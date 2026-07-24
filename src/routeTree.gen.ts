@@ -9,14 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ShellRouteImport } from './routes/_shell'
 import { Route as ShellIndexRouteImport } from './routes/_shell.index'
+import { Route as PracticeIdRouteImport } from './routes/practice.$id'
+import { Route as DayDayRouteImport } from './routes/day.$day'
 import { Route as ShellSupportRouteImport } from './routes/_shell.support'
 import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
 import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
 import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
 import { Route as ShellJourneyRouteImport } from './routes/_shell.journey'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShellRoute = ShellRouteImport.update({
   id: '/_shell',
   getParentRoute: () => rootRouteImport,
@@ -25,6 +33,16 @@ const ShellIndexRoute = ShellIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ShellRoute,
+} as any)
+const PracticeIdRoute = PracticeIdRouteImport.update({
+  id: '/practice/$id',
+  path: '/practice/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DayDayRoute = DayDayRouteImport.update({
+  id: '/day/$day',
+  path: '/day/$day',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ShellSupportRoute = ShellSupportRouteImport.update({
   id: '/support',
@@ -54,58 +72,92 @@ const ShellJourneyRoute = ShellJourneyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof ShellIndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/journey': typeof ShellJourneyRoute
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
   '/support': typeof ShellSupportRoute
+  '/day/$day': typeof DayDayRoute
+  '/practice/$id': typeof PracticeIdRoute
 }
 export interface FileRoutesByTo {
+  '/onboarding': typeof OnboardingRoute
   '/journey': typeof ShellJourneyRoute
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
   '/support': typeof ShellSupportRoute
+  '/day/$day': typeof DayDayRoute
+  '/practice/$id': typeof PracticeIdRoute
   '/': typeof ShellIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_shell': typeof ShellRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
   '/_shell/journey': typeof ShellJourneyRoute
   '/_shell/practices': typeof ShellPracticesRoute
   '/_shell/resources': typeof ShellResourcesRoute
   '/_shell/settings': typeof ShellSettingsRoute
   '/_shell/support': typeof ShellSupportRoute
+  '/day/$day': typeof DayDayRoute
+  '/practice/$id': typeof PracticeIdRoute
   '/_shell/': typeof ShellIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/onboarding'
     | '/journey'
     | '/practices'
     | '/resources'
     | '/settings'
     | '/support'
+    | '/day/$day'
+    | '/practice/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/journey' | '/practices' | '/resources' | '/settings' | '/support' | '/'
+  to:
+    | '/onboarding'
+    | '/journey'
+    | '/practices'
+    | '/resources'
+    | '/settings'
+    | '/support'
+    | '/day/$day'
+    | '/practice/$id'
+    | '/'
   id:
     | '__root__'
     | '/_shell'
+    | '/onboarding'
     | '/_shell/journey'
     | '/_shell/practices'
     | '/_shell/resources'
     | '/_shell/settings'
     | '/_shell/support'
+    | '/day/$day'
+    | '/practice/$id'
     | '/_shell/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ShellRoute: typeof ShellRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
+  DayDayRoute: typeof DayDayRoute
+  PracticeIdRoute: typeof PracticeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_shell': {
       id: '/_shell'
       path: ''
@@ -119,6 +171,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof ShellIndexRouteImport
       parentRoute: typeof ShellRoute
+    }
+    '/practice/$id': {
+      id: '/practice/$id'
+      path: '/practice/$id'
+      fullPath: '/practice/$id'
+      preLoaderRoute: typeof PracticeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/day/$day': {
+      id: '/day/$day'
+      path: '/day/$day'
+      fullPath: '/day/$day'
+      preLoaderRoute: typeof DayDayRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_shell/support': {
       id: '/_shell/support'
@@ -180,7 +246,20 @@ const ShellRouteWithChildren = ShellRoute._addFileChildren(ShellRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   ShellRoute: ShellRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
+  DayDayRoute: DayDayRoute,
+  PracticeIdRoute: PracticeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

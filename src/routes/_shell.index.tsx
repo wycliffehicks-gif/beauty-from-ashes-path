@@ -30,9 +30,10 @@ function TodayPage() {
   return (
     <section className="space-y-8 py-6">
       <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-          Resurgence Therapeutics · Awaken · Rediscover · Hope
+        <p className="eyebrow">
+          Resurgence Therapeutics · Awaken&nbsp;|&nbsp;Rediscover&nbsp;|&nbsp;Hope
         </p>
+
         <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
           Start where you are.
         </h1>

@@ -28,7 +28,7 @@ function SupportPage() {
         </p>
       </header>
 
-      <div className="surface-card space-y-3 border-l-4 border-l-[var(--ember)]">
+      <div className="surface-card space-y-3 border-l-4 border-l-destructive">
         <h2 className="font-serif text-lg text-foreground">If you are in immediate danger</h2>
         <p className="text-sm text-foreground">
           Please contact your local emergency services now, or reach a person nearby who can be with you.

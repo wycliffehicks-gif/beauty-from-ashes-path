@@ -25,12 +25,12 @@ function Onboarding() {
       key: "welcome",
       body: (
         <div className="space-y-5 text-center">
-          <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            Resurgence Therapeutics
+          <p className="eyebrow">Resurgence Therapeutics</p>
+          <p className="font-sans text-xs font-semibold tracking-[0.3em] text-[var(--gold)]">
+            AWAKEN&nbsp;&nbsp;|&nbsp;&nbsp;REDISCOVER&nbsp;&nbsp;|&nbsp;&nbsp;HOPE
           </p>
-          <p className="font-serif text-sm tracking-[0.3em] text-[var(--ember)]">
-            AWAKEN · REDISCOVER · HOPE
-          </p>
+          <div className="rule-gold mx-auto my-2 w-24" aria-hidden />
+
           <h1 className="font-serif text-4xl leading-tight text-foreground">
             Beauty from Ashes
           </h1>

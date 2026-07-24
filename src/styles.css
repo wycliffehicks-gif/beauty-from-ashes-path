@@ -5,22 +5,22 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Beauty from Ashes — design system.
- * Warm, calm, dignified. Deep charcoal, warm cream, earth brown,
- * muted amber/gold, and restrained hopeful light.
- * All colors in oklch. Semantic tokens only in components.
+ * Beauty from Ashes — Resurgence Therapeutics visual system.
+ * Warm ivory pages, charcoal body, royal blue / deep navy anchors,
+ * soft-gold and champagne as restrained accents. Playfair for headings,
+ * Lato for body. Modest radii, minimal shadow, champagne hairlines.
  */
 
 @theme inline {
-  --font-serif: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: "Lato", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 3px);
+  --radius-md: calc(var(--radius) - 1px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-xl: calc(var(--radius) + 3px);
+  --radius-2xl: calc(var(--radius) + 6px);
+  --radius-3xl: calc(var(--radius) + 10px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -44,71 +44,86 @@
   --color-ash: var(--ash);
   --color-ember: var(--ember);
   --color-hope: var(--hope);
+  --color-navy: var(--navy);
+  --color-deep-navy: var(--deep-navy);
+  --color-gold: var(--gold);
+  --color-champagne: var(--champagne);
+  --color-ivory: var(--ivory);
 }
 
 :root {
-  --radius: 0.875rem;
+  /* Modest corner radius; no bubbly UI */
+  --radius: 0.5rem;
 
-  /* Warm cream page, deep charcoal ink */
-  --background: oklch(0.965 0.012 82);
-  --foreground: oklch(0.235 0.015 55);
+  /* Brand palette — exact hex from Resurgence Therapeutics */
+  --ivory: #F6F2EA;
+  --navy: #0D2B55;
+  --deep-navy: #1A355E;
+  --gold: #D4AF6A;
+  --champagne: #E8D3AF;
+  --charcoal: #2C2F34;
 
-  --card: oklch(0.985 0.008 85);
-  --card-foreground: oklch(0.235 0.015 55);
-  --popover: oklch(0.985 0.008 85);
-  --popover-foreground: oklch(0.235 0.015 55);
+  /* Semantic tokens */
+  --background: #F6F2EA;      /* warm ivory */
+  --foreground: #2C2F34;      /* charcoal */
 
-  /* Muted amber/gold — restrained, not glossy */
-  --primary: oklch(0.58 0.10 62);
-  --primary-foreground: oklch(0.985 0.008 85);
+  --card: #FBF8EF;
+  --card-foreground: #2C2F34;
+  --popover: #FBF8EF;
+  --popover-foreground: #2C2F34;
 
-  /* Warm parchment surface */
-  --secondary: oklch(0.925 0.018 82);
-  --secondary-foreground: oklch(0.28 0.018 55);
+  /* Royal blue primary with ivory text */
+  --primary: #0D2B55;
+  --primary-foreground: #F6F2EA;
 
-  --muted: oklch(0.925 0.015 82);
-  --muted-foreground: oklch(0.45 0.02 55);
+  /* Warm parchment surface (subtle) */
+  --secondary: #EFE6D2;
+  --secondary-foreground: #1A355E;
 
-  /* Earth brown accent */
-  --accent: oklch(0.45 0.045 48);
-  --accent-foreground: oklch(0.975 0.01 85);
+  --muted: #EDE4D0;
+  --muted-foreground: #5A5D63;   /* softened charcoal, AA on ivory */
 
-  --destructive: oklch(0.50 0.13 28);
-  --destructive-foreground: oklch(0.985 0.008 85);
+  /* Deep navy accent */
+  --accent: #1A355E;
+  --accent-foreground: #F6F2EA;
 
-  --border: oklch(0.87 0.018 78);
-  --input: oklch(0.87 0.018 78);
-  --ring: oklch(0.58 0.10 62);
+  --destructive: #8A2A2A;
+  --destructive-foreground: #F6F2EA;
 
-  /* Motif tokens */
-  --ash: oklch(0.55 0.012 60);       /* soft grey-brown */
-  --ember: oklch(0.66 0.13 55);      /* warm ember highlight */
-  --hope: oklch(0.82 0.06 85);       /* hopeful light */
+  /* Champagne hairline borders / inputs */
+  --border: #E0D3B3;
+  --input: #D6C6A1;
+  --ring: #0D2B55;
+
+  /* Motif tokens re-mapped to brand */
+  --ash: #6B6E74;
+  --ember: #D4AF6A;    /* was warm ember → now soft gold accent */
+  --hope: #E8D3AF;     /* was hopeful light → now champagne */
 }
 
 .dark {
-  --background: oklch(0.19 0.012 55);
-  --foreground: oklch(0.94 0.012 82);
-  --card: oklch(0.235 0.014 55);
-  --card-foreground: oklch(0.94 0.012 82);
-  --popover: oklch(0.235 0.014 55);
-  --popover-foreground: oklch(0.94 0.012 82);
-  --primary: oklch(0.70 0.11 70);
-  --primary-foreground: oklch(0.19 0.012 55);
-  --secondary: oklch(0.28 0.015 55);
-  --secondary-foreground: oklch(0.94 0.012 82);
-  --muted: oklch(0.28 0.015 55);
-  --muted-foreground: oklch(0.72 0.02 78);
-  --accent: oklch(0.62 0.06 55);
-  --accent-foreground: oklch(0.19 0.012 55);
-  --destructive: oklch(0.62 0.16 28);
-  --destructive-foreground: oklch(0.94 0.012 82);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.70 0.11 70);
-  --ash: oklch(0.65 0.012 60);
-  --ember: oklch(0.72 0.12 55);
-  --hope: oklch(0.78 0.06 85);
+  --background: #12213D;
+  --foreground: #F6F2EA;
+  --card: #1A355E;
+  --card-foreground: #F6F2EA;
+  --popover: #1A355E;
+  --popover-foreground: #F6F2EA;
+  --primary: #D4AF6A;
+  --primary-foreground: #0D2B55;
+  --secondary: #1F3E6D;
+  --secondary-foreground: #F6F2EA;
+  --muted: #1F3E6D;
+  --muted-foreground: #C7BFA8;
+  --accent: #D4AF6A;
+  --accent-foreground: #0D2B55;
+  --destructive: #B8443A;
+  --destructive-foreground: #F6F2EA;
+  --border: rgba(232, 211, 175, 0.22);
+  --input: rgba(232, 211, 175, 0.28);
+  --ring: #D4AF6A;
+  --ash: #A9AEB6;
+  --ember: #D4AF6A;
+  --hope: #E8D3AF;
 }
 
 @layer base {
@@ -126,27 +141,27 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.65;
+    font-weight: 400;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
     color: var(--color-foreground);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 3px;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
   button, a {
     min-height: 44px;
   }
 
-  /* Allow small inline links to bypass min-height */
   a.inline-link, button.inline-link {
     min-height: 0;
   }
@@ -166,9 +181,38 @@
   padding-inline: 1.25rem;
 }
 
+/* Desktop framing — contained, tasteful, avoids a narrow mobile column
+   floating in blank space. Champagne hairlines and a very subtle ivory
+   wash create branded structure without decorative clutter. */
+@media (min-width: 900px) {
+  .container-page {
+    max-width: 720px;
+    padding-inline: 2.5rem;
+    border-inline: 1px solid var(--champagne);
+    background: linear-gradient(180deg, #FBF8EF 0%, #F6F2EA 60%);
+  }
+}
+
 @utility surface-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
+}
+
+@utility rule-gold {
+  height: 1px;
+  width: 100%;
+  background: var(--gold);
+  opacity: 0.55;
+  border: 0;
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--deep-navy);
 }

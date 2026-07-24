@@ -300,11 +300,12 @@ function StepChoice({
                 type="button"
                 onClick={() => toggle(o)}
                 aria-pressed={active}
-                className={`w-full rounded-xl border px-4 py-3 text-left text-[15px] transition-colors ${
+                className={`w-full rounded-md border px-4 py-3 text-left text-[15px] transition-colors ${
                   active
-                    ? "border-primary bg-primary/10 text-foreground"
-                    : "border-border bg-card hover:border-primary/50"
+                    ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
+                    : "border-border bg-card hover:border-[var(--deep-navy)]/40"
                 }`}
+
               >
                 {o}
               </button>

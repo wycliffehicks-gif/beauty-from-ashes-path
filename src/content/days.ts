@@ -1,0 +1,257 @@
+// Beauty from Ashes — seven-day beta content.
+// Draft copy grounded in Carl Wycliffe Hicks Jr.'s series.
+// Edit here to revise a day; nothing is hard-coded in components.
+
+export type OneStepSuggestion = string;
+
+export interface DayContent {
+  day: number;
+  title: string;
+  theme: string;
+  arriveLine: string;
+  coreReflection: string;
+  scripture?: {
+    reference: string;
+    body: string;
+    note?: string;
+  };
+  listenPrompts: string[];
+  reconnectOptions: {
+    label: string;
+    description: string;
+  }[];
+  oneHonestStep: OneStepSuggestion[];
+  closingBlessing: string;
+  optionalPrayer?: string;
+}
+
+export const DAYS: DayContent[] = [
+  {
+    day: 1,
+    title: "Begin Where You Are",
+    theme: "The meaningful road we have been avoiding.",
+    arriveLine:
+      "Start where you are — not where you think you should be.",
+    coreReflection:
+      "Sometimes we already know where life is asking for honesty — a conversation, a grief, a boundary, a request for help, or a truth we have postponed. You do not have to walk the whole road today. The beginning may simply be acknowledging where the road is.",
+    scripture: {
+      reference: "Luke 9:51",
+      body: "When the days drew near for him to be taken up, he set his face to go to Jerusalem.",
+      note: "This is not an invitation to move toward danger or suffering. It is an image of gentle resolve — of naming the meaningful road, in your own time, with support.",
+    },
+    listenPrompts: [
+      "What road have I been quietly avoiding?",
+      "What might it be asking of me — perhaps in a very small way?",
+      "What kind of support would make a first step feel safer?",
+    ],
+    reconnectOptions: [
+      { label: "Self", description: "Acknowledge the road without demanding you walk it today." },
+      { label: "A safe person", description: "Name it aloud to someone trustworthy." },
+      { label: "Meaning", description: "Notice why this road matters to who you are becoming." },
+      { label: "God (optional)", description: "Speak an honest, unpolished sentence." },
+    ],
+    oneHonestStep: [
+      "Name the avoided area in a single phrase.",
+      "Identify one safe preparation step — not the whole road.",
+      "Speak with a trusted or professional support person about it.",
+      "Write the phrase somewhere private, outside this app.",
+    ],
+    closingBlessing:
+      "May you receive credit for beginning, even when the beginning is only honest acknowledgement.",
+    optionalPrayer:
+      "God, I am not sure I am ready. Help me stay near what is true, and near people who are safe. Amen.",
+  },
+  {
+    day: 2,
+    title: "Name What You Are Carrying",
+    theme: "Unnamed burdens can grow heavier.",
+    arriveLine: "Naming is not fixing. It is allowing what is present to become a little less hidden.",
+    coreReflection:
+      "Feeling stuck does not always mean you lack desire or courage. Sometimes you are trying to move while carrying grief, fear, shame, anger, exhaustion, or a story that has never been given words. Naming is not fixing. It is allowing what is present to become a little less hidden.",
+    scripture: {
+      reference: "Psalm 55:22",
+      body: "Cast your burden on the Lord, and he will sustain you.",
+      note: "Casting begins with acknowledging that a burden is being carried at all.",
+    },
+    listenPrompts: [
+      "If I had to give what I am carrying a single word, what might it be?",
+      "Where do I notice it in my body — without forcing?",
+      "Is this a new weight, or an old one that has grown quieter but not lighter?",
+    ],
+    reconnectOptions: [
+      { label: "Body", description: "Slow the exhale. Let the ground hold you." },
+      { label: "Self", description: "Offer the same kindness you would offer a friend." },
+      { label: "A safe person", description: "Share only what feels safe to share." },
+      { label: "God (optional)", description: "Name the weight without editing it." },
+    ],
+    oneHonestStep: [
+      "Choose one word for what you are carrying today.",
+      "Notice where it sits in the body — briefly, without forcing.",
+      "Write privately, outside this app, if writing feels helpful.",
+      "Pause and use grounding if any of this feels overwhelming.",
+    ],
+    closingBlessing:
+      "May what has been unnamed become a little less hidden, at a pace that is kind to you.",
+    optionalPrayer:
+      "God, this is what I am carrying today. I do not need to explain it. Please stay near. Amen.",
+  },
+  {
+    day: 3,
+    title: "Listen to the Divided Self",
+    theme: "Part of us may want change while another part wants familiar safety.",
+    arriveLine: "Ambivalence is not a moral failure. It is often two parts of you trying to help.",
+    coreReflection:
+      "Ambivalence is not proof that you are lazy, rebellious, or insincere. One part of you may long to move forward while another remembers what change has cost, fears disappointment, or trusts what is familiar. Both parts may be trying, in different ways, to protect you.",
+    listenPrompts: [
+      "A part of me wants…",
+      "Another part of me fears…",
+      "What has the fearful part been trying to protect me from?",
+    ],
+    reconnectOptions: [
+      { label: "Self", description: "Thank the protective part without letting it drive." },
+      { label: "A safe person", description: "Talk it through with someone who will not rush you." },
+      { label: "Reality", description: "Name what is actually true today — not what could go wrong tomorrow." },
+    ],
+    oneHonestStep: [
+      "Finish the sentence: “A part of me wants…”",
+      "Finish the sentence: “Another part of me fears…”",
+      "Thank the protective part without giving it the final vote.",
+      "Choose one very small next step — small enough that both parts can bear it.",
+    ],
+    closingBlessing:
+      "May the parts of you learn to listen to each other before either has to win.",
+  },
+  {
+    day: 4,
+    title: "Dignity Before Change",
+    theme: "Shame and the question, “Am I worth healing?”",
+    arriveLine: "Your struggle does not erase your dignity.",
+    coreReflection:
+      "Shame does more than say something went wrong. It can begin telling us that we are what is wrong. Healing participation becomes difficult when we expect compassion for others but not for ourselves. Your struggle does not erase your dignity.",
+    scripture: {
+      reference: "Mark 10:46–52",
+      body: "Jesus stopped and said, “Call him.” … “What do you want me to do for you?”",
+      note: "Bartimaeus is seen, stopped for, and asked what he wants — before anything else changes.",
+    },
+    listenPrompts: [
+      "If shame were quieter today, what might I ask for?",
+      "Where do I offer compassion to others that I withhold from myself?",
+      "What is one true, kind sentence about who I am — not what I have done?",
+    ],
+    reconnectOptions: [
+      { label: "Self", description: "Speak to yourself the way a kind friend would." },
+      { label: "A safe person", description: "Let someone see you without performing." },
+      { label: "God (optional)", description: "Name what you want, without apologising." },
+    ],
+    oneHonestStep: [
+      "Name what you want, without apologising for wanting it.",
+      "Replace one shame statement with a truthful, compassionate one.",
+      "Ask for appropriate help from a safe person or professional.",
+      "Notice one act of care you would offer a friend — and offer it to yourself.",
+    ],
+    closingBlessing:
+      "May you receive the compassion you have so easily given others.",
+    optionalPrayer:
+      "God, I am tired of being hard on myself. Would you help me see what you see? Amen.",
+  },
+  {
+    day: 5,
+    title: "Let Goodness Come Near",
+    theme: "Receiving care, kindness, grace, and safe connection.",
+    arriveLine: "You are not ungrateful or broken because receiving takes time.",
+    coreReflection:
+      "Some people know how to endure more easily than they know how to receive. If care once came with conditions, disappointment, or harm, openness may not feel safe. You are not ungrateful or broken because you need time. Receiving can begin with allowing one safe kindness to land.",
+    scripture: {
+      reference: "Luke 19:1–10",
+      body: "Zacchaeus, hurry and come down, for I must stay at your house today.",
+      note: "Zacchaeus watches from a controlled distance, and grace comes near before his life is fully arranged.",
+    },
+    listenPrompts: [
+      "Where do I keep myself at a controlled distance from kindness?",
+      "When kindness comes close, what does my body do?",
+      "Where would receiving be safe today — and where would boundaries be wiser?",
+    ],
+    reconnectOptions: [
+      { label: "A safe person", description: "Allow one safe kindness to land, without deflecting." },
+      { label: "Self", description: "Let yourself count as someone worth caring for." },
+      { label: "Boundaries", description: "Notice where care would not be safe, and honour that." },
+    ],
+    oneHonestStep: [
+      "Receive one compliment today without deflecting it.",
+      "Accept one safe offer of help.",
+      "Notice where kindness creates tension — with curiosity, not judgment.",
+      "Where care is not safe, choose a boundary instead of forcing openness.",
+    ],
+    closingBlessing:
+      "May goodness come near you at a pace that your history can bear.",
+  },
+  {
+    day: 6,
+    title: "Honour What Protected You",
+    theme: "Survival strategies that once helped but may now be costly.",
+    arriveLine: "Letting go does not require shaming the way you survived.",
+    coreReflection:
+      "The anger, numbness, control, withdrawal, or guardedness you carry may once have served a real purpose. Letting go does not require shaming the way you survived. It begins by asking whether the same strategy is still helping you live now.",
+    scripture: {
+      reference: "Matthew 26:36–39",
+      body: "My Father, if it be possible, let this cup pass from me; nevertheless, not as I will, but as you will.",
+      note: "Gethsemane is honest struggle — not shallow ‘letting go.’ It names the cost before it names the surrender.",
+    },
+    listenPrompts: [
+      "What did this pattern once protect me from?",
+      "What is it costing me now — in relationships, body, or spirit?",
+      "What is the smallest way I could loosen it — perhaps by five per cent?",
+    ],
+    reconnectOptions: [
+      { label: "Self", description: "Thank the strategy for surviving. Then ask what it costs now." },
+      { label: "A safe person", description: "Do not attempt a high-risk change alone." },
+      { label: "Professional support", description: "Some patterns need company to shift safely." },
+    ],
+    oneHonestStep: [
+      "Name what this pattern once protected you from.",
+      "Name one present-day cost, without harshness.",
+      "Loosen it by five per cent — not all at once.",
+      "If the pattern is high-risk, seek support before changing it.",
+    ],
+    closingBlessing:
+      "May the parts of you that survived be honoured, even as you learn a gentler way to live.",
+    optionalPrayer:
+      "God, thank you that I am still here. Help me lay down only what is mine to lay down, and only when I am held. Amen.",
+  },
+  {
+    day: 7,
+    title: "Practise New Life",
+    theme: "New life is not going backward or pretending wounds disappeared.",
+    arriveLine: "Insight needs somewhere to land.",
+    coreReflection:
+      "New life may begin before everything feels resolved. It can be a new way of relating to the same story, wound, or question. Insight needs somewhere to land. One small lived practice can become a quiet beginning.",
+    scripture: {
+      reference: "Luke 24:13–35",
+      body: "Were not our hearts burning within us while he talked with us on the road?",
+      note: "Emmaus — hope comes near while the travellers are still grieving and confused.",
+    },
+    listenPrompts: [
+      "Which of the past six days most needs to keep breathing in my life?",
+      "What one safe connection could I move toward this week?",
+      "What boundary or support would help me continue?",
+    ],
+    reconnectOptions: [
+      { label: "Self", description: "Choose one practice to continue, and one to release." },
+      { label: "A safe person", description: "Name one connection you can move toward." },
+      { label: "Meaning", description: "Set a quiet continuation intention." },
+    ],
+    oneHonestStep: [
+      "Choose one practice to continue beyond today.",
+      "Identify one safe connection to move toward.",
+      "Name one boundary or support that will help you continue.",
+      "Write a simple continuation intention, outside this app.",
+    ],
+    closingBlessing:
+      "May the small, lived practices you choose become the quiet beginning of new life.",
+    optionalPrayer:
+      "God, I do not need everything resolved today. Meet me on the road. Amen.",
+  },
+];
+
+export const getDay = (n: number): DayContent | undefined =>
+  DAYS.find((d) => d.day === n);

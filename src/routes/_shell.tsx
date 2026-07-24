@@ -1,6 +1,7 @@
 import { Link, Outlet, createFileRoute, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { usePrefs } from "@/lib/prefs";
+import { isSplashActive, onSplashEnd } from "@/lib/splash-state";
 
 export const Route = createFileRoute("/_shell")({
   component: ShellLayout,
@@ -13,9 +14,13 @@ function ShellLayout() {
   // Route unonboarded users to /onboarding after hydration.
   useEffect(() => {
     if (!hydrated) return;
-    if (!prefs.onboarded && typeof window !== "undefined") {
-      window.location.replace("/onboarding");
+    if (prefs.onboarded || typeof window === "undefined") return;
+    const go = () => window.location.replace("/onboarding");
+    if (isSplashActive()) {
+      const off = onSplashEnd(go);
+      return () => off();
     }
+    go();
   }, [hydrated, prefs.onboarded]);
 
   const tabs: { to: string; label: string; icon: React.ReactNode }[] = [

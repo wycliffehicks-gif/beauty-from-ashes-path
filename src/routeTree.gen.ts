@@ -10,32 +10,98 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShellRouteImport } from './routes/_shell'
+import { Route as ShellIndexRouteImport } from './routes/_shell.index'
+import { Route as ShellSupportRouteImport } from './routes/_shell.support'
+import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
+import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
+import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
+import { Route as ShellJourneyRouteImport } from './routes/_shell.journey'
 
 const ShellRoute = ShellRouteImport.update({
   id: '/_shell',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShellIndexRoute = ShellIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellSupportRoute = ShellSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellSettingsRoute = ShellSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellResourcesRoute = ShellResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellPracticesRoute = ShellPracticesRouteImport.update({
+  id: '/practices',
+  path: '/practices',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellJourneyRoute = ShellJourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => ShellRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof ShellRoute
+  '/': typeof ShellIndexRoute
+  '/journey': typeof ShellJourneyRoute
+  '/practices': typeof ShellPracticesRoute
+  '/resources': typeof ShellResourcesRoute
+  '/settings': typeof ShellSettingsRoute
+  '/support': typeof ShellSupportRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof ShellRoute
+  '/journey': typeof ShellJourneyRoute
+  '/practices': typeof ShellPracticesRoute
+  '/resources': typeof ShellResourcesRoute
+  '/settings': typeof ShellSettingsRoute
+  '/support': typeof ShellSupportRoute
+  '/': typeof ShellIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_shell': typeof ShellRoute
+  '/_shell': typeof ShellRouteWithChildren
+  '/_shell/journey': typeof ShellJourneyRoute
+  '/_shell/practices': typeof ShellPracticesRoute
+  '/_shell/resources': typeof ShellResourcesRoute
+  '/_shell/settings': typeof ShellSettingsRoute
+  '/_shell/support': typeof ShellSupportRoute
+  '/_shell/': typeof ShellIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/journey'
+    | '/practices'
+    | '/resources'
+    | '/settings'
+    | '/support'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_shell'
+  to: '/journey' | '/practices' | '/resources' | '/settings' | '/support' | '/'
+  id:
+    | '__root__'
+    | '/_shell'
+    | '/_shell/journey'
+    | '/_shell/practices'
+    | '/_shell/resources'
+    | '/_shell/settings'
+    | '/_shell/support'
+    | '/_shell/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  ShellRoute: typeof ShellRoute
+  ShellRoute: typeof ShellRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -47,11 +113,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_shell/': {
+      id: '/_shell/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof ShellIndexRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/support': {
+      id: '/_shell/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof ShellSupportRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/settings': {
+      id: '/_shell/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ShellSettingsRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/resources': {
+      id: '/_shell/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ShellResourcesRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/practices': {
+      id: '/_shell/practices'
+      path: '/practices'
+      fullPath: '/practices'
+      preLoaderRoute: typeof ShellPracticesRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/journey': {
+      id: '/_shell/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof ShellJourneyRouteImport
+      parentRoute: typeof ShellRoute
+    }
   }
 }
 
+interface ShellRouteChildren {
+  ShellJourneyRoute: typeof ShellJourneyRoute
+  ShellPracticesRoute: typeof ShellPracticesRoute
+  ShellResourcesRoute: typeof ShellResourcesRoute
+  ShellSettingsRoute: typeof ShellSettingsRoute
+  ShellSupportRoute: typeof ShellSupportRoute
+  ShellIndexRoute: typeof ShellIndexRoute
+}
+
+const ShellRouteChildren: ShellRouteChildren = {
+  ShellJourneyRoute: ShellJourneyRoute,
+  ShellPracticesRoute: ShellPracticesRoute,
+  ShellResourcesRoute: ShellResourcesRoute,
+  ShellSettingsRoute: ShellSettingsRoute,
+  ShellSupportRoute: ShellSupportRoute,
+  ShellIndexRoute: ShellIndexRoute,
+}
+
+const ShellRouteWithChildren = ShellRoute._addFileChildren(ShellRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  ShellRoute: ShellRoute,
+  ShellRoute: ShellRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

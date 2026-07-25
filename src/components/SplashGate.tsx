@@ -71,7 +71,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
                 <p className="font-serif text-2xl text-[#1A355E]">
                   Resurgence Therapeutics
                 </p>
-                <p className="mt-3 whitespace-nowrap font-sans text-[0.7rem] font-semibold tracking-[0.22em] text-[#D4AF6A]">
+                <p className="mt-3 whitespace-nowrap font-sans text-[0.78rem] font-bold tracking-[0.18em] text-[#1A355E]">
                   AWAKEN&nbsp;|&nbsp;REDISCOVER&nbsp;|&nbsp;HOPE
                 </p>
               </div>

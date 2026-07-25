@@ -1,6 +1,6 @@
 // Small, SSR-safe local preference store.
 // Only low-sensitivity data: onboarding flag, spiritual toggle,
-// visited days and favourites. No journal text is ever stored.
+// and visited days. No journal text is ever stored.
 
 import { useEffect, useState } from "react";
 
@@ -10,14 +10,12 @@ export interface Prefs {
   onboarded: boolean;
   showSpiritual: boolean;
   visitedDays: number[];
-  favourites: string[]; // day-N or practice-<id>
 }
 
 const defaults: Prefs = {
   onboarded: false,
   showSpiritual: true,
   visitedDays: [],
-  favourites: [],
 };
 
 function read(): Prefs {
@@ -25,7 +23,11 @@ function read(): Prefs {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaults;
-    return { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) };
+    const parsed = JSON.parse(raw) as Partial<Prefs> & { favourites?: unknown };
+    // Drop any legacy `favourites` field silently.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { favourites: _drop, ...rest } = parsed;
+    return { ...defaults, ...rest };
   } catch {
     return defaults;
   }
@@ -71,15 +73,6 @@ export function markDayVisited(day: number) {
   if (!cur.visitedDays.includes(day)) {
     write({ ...cur, visitedDays: [...cur.visitedDays, day] });
   }
-}
-
-export function toggleFavourite(key: string) {
-  const cur = read();
-  const has = cur.favourites.includes(key);
-  write({
-    ...cur,
-    favourites: has ? cur.favourites.filter((k) => k !== key) : [...cur.favourites, key],
-  });
 }
 
 export function resetAll() {

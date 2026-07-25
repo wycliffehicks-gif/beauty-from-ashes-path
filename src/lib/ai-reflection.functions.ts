@@ -53,12 +53,14 @@ export type ReflectionServerResult =
       kind: "reflection";
       output: ReflectionOutput;
       meta: {
-        fallbackUsed: true;
+        fallbackUsed: boolean;
+        curated: boolean;
         contentPackVersion: string;
         fallbackVersion: string;
         policyVersion: string;
         validatorVersion: string;
         safetyGateVersion: string;
+        selectorVersion: string;
         aiEnabled: false;
       };
     };
@@ -72,18 +74,27 @@ function killSwitchEnabled(): boolean {
   return raw !== "false" && raw !== "0";
 }
 
+export type ReflectionMode = "auto" | "curated";
+
 /**
- * Pure core, exported for tests. Contains all decision logic. Does no I/O,
- * takes no dependencies on the request or environment beyond an explicit
- * `killSwitch` argument.
+ * Pure core, exported for tests. Contains all decision logic. Does no I/O.
+ *
+ * @param killSwitch  When true and mode is "auto", blocks the would-generate
+ *                    path (kill-switch result). "curated" bypasses this gate
+ *                    because it never calls a model — it only selects from
+ *                    the approved content pack.
+ * @param mode        "auto" (default): use the human-authored fallback.
+ *                    "curated": run the deterministic selector over the
+ *                    Day 1 content pack, then validate; fall back if the
+ *                    validator rejects the result.
  */
 export function computeReflection(
   rawInput: unknown,
   killSwitch: boolean,
+  mode: ReflectionMode = "auto",
 ): ReflectionServerResult {
   const parsed = ReflectionInputSchema.safeParse(rawInput);
   if (!parsed.success) {
-    // Distinguish text-too-long for clearer client UX, without echoing text.
     const tooLong = parsed.error.issues.some(
       (i) => i.path.join(".") === "freeText" && i.code === "too_big",
     );
@@ -117,27 +128,42 @@ export function computeReflection(
     };
   }
 
-  // Kill switch applies only to the "would-generate" path.
-  if (killSwitch) {
+  // Kill switch only gates the AI/would-generate path (mode "auto"). The
+  // curated deterministic selector calls no model and is always allowed.
+  if (killSwitch && mode === "auto") {
     return { kind: "kill-switch" };
   }
 
-  // Build the system policy so its assembly is exercised, then discard it.
-  // In the current phase we never send it anywhere.
-  buildSystemPolicy({
-    input,
-    contentPackVersion: DAY_01_CONTENT_PACK.version,
-  });
+  // Assemble the system policy so its construction stays exercised; it is
+  // discarded — never sent anywhere in this phase.
+  buildSystemPolicy({ input, contentPackVersion: DAY_01_CONTENT_PACK.version });
 
-  const output = buildDay01Fallback(input.spiritual);
-  const check = validateReflectionOutput({
+  let output: ReflectionOutput;
+  let curated = false;
+  let fallbackUsed = true;
+
+  if (mode === "curated") {
+    const selected = selectDay01Reflection(input);
+    const check = validateReflectionOutput({
+      output: selected,
+      spiritualPreference: input.spiritual,
+    });
+    if (check.ok) {
+      output = selected;
+      curated = true;
+      fallbackUsed = false;
+    } else {
+      output = buildDay01Fallback(input.spiritual);
+    }
+  } else {
+    output = buildDay01Fallback(input.spiritual);
+  }
+
+  const finalCheck = validateReflectionOutput({
     output,
     spiritualPreference: input.spiritual,
   });
-  if (!check.ok) {
-    // A validation failure on our own hand-authored fallback is a build-time
-    // bug, not a runtime user error. Return input-invalid so no partial or
-    // unsafe content ever reaches the caller.
+  if (!finalCheck.ok) {
     return { kind: "input-invalid", reason: "schema" };
   }
 
@@ -145,23 +171,26 @@ export function computeReflection(
     kind: "reflection",
     output,
     meta: {
-      fallbackUsed: true,
+      fallbackUsed,
+      curated,
       contentPackVersion: DAY_01_CONTENT_PACK_VERSION,
       fallbackVersion: DAY_01_FALLBACK_VERSION,
       policyVersion: SYSTEM_POLICY_VERSION,
       validatorVersion: VALIDATOR_VERSION,
       safetyGateVersion: SAFETY_GATE_VERSION,
+      selectorVersion: SELECT_DAY_01_VERSION,
       aiEnabled: false,
     },
   };
 }
 
 /**
- * Server function boundary. Not wired to any route or component yet.
- * Kept exported so future UI can call it without another migration.
+ * Server function boundary. Callable from the Day 1 reflection preview.
  */
 export const generateDay01Reflection = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => data)
   .handler(async ({ data }): Promise<ReflectionServerResult> => {
-    return computeReflection(data, killSwitchEnabled());
+    // Curated deterministic mode for the private preview. Live model path
+    // remains disabled by the kill switch until provider approval.
+    return computeReflection(data, killSwitchEnabled(), "curated");
   });

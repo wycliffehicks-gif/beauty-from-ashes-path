@@ -1,7 +1,9 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { usePrefs } from "@/lib/prefs";
 import { computeReflection, type ReflectionServerResult } from "@/lib/ai/compute";
+import { generateDay01Reflection } from "@/lib/ai-reflection.functions";
 import { getRegion } from "@/content/crisis-registry";
 import type {
   EmotionId,
@@ -11,7 +13,12 @@ import type {
   RoadTypeId,
 } from "@/lib/ai/types";
 
+type ReflectionMode = "curated" | "live";
+
 export const Route = createFileRoute("/day/$day/reflection")({
+  validateSearch: (search: Record<string, unknown>): { mode: ReflectionMode } => ({
+    mode: search.mode === "live" ? "live" : "curated",
+  }),
   head: () => ({
     meta: [
       { title: "Your Reflection and Next Gentle Steps — Beauty from Ashes" },
@@ -25,6 +32,7 @@ export const Route = createFileRoute("/day/$day/reflection")({
   }),
   component: ReflectionFlow,
 });
+
 
 type Screen =
   | "eligibility"

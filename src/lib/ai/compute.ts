@@ -38,8 +38,9 @@ export type ReflectionServerResult =
         validatorVersion: string;
         safetyGateVersion: string;
         selectorVersion: string;
-        aiEnabled: false;
+        aiEnabled: boolean;
       };
+
     };
 
 export type ReflectionMode = "auto" | "curated";

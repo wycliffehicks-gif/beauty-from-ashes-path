@@ -1,7 +1,9 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { usePrefs } from "@/lib/prefs";
 import { computeReflection, type ReflectionServerResult } from "@/lib/ai/compute";
+import { generateDay01Reflection } from "@/lib/ai-reflection.functions";
 import { getRegion } from "@/content/crisis-registry";
 import type {
   EmotionId,
@@ -11,7 +13,12 @@ import type {
   RoadTypeId,
 } from "@/lib/ai/types";
 
+type ReflectionMode = "curated" | "live";
+
 export const Route = createFileRoute("/day/$day/reflection")({
+  validateSearch: (search: Record<string, unknown>): { mode: ReflectionMode } => ({
+    mode: search.mode === "live" ? "live" : "curated",
+  }),
   head: () => ({
     meta: [
       { title: "Your Reflection and Next Gentle Steps — Beauty from Ashes" },
@@ -25,6 +32,7 @@ export const Route = createFileRoute("/day/$day/reflection")({
   }),
   component: ReflectionFlow,
 });
+
 
 type Screen =
   | "eligibility"
@@ -65,12 +73,15 @@ const ENERGIES: Array<{ id: EnergyId; label: string }> = [
 
 function ReflectionFlow() {
   const { day } = Route.useParams();
+  const { mode } = Route.useSearch();
   const dayNum = Number(day);
   const [prefs] = usePrefs();
   const navigate = useNavigate();
+  const callGenerate = useServerFn(generateDay01Reflection);
 
   const [screen, setScreen] = useState<Screen>("eligibility");
   const [adult, setAdult] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [region, setRegion] = useState<RegionCode>("CA");
   const [road, setRoad] = useState<RoadTypeId | null>(null);
   const [emotion, setEmotion] = useState<EmotionId | null>(null);
@@ -78,6 +89,7 @@ function ReflectionFlow() {
   const [notSafe, setNotSafe] = useState(false);
   const [freeText, setFreeText] = useState("");
   const [result, setResult] = useState<ReflectionServerResult | null>(null);
+  const [pending, setPending] = useState(false);
 
   // Only Day 1 is supported for the preview.
   if (dayNum !== 1) {
@@ -102,7 +114,7 @@ function ReflectionFlow() {
   const closeToDay = () =>
     navigate({ to: "/day/$day", params: { day: String(dayNum) } });
 
-  const runCompute = (safe: boolean) => {
+  const runCompute = async (safe: boolean) => {
     const input = {
       dayId: "day-01" as const,
       roadType: road!,
@@ -114,21 +126,54 @@ function ReflectionFlow() {
       region,
       ...(freeText.trim().length > 0 ? { freeText: freeText.trim() } : {}),
     };
-    const res = computeReflection(input, false, "curated");
+    let res: ReflectionServerResult;
+    if (mode === "live") {
+      setPending(true);
+      try {
+        res = await callGenerate({ data: { input, mode: "live" } });
+      } catch {
+        // Any transport error — fall back to curated locally so the user
+        // is never left staring at an error.
+        res = computeReflection(input, false, "curated");
+      } finally {
+        setPending(false);
+      }
+    } else {
+      res = computeReflection(input, false, "curated");
+    }
     setResult(res);
     if (res.kind === "urgent-safety") setScreen("safety");
     else if (res.kind === "minor-not-eligible") setScreen("not-eligible");
     else setScreen("result");
   };
 
+
   // ---------------- Eligibility ----------------
   if (screen === "eligibility") {
+    const canContinue = adult && (mode !== "live" || consent);
     return (
-      <Frame title="Your Reflection and Next Gentle Steps" eyebrow="Optional preview">
+      <Frame
+        title="Your Reflection and Next Gentle Steps"
+        eyebrow={mode === "live" ? "Optional live-AI preview" : "Optional preview"}
+      >
         <p className="text-foreground">
           Answer three brief questions and receive a reflection shaped by what you
           select. Your answers and the reflection are not saved.
         </p>
+
+        {mode === "live" && (
+          <div className="mt-4 rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4 text-sm leading-relaxed text-foreground">
+            <p className="font-medium">About this optional live-AI test</p>
+            <p className="mt-1">
+              For this optional live-AI test, your selected answers and any words you
+              enter are sent through Lovable AI and its model provider to prepare this
+              one reflection. This app does not intentionally save your answers or
+              reflection. Please do not include names, addresses, workplaces,
+              medical-record details, confidential information, or identifying details
+              about other people.
+            </p>
+          </div>
+        )}
 
         <label className="mt-6 flex items-start gap-3 rounded-lg border border-border bg-card p-4">
           <input
@@ -139,6 +184,20 @@ function ReflectionFlow() {
           />
           <span className="text-foreground">I confirm that I am 18 or older.</span>
         </label>
+
+        {mode === "live" && (
+          <label className="mt-3 flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1.5"
+            />
+            <span className="text-foreground">
+              I understand and choose to use live AI for this reflection.
+            </span>
+          </label>
+        )}
 
         <fieldset className="mt-4 space-y-2">
           <legend className="eyebrow mb-2">Where are you today?</legend>
@@ -167,16 +226,39 @@ function ReflectionFlow() {
           </label>
         </fieldset>
 
+        {mode === "live" && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Prefer no live AI?{" "}
+            <Link
+              to="/day/$day/reflection"
+              params={{ day: "1" }}
+              search={{ mode: "curated" }}
+              className="underline underline-offset-4"
+            >
+              Use the curated reflection preview instead.
+            </Link>
+          </p>
+        )}
+
         <Dock
           onBack={closeToDay}
           backLabel="Close"
-          onNext={() => (adult ? setScreen("q1-road") : setScreen("not-eligible"))}
+          onNext={() =>
+            canContinue
+              ? setScreen("q1-road")
+              : !adult
+                ? setScreen("not-eligible")
+                : undefined
+          }
+          nextDisabled={!canContinue}
           nextLabel="Continue"
           progress="1 of 5"
         />
       </Frame>
     );
   }
+
+
 
   if (screen === "not-eligible") {
     return (
@@ -286,19 +368,29 @@ function ReflectionFlow() {
         <p className="mt-1 text-right text-xs text-muted-foreground" aria-live="polite">
           {remaining} characters remaining
         </p>
+        {pending && (
+          <p className="mt-4 text-sm text-muted-foreground" aria-live="polite">
+            Preparing your reflection… this can take a few seconds.
+          </p>
+        )}
         <Dock
           onBack={() => setScreen("q3-energy")}
-          onNext={() => runCompute(!notSafe)}
-          nextLabel="See my reflection"
+          onNext={() => {
+            if (!pending) void runCompute(!notSafe);
+          }}
+          nextDisabled={pending}
+          nextLabel={pending ? "Preparing…" : "See my reflection"}
           progress="5 of 5"
           secondary={
             <button
               type="button"
+              disabled={pending}
               onClick={() => {
+                if (pending) return;
                 setFreeText("");
-                runCompute(!notSafe);
+                void runCompute(!notSafe);
               }}
-              className="text-sm text-muted-foreground underline underline-offset-4"
+              className="text-sm text-muted-foreground underline underline-offset-4 disabled:opacity-40"
             >
               Skip this question
             </button>
@@ -307,6 +399,8 @@ function ReflectionFlow() {
       </Frame>
     );
   }
+
+
 
   // ---------------- Safety screen ----------------
   if (screen === "safety" && result?.kind === "urgent-safety") {
@@ -383,10 +477,13 @@ function ReflectionFlow() {
       <ResultScreen
         output={result.output}
         curated={result.meta.curated}
+        aiEnabled={result.meta.aiEnabled}
+        fallbackUsed={result.meta.fallbackUsed}
         onClose={closeToDay}
       />
     );
   }
+
 
   // Any invalid state falls back to eligibility.
   if (screen === "result" || screen === "safety") {
@@ -409,12 +506,17 @@ function ReflectionFlow() {
 function ResultScreen({
   output,
   curated,
+  aiEnabled,
+  fallbackUsed,
   onClose,
 }: {
   output: ReflectionOutput;
   curated: boolean;
+  aiEnabled: boolean;
+  fallbackUsed: boolean;
   onClose: () => void;
 }) {
+
   const [copied, setCopied] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 
@@ -516,7 +618,14 @@ function ResultScreen({
         </Link>
       </div>
 
-      <div className="mt-6 rounded-md border border-border/60 bg-secondary/40 p-3 text-xs text-muted-foreground">
+      {aiEnabled && !fallbackUsed && (
+        <p className="mt-6 text-xs text-muted-foreground">
+          This response was personalized by live AI within founder-approved Beauty
+          from Ashes material and checked against safety rules before it was shown.
+        </p>
+      )}
+
+      <div className="mt-4 rounded-md border border-border/60 bg-secondary/40 p-3 text-xs text-muted-foreground">
         <button
           type="button"
           onClick={() => setAboutOpen((o) => !o)}
@@ -528,12 +637,15 @@ function ResultScreen({
         </button>
         {aboutOpen && (
           <p className="mt-2">
-            This private preview currently uses founder-approved Beauty from Ashes
-            material {curated ? "selected from your responses" : "prepared as a general Day 1 reflection"}.
-            Live AI personalization is not connected yet.
+            {aiEnabled && !fallbackUsed
+              ? "This private preview used Lovable AI to personalize the tentative summary and transitions. Themes, next steps, One Honest Step, Scripture, prayer and support wording all come from founder-approved Beauty from Ashes material. The response was checked against safety rules before being shown."
+              : curated
+                ? "This private preview uses founder-approved Beauty from Ashes material selected from your responses. Live AI is not being used for this reflection."
+                : "This private preview shows a founder-approved general Day 1 reflection. Live AI was either unavailable or its response could not be safely used, so the curated fallback is being shown instead."}
           </p>
         )}
       </div>
+
     </Frame>
   );
 }

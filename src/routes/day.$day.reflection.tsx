@@ -477,10 +477,13 @@ function ReflectionFlow() {
       <ResultScreen
         output={result.output}
         curated={result.meta.curated}
+        aiEnabled={result.meta.aiEnabled}
+        fallbackUsed={result.meta.fallbackUsed}
         onClose={closeToDay}
       />
     );
   }
+
 
   // Any invalid state falls back to eligibility.
   if (screen === "result" || screen === "safety") {

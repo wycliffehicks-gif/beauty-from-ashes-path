@@ -150,12 +150,30 @@ function ReflectionFlow() {
 
   // ---------------- Eligibility ----------------
   if (screen === "eligibility") {
+    const canContinue = adult && (mode !== "live" || consent);
     return (
-      <Frame title="Your Reflection and Next Gentle Steps" eyebrow="Optional preview">
+      <Frame
+        title="Your Reflection and Next Gentle Steps"
+        eyebrow={mode === "live" ? "Optional live-AI preview" : "Optional preview"}
+      >
         <p className="text-foreground">
           Answer three brief questions and receive a reflection shaped by what you
           select. Your answers and the reflection are not saved.
         </p>
+
+        {mode === "live" && (
+          <div className="mt-4 rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4 text-sm leading-relaxed text-foreground">
+            <p className="font-medium">About this optional live-AI test</p>
+            <p className="mt-1">
+              For this optional live-AI test, your selected answers and any words you
+              enter are sent through Lovable AI and its model provider to prepare this
+              one reflection. This app does not intentionally save your answers or
+              reflection. Please do not include names, addresses, workplaces,
+              medical-record details, confidential information, or identifying details
+              about other people.
+            </p>
+          </div>
+        )}
 
         <label className="mt-6 flex items-start gap-3 rounded-lg border border-border bg-card p-4">
           <input
@@ -166,6 +184,20 @@ function ReflectionFlow() {
           />
           <span className="text-foreground">I confirm that I am 18 or older.</span>
         </label>
+
+        {mode === "live" && (
+          <label className="mt-3 flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1.5"
+            />
+            <span className="text-foreground">
+              I understand and choose to use live AI for this reflection.
+            </span>
+          </label>
+        )}
 
         <fieldset className="mt-4 space-y-2">
           <legend className="eyebrow mb-2">Where are you today?</legend>
@@ -194,16 +226,39 @@ function ReflectionFlow() {
           </label>
         </fieldset>
 
+        {mode === "live" && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Prefer no live AI?{" "}
+            <Link
+              to="/day/$day/reflection"
+              params={{ day: "1" }}
+              search={{ mode: "curated" }}
+              className="underline underline-offset-4"
+            >
+              Use the curated reflection preview instead.
+            </Link>
+          </p>
+        )}
+
         <Dock
           onBack={closeToDay}
           backLabel="Close"
-          onNext={() => (adult ? setScreen("q1-road") : setScreen("not-eligible"))}
+          onNext={() =>
+            canContinue
+              ? setScreen("q1-road")
+              : !adult
+                ? setScreen("not-eligible")
+                : undefined
+          }
+          nextDisabled={!canContinue}
           nextLabel="Continue"
           progress="1 of 5"
         />
       </Frame>
     );
   }
+
+
 
   if (screen === "not-eligible") {
     return (

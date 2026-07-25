@@ -450,6 +450,27 @@ function StepClose({
         </div>
       )}
 
+      {dayNum === 1 && (
+        <div className="rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4">
+          <h3 className="font-serif text-lg text-foreground">
+            Your Reflection and Next Gentle Steps
+          </h3>
+          <p className="mt-1 text-sm text-foreground">
+            Optional. Answer three brief questions and receive a reflection shaped by
+            what you select. You may skip this and close Day 1.
+          </p>
+          <div className="mt-3 flex flex-col gap-2">
+            <Link
+              to="/day/$day/reflection"
+              params={{ day: "1" }}
+              className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground hover:opacity-90"
+            >
+              Try the reflection preview
+            </Link>
+          </div>
+        </div>
+      )}
+
       {isFinalDay ? (
         <div className="space-y-4 rounded-lg border border-border bg-card p-5">
           <h3 className="font-serif text-xl text-foreground sm:text-2xl">

@@ -23,6 +23,7 @@ import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
 import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
 import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
 import { Route as ShellJourneyRouteImport } from './routes/_shell.journey'
+import { Route as DayDayReflectionRouteImport } from './routes/day.$day.reflection'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -93,6 +94,11 @@ const ShellJourneyRoute = ShellJourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => ShellRoute,
 } as any)
+const DayDayReflectionRoute = DayDayReflectionRouteImport.update({
+  id: '/reflection',
+  path: '/reflection',
+  getParentRoute: () => DayDayRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ShellIndexRoute
@@ -106,8 +112,9 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
   '/support': typeof ShellSupportRoute
-  '/day/$day': typeof DayDayRoute
+  '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
+  '/day/$day/reflection': typeof DayDayReflectionRoute
 }
 export interface FileRoutesByTo {
   '/contact-support': typeof ContactSupportRoute
@@ -120,9 +127,10 @@ export interface FileRoutesByTo {
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
   '/support': typeof ShellSupportRoute
-  '/day/$day': typeof DayDayRoute
+  '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
   '/': typeof ShellIndexRoute
+  '/day/$day/reflection': typeof DayDayReflectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -137,9 +145,10 @@ export interface FileRoutesById {
   '/_shell/resources': typeof ShellResourcesRoute
   '/_shell/settings': typeof ShellSettingsRoute
   '/_shell/support': typeof ShellSupportRoute
-  '/day/$day': typeof DayDayRoute
+  '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
   '/_shell/': typeof ShellIndexRoute
+  '/day/$day/reflection': typeof DayDayReflectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/day/$day'
     | '/practice/$id'
+    | '/day/$day/reflection'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/contact-support'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/day/$day'
     | '/practice/$id'
     | '/'
+    | '/day/$day/reflection'
   id:
     | '__root__'
     | '/_shell'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/day/$day'
     | '/practice/$id'
     | '/_shell/'
+    | '/day/$day/reflection'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,7 +209,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
-  DayDayRoute: typeof DayDayRoute
+  DayDayRoute: typeof DayDayRouteWithChildren
   PracticeIdRoute: typeof PracticeIdRoute
 }
 
@@ -301,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellJourneyRouteImport
       parentRoute: typeof ShellRoute
     }
+    '/day/$day/reflection': {
+      id: '/day/$day/reflection'
+      path: '/reflection'
+      fullPath: '/day/$day/reflection'
+      preLoaderRoute: typeof DayDayReflectionRouteImport
+      parentRoute: typeof DayDayRoute
+    }
   }
 }
 
@@ -324,6 +343,17 @@ const ShellRouteChildren: ShellRouteChildren = {
 
 const ShellRouteWithChildren = ShellRoute._addFileChildren(ShellRouteChildren)
 
+interface DayDayRouteChildren {
+  DayDayReflectionRoute: typeof DayDayReflectionRoute
+}
+
+const DayDayRouteChildren: DayDayRouteChildren = {
+  DayDayReflectionRoute: DayDayReflectionRoute,
+}
+
+const DayDayRouteWithChildren =
+  DayDayRoute._addFileChildren(DayDayRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   ShellRoute: ShellRouteWithChildren,
   ContactSupportRoute: ContactSupportRoute,
@@ -331,7 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
-  DayDayRoute: DayDayRoute,
+  DayDayRoute: DayDayRouteWithChildren,
   PracticeIdRoute: PracticeIdRoute,
 }
 export const routeTree = rootRouteImport

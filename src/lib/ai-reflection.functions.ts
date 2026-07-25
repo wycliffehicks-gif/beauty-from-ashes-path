@@ -22,6 +22,7 @@ import { buildDay01Fallback, DAY_01_FALLBACK_VERSION } from "@/content/ai/fallba
 import { getRegion } from "@/content/crisis-registry";
 import { ReflectionInputSchema, type ReflectionInput } from "@/lib/ai/schemas";
 import { runSafetyGate, SAFETY_GATE_VERSION } from "@/lib/ai/safety-gate";
+import { selectDay01Reflection, SELECT_DAY_01_VERSION } from "@/lib/ai/select-day-01";
 import { buildSystemPolicy, SYSTEM_POLICY_VERSION } from "@/lib/ai/system-policy";
 import { validateReflectionOutput, VALIDATOR_VERSION } from "@/lib/ai/validator";
 import type { ReflectionOutput } from "@/lib/ai/types";

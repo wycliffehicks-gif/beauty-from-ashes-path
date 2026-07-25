@@ -506,12 +506,17 @@ function ReflectionFlow() {
 function ResultScreen({
   output,
   curated,
+  aiEnabled,
+  fallbackUsed,
   onClose,
 }: {
   output: ReflectionOutput;
   curated: boolean;
+  aiEnabled: boolean;
+  fallbackUsed: boolean;
   onClose: () => void;
 }) {
+
   const [copied, setCopied] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 

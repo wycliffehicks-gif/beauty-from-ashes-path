@@ -26,8 +26,8 @@ function ContactSupportPage() {
     <LegalPage title="Contact & Technical Support">
       <p>
         This page is for technical problems with the app, accessibility
-        concerns, factual corrections and product feedback during the private
-        beta.
+        concerns, factual corrections and product feedback before public
+        release.
       </p>
 
       <div className="surface-card space-y-2">

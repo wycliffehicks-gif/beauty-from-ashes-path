@@ -19,40 +19,40 @@ export function buildDay01Fallback(spiritual: boolean): ReflectionOutput {
     ? {
         scriptureId: "sc-luke-9-51",
         reflection:
-          "Luke 9:51 pictures Jesus quietly setting his face toward Jerusalem — a chosen, meaningful road, walked with steady resolve rather than force. It may be a gentle image for today: naming the road you have been avoiding, without demanding you walk the whole of it.",
+          "Luke 9:51 pictures Jesus quietly setting his face toward Jerusalem — a chosen, meaningful road, walked with steady resolve rather than force. It may be a gentle image for today: naming the road you have been avoiding, without demanding you walk the whole of it. Faithful pacing counts. Beginning honestly counts. You do not have to arrive today for this day to matter.",
         prayerId: "p-courage-and-wisdom",
       }
     : null;
 
   const output: ReflectionOutput = {
     hearing:
-      "It sounds like there may be a road on your heart today — one that feels meaningful, and also heavy. You may not yet be sure what it is asking of you, and that is a fair place to begin. You do not have to name it perfectly or solve it today.",
+      "It sounds like there may be a road on your heart today — one that feels meaningful, and also heavy. You may not yet be sure what it is asking of you, and that is a fair place to begin. You do not have to name it perfectly or solve it today. Perhaps what is being asked is simply that you acknowledge, without judgment, that the road is there.",
     theme: {
       id: "t-awareness-is-a-beginning",
       gloss:
-        "Day 1 does not ask you to walk the whole road. Awareness and acknowledgement may be enough for today — a quiet beginning is still a beginning.",
+        "Day 1 does not ask you to walk the whole road. Awareness and acknowledgement may be enough for today — a quiet beginning is still a beginning, and steady beginnings often outlast dramatic ones.",
     },
     nextSteps: [
       {
         id: "s-private-sentence",
-        text: "Write one private sentence, outside this app, beginning with: “The road I may be avoiding is…”. No one else needs to see it.",
+        text: "Write one private sentence, outside this app, beginning with: “The road I may be avoiding is…”. No one else needs to see it, and no one needs to grade it.",
       },
       {
         id: "s-five-quiet-minutes",
-        text: "Take five quiet minutes to notice what you fear about this road, and what you quietly hope. Notice without deciding.",
+        text: "Take five quiet minutes to notice what you fear about this road, and what you quietly hope. Notice without deciding, and let noticing itself be enough for now.",
       },
       {
         id: "s-ask-safe-person",
-        text: "If it feels wise, ask one safe person to help you think through what a very small next step could look like.",
+        text: "If it feels wise, ask one safe person to help you think through what a very small next step could look like — you do not have to hold this alone.",
       },
     ],
     oneHonestStep: {
       id: "ohs-name-the-road",
-      text: "In one private sentence today, name the road you may be avoiding. You do not need to walk it — only to acknowledge that it is there.",
+      text: "In one private sentence today, name the road you may be avoiding. You do not need to walk it — only to acknowledge, gently, that it is there.",
     },
     spiritualReflection,
     supportNote:
-      "If any of this begins to feel heavy, it may help to reach a trusted person or a qualified professional — you do not have to hold it alone.",
+      "If this begins to feel heavy, it may help to reach a trusted person or a qualified professional — you do not have to hold it alone.",
     totalWordsEstimate: 0, // filled in below
   };
 

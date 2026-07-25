@@ -101,7 +101,7 @@ const ENERGY_SENTENCE: Record<EnergyId, string> = {
 
 function buildHearing(q: Query): string {
   const closing =
-    "You do not need to name this perfectly, and you do not need to solve it today. Perhaps what may be asked of Day 1 is simply that you turn toward this road with a little more honesty and a little more kindness than yesterday. Awareness, held gently, is already a form of faithful movement.";
+    "You do not need to name this perfectly, and you do not need to solve it today. Perhaps what may be asked of Day 1 is simply that you turn toward this road with a little more honesty and a little more kindness than yesterday. Awareness, held gently, may already be a form of faithful movement — a small, quiet way of walking toward hope, one honest step at a time.";
   return `${HEARING_BY_ROAD[q.road]} ${EMOTION_SENTENCE[q.emotion]} ${ENERGY_SENTENCE[q.energy]} ${closing}`;
 }
 

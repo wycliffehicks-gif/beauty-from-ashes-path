@@ -140,9 +140,13 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 18px;
+    line-height: 1.7;
     font-weight: 400;
+  }
+
+  @media (min-width: 640px) {
+    body { font-size: 19px; }
   }
 
   h1, h2, h3, h4 {

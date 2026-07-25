@@ -1,5 +1,5 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPractice } from "@/content/practices";
 
 export const Route = createFileRoute("/practice/$id")({

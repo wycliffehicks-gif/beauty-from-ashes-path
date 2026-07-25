@@ -463,13 +463,27 @@ function StepClose({
             <Link
               to="/day/$day/reflection"
               params={{ day: "1" }}
+              search={{ mode: "live" }}
               className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground hover:opacity-90"
             >
-              Try the reflection preview
+              Try live AI reflection
             </Link>
+            <Link
+              to="/day/$day/reflection"
+              params={{ day: "1" }}
+              search={{ mode: "curated" }}
+              className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
+            >
+              Use curated reflection preview
+            </Link>
+            <p className="text-xs text-muted-foreground">
+              Live AI personalizes the tentative summary within founder-approved
+              material. The curated version is always available.
+            </p>
           </div>
         </div>
       )}
+
 
       {isFinalDay ? (
         <div className="space-y-4 rounded-lg border border-border bg-card p-5">

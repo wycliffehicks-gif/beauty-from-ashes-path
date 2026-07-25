@@ -72,6 +72,13 @@ function DayFlow() {
   const navigate = useNavigate();
   const [i, setI] = useState(0);
 
+  // CRITICAL: reset step index and scroll on every day change so that
+  // navigating from Day N → Day N+1 always opens at ARRIVE.
+  useEffect(() => {
+    setI(0);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  }, [dayNum]);
+
   useEffect(() => {
     if (content) markDayVisited(content.day);
   }, [content]);
@@ -96,7 +103,10 @@ function DayFlow() {
   }
 
   const step = STEPS[i];
-  const goNext = () => setI((n) => Math.min(STEPS.length - 1, n + 1));
+  const goNext = () => {
+    setI((n) => Math.min(STEPS.length - 1, n + 1));
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
   const goPrev = () => setI((n) => Math.max(0, n - 1));
   const exit = () => navigate({ to: "/" });
 
@@ -109,7 +119,7 @@ function DayFlow() {
       label={`Day ${content.day} · ${step.label}`}
     >
       {step.key === "arrive" && (
-        <StepArrive title={content.title} arrive={content.arriveLine} onNext={goNext} onSkip={goNext} />
+        <StepArrive title={content.title} arrive={content.arriveLine} onNext={goNext} />
       )}
       {step.key === "notice" && (
         <StepChoice
@@ -160,6 +170,7 @@ function DayFlow() {
       )}
       {step.key === "close" && (
         <StepClose
+          dayNum={content.day}
           blessing={content.closingBlessing}
           prayer={prefs.showSpiritual ? content.optionalPrayer : undefined}
           nextDay={nextDay?.day}
@@ -187,31 +198,50 @@ function FlowShell({
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
       <div className="container-page flex min-h-[100dvh] flex-col py-6">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 pb-4 sm:gap-3">
-          <button
-            type="button"
-            onClick={onBack ?? onExit}
-            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
-            aria-label={onBack ? "Back" : "Close"}
-          >
-            {onBack ? "← Back" : "✕ Close"}
-          </button>
-          <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {label}
-          </p>
-          <Link
-            to="/practice/$id"
-            params={{ id: "pause-and-ground" }}
-            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-          >
-            Pause
-          </Link>
-          <Link
-            to="/support"
-            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-          >
-            Support
-          </Link>
+        <header className="space-y-3 pb-4">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={onBack ?? onExit}
+              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
+              aria-label={onBack ? "Back" : "Close"}
+            >
+              {onBack ? "← Back" : "✕ Close"}
+            </button>
+            <p className="min-w-0 flex-1 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {label}
+            </p>
+            <button
+              type="button"
+              onClick={onExit}
+              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              Close
+            </button>
+          </div>
+          <nav className="flex items-center justify-center gap-4 text-sm">
+            <Link
+              to="/"
+              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              Home
+            </Link>
+            <span aria-hidden className="text-muted-foreground">·</span>
+            <Link
+              to="/practice/$id"
+              params={{ id: "pause-and-ground" }}
+              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              Pause
+            </Link>
+            <span aria-hidden className="text-muted-foreground">·</span>
+            <Link
+              to="/support"
+              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            >
+              Support
+            </Link>
+          </nav>
         </header>
 
         <div aria-hidden className="mb-6 flex gap-1">
@@ -227,7 +257,7 @@ function FlowShell({
 
         <div className="flex-1">{children}</div>
 
-        <div className="pt-6 text-center text-xs text-muted-foreground">
+        <div className="pt-6 text-center text-sm text-muted-foreground">
           <button
             type="button"
             onClick={onExit}
@@ -245,24 +275,21 @@ function StepArrive({
   title,
   arrive,
   onNext,
-  onSkip,
 }: {
   title: string;
   arrive: string;
   onNext: () => void;
-  onSkip: () => void;
 }) {
   return (
     <div className="space-y-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Arrive</p>
+      <p className="eyebrow">Arrive</p>
       <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">{title}</h1>
-      <p className="text-lg text-muted-foreground">{arrive}</p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-lg text-foreground">{arrive}</p>
+      <p className="text-base text-muted-foreground">
         Take one slower breath. You don’t need to do more than arrive.
       </p>
       <div className="flex flex-col gap-2 pt-4">
         <PrimaryButton onClick={onNext}>Begin</PrimaryButton>
-        <SubtleButton onClick={onSkip}>Skip to reflection</SubtleButton>
       </div>
     </div>
   );
@@ -295,9 +322,9 @@ function StepChoice({
   };
   return (
     <div className="space-y-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{heading}</p>
-      <h2 className="font-serif text-2xl text-foreground">{prompt}</h2>
-      {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
+      <p className="eyebrow">{heading}</p>
+      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">{prompt}</h2>
+      {hint && <p className="text-base text-muted-foreground">{hint}</p>}
       <ul className="space-y-2">
         {options.map((o) => {
           const active = selected.includes(o);
@@ -307,12 +334,11 @@ function StepChoice({
                 type="button"
                 onClick={() => toggle(o)}
                 aria-pressed={active}
-                className={`w-full rounded-md border px-4 py-3 text-left text-[15px] transition-colors ${
+                className={`w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
                   active
                     ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
                     : "border-border bg-card hover:border-[var(--deep-navy)]/40"
                 }`}
-
               >
                 {o}
               </button>
@@ -331,16 +357,16 @@ function StepChoice({
 function StepListen({ prompts, onNext }: { prompts: string[]; onNext: () => void }) {
   return (
     <div className="space-y-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Listen</p>
-      <h2 className="font-serif text-2xl text-foreground">A few gentle questions</h2>
-      <p className="text-sm text-muted-foreground">
+      <p className="eyebrow">Listen</p>
+      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">A few gentle questions</h2>
+      <p className="text-base text-muted-foreground">
         Read slowly. You do not have to answer. Notice which one lingers.
       </p>
       <ul className="space-y-3">
         {prompts.map((p, idx) => (
           <li
             key={idx}
-            className="rounded-xl border border-border bg-card p-4 font-serif text-lg leading-snug text-foreground"
+            className="rounded-lg border border-border bg-card p-4 font-serif text-lg leading-snug text-foreground"
           >
             {p}
           </li>
@@ -363,14 +389,14 @@ function StepReflection({
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Reflection</p>
-      <h2 className="font-serif text-2xl leading-snug text-foreground">{content.title}</h2>
-      <p className="whitespace-pre-line text-[17px] leading-relaxed text-foreground">
+      <p className="eyebrow">Reflection</p>
+      <h2 className="font-serif text-2xl leading-snug text-foreground sm:text-3xl">{content.title}</h2>
+      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
         {content.coreReflection}
       </p>
 
       {showSpiritual && content.scripture && (
-        <div className="rounded-xl border border-border bg-secondary/50 p-4">
+        <div className="rounded-lg border border-border bg-secondary/50 p-4">
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
@@ -381,9 +407,9 @@ function StepReflection({
             <span aria-hidden>{open ? "–" : "+"}</span>
           </button>
           {open && (
-            <div className="mt-3 space-y-2 text-sm">
+            <div className="mt-3 space-y-2 text-base">
               <p className="font-medium text-foreground">{content.scripture.reference}</p>
-              <blockquote className="border-l-2 border-[var(--ember)] pl-3 italic text-foreground">
+              <blockquote className="border-l-2 border-[var(--gold)] pl-3 italic text-foreground">
                 “{content.scripture.body}”
               </blockquote>
               {content.scripture.note && (
@@ -400,38 +426,62 @@ function StepReflection({
 }
 
 function StepClose({
+  dayNum,
   blessing,
   prayer,
   nextDay,
 }: {
+  dayNum: number;
   blessing: string;
   prayer?: string;
   nextDay?: number;
 }) {
   const navigate = useNavigate();
+  const isFinalDay = dayNum === 7;
   return (
     <div className="space-y-6">
-      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Close</p>
-      <h2 className="font-serif text-2xl text-foreground">A gentle close</h2>
-      <p className="text-[17px] leading-relaxed text-foreground">{blessing}</p>
+      <p className="eyebrow">Close</p>
+      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">A gentle close</h2>
+      <p className="text-lg leading-relaxed text-foreground">{blessing}</p>
       {prayer && (
-        <div className="rounded-xl border border-border bg-secondary/50 p-4 text-sm">
+        <div className="rounded-lg border border-border bg-secondary/50 p-4 text-base">
           <p className="mb-1 font-medium text-foreground">Optional prayer</p>
           <p className="italic text-foreground">{prayer}</p>
         </div>
       )}
-      <div className="flex flex-col gap-2 pt-2">
-        {nextDay ? (
-          <PrimaryButton onClick={() => navigate({ to: "/day/$day", params: { day: String(nextDay) } })}>
-            When you’re ready, continue to Day {nextDay}
-          </PrimaryButton>
-        ) : (
-          <PrimaryButton onClick={() => navigate({ to: "/journey" })}>
-            You’ve walked all seven days. Revisit any time.
-          </PrimaryButton>
-        )}
-        <SubtleButton onClick={() => navigate({ to: "/" })}>Return to Today</SubtleButton>
-      </div>
+
+      {isFinalDay ? (
+        <div className="space-y-4 rounded-lg border border-border bg-card p-5">
+          <h3 className="font-serif text-xl text-foreground sm:text-2xl">
+            You have reached the end of these seven days — but not the end of the journey.
+          </h3>
+          <ul className="list-disc space-y-2 pl-5 text-base text-foreground">
+            <li>Revisit any day that still feels meaningful.</li>
+            <li>Return to <em>One Honest Step</em> when life feels heavy or unclear.</li>
+            <li>Continue with the Beauty from Ashes videos.</li>
+            <li>Use the future companion journal for deeper reflection when available.</li>
+            <li>Move toward a safe person, community or qualified professional when support is needed.</li>
+            <li>Carry forward one truth, practice or prayer from the journey.</li>
+          </ul>
+          <div className="flex flex-col gap-2 pt-1">
+            <PrimaryButton onClick={() => navigate({ to: "/" })}>Return Home</PrimaryButton>
+            <SubtleButton onClick={() => navigate({ to: "/journey" })}>View the Journey</SubtleButton>
+            <SubtleButton onClick={() => navigate({ to: "/resources" })}>Open Resources</SubtleButton>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 pt-2">
+          {nextDay && (
+            <PrimaryButton
+              onClick={() => navigate({ to: "/day/$day", params: { day: String(nextDay) } })}
+            >
+              Continue to Day {nextDay}
+            </PrimaryButton>
+          )}
+          <SubtleButton onClick={() => navigate({ to: "/" })}>Return Home</SubtleButton>
+          <SubtleButton onClick={() => navigate({ to: "/journey" })}>View the Journey</SubtleButton>
+        </div>
+      )}
     </div>
   );
 }
@@ -441,7 +491,7 @@ function PrimaryButton({ children, onClick }: { children: React.ReactNode; onCli
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition-colors hover:opacity-90"
+      className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground transition-colors hover:opacity-90"
     >
       {children}
     </button>
@@ -453,7 +503,7 @@ function SubtleButton({ children, onClick }: { children: React.ReactNode; onClic
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex w-full items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
+      className="inline-flex w-full items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
     >
       {children}
     </button>

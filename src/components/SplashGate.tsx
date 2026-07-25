@@ -55,7 +55,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
           style={{ opacity: leaving ? 0 : 1 }}
         >
           <div
-            className="flex w-full max-w-[420px] items-center justify-center px-8 transition-transform duration-500 ease-out motion-reduce:transition-none"
+            className="flex w-full items-center justify-center px-4 transition-transform duration-500 ease-out motion-reduce:transition-none"
             style={{ transform: leaving ? "scale(1.02)" : "scale(1)" }}
           >
             {imgOk ? (
@@ -63,7 +63,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
                 src={LOGO_URL}
                 alt="Resurgence Therapeutics — Awaken, Rediscover, Hope"
                 onError={() => setImgOk(false)}
-                className="h-auto w-full max-w-[320px] object-contain sm:max-w-[380px]"
+                className="h-auto w-[82vw] max-w-[340px] object-contain sm:max-w-[420px]"
                 draggable={false}
               />
             ) : (

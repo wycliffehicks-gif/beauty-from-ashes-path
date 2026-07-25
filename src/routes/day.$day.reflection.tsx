@@ -618,7 +618,14 @@ function ResultScreen({
         </Link>
       </div>
 
-      <div className="mt-6 rounded-md border border-border/60 bg-secondary/40 p-3 text-xs text-muted-foreground">
+      {aiEnabled && !fallbackUsed && (
+        <p className="mt-6 text-xs text-muted-foreground">
+          This response was personalized by live AI within founder-approved Beauty
+          from Ashes material and checked against safety rules before it was shown.
+        </p>
+      )}
+
+      <div className="mt-4 rounded-md border border-border/60 bg-secondary/40 p-3 text-xs text-muted-foreground">
         <button
           type="button"
           onClick={() => setAboutOpen((o) => !o)}
@@ -630,12 +637,15 @@ function ResultScreen({
         </button>
         {aboutOpen && (
           <p className="mt-2">
-            This private preview currently uses founder-approved Beauty from Ashes
-            material {curated ? "selected from your responses" : "prepared as a general Day 1 reflection"}.
-            Live AI personalization is not connected yet.
+            {aiEnabled && !fallbackUsed
+              ? "This private preview used Lovable AI to personalize the tentative summary and transitions. Themes, next steps, One Honest Step, Scripture, prayer and support wording all come from founder-approved Beauty from Ashes material. The response was checked against safety rules before being shown."
+              : curated
+                ? "This private preview uses founder-approved Beauty from Ashes material selected from your responses. Live AI is not being used for this reflection."
+                : "This private preview shows a founder-approved general Day 1 reflection. Live AI was either unavailable or its response could not be safely used, so the curated fallback is being shown instead."}
           </p>
         )}
       </div>
+
     </Frame>
   );
 }

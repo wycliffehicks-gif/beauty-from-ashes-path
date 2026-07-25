@@ -368,19 +368,29 @@ function ReflectionFlow() {
         <p className="mt-1 text-right text-xs text-muted-foreground" aria-live="polite">
           {remaining} characters remaining
         </p>
+        {pending && (
+          <p className="mt-4 text-sm text-muted-foreground" aria-live="polite">
+            Preparing your reflection… this can take a few seconds.
+          </p>
+        )}
         <Dock
           onBack={() => setScreen("q3-energy")}
-          onNext={() => runCompute(!notSafe)}
-          nextLabel="See my reflection"
+          onNext={() => {
+            if (!pending) void runCompute(!notSafe);
+          }}
+          nextDisabled={pending}
+          nextLabel={pending ? "Preparing…" : "See my reflection"}
           progress="5 of 5"
           secondary={
             <button
               type="button"
+              disabled={pending}
               onClick={() => {
+                if (pending) return;
                 setFreeText("");
-                runCompute(!notSafe);
+                void runCompute(!notSafe);
               }}
-              className="text-sm text-muted-foreground underline underline-offset-4"
+              className="text-sm text-muted-foreground underline underline-offset-4 disabled:opacity-40"
             >
               Skip this question
             </button>
@@ -389,6 +399,8 @@ function ReflectionFlow() {
       </Frame>
     );
   }
+
+
 
   // ---------------- Safety screen ----------------
   if (screen === "safety" && result?.kind === "urgent-safety") {

@@ -108,18 +108,12 @@ export function validateReflectionOutput(
     }
   }
 
-  // 3. Word count.
-  const wc = actualWordCount(output);
-  if (wc < 250 || wc > 400) {
-    return { ok: false, failure: "word-count-out-of-range", detail: String(wc) };
-  }
-
-  // 4. Tentative language in hearing.
+  // 3. Tentative language in hearing (substantive check first).
   if (!TENTATIVE_MARKERS.some((r) => r.test(output.hearing))) {
     return { ok: false, failure: "hearing-not-tentative" };
   }
 
-  // 5. Prohibited phrases anywhere.
+  // 4. Prohibited phrases anywhere.
   const allText = collectText(output).toLowerCase();
   for (const phrase of DAY_01_CONTENT_PACK.prohibitedClaims) {
     if (allText.includes(phrase.toLowerCase())) {
@@ -127,12 +121,12 @@ export function validateReflectionOutput(
     }
   }
 
-  // 6. Spiritual preference respected.
+  // 5. Spiritual preference respected.
   if (!args.spiritualPreference && output.spiritualReflection !== null) {
     return { ok: false, failure: "spiritual-preference-violated" };
   }
 
-  // 7. No phone numbers anywhere.
+  // 6. No phone numbers anywhere.
   const raw = collectText(output);
   for (const p of PHONE_PATTERNS) {
     if (p.test(raw)) {
@@ -140,7 +134,7 @@ export function validateReflectionOutput(
     }
   }
 
-  // 8. supportNote wording, if present, must map to a known reminder.
+  // 7. supportNote wording, if present, must map to a known reminder.
   if (output.supportNote !== null) {
     const approved = DAY_01_CONTENT_PACK.supportReminders.map((r) =>
       r.text.toLowerCase(),
@@ -148,6 +142,13 @@ export function validateReflectionOutput(
     if (!approved.includes(output.supportNote.toLowerCase())) {
       return { ok: false, failure: "unapproved-support-wording" };
     }
+  }
+
+  // 8. Word count last — cheap structural checks and substantive checks
+  //    run first so mutation-based tests get the more diagnostic failure.
+  const wc = actualWordCount(output);
+  if (wc < 250 || wc > 400) {
+    return { ok: false, failure: "word-count-out-of-range", detail: String(wc) };
   }
 
   return { ok: true };

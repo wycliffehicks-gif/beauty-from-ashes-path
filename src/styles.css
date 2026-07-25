@@ -214,9 +214,21 @@
 
 @utility eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--deep-navy);
+}
+
+@utility brand-tagline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--deep-navy);
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+@media (min-width: 640px) {
+  .brand-tagline { letter-spacing: 0.24em; font-size: 0.88rem; }
 }

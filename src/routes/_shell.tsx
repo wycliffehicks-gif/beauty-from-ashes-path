@@ -2,6 +2,7 @@ import { Link, Outlet, createFileRoute, useNavigate, useRouterState } from "@tan
 import { useEffect } from "react";
 import { usePrefs } from "@/lib/prefs";
 import { isSplashActive, onSplashEnd } from "@/lib/splash-state";
+import { LegalFooter } from "@/components/LegalFooter";
 
 export const Route = createFileRoute("/_shell")({
   component: ShellLayout,
@@ -56,6 +57,7 @@ function ShellLayout() {
 
       <main className="container-page pb-32 pt-2">
         <Outlet />
+        <LegalFooter />
       </main>
 
       <nav

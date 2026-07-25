@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { usePrefs } from "@/lib/prefs";
+import { LegalFooter } from "@/components/LegalFooter";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -177,11 +178,24 @@ function Onboarding() {
             {isLast ? "Begin" : "Continue"}
           </button>
           {isLast && (
-            <p className="text-center text-xs text-muted-foreground">
-              By continuing, you acknowledge this app is educational and reflective, not therapy or crisis care.
+            <p className="pt-1 text-center text-xs text-muted-foreground">
+              By continuing, you acknowledge the{" "}
+              <Link to="/terms" className="inline-link text-primary underline underline-offset-4">
+                Terms of Use
+              </Link>{" "}
+              and{" "}
+              <Link
+                to="/important-information"
+                className="inline-link text-primary underline underline-offset-4"
+              >
+                Important Information
+              </Link>
+              .
             </p>
           )}
         </div>
+
+        <LegalFooter />
       </div>
     </div>
   );

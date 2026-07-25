@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ImportantInformationRouteImport } from './routes/important-information'
+import { Route as ContactSupportRouteImport } from './routes/contact-support'
 import { Route as ShellRouteImport } from './routes/_shell'
 import { Route as ShellIndexRouteImport } from './routes/_shell.index'
 import { Route as PracticeIdRouteImport } from './routes/practice.$id'
@@ -20,9 +24,29 @@ import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
 import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
 import { Route as ShellJourneyRouteImport } from './routes/_shell.journey'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportantInformationRoute = ImportantInformationRouteImport.update({
+  id: '/important-information',
+  path: '/important-information',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactSupportRoute = ContactSupportRouteImport.update({
+  id: '/contact-support',
+  path: '/contact-support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShellRoute = ShellRouteImport.update({
@@ -72,7 +96,11 @@ const ShellJourneyRoute = ShellJourneyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof ShellIndexRoute
+  '/contact-support': typeof ContactSupportRoute
+  '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/journey': typeof ShellJourneyRoute
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
@@ -82,7 +110,11 @@ export interface FileRoutesByFullPath {
   '/practice/$id': typeof PracticeIdRoute
 }
 export interface FileRoutesByTo {
+  '/contact-support': typeof ContactSupportRoute
+  '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/journey': typeof ShellJourneyRoute
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
@@ -95,7 +127,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_shell': typeof ShellRouteWithChildren
+  '/contact-support': typeof ContactSupportRoute
+  '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/_shell/journey': typeof ShellJourneyRoute
   '/_shell/practices': typeof ShellPracticesRoute
   '/_shell/resources': typeof ShellResourcesRoute
@@ -109,7 +145,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/contact-support'
+    | '/important-information'
     | '/onboarding'
+    | '/privacy'
+    | '/terms'
     | '/journey'
     | '/practices'
     | '/resources'
@@ -119,7 +159,11 @@ export interface FileRouteTypes {
     | '/practice/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/contact-support'
+    | '/important-information'
     | '/onboarding'
+    | '/privacy'
+    | '/terms'
     | '/journey'
     | '/practices'
     | '/resources'
@@ -131,7 +175,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_shell'
+    | '/contact-support'
+    | '/important-information'
     | '/onboarding'
+    | '/privacy'
+    | '/terms'
     | '/_shell/journey'
     | '/_shell/practices'
     | '/_shell/resources'
@@ -144,18 +192,50 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   ShellRoute: typeof ShellRouteWithChildren
+  ContactSupportRoute: typeof ContactSupportRoute
+  ImportantInformationRoute: typeof ImportantInformationRoute
   OnboardingRoute: typeof OnboardingRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   DayDayRoute: typeof DayDayRoute
   PracticeIdRoute: typeof PracticeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/important-information': {
+      id: '/important-information'
+      path: '/important-information'
+      fullPath: '/important-information'
+      preLoaderRoute: typeof ImportantInformationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-support': {
+      id: '/contact-support'
+      path: '/contact-support'
+      fullPath: '/contact-support'
+      preLoaderRoute: typeof ContactSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_shell': {
@@ -246,7 +326,11 @@ const ShellRouteWithChildren = ShellRoute._addFileChildren(ShellRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   ShellRoute: ShellRouteWithChildren,
+  ContactSupportRoute: ContactSupportRoute,
+  ImportantInformationRoute: ImportantInformationRoute,
   OnboardingRoute: OnboardingRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   DayDayRoute: DayDayRoute,
   PracticeIdRoute: PracticeIdRoute,
 }

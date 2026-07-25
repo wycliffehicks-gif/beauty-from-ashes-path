@@ -57,17 +57,19 @@ function SupportPage() {
         </p>
         <ul className="space-y-2 text-sm">
           <li className="rounded-lg border border-border bg-secondary/40 p-3">
-            <strong className="font-medium text-foreground">9-8-8 — Suicide Crisis Helpline (Canada).</strong>{" "}
+            <strong className="font-medium text-foreground">
+              Immediate danger — 911 or nearest emergency department.
+            </strong>{" "}
             <span className="text-muted-foreground">
-              Call or text <a href="tel:988" className="text-primary underline underline-offset-4">988</a>.
-              24/7, in English and French.
+              Call <a href="tel:911" className="text-primary underline underline-offset-4">911</a> or go to
+              your nearest emergency department.
             </span>
           </li>
           <li className="rounded-lg border border-border bg-secondary/40 p-3">
-            <strong className="font-medium text-foreground">Talk Suicide Canada.</strong>{" "}
+            <strong className="font-medium text-foreground">9-8-8 — Suicide Crisis Helpline (Canada).</strong>{" "}
             <span className="text-muted-foreground">
-              Call <a href="tel:18334564566" className="text-primary underline underline-offset-4">1-833-456-4566</a>.
-              24/7 across Canada.
+              Call or text <a href="tel:988" className="text-primary underline underline-offset-4">988</a>.
+              24/7/365, for suicide crisis support or when you are concerned about someone else.
             </span>
           </li>
           <li className="rounded-lg border border-border bg-secondary/40 p-3">
@@ -81,9 +83,9 @@ function SupportPage() {
           <li className="rounded-lg border border-border bg-secondary/40 p-3">
             <strong className="font-medium text-foreground">Hope for Wellness Helpline.</strong>{" "}
             <span className="text-muted-foreground">
-              For Indigenous peoples across Canada. Call{" "}
+              For Indigenous people across Canada. Call{" "}
               <a href="tel:18552423310" className="text-primary underline underline-offset-4">1-855-242-3310</a>.
-              24/7, with counsellors available in Cree, Ojibway and Inuktitut on request.
+              24/7, in English and French, with Cree, Ojibway and Inuktitut telephone support available on request subject to availability.
             </span>
           </li>
         </ul>

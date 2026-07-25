@@ -86,7 +86,6 @@ function Onboarding() {
             <ul className="list-disc space-y-1 pl-5">
               <li>Your spiritual-content preference.</li>
               <li>Which days you have visited.</li>
-              <li>Any items you mark as a favourite.</li>
             </ul>
             <p className="pt-2">
               Clearing your browser data will remove these. There are no accounts, no cloud storage,

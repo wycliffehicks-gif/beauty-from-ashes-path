@@ -51,24 +51,46 @@ function SupportPage() {
       <div className="surface-card space-y-3">
         <h2 className="font-serif text-lg text-foreground">Crisis and support lines</h2>
         <p className="text-sm text-muted-foreground">
-          Verified regional numbers will be added before public release. For this private beta, please
-          use the resources you already know, or ask a trusted person to help you find one.
+          If you are not in immediate danger but need to talk to someone, these lines are free,
+          confidential and available in Canada. If you are outside Canada, please use a trusted local
+          line — a curated international list will be added before public release.
         </p>
         <ul className="space-y-2 text-sm">
-          <li className="rounded-lg border border-dashed border-border bg-secondary/40 p-3">
-            <strong className="font-medium text-foreground">Canada — placeholder.</strong>{" "}
+          <li className="rounded-lg border border-border bg-secondary/40 p-3">
+            <strong className="font-medium text-foreground">9-8-8 — Suicide Crisis Helpline (Canada).</strong>{" "}
             <span className="text-muted-foreground">
-              Verified national and regional lines to be added (e.g. suicide and crisis helpline, distress
-              lines, Indigenous-specific lines).
+              Call or text <a href="tel:988" className="text-primary underline underline-offset-4">988</a>.
+              24/7, in English and French.
             </span>
           </li>
-          <li className="rounded-lg border border-dashed border-border bg-secondary/40 p-3">
-            <strong className="font-medium text-foreground">International — placeholder.</strong>{" "}
+          <li className="rounded-lg border border-border bg-secondary/40 p-3">
+            <strong className="font-medium text-foreground">Talk Suicide Canada.</strong>{" "}
             <span className="text-muted-foreground">
-              Verified country-specific lines to be added. Please do not rely on this beta for numbers.
+              Call <a href="tel:18334564566" className="text-primary underline underline-offset-4">1-833-456-4566</a>.
+              24/7 across Canada.
+            </span>
+          </li>
+          <li className="rounded-lg border border-border bg-secondary/40 p-3">
+            <strong className="font-medium text-foreground">Kids Help Phone.</strong>{" "}
+            <span className="text-muted-foreground">
+              Call <a href="tel:18006686868" className="text-primary underline underline-offset-4">1-800-668-6868</a>{" "}
+              or text CONNECT to <a href="sms:686868" className="text-primary underline underline-offset-4">686868</a>.
+              For young people, 24/7.
+            </span>
+          </li>
+          <li className="rounded-lg border border-border bg-secondary/40 p-3">
+            <strong className="font-medium text-foreground">Hope for Wellness Helpline.</strong>{" "}
+            <span className="text-muted-foreground">
+              For Indigenous peoples across Canada. Call{" "}
+              <a href="tel:18552423310" className="text-primary underline underline-offset-4">1-855-242-3310</a>.
+              24/7, with counsellors available in Cree, Ojibway and Inuktitut on request.
             </span>
           </li>
         </ul>
+        <p className="text-xs text-muted-foreground">
+          Numbers current at time of writing. If a line has changed, please contact your local emergency
+          services instead.
+        </p>
       </div>
 
       <div className="surface-card space-y-2">

@@ -82,7 +82,7 @@ function SupportPage() {
             <strong className="font-medium text-foreground">Hope for Wellness Helpline.</strong>{" "}
             <span className="text-muted-foreground">
               For Indigenous peoples across Canada. Call{" "}
-              <a href="tel:18552424545" className="text-primary underline underline-offset-4">1-855-242-3310</a>.
+              <a href="tel:18552423310" className="text-primary underline underline-offset-4">1-855-242-3310</a>.
               24/7, with counsellors available in Cree, Ojibway and Inuktitut on request.
             </span>
           </li>

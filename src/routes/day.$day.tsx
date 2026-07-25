@@ -187,7 +187,7 @@ function FlowShell({
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
       <div className="container-page flex min-h-[100dvh] flex-col py-6">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 pb-4">
+        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 pb-4 sm:gap-3">
           <button
             type="button"
             onClick={onBack ?? onExit}
@@ -199,6 +199,13 @@ function FlowShell({
           <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
             {label}
           </p>
+          <Link
+            to="/practice/$id"
+            params={{ id: "pause-and-ground" }}
+            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+          >
+            Pause
+          </Link>
           <Link
             to="/support"
             className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"

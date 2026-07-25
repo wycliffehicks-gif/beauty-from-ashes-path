@@ -8,12 +8,12 @@ export const Route = createFileRoute("/terms")({
       {
         name: "description",
         content:
-          "Plain-language terms of use for the Beauty from Ashes private beta.",
+          "Plain-language terms of use for the Beauty from Ashes current version.",
       },
       { property: "og:title", content: "Terms of Use — Beauty from Ashes" },
       {
         property: "og:description",
-        content: "Plain-language terms of use for the Beauty from Ashes private beta.",
+        content: "Plain-language terms of use for the Beauty from Ashes current version.",
       },
     ],
   }),
@@ -24,7 +24,7 @@ function TermsPage() {
   return (
     <LegalPage title="Terms of Use">
       <p>
-        These terms apply to your use of Beauty from Ashes, a private beta
+        These terms apply to your use of Beauty from Ashes, a current version
         offered by Resurgence Therapeutics. They are written in plain language.
         They are not legal advice.
       </p>

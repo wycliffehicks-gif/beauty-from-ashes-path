@@ -8,13 +8,13 @@ export const Route = createFileRoute("/contact-support")({
       {
         name: "description",
         content:
-          "How to reach the Beauty from Ashes team about technical issues, accessibility, and product feedback during the private beta.",
+          "How to reach the Beauty from Ashes team about technical issues, accessibility, and product feedback during the current version.",
       },
       { property: "og:title", content: "Contact & Technical Support — Beauty from Ashes" },
       {
         property: "og:description",
         content:
-          "Technical support, accessibility, and product feedback for the Beauty from Ashes private beta.",
+          "Technical support, accessibility, and product feedback for the Beauty from Ashes current version.",
       },
     ],
   }),
@@ -26,8 +26,8 @@ function ContactSupportPage() {
     <LegalPage title="Contact & Technical Support">
       <p>
         This page is for technical problems with the app, accessibility
-        concerns, factual corrections and product feedback during the private
-        beta.
+        concerns, factual corrections and product feedback before public
+        release.
       </p>
 
       <div className="surface-card space-y-2">

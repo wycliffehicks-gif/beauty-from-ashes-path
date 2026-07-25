@@ -72,9 +72,9 @@ function SettingsPage() {
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">About this beta</h2>
+        <h2 className="font-serif text-lg text-foreground">About this app</h2>
         <p className="text-sm text-muted-foreground">
-          This is a private prototype of <em>Beauty from Ashes</em>, a gentle daily companion for walking
+          This is a current version of <em>Beauty from Ashes</em>, a gentle daily companion for walking
           toward hope. It is part of the wider Resurgence Therapeutics ecosystem. It is not therapy,
           medical care, or crisis support.
         </p>

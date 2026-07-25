@@ -33,7 +33,7 @@ function TodayPage() {
         <p className="font-serif text-lg font-medium tracking-wide text-[var(--deep-navy)] sm:text-xl">
           Resurgence Therapeutics
         </p>
-        <p className="whitespace-nowrap font-sans text-[0.65rem] font-semibold tracking-[0.18em] text-[var(--gold)] sm:text-xs sm:tracking-[0.24em]">
+        <p className="brand-tagline">
           AWAKEN&nbsp;|&nbsp;REDISCOVER&nbsp;|&nbsp;HOPE
         </p>
 

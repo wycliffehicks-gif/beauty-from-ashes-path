@@ -8,12 +8,12 @@ export const Route = createFileRoute("/privacy")({
       {
         name: "description",
         content:
-          "How Beauty from Ashes handles information in this private beta. No accounts, no cloud storage, no analytics of reflections.",
+          "How Beauty from Ashes handles information in this current version. No accounts, no cloud storage, no analytics of reflections.",
       },
       { property: "og:title", content: "Privacy Policy — Beauty from Ashes" },
       {
         property: "og:description",
-        content: "How Beauty from Ashes handles information in this private beta.",
+        content: "How Beauty from Ashes handles information in this current version.",
       },
     ],
   }),
@@ -26,7 +26,7 @@ function PrivacyPage() {
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
-        private beta of the app.
+        current version of the app.
       </p>
 
       <h2 className="font-serif text-xl">What the app does not collect</h2>
@@ -113,7 +113,7 @@ function PrivacyPage() {
 
       <h2 className="font-serif text-xl">Privacy questions</h2>
       <p>
-        For privacy questions during the beta, please use the{" "}
+        For privacy questions during this version, please use the{" "}
         <Link
           to="/contact-support"
           className="inline-link text-primary underline underline-offset-4"

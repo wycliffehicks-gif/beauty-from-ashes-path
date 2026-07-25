@@ -1,5 +1,5 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPractice } from "@/content/practices";
 
 export const Route = createFileRoute("/practice/$id")({
@@ -26,6 +26,12 @@ function PracticeFlow() {
   const navigate = useNavigate();
   const [i, setI] = useState(-1); // -1 = intro
 
+  // Reset progression when the practice changes.
+  useEffect(() => {
+    setI(-1);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  }, [id]);
+
   if (!practice) {
     return (
       <div className="container-page min-h-[100dvh] py-10">
@@ -48,23 +54,39 @@ function PracticeFlow() {
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
       <div className="container-page flex min-h-[100dvh] flex-col py-6">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 pb-4">
-          <button
-            type="button"
-            onClick={i > -1 ? goPrev : exit}
-            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            {i > -1 ? "← Back" : "✕ Close"}
-          </button>
-          <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {practice.title}
-          </p>
-          <Link
-            to="/support"
-            className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4"
-          >
-            Support
-          </Link>
+        <header className="space-y-3 pb-4">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={i > -1 ? goPrev : exit}
+              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              {i > -1 ? "← Back" : "✕ Close"}
+            </button>
+            <p className="min-w-0 flex-1 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              {practice.title}
+            </p>
+            <button
+              type="button"
+              onClick={exit}
+              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4"
+            >
+              Close
+            </button>
+          </div>
+          <nav className="flex items-center justify-center gap-4 text-sm">
+            <Link to="/" className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground">
+              Home
+            </Link>
+            <span aria-hidden className="text-muted-foreground">·</span>
+            <Link to="/practices" className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground">
+              Practices
+            </Link>
+            <span aria-hidden className="text-muted-foreground">·</span>
+            <Link to="/support" className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground">
+              Support
+            </Link>
+          </nav>
         </header>
 
         <div aria-hidden className="mb-6 flex gap-1">

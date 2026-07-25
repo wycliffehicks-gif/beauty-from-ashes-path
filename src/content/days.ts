@@ -1,4 +1,4 @@
-// Beauty from Ashes — seven-day beta content.
+// Beauty from Ashes — seven-day journey content.
 // Draft copy grounded in Carl Wycliffe Hicks Jr.'s series.
 // Edit here to revise a day; nothing is hard-coded in components.
 

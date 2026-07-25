@@ -54,7 +54,7 @@ function SettingsPage() {
       <div className="surface-card space-y-3">
         <h2 className="font-serif text-lg text-foreground">Your local data</h2>
         <p className="text-sm text-muted-foreground">
-          Only your preference, visited days and favourites are stored — on this device only.
+          Only your preference and which days you have visited are stored — on this device only.
           Clearing your browser data will remove them. Nothing you name or reflect on is stored.
         </p>
         <button

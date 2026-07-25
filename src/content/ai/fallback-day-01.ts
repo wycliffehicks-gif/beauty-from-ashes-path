@@ -55,6 +55,8 @@ export function buildDay01Fallback(spiritual: boolean): ReflectionOutput {
       "If this begins to feel heavy, it may help to reach a trusted person or a qualified professional — you do not have to hold it alone.",
     totalWordsEstimate: 0, // filled in below
   };
+    totalWordsEstimate: 0, // filled in below
+  };
 
   output.totalWordsEstimate = estimateWordCount(output);
   return output;

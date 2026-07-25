@@ -26,6 +26,12 @@ function PracticeFlow() {
   const navigate = useNavigate();
   const [i, setI] = useState(-1); // -1 = intro
 
+  // Reset progression when the practice changes.
+  useEffect(() => {
+    setI(-1);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  }, [id]);
+
   if (!practice) {
     return (
       <div className="container-page min-h-[100dvh] py-10">

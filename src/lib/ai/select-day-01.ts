@@ -100,7 +100,9 @@ const ENERGY_SENTENCE: Record<EnergyId, string> = {
 };
 
 function buildHearing(q: Query): string {
-  return `${HEARING_BY_ROAD[q.road]} ${EMOTION_SENTENCE[q.emotion]} ${ENERGY_SENTENCE[q.energy]}`;
+  const closing =
+    "You do not need to name this perfectly, and you do not need to solve it today. Perhaps what may be asked of Day 1 is simply that you turn toward this road with a little more honesty and a little more kindness than yesterday. Awareness, held gently, is already a form of faithful movement.";
+  return `${HEARING_BY_ROAD[q.road]} ${EMOTION_SENTENCE[q.emotion]} ${ENERGY_SENTENCE[q.energy]} ${closing}`;
 }
 
 // Ordered support reminder preference by emotion; falls back to first.

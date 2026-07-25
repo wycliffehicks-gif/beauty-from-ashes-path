@@ -48,7 +48,7 @@ export function buildDay01Fallback(spiritual: boolean): ReflectionOutput {
     ],
     oneHonestStep: {
       id: "ohs-name-the-road",
-      text: "In one private sentence today, name the road you may be avoiding. You do not need to walk it — only to acknowledge, gently, that it is there.",
+      text: "In one private sentence today, name the road you may be avoiding. You do not need to walk it, and you do not need to justify it — only to acknowledge, gently and honestly, that it is there.",
     },
     spiritualReflection,
     supportNote:

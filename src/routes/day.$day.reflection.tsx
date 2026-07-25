@@ -73,12 +73,15 @@ const ENERGIES: Array<{ id: EnergyId; label: string }> = [
 
 function ReflectionFlow() {
   const { day } = Route.useParams();
+  const { mode } = Route.useSearch();
   const dayNum = Number(day);
   const [prefs] = usePrefs();
   const navigate = useNavigate();
+  const callGenerate = useServerFn(generateDay01Reflection);
 
   const [screen, setScreen] = useState<Screen>("eligibility");
   const [adult, setAdult] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [region, setRegion] = useState<RegionCode>("CA");
   const [road, setRoad] = useState<RoadTypeId | null>(null);
   const [emotion, setEmotion] = useState<EmotionId | null>(null);
@@ -86,6 +89,7 @@ function ReflectionFlow() {
   const [notSafe, setNotSafe] = useState(false);
   const [freeText, setFreeText] = useState("");
   const [result, setResult] = useState<ReflectionServerResult | null>(null);
+  const [pending, setPending] = useState(false);
 
   // Only Day 1 is supported for the preview.
   if (dayNum !== 1) {
@@ -110,7 +114,7 @@ function ReflectionFlow() {
   const closeToDay = () =>
     navigate({ to: "/day/$day", params: { day: String(dayNum) } });
 
-  const runCompute = (safe: boolean) => {
+  const runCompute = async (safe: boolean) => {
     const input = {
       dayId: "day-01" as const,
       roadType: road!,
@@ -122,12 +126,27 @@ function ReflectionFlow() {
       region,
       ...(freeText.trim().length > 0 ? { freeText: freeText.trim() } : {}),
     };
-    const res = computeReflection(input, false, "curated");
+    let res: ReflectionServerResult;
+    if (mode === "live") {
+      setPending(true);
+      try {
+        res = await callGenerate({ data: { input, mode: "live" } });
+      } catch {
+        // Any transport error — fall back to curated locally so the user
+        // is never left staring at an error.
+        res = computeReflection(input, false, "curated");
+      } finally {
+        setPending(false);
+      }
+    } else {
+      res = computeReflection(input, false, "curated");
+    }
     setResult(res);
     if (res.kind === "urgent-safety") setScreen("safety");
     else if (res.kind === "minor-not-eligible") setScreen("not-eligible");
     else setScreen("result");
   };
+
 
   // ---------------- Eligibility ----------------
   if (screen === "eligibility") {

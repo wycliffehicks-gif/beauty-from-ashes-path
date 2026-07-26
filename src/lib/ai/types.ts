@@ -94,5 +94,5 @@ export interface AggregateAuditRecord {
   safetyGateResult: SafetyGateResult;
   fallbackUsed: boolean;
   retryCount: number;
-  killSwitchTripped: boolean;
+  liveAiDisabled: boolean;
 }

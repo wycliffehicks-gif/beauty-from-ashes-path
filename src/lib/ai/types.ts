@@ -76,7 +76,7 @@ export interface ReflectionOutput {
     prayerId?: string;
   } | null;
   supportNote: string | null;
-  totalWordsEstimate: number;
+  totalWordsEstimate?: number;
 }
 
 /**

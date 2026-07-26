@@ -1,7 +1,25 @@
 import { runLivePipeline } from "./src/lib/ai/live-pipeline";
 import { createLovableAiProvider } from "./src/lib/ai/live-provider.server";
+import type { LiveModelProvider } from "./src/lib/ai/live-provider";
+import { validateReflectionOutput } from "./src/lib/ai/validator";
 
-const provider = createLovableAiProvider(process.env.LOVABLE_API_KEY);
+const inner = createLovableAiProvider(process.env.LOVABLE_API_KEY);
+const wrap: LiveModelProvider = {
+  async generate(req) {
+    const r = await inner.generate(req);
+    if (r.ok) {
+      const raw = r.raw as Record<string, unknown>;
+      console.log("---RAW KEYS---", Object.keys(raw));
+      console.log("---RAW---", JSON.stringify(raw, null, 2).slice(0, 4000));
+      const v = validateReflectionOutput({ output: raw, spiritualPreference: false });
+      console.log("---VALIDATION---", v);
+    } else {
+      console.log("---PROVIDER ERROR---", r.error, (r as { detail?: string }).detail);
+    }
+    return r;
+  },
+};
+
 const { result, telemetry } = await runLivePipeline({
   rawInput: {
     dayId: "day-01",
@@ -13,21 +31,7 @@ const { result, telemetry } = await runLivePipeline({
     spiritual: false,
     region: "CA",
   },
-  provider,
+  provider: wrap,
   liveAiEnabled: true,
 });
-
-// Print only non-sensitive metadata/telemetry — never the free text or generated body.
-console.log(JSON.stringify({
-  kind: result.kind,
-  meta: result.kind === "reflection" ? result.meta : null,
-  telemetry,
-  outputShape: result.kind === "reflection" ? {
-    hearingLen: result.output.hearing?.length ?? 0,
-    themeId: result.output.theme?.id ?? null,
-    nextStepsCount: result.output.nextSteps?.length ?? 0,
-    oneHonestStepId: result.output.oneHonestStep?.id ?? null,
-    spiritualNull: result.output.spiritualReflection === null,
-    whenMoreSupportLen: result.output.whenMoreSupport?.length ?? 0,
-  } : null,
-}, null, 2));
+console.log("===FINAL===", JSON.stringify({ kind: result.kind, telemetry, meta: result.kind === "reflection" ? result.meta : null }, null, 2));

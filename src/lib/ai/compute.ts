@@ -50,7 +50,7 @@ export type ReflectionMode = "auto" | "curated";
 
 export function computeReflection(
   rawInput: unknown,
-  killSwitch: boolean,
+  liveAiEnabled: boolean,
   mode: ReflectionMode = "auto",
 ): ReflectionServerResult {
   const parsed = ReflectionInputSchema.safeParse(rawInput);
@@ -86,7 +86,7 @@ export function computeReflection(
     };
   }
 
-  if (killSwitch && mode === "auto") return { kind: "kill-switch" };
+  if (!liveAiEnabled && mode === "auto") return { kind: "live-ai-disabled" };
 
   buildSystemPolicy({ input, contentPackVersion: DAY_01_CONTENT_PACK.version });
 

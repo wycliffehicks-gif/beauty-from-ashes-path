@@ -28,7 +28,7 @@ export type ReflectionServerResult =
       reasonCode: string;
       region: { code: "CA" | "GLOBAL"; label: string; emergencyGuidance: string };
     }
-  | { kind: "kill-switch" }
+  | { kind: "live-ai-disabled" }
   | {
       kind: "reflection";
       output: ReflectionOutput;

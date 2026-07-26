@@ -40,7 +40,8 @@ export interface LiveRunTelemetry {
 export interface RunLiveArgs {
   rawInput: unknown;
   provider: LiveModelProvider;
-  killSwitch: boolean;
+  /** true = call the provider; false = emergency switch, use curated fallback. */
+  liveAiEnabled: boolean;
 }
 
 function buildPackPayload(): string {
@@ -124,8 +125,8 @@ export async function runLivePipeline(
     };
   }
 
-  // Kill switch — curated fallback, no provider call.
-  if (args.killSwitch) {
+  // Emergency feature flag off — return curated fallback without any provider call.
+  if (!args.liveAiEnabled) {
     telemetry.fallbackUsed = true;
     const output = buildDay01Fallback(input.spiritual);
     return {

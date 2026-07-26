@@ -76,7 +76,7 @@ export interface ReflectionOutput {
     prayerId?: string;
   } | null;
   supportNote: string | null;
-  totalWordsEstimate: number;
+  totalWordsEstimate?: number;
 }
 
 /**
@@ -94,5 +94,5 @@ export interface AggregateAuditRecord {
   safetyGateResult: SafetyGateResult;
   fallbackUsed: boolean;
   retryCount: number;
-  killSwitchTripped: boolean;
+  liveAiDisabled: boolean;
 }

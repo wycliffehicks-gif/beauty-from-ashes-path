@@ -15,7 +15,10 @@ import { buildSystemPolicy, SYSTEM_POLICY_VERSION } from "@/lib/ai/system-policy
 import { validateReflectionOutput, VALIDATOR_VERSION } from "@/lib/ai/validator";
 import type { ReflectionOutput } from "@/lib/ai/types";
 
-export const AI_REFLECTION_KILL_SWITCH_DEFAULT = true;
+// Server-side feature flag default. `true` means live AI is enabled by default
+// when the env var is absent (private founder test). Set env LIVE_AI_ENABLED=false
+// or LIVE_AI_ENABLED=0 as an emergency switch to force curated fallback.
+export const LIVE_AI_ENABLED_DEFAULT = true;
 
 export type ReflectionServerResult =
   | { kind: "input-invalid"; reason: "schema" | "text-too-long" }
@@ -25,7 +28,7 @@ export type ReflectionServerResult =
       reasonCode: string;
       region: { code: "CA" | "GLOBAL"; label: string; emergencyGuidance: string };
     }
-  | { kind: "kill-switch" }
+  | { kind: "live-ai-disabled" }
   | {
       kind: "reflection";
       output: ReflectionOutput;
@@ -47,7 +50,7 @@ export type ReflectionMode = "auto" | "curated";
 
 export function computeReflection(
   rawInput: unknown,
-  killSwitch: boolean,
+  liveAiEnabled: boolean,
   mode: ReflectionMode = "auto",
 ): ReflectionServerResult {
   const parsed = ReflectionInputSchema.safeParse(rawInput);
@@ -83,7 +86,7 @@ export function computeReflection(
     };
   }
 
-  if (killSwitch && mode === "auto") return { kind: "kill-switch" };
+  if (!liveAiEnabled && mode === "auto") return { kind: "live-ai-disabled" };
 
   buildSystemPolicy({ input, contentPackVersion: DAY_01_CONTENT_PACK.version });
 

@@ -46,7 +46,7 @@ describe("runLivePipeline — safety cases skip the provider", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: { ...validInput, notSafeNow: true },
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("urgent-safety");
     expect(telemetry.providerCalls).toBe(0);
@@ -57,7 +57,7 @@ describe("runLivePipeline — safety cases skip the provider", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: { ...validInput, adultConfirmed: false },
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("input-invalid");
     expect(telemetry.providerCalls).toBe(0);
@@ -68,20 +68,20 @@ describe("runLivePipeline — safety cases skip the provider", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: { ...validInput, freeText: "I want to die." },
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("urgent-safety");
     expect(telemetry.providerCalls).toBe(0);
   });
 });
 
-describe("runLivePipeline — kill switch", () => {
+describe("runLivePipeline — live AI disabled (emergency switch)", () => {
   it("returns curated fallback and never calls the provider", async () => {
     const { provider } = mkProvider();
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: true,
+      liveAiEnabled: false,
     });
     expect(result.kind).toBe("reflection");
     expect(telemetry.providerCalls).toBe(0);
@@ -99,7 +99,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("reflection");
     expect(telemetry.providerCalls).toBe(1);
@@ -117,7 +117,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("reflection");
     expect(telemetry.providerCalls).toBe(2);
@@ -133,7 +133,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(result.kind).toBe("reflection");
     expect(telemetry.providerCalls).toBe(2);
@@ -157,7 +157,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: { ...validInput, spiritual: false },
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(telemetry.retried).toBe(true);
     expect(result.kind).toBe("reflection");
@@ -176,7 +176,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(telemetry.fallbackUsed).toBe(true);
     expect(result.kind).toBe("reflection");
@@ -187,7 +187,7 @@ describe("runLivePipeline — validation, retry, and fallback", () => {
     const { result, telemetry } = await runLivePipeline({
       rawInput: validInput,
       provider,
-      killSwitch: false,
+      liveAiEnabled: true,
     });
     expect(telemetry.providerCalls).toBe(2);
     expect(telemetry.fallbackUsed).toBe(true);

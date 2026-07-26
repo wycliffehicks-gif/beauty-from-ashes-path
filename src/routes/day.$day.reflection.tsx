@@ -487,7 +487,7 @@ function ReflectionFlow() {
 
   // Any invalid state falls back to eligibility.
   if (screen === "result" || screen === "safety") {
-    // input-invalid, kill-switch (should not occur in curated), or minor
+    // input-invalid, live-ai-disabled (should not occur in curated), or minor
     return (
       <Frame title="Something didn’t line up" eyebrow="Try again">
         <p className="text-foreground">

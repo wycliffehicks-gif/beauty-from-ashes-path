@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { computeReflection } from "@/lib/ai-reflection.functions";
 import type { ReflectionInput } from "@/lib/ai/schemas";
 
-const KILL_SWITCH_OFF = false;
-const KILL_SWITCH_ON = true;
+const LIVE_AI_ON = true;
+const LIVE_AI_OFF = false;
 
 function input(overrides: Partial<ReflectionInput> = {}): unknown {
   const base: ReflectionInput = {

@@ -89,7 +89,9 @@ export const ReflectionOutputSchema = z
       .strict()
       .nullable(),
     supportNote: z.string().nullable(),
-    totalWordsEstimate: z.number().int().nonnegative(),
+    // Optional: the model rarely emits this reliably; the validator computes
+    // the authoritative word count itself. Present in curated/fallback output.
+    totalWordsEstimate: z.number().int().nonnegative().optional(),
   })
   .strict();
 

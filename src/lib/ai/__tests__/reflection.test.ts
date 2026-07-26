@@ -39,16 +39,15 @@ describe("computeReflection — fallback-only phase", () => {
     }
   });
 
-  it("returns kill-switch when the switch is on", () => {
+  it("returns live-ai-disabled when the live-AI flag is off (auto mode)", () => {
     const res = computeReflection(input(), LIVE_AI_OFF);
-    expect(res.kind).toBe("kill-switch");
+    expect(res.kind).toBe("live-ai-disabled");
   });
 
-  it("kill switch defaults to enabled in the AI-generate path", () => {
-    // The server function reads process.env.AI_KILL_SWITCH lazily; the pure
-    // core always requires an explicit argument, so this test documents the
-    // caller's contract.
-    expect(computeReflection(input(), true).kind).toBe("kill-switch");
+  it("returns a reflection when the live-AI flag is on (auto mode)", () => {
+    // With LIVE_AI_ENABLED semantics, `true` means the auto path proceeds to
+    // generation instead of short-circuiting. Curated mode is unaffected.
+    expect(computeReflection(input(), true).kind).toBe("reflection");
   });
 
   it("routes urgent safety before reaching generation", () => {

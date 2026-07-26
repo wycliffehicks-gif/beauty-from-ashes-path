@@ -40,7 +40,8 @@ export interface LiveRunTelemetry {
 export interface RunLiveArgs {
   rawInput: unknown;
   provider: LiveModelProvider;
-  killSwitch: boolean;
+  /** true = call the provider; false = emergency switch, use curated fallback. */
+  liveAiEnabled: boolean;
 }
 
 function buildPackPayload(): string {

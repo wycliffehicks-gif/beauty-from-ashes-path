@@ -21,7 +21,7 @@ function input(overrides: Partial<ReflectionInput> = {}): unknown {
 
 describe("computeReflection — fallback-only phase", () => {
   it("returns the fallback reflection on benign choice-only input", () => {
-    const res = computeReflection(input(), KILL_SWITCH_OFF);
+    const res = computeReflection(input(), LIVE_AI_ON);
     expect(res.kind).toBe("reflection");
     if (res.kind === "reflection") {
       expect(res.meta.fallbackUsed).toBe(true);
@@ -32,7 +32,7 @@ describe("computeReflection — fallback-only phase", () => {
   });
 
   it("returns a fallback with spiritual section when preference is on", () => {
-    const res = computeReflection(input({ spiritual: true }), KILL_SWITCH_OFF);
+    const res = computeReflection(input({ spiritual: true }), LIVE_AI_ON);
     expect(res.kind).toBe("reflection");
     if (res.kind === "reflection") {
       expect(res.output.spiritualReflection).not.toBeNull();
@@ -40,7 +40,7 @@ describe("computeReflection — fallback-only phase", () => {
   });
 
   it("returns kill-switch when the switch is on", () => {
-    const res = computeReflection(input(), KILL_SWITCH_ON);
+    const res = computeReflection(input(), LIVE_AI_OFF);
     expect(res.kind).toBe("kill-switch");
   });
 
@@ -54,7 +54,7 @@ describe("computeReflection — fallback-only phase", () => {
   it("routes urgent safety before reaching generation", () => {
     const res = computeReflection(
       input({ freeText: "I keep thinking about ending my life." }),
-      KILL_SWITCH_OFF,
+      LIVE_AI_ON,
     );
     expect(res.kind).toBe("urgent-safety");
     if (res.kind === "urgent-safety") {
@@ -66,7 +66,7 @@ describe("computeReflection — fallback-only phase", () => {
   it("uses GLOBAL region wording for non-Canadian users in urgent-safety", () => {
     const res = computeReflection(
       input({ region: "GLOBAL", notSafeNow: true }),
-      KILL_SWITCH_OFF,
+      LIVE_AI_ON,
     );
     expect(res.kind).toBe("urgent-safety");
     if (res.kind === "urgent-safety") {
@@ -78,7 +78,7 @@ describe("computeReflection — fallback-only phase", () => {
   it("routes minors to not-eligible", () => {
     const res = computeReflection(
       input({ adultConfirmed: false as unknown as true }),
-      KILL_SWITCH_OFF,
+      LIVE_AI_ON,
     );
     // adultConfirmed: false fails schema (must be literal true), so this
     // hits input-invalid — which is the intended behaviour: no AI path for
@@ -87,7 +87,7 @@ describe("computeReflection — fallback-only phase", () => {
   });
 
   it("rejects free text over 600 characters at the schema layer", () => {
-    const res = computeReflection(input({ freeText: "a".repeat(601) }), KILL_SWITCH_OFF);
+    const res = computeReflection(input({ freeText: "a".repeat(601) }), LIVE_AI_ON);
     expect(res.kind).toBe("input-invalid");
     if (res.kind === "input-invalid") expect(res.reason).toBe("text-too-long");
   });
@@ -102,7 +102,7 @@ describe("computeReflection — fallback-only phase", () => {
     "How can I kill myself?",
   ];
   it.each(urgentPhrases)("safety cases never reach fallback: %s", (t) => {
-    const res = computeReflection(input({ freeText: t }), KILL_SWITCH_OFF);
+    const res = computeReflection(input({ freeText: t }), LIVE_AI_ON);
     expect(res.kind).toBe("urgent-safety");
   });
 
@@ -119,7 +119,7 @@ describe("computeReflection — fallback-only phase", () => {
   it.each(benignOffTopic)(
     "off-topic / injection inputs return the fallback (safety gate does not fire, validator/policy guard the model)",
     (t) => {
-      const res = computeReflection(input({ freeText: t }), KILL_SWITCH_OFF);
+      const res = computeReflection(input({ freeText: t }), LIVE_AI_ON);
       // These prompts do not trip the safety gate, so in the fallback-only
       // phase they return the generic fallback. The system policy and the
       // validator (not the safety gate) are what will keep the future model

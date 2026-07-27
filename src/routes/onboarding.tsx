@@ -1,6 +1,6 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { usePrefs } from "@/lib/prefs";
+import { LEGAL_BUNDLE_VERSION, usePrefs } from "@/lib/prefs";
 import { LegalFooter } from "@/components/LegalFooter";
 
 export const Route = createFileRoute("/onboarding")({

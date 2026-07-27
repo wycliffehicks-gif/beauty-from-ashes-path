@@ -112,7 +112,11 @@ function ReflectionFlow() {
   }
 
   const closeToDay = () =>
-    navigate({ to: "/day/$day", params: { day: String(dayNum) } });
+    navigate({
+      to: "/day/$day",
+      params: { day: String(dayNum) },
+      search: { step: "close" },
+    });
 
   const runCompute = async (safe: boolean) => {
     const input = {

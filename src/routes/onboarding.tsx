@@ -1,6 +1,6 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { usePrefs } from "@/lib/prefs";
+import { LEGAL_BUNDLE_VERSION, usePrefs } from "@/lib/prefs";
 import { LegalFooter } from "@/components/LegalFooter";
 
 export const Route = createFileRoute("/onboarding")({
@@ -20,6 +20,8 @@ function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [showSpiritual, setShowSpiritual] = useState<boolean>(true);
+  const [adultConfirmed, setAdultConfirmed] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   const steps = [
     {
@@ -143,17 +145,20 @@ function Onboarding() {
       body: (
         <div className="space-y-4">
           <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-            Before you begin: what this is — and is not
+            Before you begin
           </h2>
+          <p className="text-foreground">
+            A brief, plain-language summary — please read this before we start.
+          </p>
           <div className="surface-card space-y-2">
-            <h3 className="eyebrow">It is</h3>
+            <h3 className="eyebrow">What this is</h3>
             <ul className="list-disc space-y-1 pl-5 text-foreground">
               <li>An educational, reflective and spiritually sensitive companion.</li>
               <li>A place to notice, name and take one honest step at your own pace.</li>
             </ul>
           </div>
           <div className="surface-card space-y-2">
-            <h3 className="eyebrow">It is not</h3>
+            <h3 className="eyebrow">What it is not</h3>
             <ul className="list-disc space-y-1 pl-5 text-foreground">
               <li>Psychotherapy, diagnosis or medical treatment.</li>
               <li>Crisis care or emergency support. It is not monitored and cannot
@@ -166,12 +171,81 @@ function Onboarding() {
             You can stop at any time and seek support. If you are in immediate danger,
             please contact local emergency services or a person nearby.
           </p>
+
+          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground">
+            <p className="font-medium">You are welcome to review these documents</p>
+            <p className="mt-1 text-muted-foreground">
+              You are not required to open, read, scroll through, or reach the end
+              of these documents in order to continue. They are here for you to
+              consult whenever it is helpful.
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+              <li>
+                <Link
+                  to="/terms"
+                  target="_blank"
+                  className="inline-link text-primary underline underline-offset-4"
+                >
+                  Terms of Use ↗
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/privacy"
+                  target="_blank"
+                  className="inline-link text-primary underline underline-offset-4"
+                >
+                  Privacy Notice ↗
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/important-information"
+                  target="_blank"
+                  className="inline-link text-primary underline underline-offset-4"
+                >
+                  Important Information ↗
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+            <input
+              type="checkbox"
+              checked={adultConfirmed}
+              onChange={(e) => setAdultConfirmed(e.target.checked)}
+              className="mt-1.5 h-5 w-5"
+            />
+            <span className="text-foreground">
+              I confirm that I am 18 years of age or older.
+            </span>
+          </label>
+
+          <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+            <input
+              type="checkbox"
+              checked={termsAgreed}
+              onChange={(e) => setTermsAgreed(e.target.checked)}
+              className="mt-1.5 h-5 w-5"
+            />
+            <span className="text-foreground">
+              I have had the opportunity to review and agree to the Terms of Use,
+              Privacy Notice and Important Information.
+            </span>
+          </label>
+
+          <p className="text-xs text-muted-foreground">
+            A separate, optional consent for the live-AI reflection appears later,
+            only if you choose to try it.
+          </p>
         </div>
       ),
     },
   ];
 
   const isLast = step === steps.length - 1;
+  const canAdvance = !isLast || (adultConfirmed && termsAgreed);
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
@@ -194,32 +268,31 @@ function Onboarding() {
         <div className="flex flex-col gap-2">
           <button
             type="button"
+            disabled={!canAdvance}
             onClick={() => {
               if (isLast) {
-                update({ onboarded: true, showSpiritual });
+                if (!canAdvance) return;
+                update({
+                  onboarded: true,
+                  showSpiritual,
+                  legalAcceptance: {
+                    version: LEGAL_BUNDLE_VERSION,
+                    acceptedAt: new Date().toISOString(),
+                  },
+                });
                 navigate({ to: "/" });
               } else {
                 setStep((s) => s + 1);
               }
             }}
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:opacity-90"
+            className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            aria-disabled={!canAdvance}
           >
             {isLast ? "Begin" : "Continue"}
           </button>
-          {isLast && (
+          {isLast && !canAdvance && (
             <p className="pt-1 text-center text-sm text-muted-foreground">
-              By continuing, you acknowledge the{" "}
-              <Link to="/terms" className="inline-link text-primary underline underline-offset-4">
-                Terms of Use
-              </Link>{" "}
-              and{" "}
-              <Link
-                to="/important-information"
-                className="inline-link text-primary underline underline-offset-4"
-              >
-                Important Information
-              </Link>
-              .
+              Please check both boxes above to continue.
             </p>
           )}
         </div>

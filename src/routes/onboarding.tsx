@@ -20,6 +20,8 @@ function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [showSpiritual, setShowSpiritual] = useState<boolean>(true);
+  const [adultConfirmed, setAdultConfirmed] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   const steps = [
     {

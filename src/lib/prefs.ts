@@ -6,11 +6,28 @@ import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "bfa.v1";
 
+export interface LegalAcceptance {
+  /** Version identifier for the Terms + Privacy + Important Information bundle
+   *  in force at the moment the user accepted. Bump when wording changes. */
+  version: string;
+  /** ISO timestamp of acceptance. No other content is stored. */
+  acceptedAt: string;
+}
+
 export interface Prefs {
   onboarded: boolean;
   showSpiritual: boolean;
   visitedDays: number[];
+  legalAcceptance?: LegalAcceptance;
 }
+
+/**
+ * Current legal-bundle version. Increment when Terms of Use, Privacy Notice,
+ * or Important Information wording is materially changed and re-acknowledgement
+ * is required. Founder note: final wording pending Ontario lawyer review before
+ * public launch.
+ */
+export const LEGAL_BUNDLE_VERSION = "2026-07-27";
 
 const defaults: Prefs = {
   onboarded: false,

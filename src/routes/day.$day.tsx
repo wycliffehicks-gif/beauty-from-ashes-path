@@ -76,14 +76,18 @@ function DayFlow() {
   const content = getDay(dayNum);
   const [prefs] = usePrefs();
   const navigate = useNavigate();
-  const [i, setI] = useState(0);
+  const search = Route.useSearch();
+  const [i, setI] = useState(() =>
+    search.step === "close" ? STEPS.length - 1 : 0,
+  );
 
-  // CRITICAL: reset step index and scroll on every day change so that
-  // navigating from Day N → Day N+1 always opens at ARRIVE.
+  // Reset step and scroll when the day changes, or when a `?step=close`
+  // deep-link is used (e.g. returning from the reflection route back to
+  // the Day 1 Close screen).
   useEffect(() => {
-    setI(0);
+    setI(search.step === "close" ? STEPS.length - 1 : 0);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum]);
+  }, [dayNum, search.step]);
 
   useEffect(() => {
     if (content) markDayVisited(content.day);

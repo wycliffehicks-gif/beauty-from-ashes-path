@@ -4,6 +4,12 @@ import { DAYS, getDay } from "@/content/days";
 import { markDayVisited, usePrefs } from "@/lib/prefs";
 
 export const Route = createFileRoute("/day/$day")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const step = search.step;
+    return {
+      step: step === "close" ? ("close" as const) : undefined,
+    };
+  },
   head: ({ params }) => {
     const d = getDay(Number(params.day));
     const title = d ? `Day ${d.day}: ${d.title} — Beauty from Ashes` : "Day — Beauty from Ashes";

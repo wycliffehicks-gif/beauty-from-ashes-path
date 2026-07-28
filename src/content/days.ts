@@ -63,6 +63,26 @@ export const DAYS: DayContent[] = [
     theme: "The meaningful road we have been avoiding.",
     arriveLine:
       "Start where you are — not where you think you should be.",
+    // DRAFT — founder to approve. 3–6 sentences teaching how to work with today's invitation.
+    teach:
+      "Avoidance is rarely laziness. It is usually a form of protection that once made sense — and may still be doing quiet work now. Today is not about walking the whole road. It is about letting the road become a little more visible, at a pace your body can bear. Notice, without judgement, that some part of you already knows where the road is. Beginning is not the same as arriving; simply acknowledging the road is real work, and it counts.",
+    practiceId: "start-where-you-are",
+    // DRAFT — founder to approve. Curated response for each low-pressure branch.
+    branches: {
+      notSure:
+        "Not sure is an honest place to begin. You do not have to name anything yet — staying near the question is already part of the work.",
+      preferNotToSay:
+        "You do not owe this app your answer. Keeping it to yourself, or naming it only inside, is a valid form of participation today.",
+      notToday:
+        "Choosing not today is a kind of care. The road will still be there tomorrow, and so will you. A slow exhale is enough for now.",
+      veryLittleEnergy:
+        "When energy is very low, the honest step becomes very small — a single breath, one word held quietly, or simply noticing that you opened this at all.",
+      numb:
+        "Numbness is often protection, not absence. You do not have to feel more than you feel. Let noticing the numbness itself be the whole of today's practice.",
+      mixed:
+        "Mixed is not confusion — it is often accuracy. More than one true thing can live in you at once. You can let both be here without choosing between them.",
+    },
+
     coreReflection:
       "Sometimes we already know where life is asking for honesty — a conversation, a grief, a boundary, a request for help, or a truth we have postponed. You do not have to walk the whole road today. The beginning may simply be acknowledging where the road is.",
     scripture: {

@@ -4,11 +4,41 @@
 
 export type OneStepSuggestion = string;
 
+/**
+ * Curated branch responses for when a user chooses a low-pressure option
+ * on the daily Notice step. Each value is a short (1–3 sentence)
+ * founder-authored teaching fragment that acknowledges the choice and
+ * carries the user forward without re-asking or shaming.
+ *
+ * These are read by the daily flow when the user selects the matching
+ * chip; they never trigger AI, never persist input, and never re-route
+ * to a diagnostic screen.
+ */
+export interface DayBranches {
+  notSure: string;
+  preferNotToSay: string;
+  notToday: string;
+  veryLittleEnergy: string;
+  numb: string;
+  mixed: string;
+}
+
 export interface DayContent {
   day: number;
   title: string;
   theme: string;
   arriveLine: string;
+  /**
+   * Short (3–6 sentence) founder-authored teaching that frames how to
+   * work with what today's practice invites — not just what to notice.
+   * Rendered as a distinct "Teach" step between Arrive and Notice.
+   * DRAFT copy is marked in the seed data below and awaits founder approval.
+   */
+  teach?: string;
+  /** Optional ID of a curated practice from src/content/practices.ts that pairs with today's teaching. */
+  practiceId?: string;
+  /** Curated branch responses (see DayBranches). Optional during rollout. */
+  branches?: DayBranches;
   coreReflection: string;
   scripture?: {
     reference: string;
@@ -25,6 +55,7 @@ export interface DayContent {
   optionalPrayer?: string;
 }
 
+
 export const DAYS: DayContent[] = [
   {
     day: 1,
@@ -32,6 +63,26 @@ export const DAYS: DayContent[] = [
     theme: "The meaningful road we have been avoiding.",
     arriveLine:
       "Start where you are — not where you think you should be.",
+    // DRAFT — founder to approve. 3–6 sentences teaching how to work with today's invitation.
+    teach:
+      "Avoidance is rarely laziness. It is usually a form of protection that once made sense — and may still be doing quiet work now. Today is not about walking the whole road. It is about letting the road become a little more visible, at a pace your body can bear. Notice, without judgement, that some part of you already knows where the road is. Beginning is not the same as arriving; simply acknowledging the road is real work, and it counts.",
+    practiceId: "start-where-you-are",
+    // DRAFT — founder to approve. Curated response for each low-pressure branch.
+    branches: {
+      notSure:
+        "Not sure is an honest place to begin. You do not have to name anything yet — staying near the question is already part of the work.",
+      preferNotToSay:
+        "You do not owe this app your answer. Keeping it to yourself, or naming it only inside, is a valid form of participation today.",
+      notToday:
+        "Choosing not today is a kind of care. The road will still be there tomorrow, and so will you. A slow exhale is enough for now.",
+      veryLittleEnergy:
+        "When energy is very low, the honest step becomes very small — a single breath, one word held quietly, or simply noticing that you opened this at all.",
+      numb:
+        "Numbness is often protection, not absence. You do not have to feel more than you feel. Let noticing the numbness itself be the whole of today's practice.",
+      mixed:
+        "Mixed is not confusion — it is often accuracy. More than one true thing can live in you at once. You can let both be here without choosing between them.",
+    },
+
     coreReflection:
       "Sometimes we already know where life is asking for honesty — a conversation, a grief, a boundary, a request for help, or a truth we have postponed. You do not have to walk the whole road today. The beginning may simply be acknowledging where the road is.",
     scripture: {

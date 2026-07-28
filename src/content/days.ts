@@ -4,11 +4,41 @@
 
 export type OneStepSuggestion = string;
 
+/**
+ * Curated branch responses for when a user chooses a low-pressure option
+ * on the daily Notice step. Each value is a short (1–3 sentence)
+ * founder-authored teaching fragment that acknowledges the choice and
+ * carries the user forward without re-asking or shaming.
+ *
+ * These are read by the daily flow when the user selects the matching
+ * chip; they never trigger AI, never persist input, and never re-route
+ * to a diagnostic screen.
+ */
+export interface DayBranches {
+  notSure: string;
+  preferNotToSay: string;
+  notToday: string;
+  veryLittleEnergy: string;
+  numb: string;
+  mixed: string;
+}
+
 export interface DayContent {
   day: number;
   title: string;
   theme: string;
   arriveLine: string;
+  /**
+   * Short (3–6 sentence) founder-authored teaching that frames how to
+   * work with what today's practice invites — not just what to notice.
+   * Rendered as a distinct "Teach" step between Arrive and Notice.
+   * DRAFT copy is marked in the seed data below and awaits founder approval.
+   */
+  teach?: string;
+  /** Optional ID of a curated practice from src/content/practices.ts that pairs with today's teaching. */
+  practiceId?: string;
+  /** Curated branch responses (see DayBranches). Optional during rollout. */
+  branches?: DayBranches;
   coreReflection: string;
   scripture?: {
     reference: string;
@@ -24,6 +54,7 @@ export interface DayContent {
   closingBlessing: string;
   optionalPrayer?: string;
 }
+
 
 export const DAYS: DayContent[] = [
   {

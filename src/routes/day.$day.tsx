@@ -1,7 +1,14 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { DAYS, getDay } from "@/content/days";
+import { DAYS, getDay, type DayContent } from "@/content/days";
 import { markDayVisited, usePrefs } from "@/lib/prefs";
+import {
+  BRANCH_KEYS,
+  BRANCH_LABELS,
+  resolveBranch,
+  type BranchKey,
+  type ResolvedBranch,
+} from "@/lib/day-branches";
 
 export const Route = createFileRoute("/day/$day")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -29,6 +36,7 @@ export const Route = createFileRoute("/day/$day")({
 
 type StepKey =
   | "arrive"
+  | "teach"
   | "notice"
   | "name"
   | "listen"
@@ -37,7 +45,7 @@ type StepKey =
   | "step"
   | "close";
 
-const STEPS: { key: StepKey; label: string }[] = [
+const BASE_STEPS: { key: StepKey; label: string }[] = [
   { key: "arrive", label: "Arrive" },
   { key: "notice", label: "Notice" },
   { key: "name", label: "Name" },
@@ -47,6 +55,16 @@ const STEPS: { key: StepKey; label: string }[] = [
   { key: "step", label: "One Honest Step" },
   { key: "close", label: "Close" },
 ];
+
+function stepsFor(content: DayContent): { key: StepKey; label: string }[] {
+  if (!content.teach) return BASE_STEPS;
+  // Insert Teach immediately after Arrive.
+  return [
+    BASE_STEPS[0],
+    { key: "teach", label: "Teach" },
+    ...BASE_STEPS.slice(1),
+  ];
+}
 
 const NOTICE_OPTIONS = [
   "Heavy or tired",
@@ -77,17 +95,24 @@ function DayFlow() {
   const [prefs] = usePrefs();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [i, setI] = useState(() =>
-    search.step === "close" ? STEPS.length - 1 : 0,
-  );
 
-  // Reset step and scroll when the day changes, or when a `?step=close`
-  // deep-link is used (e.g. returning from the reflection route back to
-  // the Day 1 Close screen).
+  const steps = useMemo(
+    () => (content ? stepsFor(content) : BASE_STEPS),
+    [content],
+  );
+  const closeIdx = steps.length - 1;
+
+  const [i, setI] = useState(() =>
+    search.step === "close" ? closeIdx : 0,
+  );
+  const [branch, setBranch] = useState<ResolvedBranch | null>(null);
+
+  // Reset when day changes or ?step=close is used.
   useEffect(() => {
-    setI(search.step === "close" ? STEPS.length - 1 : 0);
+    setI(search.step === "close" ? closeIdx : 0);
+    setBranch(null);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum, search.step]);
+  }, [dayNum, search.step, closeIdx]);
 
   useEffect(() => {
     if (content) markDayVisited(content.day);
@@ -100,7 +125,7 @@ function DayFlow() {
 
   if (!content) {
     return (
-      <FlowShell current={0} onExit={() => navigate({ to: "/journey" })} label="Day">
+      <FlowShell current={0} total={BASE_STEPS.length} onExit={() => navigate({ to: "/journey" })} label="Day">
         <div className="space-y-4">
           <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
           <p className="text-muted-foreground">Please choose a day from the journey.</p>
@@ -112,79 +137,127 @@ function DayFlow() {
     );
   }
 
-  const step = STEPS[i];
+  const step = steps[i];
+  const jumpTo = (key: StepKey) => {
+    const idx = steps.findIndex((s) => s.key === key);
+    if (idx >= 0) {
+      setI(idx);
+      if (typeof window !== "undefined") window.scrollTo(0, 0);
+    }
+  };
   const goNext = () => {
-    setI((n) => Math.min(STEPS.length - 1, n + 1));
+    setI((n) => Math.min(steps.length - 1, n + 1));
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   };
   const goPrev = () => setI((n) => Math.max(0, n - 1));
   const exit = () => navigate({ to: "/" });
 
+  const onBranch = (key: BranchKey) => {
+    const r = resolveBranch(content, key);
+    if (!r) return;
+    setBranch(r);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
+  const clearBranch = () => setBranch(null);
+
+  const label = branch
+    ? `Day ${content.day} · ${BRANCH_LABELS[branch.key]}`
+    : `Day ${content.day} · ${step.label}`;
+
+  const backHandler = branch
+    ? clearBranch
+    : i > 0
+      ? goPrev
+      : undefined;
+
   return (
     <FlowShell
       current={i}
-      total={STEPS.length}
+      total={steps.length}
       onExit={exit}
-      onBack={i > 0 ? goPrev : undefined}
-      label={`Day ${content.day} · ${step.label}`}
+      onBack={backHandler}
+      label={label}
     >
-      {step.key === "arrive" && (
-        <StepArrive title={content.title} arrive={content.arriveLine} onNext={goNext} />
-      )}
-      {step.key === "notice" && (
-        <StepChoice
-          heading="Notice"
-          prompt="How is it, being you, right now?"
-          hint="There is no right answer. Pick what fits, or skip."
-          options={NOTICE_OPTIONS}
-          onNext={goNext}
+      {branch ? (
+        <BranchView
+          branch={branch}
+          onContinueForward={() => {
+            clearBranch();
+            jumpTo("listen");
+          }}
+          onContinueTinyStep={() => {
+            // Skip remaining prompts; the tiny-step view IS the remainder.
+            clearBranch();
+            jumpTo("close");
+          }}
+          onGroundingClose={() => {
+            // Person chose "Not today" — leave safely; day already marked visited.
+            navigate({ to: "/" });
+          }}
         />
-      )}
-      {step.key === "name" && (
-        <StepChoice
-          heading="Name"
-          prompt="What might you be carrying today?"
-          hint="Naming is not fixing. You may choose more than one, or skip."
-          options={NAME_OPTIONS}
-          multi
-          onNext={goNext}
-        />
-      )}
-      {step.key === "listen" && (
-        <StepListen prompts={content.listenPrompts} onNext={goNext} />
-      )}
-      {step.key === "reflection" && (
-        <StepReflection
-          content={content}
-          showSpiritual={prefs.showSpiritual}
-          onNext={goNext}
-        />
-      )}
-      {step.key === "reconnect" && (
-        <StepChoice
-          heading="Reconnect"
-          prompt="Where might reconnection begin today?"
-          hint="Reconnection never means returning to unsafe people."
-          options={content.reconnectOptions.map((o) => `${o.label} — ${o.description}`)}
-          onNext={goNext}
-        />
-      )}
-      {step.key === "step" && (
-        <StepChoice
-          heading="One Honest Step"
-          prompt="What small, honest step feels possible today?"
-          hint="Small counts. Preparation counts. Skipping is also a valid answer."
-          options={content.oneHonestStep}
-          onNext={goNext}
-        />
-      )}
-      {step.key === "close" && (
-        <StepClose
-          dayNum={content.day}
-          blessing={content.closingBlessing}
-          prayer={prefs.showSpiritual ? content.optionalPrayer : undefined}
-          nextDay={nextDay?.day}
-        />
+      ) : (
+        <>
+          {step.key === "arrive" && (
+            <StepArrive title={content.title} arrive={content.arriveLine} onNext={goNext} />
+          )}
+          {step.key === "teach" && content.teach && (
+            <StepTeach teach={content.teach} practiceId={content.practiceId} onNext={goNext} />
+          )}
+          {step.key === "notice" && (
+            <StepNotice
+              options={NOTICE_OPTIONS}
+              branchKeys={content.branches ? BRANCH_KEYS : []}
+              onNext={goNext}
+              onBranch={onBranch}
+            />
+          )}
+          {step.key === "name" && (
+            <StepChoice
+              heading="Name"
+              prompt="What might you be carrying today?"
+              hint="Naming is not fixing. You may choose more than one, or skip."
+              options={NAME_OPTIONS}
+              multi
+              onNext={goNext}
+            />
+          )}
+          {step.key === "listen" && (
+            <StepListen prompts={content.listenPrompts} onNext={goNext} />
+          )}
+          {step.key === "reflection" && (
+            <StepReflection
+              content={content}
+              showSpiritual={prefs.showSpiritual}
+              onNext={goNext}
+            />
+          )}
+          {step.key === "reconnect" && (
+            <StepChoice
+              heading="Reconnect"
+              prompt="Where might reconnection begin today?"
+              hint="Reconnection never means returning to unsafe people."
+              options={content.reconnectOptions.map((o) => `${o.label} — ${o.description}`)}
+              onNext={goNext}
+            />
+          )}
+          {step.key === "step" && (
+            <StepChoice
+              heading="One Honest Step"
+              prompt="What small, honest step feels possible today?"
+              hint="Small counts. Preparation counts. Skipping is also a valid answer."
+              options={content.oneHonestStep}
+              onNext={goNext}
+            />
+          )}
+          {step.key === "close" && (
+            <StepClose
+              dayNum={content.day}
+              blessing={content.closingBlessing}
+              prayer={prefs.showSpiritual ? content.optionalPrayer : undefined}
+              nextDay={nextDay?.day}
+            />
+          )}
+        </>
       )}
     </FlowShell>
   );
@@ -193,14 +266,14 @@ function DayFlow() {
 function FlowShell({
   children,
   current,
-  total = STEPS.length,
+  total,
   onExit,
   onBack,
   label,
 }: {
   children: React.ReactNode;
   current: number;
-  total?: number;
+  total: number;
   onExit: () => void;
   onBack?: () => void;
   label: string;
@@ -213,7 +286,7 @@ function FlowShell({
             <button
               type="button"
               onClick={onBack ?? onExit}
-              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
+              className="inline-link min-h-11 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
               aria-label={onBack ? "Back" : "Close"}
             >
               {onBack ? "← Back" : "✕ Close"}
@@ -224,7 +297,7 @@ function FlowShell({
             <button
               type="button"
               onClick={onExit}
-              className="inline-link rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link min-h-11 rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Close
             </button>
@@ -305,6 +378,219 @@ function StepArrive({
   );
 }
 
+function StepTeach({
+  teach,
+  practiceId,
+  onNext,
+}: {
+  teach: string;
+  practiceId?: string;
+  onNext: () => void;
+}) {
+  return (
+    <div className="space-y-5" data-testid="step-teach">
+      <p className="eyebrow">A word before we begin</p>
+      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
+        How to work with today
+      </h2>
+      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
+        {teach}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        This is guidance, not a test. There is no wrong way to read it.
+      </p>
+      {practiceId && (
+        <Link
+          to="/practice/$id"
+          params={{ id: practiceId }}
+          className="inline-link text-sm text-primary underline underline-offset-4"
+        >
+          Optional companion practice
+        </Link>
+      )}
+      <div className="pt-2">
+        <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
+      </div>
+    </div>
+  );
+}
+
+function StepNotice({
+  options,
+  branchKeys,
+  onNext,
+  onBranch,
+}: {
+  options: string[];
+  branchKeys: BranchKey[];
+  onNext: () => void;
+  onBranch: (k: BranchKey) => void;
+}) {
+  const [selected, setSelected] = useState<string[]>([]);
+  const toggle = (o: string) =>
+    setSelected((s) => (s.includes(o) ? s.filter((x) => x !== o) : [o]));
+  return (
+    <div className="space-y-5">
+      <p className="eyebrow">Notice</p>
+      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
+        How is it, being you, right now?
+      </h2>
+      <p className="text-base text-muted-foreground">
+        There is no right answer. Pick what fits, or choose a gentler path below.
+      </p>
+      <ul className="space-y-2">
+        {options.map((o) => {
+          const active = selected.includes(o);
+          return (
+            <li key={o}>
+              <button
+                type="button"
+                onClick={() => toggle(o)}
+                aria-pressed={active}
+                className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
+                  active
+                    ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
+                    : "border-border bg-card hover:border-[var(--deep-navy)]/40"
+                }`}
+              >
+                {o}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      {branchKeys.length > 0 && (
+        <div
+          className="rounded-lg border border-border/70 bg-secondary/40 p-4"
+          data-testid="branch-strip"
+        >
+          <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">
+            Or choose a gentler path
+          </p>
+          <p className="mb-3 text-sm text-muted-foreground">
+            Each of these is a valid answer. Nothing is scored or saved.
+          </p>
+          <ul className="flex flex-wrap gap-2">
+            {branchKeys.map((k) => (
+              <li key={k}>
+                <button
+                  type="button"
+                  data-testid={`branch-${k}`}
+                  onClick={() => onBranch(k)}
+                  className="min-h-11 rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground hover:border-[var(--deep-navy)]/50"
+                >
+                  {BRANCH_LABELS[k]}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2 pt-2">
+        <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
+        <SubtleButton onClick={onNext}>Skip</SubtleButton>
+      </div>
+    </div>
+  );
+}
+
+function BranchView({
+  branch,
+  onContinueForward,
+  onContinueTinyStep,
+  onGroundingClose,
+}: {
+  branch: ResolvedBranch;
+  onContinueForward: () => void;
+  onContinueTinyStep: () => void;
+  onGroundingClose: () => void;
+}) {
+  return (
+    <div className="space-y-5" data-testid={`branch-view-${branch.key}`}>
+      <p className="eyebrow">{BRANCH_LABELS[branch.key]}</p>
+      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
+        {branch.response}
+      </p>
+
+      {branch.mode === "forward" && (
+        <div className="flex flex-col gap-2 pt-2">
+          <PrimaryButton onClick={onContinueForward}>
+            Continue gently
+          </PrimaryButton>
+          <p className="text-sm text-muted-foreground">
+            We will move on without asking you to name anything else.
+          </p>
+        </div>
+      )}
+
+      {branch.mode === "low-arousal-grounding" && (
+        <div className="space-y-4">
+          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground">
+            <p className="mb-2 font-medium">A low-key body moment</p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>Feel where your body meets the chair or ground.</li>
+              <li>Let one exhale be slightly longer than the inhale.</li>
+              <li>Notice the temperature of the air on your hands.</li>
+            </ul>
+            <p className="mt-2 text-sm text-muted-foreground">
+              We will not press you to name a feeling. Sensation is enough.
+            </p>
+          </div>
+          <PrimaryButton onClick={onContinueForward}>
+            Continue when ready
+          </PrimaryButton>
+        </div>
+      )}
+
+      {branch.mode === "tiny-step" && (
+        <div className="space-y-4">
+          <div className="rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4">
+            <p className="mb-1 font-medium text-foreground">
+              One tiny preparation step
+            </p>
+            <ul className="list-disc space-y-1 pl-5 text-base text-foreground">
+              <li>Notice that you opened this at all.</li>
+              <li>Hold one word for the road, quietly, without writing it.</li>
+              <li>Drink a sip of water.</li>
+            </ul>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Preparation counts. This is a whole step today.
+            </p>
+          </div>
+          <PrimaryButton onClick={onContinueTinyStep}>
+            Close today gently
+          </PrimaryButton>
+        </div>
+      )}
+
+      {branch.mode === "grounding-close" && (
+        <div className="space-y-4">
+          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground">
+            <p className="mb-2 font-medium">A 60–90 second close</p>
+            <ol className="list-decimal space-y-1 pl-5">
+              <li>Look slowly around and name three things you can see.</li>
+              <li>Feel your feet on the floor for one full breath.</li>
+              <li>
+                Let this be enough:{" "}
+                <em>you came here, and you get to leave when you need to.</em>
+              </li>
+            </ol>
+          </div>
+          <PrimaryButton onClick={onGroundingClose}>
+            Leave safely
+          </PrimaryButton>
+          <p className="text-sm text-muted-foreground">
+            Today is marked as visited. Nothing here pretends you did more than
+            you did.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StepChoice({
   heading,
   prompt,
@@ -344,7 +630,7 @@ function StepChoice({
                 type="button"
                 onClick={() => toggle(o)}
                 aria-pressed={active}
-                className={`w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
+                className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
                   active
                     ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
                     : "border-border bg-card hover:border-[var(--deep-navy)]/40"
@@ -392,7 +678,7 @@ function StepReflection({
   showSpiritual,
   onNext,
 }: {
-  content: ReturnType<typeof getDay> & object;
+  content: DayContent;
   showSpiritual: boolean;
   onNext: () => void;
 }) {
@@ -536,7 +822,7 @@ function PrimaryButton({ children, onClick }: { children: React.ReactNode; onCli
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground transition-colors hover:opacity-90"
+      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground transition-colors hover:opacity-90"
     >
       {children}
     </button>
@@ -548,7 +834,7 @@ function SubtleButton({ children, onClick }: { children: React.ReactNode; onClic
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex w-full items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
+      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
     >
       {children}
     </button>

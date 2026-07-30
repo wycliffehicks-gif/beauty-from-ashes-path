@@ -61,6 +61,18 @@ export interface SessionReadinessOption extends SessionChoice {
   behaviour: StageBehaviour;
 }
 
+/**
+ * A short movement inside a stage. Stages 4 and 5 are layered rather than one
+ * long form: each group has its own teaching, prompt and choices.
+ */
+export interface SessionGroup {
+  id: string;
+  title: string;
+  teach: string;
+  prompt: string;
+  choices: SessionChoice[];
+}
+
 export interface SessionStage {
   key: SessionStageKey;
   /** Short label used in the progress rail and headers. */
@@ -79,10 +91,18 @@ export interface SessionStage {
   /** Tentative, compassionate interpretation — always offered as a "maybe". */
   attunement?: string;
   choices?: SessionChoice[];
+  /** Layered movements within the stage (stages 4 and 5). */
+  groups?: SessionGroup[];
   readiness?: SessionReadinessOption[];
+  /**
+   * Low-pressure exits available part-way through a stage. Rendered as a
+   * quiet "if this is too much right now" block, never as the main action.
+   */
+  branchOptions?: SessionReadinessOption[];
   /** Optional short text prompt. Transient sessionStorage only. */
   optionalText?: { prompt: string; placeholder: string };
 }
+
 
 export interface SessionContent {
   id: string;

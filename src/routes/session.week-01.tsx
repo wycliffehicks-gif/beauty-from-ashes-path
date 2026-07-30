@@ -869,12 +869,16 @@ function WeekOneSession() {
           </p>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground">
-          <Link to="/support" className="inline-link underline underline-offset-4">
+        <p className="text-center text-base text-muted-foreground">
+          <Link
+            to="/support"
+            className="inline-link inline-flex min-h-[44px] items-center px-2 underline underline-offset-4"
+          >
             Support &amp; Safety
           </Link>{" "}
           is always available, including after you leave.
         </p>
+
       </div>,
     );
   }

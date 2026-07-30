@@ -152,6 +152,7 @@ function WeekOneSession() {
 
   const goToStage = (key: SessionStageKey) => {
     setBranchResponse(null);
+    setAdaptation(null);
     setView("stage");
     if (key !== "attunement") resetAttunement();
     update({ stage: key });
@@ -165,13 +166,26 @@ function WeekOneSession() {
   };
 
   const back = () => {
-    if (branchResponse || view !== "stage") {
+    if (branchResponse || adaptation || view !== "stage") {
       setBranchResponse(null);
+      setAdaptation(null);
       setView("stage");
       return;
     }
     if (state.stage === "attunement" && attView !== "choose") {
       resetAttunement();
+      return;
+    }
+    if (state.stage === "reconnection" && state.route) {
+      update({ route: undefined, spiritualMode: undefined });
+      return;
+    }
+    if (state.stage === "embodied" && state.practice) {
+      update({ practice: undefined });
+      return;
+    }
+    if (state.stage === "one-honest-step" && state.step) {
+      update({ step: undefined });
       return;
     }
     const idx = SESSION_STAGE_ORDER.indexOf(state.stage);
@@ -198,9 +212,23 @@ function WeekOneSession() {
     setState(fresh);
     setNote("");
     setBranchResponse(null);
+    setAdaptation(null);
     setView("stage");
     resetAttunement();
   };
+
+  /**
+   * The true close. Erases every transient trace of the session — the note,
+   * every stage choice, the chosen route, consent, and the generated
+   * reflection — and only then records the low-sensitivity visited flag.
+   */
+  const finishAndClear = () => {
+    clear();
+    markDayVisited(SESSION_DAY);
+    setView("finished");
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
+
 
   const selected = useMemo(
     () => state.choices[state.stage] ?? [],

@@ -1,9 +1,14 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  CLOSE_BLESSING_CHRISTIAN,
+  CLOSE_PRAYER_CHRISTIAN,
+  CLOSE_STATEMENT_PLAIN,
   SESSION_STAGE_ORDER,
   getSession,
+  type EmbodiedPractice,
+  type ReconnectionRoute,
   type SessionReadinessOption,
   type SessionStage,
   type SessionStageKey,
@@ -29,9 +34,19 @@ import {
   toSections,
   type SessionReflectionOutput,
 } from "@/lib/session/curated-reflection";
+import {
+  integrationSynthesis,
+  namingTheme,
+  orderHonestSteps,
+  stepReflection,
+} from "@/lib/session/stage-logic";
+import { markDayVisited } from "@/lib/prefs";
 import { generateSessionReflection } from "@/lib/session-reflection.functions";
 
 const SESSION_ID = "week-01";
+/** Week 1's deep session is anchored to Day 3 in the journey. */
+const SESSION_DAY = 3;
+
 
 export const Route = createFileRoute("/session/week-01")({
   head: () => ({

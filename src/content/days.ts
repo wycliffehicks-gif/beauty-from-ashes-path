@@ -261,6 +261,26 @@ export const DAYS: DayContent[] = [
     title: "Honour What Protected You",
     theme: "Survival strategies that once helped but may now be costly.",
     arriveLine: "Letting go does not require shaming the way you survived.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Before you ask what a pattern costs, it helps to ask what it once saved. Anger, silence, control and distance are usually intelligent responses to something real. Working with them gently means thanking them first, then asking a quieter question: is this still the best way to keep me safe now? Nothing here asks you to drop a protection you still need. A five per cent loosening, in a safe moment, is a real change — and some patterns should only be loosened with company.",
+    practiceId: "sacred-reframing",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not know yet whether a pattern still helps or now costs. Holding both possibilities is wiser than deciding quickly.",
+      preferNotToSay:
+        "Survival strategies are private for good reasons. You can consider yours without describing it here.",
+      notToday:
+        "This is tender ground. Choosing not to open it today is itself good judgement about your own pacing.",
+      veryLittleEnergy:
+        "With little energy, do not touch the pattern at all. Simply notice, without acting, that it has been protecting you.",
+      numb:
+        "Numbness may be the protection itself. You do not need to go behind it today — noticing that it is there is enough.",
+      mixed:
+        "Gratitude and frustration toward the same pattern can be true at once. You do not have to resolve that tension today.",
+    },
+
     coreReflection:
       "The anger, numbness, control, withdrawal, or guardedness you carry may once have served a real purpose. Letting go does not require shaming the way you survived. It begins by asking whether the same strategy is still helping you live now.",
     scripture: {

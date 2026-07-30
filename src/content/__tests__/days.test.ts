@@ -42,3 +42,41 @@ describe("DayContent model — Module 1 expansion (Block 1)", () => {
     }
   });
 });
+
+describe("DayContent — Block 3 provisional teach + branches", () => {
+  const BRANCH_KEYS = [
+    "notSure",
+    "preferNotToSay",
+    "notToday",
+    "veryLittleEnergy",
+    "numb",
+    "mixed",
+  ] as const;
+
+  for (const n of [2, 4, 5, 6, 7]) {
+    it(`Day ${n} has a teach fragment, a paired practice, and all six branches`, () => {
+      const d = DAYS.find((x) => x.day === n)!;
+      expect((d.teach ?? "").trim().length).toBeGreaterThan(80);
+      expect((d.practiceId ?? "").length).toBeGreaterThan(0);
+      for (const key of BRANCH_KEYS) {
+        expect(d.branches?.[key]?.trim().length ?? 0).toBeGreaterThan(20);
+      }
+    });
+  }
+
+  it("Day 3 stays reserved for the deep-session anchor", () => {
+    const d = DAYS.find((x) => x.day === 3)!;
+    expect(d.teach).toBeUndefined();
+    expect(d.branches).toBeUndefined();
+  });
+
+  it("all provisional branch copy avoids scoring, diagnosis or re-asking language", () => {
+    const forbidden = /(score|diagnos|you must|try again|please answer|failure|failed|wrong)/i;
+    for (const d of DAYS) {
+      for (const key of BRANCH_KEYS) {
+        const t = d.branches?.[key];
+        if (t) expect(t, `day ${d.day} ${key}`).not.toMatch(forbidden);
+      }
+    }
+  });
+});

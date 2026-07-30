@@ -56,7 +56,7 @@ export const Route = createFileRoute("/session/week-01")({
   component: WeekOneSession,
 });
 
-type View = "stage" | "grounding-close" | "shortened";
+type View = "stage" | "grounding-close" | "shortened" | "finished";
 
 /**
  * Stage 6 sub-view. None of this is persisted: consent, the request, and the
@@ -64,6 +64,44 @@ type View = "stage" | "grounding-close" | "shortened";
  * clear, or leaving the page.
  */
 type AttunementView = "choose" | "curated" | "ai-consent" | "ai-working" | "ai-result";
+
+/** Stage 8 adaptations. Offered, never applied automatically. */
+const PRACTICE_ADAPTATIONS: SessionReadinessOption[] = [
+  {
+    id: "numb",
+    label: "I feel numb, or far away from myself",
+    behaviour: "low-arousal",
+    response:
+      "Then let’s not go looking for feeling. Sensory orientation is the practice for today: name four things you can see, three you can hear, and two you can feel touching your skin. Numbness is protection doing its job, not a wall you need to get through.",
+  },
+  {
+    id: "very-little-energy",
+    label: "Very little energy",
+    behaviour: "shorten",
+    response:
+      "Then the whole practice is this: one slower breath out, one true sentence in your head, and one sip of water. That is not a reduced version of the practice — today it is the practice.",
+  },
+  {
+    id: "prefer-not",
+    label: "I’d rather not explain which one",
+    behaviour: "continue",
+    response:
+      "You do not have to. Choose one by its title and open it, or move on without choosing. Nothing is recorded about why.",
+  },
+  {
+    id: "not-today",
+    label: "Not today",
+    behaviour: "grounding-close",
+    response: "That is a complete answer. Let’s close gently rather than just stopping.",
+  },
+  {
+    id: "need-support",
+    label: "I need support",
+    behaviour: "support",
+    response: "Let’s set this aside and get you to support instead.",
+  },
+];
+
 
 function WeekOneSession() {
   const session = getSession(SESSION_ID)!;

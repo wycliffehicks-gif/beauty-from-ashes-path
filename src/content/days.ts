@@ -117,6 +117,26 @@ export const DAYS: DayContent[] = [
     title: "Name What You Are Carrying",
     theme: "Unnamed burdens can grow heavier.",
     arriveLine: "Naming is not fixing. It is allowing what is present to become a little less hidden.",
+    // PROVISIONAL — founder review. 3–6 sentences on how to work with today's invitation.
+    teach:
+      "What we cannot name tends to run the day from behind us. Naming is not analysis and it is not confession — it is simply giving something a word so it stops having to shout. A single ordinary word is enough; it does not need to be the right word, or the whole truth. Notice that naming can make a weight feel briefly heavier before it feels lighter, because you are finally looking at it. You are allowed to name only the edge of it today, and leave the rest for another time.",
+    practiceId: "name-the-old-pattern",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "Not knowing what you are carrying is itself a kind of information. You can stay near the weight without labelling it today.",
+      preferNotToSay:
+        "Some weights are named more safely in private, or with a person you trust. Keeping it unspoken here takes nothing away from your work.",
+      notToday:
+        "Naming can wait. Setting the weight down for now is not avoidance — it is pacing, and pacing is part of carrying well.",
+      veryLittleEnergy:
+        "With little energy, one word is plenty. Let a single word rise, hold it for one breath, and let that be the whole of it.",
+      numb:
+        "When you feel nothing, there may still be something being carried quietly. You do not have to reach for feeling — noticing the flatness is enough today.",
+      mixed:
+        "You may be carrying several things at once, and they may not agree with each other. That is common, and it does not need sorting out today.",
+    },
+
     coreReflection:
       "Feeling stuck does not always mean you lack desire or courage. Sometimes you are trying to move while carrying grief, fear, shame, anger, exhaustion, or a story that has never been given words. Naming is not fixing. It is allowing what is present to become a little less hidden.",
     scripture: {

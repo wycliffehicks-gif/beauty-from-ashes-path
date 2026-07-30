@@ -1,5 +1,34 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
+
+// Minimal in-memory storage stub so these tests can run in the node
+// environment without pulling in jsdom.
+class MemoryStorage {
+  private map = new Map<string, string>();
+  get length() {
+    return this.map.size;
+  }
+  getItem(k: string) {
+    return this.map.has(k) ? this.map.get(k)! : null;
+  }
+  setItem(k: string, v: string) {
+    this.map.set(k, String(v));
+  }
+  removeItem(k: string) {
+    this.map.delete(k);
+  }
+  clear() {
+    this.map.clear();
+  }
+}
+
+const sessionStorage = new MemoryStorage();
+const localStorage = new MemoryStorage();
+(globalThis as unknown as { window: unknown }).window = {
+  sessionStorage,
+  localStorage,
+};
+
+const {
   MAX_NOTE_LENGTH,
   clearSessionState,
   emptySessionState,
@@ -7,7 +36,8 @@ import {
   sanitizeNote,
   sanitizeSessionState,
   writeSessionState,
-} from "@/lib/session-state";
+} = await import("@/lib/session-state");
+
 
 const ID = "week-01";
 

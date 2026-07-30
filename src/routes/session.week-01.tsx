@@ -122,6 +122,10 @@ function WeekOneSession() {
   const [reflectionSource, setReflectionSource] = useState<"ai" | "curated" | null>(null);
   const [aiFellBack, setAiFellBack] = useState(false);
 
+  // --- Stage 8 transient adaptation card (never stored) ---
+  const [adaptation, setAdaptation] = useState<string | null>(null);
+
+
   // Resume within the same browser session.
   useEffect(() => {
     const restored = readSessionState(SESSION_ID);

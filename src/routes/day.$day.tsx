@@ -343,11 +343,12 @@ function FlowShell({
           <button
             type="button"
             onClick={onExit}
-            className="inline-link underline underline-offset-4"
+            className="inline-link inline-flex min-h-11 items-center rounded-md px-3 underline underline-offset-4"
           >
             Close for today
           </button>
         </div>
+
       </div>
     </div>
   );

@@ -27,12 +27,72 @@ describe("week 1 session content model", () => {
     expect(WEEK_01_SESSION.stages.map((s) => s.key)).toEqual(SESSION_STAGE_ORDER);
   });
 
-  it("only stages 1–3 are interactive in this block", () => {
+  it("stages 1–6 are interactive; the rest remain planned", () => {
     const interactive = WEEK_01_SESSION.stages
       .filter((s) => s.status === "interactive")
       .map((s) => s.key);
-    expect(interactive).toEqual(["arrival", "noticing", "naming"]);
+    expect(interactive).toEqual([
+      "arrival",
+      "noticing",
+      "naming",
+      "exploration",
+      "meaning",
+      "attunement",
+    ]);
   });
+
+  it("stage 4 lays out the three movements: pull forward, pull back, protector", () => {
+    const exploration = WEEK_01_SESSION.stages.find((s) => s.key === "exploration")!;
+    expect(exploration.groups?.map((g) => g.id)).toEqual([
+      "pull-forward",
+      "pull-back",
+      "protector",
+    ]);
+    for (const g of exploration.groups!) {
+      expect(g.teach.length).toBeGreaterThan(40);
+      // every movement offers its own scoped low-pressure answers
+      for (const kind of ["mixed", "numb", "unsure", "prefer-not", "none"]) {
+        expect(g.choices.some((c) => c.id.endsWith(kind))).toBe(true);
+      }
+    }
+    // choice ids are unique across the whole stage so selections cannot collide
+    const ids = exploration.groups!.flatMap((g) => g.choices.map((c) => c.id));
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("stage 4 offers very-little-energy, not-today and support exits", () => {
+    const exploration = WEEK_01_SESSION.stages.find((s) => s.key === "exploration")!;
+    const behaviours = exploration.branchOptions?.map((b) => b.behaviour) ?? [];
+    expect(behaviours).toContain("shorten");
+    expect(behaviours).toContain("grounding-close");
+    expect(behaviours).toContain("support");
+  });
+
+  it("stage 5 separates what helped then from what it may cost now", () => {
+    const meaning = WEEK_01_SESSION.stages.find((s) => s.key === "meaning")!;
+    expect(meaning.groups?.map((g) => g.id)).toEqual(["function", "cost"]);
+    expect(meaning.practice?.body.length).toBeGreaterThan(40);
+    // never asks the person to condemn a survival strategy
+    const text = JSON.stringify(meaning).toLowerCase();
+    for (const bad of ["unhealthy", "bad habit", "must stop", "you need to", "wrong of you"]) {
+      expect(text).not.toContain(bad);
+    }
+  });
+
+  it("stage 5 keeps an explicit 'it may still be necessary' option", () => {
+    const meaning = WEEK_01_SESSION.stages.find((s) => s.key === "meaning")!;
+    const ids = meaning.groups!.flatMap((g) => g.choices.map((c) => c.id));
+    expect(ids).toContain("fn-still-necessary");
+    expect(ids).toContain("cost-none-yet");
+  });
+
+  it("stage 6 contains no spiritual content — spirituality belongs to stage 7", () => {
+    const attunement = WEEK_01_SESSION.stages.find((s) => s.key === "attunement")!;
+    expect(JSON.stringify(attunement)).not.toMatch(
+      /\b(god|jesus|scripture|bible|pray|prayer|psalm)\b/i,
+    );
+  });
+
 
   it("every planned stage still states its purpose", () => {
     for (const s of WEEK_01_SESSION.stages) {

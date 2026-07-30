@@ -14,16 +14,20 @@ function ShellLayout() {
   const navigate = useNavigate();
 
   // Route unonboarded users to /onboarding after hydration.
+  // Support & Safety is exempt: it must be reachable at any moment, including
+  // from a session branch before onboarding has ever been completed.
   useEffect(() => {
     if (!hydrated) return;
     if (prefs.onboarded) return;
+    if (pathname === "/support") return;
     const go = () => navigate({ to: "/onboarding", replace: true });
     if (isSplashActive()) {
       const off = onSplashEnd(go);
       return () => off();
     }
     go();
-  }, [hydrated, prefs.onboarded, navigate]);
+  }, [hydrated, prefs.onboarded, navigate, pathname]);
+
 
   const tabs: { to: string; label: string; icon: React.ReactNode }[] = [
     { to: "/", label: "Today", icon: <SunIcon /> },

@@ -369,7 +369,7 @@ export const DAYS: DayContent[] = [
       veryLittleEnergy:
         "With little left, let the continuation be one sentence held quietly: this mattered, and I can return to it.",
       numb:
-        "If the end of the week feels flat, that is not failure. Let the practice be simply noticing that you arrived here at all.",
+        "If the end of the week feels flat, nothing has gone amiss. Let the practice be simply noticing that you arrived here at all.",
       mixed:
         "Relief and sadness often finish together. You can carry both forward without deciding which one is the truer ending.",
     },

@@ -122,6 +122,34 @@ const LOW_PRESSURE_CHOICES: SessionChoice[] = [
   { id: "none", label: "None of these" },
 ];
 
+/**
+ * Low-pressure exits offered part-way through the longer middle stages.
+ * Identical behaviour contract to the arrival readiness options.
+ */
+const MID_STAGE_BRANCHES: SessionReadinessOption[] = [
+  {
+    id: "very-little-energy",
+    label: "Very little energy",
+    behaviour: "shorten",
+    response:
+      "Then we will not spend what you do not have. There is a shorter way through this movement that is still real.",
+  },
+  {
+    id: "not-today",
+    label: "Not today",
+    behaviour: "grounding-close",
+    response:
+      "That is a complete answer. Let’s close gently rather than just stopping.",
+  },
+  {
+    id: "need-support",
+    label: "I need support",
+    behaviour: "support",
+    response: "Let’s set this aside and get you to support instead.",
+  },
+];
+
+
 export const WEEK_01_SESSION: SessionContent = {
   id: "week-01",
   week: 1,

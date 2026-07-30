@@ -117,6 +117,26 @@ export const DAYS: DayContent[] = [
     title: "Name What You Are Carrying",
     theme: "Unnamed burdens can grow heavier.",
     arriveLine: "Naming is not fixing. It is allowing what is present to become a little less hidden.",
+    // PROVISIONAL — founder review. 3–6 sentences on how to work with today's invitation.
+    teach:
+      "What we cannot name tends to run the day from behind us. Naming is not analysis and it is not confession — it is simply giving something a word so it stops having to shout. A single ordinary word is enough; it does not need to be the right word, or the whole truth. Notice that naming can make a weight feel briefly heavier before it feels lighter, because you are finally looking at it. You are allowed to name only the edge of it today, and leave the rest for another time.",
+    practiceId: "name-the-old-pattern",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "Not knowing what you are carrying is itself a kind of information. You can stay near the weight without labelling it today.",
+      preferNotToSay:
+        "Some weights are named more safely in private, or with a person you trust. Keeping it unspoken here takes nothing away from your work.",
+      notToday:
+        "Naming can wait. Setting the weight down for now is not avoidance — it is pacing, and pacing is part of carrying well.",
+      veryLittleEnergy:
+        "With little energy, one word is plenty. Let a single word rise, hold it for one breath, and let that be the whole of it.",
+      numb:
+        "When you feel nothing, there may still be something being carried quietly. You do not have to reach for feeling — noticing the flatness is enough today.",
+      mixed:
+        "You may be carrying several things at once, and they may not agree with each other. That is common, and it does not need sorting out today.",
+    },
+
     coreReflection:
       "Feeling stuck does not always mean you lack desire or courage. Sometimes you are trying to move while carrying grief, fear, shame, anger, exhaustion, or a story that has never been given words. Naming is not fixing. It is allowing what is present to become a little less hidden.",
     scripture: {
@@ -177,6 +197,26 @@ export const DAYS: DayContent[] = [
     title: "Dignity Before Change",
     theme: "Shame and the question, “Am I worth healing?”",
     arriveLine: "Your struggle does not erase your dignity.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Shame speaks in a voice that sounds like honesty, which is why it is so persuasive. Working with it does not mean arguing back or forcing positive statements you do not believe. It means noticing the difference between “I did something painful” and “I am something wrong,” and letting that gap widen slightly. Dignity is not something you earn by improving; it is the ground you stand on while anything changes. Today you are asked only to let one true, kind sentence be said about you.",
+    practiceId: "sacred-reframing",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not be able to tell whether shame or truth is speaking. Not deciding today is safer than agreeing with the harsher voice.",
+      preferNotToSay:
+        "Shame usually asks for secrecy, and you may still choose privacy for other reasons. Both can be true; nothing needs disclosing here.",
+      notToday:
+        "This question can wait. Stepping away from it is not proof of anything about your worth.",
+      veryLittleEnergy:
+        "With little energy, let the smallest kindness stand: you are here, and that is not nothing.",
+      numb:
+        "If worth feels like an abstract word right now, leave it be. Noticing the numbness costs less than arguing with it.",
+      mixed:
+        "You may believe in your dignity and doubt it in the same hour. That is ordinary, and it is not hypocrisy.",
+    },
+
     coreReflection:
       "Shame does more than say something went wrong. It can begin telling us that we are what is wrong. Healing participation becomes difficult when we expect compassion for others but not for ourselves. Your struggle does not erase your dignity.",
     scripture: {
@@ -210,6 +250,26 @@ export const DAYS: DayContent[] = [
     title: "Let Goodness Come Near",
     theme: "Receiving care, kindness, grace, and safe connection.",
     arriveLine: "You are not ungrateful or broken because receiving takes time.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Receiving is a skill, not a virtue you either have or lack. If care once arrived with conditions or cost, your guardedness learned something accurate. Working with today means watching what happens in your body when kindness comes near — the small deflection, the joke, the change of subject — with curiosity rather than correction. You are not asked to open toward anyone unsafe. Discernment about who to let near is part of this practice, not a failure of it.",
+    practiceId: "reach-toward-safe-connection",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not know yet whether receiving feels safe. Uncertainty here is often wisdom, not resistance.",
+      preferNotToSay:
+        "Who is safe, and who is not, is yours to hold. You can weigh it privately and still be doing today's work.",
+      notToday:
+        "Openness cannot be scheduled. Letting today stay guarded is a legitimate answer, not a step backwards.",
+      veryLittleEnergy:
+        "With little energy, receiving can be very small — letting one kind thing land without answering it.",
+      numb:
+        "If kindness does not register right now, that is not ingratitude. Let the practice be noticing the distance rather than closing it.",
+      mixed:
+        "Wanting closeness and bracing against it often arrive together. Both parts can stay; neither has to win today.",
+    },
+
     coreReflection:
       "Some people know how to endure more easily than they know how to receive. If care once came with conditions, disappointment, or harm, openness may not feel safe. You are not ungrateful or broken because you need time. Receiving can begin with allowing one safe kindness to land.",
     scripture: {
@@ -241,6 +301,26 @@ export const DAYS: DayContent[] = [
     title: "Honour What Protected You",
     theme: "Survival strategies that once helped but may now be costly.",
     arriveLine: "Letting go does not require shaming the way you survived.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Before you ask what a pattern costs, it helps to ask what it once saved. Anger, silence, control and distance are usually intelligent responses to something real. Working with them gently means thanking them first, then asking a quieter question: is this still the best way to keep me safe now? Nothing here asks you to drop a protection you still need. A five per cent loosening, in a safe moment, is a real change — and some patterns should only be loosened with company.",
+    practiceId: "sacred-reframing",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not know yet whether a pattern still helps or now costs. Holding both possibilities is wiser than deciding quickly.",
+      preferNotToSay:
+        "Survival strategies are private for good reasons. You can consider yours without describing it here.",
+      notToday:
+        "This is tender ground. Choosing not to open it today is itself good judgement about your own pacing.",
+      veryLittleEnergy:
+        "With little energy, do not touch the pattern at all. Simply notice, without acting, that it has been protecting you.",
+      numb:
+        "Numbness may be the protection itself. You do not need to go behind it today — noticing that it is there is enough.",
+      mixed:
+        "Gratitude and frustration toward the same pattern can be true at once. You do not have to resolve that tension today.",
+    },
+
     coreReflection:
       "The anger, numbness, control, withdrawal, or guardedness you carry may once have served a real purpose. Letting go does not require shaming the way you survived. It begins by asking whether the same strategy is still helping you live now.",
     scripture: {
@@ -274,6 +354,26 @@ export const DAYS: DayContent[] = [
     title: "Practise New Life",
     theme: "New life is not going backward or pretending wounds disappeared.",
     arriveLine: "Insight needs somewhere to land.",
+    // PROVISIONAL — founder review.
+    teach:
+      "New life rarely announces itself. More often it looks like one small practice you keep doing while the grief is still unfinished. Today is not about summing up the week or proving it worked. It is about choosing one thing small enough to survive an ordinary week, and one connection worth moving toward. What you do not carry forward is not wasted; it simply waits. Continuing gently is a better sign than continuing perfectly.",
+    practiceId: "reach-toward-safe-connection",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "Not knowing what to carry forward is a fair place to end. You can let the week settle first and choose later.",
+      preferNotToSay:
+        "Your continuation can stay entirely private. Nothing needs to be declared here for it to be real.",
+      notToday:
+        "You do not have to close the week tidily. Leaving it open is allowed, and you can return whenever you are ready.",
+      veryLittleEnergy:
+        "With little left, let the continuation be one sentence held quietly: this mattered, and I can return to it.",
+      numb:
+        "If the end of the week feels flat, nothing has gone amiss. Let the practice be simply noticing that you arrived here at all.",
+      mixed:
+        "Relief and sadness often finish together. You can carry both forward without deciding which one is the truer ending.",
+    },
+
     coreReflection:
       "New life may begin before everything feels resolved. It can be a new way of relating to the same story, wound, or question. Insight needs somewhere to land. One small lived practice can become a quiet beginning.",
     scripture: {

@@ -11,11 +11,9 @@ import {
 } from "@/lib/day-branches";
 
 export const Route = createFileRoute("/day/$day")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { step?: "close" } => {
     const step = search.step;
-    return {
-      step: step === "close" ? ("close" as const) : undefined,
-    };
+    return step === "close" ? { step: "close" as const } : {};
   },
   head: ({ params }) => {
     const d = getDay(Number(params.day));
@@ -302,10 +300,10 @@ function FlowShell({
               Close
             </button>
           </div>
-          <nav className="flex items-center justify-center gap-4 text-sm">
+          <nav className="flex items-center justify-center gap-2 text-sm">
             <Link
               to="/"
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Home
             </Link>
@@ -313,18 +311,19 @@ function FlowShell({
             <Link
               to="/practice/$id"
               params={{ id: "pause-and-ground" }}
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Pause
             </Link>
             <span aria-hidden className="text-muted-foreground">·</span>
             <Link
               to="/support"
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Support
             </Link>
           </nav>
+
         </header>
 
         <div aria-hidden className="mb-6 flex gap-1">
@@ -344,11 +343,12 @@ function FlowShell({
           <button
             type="button"
             onClick={onExit}
-            className="inline-link underline underline-offset-4"
+            className="inline-link inline-flex min-h-11 items-center rounded-md px-3 underline underline-offset-4"
           >
             Close for today
           </button>
         </div>
+
       </div>
     </div>
   );

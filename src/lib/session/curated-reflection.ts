@@ -56,16 +56,19 @@ export interface SessionReflectionOutput {
 // -- helpers ----------------------------------------------------------------
 
 const has = (list: string[], ...ids: string[]) => ids.some((id) => list.includes(id));
-const hasPrefix = (list: string[], prefix: string) =>
-  list.some((id) => id.startsWith(prefix) && !LOW_PRESSURE_IDS.has(id));
 
-const LOW_PRESSURE_IDS = new Set([
-  "mixed",
-  "numb",
-  "unsure",
-  "prefer-not",
-  "none",
-]);
+const LOW_PRESSURE_KINDS = ["mixed", "numb", "unsure", "prefer-not", "none"] as const;
+
+/** True when a low-pressure answer of this kind was chosen anywhere in the list. */
+const hasLowPressure = (list: string[], kind: (typeof LOW_PRESSURE_KINDS)[number]) =>
+  list.some((id) => id === kind || id.endsWith(`-${kind}`));
+
+const isLowPressure = (id: string) =>
+  LOW_PRESSURE_KINDS.some((k) => id === k || id.endsWith(`-${k}`));
+
+/** True when a substantive (non low-pressure) id with this prefix was chosen. */
+const hasPrefix = (list: string[], prefix: string) =>
+  list.some((id) => id.startsWith(prefix) && !isLowPressure(id));
 
 function item(section: keyof typeof SESSION_W1_CONTENT_PACK | "support", id: string): PackItem {
   const found = findPackItem(
@@ -80,10 +83,11 @@ function item(section: keyof typeof SESSION_W1_CONTENT_PACK | "support", id: str
 
 export function selectHearingId(input: CuratedSelectionInput): string {
   const { naming, noticing = [] } = input;
-  if (has(naming, "private") || has(input.exploration, "prefer-not")) {
+  if (has(naming, "private") || hasLowPressure(input.exploration, "prefer-not")) {
     return "hearing-private";
   }
-  if (has(noticing, "numb") || has(input.exploration, "numb")) return "hearing-numb";
+  if (hasLowPressure(noticing, "numb") || hasLowPressure(input.exploration, "numb"))
+    return "hearing-numb";
   if (has(naming, "grief")) return "hearing-grief";
   if (has(naming, "relationship", "boundary", "ask-help")) return "hearing-relational";
   if (has(naming, "decision", "transition")) return "hearing-decision";
@@ -93,7 +97,7 @@ export function selectHearingId(input: CuratedSelectionInput): string {
 
 export function selectPullsId(input: CuratedSelectionInput): string {
   const { exploration } = input;
-  if (has(exploration, "mixed")) return "pulls-mixed";
+  if (hasLowPressure(exploration, "mixed")) return "pulls-mixed";
   const forward = hasPrefix(exploration, "pf-");
   const back = hasPrefix(exploration, "pb-");
   if (forward && back) return "pulls-both";
@@ -141,7 +145,8 @@ export function selectHoldingId(input: CuratedSelectionInput): string {
   }
   if (has(meaning, "fn-feel-less", "fn-hope-distance")) return "holding-dignity";
   if (has(meaning, "fn-control", "fn-functioning")) return "holding-both-and";
-  if (has(exploration, "unsure") || has(meaning, "fn-unknown")) return "holding-slow";
+  if (hasLowPressure(exploration, "unsure") || has(meaning, "fn-unknown"))
+    return "holding-slow";
   return "holding-both-and";
 }
 

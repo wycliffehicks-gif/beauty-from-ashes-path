@@ -11,11 +11,9 @@ import {
 } from "@/lib/day-branches";
 
 export const Route = createFileRoute("/day/$day")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { step?: "close" } => {
     const step = search.step;
-    return {
-      step: step === "close" ? ("close" as const) : undefined,
-    };
+    return step === "close" ? { step: "close" as const } : {};
   },
   head: ({ params }) => {
     const d = getDay(Number(params.day));

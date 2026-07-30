@@ -347,7 +347,7 @@ export const WEEK_01_SESSION: SessionContent = {
             { id: "pf-freedom", label: "I want more freedom than I have" },
             { id: "pf-next-chapter", label: "I want a next chapter to begin" },
             { id: "pf-change", label: "I want something to change, unspecified" },
-            ...LOW_PRESSURE_CHOICES,
+            ...lowPressureChoices("pf-"),
           ],
         },
         {
@@ -368,7 +368,7 @@ export const WEEK_01_SESSION: SessionContent = {
             { id: "pb-wrong-choice", label: "Making the wrong choice" },
             { id: "pb-nothing-changes", label: "Finding out nothing changes" },
             { id: "pb-no-words", label: "Something I cannot put words to" },
-            ...LOW_PRESSURE_CHOICES,
+            ...lowPressureChoices("pb-"),
           ],
         },
         {
@@ -389,7 +389,7 @@ export const WEEK_01_SESSION: SessionContent = {
             { id: "pr-humour", label: "Humour, keeping it light" },
             { id: "pr-spiritualising", label: "Reaching for a spiritual answer quickly" },
             { id: "pr-postponing", label: "Postponing — later, not now" },
-            ...LOW_PRESSURE_CHOICES,
+            ...lowPressureChoices("pr-"),
           ],
         },
       ],

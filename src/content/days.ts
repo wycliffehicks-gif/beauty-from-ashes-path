@@ -230,6 +230,26 @@ export const DAYS: DayContent[] = [
     title: "Let Goodness Come Near",
     theme: "Receiving care, kindness, grace, and safe connection.",
     arriveLine: "You are not ungrateful or broken because receiving takes time.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Receiving is a skill, not a virtue you either have or lack. If care once arrived with conditions or cost, your guardedness learned something accurate. Working with today means watching what happens in your body when kindness comes near — the small deflection, the joke, the change of subject — with curiosity rather than correction. You are not asked to open toward anyone unsafe. Discernment about who to let near is part of this practice, not a failure of it.",
+    practiceId: "reach-toward-safe-connection",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not know yet whether receiving feels safe. Uncertainty here is often wisdom, not resistance.",
+      preferNotToSay:
+        "Who is safe, and who is not, is yours to hold. You can weigh it privately and still be doing today's work.",
+      notToday:
+        "Openness cannot be scheduled. Letting today stay guarded is a legitimate answer, not a step backwards.",
+      veryLittleEnergy:
+        "With little energy, receiving can be very small — letting one kind thing land without answering it.",
+      numb:
+        "If kindness does not register right now, that is not ingratitude. Let the practice be noticing the distance rather than closing it.",
+      mixed:
+        "Wanting closeness and bracing against it often arrive together. Both parts can stay; neither has to win today.",
+    },
+
     coreReflection:
       "Some people know how to endure more easily than they know how to receive. If care once came with conditions, disappointment, or harm, openness may not feel safe. You are not ungrateful or broken because you need time. Receiving can begin with allowing one safe kindness to land.",
     scripture: {

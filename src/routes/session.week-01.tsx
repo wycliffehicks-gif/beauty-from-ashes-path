@@ -1275,12 +1275,12 @@ function ReconnectionRouteView({
 }) {
   const showScripture =
     route.id !== "christian" ||
-    spiritualMode === "sc-scripture" ||
-    spiritualMode === "sc-with-reflection" ||
+    spiritualMode === "sc-scripture-only" ||
+    spiritualMode === "sc-reflection-no-prayer" ||
     spiritualMode === "sc-with-prayer";
   const showReflection =
     route.id !== "christian" ||
-    spiritualMode === "sc-with-reflection" ||
+    spiritualMode === "sc-reflection-no-prayer" ||
     spiritualMode === "sc-with-prayer";
   const showPrayer = route.id === "christian" && spiritualMode === "sc-with-prayer";
 

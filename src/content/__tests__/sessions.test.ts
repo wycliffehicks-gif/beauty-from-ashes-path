@@ -70,7 +70,7 @@ describe("week 1 session content model", () => {
 
   it("stage 5 separates what helped then from what it may cost now", () => {
     const meaning = WEEK_01_SESSION.stages.find((s) => s.key === "meaning")!;
-    expect(meaning.groups?.map((g) => g.id)).toEqual(["function-then", "cost-now"]);
+    expect(meaning.groups?.map((g) => g.id)).toEqual(["function", "cost"]);
     expect(meaning.practice?.body.length).toBeGreaterThan(40);
     // never asks the person to condemn a survival strategy
     const text = JSON.stringify(meaning).toLowerCase();

@@ -197,6 +197,26 @@ export const DAYS: DayContent[] = [
     title: "Dignity Before Change",
     theme: "Shame and the question, “Am I worth healing?”",
     arriveLine: "Your struggle does not erase your dignity.",
+    // PROVISIONAL — founder review.
+    teach:
+      "Shame speaks in a voice that sounds like honesty, which is why it is so persuasive. Working with it does not mean arguing back or forcing positive statements you do not believe. It means noticing the difference between “I did something painful” and “I am something wrong,” and letting that gap widen slightly. Dignity is not something you earn by improving; it is the ground you stand on while anything changes. Today you are asked only to let one true, kind sentence be said about you.",
+    practiceId: "sacred-reframing",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "You may not be able to tell whether shame or truth is speaking. Not deciding today is safer than agreeing with the harsher voice.",
+      preferNotToSay:
+        "Shame usually asks for secrecy, and you may still choose privacy for other reasons. Both can be true; nothing needs disclosing here.",
+      notToday:
+        "This question can wait. Stepping away from it is not proof of anything about your worth.",
+      veryLittleEnergy:
+        "With little energy, let the smallest kindness stand: you are here, and that is not nothing.",
+      numb:
+        "If worth feels like an abstract word right now, leave it be. Noticing the numbness costs less than arguing with it.",
+      mixed:
+        "You may believe in your dignity and doubt it in the same hour. That is ordinary, and it is not hypocrisy.",
+    },
+
     coreReflection:
       "Shame does more than say something went wrong. It can begin telling us that we are what is wrong. Healing participation becomes difficult when we expect compassion for others but not for ourselves. Your struggle does not erase your dignity.",
     scripture: {

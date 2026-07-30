@@ -1191,6 +1191,11 @@ function WeekOneSession() {
         </div>
       )}
 
+      {stage.key === "integration" && selected.length > 0 && (
+        <IntegrationSynthesisCard selected={selected} />
+      )}
+
+
       {stage.branchOptions && (
         <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
           <p className="text-base text-muted-foreground">

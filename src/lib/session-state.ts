@@ -22,7 +22,18 @@ export interface SessionState {
   note?: string;
   /** Readiness branch chosen at arrival, if any. */
   readiness?: string;
+  /** Stage 7 — which reconnection route was explicitly chosen. Never defaulted. */
+  route?: string;
+  /** Stage 7 (Christian route only) — how much spiritual material was requested. */
+  spiritualMode?: string;
+  /** Stage 8 — the practice the person chose to open, if any. */
+  practice?: string;
+  /** Stage 10 — the one honest step chosen, if any. */
+  step?: string;
+  /** Stage 11 — set only when the session was truly finished and cleared. */
+  finished?: boolean;
 }
+
 
 export function emptySessionState(): SessionState {
   return { stage: SESSION_STAGE_ORDER[0], choices: {} };
@@ -71,14 +82,24 @@ export function sanitizeSessionState(raw: unknown): SessionState {
 
   const note = sanitizeNote(obj.note);
   const readinessCandidate = sanitizeIds([obj.readiness])[0];
+  const route = sanitizeIds([obj.route])[0];
+  const spiritualMode = sanitizeIds([obj.spiritualMode])[0];
+  const practice = sanitizeIds([obj.practice])[0];
+  const step = sanitizeIds([obj.step])[0];
 
   return {
     stage,
     choices,
     ...(note ? { note } : {}),
     ...(readinessCandidate ? { readiness: readinessCandidate } : {}),
+    ...(route ? { route } : {}),
+    ...(spiritualMode ? { spiritualMode } : {}),
+    ...(practice ? { practice } : {}),
+    ...(step ? { step } : {}),
+    ...(obj.finished === true ? { finished: true } : {}),
   };
 }
+
 
 export function readSessionState(sessionId: string): SessionState {
   if (typeof window === "undefined") return emptySessionState();

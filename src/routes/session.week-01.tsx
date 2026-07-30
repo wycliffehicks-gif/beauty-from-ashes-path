@@ -1,9 +1,14 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  CLOSE_BLESSING_CHRISTIAN,
+  CLOSE_PRAYER_CHRISTIAN,
+  CLOSE_STATEMENT_PLAIN,
   SESSION_STAGE_ORDER,
   getSession,
+  type EmbodiedPractice,
+  type ReconnectionRoute,
   type SessionReadinessOption,
   type SessionStage,
   type SessionStageKey,
@@ -29,9 +34,19 @@ import {
   toSections,
   type SessionReflectionOutput,
 } from "@/lib/session/curated-reflection";
+import {
+  integrationSynthesis,
+  namingTheme,
+  orderHonestSteps,
+  stepReflection,
+} from "@/lib/session/stage-logic";
+import { markDayVisited } from "@/lib/prefs";
 import { generateSessionReflection } from "@/lib/session-reflection.functions";
 
 const SESSION_ID = "week-01";
+/** Week 1's deep session is anchored to Day 3 in the journey. */
+const SESSION_DAY = 3;
+
 
 export const Route = createFileRoute("/session/week-01")({
   head: () => ({
@@ -56,7 +71,7 @@ export const Route = createFileRoute("/session/week-01")({
   component: WeekOneSession,
 });
 
-type View = "stage" | "grounding-close" | "shortened";
+type View = "stage" | "grounding-close" | "shortened" | "finished";
 
 /**
  * Stage 6 sub-view. None of this is persisted: consent, the request, and the
@@ -64,6 +79,44 @@ type View = "stage" | "grounding-close" | "shortened";
  * clear, or leaving the page.
  */
 type AttunementView = "choose" | "curated" | "ai-consent" | "ai-working" | "ai-result";
+
+/** Stage 8 adaptations. Offered, never applied automatically. */
+const PRACTICE_ADAPTATIONS: SessionReadinessOption[] = [
+  {
+    id: "numb",
+    label: "I feel numb, or far away from myself",
+    behaviour: "low-arousal",
+    response:
+      "Then let’s not go looking for feeling. Sensory orientation is the practice for today: name four things you can see, three you can hear, and two you can feel touching your skin. Numbness is protection doing its job, not a wall you need to get through.",
+  },
+  {
+    id: "very-little-energy",
+    label: "Very little energy",
+    behaviour: "shorten",
+    response:
+      "Then the whole practice is this: one slower breath out, one true sentence in your head, and one sip of water. That is not a reduced version of the practice — today it is the practice.",
+  },
+  {
+    id: "prefer-not",
+    label: "I’d rather not explain which one",
+    behaviour: "continue",
+    response:
+      "You do not have to. Choose one by its title and open it, or move on without choosing. Nothing is recorded about why.",
+  },
+  {
+    id: "not-today",
+    label: "Not today",
+    behaviour: "grounding-close",
+    response: "That is a complete answer. Let’s close gently rather than just stopping.",
+  },
+  {
+    id: "need-support",
+    label: "I need support",
+    behaviour: "support",
+    response: "Let’s set this aside and get you to support instead.",
+  },
+];
+
 
 function WeekOneSession() {
   const session = getSession(SESSION_ID)!;
@@ -83,6 +136,10 @@ function WeekOneSession() {
   const [reflection, setReflection] = useState<SessionReflectionOutput | null>(null);
   const [reflectionSource, setReflectionSource] = useState<"ai" | "curated" | null>(null);
   const [aiFellBack, setAiFellBack] = useState(false);
+
+  // --- Stage 8 transient adaptation card (never stored) ---
+  const [adaptation, setAdaptation] = useState<string | null>(null);
+
 
   // Resume within the same browser session.
   useEffect(() => {
@@ -110,6 +167,7 @@ function WeekOneSession() {
 
   const goToStage = (key: SessionStageKey) => {
     setBranchResponse(null);
+    setAdaptation(null);
     setView("stage");
     if (key !== "attunement") resetAttunement();
     update({ stage: key });
@@ -123,13 +181,26 @@ function WeekOneSession() {
   };
 
   const back = () => {
-    if (branchResponse || view !== "stage") {
+    if (branchResponse || adaptation || view !== "stage") {
       setBranchResponse(null);
+      setAdaptation(null);
       setView("stage");
       return;
     }
     if (state.stage === "attunement" && attView !== "choose") {
       resetAttunement();
+      return;
+    }
+    if (state.stage === "reconnection" && state.route) {
+      update({ route: undefined, spiritualMode: undefined });
+      return;
+    }
+    if (state.stage === "embodied" && state.practice) {
+      update({ practice: undefined });
+      return;
+    }
+    if (state.stage === "one-honest-step" && state.step) {
+      update({ step: undefined });
       return;
     }
     const idx = SESSION_STAGE_ORDER.indexOf(state.stage);
@@ -156,9 +227,23 @@ function WeekOneSession() {
     setState(fresh);
     setNote("");
     setBranchResponse(null);
+    setAdaptation(null);
     setView("stage");
     resetAttunement();
   };
+
+  /**
+   * The true close. Erases every transient trace of the session — the note,
+   * every stage choice, the chosen route, consent, and the generated
+   * reflection — and only then records the low-sensitivity visited flag.
+   */
+  const finishAndClear = () => {
+    clear();
+    markDayVisited(SESSION_DAY);
+    setView("finished");
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
+
 
   const selected = useMemo(
     () => state.choices[state.stage] ?? [],
@@ -369,7 +454,436 @@ function WeekOneSession() {
     );
   }
 
-  // ---------------- Stage 6: Compassionate Attunement ----------------------
+
+  // ---------------- The true close (after clearing) ------------------------
+
+  if (view === "finished") {
+    return shell(
+      <div className="space-y-5" data-testid="session-finished">
+        <p className="eyebrow">Finished, and cleared</p>
+        <h2 className="font-serif text-2xl text-foreground">This session is closed</h2>
+        <p className="text-lg text-foreground">
+          Everything from this session has been erased from this device — your
+          selections, the optional note, the reflection you were shown, and the route
+          you chose. There is nothing left to find, here or anywhere else.
+        </p>
+        <p className="text-base text-muted-foreground">
+          Day 3 is marked as visited in your journey. That is a marker of where you have
+          been, not a score, and nothing about it is shared.
+        </p>
+        <div className="flex flex-col gap-2 pt-2">
+          <SessionPrimaryButton onClick={() => navigate({ to: "/" })}>
+            Return home
+          </SessionPrimaryButton>
+          <SessionSubtleButton onClick={() => navigate({ to: "/journey" })}>
+            View Week 1
+          </SessionSubtleButton>
+          <SessionSubtleButton
+            onClick={() => navigate({ to: "/day/$day", params: { day: "4" } })}
+          >
+            Continue to Day 4
+          </SessionSubtleButton>
+        </div>
+      </div>,
+    );
+  }
+
+  // ---------------- A transient adaptation card (stage 8) ------------------
+
+  if (adaptation) {
+    return shell(
+      <div className="space-y-5" data-testid="session-adaptation">
+        <p className="eyebrow">Adjusted for today</p>
+        <p className="text-lg leading-relaxed text-foreground">{adaptation}</p>
+        <div className="flex flex-col gap-2 pt-2">
+          <SessionPrimaryButton onClick={next}>Continue gently</SessionPrimaryButton>
+          <SessionSubtleButton onClick={() => setAdaptation(null)}>
+            ← Back to the practices
+          </SessionSubtleButton>
+        </div>
+      </div>,
+    );
+  }
+
+  // ---------------- Stage 7: Reconnection ----------------------------------
+
+  if (stage.key === "reconnection") {
+    const routes = stage.routes ?? [];
+    const chosen = routes.find((r) => r.id === state.route);
+
+    if (!chosen) {
+      return shell(
+        <div className="space-y-6" data-testid="session-reconnection-choose">
+          <div className="space-y-2">
+            <p className="eyebrow">{stage.label}</p>
+            <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+              {stage.heading}
+            </h1>
+          </div>
+          {stage.teach && <StageTeach text={stage.teach} />}
+          {stage.body?.map((p) => (
+            <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+              {p}
+            </p>
+          ))}
+          <div className="space-y-3">
+            {routes.map((r) => (
+              <div key={r.id} className="surface-card space-y-2" data-testid={`route-${r.id}`}>
+                <h2 className="font-serif text-lg text-foreground">{r.label}</h2>
+                <p className="text-base text-muted-foreground">{r.blurb}</p>
+                <SessionSubtleButton onClick={() => update({ route: r.id })}>
+                  Take this route
+                </SessionSubtleButton>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Nothing is chosen for you here, and you can switch routes later without
+            losing anything you have already done.
+          </p>
+          {stage.branchOptions && (
+            <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+              <p className="text-base text-muted-foreground">
+                If this is more than you have room for right now:
+              </p>
+              <ul className="space-y-2">
+                {stage.branchOptions.map((b) => (
+                  <li key={b.id}>
+                    <ChoiceChip label={b.label} active={false} onClick={() => handleBranch(b, false)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="flex flex-col gap-2 pt-2">
+            <SessionSubtleButton onClick={next}>
+              Skip this movement for now
+            </SessionSubtleButton>
+          </div>
+        </div>,
+      );
+    }
+
+    return shell(
+      <ReconnectionRouteView
+        route={chosen}
+        selected={selected}
+        spiritualMode={state.spiritualMode}
+        onSelectMode={(m: string) => update({ spiritualMode: m })}
+        onToggle={toggleChoice}
+        onBranch={(b: SessionReadinessOption) => handleBranch(b, false)}
+        branchOptions={stage.branchOptions ?? []}
+        onSwitch={() => update({ route: undefined, spiritualMode: undefined })}
+        onContinue={next}
+      />,
+    );
+  }
+
+  // ---------------- Stage 8: Embodied or relational practice ---------------
+
+  if (stage.key === "embodied") {
+    const practices = stage.practices ?? [];
+    const open = practices.find((p) => p.id === state.practice);
+
+    if (open) {
+      return shell(
+        <div className="space-y-5" data-testid="session-practice-open">
+          <p className="eyebrow">A practice, if you want it</p>
+          <h2 className="font-serif text-2xl text-foreground">{open.title}</h2>
+          <p className="text-lg leading-relaxed text-foreground">{open.body}</p>
+          <p className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground">
+            {open.safety}
+          </p>
+          <div className="flex flex-col gap-2 pt-2">
+            <SessionPrimaryButton onClick={next}>
+              I’ve done this, or I’ll carry it with me
+            </SessionPrimaryButton>
+            <SessionSubtleButton onClick={() => update({ practice: undefined })}>
+              ← Choose a different practice
+            </SessionSubtleButton>
+            <SessionSubtleButton onClick={next}>Move on without doing it</SessionSubtleButton>
+          </div>
+        </div>,
+      );
+    }
+
+    return shell(
+      <div className="space-y-6" data-testid="session-embodied">
+        <div className="space-y-2">
+          <p className="eyebrow">{stage.label}</p>
+          <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+            {stage.heading}
+          </h1>
+        </div>
+        {stage.teach && <StageTeach text={stage.teach} />}
+        {stage.body?.map((p) => (
+          <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+            {p}
+          </p>
+        ))}
+
+        <div className="space-y-3">
+          {practices.map((p) => (
+            <div key={p.id} className="surface-card space-y-2" data-testid={`practice-${p.id}`}>
+              <h2 className="font-serif text-lg text-foreground">{p.title}</h2>
+              <p className="text-base text-muted-foreground">{p.blurb}</p>
+              <SessionSubtleButton onClick={() => update({ practice: p.id })}>
+                Open this practice
+              </SessionSubtleButton>
+            </div>
+          ))}
+        </div>
+
+        {stage.choices && (
+          <ul className="space-y-2">
+            {stage.choices.map((c) => (
+              <li key={c.id}>
+                <ChoiceChip
+                  label={c.label}
+                  active={selected.includes(c.id)}
+                  onClick={() => toggleChoice(c.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+          <p className="text-base text-muted-foreground">
+            If today needs something different:
+          </p>
+          <ul className="space-y-2">
+            {PRACTICE_ADAPTATIONS.map((a) => (
+              <li key={a.id}>
+                <ChoiceChip
+                  label={a.label}
+                  active={false}
+                  onClick={() => {
+                    if (a.behaviour === "support") {
+                      navigate({ to: "/support" });
+                      return;
+                    }
+                    if (a.behaviour === "grounding-close") {
+                      setView("grounding-close");
+                      return;
+                    }
+                    setAdaptation(a.response ?? null);
+                    if (typeof window !== "undefined") window.scrollTo(0, 0);
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-2 pt-2">
+          <SessionPrimaryButton onClick={next}>Continue</SessionPrimaryButton>
+          <SessionSubtleButton onClick={next}>
+            Skip a practice today — that’s allowed
+          </SessionSubtleButton>
+        </div>
+      </div>,
+    );
+  }
+
+  // ---------------- Stage 10: One Honest Step ------------------------------
+
+  if (stage.key === "one-honest-step") {
+    const priorIds = Object.values(state.choices).flat();
+    const steps = orderHonestSteps(stage.steps ?? [], priorIds);
+    const chosenStep = steps.find((s) => s.id === state.step);
+    const theme = namingTheme(state.choices.naming ?? []);
+
+    if (chosenStep) {
+      return shell(
+        <div className="space-y-5" data-testid="session-step-chosen">
+          <p className="eyebrow">Your one honest step</p>
+          <h2 className="font-serif text-2xl text-foreground">{chosenStep.label}</h2>
+          {stepReflection(chosenStep, theme).map((line) => (
+            <p key={line.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+              {line}
+            </p>
+          ))}
+          <div className="flex flex-col gap-2 pt-2">
+            <SessionPrimaryButton onClick={next}>Continue to the close</SessionPrimaryButton>
+            <SessionSubtleButton onClick={() => update({ step: undefined })}>
+              ← Choose a different step
+            </SessionSubtleButton>
+          </div>
+        </div>,
+      );
+    }
+
+    return shell(
+      <div className="space-y-6" data-testid="session-one-honest-step">
+        <div className="space-y-2">
+          <p className="eyebrow">{stage.label}</p>
+          <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+            {stage.heading}
+          </h1>
+        </div>
+        {stage.teach && <StageTeach text={stage.teach} />}
+        {stage.body?.map((p) => (
+          <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+            {p}
+          </p>
+        ))}
+
+        <ul className="space-y-2">
+          {steps.map((s) => (
+            <li key={s.id}>
+              <ChoiceChip
+                label={s.label}
+                active={false}
+                onClick={() => {
+                  update({ step: s.id });
+                  if (typeof window !== "undefined") window.scrollTo(0, 0);
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+
+        {stage.choices && (
+          <ul className="space-y-2 border-t border-border pt-4">
+            {stage.choices.map((c) => (
+              <li key={c.id}>
+                <ChoiceChip
+                  label={c.label}
+                  active={selected.includes(c.id)}
+                  onClick={() => toggleChoice(c.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {stage.optionalText && (
+          <div className="space-y-2">
+            <label htmlFor="session-note" className="block text-base text-foreground">
+              {stage.optionalText.prompt}
+            </label>
+            <textarea
+              id="session-note"
+              rows={3}
+              maxLength={MAX_NOTE_LENGTH}
+              value={note}
+              onChange={(e) => {
+                const clean = sanitizeNote(e.target.value);
+                setNote(clean);
+                update({ note: clean });
+              }}
+              placeholder={stage.optionalText.placeholder}
+              className="w-full rounded-md border border-border bg-card p-3 text-base text-foreground"
+            />
+            <p className="text-sm text-muted-foreground">
+              This is not saved beyond this browsing session and never leaves your device.
+            </p>
+          </div>
+        )}
+
+        {stage.branchOptions && (
+          <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+            <p className="text-base text-muted-foreground">
+              If this is more than you have room for right now:
+            </p>
+            <ul className="space-y-2">
+              {stage.branchOptions.map((b) => (
+                <li key={b.id}>
+                  <ChoiceChip label={b.label} active={false} onClick={() => handleBranch(b, false)} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2 pt-2">
+          <SessionPrimaryButton onClick={next}>
+            Continue without choosing a step
+          </SessionPrimaryButton>
+        </div>
+      </div>,
+    );
+  }
+
+  // ---------------- Stage 11: Safe close -----------------------------------
+
+  if (stage.key === "close") {
+    const christian = state.route === "christian";
+    const prayerRequested = christian && state.spiritualMode === "sc-with-prayer";
+
+    return shell(
+      <div className="space-y-6" data-testid="session-close">
+        <div className="space-y-2">
+          <p className="eyebrow">{stage.label}</p>
+          <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+            {stage.heading}
+          </h1>
+        </div>
+        {stage.teach && <StageTeach text={stage.teach} />}
+        {stage.body?.map((p) => (
+          <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+            {p}
+          </p>
+        ))}
+
+        <div className="surface-card space-y-2" data-testid="close-statement">
+          <h2 className="font-serif text-lg text-foreground">Where this leaves you</h2>
+          <p className="text-base leading-relaxed text-foreground">
+            {CLOSE_STATEMENT_PLAIN}
+          </p>
+        </div>
+
+        {christian && (
+          <div className="surface-card space-y-2" data-testid="close-blessing">
+            <h2 className="font-serif text-lg text-foreground">A blessing</h2>
+            <p className="text-base leading-relaxed text-foreground">
+              {CLOSE_BLESSING_CHRISTIAN}
+            </p>
+            {prayerRequested && (
+              <p
+                data-testid="close-prayer"
+                className="text-base leading-relaxed italic text-foreground"
+              >
+                {CLOSE_PRAYER_CHRISTIAN}
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="space-y-3 border-t border-border pt-5">
+          <p className="text-base text-muted-foreground">
+            Finishing erases everything from this session on this device: your
+            selections, the optional note, the reflection you were shown, and the route
+            you chose.
+          </p>
+          <SessionPrimaryButton onClick={finishAndClear}>
+            Finish and clear this session
+          </SessionPrimaryButton>
+          <SessionSubtleButton onClick={leave}>
+            Leave my place for this browser session
+          </SessionSubtleButton>
+          <p className="text-sm text-muted-foreground">
+            Leaving your place keeps this session available until you close the browser.
+            Nothing is written to long-term storage either way.
+          </p>
+        </div>
+
+        <p className="text-center text-base text-muted-foreground">
+          <Link
+            to="/support"
+            className="inline-link inline-flex min-h-[44px] items-center px-2 underline underline-offset-4"
+          >
+            Support &amp; Safety
+          </Link>{" "}
+          is always available, including after you leave.
+        </p>
+
+      </div>,
+    );
+  }
+
+
 
   if (stage.key === "attunement" && attView !== "choose") {
     if (attView === "ai-working") {
@@ -682,6 +1196,11 @@ function WeekOneSession() {
         </div>
       )}
 
+      {stage.key === "integration" && selected.length > 0 && (
+        <IntegrationSynthesisCard selected={selected} />
+      )}
+
+
       {stage.branchOptions && (
         <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
           <p className="text-base text-muted-foreground">
@@ -710,5 +1229,180 @@ function WeekOneSession() {
         </div>
       )}
     </div>,
+  );
+}
+
+/**
+ * Stage 9 — a tentative gathering of what the person selected. Deterministic,
+ * never inferential, and explicitly offered as something they may reject.
+ */
+function IntegrationSynthesisCard({ selected }: { selected: string[] }) {
+  const synthesis = integrationSynthesis(selected);
+  return (
+    <div className="surface-card space-y-2" data-testid="session-integration-synthesis">
+      <h3 className="font-serif text-lg text-foreground">What seems to be here</h3>
+      {synthesis.lines.map((line) => (
+        <p key={line.slice(0, 24)} className="text-base leading-relaxed text-foreground">
+          {line}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Stage 7 — one complete reconnection route. Both routes are whole; the
+ * Christian route is only ever rendered after an explicit choice, and its
+ * scripture, reflection and prayer are gated behind a further explicit
+ * "how much" selection.
+ */
+function ReconnectionRouteView({
+  route,
+  selected,
+  spiritualMode,
+  onSelectMode,
+  onToggle,
+  onBranch,
+  onSwitch,
+  onContinue,
+  branchOptions,
+}: {
+  route: ReconnectionRoute;
+  selected: string[];
+  branchOptions: SessionReadinessOption[];
+  spiritualMode?: string;
+  onSelectMode: (mode: string) => void;
+  onToggle: (id: string) => void;
+  onBranch: (option: SessionReadinessOption) => void;
+  onSwitch: () => void;
+  onContinue: () => void;
+}) {
+  const showScripture =
+    route.id !== "christian" ||
+    spiritualMode === "sc-scripture-only" ||
+    spiritualMode === "sc-reflection-no-prayer" ||
+    spiritualMode === "sc-with-prayer";
+  const showReflection =
+    route.id !== "christian" ||
+    spiritualMode === "sc-reflection-no-prayer" ||
+    spiritualMode === "sc-with-prayer";
+  const showPrayer = route.id === "christian" && spiritualMode === "sc-with-prayer";
+
+  return (
+    <div className="space-y-6" data-testid={`session-reconnection-${route.id}`}>
+      <div className="space-y-2">
+        <p className="eyebrow">Reconnection</p>
+        <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+          {route.label}
+        </h1>
+      </div>
+
+      <StageTeach text={route.teach} />
+
+      <div className="space-y-2">
+        <p className="text-lg leading-relaxed text-foreground">{route.prompt}</p>
+        <ul className="space-y-2">
+          {route.choices.map((c) => (
+            <li key={c.id}>
+              <ChoiceChip
+                label={c.label}
+                active={selected.includes(c.id)}
+                onClick={() => onToggle(c.id)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {route.modes && (
+        <div className="space-y-2" data-testid="spiritual-mode">
+          <p className="text-base text-foreground">
+            How much of the spiritual material would you like? Nothing is chosen for you.
+          </p>
+          <ul className="space-y-2">
+            {route.modes.map((m) => (
+              <li key={m.id}>
+                <ChoiceChip
+                  label={m.label}
+                  active={spiritualMode === m.id}
+                  onClick={() => onSelectMode(m.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {route.scripture && showScripture && (
+        <div className="surface-card space-y-2" data-testid="route-scripture">
+          <p className="text-base leading-relaxed text-foreground">
+            “{route.scripture.text}”
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {route.scripture.reference} ({route.scripture.translation})
+          </p>
+          <p className="text-base text-muted-foreground">{route.scripture.note}</p>
+        </div>
+      )}
+
+      {route.reflection && showReflection && (
+        <div className="space-y-3" data-testid="route-reflection">
+          {route.reflection.map((p) => (
+            <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+              {p}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {route.prayer && showPrayer && (
+        <p
+          data-testid="route-prayer"
+          className="rounded-lg border border-border bg-card p-4 text-base italic leading-relaxed text-foreground"
+        >
+          {route.prayer}
+        </p>
+      )}
+
+      <div className="surface-card space-y-2" data-testid="route-exercise">
+        <h3 className="font-serif text-lg text-foreground">{route.exercise.heading}</h3>
+        <p className="text-base text-muted-foreground">{route.exercise.body}</p>
+        <ul className="space-y-2 pt-1">
+          {route.exercise.stems.map((s) => (
+            <li key={s.slice(0, 24)} className="text-base italic text-foreground">
+              {s}
+            </li>
+          ))}
+        </ul>
+        <p className="text-sm text-muted-foreground">
+          These are completed silently, in your head. Nothing here is collected.
+        </p>
+      </div>
+
+      <p className="text-base leading-relaxed text-foreground">{route.closing}</p>
+
+      <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+        <p className="text-base text-muted-foreground">
+          If this route is not the right fit today:
+        </p>
+        <ul className="space-y-2">
+          <li>
+            <ChoiceChip label="Take the other route instead" active={false} onClick={onSwitch} />
+          </li>
+          {branchOptions.map((b) => (
+            <li key={b.id}>
+              <ChoiceChip label={b.label} active={false} onClick={() => onBranch(b)} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-2">
+        <SessionPrimaryButton onClick={onContinue}>Continue</SessionPrimaryButton>
+        <SessionSubtleButton onClick={onContinue}>
+          Move on without choosing
+        </SessionSubtleButton>
+      </div>
+    </div>
   );
 }

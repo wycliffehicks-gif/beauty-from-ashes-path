@@ -27,19 +27,39 @@ describe("week 1 session content model", () => {
     expect(WEEK_01_SESSION.stages.map((s) => s.key)).toEqual(SESSION_STAGE_ORDER);
   });
 
-  it("stages 1–6 are interactive; the rest remain planned", () => {
+  it("every stage of the full session is interactive", () => {
     const interactive = WEEK_01_SESSION.stages
       .filter((s) => s.status === "interactive")
       .map((s) => s.key);
-    expect(interactive).toEqual([
-      "arrival",
-      "noticing",
-      "naming",
-      "exploration",
-      "meaning",
-      "attunement",
-    ]);
+    expect(interactive).toEqual([...SESSION_STAGE_ORDER]);
   });
+
+  it("stage 7 offers two complete routes, with neither preselected", () => {
+    const reconnection = WEEK_01_SESSION.stages.find((s) => s.key === "reconnection")!;
+    expect(reconnection.routes?.map((r) => r.id)).toEqual(["meaning", "christian"]);
+    const christian = reconnection.routes?.find((r) => r.id === "christian")!;
+    expect(christian.modes?.length).toBeGreaterThan(2);
+    expect(christian.scripture).toBeTruthy();
+    const plain = reconnection.routes?.find((r) => r.id === "meaning")!;
+    expect(plain.scripture).toBeUndefined();
+    expect(plain.prayer).toBeUndefined();
+    expect(plain.exercise.stems.length).toBeGreaterThan(1);
+  });
+
+  it("stage 8 offers practices that are never required", () => {
+    const embodied = WEEK_01_SESSION.stages.find((s) => s.key === "embodied")!;
+    expect(embodied.practices?.length).toBeGreaterThanOrEqual(5);
+    for (const p of embodied.practices ?? []) {
+      expect(p.safety.length).toBeGreaterThan(10);
+    }
+  });
+
+  it("stage 10 offers small steps across approved categories", () => {
+    const step = WEEK_01_SESSION.stages.find((s) => s.key === "one-honest-step")!;
+    expect(step.steps?.length).toBeGreaterThanOrEqual(8);
+    expect(step.steps?.some((s) => s.category === "none")).toBe(true);
+  });
+
 
   it("stage 4 lays out the three movements: pull forward, pull back, protector", () => {
     const exploration = WEEK_01_SESSION.stages.find((s) => s.key === "exploration")!;

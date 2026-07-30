@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   SESSION_STAGE_ORDER,
   getSession,
+  type SessionReadinessOption,
   type SessionStage,
   type SessionStageKey,
 } from "@/content/sessions";
@@ -22,6 +24,12 @@ import {
   writeSessionState,
   type SessionState,
 } from "@/lib/session-state";
+import {
+  buildCuratedReflection,
+  toSections,
+  type SessionReflectionOutput,
+} from "@/lib/session/curated-reflection";
+import { generateSessionReflection } from "@/lib/session-reflection.functions";
 
 const SESSION_ID = "week-01";
 
@@ -50,15 +58,31 @@ export const Route = createFileRoute("/session/week-01")({
 
 type View = "stage" | "grounding-close" | "shortened";
 
+/**
+ * Stage 6 sub-view. None of this is persisted: consent, the request, and the
+ * generated reflection live in React state only and disappear on reload,
+ * clear, or leaving the page.
+ */
+type AttunementView = "choose" | "curated" | "ai-consent" | "ai-working" | "ai-result";
+
 function WeekOneSession() {
   const session = getSession(SESSION_ID)!;
   const navigate = useNavigate();
+  const requestReflection = useServerFn(generateSessionReflection);
 
   const [state, setState] = useState<SessionState>(() => emptySessionState());
   const [hydrated, setHydrated] = useState(false);
   const [view, setView] = useState<View>("stage");
   const [note, setNote] = useState("");
   const [branchResponse, setBranchResponse] = useState<string | null>(null);
+
+  // --- Stage 6 transient state (never stored) ---
+  const [attView, setAttView] = useState<AttunementView>("choose");
+  const [consentAi, setConsentAi] = useState(false);
+  const [consentAdult, setConsentAdult] = useState(false);
+  const [reflection, setReflection] = useState<SessionReflectionOutput | null>(null);
+  const [reflectionSource, setReflectionSource] = useState<"ai" | "curated" | null>(null);
+  const [aiFellBack, setAiFellBack] = useState(false);
 
   // Resume within the same browser session.
   useEffect(() => {
@@ -75,9 +99,19 @@ function WeekOneSession() {
     setState((prev) => writeSessionState(SESSION_ID, { ...prev, ...patch }));
   };
 
+  const resetAttunement = () => {
+    setAttView("choose");
+    setConsentAi(false);
+    setConsentAdult(false);
+    setReflection(null);
+    setReflectionSource(null);
+    setAiFellBack(false);
+  };
+
   const goToStage = (key: SessionStageKey) => {
     setBranchResponse(null);
     setView("stage");
+    if (key !== "attunement") resetAttunement();
     update({ stage: key });
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   };
@@ -92,6 +126,10 @@ function WeekOneSession() {
     if (branchResponse || view !== "stage") {
       setBranchResponse(null);
       setView("stage");
+      return;
+    }
+    if (state.stage === "attunement" && attView !== "choose") {
+      resetAttunement();
       return;
     }
     const idx = SESSION_STAGE_ORDER.indexOf(state.stage);
@@ -119,6 +157,7 @@ function WeekOneSession() {
     setNote("");
     setBranchResponse(null);
     setView("stage");
+    resetAttunement();
   };
 
   const selected = useMemo(
@@ -132,6 +171,88 @@ function WeekOneSession() {
       ? current.filter((x) => x !== id)
       : [...current, id];
     update({ choices: { ...state.choices, [state.stage]: nextIds } });
+  };
+
+  const handleBranch = (option: SessionReadinessOption, persistReadiness: boolean) => {
+    if (persistReadiness) update({ readiness: option.id });
+    if (option.behaviour === "support") {
+      navigate({ to: "/support" });
+      return;
+    }
+    if (option.behaviour === "grounding-close") {
+      setView("grounding-close");
+      return;
+    }
+    if (option.behaviour === "shorten") {
+      setView("shortened");
+      return;
+    }
+    setBranchResponse(option.response ?? null);
+    if (!option.response) next();
+  };
+
+  const curatedInput = useMemo(
+    () => ({
+      naming: state.choices.naming ?? [],
+      exploration: state.choices.exploration ?? [],
+      meaning: state.choices.meaning ?? [],
+      noticing: state.choices.noticing ?? [],
+      hasNote: Boolean(state.note),
+    }),
+    [state.choices, state.note],
+  );
+
+  const showCurated = () => {
+    setReflection(buildCuratedReflection(curatedInput));
+    setReflectionSource("curated");
+    setAiFellBack(false);
+    setAttView("curated");
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
+
+  const runAi = async () => {
+    setAttView("ai-working");
+    setAiFellBack(false);
+    try {
+      const result = await requestReflection({
+        data: {
+          input: {
+            sessionId: SESSION_ID,
+            naming: curatedInput.naming,
+            exploration: curatedInput.exploration,
+            meaning: curatedInput.meaning,
+            noticing: curatedInput.noticing,
+            ...(state.note ? { note: state.note } : {}),
+            adultConfirmed: true as const,
+            aiConsent: true as const,
+            notSafeNow: false,
+            region: "CA" as const,
+          },
+        },
+      });
+
+      if (result.kind === "urgent-safety") {
+        navigate({ to: "/support" });
+        return;
+      }
+      if (result.kind !== "reflection") {
+        setReflection(buildCuratedReflection(curatedInput));
+        setReflectionSource("curated");
+        setAiFellBack(true);
+        setAttView("ai-result");
+        return;
+      }
+      setReflection(result.output);
+      setReflectionSource(result.meta.source);
+      setAiFellBack(result.meta.source !== "ai");
+      setAttView("ai-result");
+    } catch {
+      setReflection(buildCuratedReflection(curatedInput));
+      setReflectionSource("curated");
+      setAiFellBack(true);
+      setAttView("ai-result");
+    }
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
   };
 
   if (!hydrated) {
@@ -248,6 +369,146 @@ function WeekOneSession() {
     );
   }
 
+  // ---------------- Stage 6: Compassionate Attunement ----------------------
+
+  if (stage.key === "attunement" && attView !== "choose") {
+    if (attView === "ai-working") {
+      return shell(
+        <div className="space-y-4" data-testid="session-ai-working">
+          <p className="eyebrow">A moment</p>
+          <h2 className="font-serif text-2xl text-foreground">Reading it back…</h2>
+          <p className="text-lg text-foreground">
+            This takes a few seconds. Nothing is being saved.
+          </p>
+        </div>,
+      );
+    }
+
+    if (attView === "ai-consent") {
+      const ready = consentAi && consentAdult;
+      return shell(
+        <div className="space-y-5" data-testid="session-ai-consent">
+          <p className="eyebrow">Before this one thing</p>
+          <h2 className="font-serif text-2xl text-foreground">
+            What happens if you choose this
+          </h2>
+          <ul className="list-disc space-y-2 pl-5 text-base text-foreground">
+            <li>
+              The options you selected, and your optional few words if you wrote any, are
+              sent once to produce a single response. There is no conversation and no
+              follow-up.
+            </li>
+            <li>
+              They are not intentionally saved or logged — not by this app, and not
+              anywhere you can retrieve them later.
+            </li>
+            <li>
+              The response is checked against the same approved material before you see
+              it. If anything does not pass, you are shown the curated reflection instead.
+            </li>
+            <li>
+              The curated reflection stays available either way. Choosing it is not the
+              lesser option.
+            </li>
+          </ul>
+
+          <div className="surface-card space-y-3">
+            <label className="flex min-h-11 cursor-pointer items-start gap-3 text-base text-foreground">
+              <input
+                type="checkbox"
+                data-testid="consent-adult"
+                checked={consentAdult}
+                onChange={(e) => setConsentAdult(e.target.checked)}
+                className="mt-1 h-5 w-5 shrink-0 rounded border-border"
+              />
+              <span>I am 18 or older.</span>
+            </label>
+            <label className="flex min-h-11 cursor-pointer items-start gap-3 text-base text-foreground">
+              <input
+                type="checkbox"
+                data-testid="consent-ai"
+                checked={consentAi}
+                onChange={(e) => setConsentAi(e.target.checked)}
+                className="mt-1 h-5 w-5 shrink-0 rounded border-border"
+              />
+              <span>
+                I understand this sends my selections, and any words I wrote, for one
+                response — and I would like to receive it.
+              </span>
+            </label>
+          </div>
+
+          <p className="text-sm text-muted-foreground">
+            Please avoid names or identifying details in anything you wrote earlier. If
+            you would rather not send anything, the curated reflection is right here.
+          </p>
+
+          <div className="flex flex-col gap-2 pt-2">
+            <SessionPrimaryButton onClick={runAi} disabled={!ready}>
+              Receive the reflection
+            </SessionPrimaryButton>
+            <SessionSubtleButton onClick={showCurated}>
+              Use the curated reflection instead
+            </SessionSubtleButton>
+            <SessionSubtleButton onClick={resetAttunement}>
+              ← Back to the two options
+            </SessionSubtleButton>
+          </div>
+        </div>,
+      );
+    }
+
+    // curated | ai-result
+    const sections = reflection ? toSections(reflection) : [];
+    return shell(
+      <div className="space-y-5" data-testid="session-reflection">
+        <p className="eyebrow">
+          {reflectionSource === "ai" ? "A reflection, shaped for you" : "A curated reflection"}
+        </p>
+        <h2 className="font-serif text-2xl text-foreground">What might be true, held gently</h2>
+
+        {aiFellBack && (
+          <p
+            data-testid="session-ai-fallback-notice"
+            className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground"
+          >
+            The AI-shaped version was not available or did not pass its checks just now,
+            so this is the curated reflection. Nothing went wrong on your side, and this
+            version is not a lesser one.
+          </p>
+        )}
+
+        <div className="space-y-4">
+          {sections.map((s) => (
+            <section key={s.key} className="surface-card space-y-1">
+              <h3 className="font-serif text-lg text-foreground">{s.heading}</h3>
+              <p className="text-base leading-relaxed text-foreground">{s.text}</p>
+            </section>
+          ))}
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          This is a reflection, not a conclusion. If a part of it does not fit, it does
+          not fit. Nothing here is saved, and it will not appear anywhere else in the app.
+        </p>
+
+        <div className="flex flex-col gap-2 pt-2">
+          <SessionPrimaryButton onClick={next}>Continue</SessionPrimaryButton>
+          <SessionSubtleButton onClick={() => goToStage("meaning")}>
+            Go back and revise my answers
+          </SessionSubtleButton>
+          <SessionSubtleButton onClick={resetAttunement}>
+            Choose the other version — a new one replaces this
+          </SessionSubtleButton>
+        </div>
+      </div>,
+    );
+  }
+
+  // ---------------- Ordinary interactive stage -----------------------------
+
+  const groupSelected = (id: string) => selected.includes(id);
+
   return shell(
     <div className="space-y-6">
       <div className="space-y-2">
@@ -271,7 +532,7 @@ function WeekOneSession() {
         </p>
       ))}
 
-      {stage.practice && (
+      {stage.practice && stage.key !== "meaning" && (
         <div className="surface-card space-y-1">
           <h3 className="font-serif text-lg text-foreground">{stage.practice.heading}</h3>
           <p className="text-base text-muted-foreground">{stage.practice.body}</p>
@@ -290,29 +551,38 @@ function WeekOneSession() {
                 <ChoiceChip
                   label={r.label}
                   active={state.readiness === r.id}
-                  onClick={() => {
-                    update({ readiness: r.id });
-                    if (r.behaviour === "support") {
-                      navigate({ to: "/support" });
-                      return;
-                    }
-                    if (r.behaviour === "grounding-close") {
-                      setView("grounding-close");
-                      return;
-                    }
-                    if (r.behaviour === "shorten") {
-                      setView("shortened");
-                      return;
-                    }
-                    setBranchResponse(r.response ?? null);
-                    if (!r.response) next();
-                  }}
+                  onClick={() => handleBranch(r, true)}
                 />
               </li>
             ))}
           </ul>
         </div>
       )}
+
+      {stage.groups?.map((group) => (
+        <section key={group.id} className="space-y-3" data-testid={`group-${group.id}`}>
+          <div className="border-t border-border pt-5">
+            <h2 className="font-serif text-xl text-foreground">{group.title}</h2>
+          </div>
+          <StageTeach text={group.teach} />
+          <p className="text-lg text-foreground">{group.prompt}</p>
+          <p className="text-sm text-muted-foreground">
+            Choose as many or as few as fit. Nothing at all is assumed from what you leave
+            unchosen.
+          </p>
+          <ul className="space-y-2">
+            {group.choices.map((c) => (
+              <li key={c.id}>
+                <ChoiceChip
+                  label={c.label}
+                  active={groupSelected(c.id)}
+                  onClick={() => toggleChoice(c.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
 
       {stage.choices && (
         <div className="space-y-2">
@@ -334,12 +604,16 @@ function WeekOneSession() {
         </div>
       )}
 
+      {stage.practice && stage.key === "meaning" && (
+        <div className="surface-card space-y-1">
+          <h3 className="font-serif text-lg text-foreground">{stage.practice.heading}</h3>
+          <p className="text-base text-muted-foreground">{stage.practice.body}</p>
+        </div>
+      )}
+
       {stage.optionalText && (
         <div className="space-y-2">
-          <label
-            htmlFor="session-note"
-            className="block text-base text-foreground"
-          >
+          <label htmlFor="session-note" className="block text-base text-foreground">
             {stage.optionalText.prompt}
           </label>
           <textarea
@@ -362,7 +636,7 @@ function WeekOneSession() {
         </div>
       )}
 
-      {stage.attunement && (selected.length > 0 || note.length > 0) && (
+      {stage.attunement && selected.length > 0 && (
         <p
           data-testid="session-attunement"
           className="rounded-lg border border-border bg-card p-4 text-base italic text-foreground"
@@ -371,7 +645,63 @@ function WeekOneSession() {
         </p>
       )}
 
-      {!stage.readiness && (
+      {stage.attunement && selected.length === 0 && note.length > 0 && (
+        <p
+          data-testid="session-attunement"
+          className="rounded-lg border border-border bg-card p-4 text-base italic text-foreground"
+        >
+          {stage.attunement}
+        </p>
+      )}
+
+      {stage.key === "attunement" && (
+        <div className="space-y-3" data-testid="session-attunement-choose">
+          <div className="surface-card space-y-2">
+            <h3 className="font-serif text-lg text-foreground">Use the curated reflection</h3>
+            <p className="text-base text-muted-foreground">
+              Written by hand and assembled from what you chose. Nothing leaves your
+              device. This is the default, and it is complete on its own.
+            </p>
+            <SessionPrimaryButton onClick={showCurated}>
+              Show the curated reflection
+            </SessionPrimaryButton>
+          </div>
+          <div className="surface-card space-y-2">
+            <h3 className="font-serif text-lg text-foreground">
+              Receive an AI-shaped reflection
+            </h3>
+            <p className="text-base text-muted-foreground">
+              Optional. One response, from the same approved material, shaped a little
+              more closely around what you chose. You will be told exactly what is sent
+              before anything is sent.
+            </p>
+            <SessionSubtleButton onClick={() => setAttView("ai-consent")}>
+              See what this involves
+            </SessionSubtleButton>
+          </div>
+        </div>
+      )}
+
+      {stage.branchOptions && (
+        <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+          <p className="text-base text-muted-foreground">
+            If this is more than you have room for right now:
+          </p>
+          <ul className="space-y-2">
+            {stage.branchOptions.map((b) => (
+              <li key={b.id}>
+                <ChoiceChip
+                  label={b.label}
+                  active={false}
+                  onClick={() => handleBranch(b, false)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {!stage.readiness && stage.key !== "attunement" && (
         <div className="flex flex-col gap-2 pt-2">
           <SessionPrimaryButton onClick={next}>Continue</SessionPrimaryButton>
           <SessionSubtleButton onClick={next}>

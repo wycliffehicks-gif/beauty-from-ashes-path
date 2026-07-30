@@ -141,6 +141,12 @@ function DayFlow() {
     );
   }
 
+  if (content.day === SESSION_DAY) {
+    return <DayThreeOrientation title={content.title} theme={content.theme} />;
+  }
+
+
+
   const step = steps[i];
   const jumpTo = (key: StepKey) => {
     const idx = steps.findIndex((s) => s.key === key);

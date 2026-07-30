@@ -114,13 +114,39 @@ export interface SessionContent {
   stages: SessionStage[];
 }
 
-const LOW_PRESSURE_CHOICES: SessionChoice[] = [
-  { id: "mixed", label: "Mixed — more than one thing at once" },
-  { id: "numb", label: "Numb, or far away from myself" },
-  { id: "unsure", label: "I’m not sure" },
-  { id: "prefer-not", label: "I’d rather not say" },
-  { id: "none", label: "None of these" },
-];
+/**
+ * The five low-pressure answers that must be available wherever choices are
+ * offered. `kind` is the stable semantic suffix; when the same set appears in
+ * more than one group within a stage, each group gets its own prefixed copy
+ * so selecting "unsure" in one movement does not light it up in another.
+ */
+export const LOW_PRESSURE_KINDS = [
+  "mixed",
+  "numb",
+  "unsure",
+  "prefer-not",
+  "none",
+] as const;
+
+export type LowPressureKind = (typeof LOW_PRESSURE_KINDS)[number];
+
+const LOW_PRESSURE_LABELS: Record<LowPressureKind, string> = {
+  mixed: "Mixed — more than one thing at once",
+  numb: "Numb, or far away from myself",
+  unsure: "I’m not sure",
+  "prefer-not": "I’d rather not say",
+  none: "None of these",
+};
+
+function lowPressureChoices(prefix = ""): SessionChoice[] {
+  return LOW_PRESSURE_KINDS.map((kind) => ({
+    id: `${prefix}${kind}`,
+    label: LOW_PRESSURE_LABELS[kind],
+  }));
+}
+
+const LOW_PRESSURE_CHOICES: SessionChoice[] = lowPressureChoices();
+
 
 /**
  * Low-pressure exits offered part-way through the longer middle stages.

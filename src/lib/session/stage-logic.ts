@@ -130,10 +130,14 @@ export const FORBIDDEN_STEP_PATTERNS = [
   /send (the|a) (message|letter|email)/i,
 ];
 
+/**
+ * Only the step's own label is screened. The `why` text is authored
+ * explanation and often names a forbidden action precisely in order to rule
+ * it out ("rehearsal is not confrontation"), so screening it would reject
+ * safe steps.
+ */
 export function isApprovedStep(step: HonestStep): boolean {
-  return !FORBIDDEN_STEP_PATTERNS.some(
-    (re) => re.test(step.label) || re.test(step.why),
-  );
+  return !FORBIDDEN_STEP_PATTERNS.some((re) => re.test(step.label));
 }
 
 /**

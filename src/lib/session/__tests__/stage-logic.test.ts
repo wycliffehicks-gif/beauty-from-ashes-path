@@ -34,7 +34,7 @@ describe("integration synthesis", () => {
 
   it("always closes with an invitation to disagree", () => {
     const result = integrationSynthesis(["un-dignity", "uf-grief", "cr-tiredness"]);
-    expect(result.lines[result.lines.length - 1]).toMatch(/not a conclusion/i);
+    expect(result.lines[result.lines.length - 1]).toMatch(/is not a conclusion/i);
   });
 
   it("stays tentative in its language", () => {

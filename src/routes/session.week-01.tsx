@@ -569,9 +569,10 @@ function WeekOneSession() {
         route={chosen}
         selected={selected}
         spiritualMode={state.spiritualMode}
-        onSelectMode={(m) => update({ spiritualMode: m })}
+        onSelectMode={(m: string) => update({ spiritualMode: m })}
         onToggle={toggleChoice}
-        onBranch={(b) => handleBranch(b, false)}
+        onBranch={(b: SessionReadinessOption) => handleBranch(b, false)}
+        branchOptions={stage.branchOptions ?? []}
         onSwitch={() => update({ route: undefined, spiritualMode: undefined })}
         onContinue={next}
       />,
@@ -1260,9 +1261,11 @@ function ReconnectionRouteView({
   onBranch,
   onSwitch,
   onContinue,
+  branchOptions,
 }: {
   route: ReconnectionRoute;
   selected: string[];
+  branchOptions: SessionReadinessOption[];
   spiritualMode?: string;
   onSelectMode: (mode: string) => void;
   onToggle: (id: string) => void;
@@ -1382,7 +1385,7 @@ function ReconnectionRouteView({
           <li>
             <ChoiceChip label="Take the other route instead" active={false} onClick={onSwitch} />
           </li>
-          {MID_STAGE_EXITS.map((b) => (
+          {branchOptions.map((b) => (
             <li key={b.id}>
               <ChoiceChip label={b.label} active={false} onClick={() => onBranch(b)} />
             </li>

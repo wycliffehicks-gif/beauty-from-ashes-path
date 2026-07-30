@@ -9,6 +9,9 @@ import {
   type BranchKey,
   type ResolvedBranch,
 } from "@/lib/day-branches";
+import { SESSION_DAY } from "@/lib/session/day-three";
+import { DayThreeOrientation } from "@/components/DayThreeOrientation";
+
 
 export const Route = createFileRoute("/day/$day")({
   validateSearch: (search: Record<string, unknown>): { step?: "close" } => {

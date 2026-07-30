@@ -294,6 +294,26 @@ export const DAYS: DayContent[] = [
     title: "Practise New Life",
     theme: "New life is not going backward or pretending wounds disappeared.",
     arriveLine: "Insight needs somewhere to land.",
+    // PROVISIONAL — founder review.
+    teach:
+      "New life rarely announces itself. More often it looks like one small practice you keep doing while the grief is still unfinished. Today is not about summing up the week or proving it worked. It is about choosing one thing small enough to survive an ordinary week, and one connection worth moving toward. What you do not carry forward is not wasted; it simply waits. Continuing gently is a better sign than continuing perfectly.",
+    practiceId: "reach-toward-safe-connection",
+    // PROVISIONAL — founder review.
+    branches: {
+      notSure:
+        "Not knowing what to carry forward is a fair place to end. You can let the week settle first and choose later.",
+      preferNotToSay:
+        "Your continuation can stay entirely private. Nothing needs to be declared here for it to be real.",
+      notToday:
+        "You do not have to close the week tidily. Leaving it open is allowed, and you can return whenever you are ready.",
+      veryLittleEnergy:
+        "With little left, let the continuation be one sentence held quietly: this mattered, and I can return to it.",
+      numb:
+        "If the end of the week feels flat, that is not failure. Let the practice be simply noticing that you arrived here at all.",
+      mixed:
+        "Relief and sadness often finish together. You can carry both forward without deciding which one is the truer ending.",
+    },
+
     coreReflection:
       "New life may begin before everything feels resolved. It can be a new way of relating to the same story, wound, or question. Insight needs somewhere to land. One small lived practice can become a quiet beginning.",
     scripture: {

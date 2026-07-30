@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { usePrefs } from "@/lib/prefs";
 import { DAYS } from "@/content/days";
+import { SESSION_DAY } from "@/lib/session/day-three";
+
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({

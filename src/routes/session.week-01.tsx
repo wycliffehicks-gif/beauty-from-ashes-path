@@ -43,9 +43,11 @@ import {
 import { markDayVisited } from "@/lib/prefs";
 import { generateSessionReflection } from "@/lib/session-reflection.functions";
 
-const SESSION_ID = "week-01";
-/** Week 1's deep session is anchored to Day 3 in the journey. */
-const SESSION_DAY = 3;
+import {
+  SESSION_DAY,
+  WEEK_01_SESSION_ID as SESSION_ID,
+} from "@/lib/session/day-three";
+
 
 
 export const Route = createFileRoute("/session/week-01")({

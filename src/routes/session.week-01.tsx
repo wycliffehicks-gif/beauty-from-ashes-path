@@ -1226,3 +1226,176 @@ function WeekOneSession() {
     </div>,
   );
 }
+
+/**
+ * Stage 9 — a tentative gathering of what the person selected. Deterministic,
+ * never inferential, and explicitly offered as something they may reject.
+ */
+function IntegrationSynthesisCard({ selected }: { selected: string[] }) {
+  const synthesis = integrationSynthesis(selected);
+  return (
+    <div className="surface-card space-y-2" data-testid="session-integration-synthesis">
+      <h3 className="font-serif text-lg text-foreground">What seems to be here</h3>
+      {synthesis.lines.map((line) => (
+        <p key={line.slice(0, 24)} className="text-base leading-relaxed text-foreground">
+          {line}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Stage 7 — one complete reconnection route. Both routes are whole; the
+ * Christian route is only ever rendered after an explicit choice, and its
+ * scripture, reflection and prayer are gated behind a further explicit
+ * "how much" selection.
+ */
+function ReconnectionRouteView({
+  route,
+  selected,
+  spiritualMode,
+  onSelectMode,
+  onToggle,
+  onBranch,
+  onSwitch,
+  onContinue,
+}: {
+  route: ReconnectionRoute;
+  selected: string[];
+  spiritualMode?: string;
+  onSelectMode: (mode: string) => void;
+  onToggle: (id: string) => void;
+  onBranch: (option: SessionReadinessOption) => void;
+  onSwitch: () => void;
+  onContinue: () => void;
+}) {
+  const showScripture =
+    route.id !== "christian" ||
+    spiritualMode === "sc-scripture" ||
+    spiritualMode === "sc-with-reflection" ||
+    spiritualMode === "sc-with-prayer";
+  const showReflection =
+    route.id !== "christian" ||
+    spiritualMode === "sc-with-reflection" ||
+    spiritualMode === "sc-with-prayer";
+  const showPrayer = route.id === "christian" && spiritualMode === "sc-with-prayer";
+
+  return (
+    <div className="space-y-6" data-testid={`session-reconnection-${route.id}`}>
+      <div className="space-y-2">
+        <p className="eyebrow">Reconnection</p>
+        <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+          {route.label}
+        </h1>
+      </div>
+
+      <StageTeach text={route.teach} />
+
+      <div className="space-y-2">
+        <p className="text-lg leading-relaxed text-foreground">{route.prompt}</p>
+        <ul className="space-y-2">
+          {route.choices.map((c) => (
+            <li key={c.id}>
+              <ChoiceChip
+                label={c.label}
+                active={selected.includes(c.id)}
+                onClick={() => onToggle(c.id)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {route.modes && (
+        <div className="space-y-2" data-testid="spiritual-mode">
+          <p className="text-base text-foreground">
+            How much of the spiritual material would you like? Nothing is chosen for you.
+          </p>
+          <ul className="space-y-2">
+            {route.modes.map((m) => (
+              <li key={m.id}>
+                <ChoiceChip
+                  label={m.label}
+                  active={spiritualMode === m.id}
+                  onClick={() => onSelectMode(m.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {route.scripture && showScripture && (
+        <div className="surface-card space-y-2" data-testid="route-scripture">
+          <p className="text-base leading-relaxed text-foreground">
+            “{route.scripture.text}”
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {route.scripture.reference} ({route.scripture.translation})
+          </p>
+          <p className="text-base text-muted-foreground">{route.scripture.note}</p>
+        </div>
+      )}
+
+      {route.reflection && showReflection && (
+        <div className="space-y-3" data-testid="route-reflection">
+          {route.reflection.map((p) => (
+            <p key={p.slice(0, 24)} className="text-lg leading-relaxed text-foreground">
+              {p}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {route.prayer && showPrayer && (
+        <p
+          data-testid="route-prayer"
+          className="rounded-lg border border-border bg-card p-4 text-base italic leading-relaxed text-foreground"
+        >
+          {route.prayer}
+        </p>
+      )}
+
+      <div className="surface-card space-y-2" data-testid="route-exercise">
+        <h3 className="font-serif text-lg text-foreground">{route.exercise.heading}</h3>
+        <p className="text-base text-muted-foreground">{route.exercise.body}</p>
+        <ul className="space-y-2 pt-1">
+          {route.exercise.stems.map((s) => (
+            <li key={s.slice(0, 24)} className="text-base italic text-foreground">
+              {s}
+            </li>
+          ))}
+        </ul>
+        <p className="text-sm text-muted-foreground">
+          These are completed silently, in your head. Nothing here is collected.
+        </p>
+      </div>
+
+      <p className="text-base leading-relaxed text-foreground">{route.closing}</p>
+
+      <div className="space-y-2 rounded-lg border border-dashed border-border p-4">
+        <p className="text-base text-muted-foreground">
+          If this route is not the right fit today:
+        </p>
+        <ul className="space-y-2">
+          <li>
+            <ChoiceChip label="Take the other route instead" active={false} onClick={onSwitch} />
+          </li>
+          {MID_STAGE_EXITS.map((b) => (
+            <li key={b.id}>
+              <ChoiceChip label={b.label} active={false} onClick={() => onBranch(b)} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-2">
+        <SessionPrimaryButton onClick={onContinue}>Continue</SessionPrimaryButton>
+        <SessionSubtleButton onClick={onContinue}>
+          Move on without choosing
+        </SessionSubtleButton>
+      </div>
+    </div>
+  );
+}

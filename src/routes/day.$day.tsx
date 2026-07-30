@@ -300,10 +300,10 @@ function FlowShell({
               Close
             </button>
           </div>
-          <nav className="flex items-center justify-center gap-4 text-sm">
+          <nav className="flex items-center justify-center gap-2 text-sm">
             <Link
               to="/"
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Home
             </Link>
@@ -311,18 +311,19 @@ function FlowShell({
             <Link
               to="/practice/$id"
               params={{ id: "pause-and-ground" }}
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Pause
             </Link>
             <span aria-hidden className="text-muted-foreground">·</span>
             <Link
               to="/support"
-              className="inline-link text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
             >
               Support
             </Link>
           </nav>
+
         </header>
 
         <div aria-hidden className="mb-6 flex gap-1">

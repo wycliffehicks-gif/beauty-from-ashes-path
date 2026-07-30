@@ -113,8 +113,11 @@ function DayFlow() {
   }, [dayNum, search.step, closeIdx]);
 
   useEffect(() => {
-    if (content) markDayVisited(content.day);
+    // Day 3 is the deep guided session: it is marked visited only by the
+    // Stage 11 finish-and-clear action, never by opening it.
+    if (content && content.day !== SESSION_DAY) markDayVisited(content.day);
   }, [content]);
+
 
   const nextDay = useMemo(
     () => DAYS.find((d) => d.day === dayNum + 1),

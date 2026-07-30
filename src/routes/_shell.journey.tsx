@@ -60,7 +60,15 @@ function JourneyPage() {
                   <span className="mt-0.5 block truncate text-sm text-muted-foreground">
                     {d.theme}
                   </span>
+                  <span className="mt-1 block text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                    {d.day === SESSION_DAY
+                      ? "Guided session · 30–60 minutes"
+                      : d.day <= 2
+                        ? "Short daily practice · preparation"
+                        : "Short daily practice · integration"}
+                  </span>
                 </span>
+
                 <span aria-hidden className="text-muted-foreground">›</span>
               </Link>
             </li>

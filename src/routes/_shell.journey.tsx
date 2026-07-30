@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { DAYS } from "@/content/days";
 import { usePrefs } from "@/lib/prefs";
+import { SESSION_DAY } from "@/lib/session/day-three";
+
 
 export const Route = createFileRoute("/_shell/journey")({
   head: () => ({
@@ -25,12 +27,15 @@ function JourneyPage() {
   return (
     <section className="space-y-6 py-6">
       <header className="space-y-2">
-        <h1 className="font-serif text-3xl text-foreground">Seven days, at your pace</h1>
+        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Week 1</p>
+        <h1 className="font-serif text-3xl text-foreground">Week 1, at your pace</h1>
         <p className="text-muted-foreground">
-          Every day is open. There are no streaks and no locks. You can revisit any day, in any order,
-          for as long as you need.
+          Week 1 holds short daily practices — Days 1 and 2 to prepare, Days 4 to 7 to integrate —
+          and one longer guided session on Day 3. Every day is open. There are no streaks and no
+          locks, and you can revisit any day, in any order.
         </p>
       </header>
+
 
       <ol className="space-y-3">
         {DAYS.map((d) => {
@@ -57,7 +62,15 @@ function JourneyPage() {
                   <span className="mt-0.5 block truncate text-sm text-muted-foreground">
                     {d.theme}
                   </span>
+                  <span className="mt-1 block text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                    {d.day === SESSION_DAY
+                      ? "Guided session · 30–60 minutes"
+                      : d.day <= 2
+                        ? "Short daily practice · preparation"
+                        : "Short daily practice · integration"}
+                  </span>
                 </span>
+
                 <span aria-hidden className="text-muted-foreground">›</span>
               </Link>
             </li>

@@ -9,6 +9,9 @@ import {
   type BranchKey,
   type ResolvedBranch,
 } from "@/lib/day-branches";
+import { SESSION_DAY } from "@/lib/session/day-three";
+import { DayThreeOrientation } from "@/components/DayThreeOrientation";
+
 
 export const Route = createFileRoute("/day/$day")({
   validateSearch: (search: Record<string, unknown>): { step?: "close" } => {
@@ -113,8 +116,11 @@ function DayFlow() {
   }, [dayNum, search.step, closeIdx]);
 
   useEffect(() => {
-    if (content) markDayVisited(content.day);
+    // Day 3 is the deep guided session: it is marked visited only by the
+    // Stage 11 finish-and-clear action, never by opening it.
+    if (content && content.day !== SESSION_DAY) markDayVisited(content.day);
   }, [content]);
+
 
   const nextDay = useMemo(
     () => DAYS.find((d) => d.day === dayNum + 1),
@@ -134,6 +140,12 @@ function DayFlow() {
       </FlowShell>
     );
   }
+
+  if (content.day === SESSION_DAY) {
+    return <DayThreeOrientation title={content.title} theme={content.theme} />;
+  }
+
+
 
   const step = steps[i];
   const jumpTo = (key: StepKey) => {

@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { usePrefs } from "@/lib/prefs";
 import { DAYS } from "@/content/days";
+import { SESSION_DAY } from "@/lib/session/day-three";
+
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
@@ -48,10 +50,15 @@ function TodayPage() {
       <div className="surface-card space-y-4">
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--ember)]" />
-          Day {suggested.day} of 7
+          Week 1 · Day {suggested.day}
         </div>
         <h2 className="font-serif text-2xl text-foreground">{suggested.title}</h2>
         <p className="text-sm text-muted-foreground">{suggested.theme}</p>
+        <p className="text-sm text-muted-foreground">
+          {suggested.day === SESSION_DAY
+            ? "This one is the longer guided session — usually 30 to 60 minutes, and you can pause."
+            : "A short daily practice."}
+        </p>
 
         <div className="flex flex-col gap-2 pt-2 sm:flex-row">
           <Link
@@ -59,8 +66,9 @@ function TodayPage() {
             params={{ day: String(suggested.day) }}
             className="inline-flex flex-1 items-center justify-center rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition-colors hover:opacity-90"
           >
-            Begin One Honest Step
+            {suggested.day === SESSION_DAY ? "Open the guided session" : "Begin One Honest Step"}
           </Link>
+
           <Link
             to="/practice/$id"
             params={{ id: "pause-and-ground" }}

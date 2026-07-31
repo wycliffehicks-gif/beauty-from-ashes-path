@@ -659,7 +659,7 @@ function CloseScreen({
           </Link>
         ) : null}
         <button type="button" onClick={onHome} className="btn-quiet w-full">
-          {nextDay ? "Return to Your Journey" : "Return to Your Journey"}
+          Return to Your Journey
         </button>
       </div>
     </div>

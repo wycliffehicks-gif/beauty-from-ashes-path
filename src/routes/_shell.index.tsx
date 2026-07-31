@@ -76,7 +76,7 @@ function JourneyHome() {
       )}
 
       <div className="space-y-3">
-        <h2 className="font-serif text-lg text-foreground">The days so far</h2>
+        <h2 className="font-serif text-lg text-foreground">The ten days</h2>
         <ol className="space-y-3">
           {JOURNEY_DAYS.map((d) => {
             const isComplete = completed.has(d.id);

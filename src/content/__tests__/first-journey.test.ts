@@ -45,7 +45,7 @@ describe("settings architecture", () => {
       "privacy-confidentiality",
       "support-safety",
       "important-information",
-      "terms-privacy",
+      "terms-and-privacy",
       "about-beauty-from-ashes",
       "about-resurgence",
       "clear-or-restart",

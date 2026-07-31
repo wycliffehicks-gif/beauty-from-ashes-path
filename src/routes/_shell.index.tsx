@@ -107,7 +107,7 @@ function JourneyHome() {
                           ? "Where you are now"
                           : "Not started yet"}
                       {" · "}
-                      {d.shape}
+                      {d.descriptor}
                     </span>
                   </span>
                   <span aria-hidden className="text-[color:var(--gold)]">
@@ -119,7 +119,7 @@ function JourneyHome() {
           })}
         </ol>
         <p className="pt-1 text-sm text-muted-foreground">
-          More days are being prepared. Nothing here is timed, scored or compared.
+          Nothing here is timed, scored or compared.
         </p>
       </div>
     </section>

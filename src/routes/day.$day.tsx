@@ -134,23 +134,18 @@ function DayFlow() {
   }, [resumeIdx, search.step]);
 
 
-  // Reset when day changes, or land on the requested / saved locator.
+  // Reset when the day changes or ?step=close is requested. Resume is handled
+  // above so it is never overwritten by a reset.
   useEffect(() => {
     if (search.step === "close") {
       setI(closeIdx);
-    } else if (search.resume && !resumedRef.current) {
-      resumedRef.current = true;
-      const idx =
-        savedLocator && savedLocator.dayId === dayIdFor(dayNum)
-          ? steps.findIndex((s) => s.key === savedLocator.step)
-          : -1;
-      setI(idx >= 0 ? idx : 0);
     } else if (!search.resume) {
       setI(0);
     }
     setBranch(null);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum, search.step, search.resume, closeIdx, steps, savedLocator]);
+  }, [dayNum, search.step, search.resume, closeIdx]);
+
 
   // Universal autosave: the exact day and screen, nothing sensitive. This is
   // what lets Home quietly save and lets "Continue where you left off" work.

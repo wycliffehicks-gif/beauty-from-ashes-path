@@ -11,12 +11,19 @@ import {
 } from "@/lib/day-branches";
 import { SESSION_DAY } from "@/lib/session/day-three";
 import { DayThreeOrientation } from "@/components/DayThreeOrientation";
+import { JourneyScreen } from "@/components/JourneyScreen";
+import { dayIdFor } from "@/content/journey";
+import { markDayComplete, readProgress, saveLocator } from "@/lib/journey/progress";
 
 
 export const Route = createFileRoute("/day/$day")({
-  validateSearch: (search: Record<string, unknown>): { step?: "close" } => {
-    const step = search.step;
-    return step === "close" ? { step: "close" as const } : {};
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { step?: "close"; resume?: true } => {
+    const out: { step?: "close"; resume?: true } = {};
+    if (search.step === "close") out.step = "close";
+    if (search.resume === true || search.resume === "true") out.resume = true;
+    return out;
   },
   head: ({ params }) => {
     const d = getDay(Number(params.day));
@@ -108,18 +115,41 @@ function DayFlow() {
   );
   const [branch, setBranch] = useState<ResolvedBranch | null>(null);
 
-  // Reset when day changes or ?step=close is used.
+  // Reset when day changes, or land on the requested / saved locator.
   useEffect(() => {
-    setI(search.step === "close" ? closeIdx : 0);
+    if (search.step === "close") {
+      setI(closeIdx);
+    } else if (search.resume) {
+      const saved = readProgress().locator;
+      const idx =
+        saved && saved.dayId === dayIdFor(dayNum)
+          ? steps.findIndex((s) => s.key === saved.step)
+          : -1;
+      setI(idx >= 0 ? idx : 0);
+    } else {
+      setI(0);
+    }
     setBranch(null);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum, search.step, closeIdx]);
+  }, [dayNum, search.step, search.resume, closeIdx, steps]);
 
+  // Universal autosave: the exact day and screen, nothing sensitive. This is
+  // what lets Home quietly save and lets "Continue where you left off" work.
   useEffect(() => {
-    // Day 3 is the deep guided session: it is marked visited only by the
-    // Stage 11 finish-and-clear action, never by opening it.
-    if (content && content.day !== SESSION_DAY) markDayVisited(content.day);
-  }, [content]);
+    if (!content || content.day === SESSION_DAY) return;
+    saveLocator({ dayId: dayIdFor(content.day), step: steps[i].key, index: i });
+  }, [content, steps, i]);
+
+  // Completion is only recorded on genuinely reaching the closing screen.
+  // Opening a day, or returning Home, never completes it. Day 3 is completed
+  // only by the Stage 11 finish-and-clear action.
+  useEffect(() => {
+    if (!content || content.day === SESSION_DAY) return;
+    if (steps[i].key !== "close") return;
+    markDayComplete(dayIdFor(content.day));
+    markDayVisited(content.day);
+  }, [content, steps, i]);
+
 
 
   const nextDay = useMemo(
@@ -273,96 +303,36 @@ function DayFlow() {
   );
 }
 
+/**
+ * Day-flow chrome. Delegates to the shared therapeutic screen shell: small
+ * Home and Settings controls only, Back in the bottom navigation area, and no
+ * safety banner, Pause, Support or "Close for today" in the content header.
+ * Each step supplies its own Continue.
+ */
 function FlowShell({
   children,
   current,
   total,
-  onExit,
   onBack,
   label,
 }: {
   children: React.ReactNode;
   current: number;
   total: number;
-  onExit: () => void;
+  /** Retained for callers; exiting now happens through the Home control. */
+  onExit?: () => void;
   onBack?: () => void;
   label: string;
 }) {
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="container-page flex min-h-[100dvh] flex-col py-6">
-        <header className="space-y-3 pb-4">
-          <div className="flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={onBack ?? onExit}
-              className="inline-link min-h-11 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
-              aria-label={onBack ? "Back" : "Close"}
-            >
-              {onBack ? "← Back" : "✕ Close"}
-            </button>
-            <p className="min-w-0 flex-1 truncate text-center text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              {label}
-            </p>
-            <button
-              type="button"
-              onClick={onExit}
-              className="inline-link min-h-11 rounded-md px-2 py-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Close
-            </button>
-          </div>
-          <nav className="flex items-center justify-center gap-2 text-sm">
-            <Link
-              to="/"
-              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Home
-            </Link>
-            <span aria-hidden className="text-muted-foreground">·</span>
-            <Link
-              to="/practice/$id"
-              params={{ id: "pause-and-ground" }}
-              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Pause
-            </Link>
-            <span aria-hidden className="text-muted-foreground">·</span>
-            <Link
-              to="/support"
-              className="inline-link inline-flex min-h-11 items-center rounded-md px-3 text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Support
-            </Link>
-          </nav>
-
-        </header>
-
-        <div aria-hidden className="mb-6 flex gap-1">
-          {Array.from({ length: total }).map((_, idx) => (
-            <span
-              key={idx}
-              className={`h-0.5 flex-1 rounded ${
-                idx <= current ? "bg-primary" : "bg-border"
-              }`}
-            />
-          ))}
-        </div>
-
-        <div className="flex-1">{children}</div>
-
-        <div className="pt-6 text-center text-sm text-muted-foreground">
-          <button
-            type="button"
-            onClick={onExit}
-            className="inline-link inline-flex min-h-11 items-center rounded-md px-3 underline underline-offset-4"
-          >
-            Close for today
-          </button>
-        </div>
-
-      </div>
-    </div>
+    <JourneyScreen
+      label={label}
+      progress={{ current, total }}
+      onBack={onBack}
+      backLabel="← Back"
+    >
+      {children}
+    </JourneyScreen>
   );
 }
 

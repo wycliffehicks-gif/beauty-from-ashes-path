@@ -1,304 +1,220 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { LEGAL_BUNDLE_VERSION, usePrefs } from "@/lib/prefs";
-import { LegalFooter } from "@/components/LegalFooter";
+import { AGREEMENT_COPY, OPENING_SCREENS } from "@/content/opening";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
     meta: [
-      { title: "Welcome — Beauty from Ashes" },
-      { name: "description", content: "A gentle daily companion for walking toward hope." },
+      { title: "Welcome — Beauty from Ashes: The First Journey" },
+      {
+        name: "description",
+        content:
+          "A quiet place to slow down and look honestly. Beauty from Ashes: The First Journey.",
+      },
       { property: "og:title", content: "Welcome — Beauty from Ashes" },
-      { property: "og:description", content: "A gentle daily companion for walking toward hope." },
+      {
+        property: "og:description",
+        content: "A quiet place to slow down and look honestly.",
+      },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: Onboarding,
+  component: Opening,
 });
 
-function Onboarding() {
+const TOTAL = OPENING_SCREENS.length + 1; // three explanatory screens + agreement
+
+function Opening() {
   const [, update] = usePrefs();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [showSpiritual, setShowSpiritual] = useState<boolean>(true);
   const [adultConfirmed, setAdultConfirmed] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
 
-  const steps = [
-    {
-      key: "welcome",
-      body: (
-        <div className="space-y-6 text-center">
-          <p className="font-serif text-xl font-medium tracking-wide text-[var(--deep-navy)] sm:text-2xl">
-            Resurgence Therapeutics
-          </p>
-          <p className="brand-tagline mx-auto">
-            AWAKEN&nbsp;|&nbsp;REDISCOVER&nbsp;|&nbsp;HOPE
-          </p>
-          <div className="rule-gold mx-auto my-2 w-24" aria-hidden />
+  const isAgreement = step === OPENING_SCREENS.length;
+  const canAdvance = !isAgreement || (adultConfirmed && termsAgreed);
 
-          <h1 className="font-serif text-4xl leading-tight text-foreground sm:text-5xl">
-            Beauty from Ashes
-          </h1>
-          <p className="text-lg text-foreground">
-            A guided psycho-spiritual reflection and formation journey for walking toward hope.
-          </p>
-          <p className="mx-auto max-w-md text-base text-muted-foreground">
-            It is for people who know something feels emotionally or spiritually heavy,
-            guarded, disconnected or stuck, but may not know where to begin.
-          </p>
-        </div>
-      ),
-    },
-    {
-      key: "why-what-how",
-      body: (
-        <div className="space-y-5">
-          <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-            Why, what, and how
-          </h2>
-          <div className="surface-card space-y-2">
-            <h3 className="eyebrow">Why</h3>
-            <p className="text-foreground">
-              Sometimes we know something is weighing on us, but we do not yet have
-              words for it — or a safe place to begin.
-            </p>
-          </div>
-          <div className="surface-card space-y-2">
-            <h3 className="eyebrow">What</h3>
-            <p className="text-foreground">
-              Beauty from Ashes is a seven-day guided journey that brings together
-              psychologically informed reflection, spiritual meaning, practical
-              exercises and one small next step.
-            </p>
-          </div>
-          <div className="surface-card space-y-2">
-            <h3 className="eyebrow">How</h3>
-            <p className="text-foreground">
-              Each day helps you arrive, notice, name, listen, reconnect and choose
-              One Honest Step. Move at your own pace. Pause, stop or return whenever
-              you need to.
-            </p>
-            <p className="pt-1 text-sm text-muted-foreground">
-              Most days can be completed in about 10–15 minutes.
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "preferences",
-      body: (
-        <div className="space-y-5">
-          <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-            Your preferences and pace
-          </h2>
-          <p className="text-foreground">
-            Some days offer an optional Scripture reflection and prayer. You may
-            include these, or hide them. Reflections work fully either way. You can
-            change this any time in Settings.
-          </p>
-          <div className="space-y-2">
-            <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
-              <input
-                type="radio"
-                name="spiritual"
-                checked={showSpiritual}
-                onChange={() => setShowSpiritual(true)}
-                className="mt-1.5"
-              />
-              <span>
-                <span className="block font-medium text-foreground">Include Scripture and prayer</span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  Optional sections appear, always collapsible.
-                </span>
-              </span>
-            </label>
-            <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
-              <input
-                type="radio"
-                name="spiritual"
-                checked={!showSpiritual}
-                onChange={() => setShowSpiritual(false)}
-                className="mt-1.5"
-              />
-              <span>
-                <span className="block font-medium text-foreground">Hide Scripture and prayer</span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  Focus on the core reflection only.
-                </span>
-              </span>
-            </label>
-          </div>
-          <div className="surface-card space-y-1">
-            <h3 className="eyebrow">Move gently</h3>
-            <p className="text-sm text-foreground">
-              You can pause a day part way through, stop when you need to, and
-              return whenever it feels possible. Nothing is graded. Nothing is
-              lost.
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "what-this-is",
-      body: (
-        <div className="space-y-4">
-          <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-            Before you begin
-          </h2>
-          <p className="text-foreground">
-            A brief, plain-language summary — please read this before we start.
-          </p>
-          <div className="surface-card space-y-2">
-            <h3 className="eyebrow">What this is</h3>
-            <ul className="list-disc space-y-1 pl-5 text-foreground">
-              <li>An educational, reflective and spiritually sensitive companion.</li>
-              <li>A place to notice, name and take one honest step at your own pace.</li>
-            </ul>
-          </div>
-          <div className="surface-card space-y-2">
-            <h3 className="eyebrow">What it is not</h3>
-            <ul className="list-disc space-y-1 pl-5 text-foreground">
-              <li>Psychotherapy, diagnosis or medical treatment.</li>
-              <li>Crisis care or emergency support. It is not monitored and cannot
-                respond if someone is in danger.</li>
-              <li>A replacement for a qualified professional or a safe, trusted
-                relationship.</li>
-            </ul>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            You can stop at any time and seek support. If you are in immediate danger,
-            please contact local emergency services or a person nearby.
-          </p>
-
-          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-sm text-foreground">
-            <p className="font-medium">You are welcome to review these documents</p>
-            <p className="mt-1 text-muted-foreground">
-              You are not required to open, read, scroll through, or reach the end
-              of these documents in order to continue. They are here for you to
-              consult whenever it is helpful.
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
-              <li>
-                <Link
-                  to="/terms"
-                  target="_blank"
-                  className="inline-link text-primary underline underline-offset-4"
-                >
-                  Terms of Use ↗
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/privacy"
-                  target="_blank"
-                  className="inline-link text-primary underline underline-offset-4"
-                >
-                  Privacy Notice ↗
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/important-information"
-                  target="_blank"
-                  className="inline-link text-primary underline underline-offset-4"
-                >
-                  Important Information ↗
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
-            <input
-              type="checkbox"
-              checked={adultConfirmed}
-              onChange={(e) => setAdultConfirmed(e.target.checked)}
-              className="mt-1.5 h-5 w-5"
-            />
-            <span className="text-foreground">
-              I confirm that I am 18 years of age or older.
-            </span>
-          </label>
-
-          <label className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
-            <input
-              type="checkbox"
-              checked={termsAgreed}
-              onChange={(e) => setTermsAgreed(e.target.checked)}
-              className="mt-1.5 h-5 w-5"
-            />
-            <span className="text-foreground">
-              I have had the opportunity to review and agree to the Terms of Use,
-              Privacy Notice and Important Information.
-            </span>
-          </label>
-
-          <p className="text-xs text-muted-foreground">
-            A separate, optional consent for the live-AI reflection appears later,
-            only if you choose to try it.
-          </p>
-        </div>
-      ),
-    },
-  ];
-
-  const isLast = step === steps.length - 1;
-  const canAdvance = !isLast || (adultConfirmed && termsAgreed);
+  const accept = () => {
+    if (!canAdvance) return;
+    update({
+      onboarded: true,
+      legalAcceptance: {
+        version: LEGAL_BUNDLE_VERSION,
+        acceptedAt: new Date().toISOString(),
+      },
+    });
+    navigate({ to: "/", replace: true });
+  };
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="container-page flex min-h-[100dvh] flex-col py-8">
-        <div className="flex items-center justify-between text-sm uppercase tracking-widest text-muted-foreground">
-          <span>Step {step + 1} of {steps.length}</span>
-          {step > 0 && (
+    <div className="journey-page">
+      <div className="container-page flex min-h-[100dvh] flex-col">
+        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 pt-4 pb-1">
+          {step > 0 ? (
             <button
               type="button"
               onClick={() => setStep((s) => Math.max(0, s - 1))}
-              className="inline-link underline underline-offset-4"
+              className="journey-chrome-btn text-sm"
+              aria-label="Back"
             >
-              Back
+              ←
             </button>
+          ) : (
+            <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           )}
-        </div>
+          <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            {step + 1} of {TOTAL}
+          </p>
+          <Link to="/support" className="journey-chrome-btn text-xs" aria-label="Support and safety">
+            ?
+          </Link>
+        </header>
 
-        <div className="flex-1 py-10">{steps[step].body}</div>
+        <main className="flex flex-1 flex-col justify-center py-2">
+          {isAgreement ? (
+            <AgreementScreen
+              adultConfirmed={adultConfirmed}
+              termsAgreed={termsAgreed}
+              setAdultConfirmed={setAdultConfirmed}
+              setTermsAgreed={setTermsAgreed}
+            />
+          ) : (
+            <ExplanatoryScreen index={step} />
+          )}
+        </main>
 
-        <div className="flex flex-col gap-2">
+        <nav aria-label="Opening navigation" className="journey-dock">
           <button
             type="button"
             disabled={!canAdvance}
-            onClick={() => {
-              if (isLast) {
-                if (!canAdvance) return;
-                update({
-                  onboarded: true,
-                  showSpiritual,
-                  legalAcceptance: {
-                    version: LEGAL_BUNDLE_VERSION,
-                    acceptedAt: new Date().toISOString(),
-                  },
-                });
-                navigate({ to: "/" });
-              } else {
-                setStep((s) => s + 1);
-              }
-            }}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             aria-disabled={!canAdvance}
+            onClick={() => (isAgreement ? accept() : setStep((s) => s + 1))}
+            className="btn-primary-journey w-full"
           >
-            {isLast ? "Begin" : "Continue"}
+            {isAgreement ? AGREEMENT_COPY.beginLabel : "Continue"}
           </button>
-          {isLast && !canAdvance && (
-            <p className="pt-1 text-center text-sm text-muted-foreground">
-              Please check both boxes above to continue.
+          {isAgreement && !canAdvance && (
+            <p className="pt-2 text-center text-sm text-muted-foreground">
+              Please confirm both statements above to continue.
             </p>
           )}
-        </div>
-
-        <LegalFooter />
+        </nav>
       </div>
     </div>
+  );
+}
+
+function ExplanatoryScreen({ index }: { index: number }) {
+  const screen = OPENING_SCREENS[index];
+  return (
+    <section className="space-y-5" data-screen={screen.key}>
+      <p className="eyebrow">{screen.eyebrow}</p>
+      <h1 className="font-serif text-[1.7rem] leading-tight text-[color:var(--navy)] sm:text-4xl">
+        {screen.title}
+      </h1>
+      <hr className="gold-seam w-24" />
+      <p className="text-[1.02rem] leading-relaxed text-foreground sm:text-lg">{screen.lead}</p>
+      <ul className="space-y-2.5">
+        {screen.points.map((p) => (
+          <li key={p} className="flex gap-3 text-[0.98rem] leading-snug text-foreground sm:text-base">
+            <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
+            <span>{p}</span>
+          </li>
+        ))}
+      </ul>
+      {screen.closing && (
+        <p className="text-[0.95rem] italic leading-snug text-muted-foreground">{screen.closing}</p>
+      )}
+    </section>
+  );
+}
+
+function AgreementScreen({
+  adultConfirmed,
+  termsAgreed,
+  setAdultConfirmed,
+  setTermsAgreed,
+}: {
+  adultConfirmed: boolean;
+  termsAgreed: boolean;
+  setAdultConfirmed: (v: boolean) => void;
+  setTermsAgreed: (v: boolean) => void;
+}) {
+  return (
+    <section className="space-y-4" data-screen="agreement">
+      <p className="eyebrow">{AGREEMENT_COPY.eyebrow}</p>
+      <h1 className="font-serif text-[1.6rem] leading-tight text-[color:var(--navy)] sm:text-3xl">
+        {AGREEMENT_COPY.title}
+      </h1>
+      <p className="text-[0.98rem] leading-snug text-foreground">{AGREEMENT_COPY.lead}</p>
+
+      <div className="rounded-xl border border-border bg-card p-4">
+        <p className="eyebrow text-[0.72rem]">What this is</p>
+        <ul className="mt-2 space-y-1 text-[0.94rem] leading-snug text-foreground">
+          {AGREEMENT_COPY.isPoints.map((p) => (
+            <li key={p}>· {p}</li>
+          ))}
+        </ul>
+        <p className="eyebrow mt-4 text-[0.72rem]">What it is not</p>
+        <ul className="mt-2 space-y-1 text-[0.94rem] leading-snug text-foreground">
+          {AGREEMENT_COPY.isNotPoints.map((p) => (
+            <li key={p}>· {p}</li>
+          ))}
+        </ul>
+      </div>
+
+      <p className="text-[0.9rem] leading-snug text-muted-foreground">
+        {AGREEMENT_COPY.automatedProcessingSentence}
+      </p>
+      <p className="text-[0.9rem] leading-snug text-muted-foreground">
+        {AGREEMENT_COPY.safetySentence}
+      </p>
+
+      <p className="text-[0.86rem] leading-snug text-muted-foreground">
+        {AGREEMENT_COPY.reviewNote}{" "}
+        <Link to="/terms" target="_blank" className="inline-link text-primary underline underline-offset-4">
+          Terms
+        </Link>
+        {" · "}
+        <Link to="/privacy" target="_blank" className="inline-link text-primary underline underline-offset-4">
+          Privacy
+        </Link>
+        {" · "}
+        <Link
+          to="/important-information"
+          target="_blank"
+          className="inline-link text-primary underline underline-offset-4"
+        >
+          Important Information
+        </Link>
+      </p>
+
+      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+        <input
+          type="checkbox"
+          data-testid="agree-adult"
+          checked={adultConfirmed}
+          onChange={(e) => setAdultConfirmed(e.target.checked)}
+          className="mt-1 h-5 w-5 shrink-0"
+        />
+        <span className="text-[0.94rem] leading-snug text-foreground">
+          {AGREEMENT_COPY.adultLabel}
+        </span>
+      </label>
+
+      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+        <input
+          type="checkbox"
+          data-testid="agree-terms"
+          checked={termsAgreed}
+          onChange={(e) => setTermsAgreed(e.target.checked)}
+          className="mt-1 h-5 w-5 shrink-0"
+        />
+        <span className="text-[0.94rem] leading-snug text-foreground">
+          {AGREEMENT_COPY.termsLabel}
+        </span>
+      </label>
+    </section>
   );
 }

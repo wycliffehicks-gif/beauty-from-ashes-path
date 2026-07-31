@@ -1,111 +1,126 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { usePrefs } from "@/lib/prefs";
-import { DAYS } from "@/content/days";
-import { SESSION_DAY } from "@/lib/session/day-three";
-
+import {
+  JOURNEY_DAYS,
+  JOURNEY_HOME_TITLE,
+  JOURNEY_IDENTITY,
+  getJourneyDayById,
+} from "@/content/journey";
+import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
     meta: [
-      { title: "Today — Beauty from Ashes" },
+      { title: "Your Journey — Beauty from Ashes: The First Journey" },
       {
         name: "description",
-        content: "Start where you are. A gentle daily companion for walking toward hope.",
+        content:
+          "Your Journey: open a day when you have a little space. No locks, no streaks, no pressure.",
       },
-      { property: "og:title", content: "Today — Beauty from Ashes" },
+      { property: "og:title", content: "Your Journey — Beauty from Ashes" },
       {
         property: "og:description",
-        content: "Start where you are. Begin one honest step.",
+        content: "Open a day when you have a little space. Every day stays revisitable.",
       },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: TodayPage,
+  component: JourneyHome,
 });
 
-function TodayPage() {
-  const [prefs] = usePrefs();
-  // Suggest the next unvisited day in the seven, otherwise Day 1.
-  const nextDay =
-    DAYS.find((d) => !prefs.visitedDays.includes(d.day))?.day ?? 1;
-  const suggested = DAYS.find((d) => d.day === nextDay)!;
+function JourneyHome() {
+  const { progress, hydrated } = useJourneyProgress();
+
+  const completed = new Set(progress.completedDays);
+  const resume = hydrated && hasMeaningfulProgress(progress) ? progress.locator : null;
+  const resumeDay = resume ? getJourneyDayById(resume.dayId) : undefined;
+
+  // The current day is the first not-yet-complete day; everything after is
+  // simply not started yet. No locks — all days stay open.
+  const currentId = JOURNEY_DAYS.find((d) => !completed.has(d.id))?.id ?? null;
 
   return (
-    <section className="space-y-8 py-6">
-      <header className="space-y-2">
-        <p className="font-serif text-lg font-medium tracking-wide text-[var(--deep-navy)] sm:text-xl">
-          Resurgence Therapeutics
-        </p>
-        <p className="brand-tagline">
-          AWAKEN&nbsp;|&nbsp;REDISCOVER&nbsp;|&nbsp;HOPE
-        </p>
-
-        <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
-          Start where you are.
+    <section className="space-y-8 pb-6">
+      <header className="space-y-3">
+        <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
+          {JOURNEY_HOME_TITLE}
         </h1>
-        <p className="text-muted-foreground">
-          Not where you think you should be. There is no wrong pace today.
+        <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
+        <hr className="gold-seam w-28" />
+        <p className="text-base text-foreground">
+          Open a day when you have a little space. Days stay open, and you can return to any of
+          them as often as you like.
         </p>
       </header>
 
-      <div className="surface-card space-y-4">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--ember)]" />
-          Week 1 · Day {suggested.day}
-        </div>
-        <h2 className="font-serif text-2xl text-foreground">{suggested.title}</h2>
-        <p className="text-sm text-muted-foreground">{suggested.theme}</p>
-        <p className="text-sm text-muted-foreground">
-          {suggested.day === SESSION_DAY
-            ? "This one is the longer guided session — usually 30 to 60 minutes, and you can pause."
-            : "A short daily practice."}
-        </p>
-
-        <div className="flex flex-col gap-2 pt-2 sm:flex-row">
+      {resume && resumeDay && (
+        <div
+          data-testid="resume-card"
+          className="rounded-xl border border-[color:var(--gold)] bg-card p-5"
+        >
+          <p className="eyebrow text-[0.72rem]">Continue where you left off</p>
+          <h2 className="mt-2 font-serif text-xl text-foreground">
+            Day {resumeDay.day} · {resumeDay.title}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Your place was saved on this device. Nothing was lost.
+          </p>
           <Link
             to="/day/$day"
-            params={{ day: String(suggested.day) }}
-            className="inline-flex flex-1 items-center justify-center rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition-colors hover:opacity-90"
+            params={{ day: String(resumeDay.day) }}
+            search={{ resume: true }}
+            className="btn-primary-journey mt-4 w-full"
           >
-            {suggested.day === SESSION_DAY ? "Open the guided session" : "Begin One Honest Step"}
-          </Link>
-
-          <Link
-            to="/practice/$id"
-            params={{ id: "pause-and-ground" }}
-            className="inline-flex flex-1 items-center justify-center rounded-lg border border-border bg-background px-5 py-3 font-medium text-foreground hover:bg-secondary"
-          >
-            Pause and Ground
+            Continue
           </Link>
         </div>
-      </div>
+      )}
 
-      <div className="rounded-lg border border-border/70 bg-secondary/40 p-4 text-sm text-muted-foreground">
-        Missed days don’t count against you. You can revisit any day, in any order,
-        for as long as you need.
-      </div>
-
-      <div>
-        <h3 className="mb-3 font-serif text-lg text-foreground">Choose another day</h3>
-        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {DAYS.map((d) => (
-            <li key={d.day}>
-              <Link
-                to="/day/$day"
-                params={{ day: String(d.day) }}
-                className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3 hover:border-primary/60"
-              >
-                <span className="flex min-w-0 flex-col">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                    Day {d.day}
-                    {prefs.visitedDays.includes(d.day) ? " · visited" : ""}
+      <div className="space-y-3">
+        <h2 className="font-serif text-lg text-foreground">The days so far</h2>
+        <ol className="space-y-3">
+          {JOURNEY_DAYS.map((d) => {
+            const isComplete = completed.has(d.id);
+            const state = isComplete ? "complete" : d.id === currentId ? "current" : "upcoming";
+            return (
+              <li key={d.id}>
+                <Link
+                  to="/day/$day"
+                  params={{ day: String(d.day) }}
+                  className="day-row"
+                  data-state={state}
+                  data-testid={`day-row-${d.id}`}
+                >
+                  <span aria-hidden className="day-marker">
+                    {d.day}
                   </span>
-                  <span className="truncate font-serif text-base text-foreground">{d.title}</span>
-                </span>
-                <span aria-hidden className="text-muted-foreground">›</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                  <span className="min-w-0">
+                    <span className="block font-serif text-lg leading-snug text-foreground">
+                      {d.title}
+                    </span>
+                    <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                      {d.theme}
+                    </span>
+                    <span className="mt-1.5 block text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground">
+                      {state === "complete"
+                        ? "Finished · open any time"
+                        : state === "current"
+                          ? "Where you are now"
+                          : "Not started yet"}
+                      {" · "}
+                      {d.shape}
+                    </span>
+                  </span>
+                  <span aria-hidden className="text-[color:var(--gold)]">
+                    ›
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+        <p className="pt-1 text-sm text-muted-foreground">
+          More days are being prepared. Nothing here is timed, scored or compared.
+        </p>
       </div>
     </section>
   );

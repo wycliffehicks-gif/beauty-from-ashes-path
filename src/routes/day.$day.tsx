@@ -1,24 +1,32 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DAYS, getDay, type DayContent } from "@/content/days";
-import { markDayVisited, usePrefs } from "@/lib/prefs";
-import {
-  BRANCH_KEYS,
-  BRANCH_LABELS,
-  resolveBranch,
-  type BranchKey,
-  type ResolvedBranch,
-} from "@/lib/day-branches";
-import { SESSION_DAY } from "@/lib/session/day-three";
-import { DayThreeOrientation } from "@/components/DayThreeOrientation";
 import { JourneyScreen } from "@/components/JourneyScreen";
+import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
+import {
+  screenKey as keyForScreen,
+  screenLabel,
+  screensFor,
+  type InfoNote,
+  type JourneyDayContent,
+  type PracticePath,
+  type Question,
+  type ScreenKey,
+} from "@/content/journey-types";
 import { dayIdFor } from "@/content/journey";
+import { markDayVisited } from "@/lib/prefs";
 import {
   markDayComplete,
   readProgress,
   saveDayAnswers,
+  saveDayReflection,
   saveLocator,
 } from "@/lib/journey/progress";
+import {
+  answerKeyFor,
+  buildReflection,
+  reflectionToText,
+  type BuiltReflection,
+} from "@/lib/journey/reflection-engine";
 import {
   mergeStepAnswers,
   optionIndexesFor,
@@ -28,9 +36,6 @@ import {
 /** Layout effect on the client, a no-op during server rendering. */
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
-
-
-
 
 export const Route = createFileRoute("/day/$day")({
   validateSearch: (
@@ -42,8 +47,10 @@ export const Route = createFileRoute("/day/$day")({
     return out;
   },
   head: ({ params }) => {
-    const d = getDay(Number(params.day));
-    const title = d ? `Day ${d.day}: ${d.title} — Beauty from Ashes` : "Day — Beauty from Ashes";
+    const d = getFirstJourneyDay(Number(params.day));
+    const title = d
+      ? `Day ${d.day}: ${d.title} — Beauty from Ashes`
+      : "Day — Beauty from Ashes";
     const desc = d?.theme ?? "A gentle daily reflection.";
     return {
       meta: [
@@ -58,96 +65,53 @@ export const Route = createFileRoute("/day/$day")({
   component: DayFlow,
 });
 
-type StepKey =
-  | "arrive"
-  | "teach"
-  | "notice"
-  | "name"
-  | "listen"
-  | "reflection"
-  | "reconnect"
-  | "step"
-  | "close";
-
-const BASE_STEPS: { key: StepKey; label: string }[] = [
-  { key: "arrive", label: "Arrive" },
-  { key: "notice", label: "Notice" },
-  { key: "name", label: "Name" },
-  { key: "listen", label: "Listen" },
-  { key: "reflection", label: "Reflection" },
-  { key: "reconnect", label: "Reconnect" },
-  { key: "step", label: "One Honest Step" },
-  { key: "close", label: "Close" },
-];
-
-function stepsFor(content: DayContent): { key: StepKey; label: string }[] {
-  if (!content.teach) return BASE_STEPS;
-  // Insert Teach immediately after Arrive.
-  return [
-    BASE_STEPS[0],
-    { key: "teach", label: "Teach" },
-    ...BASE_STEPS.slice(1),
-  ];
-}
-
-const NOTICE_OPTIONS = [
-  "Heavy or tired",
-  "Tense or on-edge",
-  "Numb or far away",
-  "Restless",
-  "Softer than yesterday",
-  "Somewhere in between",
-  "I’m not sure yet",
-];
-
-const NAME_OPTIONS = [
-  "Grief",
-  "Fear",
-  "Shame",
-  "Anger",
-  "Loneliness",
-  "Exhaustion",
-  "Longing",
-  "Something old, without words",
-  "I need to go slowly",
-];
-
 function DayFlow() {
   const { day } = Route.useParams();
   const dayNum = Number(day);
-  const content = getDay(dayNum);
-  const [prefs] = usePrefs();
+  const content = getFirstJourneyDay(dayNum);
+
+  if (!content) return <DayNotHere />;
+  return <DayFlowFor key={content.day} content={content} />;
+}
+
+function DayNotHere() {
+  return (
+    <JourneyScreen label="Day">
+      <div className="space-y-4">
+        <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
+        <p className="text-muted-foreground">
+          Nothing is lost. Please choose a day from Your Journey.
+        </p>
+        <Link to="/" className="btn-primary-journey mt-2 inline-flex">
+          Back to Your Journey
+        </Link>
+      </div>
+    </JourneyScreen>
+  );
+}
+
+function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const navigate = useNavigate();
   const search = Route.useSearch();
 
-  const steps = useMemo(
-    () => (content ? stepsFor(content) : BASE_STEPS),
-    [content],
-  );
-  const closeIdx = steps.length - 1;
-  const stepKeys = useMemo(() => steps.map((s) => s.key as string), [steps]);
-  const dayId = dayIdFor(dayNum);
+  const screens = useMemo(() => screensFor(content), [content]);
+  const stepKeys = useMemo(() => screens.map(keyForScreen), [screens]);
+  const closeIdx = screens.length - 1;
+  const dayId = dayIdFor(content.day);
 
   // Server render and first client render are identical: the opening screen,
   // or the closing screen when the URL asks for it. Browser storage is never
   // read during render, so there is no hydration mismatch.
   const [i, setI] = useState(() => (search.step === "close" ? closeIdx : 0));
-  const [branch, setBranch] = useState<ResolvedBranch | null>(null);
-
-  // Answers already recorded for this day, restored once after hydration.
   const [dayAnswers, setDayAnswers] = useState<string[]>([]);
 
   /**
-   * Resume gate. While this is "pending", autosave is held back so the
-   * opening-screen index can never overwrite the stored locator before it has
-   * been restored. It becomes "settled" as soon as the restore effect has run
-   * — whether or not there was anything valid to restore.
+   * Resume gate. While pending, autosave is held back so the opening-screen
+   * index can never overwrite the stored locator before it is restored.
    */
   const [resumeSettled, setResumeSettled] = useState(!search.resume);
   const restoredForRef = useRef<string | null>(null);
 
-  // Restore the exact saved screen after hydration, in a layout effect so it
-  // is applied before the browser paints the opening screen.
   useIsomorphicLayoutEffect(() => {
     if (restoredForRef.current === dayId) return;
     restoredForRef.current = dayId;
@@ -162,34 +126,25 @@ function DayFlow() {
         locator: progress.locator,
         requested: Boolean(search.resume),
       });
-      // An invalid, foreign or stale locator resolves to -1: stay at Arrive.
+      // Invalid, foreign or stale locator resolves to -1: stay at Arrive.
       if (idx >= 0) setI(idx);
     }
     setResumeSettled(true);
   }, [dayId, stepKeys, search.resume, search.step]);
 
-  // Reset when the day changes, or when the closing screen is requested.
-  // Resume is handled above and is never reset by this effect.
+  // Quiet autosave of the exact screen. Never completes a day.
   useEffect(() => {
-    if (search.step === "close") {
-      setI(closeIdx);
-    } else if (!search.resume) {
-      setI(0);
-    }
-    setBranch(null);
-    if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum, search.step, search.resume, closeIdx]);
-
-  // Universal autosave: the exact day and screen, nothing sensitive. Held
-  // until the resume gate settles, then it simply continues from wherever the
-  // person now is — including the screen just restored.
-  useEffect(() => {
-    if (!content || content.day === SESSION_DAY) return;
     if (!resumeSettled) return;
-    saveLocator({ dayId: dayIdFor(content.day), step: steps[i].key, index: i });
-  }, [content, steps, i, resumeSettled]);
+    saveLocator({ dayId, step: stepKeys[i], index: i });
+  }, [dayId, stepKeys, i, resumeSettled]);
 
-  // Structured, low-sensitivity answer IDs (step + option position only).
+  // Completion is recorded only on genuinely reaching the closing screen.
+  useEffect(() => {
+    if (screens[i]?.kind !== "close") return;
+    markDayComplete(dayId);
+    markDayVisited(content.day);
+  }, [screens, i, dayId, content.day]);
+
   const recordStepAnswers = (stepKey: string, optionIndexes: number[]) => {
     setDayAnswers((cur) => {
       const next = mergeStepAnswers(cur, stepKey, optionIndexes);
@@ -198,704 +153,515 @@ function DayFlow() {
     });
   };
 
-  // Completion is only recorded on genuinely reaching the closing screen.
-  // Opening a day, or returning Home, never completes it. Day 3 is completed
-  // only by the Stage 11 finish-and-clear action.
-  useEffect(() => {
-    if (!content || content.day === SESSION_DAY) return;
-    if (steps[i].key !== "close") return;
-    markDayComplete(dayIdFor(content.day));
-    markDayVisited(content.day);
-  }, [content, steps, i]);
-
-
-
-
-  const nextDay = useMemo(
-    () => DAYS.find((d) => d.day === dayNum + 1),
-    [dayNum],
-  );
-
-  if (!content) {
-    return (
-      <FlowShell current={0} total={BASE_STEPS.length} onExit={() => navigate({ to: "/journey" })} label="Day">
-        <div className="space-y-4">
-          <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
-          <p className="text-muted-foreground">Please choose a day from the journey.</p>
-          <Link to="/journey" className="inline-link text-primary underline">
-            Back to Journey
-          </Link>
-        </div>
-      </FlowShell>
-    );
-  }
-
-  if (content.day === SESSION_DAY) {
-    return <DayThreeOrientation title={content.title} theme={content.theme} />;
-  }
-
-
-
-  const step = steps[i];
-  const jumpTo = (key: StepKey) => {
-    const idx = steps.findIndex((s) => s.key === key);
-    if (idx >= 0) {
-      setI(idx);
-      if (typeof window !== "undefined") window.scrollTo(0, 0);
-    }
+  const scrollTop = () => {
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
   };
   const goNext = () => {
-    setI((n) => Math.min(steps.length - 1, n + 1));
-    if (typeof window !== "undefined") window.scrollTo(0, 0);
+    setI((n) => Math.min(closeIdx, n + 1));
+    scrollTop();
   };
-  const goPrev = () => setI((n) => Math.max(0, n - 1));
-  const exit = () => navigate({ to: "/" });
-
-  const onBranch = (key: BranchKey) => {
-    const r = resolveBranch(content, key);
-    if (!r) return;
-    setBranch(r);
-    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  const goPrev = () => {
+    setI((n) => Math.max(0, n - 1));
+    scrollTop();
   };
-  const clearBranch = () => setBranch(null);
 
-  const label = branch
-    ? `Day ${content.day} · ${BRANCH_LABELS[branch.key]}`
-    : `Day ${content.day} · ${step.label}`;
-
-  const backHandler = branch
-    ? clearBranch
-    : i > 0
-      ? goPrev
-      : undefined;
+  const screen = screens[i];
+  const label = `Day ${content.day} · ${screenLabel(content, screen)}`;
+  const nextDay = content.day < FIRST_JOURNEY_FINAL_DAY ? content.day + 1 : null;
 
   return (
-    <FlowShell
-      current={i}
-      total={steps.length}
-      onExit={exit}
-      onBack={backHandler}
+    <ScreenBody
+      key={keyForScreen(screen)}
+      content={content}
+      screen={screen}
       label={label}
-    >
-      {branch ? (
-        <BranchView
-          branch={branch}
-          onContinueForward={() => {
-            clearBranch();
-            jumpTo("listen");
-          }}
-          onContinueTinyStep={() => {
-            // Skip remaining prompts; the tiny-step view IS the remainder.
-            clearBranch();
-            jumpTo("close");
-          }}
-          onGroundingClose={() => {
-            // Person chose "Not today" — leave safely; day already marked visited.
-            navigate({ to: "/" });
-          }}
-        />
-      ) : (
-        <>
-          {step.key === "arrive" && (
-            <StepArrive title={content.title} arrive={content.arriveLine} onNext={goNext} />
-          )}
-          {step.key === "teach" && content.teach && (
-            <StepTeach teach={content.teach} practiceId={content.practiceId} onNext={goNext} />
-          )}
-          {step.key === "notice" && (
-            <StepNotice
-              options={NOTICE_OPTIONS}
-              branchKeys={content.branches ? BRANCH_KEYS : []}
-              initialIndexes={optionIndexesFor(dayAnswers, "notice", NOTICE_OPTIONS.length)}
-              onChange={(idx) => recordStepAnswers("notice", idx)}
-              onNext={goNext}
-              onBranch={onBranch}
-            />
-          )}
-          {step.key === "name" && (
-            <StepChoice
-              heading="Name"
-              prompt="What might you be carrying today?"
-              hint="Naming is not fixing. You may choose more than one, or skip."
-              options={NAME_OPTIONS}
-              multi
-              initialIndexes={optionIndexesFor(dayAnswers, "name", NAME_OPTIONS.length)}
-              onChange={(idx) => recordStepAnswers("name", idx)}
-              onNext={goNext}
-            />
-          )}
-
-          {step.key === "listen" && (
-            <StepListen prompts={content.listenPrompts} onNext={goNext} />
-          )}
-          {step.key === "reflection" && (
-            <StepReflection
-              content={content}
-              showSpiritual={prefs.showSpiritual}
-              onNext={goNext}
-            />
-          )}
-          {step.key === "reconnect" && (
-            <StepChoice
-              heading="Reconnect"
-              prompt="Where might reconnection begin today?"
-              hint="Reconnection never means returning to unsafe people."
-              options={content.reconnectOptions.map((o) => `${o.label} — ${o.description}`)}
-              onNext={goNext}
-            />
-          )}
-          {step.key === "step" && (
-            <StepChoice
-              heading="One Honest Step"
-              prompt="What small, honest step feels possible today?"
-              hint="Small counts. Preparation counts. Skipping is also a valid answer."
-              options={content.oneHonestStep}
-              onNext={goNext}
-            />
-          )}
-          {step.key === "close" && (
-            <StepClose
-              dayNum={content.day}
-              blessing={content.closingBlessing}
-              prayer={prefs.showSpiritual ? content.optionalPrayer : undefined}
-              nextDay={nextDay?.day}
-            />
-          )}
-        </>
-      )}
-    </FlowShell>
+      progress={{ current: i, total: screens.length }}
+      onBack={i > 0 ? goPrev : undefined}
+      onNext={goNext}
+      answers={dayAnswers}
+      onAnswer={recordStepAnswers}
+      nextDay={nextDay}
+      onHome={() => navigate({ to: "/" })}
+    />
   );
 }
 
-/**
- * Day-flow chrome. Delegates to the shared therapeutic screen shell: small
- * Home and Settings controls only, Back in the bottom navigation area, and no
- * safety banner, Pause, Support or "Close for today" in the content header.
- * Each step supplies its own Continue.
- */
-function FlowShell({
-  children,
-  current,
-  total,
-  onBack,
+function ScreenBody({
+  content,
+  screen,
   label,
+  progress,
+  onBack,
+  onNext,
+  answers,
+  onAnswer,
+  nextDay,
+  onHome,
 }: {
-  children: React.ReactNode;
-  current: number;
-  total: number;
-  /** Retained for callers; exiting now happens through the Home control. */
-  onExit?: () => void;
-  onBack?: () => void;
+  content: JourneyDayContent;
+  screen: ScreenKey;
   label: string;
+  progress: { current: number; total: number };
+  onBack?: () => void;
+  onNext: () => void;
+  answers: string[];
+  onAnswer: (stepKey: string, indexes: number[]) => void;
+  nextDay: number | null;
+  onHome: () => void;
 }) {
+  const shell = (
+    node: React.ReactNode,
+    nav: {
+      onContinue?: () => void;
+      continueLabel?: string;
+      footer?: React.ReactNode;
+    } = {},
+  ) => (
+    <JourneyScreen
+      label={label}
+      progress={progress}
+      onBack={onBack}
+      backLabel="← Back"
+      onContinue={nav.onContinue}
+      continueLabel={nav.continueLabel}
+      footer={nav.footer}
+    >
+      {node}
+    </JourneyScreen>
+  );
+
+  switch (screen.kind) {
+    case "arrive":
+      return shell(<ArriveScreen content={content} />, { onContinue: onNext });
+
+    case "understand":
+      return shell(<UnderstandScreen content={content} />, { onContinue: onNext });
+
+    case "question":
+    case "step": {
+      const question =
+        screen.kind === "step"
+          ? content.step
+          : content.questions.find((q) => q.id === screen.questionId);
+      if (!question) return shell(<p>—</p>, { onContinue: onNext });
+      return (
+        <QuestionScreenShell
+          question={question}
+          stepKey={answerKeyFor(content, question.id)}
+          answers={answers}
+          onAnswer={onAnswer}
+          onNext={onNext}
+          label={label}
+          progress={progress}
+          onBack={onBack}
+        />
+      );
+    }
+
+    case "echo": {
+      const question = content.questions.find((q) => q.id === screen.questionId);
+      if (!question?.echo) return shell(<p>—</p>, { onContinue: onNext });
+      return shell(
+        <EchoScreen content={content} question={question} answers={answers} />,
+        { onContinue: onNext },
+      );
+    }
+
+    case "practise":
+      return shell(<PractiseScreen content={content} />, { onContinue: onNext });
+
+    case "reflection":
+      return shell(<ReflectionScreen content={content} answers={answers} />, {
+        onContinue: onNext,
+      });
+
+    case "close":
+      return shell(
+        <CloseScreen content={content} nextDay={nextDay} onHome={onHome} />,
+      );
+  }
+}
+
+/* ---------------------------------------------------------------- screens */
+
+function ArriveScreen({ content }: { content: JourneyDayContent }) {
+  return (
+    <div className="space-y-5">
+      <p className="eyebrow">Arrive</p>
+      <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+        {content.title}
+      </h1>
+      <p className="text-lg text-foreground">{content.arrive.lead}</p>
+      {content.arrive.body.map((p) => (
+        <p key={p} className="text-base text-foreground">
+          {p}
+        </p>
+      ))}
+      {content.arrive.settle && content.arrive.settle.length > 0 && (
+        <div className="surface-card space-y-3">
+          <p className="eyebrow">A place to settle</p>
+          <ol className="space-y-2 text-base text-foreground">
+            {content.arrive.settle.map((s) => (
+              <li key={s} className="flex gap-3">
+                <span aria-hidden className="text-[color:var(--gold)]">
+                  ·
+                </span>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function UnderstandScreen({ content }: { content: JourneyDayContent }) {
+  return (
+    <div className="space-y-5">
+      <p className="eyebrow">Understand</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        {content.understand.heading}
+      </h1>
+      {content.understand.body.map((p) => (
+        <p key={p} className="text-base text-foreground">
+          {p}
+        </p>
+      ))}
+      <InfoNotes notes={content.understand.info} />
+    </div>
+  );
+}
+
+function InfoNotes({ notes }: { notes?: InfoNote[] }) {
+  if (!notes || notes.length === 0) return null;
+  return (
+    <div className="space-y-2">
+      {notes.map((n) => (
+        <details key={n.term} className="surface-card">
+          <summary className="min-h-[44px] cursor-pointer list-none py-2 font-serif text-base text-[color:var(--navy)]">
+            {n.term}
+          </summary>
+          <p className="pb-1 text-base text-foreground">{n.explanation}</p>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+function QuestionScreenShell({
+  question,
+  stepKey,
+  answers,
+  onAnswer,
+  onNext,
+  label,
+  progress,
+  onBack,
+}: {
+  question: Question;
+  stepKey: string;
+  answers: string[];
+  onAnswer: (stepKey: string, indexes: number[]) => void;
+  onNext: () => void;
+  label: string;
+  progress: { current: number; total: number };
+  onBack?: () => void;
+}) {
+  const [selected, setSelected] = useState<number[]>(() =>
+    optionIndexesFor(answers, stepKey, question.options.length),
+  );
+
+  // Restore previously recorded choices once they arrive from storage.
+  const restoredRef = useRef(false);
+  useEffect(() => {
+    if (restoredRef.current) return;
+    const prior = optionIndexesFor(answers, stepKey, question.options.length);
+    if (prior.length > 0) {
+      restoredRef.current = true;
+      setSelected(prior);
+    }
+  }, [answers, stepKey, question.options.length]);
+
+  const toggle = (idx: number) => {
+    restoredRef.current = true;
+    const next =
+      question.select === "one"
+        ? selected.includes(idx)
+          ? []
+          : [idx]
+        : selected.includes(idx)
+          ? selected.filter((n) => n !== idx)
+          : [...selected, idx];
+    setSelected(next);
+    onAnswer(stepKey, next);
+  };
+
   return (
     <JourneyScreen
       label={label}
-      progress={{ current, total }}
+      progress={progress}
       onBack={onBack}
       backLabel="← Back"
+      onContinue={onNext}
+      continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
     >
-      {children}
+      <div className="space-y-5">
+        <p className="eyebrow">{question.eyebrow}</p>
+        <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+          {question.prompt}
+        </h1>
+        {question.hint && (
+          <p className="text-base text-muted-foreground">{question.hint}</p>
+        )}
+        <ul className="space-y-2" role="list">
+          {question.options.map((option, idx) => {
+            const isOn = selected.includes(idx);
+            return (
+              <li key={option.id}>
+                <button
+                  type="button"
+                  aria-pressed={isOn}
+                  onClick={() => toggle(idx)}
+                  className={`flex min-h-[52px] w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-base transition-colors ${
+                    isOn
+                      ? "border-[color:var(--gold)] bg-[color:var(--champagne)]/35 text-foreground"
+                      : "border-border bg-card text-foreground hover:border-[color:var(--gold)]"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`mt-1 h-3 w-3 shrink-0 rounded-full border ${
+                      isOn
+                        ? "border-[color:var(--gold)] bg-[color:var(--gold)]"
+                        : "border-border"
+                    }`}
+                  />
+                  <span className="min-w-0">
+                    <span className="block">{option.label}</span>
+                    {option.note && (
+                      <span className="mt-0.5 block text-sm text-muted-foreground">
+                        {option.note}
+                      </span>
+                    )}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <InfoNotes notes={question.info} />
+      </div>
     </JourneyScreen>
   );
 }
 
-function StepArrive({
-  title,
-  arrive,
-  onNext,
+function EchoScreen({
+  content,
+  question,
+  answers,
 }: {
-  title: string;
-  arrive: string;
-  onNext: () => void;
+  content: JourneyDayContent;
+  question: Question;
+  answers: string[];
 }) {
-  return (
-    <div className="space-y-6">
-      <p className="eyebrow">Arrive</p>
-      <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">{title}</h1>
-      <p className="text-lg text-foreground">{arrive}</p>
-      <p className="text-base text-muted-foreground">
-        Take one slower breath. You don’t need to do more than arrive.
-      </p>
-      <div className="flex flex-col gap-2 pt-4">
-        <PrimaryButton onClick={onNext}>Begin</PrimaryButton>
-      </div>
-    </div>
-  );
-}
+  const echo = question.echo!;
+  const chosen = optionIndexesFor(
+    answers,
+    answerKeyFor(content, question.id),
+    question.options.length,
+  )
+    .map((idx) => echo.byOption[question.options[idx]!.id])
+    .filter((line): line is string => Boolean(line));
+  const lines = chosen.length > 0 ? chosen : [echo.unanswered];
 
-function StepTeach({
-  teach,
-  practiceId,
-  onNext,
-}: {
-  teach: string;
-  practiceId?: string;
-  onNext: () => void;
-}) {
-  return (
-    <div className="space-y-5" data-testid="step-teach">
-      <p className="eyebrow">A word before we begin</p>
-      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-        How to work with today
-      </h2>
-      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
-        {teach}
-      </p>
-      <p className="text-sm text-muted-foreground">
-        This is guidance, not a test. There is no wrong way to read it.
-      </p>
-      {practiceId && (
-        <Link
-          to="/practice/$id"
-          params={{ id: practiceId }}
-          className="inline-link text-sm text-primary underline underline-offset-4"
-        >
-          Optional companion practice
-        </Link>
-      )}
-      <div className="pt-2">
-        <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
-      </div>
-    </div>
-  );
-}
-
-function StepNotice({
-  options,
-  branchKeys,
-  initialIndexes,
-  onChange,
-  onNext,
-  onBranch,
-}: {
-  options: string[];
-  branchKeys: BranchKey[];
-  initialIndexes: number[];
-  onChange: (optionIndexes: number[]) => void;
-  onNext: () => void;
-  onBranch: (k: BranchKey) => void;
-}) {
-  const [selected, setSelected] = useState<number[]>(initialIndexes);
-  const toggle = (idx: number) => {
-    const next = selected.includes(idx) ? [] : [idx];
-    setSelected(next);
-    onChange(next);
-  };
   return (
     <div className="space-y-5">
-      <p className="eyebrow">Notice</p>
-      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">
-        How is it, being you, right now?
+      <p className="eyebrow">Explore</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        {echo.heading}
+      </h1>
+      {lines.map((line) => (
+        <p key={line} className="text-base text-foreground">
+          {line}
+        </p>
+      ))}
+      {echo.closing && (
+        <p className="text-base text-muted-foreground">{echo.closing}</p>
+      )}
+    </div>
+  );
+}
+
+function PractiseScreen({ content }: { content: JourneyDayContent }) {
+  const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
+  return (
+    <div className="space-y-5">
+      <p className="eyebrow">Practise</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        {content.practise.heading}
+      </h1>
+      <p className="text-base text-foreground">{content.practise.intro}</p>
+      <p className="text-base text-muted-foreground">{content.practise.either}</p>
+      <PracticePanel
+        path={content.practise.reflection}
+        isOpen={open === "reflection"}
+        onToggle={() => setOpen(open === "reflection" ? null : "reflection")}
+      />
+      <PracticePanel
+        path={content.practise.spiritual}
+        isOpen={open === "spiritual"}
+        onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
+      />
+    </div>
+  );
+}
+
+function PracticePanel({
+  path,
+  isOpen,
+  onToggle,
+}: {
+  path: PracticePath;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <section className="surface-card space-y-3">
+      <h2 className="font-serif text-xl leading-snug text-[color:var(--navy)]">
+        {path.title}
       </h2>
-      <p className="text-base text-muted-foreground">
-        There is no right answer. Pick what fits, or choose a gentler path below.
-      </p>
-      <ul className="space-y-2">
-        {options.map((o, idx) => {
-          const active = selected.includes(idx);
-          return (
-            <li key={o}>
-              <button
-                type="button"
-                onClick={() => toggle(idx)}
-                aria-pressed={active}
-
-                className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
-                  active
-                    ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
-                    : "border-border bg-card hover:border-[var(--deep-navy)]/40"
-                }`}
-              >
-                {o}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      {branchKeys.length > 0 && (
-        <div
-          className="rounded-lg border border-border/70 bg-secondary/40 p-4"
-          data-testid="branch-strip"
-        >
-          <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">
-            Or choose a gentler path
-          </p>
-          <p className="mb-3 text-sm text-muted-foreground">
-            Each of these is a valid answer. Nothing is scored or saved.
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {branchKeys.map((k) => (
-              <li key={k}>
-                <button
-                  type="button"
-                  data-testid={`branch-${k}`}
-                  onClick={() => onBranch(k)}
-                  className="min-h-11 rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground hover:border-[var(--deep-navy)]/50"
+      <p className="text-base text-foreground">{path.summary}</p>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="btn-quiet w-full"
+      >
+        {isOpen ? "Hide the steps" : "Show me how"}
+      </button>
+      {isOpen && (
+        <div className="space-y-3 pt-1">
+          {path.scripture && (
+            <blockquote className="rounded-xl border-l-2 border-[color:var(--gold)] bg-[color:var(--champagne)]/25 px-4 py-3">
+              <p className="font-serif text-base leading-relaxed text-foreground">
+                {path.scripture.body}
+              </p>
+              <cite className="mt-2 block text-sm not-italic text-muted-foreground">
+                {path.scripture.reference}
+              </cite>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {path.scripture.note}
+              </p>
+            </blockquote>
+          )}
+          <ol className="space-y-2 text-base text-foreground">
+            {path.steps.map((s, idx) => (
+              <li key={s} className="flex gap-3">
+                <span
+                  aria-hidden
+                  className="shrink-0 text-sm text-[color:var(--gold)]"
                 >
-                  {BRANCH_LABELS[k]}
-                </button>
+                  {idx + 1}
+                </span>
+                <span>{s}</span>
               </li>
             ))}
-          </ul>
+          </ol>
+          <p className="text-sm text-muted-foreground">{path.notRequired}</p>
         </div>
       )}
-
-      <div className="flex flex-col gap-2 pt-2">
-        <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
-        <SubtleButton onClick={onNext}>Skip</SubtleButton>
-      </div>
-    </div>
+    </section>
   );
 }
 
-function BranchView({
-  branch,
-  onContinueForward,
-  onContinueTinyStep,
-  onGroundingClose,
-}: {
-  branch: ResolvedBranch;
-  onContinueForward: () => void;
-  onContinueTinyStep: () => void;
-  onGroundingClose: () => void;
-}) {
-  return (
-    <div className="space-y-5" data-testid={`branch-view-${branch.key}`}>
-      <p className="eyebrow">{BRANCH_LABELS[branch.key]}</p>
-      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
-        {branch.response}
-      </p>
-
-      {branch.mode === "forward" && (
-        <div className="flex flex-col gap-2 pt-2">
-          <PrimaryButton onClick={onContinueForward}>
-            Continue gently
-          </PrimaryButton>
-          <p className="text-sm text-muted-foreground">
-            We will move on without asking you to name anything else.
-          </p>
-        </div>
-      )}
-
-      {branch.mode === "low-arousal-grounding" && (
-        <div className="space-y-4">
-          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground">
-            <p className="mb-2 font-medium">A low-key body moment</p>
-            <ul className="list-disc space-y-1 pl-5">
-              <li>Feel where your body meets the chair or ground.</li>
-              <li>Let one exhale be slightly longer than the inhale.</li>
-              <li>Notice the temperature of the air on your hands.</li>
-            </ul>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We will not press you to name a feeling. Sensation is enough.
-            </p>
-          </div>
-          <PrimaryButton onClick={onContinueForward}>
-            Continue when ready
-          </PrimaryButton>
-        </div>
-      )}
-
-      {branch.mode === "tiny-step" && (
-        <div className="space-y-4">
-          <div className="rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4">
-            <p className="mb-1 font-medium text-foreground">
-              One tiny preparation step
-            </p>
-            <ul className="list-disc space-y-1 pl-5 text-base text-foreground">
-              <li>Notice that you opened this at all.</li>
-              <li>Hold one word for the road, quietly, without writing it.</li>
-              <li>Drink a sip of water.</li>
-            </ul>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Preparation counts. This is a whole step today.
-            </p>
-          </div>
-          <PrimaryButton onClick={onContinueTinyStep}>
-            Close today gently
-          </PrimaryButton>
-        </div>
-      )}
-
-      {branch.mode === "grounding-close" && (
-        <div className="space-y-4">
-          <div className="rounded-lg border border-border bg-secondary/40 p-4 text-base text-foreground">
-            <p className="mb-2 font-medium">A 60–90 second close</p>
-            <ol className="list-decimal space-y-1 pl-5">
-              <li>Look slowly around and name three things you can see.</li>
-              <li>Feel your feet on the floor for one full breath.</li>
-              <li>
-                Let this be enough:{" "}
-                <em>you came here, and you get to leave when you need to.</em>
-              </li>
-            </ol>
-          </div>
-          <PrimaryButton onClick={onGroundingClose}>
-            Leave safely
-          </PrimaryButton>
-          <p className="text-sm text-muted-foreground">
-            Today is marked as visited. Nothing here pretends you did more than
-            you did.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StepChoice({
-  heading,
-  prompt,
-  hint,
-  options,
-  multi,
-  initialIndexes,
-  onChange,
-  onNext,
-}: {
-  heading: string;
-  prompt: string;
-  hint?: string;
-  options: string[];
-  multi?: boolean;
-  initialIndexes?: number[];
-  onChange?: (optionIndexes: number[]) => void;
-  onNext: () => void;
-}) {
-  const [selected, setSelected] = useState<number[]>(initialIndexes ?? []);
-  const toggle = (idx: number) => {
-    const next = multi
-      ? selected.includes(idx)
-        ? selected.filter((x) => x !== idx)
-        : [...selected, idx]
-      : [idx];
-    setSelected(next);
-    onChange?.(next);
-  };
-  return (
-    <div className="space-y-5">
-      <p className="eyebrow">{heading}</p>
-      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">{prompt}</h2>
-      {hint && <p className="text-base text-muted-foreground">{hint}</p>}
-      <ul className="space-y-2">
-        {options.map((o, idx) => {
-          const active = selected.includes(idx);
-          return (
-            <li key={o}>
-              <button
-                type="button"
-                onClick={() => toggle(idx)}
-                aria-pressed={active}
-
-                className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
-                  active
-                    ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
-                    : "border-border bg-card hover:border-[var(--deep-navy)]/40"
-                }`}
-              >
-                {o}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="flex flex-col gap-2 pt-2">
-        <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
-        <SubtleButton onClick={onNext}>Skip</SubtleButton>
-      </div>
-    </div>
-  );
-}
-
-function StepListen({ prompts, onNext }: { prompts: string[]; onNext: () => void }) {
-  return (
-    <div className="space-y-5">
-      <p className="eyebrow">Listen</p>
-      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">A few gentle questions</h2>
-      <p className="text-base text-muted-foreground">
-        Read slowly. You do not have to answer. Notice which one lingers.
-      </p>
-      <ul className="space-y-3">
-        {prompts.map((p, idx) => (
-          <li
-            key={idx}
-            className="rounded-lg border border-border bg-card p-4 font-serif text-lg leading-snug text-foreground"
-          >
-            {p}
-          </li>
-        ))}
-      </ul>
-      <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
-    </div>
-  );
-}
-
-function StepReflection({
+function ReflectionScreen({
   content,
-  showSpiritual,
-  onNext,
+  answers,
 }: {
-  content: DayContent;
-  showSpiritual: boolean;
-  onNext: () => void;
+  content: JourneyDayContent;
+  answers: string[];
 }) {
-  const [open, setOpen] = useState(false);
+  const [built, setBuilt] = useState<BuiltReflection | null>(null);
+
+  const reveal = () => {
+    const next = buildReflection(content, answers);
+    setBuilt(next);
+    // Saved locally only, so this screen can be resumed on this device.
+    saveDayReflection(dayIdFor(content.day), reflectionToText(next));
+  };
+
   return (
     <div className="space-y-5">
-      <p className="eyebrow">Reflection</p>
-      <h2 className="font-serif text-2xl leading-snug text-foreground sm:text-3xl">{content.title}</h2>
-      <p className="whitespace-pre-line text-lg leading-relaxed text-foreground">
-        {content.coreReflection}
-      </p>
+      <p className="eyebrow">Your Reflection</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        A reflection drawn from today
+      </h1>
+      <p className="text-base text-foreground">{content.reflection.intro}</p>
 
-      {showSpiritual && content.scripture && (
-        <div className="rounded-lg border border-border bg-secondary/50 p-4">
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            className="inline-link flex w-full items-center justify-between text-left font-medium text-foreground"
-          >
-            <span>Scripture &amp; spiritual reflection</span>
-            <span aria-hidden>{open ? "–" : "+"}</span>
-          </button>
-          {open && (
-            <div className="mt-3 space-y-2 text-base">
-              <p className="font-medium text-foreground">{content.scripture.reference}</p>
-              <blockquote className="border-l-2 border-[var(--gold)] pl-3 italic text-foreground">
-                “{content.scripture.body}”
-              </blockquote>
-              {content.scripture.note && (
-                <p className="text-muted-foreground">{content.scripture.note}</p>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      <PrimaryButton onClick={onNext}>Continue</PrimaryButton>
-    </div>
-  );
-}
-
-function StepClose({
-  dayNum,
-  blessing,
-  prayer,
-  nextDay,
-}: {
-  dayNum: number;
-  blessing: string;
-  prayer?: string;
-  nextDay?: number;
-}) {
-  const navigate = useNavigate();
-  const isFinalDay = dayNum === 7;
-  return (
-    <div className="space-y-6">
-      <p className="eyebrow">Close</p>
-      <h2 className="font-serif text-2xl text-foreground sm:text-3xl">A gentle close</h2>
-      <p className="text-lg leading-relaxed text-foreground">{blessing}</p>
-      {prayer && (
-        <div className="rounded-lg border border-border bg-secondary/50 p-4 text-base">
-          <p className="mb-1 font-medium text-foreground">Optional prayer</p>
-          <p className="italic text-foreground">{prayer}</p>
-        </div>
-      )}
-
-      {dayNum === 1 && (
-        <div className="rounded-lg border border-[color:var(--gold)]/60 bg-[color:var(--champagne)]/25 p-4">
-          <h3 className="font-serif text-lg text-foreground">
-            Your Reflection and Next Gentle Steps
-          </h3>
-          <p className="mt-1 text-sm text-foreground">
-            Optional. Answer three brief questions and receive a reflection shaped by
-            what you select. You may skip this and close Day 1.
-          </p>
-          <div className="mt-3 flex flex-col gap-2">
-            <Link
-              to="/day/$day/reflection"
-              params={{ day: "1" }}
-              search={{ mode: "live" }}
-              className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground hover:opacity-90"
-            >
-              Try live AI reflection
-            </Link>
-            <Link
-              to="/day/$day/reflection"
-              params={{ day: "1" }}
-              search={{ mode: "curated" }}
-              className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
-            >
-              Use curated reflection preview
-            </Link>
-            <p className="text-xs text-muted-foreground">
-              Live AI personalizes the tentative summary within founder-approved
-              material. The curated version is always available.
-            </p>
-          </div>
-        </div>
-      )}
-
-
-      {isFinalDay ? (
-        <div className="space-y-4 rounded-lg border border-border bg-card p-5">
-          <h3 className="font-serif text-xl text-foreground sm:text-2xl">
-            You have reached the end of these seven days — but not the end of the journey.
-          </h3>
-          <ul className="list-disc space-y-2 pl-5 text-base text-foreground">
-            <li>Revisit any day that still feels meaningful.</li>
-            <li>Return to <em>One Honest Step</em> when life feels heavy or unclear.</li>
-            <li>Continue with the Beauty from Ashes videos.</li>
-            <li>Use the future companion journal for deeper reflection when available.</li>
-            <li>Move toward a safe person, community or qualified professional when support is needed.</li>
-            <li>Carry forward one truth, practice or prayer from the journey.</li>
-          </ul>
-          <div className="flex flex-col gap-2 pt-1">
-            <PrimaryButton onClick={() => navigate({ to: "/" })}>Return Home</PrimaryButton>
-            <SubtleButton onClick={() => navigate({ to: "/journey" })}>View the Journey</SubtleButton>
-            <SubtleButton onClick={() => navigate({ to: "/resources" })}>Open Resources</SubtleButton>
-          </div>
-        </div>
+      {!built ? (
+        <button type="button" onClick={reveal} className="btn-primary-journey w-full">
+          See My Personalized Reflection
+        </button>
       ) : (
-        <div className="flex flex-col gap-2 pt-2">
-          {nextDay && (
-            <PrimaryButton
-              onClick={() => navigate({ to: "/day/$day", params: { day: String(nextDay) } })}
-            >
-              Continue to Day {nextDay}
-            </PrimaryButton>
-          )}
-          <SubtleButton onClick={() => navigate({ to: "/" })}>Return Home</SubtleButton>
-          <SubtleButton onClick={() => navigate({ to: "/journey" })}>View the Journey</SubtleButton>
+        <div className="space-y-4">
+          {built.sections.map((section) => (
+            <section key={section.id} className="surface-card space-y-2">
+              <h2 className="font-serif text-lg text-[color:var(--navy)]">
+                {section.title}
+              </h2>
+              {section.paragraphs.map((p) => (
+                <p key={p} className="text-base text-foreground">
+                  {p}
+                </p>
+              ))}
+            </section>
+          ))}
+          <p className="text-base text-muted-foreground">{built.closing}</p>
         </div>
       )}
     </div>
   );
 }
 
-function PrimaryButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function CloseScreen({
+  content,
+  nextDay,
+  onHome,
+}: {
+  content: JourneyDayContent;
+  nextDay: number | null;
+  onHome: () => void;
+}) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-5 py-3 text-base font-medium text-primary-foreground transition-colors hover:opacity-90"
-    >
-      {children}
-    </button>
-  );
-}
-
-function SubtleButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-base font-medium text-foreground hover:bg-secondary"
-    >
-      {children}
-    </button>
+    <div className="space-y-5">
+      <p className="eyebrow">Carry Forward</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        {content.close.heading}
+      </h1>
+      {content.close.body.map((p) => (
+        <p key={p} className="text-base text-foreground">
+          {p}
+        </p>
+      ))}
+      <div className="surface-card">
+        <p className="eyebrow">Carry forward</p>
+        <p className="mt-2 text-base text-foreground">{content.close.carryForward}</p>
+      </div>
+      <div className="space-y-3 pt-2">
+        {nextDay ? (
+          <Link
+            to="/day/$day"
+            params={{ day: String(nextDay) }}
+            className="btn-primary-journey w-full"
+          >
+            Continue to Day {nextDay}
+          </Link>
+        ) : null}
+        <button type="button" onClick={onHome} className="btn-quiet w-full">
+          {nextDay ? "Return to Your Journey" : "Return to Your Journey"}
+        </button>
+      </div>
+    </div>
   );
 }

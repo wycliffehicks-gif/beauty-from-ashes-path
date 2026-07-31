@@ -10,14 +10,14 @@ import { JOURNEY_DAYS, JOURNEY_HOME_TITLE, JOURNEY_IDENTITY, dayIdFor } from "@/
 describe("opening flow content", () => {
   it("has exactly the three explanatory screens before the agreement", () => {
     expect(OPENING_SCREENS).toHaveLength(3);
-    expect(OPENING_SCREENS.map((s) => s.id)).toEqual(["welcome", "what", "how"]);
+    expect(OPENING_SCREENS.map((s) => s.key)).toEqual(["welcome", "find-here", "how-it-works"]);
   });
 
   it("keeps each explanatory screen short enough to fit a phone viewport", () => {
     for (const screen of OPENING_SCREENS) {
-      const chars = [screen.title, screen.lead ?? "", ...screen.body].join(" ").length;
+      const chars = [screen.eyebrow, screen.title, screen.lead, ...screen.points, screen.closing ?? ""].join(" ").length;
       expect(chars).toBeLessThan(700);
-      expect(screen.body.length).toBeLessThanOrEqual(4);
+      expect(screen.points.length).toBeLessThanOrEqual(4);
     }
   });
 
@@ -28,10 +28,14 @@ describe("opening flow content", () => {
   });
 
   it("agreement keeps two separate confirmations and a calm processing sentence", () => {
-    expect(AGREEMENT_COPY.confirmations).toHaveLength(2);
-    expect(AGREEMENT_COPY.confirmations.some((c) => /18/.test(c.label))).toBe(true);
-    expect(AGREEMENT_COPY.confirmations.some((c) => /terms|privacy/i.test(c.label))).toBe(true);
-    expect(AGREEMENT_COPY.processingNote).not.toMatch(/algorithm|model|LLM|artificial intelligence/i);
+    expect(AGREEMENT_COPY.adultLabel).toMatch(/18/);
+    expect(AGREEMENT_COPY.termsLabel).toMatch(/Terms of Use/);
+    expect(AGREEMENT_COPY.termsLabel).toMatch(/Privacy Notice/);
+    expect(AGREEMENT_COPY.automatedProcessingSentence).not.toMatch(
+      /algorithm|model|LLM|artificial intelligence|\bAI\b/i,
+    );
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toMatch(/not read by a person/);
+    expect(AGREEMENT_COPY.isNotPoints.join(" ")).toMatch(/not monitored/i);
   });
 });
 

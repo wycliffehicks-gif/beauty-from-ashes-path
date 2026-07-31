@@ -115,30 +115,37 @@ function DayFlow() {
   );
   const [branch, setBranch] = useState<ResolvedBranch | null>(null);
 
+  // The saved locator is read once per mount, before any autosave can
+  // overwrite it, so ?resume=true always lands on the exact saved screen.
+  const savedLocator = useMemo(() => readProgress().locator, []);
+  const resumedRef = useRef(false);
+
   // Reset when day changes, or land on the requested / saved locator.
   useEffect(() => {
     if (search.step === "close") {
       setI(closeIdx);
-    } else if (search.resume) {
-      const saved = readProgress().locator;
+    } else if (search.resume && !resumedRef.current) {
+      resumedRef.current = true;
       const idx =
-        saved && saved.dayId === dayIdFor(dayNum)
-          ? steps.findIndex((s) => s.key === saved.step)
+        savedLocator && savedLocator.dayId === dayIdFor(dayNum)
+          ? steps.findIndex((s) => s.key === savedLocator.step)
           : -1;
       setI(idx >= 0 ? idx : 0);
-    } else {
+    } else if (!search.resume) {
       setI(0);
     }
     setBranch(null);
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }, [dayNum, search.step, search.resume, closeIdx, steps]);
+  }, [dayNum, search.step, search.resume, closeIdx, steps, savedLocator]);
 
   // Universal autosave: the exact day and screen, nothing sensitive. This is
   // what lets Home quietly save and lets "Continue where you left off" work.
   useEffect(() => {
     if (!content || content.day === SESSION_DAY) return;
+    if (search.resume && !resumedRef.current) return;
     saveLocator({ dayId: dayIdFor(content.day), step: steps[i].key, index: i });
-  }, [content, steps, i]);
+  }, [content, steps, i, search.resume]);
+
 
   // Completion is only recorded on genuinely reaching the closing screen.
   // Opening a day, or returning Home, never completes it. Day 3 is completed

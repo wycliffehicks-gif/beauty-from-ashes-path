@@ -110,15 +110,29 @@ function DayFlow() {
   );
   const closeIdx = steps.length - 1;
 
+  // The saved locator is read once per mount, before any autosave can
+  // overwrite it, so ?resume=true always lands on the exact saved screen.
+  const savedLocator = useMemo(() => readProgress().locator, []);
+  const resumeIdx = useMemo(() => {
+    if (!search.resume || !savedLocator) return -1;
+    if (savedLocator.dayId !== dayIdFor(dayNum)) return -1;
+    return steps.findIndex((s) => s.key === savedLocator.step);
+  }, [search.resume, savedLocator, dayNum, steps]);
+
   const [i, setI] = useState(() =>
     search.step === "close" ? closeIdx : 0,
   );
   const [branch, setBranch] = useState<ResolvedBranch | null>(null);
-
-  // The saved locator is read once per mount, before any autosave can
-  // overwrite it, so ?resume=true always lands on the exact saved screen.
-  const savedLocator = useMemo(() => readProgress().locator, []);
   const resumedRef = useRef(false);
+
+  // Apply the saved locator as soon as it is known on the client.
+  useEffect(() => {
+    if (search.step === "close") return;
+    if (resumedRef.current || resumeIdx < 0) return;
+    resumedRef.current = true;
+    setI(resumeIdx);
+  }, [resumeIdx, search.step]);
+
 
   // Reset when day changes, or land on the requested / saved locator.
   useEffect(() => {

@@ -232,3 +232,165 @@
 @media (min-width: 640px) {
   .brand-tagline { letter-spacing: 0.24em; font-size: 0.88rem; }
 }
+
+/* ---------------------------------------------------------------------------
+   First Journey visual foundation.
+   Warm ivory ground, navy hierarchy, restrained gold. Linework and a single
+   abstract gold seam only — no imagery, no gradients beyond a faint wash.
+   --------------------------------------------------------------------------- */
+
+@utility journey-page {
+  min-height: 100dvh;
+  background-color: var(--ivory);
+  color: var(--foreground);
+}
+
+/* A single quiet gold seam — the repaired-vessel motif, in CSS only. */
+@utility gold-seam {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--champagne) 18%,
+    var(--gold) 50%,
+    var(--champagne) 82%,
+    transparent 100%
+  );
+  opacity: 0.75;
+}
+
+@utility journey-chrome-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  border-radius: 999px;
+  color: var(--deep-navy);
+  background: transparent;
+  transition: background-color 160ms ease;
+}
+.journey-chrome-btn:hover {
+  background: color-mix(in oklab, var(--champagne) 55%, transparent);
+}
+
+@utility journey-dock {
+  position: sticky;
+  bottom: 0;
+  padding-block: 0.75rem;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  border-top: 1px solid color-mix(in oklab, var(--champagne) 80%, transparent);
+  background: color-mix(in oklab, var(--ivory) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+@utility btn-primary-journey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--navy);
+  color: var(--ivory);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn-primary-journey:hover { background: var(--deep-navy); }
+.btn-primary-journey:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@utility btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--deep-navy);
+  font-weight: 500;
+}
+.btn-quiet:hover { background: color-mix(in oklab, var(--champagne) 40%, transparent); }
+
+/* Journey home day rows — states without locks, streaks or pressure. */
+@utility day-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  text-align: left;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.day-row:hover {
+  border-color: color-mix(in oklab, var(--gold) 70%, transparent);
+}
+.day-row[data-state="current"] {
+  border-color: var(--gold);
+  box-shadow: inset 3px 0 0 0 var(--gold);
+}
+.day-row[data-state="complete"] {
+  background: color-mix(in oklab, var(--card) 70%, var(--ivory));
+}
+
+@utility day-marker {
+  display: grid;
+  place-items: center;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  border: 1px solid var(--border);
+  color: var(--deep-navy);
+  background: color-mix(in oklab, var(--champagne) 30%, transparent);
+}
+.day-row[data-state="complete"] .day-marker {
+  background: color-mix(in oklab, var(--gold) 28%, transparent);
+  border-color: var(--gold);
+}
+.day-row[data-state="current"] .day-marker {
+  background: var(--navy);
+  color: var(--ivory);
+  border-color: var(--navy);
+}
+
+/* Tablet and desktop: an intentional centred composition, not a stretched
+   phone. Content stays in a comfortable reading measure inside a framed
+   ivory panel with champagne hairlines. */
+@media (min-width: 768px) {
+  .journey-page {
+    display: flex;
+    justify-content: center;
+    padding-block: 2.5rem;
+    background:
+      radial-gradient(
+        1100px 520px at 50% -10%,
+        color-mix(in oklab, var(--champagne) 30%, transparent) 0%,
+        transparent 70%
+      ),
+      var(--ivory);
+  }
+  .journey-page > .container-page {
+    min-height: 0;
+    max-width: 46rem;
+    border: 1px solid var(--champagne);
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #FBF8EF 0%, var(--ivory) 65%);
+    padding-inline: 3rem;
+    padding-bottom: 1rem;
+  }
+  .journey-page .journey-dock {
+    background: transparent;
+    backdrop-filter: none;
+  }
+}

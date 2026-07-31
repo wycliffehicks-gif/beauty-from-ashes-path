@@ -27,8 +27,9 @@ export function SplashGate({ children }: { children: ReactNode }) {
 
     const reduced =
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-    const dwell = reduced ? 500 : 1400;
-    const fade = reduced ? 0 : 250;
+    // Slightly longer, genuinely readable dwell; a very subtle fade only.
+    const dwell = reduced ? 900 : 2600;
+    const fade = reduced ? 0 : 420;
 
     beginSplash();
     setVisible(true);
@@ -51,19 +52,16 @@ export function SplashGate({ children }: { children: ReactNode }) {
       {visible && (
         <div
           aria-hidden="true"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--warm-ivory,#F6F2EA)] transition-opacity duration-300 ease-out motion-reduce:transition-none"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--ivory,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
           style={{ opacity: leaving ? 0 : 1 }}
         >
-          <div
-            className="flex w-full items-center justify-center px-4 transition-transform duration-500 ease-out motion-reduce:transition-none"
-            style={{ transform: leaving ? "scale(1.02)" : "scale(1)" }}
-          >
+          <div className="flex w-full items-center justify-center px-4">
             {imgOk ? (
               <img
                 src={LOGO_URL}
                 alt="Resurgence Therapeutics — Awaken, Rediscover, Hope"
                 onError={() => setImgOk(false)}
-                className="h-auto w-[82vw] max-w-[340px] object-contain sm:max-w-[420px]"
+                className="h-auto w-[86vw] max-w-[400px] object-contain sm:max-w-[520px]"
                 draggable={false}
               />
             ) : (

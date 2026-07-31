@@ -1,5 +1,5 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DAYS, getDay, type DayContent } from "@/content/days";
 import { markDayVisited, usePrefs } from "@/lib/prefs";
 import {
@@ -13,7 +13,23 @@ import { SESSION_DAY } from "@/lib/session/day-three";
 import { DayThreeOrientation } from "@/components/DayThreeOrientation";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { dayIdFor } from "@/content/journey";
-import { markDayComplete, readProgress, saveLocator } from "@/lib/journey/progress";
+import {
+  markDayComplete,
+  readProgress,
+  saveDayAnswers,
+  saveLocator,
+} from "@/lib/journey/progress";
+import {
+  mergeStepAnswers,
+  optionIndexesFor,
+  resolveResumeIndex,
+} from "@/lib/journey/resume";
+
+/** Layout effect on the client, a no-op during server rendering. */
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+
 
 
 export const Route = createFileRoute("/day/$day")({
@@ -109,33 +125,51 @@ function DayFlow() {
     [content],
   );
   const closeIdx = steps.length - 1;
+  const stepKeys = useMemo(() => steps.map((s) => s.key as string), [steps]);
+  const dayId = dayIdFor(dayNum);
 
-  // The saved locator is read once per mount, before any autosave can
-  // overwrite it, so ?resume=true always lands on the exact saved screen.
-  const savedLocator = useMemo(() => readProgress().locator, []);
-  const resumeIdx = useMemo(() => {
-    if (!search.resume || !savedLocator) return -1;
-    if (savedLocator.dayId !== dayIdFor(dayNum)) return -1;
-    return steps.findIndex((s) => s.key === savedLocator.step);
-  }, [search.resume, savedLocator, dayNum, steps]);
-
-  const [i, setI] = useState(() =>
-    search.step === "close" ? closeIdx : 0,
-  );
+  // Server render and first client render are identical: the opening screen,
+  // or the closing screen when the URL asks for it. Browser storage is never
+  // read during render, so there is no hydration mismatch.
+  const [i, setI] = useState(() => (search.step === "close" ? closeIdx : 0));
   const [branch, setBranch] = useState<ResolvedBranch | null>(null);
-  const resumedRef = useRef(false);
 
-  // Apply the saved locator as soon as it is known on the client.
-  useEffect(() => {
-    if (search.step === "close") return;
-    if (resumedRef.current || resumeIdx < 0) return;
-    resumedRef.current = true;
-    setI(resumeIdx);
-  }, [resumeIdx, search.step]);
+  // Answers already recorded for this day, restored once after hydration.
+  const [dayAnswers, setDayAnswers] = useState<string[]>([]);
 
+  /**
+   * Resume gate. While this is "pending", autosave is held back so the
+   * opening-screen index can never overwrite the stored locator before it has
+   * been restored. It becomes "settled" as soon as the restore effect has run
+   * — whether or not there was anything valid to restore.
+   */
+  const [resumeSettled, setResumeSettled] = useState(!search.resume);
+  const restoredForRef = useRef<string | null>(null);
 
-  // Reset when the day changes or ?step=close is requested. Resume is handled
-  // above so it is never overwritten by a reset.
+  // Restore the exact saved screen after hydration, in a layout effect so it
+  // is applied before the browser paints the opening screen.
+  useIsomorphicLayoutEffect(() => {
+    if (restoredForRef.current === dayId) return;
+    restoredForRef.current = dayId;
+
+    const progress = readProgress();
+    setDayAnswers(progress.answers[dayId] ?? []);
+
+    if (search.step !== "close") {
+      const idx = resolveResumeIndex({
+        stepKeys,
+        dayId,
+        locator: progress.locator,
+        requested: Boolean(search.resume),
+      });
+      // An invalid, foreign or stale locator resolves to -1: stay at Arrive.
+      if (idx >= 0) setI(idx);
+    }
+    setResumeSettled(true);
+  }, [dayId, stepKeys, search.resume, search.step]);
+
+  // Reset when the day changes, or when the closing screen is requested.
+  // Resume is handled above and is never reset by this effect.
   useEffect(() => {
     if (search.step === "close") {
       setI(closeIdx);
@@ -146,15 +180,23 @@ function DayFlow() {
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   }, [dayNum, search.step, search.resume, closeIdx]);
 
-
-  // Universal autosave: the exact day and screen, nothing sensitive. This is
-  // what lets Home quietly save and lets "Continue where you left off" work.
+  // Universal autosave: the exact day and screen, nothing sensitive. Held
+  // until the resume gate settles, then it simply continues from wherever the
+  // person now is — including the screen just restored.
   useEffect(() => {
     if (!content || content.day === SESSION_DAY) return;
-    if (search.resume && !resumedRef.current) return;
+    if (!resumeSettled) return;
     saveLocator({ dayId: dayIdFor(content.day), step: steps[i].key, index: i });
-  }, [content, steps, i, search.resume]);
+  }, [content, steps, i, resumeSettled]);
 
+  // Structured, low-sensitivity answer IDs (step + option position only).
+  const recordStepAnswers = (stepKey: string, optionIndexes: number[]) => {
+    setDayAnswers((cur) => {
+      const next = mergeStepAnswers(cur, stepKey, optionIndexes);
+      saveDayAnswers(dayId, next);
+      return next;
+    });
+  };
 
   // Completion is only recorded on genuinely reaching the closing screen.
   // Opening a day, or returning Home, never completes it. Day 3 is completed
@@ -165,6 +207,7 @@ function DayFlow() {
     markDayComplete(dayIdFor(content.day));
     markDayVisited(content.day);
   }, [content, steps, i]);
+
 
 
 
@@ -263,6 +306,8 @@ function DayFlow() {
             <StepNotice
               options={NOTICE_OPTIONS}
               branchKeys={content.branches ? BRANCH_KEYS : []}
+              initialIndexes={optionIndexesFor(dayAnswers, "notice", NOTICE_OPTIONS.length)}
+              onChange={(idx) => recordStepAnswers("notice", idx)}
               onNext={goNext}
               onBranch={onBranch}
             />
@@ -274,9 +319,12 @@ function DayFlow() {
               hint="Naming is not fixing. You may choose more than one, or skip."
               options={NAME_OPTIONS}
               multi
+              initialIndexes={optionIndexesFor(dayAnswers, "name", NAME_OPTIONS.length)}
+              onChange={(idx) => recordStepAnswers("name", idx)}
               onNext={goNext}
             />
           )}
+
           {step.key === "listen" && (
             <StepListen prompts={content.listenPrompts} onNext={goNext} />
           )}
@@ -416,17 +464,24 @@ function StepTeach({
 function StepNotice({
   options,
   branchKeys,
+  initialIndexes,
+  onChange,
   onNext,
   onBranch,
 }: {
   options: string[];
   branchKeys: BranchKey[];
+  initialIndexes: number[];
+  onChange: (optionIndexes: number[]) => void;
   onNext: () => void;
   onBranch: (k: BranchKey) => void;
 }) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const toggle = (o: string) =>
-    setSelected((s) => (s.includes(o) ? s.filter((x) => x !== o) : [o]));
+  const [selected, setSelected] = useState<number[]>(initialIndexes);
+  const toggle = (idx: number) => {
+    const next = selected.includes(idx) ? [] : [idx];
+    setSelected(next);
+    onChange(next);
+  };
   return (
     <div className="space-y-5">
       <p className="eyebrow">Notice</p>
@@ -437,14 +492,15 @@ function StepNotice({
         There is no right answer. Pick what fits, or choose a gentler path below.
       </p>
       <ul className="space-y-2">
-        {options.map((o) => {
-          const active = selected.includes(o);
+        {options.map((o, idx) => {
+          const active = selected.includes(idx);
           return (
             <li key={o}>
               <button
                 type="button"
-                onClick={() => toggle(o)}
+                onClick={() => toggle(idx)}
                 aria-pressed={active}
+
                 className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
                   active
                     ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"
@@ -595,6 +651,8 @@ function StepChoice({
   hint,
   options,
   multi,
+  initialIndexes,
+  onChange,
   onNext,
 }: {
   heading: string;
@@ -602,17 +660,19 @@ function StepChoice({
   hint?: string;
   options: string[];
   multi?: boolean;
+  initialIndexes?: number[];
+  onChange?: (optionIndexes: number[]) => void;
   onNext: () => void;
 }) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const toggle = (o: string) => {
-    setSelected((s) =>
-      multi
-        ? s.includes(o)
-          ? s.filter((x) => x !== o)
-          : [...s, o]
-        : [o],
-    );
+  const [selected, setSelected] = useState<number[]>(initialIndexes ?? []);
+  const toggle = (idx: number) => {
+    const next = multi
+      ? selected.includes(idx)
+        ? selected.filter((x) => x !== idx)
+        : [...selected, idx]
+      : [idx];
+    setSelected(next);
+    onChange?.(next);
   };
   return (
     <div className="space-y-5">
@@ -620,14 +680,15 @@ function StepChoice({
       <h2 className="font-serif text-2xl text-foreground sm:text-3xl">{prompt}</h2>
       {hint && <p className="text-base text-muted-foreground">{hint}</p>}
       <ul className="space-y-2">
-        {options.map((o) => {
-          const active = selected.includes(o);
+        {options.map((o, idx) => {
+          const active = selected.includes(idx);
           return (
             <li key={o}>
               <button
                 type="button"
-                onClick={() => toggle(o)}
+                onClick={() => toggle(idx)}
                 aria-pressed={active}
+
                 className={`min-h-11 w-full rounded-md border px-4 py-3 text-left text-base transition-colors ${
                   active
                     ? "border-[var(--gold)] bg-[var(--champagne)]/40 text-foreground"

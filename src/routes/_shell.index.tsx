@@ -76,7 +76,7 @@ function JourneyHome() {
       )}
 
       <div className="space-y-3">
-        <h2 className="font-serif text-lg text-foreground">The days so far</h2>
+        <h2 className="font-serif text-lg text-foreground">The ten days</h2>
         <ol className="space-y-3">
           {JOURNEY_DAYS.map((d) => {
             const isComplete = completed.has(d.id);
@@ -107,7 +107,7 @@ function JourneyHome() {
                           ? "Where you are now"
                           : "Not started yet"}
                       {" · "}
-                      {d.shape}
+                      {d.descriptor}
                     </span>
                   </span>
                   <span aria-hidden className="text-[color:var(--gold)]">
@@ -119,7 +119,7 @@ function JourneyHome() {
           })}
         </ol>
         <p className="pt-1 text-sm text-muted-foreground">
-          More days are being prepared. Nothing here is timed, scored or compared.
+          Nothing here is timed, scored or compared.
         </p>
       </div>
     </section>

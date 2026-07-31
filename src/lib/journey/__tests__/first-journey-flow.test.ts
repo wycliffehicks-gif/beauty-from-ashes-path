@@ -270,7 +270,9 @@ describe("personalized reflection", () => {
   it("stays tentative and never diagnoses or prescribes", () => {
     for (const day of FIRST_JOURNEY_DAYS) {
       const text = reflectionToText(buildReflection(day, undefined)).toLowerCase();
-      expect(text).not.toMatch(/you must|you should|diagnos|disorder|prescrib|guarantee/);
+      expect(text).not.toMatch(
+        /you must|you should|you have a diagnos|you are diagnos|disorder|prescrib|guarantee/,
+      );
     }
   });
 

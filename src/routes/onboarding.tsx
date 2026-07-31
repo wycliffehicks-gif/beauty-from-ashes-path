@@ -66,8 +66,26 @@ function Opening() {
           <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
             {step + 1} of {TOTAL}
           </p>
-          <Link to="/support" className="journey-chrome-btn text-xs" aria-label="Support and safety">
-            ?
+          <Link
+            to="/support"
+            className="journey-chrome-btn"
+            aria-label="Support and safety"
+            title="Support and safety"
+          >
+            <svg
+              aria-hidden
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            >
+              <circle cx="12" cy="12" r="8.5" />
+              <circle cx="12" cy="12" r="3.5" />
+              <path d="M6 6l3.6 3.6M18 6l-3.6 3.6M6 18l3.6-3.6M18 18l-3.6-3.6" />
+            </svg>
           </Link>
         </header>
 

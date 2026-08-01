@@ -23,6 +23,11 @@ export interface Choice {
   label: string;
   /** Optional one-line clarification under the label. */
   note?: string;
+  /**
+   * Multi-select only: this choice cannot honestly co-exist with the others
+   * (for example "Nothing much registers right now").
+   */
+  exclusive?: boolean;
 }
 
 export interface Question {

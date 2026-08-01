@@ -175,7 +175,7 @@ export function screenLabel(day: JourneyDayContent, screen: ScreenKey): string {
     case "arrive":
       return "Arrive";
     case "understand":
-      return "Understand";
+      return day.understand.label ?? "Understand";
     case "question": {
       const q = day.questions.find((x) => x.id === screen.questionId);
       return q?.eyebrow ?? "Notice";

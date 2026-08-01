@@ -107,6 +107,8 @@ export interface JourneyDayContent {
     heading: string;
     body: string[];
     info?: InfoNote[];
+    /** Optional phase label for this screen, replacing the default "Understand". */
+    label?: string;
   };
   questions: Question[];
   practise: {

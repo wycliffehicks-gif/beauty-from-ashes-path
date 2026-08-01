@@ -238,23 +238,24 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         "We will simply separate a few things that usually arrive tangled together.",
       ],
       settle: [
-        "Put both feet flat on the floor, or feel your weight where you are lying or sitting.",
-        "Let your shoulders drop a centimetre — no further.",
-        "Look at one thing across the room for the length of two ordinary breaths.",
+        "Settle however your body allows today — seated, lying down, standing or moving. Nothing here needs a particular posture.",
+        "If shifting position is uncomfortable or painful, stay exactly as you are. Comfort matters more than any instruction.",
+        "Look at one thing across the room for the length of two ordinary breaths. Attention outward is enough; you do not need to attend inward at all.",
       ],
     },
     understand: {
+      label: "Listen",
       heading: "Four different things, often mistaken for each other",
       body: [
         "A sensation is physical: tightness, heat, weight, buzzing, emptiness. A feeling is emotional: sadness, fear, irritation, longing. A thought is a sentence your mind offers, true or not. A pressure is a demand — from work, family, money, faith or from yourself.",
-        "These get bundled into one word, usually “stressed” or “fine”. Untangling them makes the load smaller, because you can see what each part actually is.",
+        "These get bundled into one word, usually “stressed” or “fine”. Separating them can make it easier to describe what is happening and decide what, if anything, needs attention.",
         "If nothing registers at all, that is information too, and today has a route for it.",
       ],
       info: [
         {
           term: "What if I feel numb?",
           explanation:
-            "Numbness is not the absence of anything. It is often the nervous system turning the volume down after a long period of too much. You are not asked to feel more than you feel; noticing the flatness itself is the practice.",
+            "Flatness or numbness can have many meanings—or no clear meaning yet. You do not need to work out why, and you are not being asked to feel more than you do.",
         },
       ],
     },
@@ -262,8 +263,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "body",
         eyebrow: "Notice",
-        prompt: "Where does today sit in your body?",
-        hint: "Choose as many as apply, or none. Do not go looking too hard.",
+        prompt: "What sensations, if any, are most noticeable in your body right now?",
+        hint: "Choose any that feel close, or choose none. You do not have to search.",
         select: "many",
         options: [
           { id: "chest", label: "Chest — tight, full or hollow" },
@@ -272,29 +273,47 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           { id: "shoulders", label: "Shoulders or back — carrying weight" },
           { id: "head", label: "Head — busy, foggy, aching" },
           { id: "limbs", label: "Arms and legs — heavy or restless" },
-          { id: "nothing", label: "Nothing much registers right now" },
+          {
+            id: "nothing",
+            label: "Nothing much registers right now",
+            exclusive: true,
+          },
+        ],
+        info: [
+          {
+            term: "A note about physical symptoms",
+            explanation:
+              "This reflection cannot tell you why a physical sensation is present. If a symptom is new, severe, worsening or concerning, pause and seek appropriate medical care.",
+          },
         ],
         echo: {
-          heading: "What the body may be saying",
+          heading: "What you noticed",
           byOption: {
-            chest: "The chest often holds grief and fear before we have words for either.",
-            throat: "A held throat or jaw is frequently where unsaid things wait.",
-            stomach: "The stomach tends to register dread and unresolved tension quickly.",
-            shoulders: "Shoulders and back often carry responsibility — including responsibility that was never really yours.",
-            head: "A busy or foggy head can be the mind working hard to keep something manageable.",
-            limbs: "Heaviness or restlessness in the limbs is often energy that has nowhere to go.",
-            nothing: "When nothing registers, the volume may simply be turned down. That is protection, not failure.",
+            chest:
+              "You noticed tightness, fullness or hollowness in your chest. A sensation can have many possible causes and does not tell us by itself what it means.",
+            throat:
+              "You noticed holding or clenching around your throat or jaw. You can notice it without deciding why it is present.",
+            stomach:
+              "You noticed a knotted or unsettled feeling in your stomach. That is enough information for this moment.",
+            shoulders:
+              "You noticed weight or tension around your shoulders or back. You do not need to explain it here.",
+            head: "You noticed busyness, fogginess or aching in your head. Several physical, emotional or situational factors may contribute.",
+            limbs:
+              "You noticed heaviness or restlessness in your arms or legs. You can stay with the description without assigning a cause.",
+            nothing:
+              "Nothing much registered right now. You do not need to search for a sensation or decide what that means.",
           },
           unanswered:
-            "You continued without mapping anything, which is fine. The body does not owe us a report, and attention can be its own practice.",
-          closing: "None of this is a diagnosis. It is only a way of noticing where you are holding today.",
+            "You continued without selecting anything, which is fine. There is nothing you owe this screen, and attention can be its own practice.",
+          closing:
+            "You can stay curious without deciding what any sensation means today.",
         },
       },
       {
         id: "load",
         eyebrow: "Sort",
         prompt: "And what has the day mostly been made of?",
-        hint: "Choose up to a few. This is sorting, not confessing.",
+        hint: "Choose any that fit. This is sorting, not confessing.",
         select: "many",
         options: [
           { id: "feeling", label: "Feelings — sadness, fear, anger, longing" },
@@ -303,7 +322,6 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           { id: "selfpressure", label: "Pressure I put on myself" },
           { id: "tiredness", label: "Plain tiredness" },
           { id: "flat", label: "Very little of anything — flat" },
-          { id: "mixed", label: "Several of these at once" },
         ],
       },
     ],
@@ -313,19 +331,19 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       either:
         "Either or both. You can open one, return, and open the other, or continue after one.",
       reflection: {
-        title: "Reflection Practice — a body-and-attention map",
+        title: "Reflection Practice — a map for your attention",
         summary:
-          "A structured two-minute sweep that gives your attention somewhere specific to go.",
+          "A structured two-minute practice that gives your attention somewhere specific to go. Two routes are offered: inward or outward. Both are complete.",
         steps: [
-          "Start at your feet. Notice temperature and contact — nothing else. Two breaths.",
-          "Move to your stomach. Notice whether it is settled, tight or unclear. Two breaths.",
-          "Move to your chest. Notice space or pressure there. Two breaths.",
-          "Move to your throat, jaw and face. Notice whether anything is held. Two breaths.",
-          "Finish by naming, silently, one word for the whole of it — even if the word is “blank”.",
-          "If your mind wanders, that is expected. Return to the last place you remember.",
+          "Choose one route. Inward attention is optional, and the outward route is equally complete.",
+          "Outward route: look slowly around the room and notice five neutral things — by colour, by shape, or by where they sit in the space.",
+          "Name each one silently as you find it, at whatever pace suits you. There is nothing to score.",
+          "Inward route, only if it feels workable today: notice contact and temperature where your body meets what is supporting you. Two breaths.",
+          "Inward route, continuing: notice one other area — stomach, chest, or jaw — and whether anything is settled, tight or unclear. Two breaths.",
+          "Finish either route by naming, silently, one word for the whole of it — even if the word is “blank”.",
         ],
         notRequired:
-          "You do not need to feel anything in particular, relax, or finish the whole sweep. Two stops is a complete practice.",
+          "You are not aiming to become calm, and nothing has to change. If inward attention feels unsettling, use the outward route only. Two stops is a complete practice.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — permission to lament",
@@ -356,7 +374,12 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         { id: "checkin", label: "Check in with my body once more later today" },
         { id: "ease", label: "Loosen one held place — jaw, shoulders, hands" },
         { id: "rest", label: "Give myself ten honest minutes of rest" },
-        { id: "word", label: "Keep one word for today and let the rest go" },
+        { id: "word", label: "Write down one word and leave the reflection there for today" },
+        {
+          id: "share",
+          label: "Share one honest sentence with someone I trust",
+          note: "Only if that relationship feels safe.",
+        },
         { id: "prepare", label: "Nothing outward — noticing was the step" },
       ],
     },
@@ -367,32 +390,37 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "hearing",
           title: "What I'm hearing",
           from: "body",
-          opening: "You noticed where today is sitting:",
+          opening: "You noticed the following:",
           lines: {
-            chest: "There is something held in the chest, which is often where grief and fear arrive first.",
-            throat: "There is holding around the throat or jaw, which sometimes accompanies things left unsaid.",
-            stomach: "The stomach is unsettled, which often tracks worry more accurately than thoughts do.",
-            shoulders: "The shoulders and back are carrying weight — possibly more than is yours to carry.",
-            head: "The head is busy or clouded, which can be the mind working overtime to keep things manageable.",
-            limbs: "There is heaviness or restlessness in the body, which may be energy without an outlet.",
-            nothing: "Nothing much registered, and that may be protection rather than absence.",
+            chest: "You noticed tightness, fullness or hollowness in your chest.",
+            throat: "You noticed holding or clenching around your throat or jaw.",
+            stomach: "You noticed a knotted or unsettled feeling in your stomach.",
+            shoulders: "You noticed weight or tension around your shoulders or back.",
+            head: "You noticed busyness, fogginess or aching in your head.",
+            limbs: "You noticed heaviness or restlessness in your arms or legs.",
+            nothing:
+              "Nothing much registered right now, and you do not need to decide what that means.",
           },
           unanswered:
-            "No map was made today, and none was needed. Attention was given, and that is the substance of this day.",
+            "Nothing was selected today, and nothing was needed. Attention was given, and that is the substance of this day.",
         },
         {
           id: "underneath",
           title: "What may be happening underneath",
           from: "load",
-          opening: "Sorting what the day was made of can make it smaller. From your choices:",
+          opening: "Sorting what the day was made of can help you describe it. From your choices:",
           lines: {
-            feeling: "Feeling is present, which usually means something matters, not that something is wrong with you.",
-            thoughts: "Circling thoughts often appear when a situation has no resolution available yet.",
-            pressure: "Outside pressure is real, and it does not stop being real because you are coping with it.",
-            selfpressure: "The pressure you place on yourself may be doing more work than you realise.",
-            tiredness: "Tiredness can be an accurate signal rather than a personal failing.",
-            flat: "Flatness may be the cost of holding a great deal for a long time.",
-            mixed: "Several things at once is not confusion. It is usually accuracy.",
+            feeling:
+              "You identified feelings as part of today. That names one part of your experience without requiring an explanation.",
+            thoughts:
+              "You identified circling thoughts. They may be tiring even when no clear answer is available.",
+            pressure:
+              "You identified pressure and demands from outside. That pressure is real, and it does not stop being real because you are coping with it.",
+            selfpressure:
+              "You identified pressure you place on yourself. It may be taking up more space than it appears to.",
+            tiredness:
+              "You identified tiredness as part of today. It may deserve practical care rather than judgement.",
+            flat: "You identified flatness or very little registering. You do not need to decide what it means.",
           },
           unanswered:
             "The day was not sorted into parts, and it does not have to be. Noticing that something is here is the first move; naming it can wait.",
@@ -405,20 +433,23 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             checkin: "One more check-in later today keeps this from being a one-off exercise.",
             ease: "Loosening one held place is a small, real act of care.",
             rest: "Ten honest minutes of rest is not indulgence; it is maintenance.",
-            word: "Keeping one word and letting the rest go is a reasonable way to carry a day.",
+            word: "Writing down one word and leaving the reflection there is a reasonable way to carry a day.",
+            share:
+              "One honest sentence to someone you trust can lighten a day — as long as that relationship feels safe to you.",
             prepare: "Noticing was the step. That is a complete answer.",
           },
           unanswered:
             "Nothing was chosen, and nothing is owed. The attention you gave today already happened.",
         },
       ],
-      closing: "Nothing here is measured or scored, and no one else sees it.",
+      closing:
+        "Only you know the fuller context. Keep what fits and leave what does not.",
     },
     close: {
       heading: "Enough noticing for one day",
       body: [
-        "You looked at what was here without needing to fix it. That is harder than it sounds, particularly when the honest answer is “not much”.",
-        "Tomorrow gives words to some of it — gently, and without requiring anything you do not want to name.",
+        "You looked at what was here without needing to fix it — whether you selected something or continued without selections. Either way, you gave this some attention.",
+        "The next day gives words to some of it — gently, and without requiring anything you do not want to name. You can go on when you are ready, or stop here.",
       ],
       carryForward:
         "Carry forward one sentence: what I notice does not have to be dramatic to be true.",

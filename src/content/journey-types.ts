@@ -23,6 +23,11 @@ export interface Choice {
   label: string;
   /** Optional one-line clarification under the label. */
   note?: string;
+  /**
+   * Multi-select only: this choice cannot honestly co-exist with the others
+   * (for example "Nothing much registers right now").
+   */
+  exclusive?: boolean;
 }
 
 export interface Question {
@@ -102,6 +107,8 @@ export interface JourneyDayContent {
     heading: string;
     body: string[];
     info?: InfoNote[];
+    /** Optional phase label for this screen, replacing the default "Understand". */
+    label?: string;
   };
   questions: Question[];
   practise: {
@@ -168,7 +175,7 @@ export function screenLabel(day: JourneyDayContent, screen: ScreenKey): string {
     case "arrive":
       return "Arrive";
     case "understand":
-      return "Understand";
+      return day.understand.label ?? "Understand";
     case "question": {
       const q = day.questions.find((x) => x.id === screen.questionId);
       return q?.eyebrow ?? "Notice";

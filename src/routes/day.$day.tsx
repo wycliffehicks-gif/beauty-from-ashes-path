@@ -27,6 +27,7 @@ import {
   reflectionToText,
   type BuiltReflection,
 } from "@/lib/journey/reflection-engine";
+import { toggleSelection } from "@/lib/journey/selection";
 import {
   mergeStepAnswers,
   optionIndexesFor,
@@ -319,7 +320,7 @@ function ArriveScreen({ content }: { content: JourneyDayContent }) {
 function UnderstandScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
-      <p className="eyebrow">Understand</p>
+      <p className="eyebrow">{content.understand.label ?? "Understand"}</p>
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
         {content.understand.heading}
       </h1>
@@ -385,14 +386,7 @@ function QuestionScreenShell({
 
   const toggle = (idx: number) => {
     restoredRef.current = true;
-    const next =
-      question.select === "one"
-        ? selected.includes(idx)
-          ? []
-          : [idx]
-        : selected.includes(idx)
-          ? selected.filter((n) => n !== idx)
-          : [...selected, idx];
+    const next = toggleSelection(question, selected, idx);
     setSelected(next);
     onAnswer(stepKey, next);
   };

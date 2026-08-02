@@ -2245,8 +2245,16 @@ describe("Day 10 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain("what was held privately remains yours");
-    expect(text).toContain("That privacy choice is saved on this device");
-    expect(text).toContain("no private content is known or inferred");
+    const allPrivate = buildReflection(day10, [
+      answer("q.different", idx(different, "private")),
+      answer("q.unfinished", idx(unfinished, "private")),
+      answer("step", idx(day10.step, "private")),
+    ])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(allPrivate).toContain("what was held privately remains yours");
+    expect(allPrivate).toContain("That privacy choice is saved on this device");
+    expect(allPrivate).toContain("no private content is known or inferred");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");

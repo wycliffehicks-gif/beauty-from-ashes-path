@@ -405,11 +405,7 @@ function ScreenBody({
           label={label}
           progress={progress}
           onBack={onBack}
-          prototypeVisual={
-            content.day === 1 &&
-            screen.kind === "question" &&
-            question.id === content.questions[0]?.id
-          }
+          prototypeVisual={content.day === 1 && question.id === "state"}
         />
       );
 
@@ -461,10 +457,14 @@ function ScreenBody({
 function ArriveScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
-      <div className="bfa-visual-threshold">
-        <VisualMotif variant="threshold" />
-      </div>
+      {content.day === 1 && (
+        <div className="bfa-visual-threshold">
+          <VisualMotif variant="threshold" />
+        </div>
+      )}
       <p className="eyebrow">Arrive</p>
+
+
 
       <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
         {content.title}

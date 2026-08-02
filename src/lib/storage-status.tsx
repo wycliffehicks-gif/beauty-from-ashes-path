@@ -132,19 +132,24 @@ export function useStorageStatus(): { persistent: boolean; hydrated: boolean } {
 /**
  * One calm notice, shown only when persistence is genuinely unavailable.
  *
- * It sits in normal document flow so it can never cover the sticky bottom
- * navigation dock, and it is rendered inside the splash underlay so it stays
- * inert and aria-hidden while the opening splash covers the app.
+ * It sits at the top of the app in normal document flow, so it is visible in
+ * the first viewport and can never cover the sticky bottom navigation dock.
+ * Because it sits above the app, its divider is on the bottom edge.
+ *
+ * `suppressed` lets the opening splash keep it unmounted while the splash
+ * covers (and inerts) the app; when the splash ends the notice mounts fresh, so
+ * `role="status"` can actually announce rather than having existed inside
+ * aria-hidden content.
  */
-export function StorageNotice() {
+export function StorageNotice({ suppressed = false }: { suppressed?: boolean } = {}) {
   const { persistent, hydrated } = useStorageStatus();
-  if (!hydrated || persistent) return null;
+  if (suppressed || !hydrated || persistent) return null;
   return (
     <div
       data-testid="storage-notice"
       role="status"
       aria-live="polite"
-      className="border-t border-border bg-card px-4 py-3"
+      className="border-b border-border bg-card px-4 py-3"
     >
       <p className="container-page text-center text-sm text-foreground">
         {STORAGE_UNAVAILABLE_NOTICE}

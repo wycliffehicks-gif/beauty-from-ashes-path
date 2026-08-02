@@ -173,14 +173,14 @@ describe("interface and visual foundation", () => {
     expect(css).toContain("color-scheme: dark");
   });
 
-  it("keeps the storage notice inside the splash underlay", () => {
+  it("lets SplashGate own the storage notice at the top of the underlay", () => {
     const root = read("src/routes/__root.tsx");
-    const underlayStart = root.indexOf("<SplashGate>");
-    const notice = root.indexOf("<StorageNotice />");
-    const underlayEnd = root.indexOf("</SplashGate>");
-    expect(underlayStart).toBeGreaterThan(-1);
-    expect(notice).toBeGreaterThan(underlayStart);
-    expect(notice).toBeLessThan(underlayEnd);
+    expect(root).not.toContain("StorageNotice");
+    const gate = read("src/components/SplashGate.tsx");
+    const notice = gate.indexOf("<StorageNotice suppressed={noticeSuppressed} />");
+    const children = gate.indexOf("{children}");
+    expect(notice).toBeGreaterThan(-1);
+    expect(notice).toBeLessThan(children);
   });
 
   it("makes no Wix media claim in Privacy while keeping the Google Fonts disclosure", () => {

@@ -13,7 +13,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SplashGate } from "../components/SplashGate";
 import { AgreementGate } from "../components/AgreementGate";
-import { StorageNotice } from "../lib/storage-status";
 
 /**
  * System dark mode, applied before the body paints so there is no light flash
@@ -147,8 +146,6 @@ function RootComponent() {
         <AgreementGate>
           <Outlet />
         </AgreementGate>
-        {/* Inside the splash underlay, so it is inert while splash covers the app. */}
-        <StorageNotice />
       </SplashGate>
     </QueryClientProvider>
 

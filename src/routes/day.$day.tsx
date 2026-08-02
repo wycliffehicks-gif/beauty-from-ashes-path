@@ -577,6 +577,7 @@ function QuestionScreenShell({
   progress,
   onBack,
   motif,
+  focusKey,
 }: {
   question: Question;
   stepKey: string;
@@ -588,7 +589,10 @@ function QuestionScreenShell({
   onBack?: () => void;
   /** Presentation only: which day geometry the quiet divider draws. */
   motif: MotifKey;
+  /** Stable screen identity, so a screen change moves focus to the question. */
+  focusKey?: string;
 }) {
+
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),
   );
@@ -666,9 +670,11 @@ function QuestionScreenShell({
       backLabel="← Back"
       onContinue={onNext}
       continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
+      focusKey={focusKey}
     >
       {body}
     </JourneyScreen>
+
   );
 }
 

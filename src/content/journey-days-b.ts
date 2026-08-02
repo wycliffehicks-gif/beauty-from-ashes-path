@@ -1256,19 +1256,19 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           heading: "What may be worth keeping — or leaving here",
           byOption: {
             protective:
-              "You kept near the possibility that a familiar response may have helped you cope. This choice does not tell us where it came from, what it protected, or whether it still helps.",
+              "You kept near the possibility that a familiar response may have helped you cope. Nothing here tells us where it came from, what it protected, or whether it still helps.",
             named:
-              "One idea you chose to keep near is that putting words to something may change how you relate to it. This choice does not tell us that anything has become lighter or easier.",
+              "One idea you chose to keep near is that putting words to something may change how you relate to it. That does not establish that anything has become lighter or easier.",
             twopulls:
-              "You kept near the idea that more than one pull or truth can be present at once. This choice does not tell us that any particular conflict is alive in you now.",
+              "You kept near the idea that more than one pull or truth can be present at once. This cannot tell us that any particular conflict is alive in you now.",
             cost:
-              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. This choice does not tell us what any cost is, what caused it, or where blame belongs.",
+              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. Nothing here tells us what any cost is, what caused it, or where blame belongs.",
             harsh:
-              "You kept near the idea that truth and responsibility do not require self-attack. This choice does not tell us how you speak to yourself, and honest accountability remains possible.",
+              "You kept near the idea that truth and responsibility do not require self-attack. That does not establish how you speak to yourself, and honest accountability remains possible.",
             small:
-              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. This choice does not tell us that any step has happened.",
+              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. This cannot tell us that any step has happened.",
             notalone:
-              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. This choice does not tell us what support exists, who is safe, or what you can reach.",
+              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. Nothing here tells us what support exists, who is safe, or what you can reach.",
             nothing:
               "You noted that nothing feels settled or complete right now, even if an idea resonates. An idea may resonate without becoming a finished outcome, a commitment, or a clear thing to carry forward, and that can sit beside anything else you kept near.",
             unclear:
@@ -1451,19 +1451,19 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "different",
           lines: {
             protective:
-              "One idea you chose to keep near is that a familiar response may have helped you cope. This choice does not tell us where it began, what danger there was, what it protected, or whether it still helps.",
+              "One idea you chose to keep near is that a familiar response may have helped you cope. That does not establish where it began, what danger there was, what it protected, or whether it still helps.",
             named:
-              "You kept near the idea that putting words to something may change how you relate to it. This choice does not tell us that anything has become lighter, clearer, or easier to manage.",
+              "You kept near the idea that putting words to something may change how you relate to it. This cannot tell us that anything has become lighter, clearer, or easier to manage.",
             twopulls:
-              "You kept near the idea that more than one pull or truth can be present at once. This choice does not tell us that any particular conflict or ambivalence is alive in you now.",
+              "You kept near the idea that more than one pull or truth can be present at once. Nothing here tells us that any particular conflict or ambivalence is alive in you now.",
             cost:
-              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. This choice does not tell us what any cost is, what caused it, what choice was available, or where blame belongs.",
+              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. That does not establish what any cost is, what caused it, what choice was available, or where blame belongs.",
             harsh:
-              "You kept near the idea that truth and responsibility do not require self-attack. This choice does not tell us how you speak to yourself or how you have behaved, and honest accountability remains possible.",
+              "You kept near the idea that truth and responsibility do not require self-attack. This cannot tell us how you speak to yourself or how you have behaved, and honest accountability remains possible.",
             small:
-              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. This choice does not tell us that any step happened or that it mattered.",
+              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. Nothing here tells us that any step happened or that it mattered.",
             notalone:
-              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. This choice does not tell us what support exists, who is safe, or what is within reach for you.",
+              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. That does not establish what support exists, who is safe, or what is within reach for you.",
             nothing:
               "You noted that nothing feels settled or complete right now, even if an idea resonates. An idea may resonate without becoming a finished outcome, a commitment, or a clear thing to carry forward, and nothing is promised to arrive later instead.",
             unclear:
@@ -1480,15 +1480,15 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "unfinished",
           lines: {
             grief:
-              "You named grief, loss, or mourning as something still open. This choice does not tell us any history, and no particular grief work is asked of you.",
+              "You named grief, loss, or mourning as something still open. This cannot tell us any history, and no particular grief work is asked of you.",
             relationship:
               "You named something relational that remains unresolved. No contact, reconciliation, forgiveness, or action follows from that, and no one is treated here as safe or unsafe.",
             limit:
-              "You named a limit, boundary, or condition that may need consideration. This choice does not tell us that it is overdue, safe, available, or within your control.",
+              "You named a limit, boundary, or condition that may need consideration. Nothing here tells us that it is overdue, safe, available, or within your control.",
             support:
-              "You named support, accommodation, advocacy, or practical care that is not yet in place. This choice does not tell us what service or person exists, or what you can reach.",
+              "You named support, accommodation, advocacy, or practical care that is not yet in place. That does not establish what service or person exists, or what you can reach.",
             self:
-              "You named how you relate to yourself in difficulty as something still open. This choice does not tell us how you speak to yourself, and no compassionate outcome is required.",
+              "You named how you relate to yourself in difficulty as something still open. This cannot tell us how you speak to yourself, and no compassionate outcome is required.",
             faith:
               "You named questions about faith, God, meaning, or belonging as open. No spiritual resolution, certainty, or prayer is required of you.",
             rest:
@@ -1511,11 +1511,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             support:
-              "You chose to identify one possible kind of support, accommodation, advocacy, or practical care. This choice does not tell us that anyone was contacted, that a service exists, or that it is within reach.",
+              "You chose to identify one possible kind of support, accommodation, advocacy, or practical care. Nothing here tells us that anyone was contacted, that a service exists, or that it is within reach.",
             conversation:
               "You chose to prepare one sentence you might share. Nothing has to be sent or said, no one is treated here as safe, and this choice does not tell us that anything happened.",
             limit:
-              "You chose to name one limit or condition you may want to consider. This choice does not tell us that it is safe, available, or acted on.",
+              "You chose to name one limit or condition you may want to consider. That does not establish that it is safe, available, or acted on.",
             rest:
               "You chose to identify one realistic form of rest or reduced demand. Rest may not be available to you, and this choice does not tell us that anything changed.",
             kind:

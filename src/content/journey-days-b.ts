@@ -1108,7 +1108,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             again:
-              "Reading or rehearsing the response once more, privately, was selected. It stays private, and nothing outward follows from it.",
+              "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
             sentence:
               "Shortening or revising one sentence was selected. Whether it is ever spoken anywhere is left entirely open.",
             use: "Naming what would have to be true before any real-world use was selected. That names conditions only; it does not commit you to using anything.",

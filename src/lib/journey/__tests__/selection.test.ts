@@ -149,3 +149,46 @@ describe("Day 3 revision", () => {
     expect(day3.practise.spiritual.scripture?.reference).toContain("Psalm 13:1–2");
   });
 });
+
+describe("Day 3 wording refinement", () => {
+  const day3 = getFirstJourneyDay(3)!;
+  const carrying = day3.questions.find((q) => q.id === "carrying")!;
+  const shows = day3.questions.find((q) => q.id === "shows")!;
+  const text = JSON.stringify(day3);
+
+  it("makes the 'unsure' word option exclusive both ways", () => {
+    const idsList = carrying.options.map((o) => o.id);
+    const unsure = idsList.indexOf("unsure");
+    const grief = idsList.indexOf("grief");
+    expect(toggleSelection(carrying, [grief], unsure)).toEqual([unsure]);
+    expect(toggleSelection(carrying, [unsure], grief)).toEqual([grief]);
+  });
+
+  it("replaces public-facing 'Unresolved hurt' wording", () => {
+    expect(text).not.toMatch(/Unresolved hurt/i);
+    expect(text).not.toMatch(/unresolved hurt/);
+    expect(carrying.options.find((o) => o.id === "hurt")!.label).toBe(
+      "Hurt that still affects me — something painful still matters",
+    );
+  });
+
+  it("uses the revised Locate prompt and non-shared-cause hint", () => {
+    expect(shows.prompt).toContain("feel relevant");
+    expect(shows.hint).toContain("does not mean those experiences share the same cause");
+  });
+
+  it("includes the refined One Honest Sentence wording", () => {
+    const steps = day3.practise.reflection.steps.join(" ");
+    expect(steps).toContain("Something I regret is");
+    expect(steps).toContain("What feels heaviest today is");
+    expect(steps).toContain("identifying details");
+    expect(steps).toContain("using any sense");
+  });
+
+  it("uses the revised hold step and close heading", () => {
+    expect(day3.step.options.find((o) => o.id === "hold")!.label).toContain(
+      "without trying to solve it",
+    );
+    expect(day3.close.heading).toBe("One honest beginning");
+  });
+});

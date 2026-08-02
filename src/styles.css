@@ -7,13 +7,14 @@
 /*
  * Beauty from Ashes — Resurgence Therapeutics visual system.
  * Warm ivory pages, charcoal body, royal blue / deep navy anchors,
- * soft-gold and champagne as restrained accents. Playfair for headings,
- * Lato for body. Modest radii, minimal shadow, champagne hairlines.
+ * soft-gold and champagne as restrained accents. IBM Plex Serif for expressive
+ * headings, IBM Plex Sans for body and interface, aligning with the Resurgence
+ * Therapeutics site direction. Modest radii, minimal shadow, champagne hairlines.
  */
 
 @theme inline {
-  --font-serif: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
-  --font-sans: "Lato", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "IBM Plex Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --radius-sm: calc(var(--radius) - 3px);
   --radius-md: calc(var(--radius) - 1px);
@@ -132,6 +133,8 @@
   }
 
   html {
+    /* Native controls, checkboxes and scrollbars follow the active scheme. */
+    color-scheme: light;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -147,6 +150,10 @@
 
   @media (min-width: 640px) {
     body { font-size: 19px; }
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   h1, h2, h3, h4 {

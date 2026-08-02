@@ -8,8 +8,9 @@ import { isSplashActive, onSplashEnd } from "@/lib/splash-state";
  * Renders children only when the current agreement has been accepted on this
  * device, or when the route is one of the always-reachable safety/information
  * pages. Restricted routes never mount before then, so a fresh person opening
- * a restricted URL sees no therapeutic content and nothing is written to
- * storage — no locator, no answers, no reflection, no completion.
+ * a restricted URL sees no therapeutic content and no restricted journey state
+ * is written — no locator, no answers, no reflection, no completion. The launch
+ * screen may still write its own non-therapeutic session marker beforehand.
  */
 export function AgreementGate({ children }: { children: ReactNode }) {
   const [prefs, , hydrated] = usePrefs();

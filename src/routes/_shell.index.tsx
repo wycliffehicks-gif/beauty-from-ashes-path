@@ -83,7 +83,10 @@ function JourneyHome() {
 
       <div className="space-y-3">
         <h2 className="font-serif text-lg text-foreground">The ten days</h2>
+        <div className="bfa-visual-thread-track">
+        <VisualMotif variant="thread" />
         <ol className="space-y-3">
+
           {JOURNEY_DAYS.map((d) => {
             const isComplete = completed.has(d.id);
             const state = isComplete ? "complete" : d.id === currentId ? "current" : "upcoming";

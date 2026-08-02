@@ -23,7 +23,10 @@ export const Route = createFileRoute("/important-information")({
 
 function ImportantInfoPage() {
   return (
-    <LegalPage title="Important Information, Clinical Disclaimer & Crisis Support">
+    <LegalPage
+      title="Important Information, Clinical Disclaimer &amp; Crisis Support"
+      lastUpdated="August 2, 2026"
+    >
       <p className="text-lg">
         <strong className="font-medium text-foreground">
           Beauty from Ashes is not psychotherapy.
@@ -59,16 +62,16 @@ function ImportantInfoPage() {
 
       <h2 className="font-serif text-xl">If you feel overwhelmed</h2>
       <p>
-        It is okay to stop. You can use the{" "}
-        <Link
-          to="/practice/$id"
-          params={{ id: "pause-and-ground" }}
-          className="inline-link text-primary underline underline-offset-4"
-        >
-          Pause and Ground
+        It is okay to stop, and stopping is allowed at any point. You may close
+        the app, put it down, or leave a day unfinished. If it helps, you might
+        turn your attention to something ordinary around you, or reach a person
+        or professional you trust. Nothing here is required, and no particular
+        response is promised. Your safety matters more than any exercise in this
+        app. You can also open{" "}
+        <Link to="/support" className="inline-link text-primary underline underline-offset-4">
+          Support &amp; Safety
         </Link>{" "}
-        practice, move toward a safe person or place, or reach a qualified
-        professional. Your safety matters more than any exercise in this app.
+        for crisis lines and other kinds of help.
       </p>
 
       <h2 className="font-serif text-xl">This app may complement therapy</h2>
@@ -90,13 +93,24 @@ function ImportantInfoPage() {
           or go to your nearest emergency department.
         </p>
         <p className="text-sm text-foreground">
-          If you are thinking about suicide, or are worried about someone
-          else, call or text{" "}
-          <a href="tel:988" className="text-primary underline underline-offset-4">
-            988
-          </a>{" "}
-          in Canada. It is free, confidential, and available 24/7.
+          If you are thinking about suicide, or are worried about someone else,
+          the 9-8-8 Suicide Crisis Helpline in Canada is free, confidential and
+          available 24/7 by phone or text.
         </p>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href="tel:988"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-primary underline underline-offset-4"
+          >
+            Call 988
+          </a>
+          <a
+            href="sms:988"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-primary underline underline-offset-4"
+          >
+            Text 988
+          </a>
+        </div>
         <p className="text-sm text-muted-foreground">
           If you are outside Canada, please use your local emergency or crisis
           service.
@@ -104,8 +118,8 @@ function ImportantInfoPage() {
       </div>
 
       <p className="text-sm">
-        For the full list of Canadian crisis and support lines used in this
-        app, see{" "}
+        For the full list of Canadian crisis lines and other kinds of help used
+        in this app, see{" "}
         <Link to="/support" className="inline-link text-primary underline underline-offset-4">
           Support &amp; Safety
         </Link>

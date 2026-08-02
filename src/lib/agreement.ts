@@ -9,8 +9,8 @@ import { LEGAL_BUNDLE_VERSION, type Prefs } from "@/lib/prefs";
 
 /**
  * Reachable before (or without) current acceptance: the opening flow itself,
- * safety and information pages, and the single grounding practice a person may
- * need immediately.
+ * plus the safety and information pages. The older standalone practices are
+ * outside this pilot and are never reachable before acceptance.
  */
 export const PUBLIC_PATHS = [
   "/onboarding",
@@ -19,7 +19,6 @@ export const PUBLIC_PATHS = [
   "/terms",
   "/important-information",
   "/contact-support",
-  "/practice/pause-and-ground",
 ] as const;
 
 function normalizePath(pathname: string): string {

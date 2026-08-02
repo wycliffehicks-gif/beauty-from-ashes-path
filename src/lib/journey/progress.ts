@@ -118,6 +118,32 @@ function sanitizeReflections(raw: unknown): Record<string, string> {
   return out;
 }
 
+const MAX_SNAPSHOT_LENGTH = 1024;
+
+/** Coded selection fingerprints only: ids, separators and nothing else. */
+function sanitizeSnapshots(raw: unknown): Record<string, string> {
+  if (!raw || typeof raw !== "object") return {};
+  const out: Record<string, string> = {};
+  for (const [dayId, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!isSafeId(dayId) || typeof value !== "string") continue;
+    if (value.length === 0 || value.length > MAX_SNAPSHOT_LENGTH) continue;
+    if (!/^[A-Za-z0-9._:|-]+$/.test(value)) continue;
+    out[dayId] = value;
+  }
+  return out;
+}
+
+function sanitizeReached(raw: unknown): Record<string, number> {
+  if (!raw || typeof raw !== "object") return {};
+  const out: Record<string, number> = {};
+  for (const [dayId, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!isSafeId(dayId)) continue;
+    if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) continue;
+    out[dayId] = Math.min(value, 64);
+  }
+  return out;
+}
+
 /**
  * Parse the earlier `bfa.v1` visited-day markers. Kept for reference only.
  *
@@ -146,15 +172,20 @@ export function normalizeProgress(raw: unknown): JourneyProgress {
     answers: sanitizeAnswers(r.answers),
     completedDays: Array.from(new Set(completed)),
     reflections: sanitizeReflections(r.reflections),
+    reflectionSnapshots: sanitizeSnapshots(r.reflectionSnapshots),
+    reached: sanitizeReached(r.reached),
     updatedAt: typeof r.updatedAt === "string" ? r.updatedAt : null,
   };
 }
 
 /**
- * One-time store upgrade. Positional answer tokens become stable option ids,
- * and older completion markers are dropped rather than trusted (see
- * ./answer-migration.ts for why). Locator, answers and saved reflections are
- * preserved.
+ * One-time store upgrade. Positional answer tokens become stable option ids.
+ *
+ * Days a person genuinely finished in this store are PRESERVED: they were
+ * recorded by this app's own completion path and deleting them would silently
+ * take real work away. Only the separate legacy `bfa.v1` visited-day markers are
+ * never promoted to completion, because "visited" was never proof of finishing
+ * (see ./answer-migration.ts). Locator, answers and saved reflections are kept.
  */
 export function upgradeStoredProgress(raw: unknown): {
   progress: JourneyProgress;
@@ -170,7 +201,6 @@ export function upgradeStoredProgress(raw: unknown): {
     progress: {
       ...normalized,
       answers: migrateAnswersToStableIds(normalized.answers),
-      completedDays: [],
     },
     changed: true,
   };

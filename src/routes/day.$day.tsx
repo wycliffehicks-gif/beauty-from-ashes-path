@@ -536,6 +536,7 @@ function QuestionScreenShell({
   label,
   progress,
   onBack,
+  prototypeVisual = false,
 }: {
   question: Question;
   stepKey: string;
@@ -545,6 +546,8 @@ function QuestionScreenShell({
   label: string;
   progress: { current: number; total: number };
   onBack?: () => void;
+  /** Presentation only: the prototype "quiet edge" treatment. */
+  prototypeVisual?: boolean;
 }) {
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),
@@ -571,6 +574,69 @@ function QuestionScreenShell({
     );
   };
 
+  const body = (
+    <div className="space-y-5">
+      <p className="eyebrow">{question.eyebrow}</p>
+      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+        {question.prompt}
+      </h1>
+      {question.hint && (
+        <p className="text-base text-muted-foreground">{question.hint}</p>
+      )}
+      <ul className="space-y-2" role="list">
+        {question.options.map((option, idx) => {
+          const isOn = selected.includes(idx);
+          return (
+            <li key={option.id}>
+              <button
+                type="button"
+                aria-pressed={isOn}
+                onClick={() => toggle(idx)}
+                className={
+                  prototypeVisual
+                    ? "bfa-prototype-choice"
+                    : `flex min-h-[52px] w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-base transition-colors ${
+                        isOn
+                          ? "border-[color:var(--gold)] bg-[color:var(--champagne)]/35 text-foreground"
+                          : "border-border bg-card text-foreground hover:border-[color:var(--gold)]"
+                      }`
+                }
+              >
+                <span
+                  aria-hidden
+                  className={
+                    prototypeVisual
+                      ? "bfa-prototype-choice-dot"
+                      : `mt-1 h-3 w-3 shrink-0 rounded-full border ${
+                          isOn
+                            ? "border-[color:var(--gold)] bg-[color:var(--gold)]"
+                            : "border-border"
+                        }`
+                  }
+                />
+                <span className="min-w-0">
+                  <span className="block">{option.label}</span>
+                  {option.note && (
+                    <span
+                      className={
+                        prototypeVisual
+                          ? "bfa-prototype-choice-note"
+                          : "mt-0.5 block text-sm text-muted-foreground"
+                      }
+                    >
+                      {option.note}
+                    </span>
+                  )}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <InfoNotes notes={question.info} />
+    </div>
+  );
+
   return (
     <JourneyScreen
       label={label}
@@ -580,55 +646,18 @@ function QuestionScreenShell({
       onContinue={onNext}
       continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
     >
-      <div className="space-y-5">
-        <p className="eyebrow">{question.eyebrow}</p>
-        <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
-          {question.prompt}
-        </h1>
-        {question.hint && (
-          <p className="text-base text-muted-foreground">{question.hint}</p>
-        )}
-        <ul className="space-y-2" role="list">
-          {question.options.map((option, idx) => {
-            const isOn = selected.includes(idx);
-            return (
-              <li key={option.id}>
-                <button
-                  type="button"
-                  aria-pressed={isOn}
-                  onClick={() => toggle(idx)}
-                  className={`flex min-h-[52px] w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-base transition-colors ${
-                    isOn
-                      ? "border-[color:var(--gold)] bg-[color:var(--champagne)]/35 text-foreground"
-                      : "border-border bg-card text-foreground hover:border-[color:var(--gold)]"
-                  }`}
-                >
-                  <span
-                    aria-hidden
-                    className={`mt-1 h-3 w-3 shrink-0 rounded-full border ${
-                      isOn
-                        ? "border-[color:var(--gold)] bg-[color:var(--gold)]"
-                        : "border-border"
-                    }`}
-                  />
-                  <span className="min-w-0">
-                    <span className="block">{option.label}</span>
-                    {option.note && (
-                      <span className="mt-0.5 block text-sm text-muted-foreground">
-                        {option.note}
-                      </span>
-                    )}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <InfoNotes notes={question.info} />
-      </div>
+      {prototypeVisual ? (
+        <div className="bfa-visual-quiet-edge">
+          <VisualMotif variant="quiet-edge" />
+          <div className="bfa-visual-quiet-edge-inner">{body}</div>
+        </div>
+      ) : (
+        body
+      )}
     </JourneyScreen>
   );
 }
+
 
 function EchoScreen({
   content,

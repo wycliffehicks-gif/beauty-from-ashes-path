@@ -99,13 +99,17 @@ function Opening() {
 
   // Deterministic post-acceptance transition. Home replaces the remaining entry
   // only once this visit's pushed entries have actually collapsed back to the
-  // entry position — no timer, so Home can never land before the collapse and
-  // strand the person back in onboarding.
+  // exact entry position — no timer, so Home can never land before the collapse
+  // and strand the person back in onboarding, and an unrelated overshot entry
+  // can never be replaced.
   const [collapsing, setCollapsing] = useState(false);
+  // Immediate (pre-rerender) single-flight guard: a rapid double activation must
+  // not be able to issue a second history.go.
+  const acceptStarted = useRef(false);
   useEffect(() => {
     if (!collapsing) return;
     const entry = entryHistoryIndex.current ?? historyIndex;
-    if (historyIndex <= entry) {
+    if (historyIndex === entry) {
       setCollapsing(false);
       navigate({ to: "/", replace: true });
     }
@@ -113,6 +117,8 @@ function Opening() {
 
   const accept = () => {
     if (!canAdvance) return;
+    if (acceptStarted.current) return;
+    acceptStarted.current = true;
     update({
       onboarded: true,
       legalAcceptance: {

@@ -38,7 +38,9 @@ describe("spiritual preference sanitization is fail-safe", () => {
       visitedDays: [1, 1, 2.5, -3, "4", null, 3],
       legalAcceptance: { version: "", acceptedAt: "x" },
     });
-    expect(out.visitedDays).toEqual([1, 2, 3]);
+    // 2.5 is not whole, "4" is not a number, -3 is out of range: all discarded.
+    expect(out.visitedDays).toEqual([1, 3]);
+
     expect(out.legalAcceptance).toBeUndefined();
   });
 });

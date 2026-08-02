@@ -15,6 +15,8 @@ import {
 } from "react";
 
 import { JourneyScreen } from "@/components/JourneyScreen";
+import { VisualMotif } from "@/components/VisualMotifs";
+
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
 import {
   screenKey as keyForScreen,

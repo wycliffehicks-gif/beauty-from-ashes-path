@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { VisualMotif } from "@/components/VisualMotifs";
 import { beginSplash, endSplash } from "@/lib/splash-state";
+import { StorageNotice } from "@/lib/storage-status";
 
 const SESSION_KEY = "bfa_splash_shown_v1";
 
@@ -17,6 +18,9 @@ const SESSION_KEY = "bfa_splash_shown_v1";
 export function SplashGate({ children }: { children: ReactNode }) {
   const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  // The storage notice must not exist inside the aria-hidden/inert underlay, so
+  // it stays unmounted until the splash decision is made and any splash ends.
+  const [noticeSuppressed, setNoticeSuppressed] = useState(true);
   const underlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -27,7 +31,10 @@ export function SplashGate({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
-    if (shown) return;
+    if (shown) {
+      setNoticeSuppressed(false);
+      return;
+    }
     try {
       sessionStorage.setItem(SESSION_KEY, "1");
     } catch {
@@ -46,6 +53,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
     const t1 = window.setTimeout(() => setLeaving(true), dwell);
     const t2 = window.setTimeout(() => {
       setVisible(false);
+      setNoticeSuppressed(false);
       endSplash();
     }, dwell + fade);
     return () => {
@@ -73,6 +81,9 @@ export function SplashGate({ children }: { children: ReactNode }) {
         data-testid="splash-underlay"
         aria-hidden={visible ? "true" : undefined}
       >
+        {/* Above the app in normal flow: visible in the first viewport and
+            never covering the sticky bottom navigation dock. */}
+        <StorageNotice suppressed={noticeSuppressed} />
         {children}
       </div>
       {visible && (

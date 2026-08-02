@@ -1153,10 +1153,10 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     arrive: {
       lead: "This is the last day of the First Journey. It completes a ten-day container without claiming that your healing is complete.",
       body: [
-        "You may have engaged with every day, some days, mainly read, kept things private, or left questions unanswered. Any of those is a real way to have used this.",
-        "You may feel changed, unchanged, more unsettled, clearer, uncertain, or nothing in particular. Today does not decide what these ten days meant.",
+        "You may have moved through every day or only some, mainly read, kept things private, left questions unanswered, or arrived here directly. No one path is treated here as more complete than another.",
+        "You may feel changed, unchanged, unsettled, clearer, uncertain, or nothing in particular. Today does not decide what this journey means for you, and no clear meaning is required.",
         "Today offers room to gather one thread if there is one, to leave one unfinished place acknowledged if that is useful, and to choose how much—if anything—to carry beyond the page.",
-        "Finishing screens is not evidence of healing, readiness, insight, attention, courage, or progress.",
+        "Reaching this page does not have to prove healing, readiness, insight, attention, courage, or progress.",
       ],
       settle: [
         "Any position that works is fine, including continuing to move as you are.",
@@ -1168,10 +1168,10 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       label: "Listen",
       heading: "A journey can be complete while healing remains unfinished",
       body: [
-        "By integration, we mean allowing pieces of experience to sit in a more workable relationship with each other. That may involve remembering, grieving, reinterpreting, practising, seeking support, setting limits, receiving accommodation, resisting harm or injustice, or leaving a question open. It is not a scored result, and it may not be felt.",
+        "By integration, we mean allowing pieces of experience to sit in a more workable relationship with each other. That may involve remembering, grieving, reinterpreting, practising, seeking support, setting limits, receiving accommodation, resisting harm or injustice, or leaving a question open. It does not have to produce a clear feeling or result.",
         "New life, in this series, is not going back to an untouched earlier self. It may mean relating to the same story, wounds, losses, questions, or circumstances differently—with more truth, care, support, boundaries, grief, or room for hope.",
         "Carrying something differently does not mean carrying it alone, calling harm good, suppressing lament, pretending the ashes never existed, or claiming the old story no longer matters.",
-        "Some things may change. Some may need support, accommodation, advocacy, resistance, mourning, safer conditions, or time. Some may remain unresolved. Grief, illness, disability, caregiving, discrimination, unsafe conditions, financial pressure, differences in power, relationships, limited resources, and limited support are all real, and none of them is undone by ten days of reading.",
+        "Some things may change. Some may need support, accommodation, advocacy, resistance, mourning, safer conditions, or time. Some may remain unresolved. Grief, illness, disability, caregiving, discrimination, unsafe conditions, financial pressure, differences in power, relationships, limited resources, and limited support are all real, and none of them is undone by an app or a closing screen.",
         "Unfinishedness may reflect circumstance, constraint, loss, other people's choices, your own responsibility, or something that is simply unclear. It is not automatically a personal failure.",
         "Carrying forward can mean keeping one sentence, knowing where to return, seeking care, allowing grief, waiting, or leaving the journey here. It does not mean carrying alone, and it does not mean taking action. Insight, action, relief, spiritual feeling, future continuation, and a next step are not required.",
       ],
@@ -1179,7 +1179,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         {
           term: "What does integration mean?",
           explanation:
-            "It means letting the pieces of an experience sit together in a more workable way—remembered, named, grieved, supported, limited, or left open. No insight, feeling, or outcome is required for that to count.",
+            "It means letting the pieces of an experience sit together in a more workable way—remembered, named, grieved, supported, limited, or left open. No insight, feeling, or outcome is required here.",
         },
         {
           term: "What does ‘carry it forward’ mean?",
@@ -1194,12 +1194,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         {
           term: "What if I feel more unsettled?",
           explanation:
-            "This app cannot determine why distress increased, and worsening is not treated here as a necessary phase of healing. You may stop or step away. If distress is persistent, worsening, disrupting daily life, or raising safety concerns, appropriate real-world care is the right next step, and Support & Safety is available for urgent safety needs.",
+            "This app cannot determine why distress increased, and worsening is not treated here as a necessary phase of healing. You may stop or step away. If distress persists, worsens, disrupts daily life, or raises safety concerns, consider seeking appropriate real-world care. For urgent or immediate safety concerns, Support & Safety lists available options.",
         },
         {
           term: "Do I have to continue after this?",
           explanation:
-            "No. The First Journey is complete here. Returning to a day, or continuing anything elsewhere, is optional and is not required to make these ten days count.",
+            "No. The First Journey is complete here. Returning to a day, or continuing anything elsewhere, is entirely optional. This remains a complete stopping place whether or not you return.",
         },
       ],
     },
@@ -1208,8 +1208,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         id: "different",
         eyebrow: "Gather",
         prompt: "Which idea from this journey, if any, feels worth keeping near?",
-        hint: "Choose one if one fits. You may choose no clear thread, uncertainty, privacy, or continue without answering.",
-        select: "one",
+        hint: "You may choose as many as fit, one, or none. You may also note that nothing feels settled, choose uncertainty or privacy, or continue without answering.",
+        select: "many",
         options: [
           {
             id: "protective",
@@ -1237,8 +1237,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           },
           {
             id: "nothing",
-            label: "No particular thread feels worth carrying right now",
-            exclusive: true,
+            label: "Nothing feels settled or complete, even if an idea resonates",
           },
           {
             id: "unclear",
@@ -1255,25 +1254,25 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           heading: "What may be worth keeping — or leaving here",
           byOption: {
             protective:
-              "The idea you selected is that a familiar response may have helped you cope. That is the idea only. No origin, past danger, protective purpose, or present usefulness is established here.",
+              "You kept near the possibility that a familiar response may have helped you cope. This choice does not tell us where it came from, what it protected, or whether it still helps.",
             named:
-              "The idea you selected is that putting words to something may change how you relate to it. Nothing about manageability or relief is assumed by keeping it near.",
+              "One idea you chose to keep near is that putting words to something may change how you relate to it. This choice does not tell us that anything has become lighter or easier.",
             twopulls:
-              "The idea you selected is that more than one pull or truth can be present at once. No current conflict or ambivalence in you is inferred beyond that idea.",
+              "You kept near the idea that more than one pull or truth can be present at once. This choice does not tell us that any particular conflict is alive in you now.",
             cost:
-              "The idea you selected is that noticing a possible cost is not the same as blaming yourself. No particular cost, cause, available choice, or conclusion about blame is established.",
+              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. This choice does not tell us what any cost is, what caused it, or where blame belongs.",
             harsh:
-              "The idea you selected is that truth and responsibility do not require self-attack. No harsh tone or harmful behaviour is inferred beyond that idea, and accountability remains possible.",
+              "You kept near the idea that truth and responsibility do not require self-attack. This choice does not tell us how you speak to yourself, and honest accountability remains possible.",
             small:
-              "The idea you selected is that a small or preparatory response can matter without proving progress. No step is assumed to have occurred, or to have mattered.",
+              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. This choice does not tell us that any step has happened.",
             notalone:
-              "The idea you selected is that some things may need support or safer conditions rather than more effort from you. No support, person, disclosure, resource, safety, or access is assigned to you here.",
+              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. This choice does not tell us what support exists, who is safe, or what you can reach.",
             nothing:
-              "You selected that no particular thread feels worth carrying right now. That absence is left exactly as it is, and nothing is promised to arrive later instead.",
+              "You noted that nothing feels settled or complete right now, even if an idea resonates. An idea may resonate without becoming a finished outcome, a commitment, or a clear thing to carry forward, and that can sit beside anything else you kept near.",
             unclear:
-              "You selected that you are not sure what, if anything, you want to carry forward. Uncertainty remains uncertainty here, with no hidden meaning read into it.",
+              "You noted that you are not sure what, if anything, you want to carry forward. Uncertainty stays uncertainty here, with no hidden meaning read into it.",
             private:
-              "You selected a structured private choice, and only that choice is saved on this device. Nothing about its content is known or inferred.",
+              "You chose to keep this private. That choice is saved on this device, and what you held privately remains yours.",
           },
           unanswered:
             "You continued without selecting a thread. Nothing will be chosen, interpreted, or summarised on your behalf.",
@@ -1285,8 +1284,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         id: "unfinished",
         eyebrow: "Name",
         prompt: "What, if anything, remains open or may deserve care beyond today?",
-        hint: "Choose one if one fits. Naming it does not require resolving it, and you may leave it unclear, outside your control, private, or unanswered.",
-        select: "one",
+        hint: "You may choose as many as fit, one, or none. Naming something does not require resolving it, and you may leave it unclear, outside your control, private, or unanswered.",
+        select: "many",
         options: [
           { id: "grief", label: "Grief, loss, or mourning that may need more room or support" },
           {
@@ -1337,7 +1336,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     practise: {
       heading: "Two ways to gather without forcing closure",
       intro:
-        "Both paths work the same way whether a thread and an unfinished place were selected, kept private, left unclear, absent, or unanswered. Neither path receives your selections, and neither asks for anything new.",
+        "You can use either path without repeating or explaining anything you chose. Uncertainty, privacy, or no selection can remain.",
       either:
         "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the practice unfinished.",
       reflection: {
@@ -1347,7 +1346,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "A plain, unhurried way to gather one possible thread, leave one place unfinished, and notice what might support the pace—without deciding anything.",
         steps: [
           "Let your attention rest, if you would like to, on one neutral detail available through any sense that is comfortable for you. No touch, posture change, breathing change, bodily sensation, visualisation, or calm is required.",
-          "Look back only as broadly as is workable today. You might use an idea you selected, something you held privately, uncertainty, or nothing in particular. Reading this step and going no further is available.",
+          "Look back only as broadly as is workable today. You might use an idea you selected, something you held privately, uncertainty, or nothing in particular. You may stop after reading this step.",
           "Privately complete, or simply consider, this line: “One thing I may want to keep near is…” “Nothing clear” is a complete response.",
           "Then, if it is useful: “One thing I can let remain unfinished is…” It may stay unnamed, or it may be something outside your influence.",
           "Then, if it is useful: “What may help protect the pace is…” Possibilities may include time, grief, rest, support, accommodation, advocacy, a boundary, safer conditions, waiting, or no action at all. There is no need to invent something that is not available to you.",
@@ -1355,7 +1354,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "If you would like to, name one possible return point—a day, a sentence, a practice, a question, or a possible source of support—without scheduling it, promising it, or acting on it. Then let your attention return outward. No closure or particular feeling is required.",
         ],
         notRequired:
-          "Not required: writing, saving, disclosure, contact, conversation, reconciliation, forgiveness, action, a schedule, a commitment, a daily practice, insight, emotional release, hope, relief, progress, or any outcome. If distress grows, stopping is the reasonable thing to do.",
+          "Not required: writing, saving, disclosure, contact, conversation, reconciliation, forgiveness, action, a schedule, a commitment, a daily practice, insight, emotional release, hope, relief, progress, or any outcome. If distress grows, you may stop, reorient outward, or seek support.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — blessing without forced closure",
@@ -1442,7 +1441,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This uses only today’s selected structured responses; it does not summarise earlier days or decide what the journey meant.",
+        "This reflection stays with what you chose—or left open—today. It does not fill in earlier days or decide what the journey meant for you.",
       sections: [
         {
           id: "hearing",
@@ -1450,28 +1449,28 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "different",
           lines: {
             protective:
-              "You selected the idea that a familiar response may have helped you cope. No origin, danger, purpose, or present usefulness is established by that selection.",
+              "One idea you chose to keep near is that a familiar response may have helped you cope. This choice does not tell us where it began, what danger there was, what it protected, or whether it still helps.",
             named:
-              "You selected the idea that putting words to something may change how you relate to it. Nothing about relief or manageability follows from it.",
+              "You kept near the idea that putting words to something may change how you relate to it. This choice does not tell us that anything has become lighter, clearer, or easier to manage.",
             twopulls:
-              "You selected the idea that more than one pull or truth can be present at once. Nothing about your current state is inferred beyond that idea.",
+              "You kept near the idea that more than one pull or truth can be present at once. This choice does not tell us that any particular conflict or ambivalence is alive in you now.",
             cost:
-              "You selected the idea that noticing a possible cost is not the same as blaming yourself. No particular cost, cause, or available choice is established.",
+              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. This choice does not tell us what any cost is, what caused it, what choice was available, or where blame belongs.",
             harsh:
-              "You selected the idea that truth and responsibility do not require self-attack. No tone or behaviour of yours is described, and accountability remains possible.",
+              "You kept near the idea that truth and responsibility do not require self-attack. This choice does not tell us how you speak to yourself or how you have behaved, and honest accountability remains possible.",
             small:
-              "You selected the idea that a small or preparatory response can matter without proving progress. No step is assumed to have happened.",
+              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. This choice does not tell us that any step happened or that it mattered.",
             notalone:
-              "You selected the idea that some things may need support or safer conditions rather than more effort from you. No support, person, or access is assigned.",
+              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. This choice does not tell us what support exists, who is safe, or what is within reach for you.",
             nothing:
-              "You selected that no particular thread feels worth carrying right now. That absence is left intact, and nothing is promised later.",
+              "You noted that nothing feels settled or complete right now, even if an idea resonates. An idea may resonate without becoming a finished outcome, a commitment, or a clear thing to carry forward, and nothing is promised to arrive later instead.",
             unclear:
-              "You selected that you are not sure what, if anything, you want to carry forward. That uncertainty is recorded as uncertainty only.",
+              "You noted that you are not sure what, if anything, you want to carry forward. That uncertainty stays uncertainty here, and nothing is read into it.",
             private:
-              "You selected a structured private choice, and it is saved on this device. Nothing about its content is known or inferred here.",
+              "You chose to keep this private. That choice is saved on this device, and what was held privately remains yours—its content is not known or interpreted.",
           },
           unanswered:
-            "No thread was selected, so none is assigned or summarised. Nothing about attention, insight, honesty, or engagement is claimed by these screens having been navigated.",
+            "You left the first question open. Nothing is being chosen or interpreted for you.",
         },
         {
           id: "care",
@@ -1479,30 +1478,30 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "unfinished",
           lines: {
             grief:
-              "Grief, loss, or mourning was selected as what remains open. No history is assumed, and no particular grief work is required of you.",
+              "You named grief, loss, or mourning as something still open. This choice does not tell us any history, and no particular grief work is asked of you.",
             relationship:
-              "Something relational was selected as unresolved. No contact, reconciliation, forgiveness, or action follows, and nobody is assumed to be safe.",
+              "You named something relational that remains unresolved. No contact, reconciliation, forgiveness, or action follows from that, and no one is treated here as safe or unsafe.",
             limit:
-              "A limit, boundary, or condition was selected as something that may need consideration. It is not assumed to be overdue, safe, available, or within your control.",
+              "You named a limit, boundary, or condition that may need consideration. This choice does not tell us that it is overdue, safe, available, or within your control.",
             support:
-              "Support, accommodation, advocacy, or practical care was selected as not yet in place. No service, person, access, or availability is assumed.",
+              "You named support, accommodation, advocacy, or practical care that is not yet in place. This choice does not tell us what service or person exists, or what you can reach.",
             self:
-              "How you relate to yourself in difficulty was selected as what remains open. No particular self-talk is assumed, and no compassionate outcome is required.",
+              "You named how you relate to yourself in difficulty as something still open. This choice does not tell us how you speak to yourself, and no compassionate outcome is required.",
             faith:
-              "Questions about faith, God, meaning, or belonging were selected as open. No spiritual resolution, certainty, or prayer is required.",
+              "You named questions about faith, God, meaning, or belonging as open. No spiritual resolution, certainty, or prayer is required of you.",
             rest:
-              "Rest, reduced demand, or recovery time was selected as what remains open. Rest may not be available to you, and that is not a fault of yours.",
+              "You named rest, reduced demand, or recovery time as something still open. Rest may not be available to you, and that is not a fault of yours.",
             unclear:
-              "You selected that something remains open that you cannot or do not want to name. No content is inferred, and nothing is promised to emerge later.",
+              "You noted that something remains open that you cannot or do not want to name. Its content stays yours, and nothing is promised to emerge later.",
             outside:
-              "You selected that what remains is mostly outside your control or influence. That limit is respected here, and responsibility is not handed back to you.",
+              "You noted that what remains is mostly outside your control or influence. That limit is respected here, and responsibility is not handed back to you.",
             none:
-              "You selected that nothing in particular feels unfinished today. That absence is left exactly as it is.",
+              "You noted that nothing in particular feels unfinished today. That is left exactly as it is.",
             private:
-              "You selected a structured private choice, and it is saved on this device. Nothing about its content is known or inferred here.",
+              "You kept this unfinished place private. That privacy choice is saved on this device, and its content is not known or interpreted.",
           },
           unanswered:
-            "No unfinished place was selected, so none is inferred. Nothing further is read into that.",
+            "You did not name an unfinished place. Nothing needs to be added.",
         },
         {
           id: "next",
@@ -1510,39 +1509,39 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             support:
-              "Identifying one possible kind of support, accommodation, advocacy, or practical care was selected. No contact, service, or availability is assumed, and no action is claimed.",
+              "You chose to identify one possible kind of support, accommodation, advocacy, or practical care. This choice does not tell us that anyone was contacted, that a service exists, or that it is within reach.",
             conversation:
-              "Preparing one sentence you might share was selected. Nothing needs to be sent or said, nobody is assumed to be safe, and no action is claimed.",
+              "You chose to prepare one sentence you might share. Nothing has to be sent or said, no one is treated here as safe, and this choice does not tell us that anything happened.",
             limit:
-              "Naming one limit or condition you may want to consider was selected. No action, safety, or availability is claimed.",
+              "You chose to name one limit or condition you may want to consider. This choice does not tell us that it is safe, available, or acted on.",
             rest:
-              "Identifying one realistic form of rest or reduced demand was selected. Rest may not be available, and no action is claimed.",
+              "You chose to identify one realistic form of rest or reduced demand. Rest may not be available to you, and this choice does not tell us that anything changed.",
             kind:
-              "Keeping one fair sentence for a difficult moment was selected. No daily promise, habit, or effect is claimed.",
+              "You chose to keep one fair sentence for a difficult moment. No daily promise, habit, or effect follows from that.",
             revisit:
-              "Choosing one day or practice you may return to was selected. Nothing is scheduled, and no return is required.",
+              "You chose one day or practice you may return to. Nothing is scheduled, and returning is not required.",
             prepare:
-              "Letting the journey end here with nothing outward required was selected. Nothing further is implied by it.",
+              "You chose to let the journey end here with nothing outward required. Nothing further follows from that.",
             unavailable:
-              "You selected that a step may matter, but none feels safe or available now. That stays exactly as selected, and nothing is asked of you.",
+              "You noted that a step may matter, but none feels safe or available now. That stays exactly as you left it, and nothing is asked of you.",
             unclear:
-              "You selected that you are not sure how you want to leave this. That uncertainty stays as uncertainty.",
+              "You noted that you are not sure how you want to leave this. That uncertainty stays as uncertainty.",
             none:
-              "You selected that no next step feels right or needed today. That stays exactly as selected.",
+              "You noted that no next step feels right or needed today. That stays exactly as you left it.",
             private:
-              "You selected a structured private choice, and it is saved on this device. Nothing about its content is known or inferred here.",
+              "You kept how you are leaving this journey private. That choice is saved on this device, and no private content is known or inferred.",
           },
           unanswered:
-            "No step was selected, so none is added. The ending remains open, and nothing about practice or journey work is claimed.",
+            "You did not choose a next step. The journey can end here without one.",
         },
       ],
       closing:
-        "Today’s selections do not establish progress, readiness, cause, safety, or what will happen next. They show only what was selected here—including uncertainty, privacy, no clear thread, or no step.",
+        "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next.",
     },
     close: {
       heading: "A complete stopping place",
       body: [
-        "You have reached the last screen of the First Journey. You may have answered, kept things private, simply read, or left everything open. None of those paths establishes healing, progress, readiness, or a particular meaning.",
+        "You may have answered, kept things private, simply read, or left everything open. None of those paths has to prove healing, progress, readiness, or meaning.",
         "The First Journey is complete here. A complete journey does not require a neat outcome. Grief, questions, limits, responsibilities, harm, faith struggle, illness and circumstances may remain. Unfinished is not the same as failed.",
         "Every day remains open if returning is useful; you owe the app no repetition or continuation. If something needs care beyond an app, consider appropriate professional, medical, community, spiritual or trusted support. For immediate safety concerns, use Support & Safety.",
       ],

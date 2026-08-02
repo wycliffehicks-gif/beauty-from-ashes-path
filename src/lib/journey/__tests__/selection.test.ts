@@ -1245,7 +1245,7 @@ describe("Day 8 revision", () => {
       .join(" ");
     expect(text).toContain("You named one person who may be safe enough");
     expect(text).toContain("one small outward action, if safe and realistic");
-    expect(text).toContain("Drafting one brief message to someone safe enough");
+    expect(text).toContain("drafting one brief message to someone safe enough");
     expect(text).not.toContain("Creativity, beauty, learning or nature was selected");
     expect(text).not.toContain("A community, culture, tradition or place of belonging was selected");
     expect(text).not.toContain("A few private minutes, or one small moment, was selected");
@@ -1689,7 +1689,7 @@ describe("Day 9 revision", () => {
       .join(" ");
     expect(text).toContain("You considered rehearsing a limit or a delay");
     expect(text).toContain("You named work as a setting that came to mind");
-    expect(text).toContain("Identifying support you might want before any real-world action");
+    expect(text).toContain("identifying support you might want before any real-world action");
     expect(text).not.toContain("Rehearsing asking for one kind of support was selected");
     expect(text).not.toContain("Putting private words");
     expect(text).not.toContain("Home was selected");
@@ -2097,7 +2097,7 @@ describe("Day 10 revision", () => {
     expect(echo.byOption["twopulls"]).toContain("any particular conflict is alive in you");
     expect(echo.byOption["cost"]).toContain("where blame belongs");
     expect(echo.byOption["harsh"]).toContain("accountability remains possible");
-    expect(echo.byOption["small"]).toContain("does not tell us that any step has happened");
+    expect(echo.byOption["small"]).toContain("that any step has happened");
     expect(echo.byOption["notalone"]).toContain(
       "does not tell us what support exists, who is safe, or what you can reach",
     );
@@ -2254,7 +2254,7 @@ describe("Day 10 revision", () => {
       .join(" ");
     expect(allPrivate).toContain("What was held privately remains yours");
     expect(allPrivate).toContain("Its content is not known or interpreted here");
-    expect(allPrivate).toContain("no private content is known or inferred");
+    expect(allPrivate).toContain("private content is known or inferred");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");

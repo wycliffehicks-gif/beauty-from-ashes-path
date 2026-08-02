@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { VisualMotif } from "@/components/VisualMotifs";
 import {
   JOURNEY_DAYS,
   JOURNEY_HOME_TITLE,
@@ -6,6 +7,7 @@ import {
   getJourneyDayById,
 } from "@/content/journey";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
@@ -40,17 +42,21 @@ function JourneyHome() {
 
   return (
     <section className="space-y-8 pb-6">
-      <header className="space-y-3">
-        <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
-          {JOURNEY_HOME_TITLE}
-        </h1>
-        <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
-        <hr className="gold-seam w-28" />
-        <p className="text-base text-foreground">
-          Open a day when you have a little space. Days stay open, and you can return to any of
-          them as often as you like.
-        </p>
-      </header>
+      <div className="bfa-visual-home-hero">
+        <VisualMotif variant="home" />
+        <header className="bfa-visual-home-hero-inner space-y-3">
+          <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
+            {JOURNEY_HOME_TITLE}
+          </h1>
+          <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
+          <hr className="gold-seam w-28" />
+          <p className="text-base text-foreground">
+            Open a day when you have a little space. Days stay open, and you can return to any of
+            them as often as you like.
+          </p>
+        </header>
+      </div>
+
 
       {resume && resumeDay && (
         <div
@@ -77,7 +83,10 @@ function JourneyHome() {
 
       <div className="space-y-3">
         <h2 className="font-serif text-lg text-foreground">The ten days</h2>
+        <div className="bfa-visual-thread-track">
+        <VisualMotif variant="thread" />
         <ol className="space-y-3">
+
           {JOURNEY_DAYS.map((d) => {
             const isComplete = completed.has(d.id);
             const state = isComplete ? "complete" : d.id === currentId ? "current" : "upcoming";
@@ -118,6 +127,8 @@ function JourneyHome() {
             );
           })}
         </ol>
+        </div>
+
         <p className="pt-1 text-sm text-muted-foreground">
           Nothing here is timed, scored or compared.
         </p>

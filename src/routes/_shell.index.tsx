@@ -106,7 +106,7 @@ function JourneyHome() {
                     <span className="block font-serif text-lg leading-snug text-foreground">
                       {d.title}
                     </span>
-                    <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                    <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
                       {d.theme}
                     </span>
                     <span className="mt-1.5 block text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground">

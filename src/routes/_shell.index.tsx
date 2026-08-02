@@ -7,6 +7,7 @@ import {
   getJourneyDayById,
 } from "@/content/journey";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+import { useStorageStatus } from "@/lib/storage-status";
 
 
 export const Route = createFileRoute("/_shell/")({
@@ -31,14 +32,17 @@ export const Route = createFileRoute("/_shell/")({
 
 function JourneyHome() {
   const { progress, hydrated } = useJourneyProgress();
+  const { persistent, hydrated: storageHydrated } = useStorageStatus();
 
   const completed = new Set(progress.completedDays);
   const resume = hydrated && hasMeaningfulProgress(progress) ? progress.locator : null;
   const resumeDay = resume ? getJourneyDayById(resume.dayId) : undefined;
 
-  // The current day is the first not-yet-complete day; everything after is
-  // simply not started yet. No locks — all days stay open.
-  const currentId = JOURNEY_DAYS.find((d) => !completed.has(d.id))?.id ?? null;
+  // "Where you are now" must be the day the saved resume locator actually points
+  // to. Only when there is no meaningful resume does the first unfinished day
+  // become the quiet starting point. No locks — every day stays open.
+  const currentId =
+    resumeDay?.id ?? JOURNEY_DAYS.find((d) => !completed.has(d.id))?.id ?? null;
 
   return (
     <section className="space-y-8 pb-6">
@@ -67,8 +71,10 @@ function JourneyHome() {
           <h2 className="mt-2 font-serif text-xl text-foreground">
             Day {resumeDay.day} · {resumeDay.title}
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Your place was saved on this device. Nothing was lost.
+          <p className="mt-1 text-sm text-muted-foreground" data-testid="resume-storage-note">
+            {!storageHydrated || persistent
+              ? "Your place is saved in this browser, on this device."
+              : "Your place is available in this tab for now. It may be lost if this tab closes or reloads."}
           </p>
           <Link
             to="/day/$day"
@@ -114,7 +120,7 @@ function JourneyHome() {
                         ? "Finished · open any time"
                         : state === "current"
                           ? "Where you are now"
-                          : "Not started yet"}
+                          : "Open any time"}
                       {" · "}
                       {d.descriptor}
                     </span>

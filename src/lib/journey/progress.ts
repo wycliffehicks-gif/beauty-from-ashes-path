@@ -14,8 +14,13 @@ import { useCallback, useEffect, useState } from "react";
 import { migrateAnswersToStableIds } from "./answer-migration";
 
 export const JOURNEY_STORAGE_KEY = "bfa.journey.v1";
-/** v2 stores each option's stable id instead of its position. */
-export const JOURNEY_STORE_VERSION = 2;
+/**
+ * v2 stores each option's stable id instead of its position.
+ * v3 additionally guarantees a trusted `reached` high-water screen, derived
+ * conservatively for older stores so a legitimate mid-day resume is not lost.
+ */
+export const JOURNEY_STORE_VERSION = 3;
+
 
 /** Legacy low-sensitivity preference store (visited days only). */
 const LEGACY_PREFS_KEY = "bfa.v1";
@@ -28,7 +33,13 @@ export const APP_OWNED_KEY_PREFIXES = ["bfa.session.", "bfa."] as const;
 
 const MAX_ANSWER_ID_LENGTH = 64;
 const MAX_ANSWERS_PER_DAY = 40;
-const MAX_REFLECTION_LENGTH = 4000;
+/**
+ * Bounded generously above the largest reflection any of the ten days can
+ * produce with every option selected (measured maximum ≈ 5.4k characters), so a
+ * fully answered day can never be truncated. Still local-only and bounded.
+ */
+const MAX_REFLECTION_LENGTH = 12000;
+
 
 export interface JourneyLocator {
   /** e.g. "day-04" */
@@ -179,13 +190,40 @@ export function normalizeProgress(raw: unknown): JourneyProgress {
 }
 
 /**
- * One-time store upgrade. Positional answer tokens become stable option ids.
+ * Derive a conservative trusted high-water screen for a store written before
+ * `reached` existed, using only a validated same-day locator.
+ *
+ * Rules: a Reflection locator is trusted only when a saved reflection for that
+ * day supports it; an uncompleted Close locator is capped below Close so it can
+ * never become trusted; nothing here ever infers completion, and an existing
+ * higher `reached` value is never lowered.
+ */
+export function deriveReachedFromLocator(p: JourneyProgress): Record<string, number> {
+  const loc = p.locator;
+  if (!loc) return p.reached;
+  const idx = loc.index;
+  if (typeof idx !== "number" || !Number.isInteger(idx) || idx <= 0) return p.reached;
+
+  let derived = Math.min(idx, 64);
+  if (loc.step === "close" && !p.completedDays.includes(loc.dayId)) derived -= 1;
+  else if (loc.step === "reflection" && !p.reflections[loc.dayId]) derived -= 1;
+
+  const existing = p.reached[loc.dayId] ?? 0;
+  if (derived <= existing || derived <= 0) return p.reached;
+  return { ...p.reached, [loc.dayId]: derived };
+}
+
+/**
+ * One-time store upgrade. Positional answer tokens become stable option ids
+ * (v1 → v2), and a conservative trusted `reached` value is derived from a
+ * validated locator for stores written before it existed (→ v3).
  *
  * Days a person genuinely finished in this store are PRESERVED: they were
  * recorded by this app's own completion path and deleting them would silently
  * take real work away. Only the separate legacy `bfa.v1` visited-day markers are
  * never promoted to completion, because "visited" was never proof of finishing
- * (see ./answer-migration.ts). Locator, answers and saved reflections are kept.
+ * (see ./answer-migration.ts). Locator, answers, saved reflections, snapshots
+ * and any existing `reached` values are kept.
  */
 export function upgradeStoredProgress(raw: unknown): {
   progress: JourneyProgress;
@@ -197,14 +235,16 @@ export function upgradeStoredProgress(raw: unknown): {
   if (!raw || storedVersion >= JOURNEY_STORE_VERSION) {
     return { progress: normalized, changed: false };
   }
+  const withAnswers: JourneyProgress =
+    storedVersion < 2
+      ? { ...normalized, answers: migrateAnswersToStableIds(normalized.answers) }
+      : normalized;
   return {
-    progress: {
-      ...normalized,
-      answers: migrateAnswersToStableIds(normalized.answers),
-    },
+    progress: { ...withAnswers, reached: deriveReachedFromLocator(withAnswers) },
     changed: true,
   };
 }
+
 
 export const JOURNEY_CHANGE_EVENT = "bfa-journey-change";
 

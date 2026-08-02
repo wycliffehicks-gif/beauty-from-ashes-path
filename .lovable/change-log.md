@@ -842,3 +842,53 @@ untouched.
 Verification: TypeScript clean, 439 tests pass (418 baseline + 21 new), browser
 walks at 360px, 390px and desktop with no overflow and no console errors.
 Private and unpublished.
+
+## Surgical acceptance fix (2 August 2026)
+
+Bounded repair of the confirmed circular-reachability defect found by the
+integration review. No content, visual, dependency, backend or AI change; Days
+1–10 content files untouched.
+
+- **Forward movement now earns the next screen.** A valid in-app Continue raises
+  the trusted high-water mark and saves it *before* navigating, so the reflection
+  is reachable. The render/autosave effect no longer creates trust at all: it
+  saves only the locator for the screen actually shown.
+- **Every screen above the trusted position is clamped**, not only Reflection and
+  Close, so a crafted `?s=step` or `?s=understand` cannot render and then become
+  trusted. Already-earned screens (reload, Back, Forward) and a genuinely
+  completed day's Close still restore. Completion still requires a ready
+  reflection reached through a valid Reflection → Close transition.
+- **Store version 3.** v1 stores still migrate positional answers to stable ids;
+  pre-correction v2 stores keep their stable ids untouched. Completions, answers,
+  reflections and snapshots are preserved, and a conservative `reached` value is
+  derived from a validated same-day locator: a Reflection locator is trusted only
+  when a saved reflection supports it, an uncompleted Close locator is capped
+  below Close, and nothing ever infers completion. Legacy `bfa.v1` visited days
+  are still never completion.
+  *Honest limitation:* completions already erased in a browser that opened the
+  short-lived intermediate build cannot be reconstructed. That is private
+  preview/test state only; no data has been invented to replace it.
+- **Readiness can never be stale.** Readiness is keyed to the reflection screen
+  *and* the current coded answer snapshot, is cleared on any in-app navigation,
+  and the reflection reports "preparing" in the layout phase (before paint) on
+  every mount, including browser Back/Forward. Continue becomes available only
+  once the matching restored or rebuilt response exists.
+- **Exact display.** A restored response now shows its own opening words rather
+  than the current day's generic intro. While preparing, only the short preparing
+  message and the neutral current intro appear — no claim of exactness.
+- **Safe storage cap.** The largest all-options reflection across the ten days
+  measures ~5.4k characters; the local cap was raised from 4,000 to 12,000 so a
+  fully answered day cannot be truncated. Still local-only and bounded.
+- **Onboarding direct/reload Back.** Visible Back uses the real entry history
+  index: it walks history only when this onboarding visit actually pushed an
+  entry, otherwise it replaces to the previous opening screen. Normal
+  browser/Android Back and Forward are unchanged.
+
+Verification: TypeScript clean, 451 tests pass (439 baseline + 12 new
+regressions, including a state-machine test that fails if reach is raised after
+navigating and fixtures shaped like the v1 and pre-`reached` v2 stores). Browser
+walk at 390px: full Continue walk of Days 1, 5 and 10 to Close; crafted
+`?s=understand|step|reflection|close` on a fresh device all clamp to `?s=arrive`;
+in-day Reflection → Back → answer change → Forward rebuilds before Continue is
+offered; onboarding direct load and reload Back move one opening screen. No
+console errors. Private and unpublished.

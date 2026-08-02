@@ -1,5 +1,22 @@
-import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
+import { useRef, useState } from "react";
+
+/** The router's own history position, for a truthful visible Back. */
+function useHistoryIndex(): number {
+  const router = useRouter();
+  return useRouterState({
+    select: (s) =>
+      (s.location.state as { __TSR_index?: number } | undefined)?.__TSR_index ??
+      router.history.length - 1,
+  });
+}
+
 import { LEGAL_BUNDLE_VERSION, usePrefs } from "@/lib/prefs";
 import { AGREEMENT_COPY, OPENING_SCREENS } from "@/content/opening";
 
@@ -47,27 +64,38 @@ function Opening() {
   const fromUrl = search.s ? OPENING_KEYS.indexOf(search.s as (typeof OPENING_KEYS)[number]) : -1;
   const step = fromUrl >= 0 ? fromUrl : 0;
 
+  // The real history position when this onboarding visit began. Only entries
+  // this visit actually pushed may be walked back; a direct load or reload of
+  // ?s=how-it-works or ?s=agreement pushed nothing, so visible Back must move to
+  // the previous opening screen instead of leaving the app.
+  const historyIndex = useHistoryIndex();
+  const entryHistoryIndex = useRef<number | null>(null);
+  if (entryHistoryIndex.current === null) entryHistoryIndex.current = historyIndex;
+
   const isAgreement = step === OPENING_SCREENS.length;
   const canAdvance = !isAgreement || (adultConfirmed && termsAgreed);
 
-  const goToStep = (next: number) => {
+  const goToStep = (next: number, opts: { replace?: boolean } = {}) => {
     const key = OPENING_KEYS[Math.max(0, Math.min(OPENING_KEYS.length - 1, next))];
     if (key === search.s) return;
-    navigate({ to: "/onboarding", search: { s: key } });
+    navigate({ to: "/onboarding", search: { s: key }, replace: opts.replace });
     if (typeof window !== "undefined") window.scrollTo(0, 0);
   };
 
   const goBack = () => {
     if (step <= 0) return;
-    // The first screen is reached without a pushed entry, so only later screens
-    // use real history; that keeps visible Back and device Back identical.
-    if (fromUrl > 0) {
+    const depth = historyIndex - (entryHistoryIndex.current ?? historyIndex);
+    if (depth > 0) {
       router.history.back();
       if (typeof window !== "undefined") window.scrollTo(0, 0);
       return;
     }
-    goToStep(step - 1);
+    goToStep(step - 1, { replace: true });
   };
+
+
+
+
 
   const accept = () => {
     if (!canAdvance) return;

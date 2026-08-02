@@ -66,10 +66,12 @@ describe("crafted screen queries cannot skip the journey", () => {
     });
   }
 
-  it("leaves ordinary screens directly addressable", () => {
+  it("clamps every screen above the trusted position, ordinary ones included", () => {
     const kinds = kindsFor(day1);
-    expect(resolveVisibleIndex({ kinds, requested: 2, reached: 0, completed: false })).toBe(2);
+    expect(resolveVisibleIndex({ kinds, requested: 2, reached: 0, completed: false })).toBe(0);
+    expect(resolveVisibleIndex({ kinds, requested: 2, reached: 2, completed: false })).toBe(2);
   });
+
 
   it("never allows more than the earned or finished position", () => {
     const kinds = kindsFor(day1);

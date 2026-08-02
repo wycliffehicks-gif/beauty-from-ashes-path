@@ -48,6 +48,12 @@ preserved, as are all existing option IDs and their order.
 - **Tests**: new “Day 5 revision” block in
   `src/lib/journey/__tests__/selection.test.ts`.
 
+- **Final wording clarification (same day)**: the care section is retitled
+  “What may need room” and its closing sentence is now “No single pull has to
+  decide today,” so the section stays truthful on one-pull, `none`, `private` and
+  fully skipped paths; the `holdback` `energy` line now reads “a real practical
+  concern that deserves respect,” removing the defensive “not an excuse”.
+
 ## 2026-08-01 — Bounded Day 4 content-and-safety revision
 
 Day 4 (“What It May Have Protected”) only; Days 1–3 and 5–10 untouched. No

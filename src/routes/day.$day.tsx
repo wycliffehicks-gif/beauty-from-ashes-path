@@ -357,6 +357,12 @@ function ScreenBody({
   onReflectionSaved: (text: string, snapshot: string) => void;
 
 }) {
+  // Screen identity for single-page focus management. The reflection screen is
+  // deliberately excluded: it moves focus to its own heading once the response
+  // is ready, so it must not be focused twice.
+  const screenFocusKey =
+    screen.kind === "reflection" ? undefined : `${content.day}:${keyForScreen(screen)}`;
+
   const shell = (
     node: React.ReactNode,
     nav: {
@@ -377,10 +383,12 @@ function ScreenBody({
       continueDisabled={nav.continueDisabled}
       continueHint={nav.continueHint}
       footer={nav.footer}
+      focusKey={screenFocusKey}
     >
       {node}
     </JourneyScreen>
   );
+
 
   switch (screen.kind) {
     case "arrive":

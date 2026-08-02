@@ -537,7 +537,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "What happens inside is not clear to you. That uncertainty stays as it is, with no hidden meaning attached.",
             private:
-              "You chose to keep this private. That structured choice is saved on this device, and no tone, cause or history is inferred from it.",
+              "You kept this private. Its content is not known or interpreted here, and no tone, cause or history is inferred from it.",
           },
           unanswered:
             "No inner response was selected, and none will be inferred. No tone, cause, purpose or history is being assigned to you from this day.",
@@ -564,7 +564,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "What compassion would look like is not clear yet. That can remain unclear, and no underlying need will be guessed at.",
             none: "No different way of holding this felt right today. That absence stays as it is, and no explanation or hidden meaning will be assigned.",
             private:
-              "You chose to keep this private. That structured choice is saved on this device, and no need or response is inferred from it.",
+              "You kept this private. Its content is not known or interpreted here, and no need or response is inferred from it.",
           },
           unanswered:
             "No more compassionate way of holding this was selected, and none will be inferred. Nothing here concludes that you need something you did not name.",

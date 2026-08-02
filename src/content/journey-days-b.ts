@@ -612,7 +612,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       lead: "Reconnection is not going back, and it never means returning to harm.",
       body: [
         "Reconnecting here means making a little room for one thread that matters to you now. It may be something long-standing, something newly emerging, or something not yet clear.",
-        "It does not mean restoring an earlier, untouched version of yourself. New life can be a new way of being with yourself, with others, with God, with your wounds, with your questions and with a story that is not finished. It may begin quietly — in a changed relationship, or in one small lived contact.",
+        "It does not mean restoring an earlier, untouched version of yourself. New life can be a new way of being with yourself, with others, with God, with your wounds, with your questions and with a story that is not finished. It may begin quietly — in a changed relationship, or in one small moment of contact.",
         "It does not mean reconciling, returning to an unsafe person, place or community, proving progress, or pretending that pain is over.",
         "Grief, illness, disability, exhaustion, caregiving, discrimination, unsafe circumstances and limited money, time or transport can all reduce what is reachable. That is a real limit on access, not a personal failure.",
       ],
@@ -627,16 +627,16 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       heading: "What “what matters” can mean",
       body: [
         "What matters can be a value, a need, a person, a culture, a community, a faith, an interest, a creative thread, a place, an ordinary activity, or a way of being. It is not what you are told you should value, and not what other people demand of you.",
-        "A value is a chosen quality or direction — dignity, honesty, care, rest, belonging, justice, creativity, faith. It is not a task to complete, and not proof that you are good.",
+        "A value is a chosen quality or direction — dignity, honesty, care, rest, belonging, justice, creativity, faith. It is not a task to complete, a rule imposed on you, or a test you have to pass.",
         "A thread can be approached in a new form. It does not have to recreate what it was before, and it does not have to be available outwardly today. It can be named, remembered, held privately, or left alone.",
-        "You do not have to explain where a thread came from, or why it became distant, for it to count as yours.",
+        "You do not have to explain where a thread came from, or why it became distant. It can remain yours without that explanation.",
         "Nothing here requires contact, disclosure, reconciliation, forgiveness, public action, a bodily response, hope, clarity or change.",
       ],
       info: [
         {
           term: "What does “safe enough” mean here?",
           explanation:
-            "Safe enough for this amount of contact — not safe in every way, and not permanently. Someone who respects a no or a limit, who does not require you to disclose anything, and who is not known to use your vulnerability against you. Nobody here can tell you a particular person is safe; only you hold that information. If safety is uncertain, no contact is needed, and another route can be chosen instead.",
+            "Safe enough for this amount of contact — not safe in every way, and not permanently. Someone who respects a no or a limit, who does not require you to disclose anything, and who is not known to use your vulnerability against you. This app cannot decide whether a particular person is safe. You may know things about this person or situation that the app cannot know. If safety is uncertain, no contact is required, and another route can be chosen instead.",
         },
       ],
     },
@@ -644,7 +644,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       {
         id: "route",
         eyebrow: "Choose",
-        prompt: "Which thread matters to you now?",
+        prompt: "What, if anything, feels worth making a little room for today?",
         hint: "One choice for today. Nothing follows automatically from it.",
         select: "one",
         options: [
@@ -677,14 +677,14 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           { id: "private", label: "I would rather keep the direction private" },
         ],
         echo: {
-          heading: "What that selection holds",
+          heading: "Room for what is clear — and what is not",
           byOption: {
             self: "Something of your own is a thread that does not have to be useful to anyone. It can stay a preference or an interest without becoming a project.",
-            body: "A body or a physical need can be attended to in whatever form is available — including rest, food, warmth, medication, care, or none of these today. No sensation or movement is required.",
+            body: "Attention to your body or a physical need can take whatever form is available — comfort, rest, warmth, accommodation, practical care, or no action today. No sensation, movement, or improvement is expected.",
             reality: "One ordinary part of the present is small on purpose. Noticing it is enough; nothing has to follow.",
             values: "A chosen quality or direction can be named without being lived out today. Naming it does not commit you to anything.",
-            creativity: "Creativity, beauty, learning or nature can be met by noticing as much as by making. Either counts as contact.",
-            person: "One person who may be safe enough is a possibility, not an obligation. No contact and no disclosure are required, and if their safety is uncertain, no contact is the right answer.",
+            creativity: "Creativity, beauty, learning or nature can be met by noticing as much as by making. Contact may mean making something or simply noticing.",
+            person: "One person who may be safe enough is a possibility, not an obligation. No contact and no disclosure are required. If their safety is uncertain, no contact is required.",
             community: "A community, culture, tradition or place can be held in mind without joining, attending or performing anything.",
             god: "This route stays within the Christian path offered here. It does not assume prayer, certainty of belief, or any felt closeness.",
             other: "Something else that matters to you is a complete answer. It does not have to fit a listed category to be real.",
@@ -751,7 +751,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Read the verse below slowly, once or twice. Reading only is a complete way to do this.",
           "In the wider Emmaus story, two people are walking while their questions are still unresolved. That is the part this verse describes — not a promise about what you will feel, notice or understand today.",
           "If you wish, you may hold one thing before God: what matters to you, or what feels out of reach. You may do this in silence, or leave it unsaid.",
-          "If words fit, one brief prayer in your own words is enough. If they do not fit, silence is not a lesser option.",
+          "If words fit, one brief prayer in your own words is enough. If they do not fit, silence can be the whole practice.",
           "Doubt, anger, numbness, distance and spiritual struggle can be present here without being problems to solve or things to fix before continuing.",
           "Close whenever you are ready, with or without anything having shifted.",
         ],
@@ -767,8 +767,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What is one honest step you would take from today?",
-      hint: "One choice. Small, reversible, and yours to change.",
+      prompt: "What, if anything, feels like one honest step from today?",
+      hint: "One choice if one fits. Small, reversible, and yours to change.",
       select: "one",
       options: [
         { id: "act", label: "Make one small, safe space for something that matters" },
@@ -778,7 +778,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
         {
           id: "outside",
-          label: "Go to a window, or to a sound, an object or a memory that is within reach",
+          label:
+            "Spend a moment with a window, sound, object, memory, or another point of contact within reach",
         },
         { id: "own", label: "Take a few minutes for something that is mine and not a duty" },
         { id: "rehearse", label: "Keep it inward — naming or remembering what matters" },
@@ -788,11 +789,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "From today's selections only, and nothing beyond them.",
+      intro:
+        "This reflection uses only what was selected; it will not fill in what was left open.",
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "The thread — or what remained open",
           from: "route",
           lines: {
             self: "Something of your own was selected as the thread that matters — a preference or interest, rather than a duty.",
@@ -809,7 +811,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             private: "A private direction was selected. That structured choice is saved on this device; the direction itself is not recorded here, and none will be inferred.",
           },
           unanswered:
-            "No thread was selected, and none will be assigned. This page can only reflect selections, so today it has nothing to reflect on that point — which is a complete outcome rather than a gap.",
+            "No thread was selected, and none will be assigned. The direction simply remains open; no personal meaning or conclusion is drawn from that.",
         },
         {
           id: "care",
@@ -825,7 +827,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             private: "A private amount was selected. That structured choice is saved on this device; the amount itself is not recorded, and none will be inferred.",
           },
           unanswered:
-            "No amount was selected. Whatever is actually available today is not something this page can know, and nothing will be estimated on your behalf.",
+            "No amount was selected. What is available remains open, and no amount will be estimated or supplied here.",
         },
         {
           id: "next",
@@ -834,11 +836,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           lines: {
             act: "Making one small, safe space for something that matters was selected as the step.",
             message: "Drafting one brief message to someone safe enough was selected as the step. Drafting without sending is the whole step if that is what happens.",
-            outside: "A window, a sound, an object or a memory within reach was selected as the step. It promises no change in how you feel.",
+            outside: "A window, sound, object, memory, or another point of contact within reach was selected as the step. No change in how you feel is promised.",
             own: "A few minutes for something that is yours and not a duty was selected as the step.",
             rehearse: "Keeping it inward — naming or remembering what matters — was selected as the step. That naming is the whole of it.",
             unclear: "Uncertainty about which step fits was selected. No step will be chosen for you.",
-            none: "No available step was selected, and none will be pressed. Not forcing one is a complete answer.",
+            none: "No available step was selected, and none will be pressed or inferred.",
             private: "A private step was selected. That structured choice is saved on this device; what the step is remains yours alone.",
           },
           unanswered:
@@ -849,7 +851,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "These selections do not establish why something matters to you, why it became distant, whether reconnection is possible, or what will change. Nothing here suggests moving toward anyone unsafe, and no reconnection is owed to anybody.",
     },
     close: {
-      heading: "One thread, held as it is",
+      heading: "Held without force",
       body: [
         "Reconnection is not going back, not returning to harm, and not proving progress. A thread that matters can be approached in a new form, held inwardly, kept private, or left alone when it is not available.",
         "Day 9 turns to practising a different response, privately, with step-by-step guidance and nothing required in public.",

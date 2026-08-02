@@ -1026,12 +1026,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "How would you like to complete today's rehearsal—if one choice fits?",
-      hint: "One choice if one fits. Reading, or leaving it open, remains available.",
+      prompt: "How, if at all, would you like to leave this practice?",
+      hint: "You may choose one if it fits, simply read, or leave this open.",
       select: "one",
       options: [
-        { id: "again", label: "Read or rehearse the response once more, privately" },
-        { id: "sentence", label: "Shorten or revise one sentence until it sounds like me" },
+        { id: "again", label: "Read one possible response, or try its opening once, privately" },
+        { id: "sentence", label: "Shorten or revise one possible sentence until it sounds like me" },
         { id: "use", label: "Name what would have to be true before any real-world use" },
         { id: "ground", label: "Keep one accessible outward-orienting cue" },
         {

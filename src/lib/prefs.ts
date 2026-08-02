@@ -24,14 +24,20 @@ export interface Prefs {
 /**
  * Current legal-bundle version. Increment when Terms of Use, Privacy Notice,
  * or Important Information wording is materially changed and re-acknowledgement
- * is required. Founder note: final wording pending Ontario lawyer review before
- * public launch.
+ * is required. Bumped to 2026-08-02 because the Privacy Notice wording changed
+ * materially, so a previously recorded agreement is asked for again. Founder
+ * note: final wording pending Ontario lawyer review before public launch.
  */
-export const LEGAL_BUNDLE_VERSION = "2026-07-27";
+export const LEGAL_BUNDLE_VERSION = "2026-08-02";
 
+/**
+ * Spiritual reflection is opt-in: the opening says it is offered only if the
+ * person chooses it, so a fresh or cleared device starts with it off. An
+ * explicitly stored true or false is always preserved.
+ */
 const defaults: Prefs = {
   onboarded: false,
-  showSpiritual: true,
+  showSpiritual: false,
   visitedDays: [],
 };
 

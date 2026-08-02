@@ -147,9 +147,10 @@ function RootComponent() {
         <AgreementGate>
           <Outlet />
         </AgreementGate>
+        {/* Inside the splash underlay, so it is inert while splash covers the app. */}
+        <StorageNotice />
       </SplashGate>
-      <StorageNotice />
-
     </QueryClientProvider>
+
   );
 }

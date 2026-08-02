@@ -618,9 +618,13 @@ function EchoScreen({
 }
 
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
-  const [prefs] = usePrefs();
+  const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
-  const showSpiritual = prefs.showSpiritual;
+  // Nothing spiritual appears until the stored preference has actually been
+  // read, so someone who chose to leave it off never briefly sees the Christian
+  // panel, Scripture, prayer or companion wording. The nonreligious practice is
+  // complete on its own and always shown.
+  const showSpiritual = prefsHydrated && prefs.showSpiritual;
 
   return (
     <div className="space-y-5">

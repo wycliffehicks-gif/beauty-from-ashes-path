@@ -28,8 +28,9 @@ function ShellLayout() {
           )}
           <span aria-hidden />
           <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
-            <MenuIcon />
+            <SettingsIcon />
           </Link>
+
         </header>
 
         <main className="flex-1 pb-10">

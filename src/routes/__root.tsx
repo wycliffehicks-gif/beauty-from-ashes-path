@@ -133,8 +133,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <SplashGate>
-        <Outlet />
+        <AgreementGate>
+          <Outlet />
+        </AgreementGate>
       </SplashGate>
+
     </QueryClientProvider>
   );
 }

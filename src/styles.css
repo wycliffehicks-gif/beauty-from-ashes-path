@@ -409,6 +409,8 @@
   --bfa-mineral-form: rgba(221, 228, 231, 0.55);
   --bfa-interactive-gold: #8A672D;
   --bfa-control-border: #8E7A60;
+  /* Opaque backdrop for reading surfaces sitting over decorative contour art. */
+  --bfa-reading-backdrop: #F6F2EA;
 }
 
 .dark {
@@ -419,6 +421,7 @@
   --bfa-mineral-form: rgba(221, 228, 231, 0.09);
   --bfa-interactive-gold: #E8D3AF;
   --bfa-control-border: rgba(232, 211, 175, 0.45);
+  --bfa-reading-backdrop: #12213D;
 }
 
 .bfa-visual-motif {
@@ -431,6 +434,12 @@
   display: block;
   height: 100%;
   width: 100%;
+}
+/* Keep every contour hairline-thin however the motif is scaled. */
+.bfa-visual-svg path,
+.bfa-visual-svg circle,
+.bfa-visual-svg ellipse {
+  vector-effect: non-scaling-stroke;
 }
 
 /* --- Screen 1: splash ---------------------------------------------------- */
@@ -447,20 +456,15 @@
   inset: 0;
   z-index: 0;
 }
-/* Keep contour hairlines hairline-thin however tall the viewport is. */
-.bfa-visual-splash-bg path,
-.bfa-visual-splash-bg circle,
-.bfa-visual-splash-bg ellipse {
-  vector-effect: non-scaling-stroke;
-}
 .bfa-visual-splash-inner {
   position: relative;
   z-index: 1;
-  padding-block: 1.25rem;
+  padding-block: 2rem;
   background: radial-gradient(
-    120% 90% at 50% 45%,
-    color-mix(in oklab, var(--ivory) 92%, transparent) 0%,
-    color-mix(in oklab, var(--ivory) 70%, transparent) 55%,
+    ellipse 76% 62% at 50% 46%,
+    var(--bfa-reading-backdrop) 0%,
+    color-mix(in oklab, var(--bfa-reading-backdrop) 88%, transparent) 46%,
+    color-mix(in oklab, var(--bfa-reading-backdrop) 40%, transparent) 74%,
     transparent 100%
   );
 }
@@ -526,28 +530,28 @@
 .bfa-visual-home-hero-inner {
   position: relative;
   z-index: 1;
-  background: radial-gradient(
-    120% 100% at 40% 40%,
-    color-mix(in oklab, var(--ivory) 88%, transparent) 0%,
-    color-mix(in oklab, var(--ivory) 62%, transparent) 60%,
-    transparent 100%
-  );
+  border-radius: var(--radius-xl);
+  padding: 0.75rem;
+  background: var(--bfa-reading-backdrop);
 }
 .bfa-visual-thread-track {
   position: relative;
 }
 .bfa-visual-thread-track > .bfa-visual-motif {
-  left: 0.6rem;
+  /* Centre the rail on the day marker: 1rem row padding + half of a 2.75rem marker. */
+  left: calc(38px - 0.8rem);
   right: auto;
   width: 1.6rem;
-  z-index: 0;
+  z-index: 2;
 }
 .bfa-visual-thread-track > ol {
   position: relative;
   z-index: 1;
 }
-@media (min-width: 640px) {
-  .bfa-visual-thread-track > .bfa-visual-motif { left: 1rem; }
+/* The marker stays above the thread so no number is crossed. */
+.bfa-visual-thread-track .day-marker {
+  position: relative;
+  z-index: 3;
 }
 
 /* --- Screen 3: day arrival threshold ------------------------------------ */
@@ -576,18 +580,9 @@
 .bfa-visual-quiet-edge-inner {
   position: relative;
   z-index: 1;
-  background: radial-gradient(
-    120% 100% at 40% 40%,
-    color-mix(in oklab, var(--ivory) 88%, transparent) 0%,
-    color-mix(in oklab, var(--ivory) 62%, transparent) 60%,
-    transparent 100%
-  );
-}
-.bfa-prototype-surface {
-  background: var(--bfa-paper);
-  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  padding: 1.25rem;
+  padding: 0.75rem;
+  background: var(--bfa-reading-backdrop);
 }
 
 .bfa-prototype-choice {
@@ -605,8 +600,10 @@
   border-radius: var(--radius-lg);
   transition: border-color 150ms ease, background-color 150ms ease;
 }
-.bfa-prototype-choice:hover {
-  border-color: var(--bfa-interactive-gold);
+@media (hover: hover) {
+  .bfa-prototype-choice:hover {
+    border-color: var(--bfa-interactive-gold);
+  }
 }
 .bfa-prototype-choice[aria-pressed="true"] {
   border-color: var(--bfa-interactive-gold);
@@ -614,13 +611,13 @@
   background: color-mix(in oklab, var(--champagne) 26%, var(--bfa-paper));
 }
 .bfa-prototype-choice:focus-visible {
-  outline: 2px solid var(--ring);
+  outline: 3px solid var(--ring);
   outline-offset: 3px;
 }
 .bfa-prototype-choice-dot {
-  margin-top: 0.4rem;
-  height: 0.7rem;
-  width: 0.7rem;
+  margin-top: 0.3rem;
+  height: 1.05rem;
+  width: 1.05rem;
   flex-shrink: 0;
   border-radius: 999px;
   border: 1px solid var(--bfa-control-border);

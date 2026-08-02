@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { VisualMotif } from "@/components/VisualMotifs";
 import {
   JOURNEY_DAYS,
   JOURNEY_HOME_TITLE,
@@ -6,6 +7,7 @@ import {
   getJourneyDayById,
 } from "@/content/journey";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({

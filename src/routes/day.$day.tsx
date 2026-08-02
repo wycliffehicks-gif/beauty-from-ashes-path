@@ -395,6 +395,8 @@ function ScreenBody({
           answers={answers}
           answersLoaded={answersLoaded}
           onReady={onReflectionReady}
+          savedReflection={savedReflection}
+          onSaved={onReflectionSaved}
         />,
         {
           onContinue: onNext,

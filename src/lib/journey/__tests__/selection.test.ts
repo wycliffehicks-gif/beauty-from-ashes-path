@@ -444,9 +444,9 @@ describe("Day 5 revision", () => {
 
   it("maps only the selected ids on an answered path", () => {
     const answers = [
-      `q.forward:${forward.options.findIndex((o) => o.id === "rest")}`,
-      `q.holdback:${holdback.options.findIndex((o) => o.id === "ongoing")}`,
-      `step:${day5.step.options.findIndex((o) => o.id === "wait")}`,
+      `q.forward.${forward.options.findIndex((o) => o.id === "rest")}`,
+      `q.holdback.${holdback.options.findIndex((o) => o.id === "ongoing")}`,
+      `step.${day5.step.options.findIndex((o) => o.id === "wait")}`,
     ];
     const built = buildReflection(day5, answers);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");

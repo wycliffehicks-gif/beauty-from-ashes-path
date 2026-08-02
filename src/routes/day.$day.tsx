@@ -678,9 +678,11 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
     <div className="space-y-5">
       <p className="eyebrow">Practise</p>
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
-        {content.practise.heading}
+        {showSpiritual ? content.practise.heading : PRACTICE_SINGLE_HEADING}
       </h1>
-      <p className="text-base text-foreground">{content.practise.intro}</p>
+      <p className="text-base text-foreground">
+        {showSpiritual ? content.practise.intro : PRACTICE_SINGLE_INTRO}
+      </p>
       {showSpiritual && (
         <p className="text-base text-muted-foreground">{content.practise.either}</p>
       )}

@@ -430,7 +430,10 @@ describe("Day 5 revision", () => {
     }
     const care = day5.reflection.sections.find((s) => s.id === "care")!;
     expect(care.from).toBeUndefined();
-    expect(care.opening).toContain("Neither has to decide alone today");
+    expect(care.title).toBe("What may need room");
+    expect(care.title).not.toContain("both");
+    expect(care.opening).toContain("No single pull has to decide today");
+    expect(JSON.stringify(day5)).not.toContain("not an excuse");
   });
 
   it("produces an honest fully skipped reflection", () => {

@@ -1333,7 +1333,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
               "You pointed to possible effects on people or responsibilities that genuinely depend on you.",
             stability:
               "You pointed to a possible loss of safety, privacy, stability or predictability.",
-            energy: "You pointed to limits in energy, health or capacity — a practical concern, not an excuse.",
+            energy: "You pointed to limits in energy, health or capacity — a real practical concern that deserves respect.",
             hope: "You pointed to the risk of hoping and being disappointed.",
             identity:
               "You pointed to a role, relationship, belonging, culture, faith or sense of identity that may feel at stake.",
@@ -1348,11 +1348,11 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         },
         {
           id: "care",
-          title: "What both may need from you",
+          title: "What may need room",
           opening:
-            "Longing and caution can both carry information. Longing may point toward what matters; caution may point toward risk, capacity, responsibility, timing or uncertainty. Sometimes only one is clear. Neither has to decide alone today.",
+            "Longing and caution can both carry information. Longing may point toward what matters; caution may point toward risk, capacity, responsibility, timing or uncertainty. Sometimes only one is clear. No single pull has to decide today.",
           unanswered:
-            "Longing and caution can both carry information, and sometimes only one is clear. Neither has to decide alone today.",
+            "Longing and caution can both carry information, and sometimes only one is clear. No single pull has to decide today.",
         },
         {
           id: "next",

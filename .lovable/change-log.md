@@ -797,3 +797,47 @@ content revision, no visual redesign, no database, no publication.
 
 Verification: TypeScript clean, 418 tests pass (403 baseline + 15 new), mobile
 checked at 360px and 390px with no horizontal overflow and no console errors.
+
+## Correction pass — audit blockers (2026-08-02)
+
+Bounded technical/safety pass on top of the consolidated repair. No content,
+visual, dependency, AI, backend or publication change; Days 1–10 content files
+untouched.
+
+- **Reflection readiness race removed.** Readiness is now owned by one keyed
+  value (`readyForKey === currentKey`), so nothing can reset it after the
+  reflection reports ready. Continue enables exactly once the reflection is
+  present, on every day.
+- **The exact saved reflection is restored.** `reflection-restore.ts` proves
+  association through a coded answer-id snapshot; matching saved text is
+  re-rendered structurally, and changed answers rebuild deterministically and
+  replace what was saved. Unusable or foreign saved text rebuilds instead of
+  crashing. No free text, no network, no model, never labelled AI.
+- **Crafted screen queries cannot skip the journey.** `screen-access.ts` clamps
+  an unreached `?s=reflection` / `?s=close` to the furthest position genuinely
+  reached; Close is restorable for a genuinely completed day. Completion still
+  requires a ready reflection reached through valid journey state.
+- **Real history.** Onboarding screens are addressed by `?s=` keys so device and
+  browser Back/Forward move one onboarding screen; in-day mixed Back sequences no
+  longer produce duplicate entries or no-op Back presses.
+- **Legitimate completions preserved.** v1 → v2 migration keeps sanitized
+  existing `bfa.journey.v1` completed days; legacy `bfa.v1` visited days are
+  still never promoted to completion.
+- **Spiritual choice is opt-in and does not flash.** `PREF_DEFAULTS.showSpiritual`
+  is `false` for fresh or cleared devices, an explicitly stored value is
+  preserved, and the practice screen waits for the preference to hydrate.
+- **Accurate agreement version and privacy copy.** `LEGAL_BUNDLE_VERSION` is
+  `2026-08-02`, so earlier acceptances are requested again. Privacy, Settings and
+  the opening now distinguish local coded storage from anything Resurgence
+  receives, itemise every stored value including session-only weekly-session
+  state, and say the reflection is assembled locally and deterministically.
+- **Accessibility.** Only the short "Preparing your reflection…" message is a
+  live region; the finished reflection is ordinary structured content and the
+  heading receives focus. Practice control names and 44px targets unchanged.
+- **Honest comments.** The launch screen may write its non-therapeutic session
+  marker before agreement; no restricted journey, answer, reflection or
+  completion state is written.
+
+Verification: TypeScript clean, 439 tests pass (418 baseline + 21 new), browser
+walks at 360px, 390px and desktop with no overflow and no console errors.
+Private and unpublished.

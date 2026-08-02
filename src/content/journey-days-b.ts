@@ -315,34 +315,47 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
   {
     day: 7,
     title: "A More Compassionate Way to Hold It",
-    theme: "Accurate compassion, rather than harshness or false comfort.",
+    theme: "Truth, context, dignity and responsibility held together without self-attack.",
     motif: "compassion",
     shape: "standard",
-    descriptor: "Turning toward yourself · about 12 minutes",
+    descriptor: "Holding truth without self-attack · about 12 minutes",
     arrive: {
-      lead: "Most people are gentler with others than they are with themselves.",
+      lead: "Facing what is true does not require turning yourself into the enemy.",
       body: [
-        "Today is about the tone you use inside your own head — and whether it is accurate.",
-        "Compassion here does not mean flattery or excuses. It means speaking to yourself the way a wise, honest friend would.",
+        "Today is not asking you to praise yourself or pretend everything is fine. It asks how you meet a difficulty, limit, need, response or mistake once you notice it.",
+        "Here, compassion means holding truth, context, dignity and appropriate responsibility together. It may feel warm, neutral, practical, unfamiliar or difficult; no particular feeling is required.",
       ],
       settle: [
-        "Put one hand somewhere steady — your chest, your arm, the table.",
-        "Let two breaths pass without doing anything with them.",
-        "Notice that you are the one who kept showing up to this.",
+        "Settle in any position that works for you.",
+        "If it feels comfortable, notice one place where you are supported. Otherwise, notice one neutral detail nearby using any sense that is available and comfortable.",
+        "You do not need to touch your body, change your breathing, relax or feel settled.",
       ],
     },
     understand: {
-      heading: "Compassion is accuracy, not indulgence",
+      label: "Listen",
+      heading: "Compassion can be honest without becoming cruel",
       body: [
-        "Self-criticism promises to keep us in line. In practice it mostly keeps us defended, and defended people find change harder, not easier.",
-        "Accurate compassion says two things at once: this is genuinely difficult, and you are genuinely responsible for what you do next. It does not require pretending anything is fine.",
-        "If self-kindness feels false or undeserved, that reaction is common and worth noting rather than overriding. There are ways into this that do not involve saying nice things to yourself.",
+        "An inner response is whatever happens inside when something is difficult. It may be words, a tone, images, pressure, comparison, blankness, withdrawal or simply a general attitude toward yourself. Some people have no verbal inner voice at all, and that is ordinary.",
+        "Accurate compassion does not flatter you, excuse harm or declare every choice acceptable. It acknowledges that something is genuinely difficult, includes relevant context and limits, includes impact on others where that applies, and holds only the responsibility actually within your influence.",
+        "Harshness can feel like honesty, discipline, protection or accountability. It can also add shame, hiding, exhaustion or pressure. That is not always the case, it does not mean you are defended, and a more compassionate response is not a guarantee that anything will change.",
+        "Some things were chosen and some were not. Grief, illness, disability, caregiving, discrimination, unsafe conditions and limited resources are not chosen. Compassion neither erases consequences nor assigns blame for what was outside your control.",
+        "Nothing today requires forgiveness, confession, disclosure, repair, confrontation, changed behaviour, a changed feeling or a decision. The practice here is contained: one moment of truth without added self-attack.",
       ],
       info: [
         {
-          term: "What if self-compassion feels fake?",
+          term: "What does “hold it” mean?",
           explanation:
-            "Then start with accuracy instead of warmth. “This has been hard, and I have been doing my best with it” is a factual sentence. You can also use the body rather than words — steadiness, warmth or rest can carry compassion without any statement at all.",
+            "It means how you relate to a feeling, response, need, limit, mistake or circumstance once you notice it — the stance you take toward it. It does not mean holding anything physically, approving of it, fixing it or solving it.",
+        },
+        {
+          term: "What if compassion feels false or undeserved?",
+          explanation:
+            "Then start with accuracy and non-cruelty rather than warmth. “Something difficult is here” or “I can tell the truth without attacking myself” may be enough. No warmth is required, and nothing here asks you to declare that you have been doing your best.",
+        },
+        {
+          term: "What if I have hurt someone?",
+          explanation:
+            "Compassion does not erase impact. It can sit alongside specific responsibility, safe repair, changed behaviour, clear boundaries or professional help, without treating self-punishment as proof that you are good. No repair, contact or action is asked of you today.",
         },
       ],
     },
@@ -350,102 +363,154 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       {
         id: "tone",
         eyebrow: "Notice",
-        prompt: "When you are struggling, what does your inner voice sound like?",
-        hint: "Choose whichever is most familiar.",
-        select: "many",
+        prompt:
+          "When something is difficult, or you believe you have fallen short, which inner response is most familiar?",
+        hint: "Choose the closest fit. It may be words, pressure, images, withdrawal or blankness; you do not need to know where it came from.",
+        select: "one",
         options: [
-          { id: "harsh", label: "Harsh — you should have handled this better" },
-          { id: "dismissive", label: "Dismissive — other people have it worse" },
-          { id: "impatient", label: "Impatient — why is this still going on" },
-          { id: "anxious", label: "Anxious — running through everything that could go wrong" },
-          { id: "silent", label: "Silent — I don't speak to myself at all" },
-          { id: "mixed", label: "It shifts depending on the day" },
-          { id: "kind", label: "Reasonably kind, most of the time" },
+          { id: "harsh", label: "Harsh — I attack, insult or shame myself" },
+          { id: "dismissive", label: "Dismissive — I minimise it or compare it away" },
+          { id: "impatient", label: "Impatient — I pressure myself to be over it or do better" },
+          { id: "anxious", label: "Anxious — I scan or rehearse what might go wrong" },
+          {
+            id: "silent",
+            label: "More wordless — pressure, blankness or withdrawal rather than words",
+          },
+          { id: "mixed", label: "It changes — kind sometimes, harsh or distant at others" },
+          { id: "kind", label: "Mostly fair or kind, even when things are difficult" },
+          { id: "none", label: "No particular inner response stands out", exclusive: true },
+          { id: "unclear", label: "I am not sure what happens inside", exclusive: true },
+          { id: "private", label: "I would rather keep this private today", exclusive: true },
         ],
         echo: {
-          heading: "Where that voice may come from",
+          heading: "What you noticed about the inner response",
           byOption: {
-            harsh: "A harsh inner voice is usually borrowed. Somebody spoke that way first, and it was learned rather than chosen.",
-            dismissive: "Comparing your pain downward keeps you from taking it seriously — which is often exactly what it was trained to do.",
-            impatient: "Impatience with your own recovery frequently comes from being expected to bounce back quickly.",
-            anxious: "An anxious inner voice is usually trying to prevent harm by rehearsing it in advance.",
-            silent: "Silence is not neutral. It may be an absence of anyone ever speaking kindly to you when it mattered.",
-            mixed: "A voice that shifts often tracks how much reserve you have on a given day.",
-            kind: "A reasonably kind inner voice is an asset, and it may still go quiet under real pressure.",
+            harsh:
+              "You described an inner response that runs harsh or shaming. That describes what happens; it says nothing about where it came from or what it is for.",
+            dismissive:
+              "You described minimising it or comparing it away. Other people's suffering does not make your experience unreal.",
+            impatient:
+              "You described pressure to be over it or to do better. No timeline is being set here.",
+            anxious:
+              "You described scanning or rehearsing what might go wrong. No motive, history or prediction is being read into that.",
+            silent:
+              "You described something more wordless — pressure, blankness or withdrawal rather than words. That is not proof of trauma, deprivation, a particular history or missing care.",
+            mixed:
+              "You described a response that changes. No single tone has to be treated as the whole picture.",
+            kind: "You described a response that is mostly fair or kind. That is a real resource, and it does not have to be maintained perfectly.",
+            none: "No particular inner response stands out today, and none needs to be invented.",
+            unclear:
+              "You are not sure what happens inside. That uncertainty can simply remain, and no hidden meaning will be assigned to it.",
+            private:
+              "You chose to keep this private today. Your choice is saved on this device, and no tone, cause, purpose or history will be inferred from it.",
           },
           unanswered:
-            "You continued without naming the voice, and it will not be guessed at. What is true generally is that the tone we use inside was learned somewhere.",
-          closing: "Noticing the tone is the change. You do not have to argue with it today.",
+            "You continued without naming an inner response. No tone, cause, purpose or history will be assigned.",
+          closing:
+            "An inner response is not the whole of you. Noticing it is one step; no correction is required today.",
         },
       },
       {
         id: "need",
         eyebrow: "Consider",
-        prompt: "What might the struggling part of you actually need?",
-        hint: "Choose any that fit. Needing something is not weakness.",
-        select: "many",
+        prompt:
+          "What would a more compassionate way of holding this look like today—if anything?",
+        hint: "Choose the closest fit. Compassion may be practical, neutral or accountable; warmth is not required.",
+        select: "one",
         options: [
-          { id: "rest", label: "Rest, without earning it first" },
-          { id: "acknowledged", label: "To be told this has genuinely been hard" },
-          { id: "notalone", label: "To not be alone with it" },
-          { id: "permission", label: "Permission to feel what I feel" },
-          { id: "patience", label: "Time, without a deadline attached" },
-          { id: "safety", label: "To feel safe before anything else" },
-          { id: "forgiveness", label: "To stop being punished by me" },
-          { id: "unsure", label: "I don't know yet" },
+          { id: "rest", label: "Treat rest, reduced demand or basic care as a real need—if possible" },
+          { id: "acknowledged", label: "Acknowledge that this has genuinely been difficult" },
+          {
+            id: "notalone",
+            label: "Respect that support may matter, without contacting anyone today",
+          },
+          {
+            id: "permission",
+            label: "Allow one feeling or reaction to be present without judging it",
+          },
+          { id: "patience", label: "Allow more time without treating delay as failure" },
+          {
+            id: "safety",
+            label: "Respect safety, stability or practical support before pushing further",
+          },
+          {
+            id: "forgiveness",
+            label: "Separate accountability from self-punishment; no forgiveness is required",
+          },
+          { id: "unsure", label: "I am not sure what compassion would look like", exclusive: true },
+          {
+            id: "none",
+            label: "No different way of holding this feels right today",
+            exclusive: true,
+          },
+          { id: "private", label: "I would rather keep this private today", exclusive: true },
         ],
       },
     ],
     practise: {
       heading: "Two ways to practise today",
       intro:
-        "One uses words. One does not, for people who would rather not write or speak anything.",
-      either: "Either or both. The wordless one is not the lesser option.",
+        "Both paths hold truth, context, dignity and responsibility together, without denying any of them. One uses ordinary reflection; the other is an explicitly Christian path.",
+      either:
+        "Either, both or neither. You may read one through without doing it, and you may stop at any point.",
       reflection: {
-        title: "Reflection Practice — a compassionate response",
+        title: "Reflection Practice — truth without self-attack",
         summary:
-          "Speaking to the struggling part of you as a wise friend would — or, if you prefer, offering steadiness instead of words.",
+          "One contained moment of facing something true, with context and any real responsibility included, and without adding self-attack.",
         steps: [
-          "Bring to mind the part of you that has been struggling. Not the whole of you — the part.",
-          "Imagine that part belonged to someone you respect and care about. Notice what you would not say to them.",
-          "Now find one sentence you could say honestly: for example, “This has been hard, and you have kept going.”",
-          "Say it once inwardly. If it feels false, make it more accurate rather than warmer, and try again.",
-          "If words do not work today, do this instead: place a hand somewhere steady, let your breathing slow slightly, and stay there for thirty seconds. That is the whole practice — no sentence required.",
+          "Orient outward first. Notice one neutral detail nearby, or one accessible point of support. No touch, posture, breathing, relaxation or bodily sensation is required.",
+          "Bring to mind one difficulty, limit, need, response or mistake. Keep it broad and private — no names and no identifying details.",
+          "Separate observation from verdict. Try “Something I notice is…” rather than a whole-person label such as “I am a failure.”",
+          "Add context: “What was also true was…” Context may include a limit, a need, an impact, a choice or a circumstance. It adds accuracy; it does not automatically excuse harm.",
+          "If responsibility is clear, make it specific: “What is mine to acknowledge or address is…” If nothing is clear, or nothing is within your influence, do not invent responsibility.",
+          "Offer one accurate, less-punishing response. For example: “This is difficult, and I do not need to attack myself to face it.” Or “I can be accountable without making this my whole identity.” Or “I do not know yet; I can leave the question open without contempt.” If words do not fit, choose a brief wordless act of non-hostility or ordinary care that is realistically available to you. No outcome is required.",
+          "Reorient outward — one detail nearby again. If no warmth, relief or clarity appeared, nothing failed.",
         ],
         notRequired:
-          "Nothing has to be written, spoken aloud or believed fully. Warmth is not the requirement; accuracy is.",
+          "Nothing has to be written, spoken, believed or forgiven. No disclosure, contact, repair, action or improved feeling is required, and you may stop if distress grows.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — mercy toward the barely-lit",
+        title: "Scripture & Spiritual Reflection — gentleness without abandoning truth",
         summary:
-          "A Christian pathway about being handled gently when you are worn thin.",
+          "A Christian pathway in which gentleness toward what is vulnerable and a commitment to justice are held together, chosen only if it fits.",
         steps: [
-          "Read the passage. Notice what it says about damaged things: they are not discarded, and they are not forced.",
-          "Notice what it does not say: it does not say the reed deserved to break, or that the wick should try harder.",
-          "If you wish, hold the struggling part of you in mind and receive that image for a moment — being handled carefully rather than corrected.",
-          "Sit quietly for a few breaths. Nothing needs to be confessed or resolved here.",
+          "Read the passage slowly if you wish, and notice that gentleness and justice are held together rather than traded against each other.",
+          "Notice whether the image feels comforting, distant, difficult or neutral. Any of those responses may simply remain, and the passage may be set aside.",
+          "If it fits, bring one difficulty, limit, need, response or mistake before Christ — or keep it private. No explanation is required.",
+          "If it fits, name one truth and one mercy. If responsibility is yours, name only what is specific and within your influence.",
+          "Optional prayer: “Jesus, help me face what is true without contempt, receive care without pretending, and recognise any honest response that is mine.”",
+          "Let prayer remain alongside practical care, accountability, boundaries or support rather than replacing them. Then reorient outward. No relief or clarity is required.",
         ],
         notRequired:
-          "There is no requirement to forgive anyone, including yourself, and no requirement to feel differently by the end. You may read this and leave it there.",
+          "There is no requirement to confess, forgive, reconcile, surrender safety or boundaries, feel differently, pray at all, or find this passage comforting.",
         scripture: {
           reference: "Isaiah 42:3 (World English Bible)",
-          body: "He won't break a bruised reed. He won't quench a dimly burning wick.",
-          note: "An image of care for what is barely holding on — without demand, and without haste.",
+          body: "He won't break a bruised reed. He won't quench a dimly burning wick. He will faithfully bring justice.",
+          note: "Christian readers may receive this as an image of gentleness toward what is vulnerable, held alongside justice. It does not say why suffering occurred, excuse harm or promise a feeling, and it is not a description of you as damaged. The image does not have to fit today.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What small act of compassion is possible today?",
-      hint: "One choice, and accuracy counts as compassion.",
+      prompt: "What one contained step is possible today?",
+      hint: "One choice. Each of these stays with you; nothing has to be said or sent.",
       select: "one",
       options: [
-        { id: "sentence", label: "Say one accurate, kind sentence to myself once" },
-        { id: "catch", label: "Catch the harsh voice once and simply notice it" },
-        { id: "body", label: "Offer my body something it needs" },
-        { id: "receive", label: "Let one kindness from someone else land, without deflecting" },
-        { id: "prepare", label: "Nothing outward — noticing the tone was the step" },
+        { id: "sentence", label: "Use one fair, accurate sentence once" },
+        { id: "catch", label: "Notice one harsh or dismissive response without arguing with it" },
+        {
+          id: "body",
+          label: "Offer my body one ordinary form of care that is realistically available",
+        },
+        {
+          id: "receive",
+          label: "Let one fair sentence remain for a few seconds without forcing belief",
+        },
+        {
+          id: "prepare",
+          label: "Nothing outward — considering a less-punishing hold was the step",
+        },
       ],
     },
     reflection: {
@@ -453,64 +518,86 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "The inner response you named",
           from: "tone",
-          opening: "You noticed how you speak to yourself:",
           lines: {
-            harsh: "The inner tone runs harsh, which is usually learned rather than deserved.",
-            dismissive: "Your difficulty tends to be minimised by comparison, which quietly disqualifies you from your own care.",
-            impatient: "There is impatience with how long this is taking, which recovery rarely respects.",
-            anxious: "The voice runs ahead, rehearsing what might go wrong in an attempt to prevent it.",
-            silent: "There is no inner voice at all, which may mean kindness was never modelled inwardly.",
-            mixed: "The tone shifts with your reserves, which is ordinary and informative.",
-            kind: "The tone is reasonably kind, and that is a genuine resource to protect.",
+            harsh: "The familiar inner response runs harsh or shaming. That is what is here; nothing is being said about its origin, purpose or meaning.",
+            dismissive:
+              "The familiar response minimises it or compares it away. That does not make what you are living with unreal.",
+            impatient:
+              "The familiar response presses you to be over it or to do better. No timeline follows from that.",
+            anxious:
+              "The familiar response scans or rehearses what might go wrong. No motive or history is being read into it.",
+            silent:
+              "The familiar response is more wordless — pressure, blankness or withdrawal. That is described, not interpreted.",
+            mixed:
+              "The response changes. Neither the kinder nor the harsher version has to stand for the whole.",
+            kind: "The response is mostly fair or kind. That is a resource already present, without any need to keep it perfect.",
+            none: "No particular inner response stood out, and none will be invented here.",
+            unclear:
+              "What happens inside is not clear to you. That uncertainty stays as it is, with no hidden meaning attached.",
+            private:
+              "You chose to keep this private. That structured choice is saved on this device, and no tone, cause or history is inferred from it.",
           },
           unanswered:
-            "The inner tone was not named. It is still worth listening for later — most people are startled by what they hear.",
+            "No inner response was selected, and none will be inferred. No tone, cause, purpose or history is being assigned to you from this day.",
         },
         {
           id: "care",
-          title: "What may deserve care now",
+          title: "The way of holding you considered",
           from: "need",
-          opening: "You considered what the struggling part may need:",
           lines: {
-            rest: "Rest may be needed before anything else, and it does not have to be earned first.",
-            acknowledged: "Acknowledgement may matter more than advice: this has genuinely been hard.",
-            notalone: "Not being alone with it may be the need, which is a reason to let someone near.",
-            permission: "Permission to feel what you feel may be the missing piece, and you are allowed to give it.",
-            patience: "Time without a deadline may be what is required, and pressure will not speed it up.",
-            safety: "Safety may need to come first. Nothing else settles well without it.",
-            forgiveness: "An end to self-punishment may be what is needed, which is different from excusing anything.",
-            unsure: "The need is not clear yet, and it does not have to be identified to be met gently.",
+            rest: "Rest, reduced demand or basic care was named as a real need. Whether it is available to you is a separate question, and nothing here assumes it is.",
+            acknowledged:
+              "Acknowledging that this has genuinely been difficult was what you chose. That is an accurate thing to say, not a conclusion about anything else.",
+            notalone:
+              "You chose to respect that support may matter. No person, contact or disclosure is being suggested here.",
+            permission:
+              "You chose to let one feeling or reaction be present without judging it. Nothing grants you that and nothing asks you to act on the feeling.",
+            patience:
+              "You chose to allow more time without treating delay as failure. No pace is being set for you.",
+            safety:
+              "You chose to respect safety, stability or practical support before pushing further. No reason for that is being assumed.",
+            forgiveness:
+              "You chose to separate accountability from self-punishment. That excuses nothing, and no forgiveness of yourself or anyone else is required.",
+            unsure:
+              "What compassion would look like is not clear yet. That can remain unclear, and no underlying need will be guessed at.",
+            none: "No different way of holding this felt right today. That absence stays as it is, without being read as avoidance.",
+            private:
+              "You chose to keep this private. That structured choice is saved on this device, and no need or response is inferred from it.",
           },
           unanswered:
-            "No need was named, and none will be invented. It may be enough today to allow that there is a part of you that needs something.",
+            "No more compassionate way of holding this was selected, and none will be inferred. Nothing here concludes that you need something you did not name.",
         },
         {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
-            sentence: "One accurate, kind sentence — said once — is a real change in tone.",
-            catch: "Catching the harsh voice without fighting it is often the most effective first move.",
-            body: "Offering the body what it needs is compassion that requires no words at all.",
-            receive: "Letting one kindness land without deflecting is harder than it sounds, and it counts.",
-            prepare: "Noticing the tone was the step. That is where this work begins.",
+            sentence:
+              "One fair, accurate sentence, used once. Whether anything follows from it is not something this can tell you.",
+            catch: "Noticing one harsh or dismissive response without arguing with it. That is a small act of attention, with no claim about what it achieves.",
+            body: "One ordinary form of care for your body, if it is realistically available. No outcome is attached to it.",
+            receive:
+              "Letting one fair sentence remain for a few seconds, without forcing belief in it. Belief is not the measure.",
+            prepare:
+              "Nothing outward. Considering a less-punishing way of holding this was the step, and it stands as one.",
           },
           unanswered:
-            "Nothing was chosen. The attention you gave to how you speak to yourself already matters.",
+            "No step was selected, and none will be assumed. Reading through the day without choosing anything is a complete way to have spent it.",
         },
       ],
-      closing: "Nothing here excuses anything or asks you to forgive anyone.",
+      closing:
+        "Today's selections do not establish why this inner response exists, what you deserve, or what will change. They point only to one way honesty and dignity might remain in the same room.",
     },
     close: {
-      heading: "A kinder hold",
+      heading: "Truth without contempt",
       body: [
-        "You turned toward the struggling part of yourself instead of away from it. That is not indulgence; it is usually what makes change possible.",
-        "Tomorrow looks outward — carefully, and on your terms.",
+        "Whether or not you named anything today, you spent some time near a question: whether what is true can remain while some of the contempt, dismissal or pressure is left out.",
+        "Compassion does not erase harm, consequence, grief, boundaries, limits or responsibility. It can mean accompanying yourself while you face what is yours, what is not, and what is still unclear.",
+        "Day 8 explores one small, safe reconnection with what matters, chosen by you.",
       ],
-      carryForward:
-        "Carry forward one sentence: I can be honest with myself without being harsh.",
+      carryForward: "I can face what is true without turning myself into the enemy.",
     },
   },
 

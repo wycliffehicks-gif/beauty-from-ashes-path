@@ -1,14 +1,18 @@
 // Server function boundary for the Day 1 personalized reflection.
 //
+// DORMANT. Nothing in the customer-facing First Journey imports or calls this
+// module, and the shipped product makes no provider, gateway or network call.
+//
 // Two modes:
 //   - "curated": deterministic client-safe selection (no provider call).
 //   - "live":    calls Lovable AI Gateway through the injected provider,
 //                validates the response, retries once, then falls back.
 //
-// Feature flag: LIVE_AI_ENABLED (server-side env var).
-//   - Absent  -> defaults to enabled (private founder test).
-//   - "false" or "0" -> disables provider calls; live mode returns the
-//     curated/founder-approved fallback. Curated mode is unaffected.
+// Feature flag: LIVE_AI_ENABLED (server-side env var). It FAILS CLOSED.
+//   - Absent, blank or any unrecognized value -> disabled.
+//   - Exactly "true" or "1" (case-insensitive, trimmed) -> enabled.
+// Anything else, including "false", "0", "yes", "on" or a typo, stays disabled,
+// so accidental activation is not possible.
 //
 // The live provider (`live-provider.server.ts`) is imported dynamically
 // inside the handler so its module is never bundled for the browser and
@@ -28,14 +32,18 @@ export {
   type ReflectionMode,
 } from "@/lib/ai/compute";
 
+/** The single documented set of values that may enable a dormant AI module. */
+export const LIVE_AI_ENABLED_VALUES = ["true", "1"] as const;
+
 export function liveAiEnabled(): boolean {
   const raw = (globalThis as { process?: { env?: Record<string, string | undefined> } })
     .process?.env?.LIVE_AI_ENABLED;
-  if (raw === undefined) return LIVE_AI_ENABLED_DEFAULT;
+  if (typeof raw !== "string") return LIVE_AI_ENABLED_DEFAULT;
   const normalized = raw.trim().toLowerCase();
-  if (normalized === "false" || normalized === "0") return false;
-  return true;
+  if (normalized.length === 0) return LIVE_AI_ENABLED_DEFAULT;
+  return (LIVE_AI_ENABLED_VALUES as readonly string[]).includes(normalized);
 }
+
 
 type CallShape = { input: unknown; mode?: "curated" | "live" };
 

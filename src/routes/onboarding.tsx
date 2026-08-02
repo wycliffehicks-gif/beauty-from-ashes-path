@@ -88,7 +88,7 @@ function Opening() {
           {step > 0 ? (
             <button
               type="button"
-              onClick={() => setStep((s) => Math.max(0, s - 1))}
+              onClick={goBack}
               className="journey-chrome-btn text-sm"
               aria-label="Back"
             >

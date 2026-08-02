@@ -8,14 +8,12 @@
  * Variants:
  *  - "splash"     atmospheric opening composition
  *  - "home"       quiet hero atmosphere for Journey Home
- *  - "threshold"  a doorway-like arrival band above a heading
- *  - "quiet-edge" sparse edge contour for reading/answering surfaces
  *  - "thread"     a vertical living gold thread beside a list
  */
 
 import type { MotifKey } from "@/content/journey-types";
 
-export type MotifVariant = "splash" | "home" | "threshold" | "quiet-edge" | "thread";
+export type MotifVariant = "splash" | "home" | "thread";
 
 
 const GOLD = "var(--bfa-gold-line)";
@@ -34,8 +32,6 @@ export function VisualMotif({
     <div aria-hidden="true" className={`bfa-visual-motif ${className}`}>
       {variant === "splash" && <SplashMotif />}
       {variant === "home" && <HomeMotif />}
-      {variant === "threshold" && <ThresholdMotif />}
-      {variant === "quiet-edge" && <QuietEdgeMotif />}
       {variant === "thread" && <ThreadMotif />}
     </div>
   );
@@ -100,57 +96,6 @@ function HomeMotif() {
           strokeWidth="1.5"
           opacity="0.85"
         />
-      </g>
-    </svg>
-  );
-}
-
-function ThresholdMotif() {
-  return (
-    <svg
-      className="bfa-visual-svg"
-      viewBox="0 0 390 144"
-      preserveAspectRatio="xMidYMid slice"
-      focusable="false"
-    >
-      <g fill="none" strokeLinecap="round">
-        <ellipse cx="195" cy="150" rx="150" ry="96" fill={MINERAL} opacity="0.5" />
-        {/* an opening: two contours drawing apart, a room beyond */}
-        <path d="M18 142 C 46 74, 96 34, 168 20" stroke={ASH} strokeWidth="1" opacity="0.55" />
-        <path d="M372 142 C 344 74, 294 34, 222 20" stroke={ASH} strokeWidth="1" opacity="0.55" />
-        <path d="M40 142 C 66 84, 110 48, 172 34" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.8" />
-        <path d="M350 142 C 324 84, 280 48, 218 34" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.8" />
-        <path d="M-10 118 C 92 96, 296 96, 400 118" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.5" />
-        <path
-          d="M112 144 C 148 112, 156 74, 196 44 C 232 18, 258 26, 286 6"
-          stroke={GOLD}
-          strokeWidth="1.5"
-          opacity="0.9"
-        />
-      </g>
-    </svg>
-  );
-}
-
-function QuietEdgeMotif() {
-  return (
-    <svg
-      className="bfa-visual-svg"
-      viewBox="0 0 390 520"
-      preserveAspectRatio="xMidYMid slice"
-      focusable="false"
-    >
-      <g fill="none" strokeLinecap="round">
-        <path d="M-10 42 C 78 20, 128 62, 188 46" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.7" />
-        <path d="M-10 66 C 66 48, 108 78, 156 68" stroke={ASH} strokeWidth="1" opacity="0.35" />
-        <path d="M400 468 C 320 490, 268 452, 208 470" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.6" />
-        <path
-          d="M6 -10 C 22 92, -2 176, 18 268 C 34 350, 12 430, 30 530"
-          stroke={GOLD}
-          strokeWidth="1.4"
-          opacity="0.75"
-        />
-        <path d="M18 268 C 44 280, 62 272, 84 254" stroke={GOLD} strokeWidth="1" opacity="0.35" />
       </g>
     </svg>
   );

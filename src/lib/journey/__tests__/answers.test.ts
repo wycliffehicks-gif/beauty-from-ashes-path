@@ -53,6 +53,7 @@ import {
   JOURNEY_STORAGE_KEY,
   JOURNEY_STORE_VERSION,
   clearJourney,
+  migrateLegacyVisitedDays,
   upgradeStoredProgress,
 } from "@/lib/journey/progress";
 

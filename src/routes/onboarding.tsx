@@ -141,7 +141,7 @@ function Opening() {
             type="button"
             disabled={!canAdvance}
             aria-disabled={!canAdvance}
-            onClick={() => (isAgreement ? accept() : setStep((s) => s + 1))}
+            onClick={() => (isAgreement ? accept() : goToStep(step + 1))}
             className="btn-primary-journey w-full"
           >
             {isAgreement ? AGREEMENT_COPY.beginLabel : "Continue"}

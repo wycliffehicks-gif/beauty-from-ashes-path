@@ -1106,7 +1106,7 @@ describe("Day 8 revision", () => {
     expect(u).toContain("respects a no or a limit");
     expect(u).toContain("does not require you to disclose anything");
     expect(u).toContain("use your vulnerability against you");
-    expect(u).toContain("If safety is uncertain, no contact is needed");
+    expect(u).toContain("If safety is uncertain, no contact is required");
     expect(u).toContain(
       "Nothing here requires contact, disclosure, reconciliation, forgiveness, public action, a bodily response, hope, clarity or change.",
     );

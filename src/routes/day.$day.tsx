@@ -304,6 +304,8 @@ function ScreenBody({
   onHome,
   reflectionReady,
   onReflectionReady,
+  savedReflection,
+  onReflectionSaved,
 }: {
   content: JourneyDayContent;
   screen: ScreenKey;
@@ -318,6 +320,8 @@ function ScreenBody({
   onHome: () => void;
   reflectionReady: boolean;
   onReflectionReady: () => void;
+  savedReflection: { text?: string; snapshot?: string };
+  onReflectionSaved: (text: string, snapshot: string) => void;
 }) {
   const shell = (
     node: React.ReactNode,

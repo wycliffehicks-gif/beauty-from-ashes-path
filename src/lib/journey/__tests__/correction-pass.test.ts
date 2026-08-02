@@ -24,8 +24,8 @@ function kindsFor(day: typeof day1) {
   return screensFor(day).map((s) => s.kind);
 }
 
-function indexOfKind(day: typeof day1, kind: string) {
-  return kindsFor(day).indexOf(kind);
+function indexOfKind(day: typeof day1, kind: (typeof day1)["questions"] extends never ? never : string) {
+  return (kindsFor(day) as string[]).indexOf(kind);
 }
 
 describe("crafted screen queries cannot skip the journey", () => {

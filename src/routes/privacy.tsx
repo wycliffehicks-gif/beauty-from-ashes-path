@@ -43,9 +43,16 @@ function PrivacyPage() {
         your browser or device only:
       </p>
       <ul className="list-disc space-y-1 pl-5">
-        <li>Whether you have completed the welcome (onboarding) steps.</li>
-        <li>Your optional spiritual-content preference.</li>
-        <li>Which of the seven days you have visited.</li>
+        <li>Whether you have completed the opening steps, and that you agreed to
+          the Terms, Privacy Notice and Important Information, with the date of
+          that agreement.</li>
+        <li>Your optional Scripture and spiritual-reflection preference.</li>
+        <li>Which of the ten days you have opened, the day and page you were
+          last on, and which days you have finished.</li>
+        <li>The choices you selected from the lists offered on each day, saved as
+          short option labels rather than anything you typed.</li>
+        <li>The personalized reflection prepared for you on a day, so that it can
+          be shown again if you return to that page.</li>
       </ul>
       <p>
         The app also uses your browser’s <em>session storage</em> to remember,
@@ -53,12 +60,19 @@ function PrivacyPage() {
         shown, so it does not repeat.
       </p>
       <p>
+        Everything above stays on this device and browser. It is not sent to us,
+        it is not stored on a server, and there is no account, database or
+        analytics behind it. Because it is local, it does not move with you to
+        another device or browser.
+      </p>
+      <p>
         These local items are not confidential clinical records. They are not
         protected in the way that psychotherapy or medical records are. Anyone
         with access to your device or browser profile may be able to see them.
-        You can remove them by clearing local app or browser data, or by using
-        the “Clear local data” action in Settings.
+        You can remove all of them at any time with “Clear or restart my
+        journey” in Settings, or by clearing this browser’s data for the app.
       </p>
+
 
       <h2 className="font-serif text-xl">Please do not send sensitive information</h2>
       <p>

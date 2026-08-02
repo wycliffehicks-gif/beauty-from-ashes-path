@@ -394,3 +394,214 @@
     backdrop-filter: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   PROTOTYPE — Quiet Contour and Living Gold Thread (four-screen review).
+   Namespaced tokens and .bfa-* classes only. No global surface, row, page or
+   button utility is redefined here.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --bfa-paper: #FCF9F3;
+  --bfa-gold-line: #D4AF6A;
+  --bfa-champagne-line: #E8D3AF;
+  --bfa-ash-line: #6B6E74;
+  --bfa-mineral-form: rgba(221, 228, 231, 0.55);
+  --bfa-interactive-gold: #8A672D;
+  --bfa-control-border: #8E7A60;
+}
+
+.dark {
+  --bfa-paper: #16274A;
+  --bfa-gold-line: #D4AF6A;
+  --bfa-champagne-line: rgba(232, 211, 175, 0.42);
+  --bfa-ash-line: rgba(169, 174, 182, 0.4);
+  --bfa-mineral-form: rgba(221, 228, 231, 0.09);
+  --bfa-interactive-gold: #E8D3AF;
+  --bfa-control-border: rgba(232, 211, 175, 0.45);
+}
+
+.bfa-visual-motif {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bfa-visual-svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* --- Screen 1: splash ---------------------------------------------------- */
+.bfa-visual-splash {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 34rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+.bfa-visual-splash > .bfa-visual-motif {
+  z-index: 0;
+}
+.bfa-visual-splash-inner {
+  position: relative;
+  z-index: 1;
+}
+.bfa-visual-splash-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 10vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.bfa-visual-splash-sub {
+  margin-top: 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--deep-navy);
+}
+.bfa-visual-splash-seam {
+  margin: 1.6rem auto 0;
+  height: 1px;
+  width: 5.5rem;
+  border: 0;
+  background: var(--bfa-gold-line);
+  opacity: 0.85;
+}
+.bfa-visual-splash-parent {
+  margin-top: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.bfa-visual-splash-parent img {
+  height: auto;
+  width: 9.5rem;
+  max-width: 42vw;
+  opacity: 0.9;
+}
+.bfa-visual-splash-parent-text {
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* --- Screen 2: journey home --------------------------------------------- */
+.bfa-visual-home-hero {
+  position: relative;
+  isolation: isolate;
+  margin-inline: -1.25rem;
+  padding: 1.75rem 1.25rem 1.5rem;
+}
+.bfa-visual-home-hero > .bfa-visual-motif {
+  z-index: 0;
+}
+.bfa-visual-home-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+.bfa-visual-thread-track {
+  position: relative;
+}
+.bfa-visual-thread-track > .bfa-visual-motif {
+  left: 0.6rem;
+  right: auto;
+  width: 1.6rem;
+  z-index: 0;
+}
+.bfa-visual-thread-track > ol {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 640px) {
+  .bfa-visual-thread-track > .bfa-visual-motif { left: 1rem; }
+}
+
+/* --- Screen 3: day arrival threshold ------------------------------------ */
+.bfa-visual-threshold {
+  position: relative;
+  height: 138px;
+  margin-inline: -0.25rem;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .bfa-visual-threshold { height: 168px; }
+}
+
+/* --- Screen 4: quiet edge + answer choices ------------------------------ */
+.bfa-visual-quiet-edge {
+  position: relative;
+  isolation: isolate;
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  padding-block: 0.5rem 1rem;
+}
+.bfa-visual-quiet-edge > .bfa-visual-motif {
+  z-index: 0;
+}
+.bfa-visual-quiet-edge-inner {
+  position: relative;
+  z-index: 1;
+}
+.bfa-prototype-surface {
+  background: var(--bfa-paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+}
+
+.bfa-prototype-choice {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 1rem;
+  color: var(--foreground);
+  background: var(--bfa-paper);
+  border: 1px solid var(--bfa-control-border);
+  border-radius: var(--radius-lg);
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.bfa-prototype-choice:hover {
+  border-color: var(--bfa-interactive-gold);
+}
+.bfa-prototype-choice[aria-pressed="true"] {
+  border-color: var(--bfa-interactive-gold);
+  box-shadow: inset 2px 0 0 0 var(--bfa-interactive-gold);
+  background: color-mix(in oklab, var(--champagne) 26%, var(--bfa-paper));
+}
+.bfa-prototype-choice:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.bfa-prototype-choice-dot {
+  margin-top: 0.4rem;
+  height: 0.7rem;
+  width: 0.7rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--bfa-control-border);
+}
+.bfa-prototype-choice[aria-pressed="true"] .bfa-prototype-choice-dot {
+  border-color: var(--bfa-interactive-gold);
+  background: var(--bfa-interactive-gold);
+}
+.bfa-prototype-choice-note {
+  margin-top: 0.15rem;
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}

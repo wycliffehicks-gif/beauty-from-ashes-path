@@ -20,12 +20,12 @@ const day1 = FIRST_JOURNEY_DAYS[0]!;
 const day5 = FIRST_JOURNEY_DAYS[4]!;
 const day10 = FIRST_JOURNEY_DAYS[9]!;
 
-function kindsFor(day: typeof day1) {
-  return screensFor(day).map((s) => s.kind);
+function kindsFor(day: typeof day1): string[] {
+  return screensFor(day).map((s) => s.kind as string);
 }
 
-function indexOfKind(day: typeof day1, kind: (typeof day1)["questions"] extends never ? never : string) {
-  return (kindsFor(day) as string[]).indexOf(kind);
+function indexOfKind(day: typeof day1, kind: string): number {
+  return kindsFor(day).indexOf(kind);
 }
 
 describe("crafted screen queries cannot skip the journey", () => {

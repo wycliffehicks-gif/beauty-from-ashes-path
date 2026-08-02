@@ -735,7 +735,7 @@
 }
 
 .btn-quiet {
-  color: var(--accent-foreground);
+  color: var(--accent);
 }
 .dark .btn-quiet {
   color: var(--foreground);

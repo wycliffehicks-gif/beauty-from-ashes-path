@@ -13,6 +13,15 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SplashGate } from "../components/SplashGate";
 import { AgreementGate } from "../components/AgreementGate";
+import { StorageNotice } from "../lib/storage-status";
+
+/**
+ * System dark mode, applied before the body paints so there is no light flash
+ * and no hydration mismatch: the class lives on <html>, which React does not
+ * manage. No user setting, no persistence, no analytics. Responds safely if the
+ * system preference changes mid-session.
+ */
+const THEME_SCRIPT = `(function(){try{var m=window.matchMedia("(prefers-color-scheme: dark)");var a=function(d){var r=document.documentElement;r.classList.toggle("dark",d);var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",d?"#0F1B2E":"#F6F2EA");};a(m.matches);if(m.addEventListener)m.addEventListener("change",function(e){a(e.matches);});else if(m.addListener)m.addListener(function(e){a(e.matches);});}catch(e){}})();`;
 
 
 function NotFoundComponent() {
@@ -118,6 +127,7 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
         {children}
@@ -137,6 +147,7 @@ function RootComponent() {
           <Outlet />
         </AgreementGate>
       </SplashGate>
+      <StorageNotice />
 
     </QueryClientProvider>
   );

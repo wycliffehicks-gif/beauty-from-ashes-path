@@ -846,7 +846,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             unsure:
               "You said you are not sure which response fits. That is a real answer, and the rest of today works without one.",
             private:
-              "You chose to keep this private today. Nothing has been recorded about it, and the day continues as it is.",
+              "You chose not to name a response here. No response will be assumed from that choice, and the day continues.",
           },
           unanswered:
             "You continued without choosing a response, and none will be assumed. The rest of today can be read generally.",
@@ -1005,7 +1005,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             busy: "You chose staying busy as the response to look at today.",
             alone: "You chose handling it alone rather than asking as the response to look at today.",
             unsure: "You said you were not sure which response fits, which is an honest place to be.",
-            private: "You kept this private today, and nothing about it has been recorded.",
+            private:
+              "You chose not to name a response here. No response will be inferred from that choice.",
           },
           unanswered:
             "No response was chosen, and none will be attributed to you. Today can still be read generally.",

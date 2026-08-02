@@ -275,4 +275,15 @@ describe("Day 4 revision", () => {
     const share = day4.step.options.find((o) => o.id === "prepare-share")!;
     expect(share.note).toMatch(/No need to send or say it today/i);
   });
+  it("states the private response choice accurately", () => {
+    const json = JSON.stringify(day4);
+    expect(json).not.toContain("Nothing has been recorded");
+    expect(json).not.toContain("nothing about it has been recorded");
+    expect(json).toContain(
+      "You chose not to name a response here. No response will be assumed from that choice, and the day continues.",
+    );
+    expect(json).toContain(
+      "You chose not to name a response here. No response will be inferred from that choice.",
+    );
+  });
 });

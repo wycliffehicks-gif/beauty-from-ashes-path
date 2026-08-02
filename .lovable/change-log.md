@@ -47,6 +47,11 @@ Still private and unpublished.
 - **Tests**: new “Day 4 revision” block in
   `src/lib/journey/__tests__/selection.test.ts`.
 
+- **Final wording clarification (same day)**: the response echo and the
+  reflection `hearing` line for `private` no longer claim nothing was recorded;
+  they now read “You chose not to name a response here…”, since the choice is a
+  structured answer saved locally.
+
 ## 2026-08-01 — Bounded Day 3 content-and-safety revision
 
 Day 3 (“Name What You're Carrying”) only; Days 1–2 and 4–10 untouched. No

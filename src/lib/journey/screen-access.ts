@@ -46,9 +46,10 @@ export function allowedIndex({
 }
 
 /**
- * The index the flow should actually render. Ungated screens are returned as
- * asked; an unearned reflection or Close is clamped back to the safe valid
- * position so nothing can be falsely completed from a crafted URL.
+ * The index the flow should actually render. EVERY screen above the trusted
+ * high-water mark is clamped, not only the reflection and Close: a crafted
+ * `?s=step` must not render and then quietly become trusted. Already-earned
+ * screens (reload, Back, Forward) and a finished day's Close still restore.
  */
 export function resolveVisibleIndex({
   kinds,
@@ -59,15 +60,7 @@ export function resolveVisibleIndex({
   const last = kinds.length - 1;
   if (last < 0) return 0;
   const want = Number.isInteger(requested) && requested > 0 ? Math.min(requested, last) : 0;
-  const kind = kinds[want];
-  if (!kind || !isGatedKind(kind)) return want;
-
   const allowed = allowedIndex({ kinds, reached, completed });
-  if (want <= allowed) return want;
-
-  // Clamp to the furthest position that is both allowed and not itself gated,
-  // unless the allowed position is legitimately a gated screen.
-  let idx = Math.min(allowed, want);
-  while (idx > 0 && isGatedKind(kinds[idx] ?? "") && idx > allowed) idx -= 1;
-  return Math.max(0, idx);
+  return Math.max(0, Math.min(want, allowed));
 }
+

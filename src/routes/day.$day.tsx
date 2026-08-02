@@ -5,7 +5,15 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
 import {
@@ -45,6 +53,13 @@ import {
 import { resolveResumeIndex } from "@/lib/journey/resume";
 
 const SAFE_SCREEN_KEY = /^[A-Za-z0-9._-]{1,64}$/;
+
+/**
+ * Layout-phase effect in the browser, plain effect on the server, so a screen
+ * can report its state before paint without an SSR warning.
+ */
+const useBeforePaintEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 
 export const Route = createFileRoute("/day/$day")({
   /**
@@ -188,32 +203,30 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayId]);
 
-  // Quiet autosave of the exact screen, plus the high-water screen reached.
-  // Neither completes a day.
+  // Quiet autosave of the exact screen actually being shown. This effect never
+  // creates trust: a URL render can no longer raise the high-water mark, so a
+  // crafted address can neither open nor become a reached screen.
   useEffect(() => {
     if (!answersLoaded) return;
     saveLocator({ dayId, step: stepKeys[i], index: i });
-    if (i > reached) {
-      setReached(i);
-      saveReached(dayId, i);
-    }
     // If the URL asked for a screen that has not been earned, correct the
     // address bar so reload and Back stay consistent with what is shown.
     if (requested !== i) goTo(i, { replace: true });
-  }, [dayId, stepKeys, i, answersLoaded, reached, requested, goTo]);
+  }, [dayId, stepKeys, i, answersLoaded, requested, goTo]);
 
   /**
-   * Reflection readiness has exactly one owner: the screen key it belongs to.
-   * There is no separate reset effect to race with the child, so Continue can
-   * never be stranded disabled.
+   * Reflection readiness is keyed to BOTH the reflection screen and the current
+   * coded answers, so it cannot survive leaving the screen, a browser Forward,
+   * or an answer change: the token simply stops matching. The reflection child
+   * also reports "preparing" in the layout phase, before paint, on every mount.
    */
-  const [readyForKey, setReadyForKey] = useState<string | null>(null);
+  const [readyToken, setReadyToken] = useState<string | null>(null);
   const currentKey = stepKeys[i];
-  const reflectionReady = readyForKey === currentKey;
-  const onReflectionReady = useCallback(
-    (key: string) => setReadyForKey(key),
-    [],
-  );
+  const reflectionToken = `${currentKey}|${answersSnapshot(dayAnswers)}`;
+  const reflectionReady = readyToken === reflectionToken;
+  const onReflectionPreparing = useCallback(() => setReadyToken(null), []);
+  const onReflectionReady = useCallback((token: string) => setReadyToken(token), []);
+
 
   const recordStepAnswers = (stepKey: string, optionIds: string[]) => {
     setDayAnswers((cur) => {
@@ -233,11 +246,20 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       setCompleted(true);
       markDayComplete(dayId);
     }
+    // A valid in-app forward action is what EARNS the next screen, so the
+    // trusted high-water mark is raised BEFORE navigating. Were this done after
+    // navigation, the clamp would send the person straight back.
+    if (next > reached) {
+      setReached(next);
+      saveReached(dayId, next);
+    }
+    setReadyToken(null);
     goTo(next);
   };
 
   const goPrev = () => {
     if (i <= 0) return;
+    setReadyToken(null);
     // Derived from the real history index, so mixed visible Back and
     // browser/Android Back or Forward can never leave a stale depth counter.
     const depth = historyIndex - (entryHistoryIndex.current ?? historyIndex);
@@ -248,6 +270,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     }
     goTo(i - 1, { replace: true });
   };
+
 
   const screen = screens[i];
   const label = `Day ${content.day} · ${screenLabel(content, screen)}`;
@@ -268,7 +291,10 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       nextDay={nextDay}
       onHome={() => navigate({ to: "/" })}
       reflectionReady={reflectionReady}
-      onReflectionReady={() => onReflectionReady(currentKey)}
+      reflectionToken={reflectionToken}
+      onReflectionPreparing={onReflectionPreparing}
+      onReflectionReady={onReflectionReady}
+
       savedReflection={savedReflection}
       onReflectionSaved={(text, snapshot) =>
         setSavedReflection({ text, snapshot })
@@ -303,6 +329,8 @@ function ScreenBody({
   nextDay,
   onHome,
   reflectionReady,
+  reflectionToken,
+  onReflectionPreparing,
   onReflectionReady,
   savedReflection,
   onReflectionSaved,
@@ -319,9 +347,12 @@ function ScreenBody({
   nextDay: number | null;
   onHome: () => void;
   reflectionReady: boolean;
-  onReflectionReady: () => void;
+  reflectionToken: string;
+  onReflectionPreparing: () => void;
+  onReflectionReady: (token: string) => void;
   savedReflection: { text?: string; snapshot?: string };
   onReflectionSaved: (text: string, snapshot: string) => void;
+
 }) {
   const shell = (
     node: React.ReactNode,
@@ -394,10 +425,13 @@ function ScreenBody({
           content={content}
           answers={answers}
           answersLoaded={answersLoaded}
+          token={reflectionToken}
+          onPreparing={onReflectionPreparing}
           onReady={onReflectionReady}
           savedReflection={savedReflection}
           onSaved={onReflectionSaved}
         />,
+
         {
           onContinue: onNext,
           continueDisabled: !reflectionReady,
@@ -727,6 +761,8 @@ function ReflectionScreen({
   content,
   answers,
   answersLoaded,
+  token,
+  onPreparing,
   onReady,
   savedReflection,
   onSaved,
@@ -734,12 +770,24 @@ function ReflectionScreen({
   content: JourneyDayContent;
   answers: string[];
   answersLoaded: boolean;
-  onReady: () => void;
+  /** Reflection screen plus current coded answers; readiness belongs to it. */
+  token: string;
+  onPreparing: () => void;
+  onReady: (token: string) => void;
   savedReflection: { text?: string; snapshot?: string };
   onSaved: (text: string, snapshot: string) => void;
 }) {
-  const [built, setBuilt] = useState<BuiltReflection | null>(null);
+  const [state, setState] = useState<{ token: string; built: BuiltReflection } | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+  // Before paint on every mount — including browser Back and Forward — and
+  // whenever the answers change, this screen reports that it is preparing, so a
+  // stale readiness can never briefly enable Continue.
+  useBeforePaintEffect(() => {
+    setState(null);
+    onPreparing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   useEffect(() => {
     if (!answersLoaded) return;
@@ -750,8 +798,8 @@ function ReflectionScreen({
     if (savedReflection.snapshot && savedReflection.snapshot === snapshot) {
       const restored = restoreReflection(content, savedReflection.text);
       if (restored) {
-        setBuilt(restored);
-        onReady();
+        setState({ token, built: restored });
+        onReady(token);
         return;
       }
     }
@@ -759,14 +807,17 @@ function ReflectionScreen({
     // Otherwise rebuild deterministically and replace what was saved.
     const next = buildReflection(content, answers);
     const text = reflectionToText(next);
-    setBuilt(next);
+    setState({ token, built: next });
     saveDayReflection(dayId, text, snapshot);
     onSaved(text, snapshot);
-    onReady();
+    onReady(token);
     // savedReflection is read once per screen entry; rebuilding on our own save
     // would loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content, answers, answersLoaded]);
+  }, [content, token, answersLoaded]);
+
+  // Only a response built for the current answers may be shown.
+  const built = state && state.token === token ? state.built : null;
 
   // Once the reflection is present it is ordinary structured content, so the
   // heading takes focus rather than the whole thing being announced at once.
@@ -784,7 +835,13 @@ function ReflectionScreen({
       >
         A reflection drawn from today
       </h1>
-      <p className="text-base text-foreground">{content.reflection.intro}</p>
+      {/* When a saved response is restored, its own opening words are shown, not
+          the current day's generic intro. While preparing, the neutral current
+          intro stands in and nothing is claimed to be exact. */}
+      <p className="text-base text-foreground">
+        {built ? built.intro : content.reflection.intro}
+      </p>
+
 
       {!built ? (
         <p role="status" aria-live="polite" className="text-base text-muted-foreground">

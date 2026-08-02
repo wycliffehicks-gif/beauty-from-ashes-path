@@ -35,11 +35,18 @@ export const LEGAL_BUNDLE_VERSION = "2026-08-02";
  * person chooses it, so a fresh or cleared device starts with it off. An
  * explicitly stored true or false is always preserved.
  */
-const defaults: Prefs = {
+export const PREF_DEFAULTS: Prefs = {
   onboarded: false,
   showSpiritual: false,
   visitedDays: [],
 };
+
+const defaults: Prefs = PREF_DEFAULTS;
+
+/** Read the stored preferences, applying defaults for anything absent. */
+export function readPrefs(): Prefs {
+  return read();
+}
 
 function read(): Prefs {
   if (typeof window === "undefined") return defaults;

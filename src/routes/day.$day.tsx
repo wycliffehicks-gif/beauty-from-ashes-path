@@ -970,7 +970,15 @@ function ReflectionScreen({
   );
 }
 
+/**
+ * Chrome-level pacing note on every daily close. It sets no task and makes no
+ * claim: one day at a time is enough.
+ */
+export const CLOSE_CONTAINMENT_NOTE =
+  "One day at a time is enough. There is no need to continue now.";
+
 function CloseScreen({
+
   content,
   nextDay,
   onHome,

@@ -1,5 +1,74 @@
 # Change log
 
+## 2026-08-02 — Bounded Day 10 content, safety, branch-accuracy and focused-regression revision
+
+Day 10 (“Carry It Forward”) only. Days 1–9 content, routes, components, types,
+storage/resume/completion logic, the reflection engine, AI files, onboarding,
+legal/support content, settings, styles, assets, package files and
+`src/routeTree.gen.ts` are untouched. Still private and unpublished. Three files
+changed: the Day 10 object in `src/content/journey-days-b.ts`, an appended
+“Day 10 revision” block plus the single Day 9-test Day 10 lead literal in
+`src/lib/journey/__tests__/selection.test.ts`, and this entry.
+
+**Preserved identity, order and positional IDs.** day 10; title “Carry It
+Forward”; motif `carry`; shape `notice-first`; descriptor “Gathering the journey ·
+about 15 minutes”; question IDs `different` then `unfinished`; step ID `step`;
+nine-screen order arrive → q.different → e.different → understand → q.unfinished →
+practise → step → reflection → close. Every legacy option ID kept in its existing
+position and reworded in place; new IDs appended only after the legacy ones
+(different — unclear, private; unfinished — outside, none, private; step —
+unavailable, unclear, none, private). All three choice sets are now single-select
+for one contained integration thread, with exclusive metadata on the
+nothing/unclear/outside/none/unavailable/private choices.
+
+**Content.** New theme (“Integration and a complete stopping place without
+manufactured progress, forced closure, or required action.”); new lead completing
+a ten-day container without claiming completed healing; arrival body covering
+every way the journey may have been used, any felt or unfelt outcome, room to
+gather one thread and leave one unfinished place, and an explicit statement that
+finishing screens is not evidence of healing, readiness, insight, attention,
+courage or progress; inclusive outward-first settle with no sitting, vision,
+touch, inward bodily attention, posture, breathing, relaxation, calm, gratitude,
+emotional response or closure requirement. “Listen” screen restores the Part
+7/7.5 movement: integration in newcomer language, new life as not going back to
+an untouched earlier self, carrying differently as not carrying alone / calling
+harm good / suppressing lament / pretending the ashes never existed, named real
+constraints (grief, illness, disability, caregiving, discrimination, unsafe
+conditions, financial pressure, power differences, relationships, limited
+resources and support), unfinishedness as not automatically personal failure, and
+five InfoNotes including a non-normalising “more unsettled” note routing to
+real-world care and Support & Safety, and an explicit “you do not have to
+continue”.
+
+**Practise, step, reflection, close.** Two equal-depth seven-step paths —
+“Integration Practice” and “Scripture & Spiritual Reflection — blessing without
+forced closure” — doing the same integration movement without receiving any
+selections, with either/both/neither/read/stop consent, accessible outward
+orientation, and the verified Numbers 6:24–26 (WEB) quote under an accurate
+ancient Israelite priestly-blessing note. One Honest Step reworded so no option
+requires a real-world act, schedule, habit, disclosure, contact or outcome, with
+notes on unavailable support and on the app being unable to judge safety.
+Personalised reflection reduced to three answer-driven sections with no openings,
+a substantive line for every retained and appended ID, substantive unanswered
+fallbacks that claim no attention/insight/engagement, accurate “saved on this
+device” wording for every private branch, and a closing that establishes no
+progress, readiness, cause, safety or future. Close is “A complete stopping
+place” with permission, no continuation pressure, and the carry-forward sentence
+“I can let this journey be complete without forcing myself to be finished.”
+
+**Removed claims.** All listed legacy phrases are gone, including “You have spent
+ten days”, “same person who opened Day 1”, “Let one breath out slowly”, “long
+avoided”, “heavier before it feels lighter”, “puts the choice back”, “will surface
+when it is ready”, “make it specific”, “I began where I was”, “Ten days of honest
+attention” and the generic “A blessing asks for” flattening.
+
+**Verification.** 402 tests pass (24 files), standalone TypeScript typecheck
+clean, production build succeeds. Browser-checked at 360px and 390px across an
+answered path, a fully unanswered path, a private path, an
+unclear/outside-control/unavailable path, both expanded practice panels, the
+personalised reflection and the close: no page or console errors and no
+horizontal overflow.
+
 ## 2026-08-02 — Bounded Day 9 clinical-content, psychospiritual, safety, accessibility, branch-accuracy and source-alignment revision
 
 Day 9 (“Practise a Different Response”) only. Days 1–8 and Day 10, routes,

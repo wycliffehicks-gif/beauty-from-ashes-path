@@ -1015,7 +1015,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Reorient outward. No relief, certainty, trust, felt refuge or closeness, forgiveness, reconciliation, contact, disclosure, or action is required.",
         ],
         notRequired:
-          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. Stopping at any point is available, and you may leave this path entirely.",
+          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point or leave this path entirely.",
         scripture: {
           reference: "Psalm 62:8 (World English Bible)",
           body: "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",

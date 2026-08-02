@@ -1,5 +1,52 @@
 # Change log
 
+## 2026-08-01 — Bounded Day 4 content-and-safety revision
+
+Day 4 (“What It May Have Protected”) only; Days 1–3 and 5–10 untouched. No
+routing, storage, AI, shared reflection-mechanics or other shared-system change.
+Still private and unpublished.
+
+- **Shape/descriptor**: shape is now `standard` (all questions before the
+  practice); descriptor “Understanding one response · about 12 minutes”.
+- **Arrive**: new lead and body — one familiar response, and what it may have
+  tried to prevent, preserve or provide; states plainly that no origin proof,
+  reliving or giving up is asked. Settling directions rewritten as inclusive of
+  any position, outward-first, with contact optional.
+- **Listen**: phase label “Listen”; heading “A familiar response may have had a
+  job to do”; pattern defined as a response, not an identity; protection framed
+  as one lens, not a verdict, including protection that may still be responding
+  to something real; understanding does not excuse effects or remove
+  responsibility. Info notes: “What does ‘pattern’ mean here?”, a descriptive
+  “What is overfunctioning?” with no hidden cause, and “What if protection does
+  not fit?”
+- **Question 1 (`response`)**: now single-select with natural labels for the nine
+  existing ids, plus `unsure` and `private`. Explore screen retitled “What you
+  chose to explore”; every echo describes the selection only and states it does
+  not tell us why; closing separates response from identity.
+- **Question 2**: the historical “then” question is replaced by `doorway` —
+  when the response is most likely to show up — with exclusive `unclear` and
+  `private`.
+- **Question 3 (`purpose`)**: new wondering question about what it may have tried
+  to prevent, preserve or provide, including `stillreal`, `other`, and exclusive
+  `notfit`, `unsure`, `private`.
+- **Practise**: nonreligious “Then / Now, with room for what is still true” with
+  six outward-first steps and no assumption the protection is obsolete;
+  Christian path “loved before readiness” now uses Mark 10:21 (WEB), states
+  explicitly that no equation with possessions, sin label or surrender is
+  intended, and offers an optional prayer.
+- **One Honest Step**: new prompt, hint and five options (`notice`, `sentence`,
+  `reminder`, `prepare-share` with a “no need to send or say it today” note,
+  `settle`). “Loosen it five percent” removed — pattern change belongs to Day 9.
+- **Reflection copy** (mechanism unchanged): descriptive `hearing`, context-only
+  `underneath` (“a context is not a cause”), tentative `protected`, a general
+  `care` paragraph on compassion, responsibility and ongoing realities, and an
+  accurate `next`. No personalized openings on the answer-driven sections, so
+  skipped paths read truthfully. New closing.
+- **Close**: heading “Understanding before change”; no “tomorrow”; carry-forward
+  is “A pattern may be part of my story; it is not the whole of who I am.”
+- **Tests**: new “Day 4 revision” block in
+  `src/lib/journey/__tests__/selection.test.ts`.
+
 ## 2026-08-01 — Bounded Day 3 content-and-safety revision
 
 Day 3 (“Name What You're Carrying”) only; Days 1–2 and 4–10 untouched. No

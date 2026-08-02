@@ -551,38 +551,75 @@
   z-index: 1;
 }
 
-/* --- Screen 3: day arrival threshold ------------------------------------ */
-.bfa-visual-threshold {
+/* ---------------------------------------------------------------------------
+   Day motifs — Arrival, quiet divider, Close. Normal document flow only; art
+   never sits behind text. Fields are restrained mists, dimmer in dark mode.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --bfa-field-blue: #DDE4E7;
+  --bfa-field-plum: #E7DEE6;
+  --bfa-field-green: #DBE1DA;
+  --bfa-field-stone: #E7E0D5;
+  --bfa-field-opacity: 0.55;
+}
+
+.dark {
+  --bfa-field-blue: #DDE4E7;
+  --bfa-field-plum: #E7DEE6;
+  --bfa-field-green: #DBE1DA;
+  --bfa-field-stone: #E7E0D5;
+  --bfa-field-opacity: 0.07;
+}
+
+.bfa-day-field {
+  opacity: var(--bfa-field-opacity);
+}
+
+.bfa-day-motif {
   position: relative;
-  height: 138px;
-  margin-inline: -0.25rem;
-  border-radius: var(--radius-xl);
+  width: 100%;
   overflow: hidden;
+  pointer-events: none;
+  border-radius: var(--radius-xl);
+}
+.bfa-day-motif > .bfa-visual-svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.bfa-day-motif path,
+.bfa-day-motif ellipse,
+.bfa-day-motif circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.bfa-day-motif-arrival {
+  height: 140px;
+  margin-inline: -0.25rem;
 }
 @media (min-width: 768px) {
-  .bfa-visual-threshold { height: 168px; }
+  .bfa-day-motif-arrival { height: 168px; }
 }
 
-/* --- Screen 4: quiet edge + answer choices ------------------------------ */
-.bfa-visual-quiet-edge {
-  position: relative;
-  isolation: isolate;
-  margin-inline: -1.25rem;
-  padding-inline: 1.25rem;
-  padding-block: 0.5rem 1rem;
+.bfa-day-motif-quiet {
+  height: 36px;
+  margin-inline: -0.25rem;
 }
-.bfa-visual-quiet-edge > .bfa-visual-motif {
-  z-index: 0;
-}
-.bfa-visual-quiet-edge-inner {
-  position: relative;
-  z-index: 1;
-  border-radius: var(--radius-xl);
-  padding: 0.75rem;
-  background: var(--bfa-reading-backdrop);
+@media (min-width: 768px) {
+  .bfa-day-motif-quiet { height: 44px; }
 }
 
-.bfa-prototype-choice {
+.bfa-day-motif-closing {
+  height: 96px;
+  margin-inline: -0.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Permanent journey choice treatment (promoted from the approved prototype).
+   --------------------------------------------------------------------------- */
+
+@utility bfa-journey-choice {
   display: flex;
   gap: 0.85rem;
   align-items: flex-start;
@@ -598,20 +635,21 @@
   transition: border-color 150ms ease, background-color 150ms ease;
 }
 @media (hover: hover) {
-  .bfa-prototype-choice:hover {
+  .bfa-journey-choice:hover {
     border-color: var(--bfa-interactive-gold);
   }
 }
-.bfa-prototype-choice[aria-pressed="true"] {
+.bfa-journey-choice[aria-pressed="true"] {
   border-color: var(--bfa-interactive-gold);
   box-shadow: inset 2px 0 0 0 var(--bfa-interactive-gold);
   background: color-mix(in oklab, var(--champagne) 26%, var(--bfa-paper));
 }
-.bfa-prototype-choice:focus-visible {
+.bfa-journey-choice:focus-visible {
   outline: 3px solid var(--ring);
   outline-offset: 3px;
 }
-.bfa-prototype-choice-dot {
+
+@utility bfa-journey-choice-dot {
   margin-top: 0.3rem;
   height: 1.05rem;
   width: 1.05rem;
@@ -619,13 +657,134 @@
   border-radius: 999px;
   border: 1px solid var(--bfa-control-border);
 }
-.bfa-prototype-choice[aria-pressed="true"] .bfa-prototype-choice-dot {
+.bfa-journey-choice[aria-pressed="true"] .bfa-journey-choice-dot {
   border-color: var(--bfa-interactive-gold);
   background: var(--bfa-interactive-gold);
 }
-.bfa-prototype-choice-note {
+
+@utility bfa-journey-choice-note {
   margin-top: 0.15rem;
   display: block;
   font-size: 0.9rem;
   color: var(--muted-foreground);
+}
+
+/* Selected state must never rest on colour alone: border, inset seam, filled
+   marker and aria-pressed all carry it, including in forced-colours mode. */
+@media (forced-colors: active) {
+  .bfa-journey-choice {
+    border: 1px solid ButtonBorder;
+  }
+  .bfa-journey-choice[aria-pressed="true"] {
+    border: 3px solid Highlight;
+    box-shadow: none;
+  }
+  .bfa-journey-choice-dot {
+    border: 1px solid ButtonBorder;
+  }
+  .bfa-journey-choice[aria-pressed="true"] .bfa-journey-choice-dot {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .bfa-day-motif { display: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Semantic dark-mode foundation for journey surfaces. Light appearance is
+   unchanged: the semantic tokens already resolve to the approved brand values.
+   --------------------------------------------------------------------------- */
+
+.journey-page {
+  background-color: var(--background);
+}
+
+@media (min-width: 900px) {
+  .container-page {
+    border-inline-color: var(--border);
+    background: linear-gradient(180deg, var(--card) 0%, var(--background) 60%);
+  }
+}
+
+@media (min-width: 768px) {
+  .journey-page {
+    background:
+      radial-gradient(
+        1100px 520px at 50% -10%,
+        color-mix(in oklab, var(--champagne) 30%, transparent) 0%,
+        transparent 70%
+      ),
+      var(--background);
+  }
+  .journey-page > .container-page {
+    border-color: var(--border);
+    background: linear-gradient(180deg, var(--card) 0%, var(--background) 65%);
+  }
+}
+
+.journey-dock {
+  border-top-color: var(--border);
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+}
+
+.btn-primary-journey {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.btn-primary-journey:hover {
+  background: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+}
+
+.btn-quiet {
+  color: var(--accent);
+}
+.dark .btn-quiet {
+  color: var(--foreground);
+}
+
+.eyebrow {
+  color: var(--accent);
+}
+.dark .eyebrow {
+  color: var(--primary);
+}
+
+.journey-chrome-btn {
+  color: var(--accent);
+}
+.dark .journey-chrome-btn {
+  color: var(--foreground);
+}
+.dark .journey-chrome-btn:hover {
+  background: color-mix(in oklab, var(--muted) 80%, transparent);
+}
+
+.day-marker {
+  color: var(--accent);
+}
+.dark .day-marker {
+  color: var(--foreground);
+  background: color-mix(in oklab, var(--muted) 70%, transparent);
+}
+.dark .day-row[data-state="current"] .day-marker {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+.dark .day-row[data-state="complete"] {
+  background: color-mix(in oklab, var(--card) 80%, var(--background));
+}
+
+.dark .brand-tagline,
+.dark .bfa-visual-splash-title,
+.dark .bfa-visual-splash-sub {
+  color: var(--foreground);
+}
+
+/* Dark mode: the two brand inks are used for text in several journey and
+   opening surfaces. Remapping them here keeps light mode byte-identical while
+   removing dark-on-dark headings. Every place they carry a background instead
+   is overridden explicitly above. */
+.dark {
+  --navy: #F6F2EA;
+  --deep-navy: #E8D3AF;
 }

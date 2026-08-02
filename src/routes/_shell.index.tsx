@@ -127,6 +127,8 @@ function JourneyHome() {
             );
           })}
         </ol>
+        </div>
+
         <p className="pt-1 text-sm text-muted-foreground">
           Nothing here is timed, scored or compared.
         </p>

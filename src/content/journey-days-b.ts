@@ -977,15 +977,15 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       },
     ],
     practise: {
-      heading: "Two ways to rehearse without committing to act.",
+      heading: "Two ways to rehearse without committing to act",
       intro:
-        "Both paths below work whether or not anything was selected earlier, and whether what you have in mind is clear, unclear, private, or absent.",
+        "You do not need a clear response or setting to read or use either path. Everything may stay general, private, unclear, or unanswered.",
       either:
-        "Either, both, or neither. Reading only is complete, stopping at any point is complete, and leaving the exercise unfinished is complete.",
+        "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
       reflection: {
         title: "Reflection Practice — one private rehearsal",
         summary:
-          "A short private structure for trying only the opening moment of one possible response, without using it anywhere.",
+          "A short private structure for trying only the opening moment of one possible response, without deciding to use it in real life.",
         steps: [
           "Orient outward through one neutral detail or point of orientation available to you. No posture, touch, breath change, particular sense, stillness, or calm is required, and reading only is available.",
           "Bring to mind one manageable ordinary moment, or keep this entirely general. No names or identifying details are needed. Please do not use the most dangerous, traumatic, overwhelming, or high-consequence situation you are living with.",

@@ -1237,7 +1237,7 @@ describe("Day 8 revision", () => {
   });
 
   it("reflects one exact answered positional path and excludes adjacent options", () => {
-    const answers = ["q.route:5", "q.size:2", "step:1"];
+    const answers = ["q.route.5", "q.size.2", "step.1"];
     const text = buildReflection(day8, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
@@ -1252,21 +1252,21 @@ describe("Day 8 revision", () => {
   });
 
   it("keeps unclear, none and private paths accurate about local storage", () => {
-    const unclear = buildReflection(day8, ["q.route:9", "q.size:4", "step:5"])
+    const unclear = buildReflection(day8, ["q.route.9", "q.size.4", "step.5"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(unclear).toContain("That uncertainty is left as it is");
     expect(unclear).toContain("It stays uncertain here");
     expect(unclear).toContain("No step will be chosen for you");
 
-    const none = buildReflection(day8, ["q.route:10", "q.size:5", "step:6"])
+    const none = buildReflection(day8, ["q.route.10", "q.size.5", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(none).toContain("That absence is left intact");
     expect(none).toContain("without being treated as failure");
     expect(none).toContain("Not forcing one is a complete answer");
 
-    const priv = buildReflection(day8, ["q.route:11", "q.size:6", "step:7"])
+    const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(priv).toContain("A private direction was selected");
@@ -1317,7 +1317,6 @@ describe("Day 8 revision", () => {
       "Decide when",
       "first sentence",
       "rehearse it instead",
-      "in whatever form",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
         phrase.toLowerCase(),

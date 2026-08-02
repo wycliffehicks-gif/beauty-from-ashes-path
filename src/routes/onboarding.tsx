@@ -198,14 +198,24 @@ function Opening() {
         <nav aria-label="Opening navigation" className="journey-dock">
           <button
             type="button"
-            disabled={!canAdvance}
-            aria-disabled={!canAdvance}
-            onClick={() => (isAgreement ? accept() : goToStep(step + 1))}
+            data-testid="opening-continue"
+            disabled={!canAdvance || collapsing}
+            aria-disabled={!canAdvance || collapsing}
+            onClick={() => {
+              // Inert on every opening screen reached during the collapse.
+              if (collapsing) return;
+              if (isAgreement) accept();
+              else goToStep(step + 1);
+            }}
             className="btn-primary-journey w-full"
           >
-            {isAgreement ? AGREEMENT_COPY.beginLabel : "Continue"}
+            {collapsing
+              ? "Opening your journey…"
+              : isAgreement
+                ? AGREEMENT_COPY.beginLabel
+                : "Continue"}
           </button>
-          {isAgreement && !canAdvance && (
+          {isAgreement && !canAdvance && !collapsing && (
             <p className="pt-2 text-center text-sm text-muted-foreground">
               Please confirm both statements above to continue.
             </p>

@@ -778,13 +778,14 @@ content revision, no visual redesign, no database, no publication.
   is gone. A day is marked complete only by real forward movement into Close,
   which is only reachable from the reflection once it is available.
 - **Automatic, non-bypassable, restorable reflection.** No reveal control and no
-  AI/curated/model label. The reflection is assembled on this device, announced
-  with `role="status" aria-live="polite"`, saved locally for exact-screen resume,
-  and Continue stays disabled until it is present.
+  AI/curated/model label. The reflection is assembled on this device, saved
+  locally for exact-screen resume, and Continue stays disabled until it is
+  present. (Superseded below: only the short "Preparing…" message is a live
+  region, and completion markers are now preserved.)
 - **Stable answer ids and conservative migration.** `answers.ts` stores
   `step:optionId`; legacy `step.index` tokens are still read through the current
   frozen option lists. Store version 2 keeps the saved place, selections and
-  reflections, and drops older completion markers rather than trusting them.
+  reflections. (Superseded below: legitimate completed days are preserved.)
 - **In-day and onboarding Back.** Screens are addressed by a stable `?s=` key, so
   device/browser Back moves exactly one screen and matches the in-app Back.
 - **Spiritual preference honoured.** The Christian path and the "either or both"

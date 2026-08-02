@@ -496,9 +496,9 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             "When this journey speaks of what you are carrying, it means any grief, worry, responsibility, hurt, shame or unanswered question that continues to take energy — even when other people cannot see it.",
         },
         {
-          term: "What does “unresolved hurt” mean?",
+          term: "What does “hurt that still affects me” mean?",
           explanation:
-            "Here it means a hurt that still feels unfinished or continues to matter. You do not need to decide why it remains present, tell the whole story or work through it here.",
+            "Pain from something past or ongoing that still affects you. This does not mean you have failed to move on, and it does not point to one hidden cause.",
         },
       ],
     },
@@ -519,10 +519,14 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           },
           { id: "exhaustion", label: "Exhaustion — I have little or no reserve left" },
           { id: "loneliness", label: "Loneliness — I feel alone, unseen or disconnected" },
-          { id: "hurt", label: "Unresolved hurt — something painful still feels unfinished" },
+          { id: "hurt", label: "Hurt that still affects me — something painful still matters" },
           { id: "regret", label: "Regret — something I wish had been different" },
           { id: "pressure", label: "Pressure — too much is being asked of me" },
-          { id: "unsure", label: "I know something is there, but I do not have a word yet" },
+          {
+            id: "unsure",
+            label: "I know something is there, but I do not have a word yet",
+            exclusive: true,
+          },
           {
             id: "private",
             label: "I would rather not name it here today",
@@ -544,7 +548,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             loneliness:
               "You chose loneliness as one word for today. It may involve feeling alone, unseen, disconnected or something else only you can name.",
             hurt:
-              "You chose unresolved hurt as one word for today. You do not need to tell the whole story or decide what to do with it here.",
+              "You chose hurt that still affects you as part of what you are carrying. You do not need to tell the whole story or decide what to do with it here.",
             regret:
               "You chose regret as one word for today. It names something you wish had been different without deciding what responsibility, repair or self-forgiveness may be needed.",
             pressure:
@@ -563,8 +567,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "shows",
         eyebrow: "Locate",
-        prompt: "Where, if anywhere, do you notice this alongside ordinary life?",
-        hint: "Choose any that fit. These experiences may or may not share a cause; you do not have to work that out here.",
+        prompt: "In what parts of life, if any, does this word feel relevant right now?",
+        hint: "Choose any that fit. Noticing it in more than one place does not mean those experiences share the same cause.",
         select: "many",
         options: [
           { id: "sleep", label: "Sleep — falling asleep, staying asleep, waking early" },
@@ -601,9 +605,10 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "A private sentence that names one part of what you are carrying. No full story is required.",
         steps: [
           "Choose one broad word from today, or use “not sure”.",
-          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “I regret…” or “I feel unseen when…”.",
+          "Keep this as broad as you need. You do not have to describe what happened or include names or identifying details. You may stop or leave the sentence unfinished.",
+          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “Something I regret is…”, “I feel unseen when…” or “What feels heaviest today is…”.",
           "Stop after one sentence. You do not have to add details or make the sentence explain everything.",
-          "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, look around and notice three neutral details in the room.",
+          "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, notice up to three neutral details around you, using any sense that works comfortably for you.",
           "Finish with: “This is real, and it is not all that is real about me.”",
           "Let the sentence rest there for now. You do not need to keep repeating it or make it disappear.",
         ],
@@ -621,7 +626,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "Finish by pausing, noticing the room around you or stopping. A completed resolution is not required.",
         ],
         notRequired:
-          "Anger toward God, silence, doubt or an unfinished sentence may all be present. You may read without praying or leave this path entirely.",
+          "You may remain with the question, anger, doubt or silence. You do not have to resolve the lament or move toward praise today. You may read without praying or leave this path entirely.",
         scripture: {
           reference: "Psalm 13:1–2 (World English Bible)",
           body: "How long, Yahweh? Will you forget me forever? How long will you hide your face from me? How long shall I take counsel in my soul, having sorrow in my heart every day?",
@@ -636,12 +641,16 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       hint: "Choose one, or continue without choosing. It should be small enough for today’s version of you.",
       select: "one",
       options: [
-        { id: "hold", label: "Keep the word and return to it when I have a little space" },
+        {
+          id: "hold",
+          label:
+            "Pause once today and quietly name the word to myself without trying to solve it",
+        },
         { id: "write", label: "Write one honest sentence somewhere outside this app" },
         {
           id: "tell",
-          label: "Tell one trusted person one sentence about it",
-          note: "Only if the person and relationship feel safe.",
+          label: "Share one honest sentence with someone I reasonably trust to respond with care",
+          note: "Only if doing so feels safe.",
         },
         { id: "kind", label: "Say to myself, “This is real, and it is not all of me”" },
         {
@@ -670,7 +679,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             loneliness:
               "You chose loneliness. It may involve feeling alone, unseen, disconnected or something else only you can name.",
             hurt:
-              "You chose unresolved hurt. You do not need to tell the whole story or decide what to do with it today.",
+              "You chose hurt that still affects you. You do not need to tell the whole story or decide what to do with it today.",
             regret:
               "You chose regret. That names something you wish had been different without deciding what responsibility, repair or self-forgiveness may be needed.",
             pressure:
@@ -684,7 +693,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         },
         {
           id: "underneath",
-          title: "Where it may be landing",
+          title: "What you noticed alongside it",
           from: "shows",
           lines: {
             sleep:
@@ -721,13 +730,13 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           title: "One honest next step",
           from: "step",
           lines: {
-            hold: "Letting the word rest and returning later respects your pacing.",
+            hold: "Quietly naming the word once, without trying to solve it, is a small practice of clarity.",
             write:
               "Writing one honest sentence may help you see it more clearly. Choose a place that feels suitably private.",
-            tell: "One sentence to a trusted person may open support, but you decide how much to say and safety matters.",
+            tell: "One sentence to someone you reasonably trust may open support, but you decide how much to say and safety matters.",
             kind: "Saying it is real but not all of you separates experience from identity without denying either.",
             prepare:
-              "Finding a word — or choosing not to — was the step. Nothing more is required today.",
+              "No outward step today. Finding a word, choosing not to or simply reaching this point is enough.",
           },
           unanswered:
             "No step was chosen, and none is required. Naming, staying near the question or deciding not today may be enough.",
@@ -737,7 +746,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         "Only you know the fuller context. Keep what fits and leave what does not. You are not what you carry.",
     },
     close: {
-      heading: "A word, not a verdict",
+      heading: "One honest beginning",
       body: [
         "You gave something a plain word, or you stayed near the question without forcing one. Either is enough for today.",
         "Day 4 turns toward what a response or pattern may be trying to protect. Continue when you have a little space, or stop here if you need.",

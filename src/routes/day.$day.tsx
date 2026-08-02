@@ -461,7 +461,11 @@ function ScreenBody({
 function ArriveScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
+      <div className="bfa-visual-threshold">
+        <VisualMotif variant="threshold" />
+      </div>
       <p className="eyebrow">Arrive</p>
+
       <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
         {content.title}
       </h1>

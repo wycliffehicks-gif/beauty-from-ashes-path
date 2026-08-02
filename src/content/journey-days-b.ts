@@ -997,12 +997,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Reorient outward however suits you. The response can be revised, kept private, discarded, or never used.",
         ],
         notRequired:
-          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. You may stop at any point.",
+          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest rehearsal before God",
         summary:
-          "A Christian path through the same movement, at the same depth, offered only if you choose it.",
+          "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
         steps: [
           "Orient outward however works for you. Reading only is available here too.",
           "Read Psalm 62:8 below, only if you would like to.",

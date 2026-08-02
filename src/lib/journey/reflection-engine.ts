@@ -48,10 +48,9 @@ export function selectedOptionIds(
 ): string[] {
   const question = questionById(day, questionId);
   if (!question) return [];
-  return optionIndexesFor(answerIds, answerKeyFor(day, questionId), question.options.length)
-    .map((idx) => question.options[idx]?.id)
-    .filter((id): id is string => Boolean(id));
+  return optionIdsFor(answerIds, answerKeyFor(day, questionId), question.options);
 }
+
 
 export function buildReflection(
   day: JourneyDayContent,

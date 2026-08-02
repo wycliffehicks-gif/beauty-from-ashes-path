@@ -248,7 +248,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           title: "What may be keeping it in place",
           from: "protects",
           lines: {
-            peace: "Reducing conflict or disruption may matter, especially when conflict has consequences. This does not decide what you should do.",
+            peace: "Reducing conflict or disruption may matter, especially when conflict has consequences. This does not decide what to do.",
             functioning:
               "You named day-to-day functioning as something this supports. Any alternative may need enough stability and practical support for real life.",
             safe: "You named safety, privacy or stability. If a risk still matters, it deserves consideration rather than override.",
@@ -299,7 +299,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
       ],
       closing:
-        "No conclusion has been reached about what caused the cost or what you should change. What you noticed may point toward choice, support, grief, a safer condition or simply more time.",
+        "No conclusion has been reached about what caused the cost or what to change. What you noticed may point toward choice, support, grief, a safer condition or simply more time.",
     },
     close: {
       heading: "Seen clearly, held gently",

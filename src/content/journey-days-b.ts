@@ -308,7 +308,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "You did not have to blame yourself, dismiss what is still real or decide what to change. When you continue, Day 7 turns toward how you hold yourself while seeing what is true.",
       ],
       carryForward:
-        "I can notice the cost without condemning myself or ignoring what is still real.",
+        "I can stay honest about what is clear and unclear without condemning myself or ignoring what is still real.",
     },
   },
 

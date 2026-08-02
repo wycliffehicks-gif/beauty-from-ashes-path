@@ -77,4 +77,5 @@ export const ABOUT_RESURGENCE =
   "Resurgence Therapeutics is a psychotherapy practice grounded in the belief that people are worth returning to. Awaken, Rediscover, Hope is not a slogan here; it is the order in which most healing seems to happen.";
 
 export const CLEAR_CONFIRM_QUESTION =
-  "Clear your saved journey on this device? Your progress and completed days will be removed. This cannot be undone.";
+  "Clear everything this app has saved on this device? Your saved place, the choices you selected, your reflections, your finished days and your preferences will all be removed. This cannot be undone.";
+

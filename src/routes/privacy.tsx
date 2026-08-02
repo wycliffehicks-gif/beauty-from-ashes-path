@@ -134,9 +134,9 @@ function PrivacyPage() {
         loads:
       </p>
       <ul className="list-disc space-y-1 pl-5">
-        <li>The Resurgence Therapeutics logo from Wix-hosted media.</li>
         <li>Web fonts from Google Fonts.</li>
       </ul>
+
       <p>
         Those providers apply their own privacy practices to that technical
         information.

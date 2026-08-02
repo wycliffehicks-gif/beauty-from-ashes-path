@@ -69,6 +69,46 @@ unclear/outside-control/unavailable path, both expanded practice panels, the
 personalised reflection and the close: no page or console errors and no
 horizontal overflow.
 
+**Final acceptance cleanup (same day).** Day 10 only, in the same three files.
+
+- Legacy compatibility: `different` and `unfinished` are `select: "many"` again, so
+  restored positional many-answer arrays hydrate honestly; `step` stays
+  single-select. No option ID, position or appended exclusive branch moved. Hints
+  now say several answers are permitted while one or none is enough.
+- Q1 `nothing` reframed to “Nothing feels settled or complete, even if an idea
+  resonates”, with echo and reflection copy explaining that an idea may resonate
+  without becoming a finished outcome, commitment or clear carry-forward — it no
+  longer contradicts substantive branches, and its `exclusive` flag is dropped.
+- Direct-entry users included in the arrival copy, with warmer high-salience
+  lines (“Reaching this page does not have to prove healing…”, “no clear meaning
+  is required”, “none of them is undone by an app or a closing screen”, “It does
+  not have to produce a clear feeling or result”).
+- The one universal support directive is gone: worsening distress copy no longer
+  calls care “the right next step”, and the continuation note ends “This remains a
+  complete stopping place whether or not you return.”
+- Echo and personalised-reflection voice humanised (“You kept near…”, “One idea you
+  chose to keep near is…”, followed by a single “This choice does not tell us…”
+  safeguard). Every non-inference safeguard is preserved. All three private
+  branches are distinct and storage-accurate; the three unanswered lines are the
+  approved new wording. Removed “selected structured responses”, “screens having
+  been navigated”, “is established”, “is assigned”, “is claimed” and the universal
+  “Today’s selections” boilerplate.
+- Preserved exactly: identity, title, motif, shape, descriptor, theme, nine-screen
+  sequence, the integration/new-life teaching and constraints, both seven-step
+  practices, Numbers 6:24–26 (WEB) reference/body/note/optionality/prayer, close
+  heading “A complete stopping place”, close body paragraphs 2 and 3, and the
+  carry-forward sentence. Days 6–9 byte-for-byte.
+- Regression: Day 10 block updated to lock many/many/one contracts, unchanged
+  positions, direct-entry arrival, forbidden audit phrases and “the right next
+  step/place”, the new unanswered lines, legacy Q1 `[0,7]`, `[7,0]`,
+  `[0..7]` and legacy Q2 `[0..7]` coherence, position 7 alone, and a
+  restoration-level toggle assertion using the existing shared helper. 403 tests
+  pass (24 files), typecheck clean, production build succeeds. Re-walked at 360px
+  and 390px: fully skipped, answered, legacy Q1/Q2 restored, private/outside/
+  unavailable, and both expanded practices — no app errors, no horizontal
+  overflow. Still private and unpublished.
+
+
 ## 2026-08-02 — Bounded Day 9 clinical-content, psychospiritual, safety, accessibility, branch-accuracy and source-alignment revision
 
 Day 9 (“Practise a Different Response”) only. Days 1–8 and Day 10, routes,

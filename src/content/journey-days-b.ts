@@ -864,34 +864,46 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
   {
     day: 9,
     title: "Practise a Different Response",
-    theme: "Rehearsing something new, privately and without risk.",
+    theme: "Trying one possible response privately, with safety and choice intact.",
     motif: "practise",
     shape: "standard",
-    descriptor: "Rehearsal and practice · about 12 minutes",
+    descriptor: "A small private rehearsal · about 12 minutes",
     arrive: {
-      lead: "New responses are practised long before they are performed.",
+      lead: "A different response can be tried privately before you decide whether it belongs in real life.",
       body: [
-        "Today you choose one practice and are guided through it step by step.",
-        "Nothing here requires a conversation, a confrontation or a disclosure. Everything can be done privately.",
+        "A different response might be an outward pause, delaying an answer, a brief first-person sentence, preparing a limit or a request, orienting through whichever sense is available to you, speaking to yourself less harshly, naming grief privately, or preparing something without acting on it.",
+        "Trying one of these privately does not mean the familiar response was defective, and it does not mean anything has to be used in real life. Nothing today asks for a conversation, a message, a disclosure, or any outward action.",
       ],
       settle: [
-        "Sit somewhere you will not be interrupted for a few minutes, if that is possible.",
-        "Let your hands be still and your feet be flat.",
-        "Notice, without changing it, how you are breathing.",
+        "Settle in whatever position works for you, including standing, lying down, moving, or staying exactly as you are.",
+        "If it helps, notice one neutral outward detail or point of orientation through any sense available to you — something seen, heard, touched, or simply known to be nearby.",
+        "Attention to body or breath can be left alone entirely. No stillness, calm, sensation, movement, or settled feeling is required.",
+        "Reading only is a complete way to do today, and stopping at any point remains available.",
       ],
     },
     understand: {
-      heading: "Why rehearsal works",
+      label: "Listen",
+      heading: "Rehearsal is a possibility, not a promise.",
       body: [
-        "Under pressure, people do what they have practised, not what they intended. That is why a new response usually fails in the moment: it has never been tried anywhere safe.",
-        "Rehearsal changes that. Saying a sentence in an empty room, writing something you will never send, or planning a limit in advance all make the real version more possible later.",
-        "None of this requires the other person's participation, or even their knowledge.",
+        "A response is what someone does, says, delays, prepares, or chooses not to do when a familiar moment appears. Rehearsal means privately trying only the opening of one possible response — in silent words, in writing you will not send, or as a simple outline — without involving another person and without committing to use it.",
+        "Rehearsing may clarify whether an option fits, how it might be worded, what conditions would matter, or what support would be needed. It cannot control what happens under pressure, and it does not prove readiness.",
+        "Illness, disability, fatigue, dependence, caregiving, discrimination, coercion, differences in power, limited money or time, and real consequences may restrict what is safe or available. Preparation alone, or no outward action at all, can be the whole of this.",
       ],
       info: [
         {
           term: "What is a boundary, in plain terms?",
           explanation:
-            "A boundary is a statement about what you will do, not a demand about what someone else must do. “I won't be able to talk about this tonight” is a boundary. It does not require permission, an argument, or an explanation.",
+            "A boundary is a limit, decision, or action within your own control — not control over another person. It can include delaying an answer, declining, ending or leaving a situation only if that is safe and available to you, asking someone else to carry a message, requesting an accommodation, or deciding what you will take part in. Communicating or holding a boundary may require support, and it may not be safe in every context.",
+        },
+        {
+          term: "What if no situation feels manageable?",
+          explanation:
+            "Reading, keeping everything general, or leaving it open is available. Please do not use the most dangerous, traumatic, overwhelming, or high-consequence moment in your life for this. A small, ordinary moment is enough, and none at all is also enough.",
+        },
+        {
+          term: "What if safety or consequences are uncertain?",
+          explanation:
+            "This app cannot assess your particular situation. No outward practice is required here. Preparation, an accommodation, or help from a professional or trusted support may be wiser, and doing nothing outward may be wisest. If there is danger now, that belongs with real-world help — Support & Safety lists where to look.",
         },
       ],
     },
@@ -899,171 +911,234 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       {
         id: "practice",
         eyebrow: "Choose",
-        prompt: "Which practice would be most useful today?",
-        hint: "One choice. You will be guided through it in the practice screen.",
+        prompt: "What, if anything, would you like to rehearse in a private, contained way?",
+        hint: "One choice if one fits. The shared practice can also simply be read, without choosing anything.",
         select: "one",
         options: [
-          { id: "grounding", label: "Grounding — settling when things escalate" },
-          { id: "unsent", label: "The unsent sentence — saying it where it is safe" },
-          { id: "boundary", label: "Rehearsing a limit I need to set" },
-          { id: "support", label: "Rehearsing asking someone for support" },
-          { id: "lament", label: "Lament — saying the hard thing plainly" },
-          { id: "prepare", label: "Prepare, don't perform — planning without acting" },
-          { id: "loosen", label: "Five percent — loosening one held pattern slightly" },
+          { id: "grounding", label: "A pause, and orienting outward before responding" },
+          { id: "unsent", label: "Putting private words to what I feel or need" },
+          { id: "boundary", label: "Rehearsing a limit, or a delay before answering" },
+          { id: "support", label: "Rehearsing asking for one kind of support" },
+          { id: "lament", label: "Naming grief, anger, disappointment, or longing privately" },
+          { id: "prepare", label: "Preparing something without deciding to act" },
+          { id: "loosen", label: "Trying a very small variation in a familiar response" },
+          { id: "unclear", label: "I am not sure what I would practise" },
+          { id: "none", label: "No different response feels available today" },
+          { id: "private", label: "I have one in mind and prefer to keep it private" },
         ],
         echo: {
-          heading: "What this practice is for",
+          heading: "What was selected — and what is not established",
           byOption: {
-            grounding: "Grounding gives your body a task when it is escalating, which is more reliable than telling yourself to calm down.",
-            unsent: "The unsent sentence lets something be said in full without any of the consequences of sending it.",
-            boundary: "Rehearsing a limit makes the real one shorter, calmer and far more likely to be said at all.",
-            support: "Rehearsing a request removes most of the improvisation from a moment that is already difficult.",
-            lament: "Lament gives grief and anger a form, so they do not have to leak out sideways.",
-            prepare: "Preparing without acting is a complete practice, and it keeps the timing yours.",
-            loosen: "A five percent change, in one safe moment, is small enough to survive and real enough to count.",
+            grounding:
+              "A pause and orienting outward was selected. That says nothing about whether escalation is present, what would happen if you paused, or whether pausing will be available when it matters.",
+            unsent:
+              "Putting private words to what you feel or need was selected. Nothing here establishes what those words are, that they have needed saying, or that they will ever be shared.",
+            boundary:
+              "Rehearsing a limit or a delay was selected. This does not establish whether a limit is overdue, safe, available, or ready for use in real life.",
+            support:
+              "Rehearsing asking for one kind of support was selected. No person, disclosure, or request is identified here, and none is required.",
+            lament:
+              "Naming grief, anger, disappointment, or longing privately was selected. No history, cause, or required emotional release is assumed.",
+            prepare:
+              "Preparing without deciding to act was selected. Preparation is complete in itself, and no decision follows from it here.",
+            loosen:
+              "A very small variation in a familiar response was selected. No old pattern, reason, or outcome is inferred from that.",
+            unclear:
+              "Not being sure what you would practise was selected, and that uncertainty is left as it is. Nothing will be chosen on your behalf.",
+            none:
+              "That no different response feels available today was selected, and that is left intact. It is treated as accurate information, not as failure.",
+            private:
+              "A private choice was selected. The structured choice is saved on this device; what it refers to stays with you and is not collected here.",
           },
           unanswered:
-            "You continued without choosing, and the practice screen still offers a complete option. Nothing is missed by not deciding.",
-          closing: "Whatever you chose, nothing in it requires anyone else's involvement today.",
+            "This page was continued without a selection, and nothing will be chosen on your behalf. The shared practice ahead does not depend on a choice, and it can be read only.",
+          closing:
+            "Anything here can stay private, be revised later, be set aside, or never be used at all.",
         },
       },
       {
         id: "where",
         eyebrow: "Locate",
-        prompt: "Where would a different response matter most at the moment?",
-        hint: "Choose any that fit. This shapes nothing but your own thinking.",
+        prompt: "Which setting or settings, if any, came to mind?",
+        hint: "Choose any that fit. The practice can also stay general, or stay private.",
         select: "many",
         options: [
           { id: "home", label: "At home" },
           { id: "work", label: "At work" },
           { id: "family", label: "With family" },
           { id: "friend", label: "With a friend or partner" },
-          { id: "self", label: "In how I treat myself" },
+          { id: "self", label: "In how I speak to myself" },
           { id: "faith", label: "In my faith or spiritual life" },
-          { id: "private", label: "I would rather not specify" },
+          { id: "private", label: "I would rather not specify", exclusive: true },
+          { id: "other", label: "Somewhere else, not listed here" },
+          { id: "unclear", label: "I am not sure", exclusive: true },
+          { id: "none", label: "No particular setting", exclusive: true },
         ],
       },
     ],
     practise: {
-      heading: "Two ways to practise today",
+      heading: "Two ways to rehearse without committing to act.",
       intro:
-        "The first is a general rehearsal structure that fits whichever practice you chose. The second is a spiritual pathway of equal substance.",
-      either: "Either or both, and neither requires anyone else.",
+        "Both paths below work whether or not anything was selected earlier, and whether what you have in mind is clear, unclear, private, or absent.",
+      either:
+        "Either, both, or neither. Reading only is complete, stopping at any point is complete, and leaving the exercise unfinished is complete.",
       reflection: {
-        title: "Reflection Practice — guided rehearsal",
+        title: "Reflection Practice — one private rehearsal",
         summary:
-          "A step-by-step structure for practising a new response somewhere safe.",
+          "A short private structure for trying only the opening moment of one possible response, without using it anywhere.",
         steps: [
-          "Name the situation in one line, silently: who is there, and what usually happens.",
-          "Decide the one thing you would do differently. One thing only — a sentence, a pause, a limit, or leaving earlier.",
-          "If it is a sentence, make it short and about you: “I need to stop here”, “I can't take that on”, “That hurt me”.",
-          "Say it once, silently. Then say it once more, slower, and notice what your body does. Tightening is expected.",
-          "Now rehearse the part people forget: what you will do if it does not go well. Usually the answer is simply “I will end the conversation and leave”.",
-          "Finish by naming what is explicitly not required: you do not have to send it, say it, win it, or do it at all.",
-          "If grounding is what you chose, use this instead: name five things you can see, four you can hear, three you can touch, two you can smell, one slow breath.",
+          "Orient outward through one neutral detail or point of orientation available to you. No posture, touch, breath change, particular sense, stillness, or calm is required, and reading only is available.",
+          "Bring to mind one manageable ordinary moment, or keep this entirely general. No names or identifying details are needed. Please do not use the most dangerous, traumatic, overwhelming, or high-consequence situation you are living with.",
+          "If it is clear, name the familiar response in a few words, without judging it and without explaining where it came from. If it is unclear, leave it unnamed.",
+          "Name one slightly different possibility: a pause and orienting outward; asking for time; one brief first-person sentence; preparing a limit; preparing a request; a less hostile way of speaking to yourself; telling a private truth or naming grief; preparation only; or nothing outward at all.",
+          "Try only its opening moment, once — in silent words, in writing you will not send, or as a simple outline. There is no need to replay a whole scene. If imagining or turning inward is unhelpful, read this step only.",
+          "Notice whether it seems usable, incomplete, unclear, unavailable, or unwise. No bodily response is required, and discomfort is not proof of growth.",
+          "Ask what condition would matter before any real-world use: time, privacy, support, an accommodation, someone else carrying a message, the ability to stop, or safer circumstances. “I do not know” and “not available” are both valid answers.",
+          "Reorient outward however suits you. The response can be revised, kept private, discarded, or never used.",
         ],
         notRequired:
-          "No confrontation, no disclosure, no message sent, no decision made. Rehearsal is the whole of it.",
+          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. You may stop at any point.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — pouring it out",
+        title: "Scripture & Spiritual Reflection — honest rehearsal before God",
         summary:
-          "A Christian pathway for saying the unedited thing, offered only if you choose it.",
+          "A Christian path through the same movement, at the same depth, offered only if you choose it.",
         steps: [
-          "Read the line. Notice the instruction is to pour out, not to tidy up first.",
-          "Choose a form: silent words, spoken words, or writing something you will not keep.",
-          "Say the unedited version — including anger, doubt or the sentence you would not say aloud to anyone.",
-          "Stop when you are finished rather than when it sounds finished. There is no required ending.",
-          "Sit for a few breaths afterwards, and let the silence be part of it.",
+          "Orient outward however works for you. Reading only is available here too.",
+          "Read Psalm 62:8 below, only if you would like to.",
+          "Bring one manageable concern, or keep it general. Please leave aside anything that is dangerous or high-risk right now.",
+          "Pour out only as much as fits. Anger, grief, doubt, numbness, difficulty trusting, silence, or having no words at all may all be present.",
+          "If it is clear, name the familiar response without a moral verdict. If it is unclear, let it stay unclear.",
+          "Name one possible alternative that would be truthful and safe for you: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
+          "Rehearse only its opening moment, once — in words, in writing, or in silence before God. Hold it as a possibility, not a vow, not a divine command or direction, not proof of faith, and not a promise to act.",
+          "Name any practical support, safety, accommodation, or wisdom that would be needed. Prayer does not replace real-world help or planning.",
+          "Reorient outward. No relief, certainty, trust, felt refuge or closeness, forgiveness, reconciliation, contact, disclosure, or action is required.",
         ],
         notRequired:
-          "Nothing needs to be resolved, forgiven or believed by the end. You may read the line and go no further.",
+          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. Stopping at any point is available, and you may leave this path entirely.",
         scripture: {
           reference: "Psalm 62:8 (World English Bible)",
-          body: "Trust in him at all times, you people. Pour out your heart before him.",
-          note: "The instruction assumes there is something difficult to pour out, and does not ask for it to be edited first.",
+          body: "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",
+          note: "This is the psalmist's invitation to speak honestly. It does not explain suffering, does not declare a situation safe, does not promise that refuge will be felt, does not require trust on command, and does not turn a rehearsed response into divine direction.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What will you take from the rehearsal?",
-      hint: "One choice, and rehearsing again counts.",
+      prompt: "How would you like to complete today's rehearsal—if one choice fits?",
+      hint: "One choice if one fits. Reading, or leaving it open, remains available.",
       select: "one",
       options: [
-        { id: "again", label: "Rehearse it once more later this week" },
-        { id: "sentence", label: "Keep the one sentence ready, in case it is needed" },
-        { id: "use", label: "Use it once, in a low-risk moment" },
-        { id: "ground", label: "Use the grounding sequence next time things escalate" },
-        { id: "support", label: "Take it to a professional or trusted person" },
-        { id: "prepare", label: "Nothing outward — the rehearsal was the step" },
+        { id: "again", label: "Read or rehearse the response once more, privately" },
+        { id: "sentence", label: "Shorten or revise one sentence until it sounds like me" },
+        { id: "use", label: "Name what would have to be true before any real-world use" },
+        { id: "ground", label: "Keep one accessible outward-orienting cue" },
+        {
+          id: "support",
+          label:
+            "Identify support I might want before any real-world action — no contact or disclosure today",
+        },
+        { id: "prepare", label: "Leave it here; reading or rehearsing was enough" },
+        { id: "unclear", label: "I am not sure" },
+        { id: "none", label: "No step feels right today" },
+        { id: "private", label: "I have one in mind and prefer to keep it private" },
       ],
     },
     reflection: {
-      intro: "Drawn only from today's choices.",
+      intro: "This reflection uses only what was selected; it will not fill in what was left open.",
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "The response — or what remained open",
           from: "practice",
-          opening: "You chose a practice:",
           lines: {
-            grounding: "You chose grounding, which suggests escalation is part of what you are managing.",
-            unsent: "You chose the unsent sentence, which suggests something has needed saying for a while.",
-            boundary: "You chose to rehearse a limit, which usually means one is overdue rather than sudden.",
-            support: "You chose to rehearse asking for support, which is often harder than continuing alone.",
-            lament: "You chose lament, which gives weight to something that has had to stay quiet.",
-            prepare: "You chose to prepare rather than act, which keeps the timing in your hands.",
-            loosen: "You chose a five percent loosening, which is a realistic size for a real change.",
+            grounding:
+              "A pause and orienting outward was selected. Nothing here says whether it would be available under pressure, or what it would change.",
+            unsent:
+              "Putting private words to what you feel or need was selected. The words themselves are not collected, and nothing about them is assumed.",
+            boundary:
+              "Rehearsing a limit or a delay was selected. Whether such a limit is safe, available, or ready for real life is not established here.",
+            support:
+              "Rehearsing asking for one kind of support was selected. No person, request, or disclosure is identified.",
+            lament:
+              "Naming grief, anger, disappointment, or longing privately was selected. No history, cause, or required release is inferred.",
+            prepare:
+              "Preparing without deciding to act was selected. Preparation stands on its own here, with no action implied.",
+            loosen:
+              "A very small variation in a familiar response was selected. No pattern, reason, or outcome is inferred from that.",
+            unclear:
+              "Not being sure what to practise was selected. That uncertainty is left as it is, and no response will be guessed for you.",
+            none:
+              "That no different response feels available today was selected. That absence is left intact, without being treated as failure.",
+            private:
+              "A private choice was selected. That structured choice is saved on this device, and its content stays with you.",
           },
           unanswered:
-            "No practice was chosen, and the general rehearsal structure stands on its own. Nothing was missed.",
+            "No response was selected here, and none will be assigned. Nothing is assumed about what you might need, whether any rehearsal happened, or what may be available to you later.",
         },
         {
           id: "underneath",
-          title: "Where it may matter",
+          title: "The setting — or what remained open",
           from: "where",
-          opening: "You located where a different response would matter:",
           lines: {
-            home: "At home, where responses are most habitual and hardest to change mid-flow.",
-            work: "At work, where the cost of a limit can feel higher than it usually is.",
-            family: "With family, where old roles reassert themselves quickly.",
-            friend: "With a friend or partner, where closeness raises the stakes of honesty.",
-            self: "In how you treat yourself, which is the setting most people practise last.",
-            faith: "In your faith or spiritual life, where honesty is sometimes assumed to be unwelcome.",
-            private: "You kept the setting to yourself, which changes nothing about the practice.",
+            home: "Home was selected as a setting that came to mind. Nothing about who is there, or what happens there, is assumed.",
+            work: "Work was selected as a setting that came to mind. No estimate is made here about power, consequences, accommodation needs, or safety.",
+            family:
+              "Family was selected as a setting that came to mind. No roles, closeness, safety, conflict, or history are assumed.",
+            friend:
+              "A friend or partner was selected as a setting that came to mind. No closeness, safety, conflict, or history is assumed.",
+            self: "How you speak to yourself was selected as a setting that came to mind. No form, cause, or diagnosis is inferred.",
+            faith:
+              "Faith or spiritual life was selected as a setting that came to mind. Nothing is assumed about belief, practice, community, spiritual struggle, or whether honesty is welcomed there.",
+            private:
+              "Keeping the setting unspecified was selected. That structured choice is saved on this device, and what it refers to stays with you.",
+            other:
+              "A setting outside the listed options was selected. Its content is not collected here, and nothing about it is assumed.",
+            unclear:
+              "Not being sure of a setting was selected. It stays uncertain here, and no setting will be assigned.",
+            none: "No particular setting was selected, and none will be added. A rehearsal can stay general.",
           },
           unanswered:
-            "You did not specify a setting, and none is needed. A rehearsed response tends to travel.",
+            "No setting was selected here, and none will be assigned. No person, relationship, risk, or context is inferred from that.",
         },
         {
           id: "next",
-          title: "One honest next step",
+          title: "How today was completed — or left open",
           from: "step",
           lines: {
-            again: "Rehearsing again is how something moves from possible to available.",
-            sentence: "Keeping one sentence ready means you are not improvising under pressure.",
-            use: "Using it once in a low-risk moment is the safest way to test it.",
-            ground: "Having a grounding sequence ready gives your body somewhere to go.",
-            support: "Taking it to a professional or trusted person is a sound and unremarkable next move.",
-            prepare: "The rehearsal was the step, and rehearsal is where new responses come from.",
+            again:
+              "Reading or rehearsing the response once more, privately, was selected. It stays private, and nothing outward follows from it.",
+            sentence:
+              "Shortening or revising one sentence was selected. Whether it is ever spoken anywhere is left entirely open.",
+            use: "Naming what would have to be true before any real-world use was selected. That names conditions only; it does not commit you to using anything.",
+            ground:
+              "Keeping one accessible outward-orienting cue was selected. Nothing is claimed about whether it will be reached for.",
+            support:
+              "Identifying support you might want before any real-world action was selected. No contact and no disclosure are part of that.",
+            prepare:
+              "Leaving it here was selected, with reading or rehearsing being enough. That is complete as it stands.",
+            unclear:
+              "Not being sure of a step was selected. That is left uncertain, and no step will be chosen for you.",
+            none: "That no step feels right today was selected. That is left as it is, and none will be pressed or inferred.",
+            private:
+              "A private step was selected. That structured choice is saved on this device, and its content stays with you.",
           },
           unanswered:
-            "Nothing was chosen. Practising at all already changes what is available to you later.",
+            "No step was selected here, and none will be added. Nothing is claimed about whether any rehearsal happened, what became available, or what happens after today.",
         },
       ],
       closing:
-        "Nothing here asks you to confront anyone, disclose anything, or act before you are ready.",
+        "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",
     },
     close: {
-      heading: "Practised, not performed",
+      heading: "Possibility, not a promise.",
       body: [
-        "You rehearsed something new without having to risk anything. That is exactly the right order.",
-        "Tomorrow is the last day of this first journey: integration, what remains unfinished, and one honest step forward.",
+        "Whether today was rehearsed, read, kept private, or left open, no real-world action was required, and none is required now.",
+        "A private rehearsal may make one option feel more familiar, may show that it needs revising or needs support, or may leave it unavailable for now. It does not guarantee access under pressure, and it does not make a situation safe.",
+        "Day 10 gathers what may be worth keeping, what remains unfinished, and what support or next step, if any, fits your actual life.",
       ],
-      carryForward:
-        "Carry forward one sentence: I can practise a response long before I need it.",
+      carryForward: "I can rehearse a possibility without promising to use it.",
     },
   },
 

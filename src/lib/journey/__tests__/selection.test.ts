@@ -665,3 +665,230 @@ describe("Day 6 revision", () => {
     expect(body).not.toContain("You named");
   });
 });
+
+describe("Day 7 revision", () => {
+  const day7 = getFirstJourneyDay(7)!;
+  const day8Snapshot = JSON.stringify(getFirstJourneyDay(8)!);
+  const q = (id: string) => day7.questions.find((x) => x.id === id)!;
+  const tone = q("tone");
+  const need = q("need");
+  const ids = (options: { id: string }[]) => options.map((o) => o.id);
+  const text = JSON.stringify(day7).toLowerCase();
+
+  it("keeps the canonical identity, shape and screen sequence", () => {
+    expect(day7.title).toBe("A More Compassionate Way to Hold It");
+    expect(day7.motif).toBe("compassion");
+    expect(day7.shape).toBe("standard");
+    expect(day7.descriptor).toBe("Holding truth without self-attack · about 12 minutes");
+    expect(day7.theme).toBe(
+      "Truth, context, dignity and responsibility held together without self-attack.",
+    );
+    expect(screensFor(day7).map(screenKey)).toEqual([
+      "arrive",
+      "understand",
+      "q.tone",
+      "e.tone",
+      "q.need",
+      "practise",
+      "step",
+      "reflection",
+      "close",
+    ]);
+    expect(day7.questions.map((x) => x.id)).toEqual(["tone", "need"]);
+    expect(day7.step.id).toBe("step");
+  });
+
+  it("makes both questions single-select", () => {
+    expect(tone.select).toBe("one");
+    expect(need.select).toBe("one");
+  });
+
+  it("locks the positional option ids", () => {
+    expect(ids(tone.options)).toEqual([
+      "harsh",
+      "dismissive",
+      "impatient",
+      "anxious",
+      "silent",
+      "mixed",
+      "kind",
+      "none",
+      "unclear",
+      "private",
+    ]);
+    expect(ids(need.options)).toEqual([
+      "rest",
+      "acknowledged",
+      "notalone",
+      "permission",
+      "patience",
+      "safety",
+      "forgiveness",
+      "unsure",
+      "none",
+      "private",
+    ]);
+    expect(ids(day7.step.options)).toEqual([
+      "sentence",
+      "catch",
+      "body",
+      "receive",
+      "prepare",
+    ]);
+  });
+
+  it("labels the educational screen 'Listen' and explains the terms for a newcomer", () => {
+    expect(day7.understand.label).toBe("Listen");
+    const understand = day7.understand.body.join(" ");
+    expect(understand).toContain("An inner response is whatever happens inside");
+    expect(understand).toContain("no verbal inner voice");
+    const terms = (day7.understand.info ?? []).map((n) => n.term);
+    expect(terms).toContain("What does “hold it” mean?");
+    expect(terms).toContain("What if compassion feels false or undeserved?");
+    expect(terms).toContain("What if I have hurt someone?");
+  });
+
+  it("uses an inclusive arrival with no prescribed touch, posture, breathing or relaxation", () => {
+    expect(day7.arrive.lead).toBe(
+      "Facing what is true does not require turning yourself into the enemy.",
+    );
+    const settle = (day7.arrive.settle ?? []).join(" ");
+    expect(settle).toContain("any position that works for you");
+    expect(settle).toContain(
+      "You do not need to touch your body, change your breathing, relax or feel settled.",
+    );
+    for (const phrase of ["put one hand", "let two breaths", "breathing slow", "sit up", "feet flat"]) {
+      expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase);
+    }
+  });
+
+  it("gives every tone option an echo that infers no history, cause or purpose", () => {
+    const echo = tone.echo!;
+    expect(echo.heading).toBe("What you noticed about the inner response");
+    for (const id of ids(tone.options)) {
+      expect(echo.byOption[id], `missing echo: ${id}`).toBeTruthy();
+    }
+    expect(echo.byOption["silent"]).toContain("not proof of trauma");
+    expect(echo.byOption["none"]).toContain("none needs to be invented");
+    expect(echo.byOption["unclear"]).toContain("no hidden meaning");
+    expect(echo.byOption["private"]).toContain("no tone, cause, purpose or history will be inferred");
+    expect(echo.unanswered).toBe(
+      "You continued without naming an inner response. No tone, cause, purpose or history will be assigned.",
+    );
+    expect(echo.closing).toContain("no correction is required today");
+    expect(JSON.stringify(day7)).not.toContain("nothing was recorded");
+    expect(text).not.toContain("nothing has been recorded");
+  });
+
+  it("keeps both practices substantial and equal, with consent and the full Isaiah verse", () => {
+    expect(day7.practise.reflection.steps.length).toBeGreaterThanOrEqual(6);
+    expect(day7.practise.spiritual.steps.length).toBeGreaterThanOrEqual(6);
+    const either = day7.practise.either.toLowerCase();
+    expect(either).toContain("either, both or neither");
+    expect(either).toContain("read");
+    expect(either).toContain("stop");
+    expect(day7.practise.spiritual.scripture?.reference).toBe(
+      "Isaiah 42:3 (World English Bible)",
+    );
+    expect(day7.practise.spiritual.scripture?.body).toBe(
+      "He won't break a bruised reed. He won't quench a dimly burning wick. He will faithfully bring justice.",
+    );
+    expect(day7.practise.spiritual.scripture?.note).toContain("not a description of you as damaged");
+    expect(day7.practise.reflection.steps.join(" ")).toContain("wordless act of non-hostility");
+    expect(day7.practise.reflection.steps.join(" ")).toContain(
+      "No touch, posture, breathing, relaxation or bodily sensation is required",
+    );
+  });
+
+  it("leaves the answer-driven reflection sections without openings", () => {
+    for (const id of ["hearing", "care", "next"]) {
+      const section = day7.reflection.sections.find((s) => s.id === id)!;
+      expect(section.opening).toBeUndefined();
+      expect(section.from).toBeTruthy();
+      expect(section.unanswered.length).toBeGreaterThan(60);
+    }
+    for (const section of day7.reflection.sections) {
+      const question = section.from === "step" ? day7.step : q(section.from!);
+      for (const option of question.options) {
+        expect(section.lines?.[option.id], `missing line: ${section.id}/${option.id}`).toBeTruthy();
+      }
+    }
+  });
+
+  it("invents nothing on a fully skipped path", () => {
+    const built = buildReflection(day7, undefined);
+    const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
+    expect(body).not.toContain("You noticed");
+    expect(body).not.toContain("You considered");
+    expect(body).toContain("No inner response was selected");
+    expect(body).toContain("No more compassionate way of holding this was selected");
+    expect(body).toContain("No step was selected");
+    expect(built.closing).toContain("do not establish why this inner response exists");
+  });
+
+  it("states private, unclear and none paths accurately", () => {
+    const privateIdx = tone.options.findIndex((o) => o.id === "private");
+    const unclearIdx = need.options.findIndex((o) => o.id === "unsure");
+    const built = buildReflection(day7, [`q.tone.${privateIdx}`, `q.need.${unclearIdx}`]);
+    const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
+    expect(body).toContain("saved on this device");
+    expect(body).toContain("no underlying need will be guessed at");
+    expect(body).not.toContain("nothing was recorded");
+
+    const noneIdx = need.options.findIndex((o) => o.id === "none");
+    const noneBody = buildReflection(day7, [`q.need.${noneIdx}`])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(noneBody).toContain("That absence stays as it is");
+  });
+
+  it("maps only the selected ids on an answered path", () => {
+    const answers = [
+      `q.tone.${tone.options.findIndex((o) => o.id === "silent")}`,
+      `q.need.${need.options.findIndex((o) => o.id === "notalone")}`,
+      `step.${day7.step.options.findIndex((o) => o.id === "catch")}`,
+    ];
+    const body = buildReflection(day7, answers)
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(body).toContain("more wordless");
+    expect(body).toContain("support may matter");
+    expect(body).toContain("without arguing with it");
+    expect(body).not.toContain("runs harsh or shaming");
+    expect(body).not.toContain("minimises it or compares it away");
+    expect(body).not.toContain("without judging it. Nothing grants you that");
+  });
+
+  it("removes the old inferential, shaming and outcome-promising language", () => {
+    for (const phrase of [
+      "most people are gentler",
+      "defended people",
+      "i have been doing my best",
+      "borrowed",
+      "somebody spoke that way first",
+      "trained to do",
+      "bounce back",
+      "trying to prevent harm",
+      "never modelled",
+      "reserve",
+      "recovery rarely",
+      "let someone near",
+      "you are allowed to give it",
+      "most effective first move",
+      "makes change possible",
+      "tomorrow",
+      "barely holding on",
+      "deserved to break",
+      "should try harder",
+      "damaged things",
+      "rather than corrected",
+      "you should",
+    ]) {
+      expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase);
+    }
+  });
+
+  it("leaves Day 8 unchanged", () => {
+    expect(JSON.stringify(getFirstJourneyDay(8)!)).toBe(day8Snapshot);
+  });
+});

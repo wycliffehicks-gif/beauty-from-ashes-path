@@ -1117,7 +1117,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             support:
               "Identifying support you might want before any real-world action was selected. No contact and no disclosure are part of that.",
             prepare:
-              "Leaving it here was selected, with reading or rehearsing being enough. That is complete as it stands.",
+              "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
             unclear:
               "Not being sure of a step was selected. That is left uncertain, and no step will be chosen for you.",
             none: "That no step feels right today was selected. That is left as it is, and none will be pressed or inferred.",

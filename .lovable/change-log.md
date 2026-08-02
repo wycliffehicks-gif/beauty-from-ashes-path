@@ -1,5 +1,139 @@
 # Change log
 
+## 2026-08-02 — Bounded Day 8 content, safety, branch-accuracy and source-alignment revision
+
+Day 8 (“Reconnect With What Matters”) only. Days 1–7 and 9–10, routes,
+components, types, storage/resume/completion logic, the reflection engine,
+services, settings and `src/routeTree.gen.ts` are untouched. Still private and
+unpublished. Three files changed: the Day 8 object in
+`src/content/journey-days-b.ts`, a focused “Day 8 revision” block plus the Day 8
+boundary literals in `src/lib/journey/__tests__/selection.test.ts`, and this
+entry.
+
+**Preserved identity, order and positional IDs.** day 8; title “Reconnect With
+What Matters”; motif `reconnect`; shape `practise-mid`; question IDs `route` and
+`size`; step ID `step`; nine-screen order arrive → understand → q.route →
+e.route → practise → q.size → step → reflection → close. All existing option IDs
+kept in their current positions (route: self, body, reality, values, creativity,
+person, community, god; size: tiny, small, moderate, rehearse; step: act,
+message, outside, own, rehearse). Labels were reworded in place only; nothing was
+reordered, renamed or removed, so positionally stored answers stay valid.
+
+**Central movement.** Identify one thread that matters now, name the quality or
+meaning it holds without explaining its history, and make only as much safe
+contact with it as is genuinely available. Absence of a clear, reachable or safe
+thread is left intact, with no hidden meaning and no framing as failure.
+
+**Source alignment.** New life is not returning to an earlier untouched self; it
+can be a new way of being with oneself, others, God, one's wounds, one's
+questions and an unfinished story. It may begin quietly, in a changed
+relationship or one small lived contact. Reconnection never means returning to
+harm; smallness, wisdom, safety and real-world limits are held together.
+
+**Newcomer definitions.** Arrive defines reconnecting as making a little room
+for something that matters now — long-standing, newly emerging or not yet clear
+— and rules out restoring a past self, reconciling, returning to an unsafe
+person/place/community, proving progress and pretending pain is over. It names
+grief, illness, disability, exhaustion, caregiving, discrimination, unsafe
+circumstances and limited resources as real limits on access rather than
+personal failure. Understand explains “what matters” in plain language, defines a
+value as a chosen quality or direction rather than a task or proof of goodness,
+and states that a thread may be approached in a new form without recreating the
+past or being outwardly available today.
+
+**Removed.** “Long difficulty tends to narrow life”, “Small and real beats large
+and imagined”, “Whatever you chose”, “You chose a direction and made it small
+enough”, “Tomorrow”, claims about what people postpone, where reconnection is
+most immediately felt, what difficulty shuts down first, courage, restoration,
+widening life and changing input or state; the mobility/vision/breath settling
+instructions and the forced-positive “something that is genuinely fine”;
+action-planning, scheduling, first-sentence rehearsal and behavioural-rehearsal
+steps that belong to Day 9; and defensive comparison language (“still counts”,
+“right amount”, “legitimate/not lesser”).
+
+**Appended options** (append-only, in order): route — `other`, `unclear`,
+`none`, `private`; size — `unclear`, `none`, `private`; step — `unclear`,
+`none`, `private`. Every route option has an echo mirroring only that selection,
+with no cause, origin, bravery, delay, hidden desire, outcome or unselected
+opposite. `person` requires no contact or disclosure and treats uncertain safety
+as no contact; `god` stays inside the Christian path without assuming prayer,
+belief certainty or felt closeness; `private` states accurately that the
+structured choice is saved on this device and infers no direction. The
+unanswered fallback and the always-rendered closing are branch-neutral.
+
+**Practice equality and consent.** The practice screen is reached on unanswered,
+unclear, none and private paths, so its heading, intro and every step are
+branch-neutral and never reference “the direction you chose”. Either, both or
+neither; reading only and stopping at any point are complete. The nonreligious
+“making room for one thread” practice permits a named, privately held or absent
+direction, asks what quality or meaning the thread holds now without analysing
+origin, distinguishes a new form from recreating the past, offers brief
+accessible contact (noticing, listening, reading, remembering, naming, holding an
+object, one mark, or letting the idea remain), requires no message, contact,
+plan, visualisation, outing, mobility, touch, sensation, calm or hope, leaves any
+response or none uninterpreted, and claims no change or progress.
+
+**Scripture correction.** Luke 24:15 (World English Bible) is now quoted in
+full: “While they talked and questioned together, Jesus himself came near, and
+went with them.” The note says this describes what happens in the Emmaus story
+while the walkers are still talking and questioning, and is not a promise about
+what the user must feel, recognise or experience. The inaccurate claim that the
+walkers “are not reprimanded” is removed. Reading only, silence, naming what
+matters or feels out of reach before God, or one brief prayer are all complete;
+doubt, anger, numbness and spiritual struggle are given room rather than treated
+as problems to solve; no prayer, certainty, disclosure, outward step or felt
+accompaniment is required, and the path may be left entirely.
+
+**Amount and step.** `size` is reframed as how much contact is realistically
+available now (name/notice only; a few private minutes; one small outward action
+only if safe and realistic; keep it inward, remembered, imagined or symbolic —
+without using Day 9's “rehearse” language), with no “right size”, no assumed low
+reserves and no implication that a larger or outward step is better. One Honest
+Step keeps its five IDs and is safe, reversible, accessible and
+non-performative: a small safe space without claiming an act was already
+identified; a brief message only to someone safe enough, with drafting alone
+counting; an accessible present-world alternative (window, sound, object,
+memory) that promises no state change; a few minutes for something that is mine
+and not a duty; and an inward naming or remembering.
+
+**Branch-accurate reflection and close.** All three answer-driven sections lost
+their unconditional `opening` fields; every retained and appended route, size and
+step ID maps to a nonempty line; unanswered fallbacks are substantive; `unclear`
+and `none` leave uncertainty and absence intact; every `private` line says
+accurately that the structured private choice is saved on this device without
+claiming nothing was recorded and without inferring content. No causal history,
+diagnosis, universal, outcome promise, cross-question inference or unselected
+opposite. The reflection closing states that these selections do not establish
+why something matters, why it became distant, whether reconnection is possible,
+or what will change. The close claims no choice, action, widening or progress,
+reiterates that reconnection is not going back, returning to harm or proving
+progress, refers to “Day 9” (never “tomorrow”), preserves Day 9's rehearsal role,
+and carries forward: “What matters can be met in a way that is small, safe, and
+mine to choose.”
+
+**Tests.** A focused “Day 8 revision” suite covers canonical identity and exact
+nine-screen order, single-select on route/size/step, exact positional ID arrays
+including appended IDs, newcomer definitions and the new-life-is-not-going-back
+distinction, inclusive arrival free of vision/breath/posture/forced-positive
+assumptions, complete route echo coverage and a branch-neutral closing,
+branch-neutral practice copy, equal-depth practices with either/both/neither and
+read-only consent, the exact full Luke 24:15 WEB quote with its story-specific
+note and no “reprimand” claim, safe-person and accessible outside steps, absent
+reflection openings with complete mapped lines and substantive fallbacks, a fully
+skipped path inventing nothing, one exact answered positional path excluding
+adjacent options, accurate unclear/none/private paths without “nothing was
+recorded”, removal of inferential/outcome-promising/time-dependent/Day-9-overlap
+phrases, and literal Day 7 and Day 9 boundary snapshots. The pre-existing Day 8
+boundary literals in the Day 7 block were updated only for the revised lead and
+carry-forward. Full suite: 371 tests passing.
+
+**Deferred (out of scope, unchanged).** Reflection reveal/bypass and saved-response
+restoration, positional-storage migration to stable answer IDs, direct-day
+agreement bypass, duplicate “Show me how” accessible labels, the inactive
+spiritual preference, and other shared Back/onboarding mechanics.
+
+
+
 ## 2026-08-02 — Bounded Day 7 content, safety and branch-accuracy revision
 
 Day 7 (“A More Compassionate Way to Hold It”) only; Days 1–6 and 8–10 untouched.

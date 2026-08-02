@@ -26,9 +26,23 @@ redesign, no routing/storage/AI change, no publication.
 - **Reflection copy** (mechanism unchanged): removed the openings that asserted
   “You put words…” / “You noticed…”, so skipped paths read honestly; all lines,
   care paragraph and closing replaced with non-causal wording.
-- **Close**: “A word, not a verdict”; no “tomorrow”; carry-forward is “What I
-  carry is real, but it is not all that is real about me.”
-- **Tests**: Day 3 coverage added to `src/lib/journey/__tests__/selection.test.ts`.
+- **Close**: heading is now “One honest beginning”; no “tomorrow”; carry-forward is
+  “What I carry is real, but it is not all that is real about me.”
+- **Final wording refinement (same day)**: `unsure` marked exclusive alongside
+  `private`; public-facing “Unresolved hurt” replaced everywhere with “Hurt that
+  still affects me” (id `hurt` retained) across choice, info note, echo and
+  reflection line; Locate prompt now “In what parts of life, if any, does this word
+  feel relevant right now?” with a non-shared-cause hint, physical-symptom note
+  kept, and the reflection section retitled “What you noticed alongside it”; One
+  Honest Sentence gained a breadth/no-identifying-details boundary, revised
+  sentence stems (“Something I regret is…”, “What feels heaviest today is…”) and an
+  any-sense outward alternative; One Honest Step `hold` and `tell` labels, note and
+  reflection lines revised; Christian-path `notRequired` allows remaining with
+  question, anger, doubt or silence; skipped/no-outward-step reflection line
+  rewritten.
+- **Tests**: Day 3 coverage added to `src/lib/journey/__tests__/selection.test.ts`,
+  including `unsure` exclusivity in both directions, absence of “Unresolved hurt”,
+  Locate wording, practice wording and the new close heading.
 
 ## 2026-08-01 — Bounded Day 2 content-and-safety revision
 

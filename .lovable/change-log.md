@@ -1,5 +1,53 @@
 # Change log
 
+## 2026-08-01 — Bounded Day 5 content-and-safety revision
+
+Day 5 (“The Two Pulls Within You”) only; Days 1–4 and 6–10 untouched. No route,
+component, storage, resume, reflection-mechanics, AI or other shared-system
+change. Still private and unpublished. The nine-screen order (arrive → understand
+→ forward → Explore → holdback → practise → step → reflection → close) is
+preserved, as are all existing option IDs and their order.
+
+- **Descriptor/theme**: “Making room for mixed feelings · about 10 minutes”;
+  theme now states that movement and caution can be present together without a
+  decision being required.
+- **Arrive**: certainty, prescribed nose/mouth breathing, flat feet and “stand
+  up” language removed. Three inclusive settling steps (any workable position,
+  outward orientation first, optional body/breath only if comfortable).
+- **Understand (“Listen”)**: newcomer explanations of mixed feelings, what each
+  pull may point toward, and that listening is not obeying, deciding or treating
+  both as equally right. Two info notes: “What is ambivalence?” and “What does
+  ‘a part of me’ mean here?”
+- **Question 1 (`forward`)**: now single-select; refined labels, a no-contact
+  note on `repair`, and appended `none` and `private`. The Explore screen
+  (“What may be drawing you forward”) echoes only the selected wish and supplies
+  no unselected fear, history, cause or meaning.
+- **Question 2 (`holdback`)**: no longer asks what the pull is protecting
+  (Day 4’s work). Now single-select, asking what concern it might carry, with
+  appended `ongoing`, `none`, `private` and an info note “What if the concern is
+  about something still real?”
+- **Practise**: “either, both, or neither” explicit. Nonreligious path is a
+  six-step sentence-stem practice with outward start, no forced gratitude or
+  agreement, an explicit stop-and-reorient permission, and accurate
+  “you do not need to write or save anything” wording. Christian path keeps
+  Mark 9:24 (WEB) and states plainly that the person’s caution is not being
+  equated with unbelief and that faith does not require overriding safety,
+  limits, responsibilities or current reality.
+- **One Honest Step**: same five IDs, new labels focused on listening rather than
+  deciding; “without giving it the final vote” and outward-action framing removed;
+  `talk` carries a safe-person note.
+- **Reflection copy** (mechanism unchanged): four sections — descriptive
+  `hearing`, tentative `protected` (no assumed history, survival or identity
+  verdict; `ongoing` respected without urging override), an answer-neutral
+  `care` paragraph, and an accurate `next`. No personalized openings on
+  answer-driven sections, so skipped/none/private paths read truthfully. New
+  closing on ambivalence as information, not a verdict.
+- **Close**: “Room for more than one truth”; accurate on answered, partial,
+  private, none and fully skipped paths; points to Day 6 rather than “tomorrow”.
+  Carry-forward: “More than one truth can be present, and I can choose my pace.”
+- **Tests**: new “Day 5 revision” block in
+  `src/lib/journey/__tests__/selection.test.ts`.
+
 ## 2026-08-01 — Bounded Day 4 content-and-safety revision
 
 Day 4 (“What It May Have Protected”) only; Days 1–3 and 5–10 untouched. No

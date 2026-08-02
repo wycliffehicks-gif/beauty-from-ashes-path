@@ -721,6 +721,16 @@ export const PRACTICE_SINGLE_HEADING = "A practice for today";
 export const PRACTICE_SINGLE_INTRO =
   "You may open this practice, read without doing it, stop at any point, or continue without opening it.";
 
+/**
+ * Day 1 only, and only when the preference has been read and is off: one quiet,
+ * nonblocking mention that the Christian option exists, so nobody has to guess
+ * where it lives. It never appears again on a later day, and it applies no
+ * pressure — the Reflection Practice is complete on its own.
+ */
+export const SPIRITUAL_INVITATION_TEXT =
+  "The Reflection Practice above is complete on its own. If you would like optional Christian Scripture and prayer alongside it, you can turn that on in Settings at any time.";
+export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
+
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
   const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
@@ -729,6 +739,7 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
   // panel, Scripture, prayer or companion wording. The nonreligious practice is
   // complete on its own and always shown.
   const showSpiritual = prefsHydrated && prefs.showSpiritual;
+  const showSpiritualInvitation = content.day === 1 && prefsHydrated && !prefs.showSpiritual;
 
   return (
     <div className="space-y-5">
@@ -755,9 +766,26 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
           onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
         />
       )}
+      {showSpiritualInvitation && (
+        <aside
+          data-testid="spiritual-invitation"
+          className="rounded-xl border border-border bg-card p-4"
+        >
+          <p className="text-sm leading-snug text-muted-foreground">
+            {SPIRITUAL_INVITATION_TEXT}
+          </p>
+          <Link
+            to="/settings"
+            className="btn-quiet mt-3 inline-flex min-h-[44px] w-full sm:w-auto"
+          >
+            {SPIRITUAL_INVITATION_LINK_LABEL}
+          </Link>
+        </aside>
+      )}
     </div>
   );
 }
+
 
 function PracticePanel({
   path,

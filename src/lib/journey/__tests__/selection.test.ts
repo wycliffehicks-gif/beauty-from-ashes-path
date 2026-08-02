@@ -79,3 +79,73 @@ describe("Day 2 revision", () => {
     expect(day2.practise.spiritual.scripture?.reference).toMatch(/Psalm 42/);
   });
 });
+
+describe("Day 3 revision", () => {
+  const day3 = getFirstJourneyDay(3)!;
+  const carrying = day3.questions.find((q) => q.id === "carrying")!;
+  const shows = day3.questions.find((q) => q.id === "shows")!;
+  const ids = (q: typeof carrying) => q.options.map((o) => o.id);
+  const text = JSON.stringify(day3);
+
+  it("removes the redundant 'mixed' option and adds regret and private", () => {
+    expect(ids(carrying)).not.toContain("mixed");
+    expect(ids(carrying)).toContain("regret");
+    expect(ids(carrying)).toContain("private");
+  });
+
+  it("makes 'I would rather not name it here today' exclusive both ways", () => {
+    const priv = ids(carrying).indexOf("private");
+    const grief = ids(carrying).indexOf("grief");
+    const fear = ids(carrying).indexOf("fear");
+    expect(toggleSelection(carrying, [grief, fear], priv)).toEqual([priv]);
+    expect(toggleSelection(carrying, [priv], grief)).toEqual([grief]);
+  });
+
+  it("makes 'not sure where it shows up' exclusive both ways", () => {
+    const unclear = ids(shows).indexOf("unclear");
+    const sleep = ids(shows).indexOf("sleep");
+    expect(toggleSelection(shows, [sleep], unclear)).toEqual([unclear]);
+    expect(toggleSelection(shows, [unclear], sleep)).toEqual([sleep]);
+  });
+
+  it("labels the educational screen 'Listen' and defines 'carrying'", () => {
+    expect(day3.understand.label).toBe("Listen");
+    expect(day3.understand.info?.some((n) => n.term.includes("carrying"))).toBe(true);
+  });
+
+  it("drops the 'illness' body wording and adds the physical-symptom note", () => {
+    expect(shows.options.find((o) => o.id === "body")!.label).not.toMatch(/illness/i);
+    expect(shows.info?.some((n) => n.term === "A note about physical symptoms")).toBe(true);
+  });
+
+  it("uses the One Honest Sentence practice with an outward alternative", () => {
+    expect(day3.practise.reflection.title).toContain("One Honest Sentence");
+    expect(day3.practise.reflection.steps.join(" ")).toContain("three neutral details");
+    expect(day3.practise.reflection.steps.join(" ")).not.toMatch(/Let it go/);
+  });
+
+  it("avoids 'tomorrow' and confident causal claims", () => {
+    for (const phrase of [
+      "tomorrow",
+      "genuinely unsafe rather than imagined",
+      "keeps score",
+      "system asking",
+      "run the day",
+      "usually a relief",
+      "love with nowhere to put itself",
+    ]) {
+      expect(text.toLowerCase()).not.toContain(phrase.toLowerCase());
+    }
+  });
+
+  it("keeps the skipped reflection path free of contradictory openings", () => {
+    const hearing = day3.reflection.sections.find((s) => s.id === "hearing")!;
+    const landing = day3.reflection.sections.find((s) => s.id === "underneath")!;
+    expect(hearing.opening).toBeUndefined();
+    expect(landing.opening).toBeUndefined();
+  });
+
+  it("keeps Psalm 13 and both practice pathways", () => {
+    expect(day3.practise.spiritual.scripture?.reference).toContain("Psalm 13:1–2");
+  });
+});

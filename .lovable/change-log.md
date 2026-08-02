@@ -1,5 +1,35 @@
 # Change log
 
+## 2026-08-01 — Bounded Day 3 content-and-safety revision
+
+Day 3 (“Name What You're Carrying”) only; Days 1–2 and 4–10 untouched. No
+redesign, no routing/storage/AI change, no publication.
+
+- **Arrive**: added the “one broad word — or no word today” invitation; settling
+  directions rewritten as explicitly optional and inclusive of pain or limited
+  mobility, with an outward colour alternative.
+- **Listen**: educational screen now carries the phase label “Listen”; the three
+  body paragraphs replaced with non-causal, identity-separating wording; the
+  diagnosis note states plainly that this app does not assess or diagnose; added
+  “What does ‘carrying’ mean here?”; “unresolved hurt” rewritten.
+- **Name**: new prompt and hint; redundant “Several at once, tangled together”
+  removed; added `regret` and an exclusive `private` (“I would rather not name it
+  here today”); every echo replaced with descriptive, tentative wording; closing
+  now “You are not what you carry.”
+- **Locate**: new prompt and hint; body option no longer mentions illness; added
+  an exclusive `unclear` option and the “A note about physical symptoms” note.
+- **Practise**: nonreligious path is now “One Honest Sentence” with sentence
+  stems, an outward alternative to body attention and no “let it go”; Christian
+  lament path and Psalm 13:1–2 (WEB) preserved with revised steps and notes.
+- **One Honest Step**: new prompt, hint and options, including a safety note on
+  telling a trusted person.
+- **Reflection copy** (mechanism unchanged): removed the openings that asserted
+  “You put words…” / “You noticed…”, so skipped paths read honestly; all lines,
+  care paragraph and closing replaced with non-causal wording.
+- **Close**: “A word, not a verdict”; no “tomorrow”; carry-forward is “What I
+  carry is real, but it is not all that is real about me.”
+- **Tests**: Day 3 coverage added to `src/lib/journey/__tests__/selection.test.ts`.
+
 ## 2026-08-01 — Bounded Day 2 content-and-safety revision
 
 Day 2 (“Notice What Is Here”) only; Days 1 and 3–10 untouched. No redesign,

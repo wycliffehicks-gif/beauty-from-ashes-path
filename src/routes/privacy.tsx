@@ -169,16 +169,19 @@ function PrivacyPage() {
 
       <h2 className="font-serif text-xl">Privacy questions</h2>
       <p>
-        For privacy questions during this version, please use the{" "}
+        For privacy questions during this version, please see the{" "}
         <Link
           to="/contact-support"
           className="inline-link text-primary underline underline-offset-4"
         >
           Contact &amp; Technical Support
         </Link>{" "}
-        page. A named privacy contact and email address will be added here
-        before public launch.
+        page. A named privacy contact, and a monitored channel for privacy
+        requests, must be in place before any public or paid launch. Until then
+        this remains a private candidate version, and no monitored privacy
+        channel is offered.
       </p>
+
 
       <p className="text-sm text-muted-foreground">
         This policy is written in plain language and is not legal advice. It

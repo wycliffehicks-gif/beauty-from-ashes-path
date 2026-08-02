@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { LegalPage } from "@/components/LegalPage";
+
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -22,7 +23,8 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <LegalPage title="Terms of Use">
+    <LegalPage title="Terms of Use" lastUpdated="August 2, 2026">
+
       <p>
         These terms apply to your use of Beauty from Ashes, a current version
         offered by Resurgence Therapeutics. They are written in plain language.
@@ -56,9 +58,15 @@ function TermsPage() {
       <p>
         You remain responsible for your own decisions, safety and for seeking
         qualified professional care when you need it. If an exercise increases
-        distress or feels unsafe for you, please stop, use the Pause and Ground
-        practice, and seek appropriate support.
+        distress or feels unsafe for you, please stop the exercise. It can help
+        to let your attention rest on one neutral detail nearby for a moment. You
+        are welcome to open{" "}
+        <Link to="/support" className="inline-link text-primary underline underline-offset-4">
+          Support &amp; Safety
+        </Link>{" "}
+        at any time, and to seek appropriate support.
       </p>
+
 
       <h2 className="font-serif text-xl">No guarantee of outcomes</h2>
       <p>

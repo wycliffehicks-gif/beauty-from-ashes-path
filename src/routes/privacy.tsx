@@ -26,38 +26,78 @@ function PrivacyPage() {
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
-        current version of the app.
+        version of the app.
       </p>
 
       <h2 className="font-serif text-xl">What the app does not collect</h2>
       <p>
         The current app does not require you to create an account. It does not
         intentionally collect your name, email address, journal entries,
-        selected reflection responses, diagnosis, medical record or other
-        personal health information through the app itself.
+        diagnosis, medical record or other personal health information through
+        the app itself. The responses you select on each day are saved on this
+        device only. They are not sent to Resurgence Therapeutics, and nobody at
+        Resurgence Therapeutics receives or reads them.
       </p>
 
       <h2 className="font-serif text-xl">What is kept on this device</h2>
       <p>
-        The app stores a small amount of low-sensitivity information locally in
-        your browser or device only:
+        The app stores a small amount of low-sensitivity information in your own
+        browser or device storage only:
       </p>
       <ul className="list-disc space-y-1 pl-5">
-        <li>Whether you have completed the opening steps, and that you agreed to
-          the Terms, Privacy Notice and Important Information, with the date of
-          that agreement.</li>
-        <li>Your optional Scripture and spiritual-reflection preference.</li>
-        <li>Which of the ten days you have opened, the day and page you were
-          last on, and which days you have finished.</li>
-        <li>The choices you selected from the lists offered on each day, saved as
-          short option labels rather than anything you typed.</li>
-        <li>The personalized reflection prepared for you on a day, so that it can
-          be shown again if you return to that page.</li>
+        <li>
+          A flag recording that you completed the opening steps, and your
+          agreement to the Terms, Privacy Notice and Important Information —
+          the version you agreed to and the date and time of that agreement.
+        </li>
+        <li>
+          Your optional Scripture and spiritual-reflection preference (on or
+          off).
+        </li>
+        <li>
+          A legacy list of day numbers you had opened, kept from an earlier
+          version of the app and not used to decide anything.
+        </li>
+        <li>
+          The version number of the journey store, so saved information can be
+          read correctly after an update.
+        </li>
+        <li>
+          The day and page you were last on, and the furthest page you reached
+          in a day, so you can return to the same place.
+        </li>
+        <li>
+          The responses you selected, saved as short coded option identifiers
+          (for example <code>q.notice:heavy</code>) rather than the wording of
+          the option, and never anything you typed.
+        </li>
+        <li>Which of the ten days you have finished.</li>
+        <li>
+          The exact personalized reflection prepared for you on a day, together
+          with a coded fingerprint of the selections it was built from, so the
+          same words can be shown again if you return to that page.
+        </li>
+        <li>The date and time this saved information was last updated.</li>
       </ul>
       <p>
-        The app also uses your browser’s <em>session storage</em> to remember,
-        for the current session only, that the launch screen has already been
-        shown, so it does not repeat.
+        The app also uses your browser’s <em>session storage</em>, which is
+        cleared when you close the browser, to remember that the launch screen
+        has already been shown so it does not repeat.
+      </p>
+      <p>
+        An earlier weekly “deep session” feature may also have left session-only
+        information in this browser: which stage of that session you were on, the
+        coded option identifiers you had selected there, and an optional short
+        note limited to 400 characters. That information is session-only, stays
+        on this device, and is removed along with everything else when you clear
+        your journey.
+      </p>
+      <p>
+        Your personalized reflection is assembled on this device. It is put
+        together locally and deterministically from the approved wording written
+        for that day and the coded options you selected. No artificial
+        intelligence, no server and no external service is involved, and nothing
+        is transmitted in order to produce it.
       </p>
       <p>
         Everything above stays on this device and browser. It is not sent to us,
@@ -68,10 +108,12 @@ function PrivacyPage() {
       <p>
         These local items are not confidential clinical records. They are not
         protected in the way that psychotherapy or medical records are. Anyone
-        with access to your device or browser profile may be able to see them.
-        You can remove all of them at any time with “Clear or restart my
+        with access to your device or browser profile may be able to see them,
+        and we cannot promise confidentiality for information held in your own
+        browser. You can remove all of it at any time with “Clear or restart my
         journey” in Settings, or by clearing this browser’s data for the app.
       </p>
+
 
 
       <h2 className="font-serif text-xl">Please do not send sensitive information</h2>

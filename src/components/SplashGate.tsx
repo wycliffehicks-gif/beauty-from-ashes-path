@@ -53,8 +53,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
       {children}
       {visible && (
         <div
-          aria-hidden="true"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--ivory,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--bfa-reading-backdrop,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
           style={{ opacity: leaving ? 0 : 1 }}
         >
           <VisualMotif variant="splash" className="bfa-visual-splash-bg" />
@@ -68,7 +67,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
                   {imgOk ? (
                     <img
                       src={LOGO_URL}
-                      alt=""
+                      alt="Resurgence Therapeutics — Awaken, Rediscover, Hope"
                       onError={() => setImgOk(false)}
                       className="bfa-visual-splash-logo object-contain"
                       draggable={false}

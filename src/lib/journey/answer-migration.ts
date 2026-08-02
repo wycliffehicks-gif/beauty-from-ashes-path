@@ -7,11 +7,10 @@
 // safely. Tokens that belong to no current step key are left untouched so
 // nothing is silently destroyed.
 //
-// Completion is deliberately NOT carried across. Older builds could mark a day
-// complete merely by opening a close URL, so an old marker is not proof that a
-// day was finished. Leaving a day unfinished is the conservative choice; the
-// person can simply walk it again, and all locator, answer and saved-reflection
-// data is preserved.
+// Completion recorded by this app's own end-of-day path IS carried across: it
+// represents real work a person did, so it is sanitized and preserved. Only
+// legacy `bfa.v1` visited-day markers are never promoted to completion, because
+// merely opening a day was never proof of finishing it.
 
 import { FIRST_JOURNEY_DAYS } from "@/content/first-journey";
 import { dayIdFor } from "@/content/journey";

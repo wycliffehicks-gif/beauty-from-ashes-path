@@ -1570,12 +1570,22 @@ describe("Day 9 revision", () => {
       ...day9.practise.reflection.steps,
       ...day9.practise.spiritual.steps,
     ].join(" ");
-    expect(day9.practise.heading).toBe("Two ways to rehearse without committing to act.");
-    expect(day9.practise.intro).toContain("whether or not anything was selected earlier");
-    expect(day9.practise.either).toContain("Either, both, or neither");
-    expect(day9.practise.either).toContain("Reading only is complete");
-    expect(day9.practise.either).toContain("stopping at any point is complete");
-    expect(day9.practise.either).toContain("leaving the exercise unfinished is complete");
+    expect(day9.practise.heading).toBe("Two ways to rehearse without committing to act");
+    expect(day9.practise.intro).toBe(
+      "You do not need a clear response or setting to read or use either path. Everything may stay general, private, unclear, or unanswered.",
+    );
+    expect(day9.practise.either).toBe(
+      "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
+    );
+    expect(day9.practise.reflection.summary).toContain(
+      "without deciding to use it in real life",
+    );
+    expect(day9.practise.spiritual.summary).toBe(
+      "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
+    );
+    expect(day9.practise.spiritual.steps.join(" ")).toContain(
+      "leaving safety and real-world use undecided",
+    );
     expect(panels).toContain("keep this entirely general");
     for (const phrase of [
       "whichever practice you chose",

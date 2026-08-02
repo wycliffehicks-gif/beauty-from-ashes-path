@@ -878,12 +878,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "Settle in whatever position works for you, including standing, lying down, moving, or staying exactly as you are.",
         "If it helps, notice one neutral outward detail or point of orientation through any sense available to you — something seen, heard, touched, or simply known to be nearby.",
         "Attention to body or breath can be left alone entirely. No stillness, calm, sensation, movement, or settled feeling is required.",
-        "Reading only is a complete way to do today, and stopping at any point remains available.",
+        "You may simply read, and you may stop at any point. No particular feeling or response is required.",
       ],
     },
     understand: {
       label: "Listen",
-      heading: "Rehearsal is a possibility, not a promise.",
+      heading: "Rehearsal is a possibility, not a promise",
       body: [
         "A response is what someone does, says, delays, prepares, or chooses not to do when a familiar moment appears. Rehearsal means privately trying only the opening of one possible response — in silent words, in writing you will not send, or as a simple outline — without involving another person and without committing to use it.",
         "Rehearsing may clarify whether an option fits, how it might be worded, what conditions would matter, or what support would be needed. It cannot control what happens under pressure, and it does not prove readiness.",

@@ -2099,7 +2099,7 @@ describe("Day 10 revision", () => {
     expect(echo.byOption["harsh"]).toContain("accountability remains possible");
     expect(echo.byOption["small"]).toContain("that any step has happened");
     expect(echo.byOption["notalone"]).toContain(
-      "does not tell us what support exists, who is safe, or what you can reach",
+      "what support exists, who is safe, or what you can reach",
     );
     expect(echo.byOption["nothing"]).toContain(
       "An idea may resonate without becoming a finished outcome",

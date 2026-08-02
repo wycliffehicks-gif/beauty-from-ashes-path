@@ -1536,7 +1536,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
       ],
       closing:
-        "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Your worth is not conditional on resolving anything, and unresolved difficulty does not cancel it. Being heard and accompanied, even when nothing has changed, may itself be meaningful.",
+        "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",
+
     },
     close: {
       heading: "A complete stopping place",

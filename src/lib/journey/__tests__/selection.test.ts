@@ -1733,7 +1733,10 @@ describe("Day 9 revision", () => {
 
   it("closes without claiming selection, rehearsal, action, readiness or progress", () => {
     const close = [day9.close.heading, ...day9.close.body, day9.close.carryForward].join(" ");
-    expect(day9.close.heading).toBe("Possibility, not a promise.");
+    expect(day9.close.heading).toBe("Possibility, not a promise");
+    expect(day9.close.body[0]).toBe(
+      "Whether you rehearsed a response, read the practice, kept your response private, or left everything open, no real-world action was required, and none is required now.",
+    );
     expect(close).toContain("no real-world action was required");
     expect(close).toContain("does not guarantee access under pressure");
     expect(close).toContain("does not make a situation safe");

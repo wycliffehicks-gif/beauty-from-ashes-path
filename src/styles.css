@@ -542,16 +542,13 @@
   left: calc(38px - 0.8rem);
   right: auto;
   width: 1.6rem;
-  z-index: 2;
+  z-index: 0;
 }
+/* Rows keep opaque faces, so the thread reads as a seam stitching between
+   them rather than a line drawn across reading surfaces. */
 .bfa-visual-thread-track > ol {
   position: relative;
   z-index: 1;
-}
-/* The marker stays above the thread so no number is crossed. */
-.bfa-visual-thread-track .day-marker {
-  position: relative;
-  z-index: 3;
 }
 
 /* --- Screen 3: day arrival threshold ------------------------------------ */

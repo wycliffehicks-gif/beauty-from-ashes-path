@@ -137,9 +137,11 @@ function SettingsPage() {
       >
         <h2 className="font-serif text-lg text-foreground">{sectionTitle("clear-or-restart")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Your journey is kept on this device and browser only. Clearing it removes your saved
-          place and completed days.
+          Everything this app saves stays on this device and browser only: your saved place, the
+          choices you selected, your reflections, your finished days, your preferences and your
+          recorded agreement. Clearing removes all of it and returns you to the opening.
         </p>
+
         {!confirming ? (
           <button
             type="button"

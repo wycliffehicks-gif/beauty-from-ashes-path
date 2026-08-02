@@ -762,7 +762,13 @@
     border-color: var(--border);
     background: linear-gradient(180deg, var(--card) 0%, var(--background) 65%);
   }
+  /* Semantic ground, so the opaque desktop dock follows the page in both
+     appearances instead of holding the light brand value. */
+  .journey-page .journey-dock {
+    background: var(--background);
+  }
 }
+
 
 .journey-dock {
   border-top-color: var(--border);

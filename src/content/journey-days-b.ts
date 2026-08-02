@@ -337,8 +337,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       body: [
         "An inner response is whatever happens inside when something is difficult. It may be words, a tone, images, pressure, comparison, blankness, withdrawal or simply a general attitude toward yourself. Some people have no verbal inner voice at all, and that is ordinary.",
         "Accurate compassion does not flatter you, excuse harm or declare every choice acceptable. It acknowledges that something is genuinely difficult, includes relevant context and limits, includes impact on others where that applies, and holds only the responsibility actually within your influence.",
-        "Harshness can feel like honesty, discipline, protection or accountability. It can also add shame, hiding, exhaustion or pressure. That is not always the case, it does not mean you are defended, and a more compassionate response is not a guarantee that anything will change.",
-        "Some things were chosen and some were not. Grief, illness, disability, caregiving, discrimination, unsafe conditions and limited resources are not chosen. Compassion neither erases consequences nor assigns blame for what was outside your control.",
+        "Harshness may feel like honesty, discipline, protection or accountability. It may also add shame, hiding, exhaustion or pressure. Neither possibility tells us why your inner response developed, and a more compassionate response does not guarantee that anything will change.",
+        "Some difficulties are shaped by choices; others arise partly or largely from circumstances—such as grief, illness, disability, caregiving demands, discrimination, unsafe conditions or limited resources—that may not be chosen or within your control. Compassion neither erases consequences nor assigns blame for what was outside your control.",
         "Nothing today requires forgiveness, confession, disclosure, repair, confrontation, changed behaviour, a changed feeling or a decision. The practice here is contained: one moment of truth without added self-attack.",
       ],
       info: [
@@ -355,7 +355,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         {
           term: "What if I have hurt someone?",
           explanation:
-            "Compassion does not erase impact. It can sit alongside specific responsibility, safe repair, changed behaviour, clear boundaries or professional help, without treating self-punishment as proof that you are good. No repair, contact or action is asked of you today.",
+            "Compassion does not erase impact. It can sit alongside specific responsibility, safe repair, changed behaviour, clear boundaries or professional help, without treating self-punishment as the same thing as accountability or repair. No repair, contact or action is asked of you today.",
         },
       ],
     },
@@ -553,7 +553,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             notalone:
               "You chose to respect that support may matter. No person, contact or disclosure is being suggested here.",
             permission:
-              "You chose to let one feeling or reaction be present without judging it. Nothing grants you that and nothing asks you to act on the feeling.",
+              "You chose to let one feeling or reaction be present without judging it. That does not require approving of the feeling or acting on it.",
             patience:
               "You chose to allow more time without treating delay as failure. No pace is being set for you.",
             safety:
@@ -562,7 +562,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "You chose to separate accountability from self-punishment. That excuses nothing, and no forgiveness of yourself or anyone else is required.",
             unsure:
               "What compassion would look like is not clear yet. That can remain unclear, and no underlying need will be guessed at.",
-            none: "No different way of holding this felt right today. That absence stays as it is, without being read as avoidance.",
+            none: "No different way of holding this felt right today. That absence stays as it is, and no explanation or hidden meaning will be assigned.",
             private:
               "You chose to keep this private. That structured choice is saved on this device, and no need or response is inferred from it.",
           },
@@ -588,12 +588,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
       ],
       closing:
-        "Today's selections do not establish why this inner response exists, what you deserve, or what will change. They point only to one way honesty and dignity might remain in the same room.",
+        "Today's selections do not establish why this inner response exists, what it says about your worth, or what will change. They point only to one way honesty and dignity might remain in the same room.",
     },
     close: {
       heading: "Truth without contempt",
       body: [
-        "Whether or not you named anything today, you spent some time near a question: whether what is true can remain while some of the contempt, dismissal or pressure is left out.",
+        "Whether or not you named anything today, this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
         "Compassion does not erase harm, consequence, grief, boundaries, limits or responsibility. It can mean accompanying yourself while you face what is yours, what is not, and what is still unclear.",
         "Day 8 explores one small, safe reconnection with what matters, chosen by you.",
       ],

@@ -7,9 +7,14 @@ import {
   ABOUT_BEAUTY_FROM_ASHES,
   ABOUT_RESURGENCE,
   CLEAR_CONFIRM_QUESTION,
-  PRIVACY_CONFIDENTIALITY_POINTS,
+  CREATOR_ATTRIBUTION,
+  CREATOR_SCOPE_NOTE,
   PRIVACY_CONFIDENTIALITY_REVIEW_NOTE,
+  PRIVACY_SUMMARY_LINK_LABEL,
+  PRIVACY_SUMMARY_POINTS,
   SETTINGS_SECTIONS,
+  SPIRITUAL_TOGGLE_DESCRIPTION,
+  SPIRITUAL_TOGGLE_TITLE,
 } from "@/content/settings";
 
 export const Route = createFileRoute("/_shell/settings")({
@@ -51,52 +56,16 @@ function SettingsPage() {
         <hr className="gold-seam w-24" />
       </header>
 
-      {/* Privacy & Confidentiality */}
+      {/* Spiritual preference — the opt-in a person most often comes here to
+          find, so it sits immediately under the heading. */}
       <section
-        data-testid="settings-privacy-confidentiality"
+        data-testid="settings-spiritual"
         className="rounded-xl border border-border bg-card p-5"
       >
-        <h2 className="font-serif text-xl text-foreground">
-          {sectionTitle("privacy-confidentiality")}
-        </h2>
-        <ul className="mt-3 space-y-2.5 text-[0.95rem] leading-snug text-foreground">
-          {PRIVACY_CONFIDENTIALITY_POINTS.map((p) => (
-            <li key={p} className="flex gap-3">
-              <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
-              <span>{p}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-4 text-xs text-muted-foreground">{PRIVACY_CONFIDENTIALITY_REVIEW_NOTE}</p>
-      </section>
-
-      {/* Support & Safety / Important Information / Terms and Privacy */}
-      <nav
-        aria-label="Information and support"
-        data-testid="settings-links"
-        className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card"
-      >
-        <SettingsLink to="/support" title={sectionTitle("support-safety")} />
-        <SettingsLink
-          to="/important-information"
-          title={sectionTitle("important-information")}
-        />
-        <SettingsLink to="/terms" title="Terms of Use" />
-        <SettingsLink to="/privacy" title="Privacy Notice" />
-        <SettingsLink to="/contact-support" title="Contact" />
-      </nav>
-
-      {/* Spiritual preference */}
-      <section className="rounded-xl border border-border bg-card p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="font-serif text-lg text-foreground">
-              Scripture &amp; spiritual reflection
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Include optional Scripture and prayer where a day offers them. Every reflection
-              works fully without it.
-            </p>
+            <h2 className="font-serif text-lg text-foreground">{SPIRITUAL_TOGGLE_TITLE}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{SPIRITUAL_TOGGLE_DESCRIPTION}</p>
           </div>
           <button
             type="button"
@@ -117,6 +86,51 @@ function SettingsPage() {
         </div>
       </section>
 
+      {/* Support & Safety / Important Information / Terms and Privacy / Contact */}
+      <nav
+        aria-label="Information and support"
+        data-testid="settings-links"
+        className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card"
+      >
+        <SettingsLink to="/support" title={sectionTitle("support-safety")} />
+        <SettingsLink
+          to="/important-information"
+          title={sectionTitle("important-information")}
+        />
+        <SettingsLink to="/privacy" title="Privacy Notice" />
+        <SettingsLink to="/terms" title="Terms of Use" />
+        <SettingsLink to="/contact-support" title="Contact" />
+      </nav>
+
+      {/* Privacy & Confidentiality — a short plain-language summary only. The
+          complete detail stays on the Privacy Notice page. */}
+      <section
+        data-testid="settings-privacy-confidentiality"
+        className="rounded-xl border border-border bg-card p-5"
+      >
+        <h2 className="font-serif text-xl text-foreground">
+          {sectionTitle("privacy-confidentiality")}
+        </h2>
+        <ul className="mt-3 space-y-2.5 text-[0.95rem] leading-snug text-foreground">
+          {PRIVACY_SUMMARY_POINTS.map((p) => (
+            <li key={p} className="flex gap-3">
+              <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-sm">
+          <Link
+            to="/privacy"
+            data-testid="settings-privacy-full-link"
+            className="inline-link text-primary underline underline-offset-4"
+          >
+            {PRIVACY_SUMMARY_LINK_LABEL}
+          </Link>
+        </p>
+        <p className="mt-3 text-xs text-muted-foreground">{PRIVACY_CONFIDENTIALITY_REVIEW_NOTE}</p>
+      </section>
+
       {/* About */}
       <section data-testid="settings-about" className="space-y-4">
         <div className="rounded-xl border border-border bg-card p-5">
@@ -125,6 +139,12 @@ function SettingsPage() {
           </h2>
           <p className="mt-2 text-[0.95rem] leading-relaxed text-foreground">
             {ABOUT_BEAUTY_FROM_ASHES}
+          </p>
+          <p className="mt-3 text-[0.95rem] leading-relaxed text-foreground">
+            {CREATOR_ATTRIBUTION}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {CREATOR_SCOPE_NOTE}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-card p-5">

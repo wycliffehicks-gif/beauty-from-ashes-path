@@ -45,7 +45,7 @@ function JourneyHome() {
       <div className="bfa-visual-home-hero">
         <VisualMotif variant="home" />
         <header className="bfa-visual-home-hero-inner space-y-3">
-          <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
+          <h1 className="bfa-heading font-serif text-3xl leading-tight sm:text-4xl">
             {JOURNEY_HOME_TITLE}
           </h1>
           <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>

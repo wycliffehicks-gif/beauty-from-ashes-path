@@ -509,16 +509,48 @@ function UnderstandScreen({ content }: { content: JourneyDayContent }) {
   );
 }
 
+/**
+ * Renders body copy, turning the exact phrase "Support & Safety" into one real
+ * link to /support without changing the sentence. No banner, no repeated alarm
+ * icon: the sentence itself simply becomes actionable where the day already
+ * mentions it.
+ */
+const SUPPORT_PHRASE = "Support & Safety";
+
+function SupportText({ text }: { text: string }) {
+  if (!text.includes(SUPPORT_PHRASE)) return <>{text}</>;
+  const parts = text.split(SUPPORT_PHRASE);
+  return (
+    <>
+      {parts.map((part, idx) => (
+        <span key={idx}>
+          {part}
+          {idx < parts.length - 1 && (
+            <Link
+              to="/support"
+              className="inline-link text-primary underline underline-offset-4"
+            >
+              {SUPPORT_PHRASE}
+            </Link>
+          )}
+        </span>
+      ))}
+    </>
+  );
+}
+
 function InfoNotes({ notes }: { notes?: InfoNote[] }) {
   if (!notes || notes.length === 0) return null;
   return (
     <div className="space-y-2">
       {notes.map((n) => (
         <details key={n.term} className="surface-card">
-          <summary className="min-h-[44px] cursor-pointer list-none py-2 font-serif text-base text-[color:var(--navy)]">
+          <summary className="bfa-heading min-h-[44px] cursor-pointer list-none py-2 font-serif text-base">
             {n.term}
           </summary>
-          <p className="pb-1 text-base text-foreground">{n.explanation}</p>
+          <p className="pb-1 text-base text-foreground">
+            <SupportText text={n.explanation} />
+          </p>
         </details>
       ))}
     </div>
@@ -665,6 +697,14 @@ function EchoScreen({
   );
 }
 
+/**
+ * When Scripture and spiritual reflection are switched off, the day offers one
+ * practice, so the copy must promise exactly one — never "either" of two.
+ */
+export const PRACTICE_SINGLE_HEADING = "A practice for today";
+export const PRACTICE_SINGLE_INTRO =
+  "You may open this practice, read without doing it, stop at any point, or continue without opening it.";
+
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
   const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
@@ -678,9 +718,11 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
     <div className="space-y-5">
       <p className="eyebrow">Practise</p>
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
-        {content.practise.heading}
+        {showSpiritual ? content.practise.heading : PRACTICE_SINGLE_HEADING}
       </h1>
-      <p className="text-base text-foreground">{content.practise.intro}</p>
+      <p className="text-base text-foreground">
+        {showSpiritual ? content.practise.intro : PRACTICE_SINGLE_INTRO}
+      </p>
       {showSpiritual && (
         <p className="text-base text-muted-foreground">{content.practise.either}</p>
       )}
@@ -712,7 +754,7 @@ function PracticePanel({
 }) {
   return (
     <section className="surface-card space-y-3">
-      <h2 className="font-serif text-xl leading-snug text-[color:var(--navy)]">
+      <h2 className="bfa-heading font-serif text-xl leading-snug">
         {path.title}
       </h2>
       <p className="text-base text-foreground">{path.summary}</p>
@@ -867,7 +909,7 @@ function ReflectionScreen({
         <div className="space-y-4">
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">
-              <h2 className="font-serif text-lg text-[color:var(--navy)]">
+              <h2 className="bfa-heading font-serif text-lg">
                 {section.title}
               </h2>
               {section.paragraphs.map((p) => (
@@ -902,7 +944,7 @@ function CloseScreen({
       </h1>
       {content.close.body.map((p) => (
         <p key={p} className="text-base text-foreground">
-          {p}
+          <SupportText text={p} />
         </p>
       ))}
       <div className="surface-card">

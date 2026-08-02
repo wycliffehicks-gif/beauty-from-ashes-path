@@ -1,53 +1,58 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { PRACTICES } from "@/content/practices";
 
+/**
+ * The older standalone practice library is not part of this private pilot and
+ * is not held to the same safety standard as the ten-day First Journey. This
+ * route is a calm holding page; every /practice/$id path lands here too.
+ */
 export const Route = createFileRoute("/_shell/practices")({
   head: () => ({
     meta: [
       { title: "Practices — Beauty from Ashes" },
       {
         name: "description",
-        content: "Small, standalone tools for grounding, naming, lament and reconnection.",
+        content:
+          "The standalone practice library is being reviewed and is not part of this private pilot.",
       },
       { property: "og:title", content: "Practices — Beauty from Ashes" },
       {
         property: "og:description",
-        content: "Grounding, naming, lament and reconnection — one short practice at a time.",
+        content:
+          "The standalone practice library is being reviewed and is not part of this private pilot.",
       },
     ],
   }),
-  component: PracticesPage,
+  component: PracticesHoldingPage,
 });
 
-function PracticesPage() {
+export const PRACTICES_HOLDING_MESSAGE =
+  "The standalone practice library is being reviewed and is not part of this private pilot.";
+
+function PracticesHoldingPage() {
   return (
-    <section className="space-y-6 py-6">
+    <section className="space-y-6 py-6" data-testid="practices-holding">
       <header className="space-y-2">
         <h1 className="font-serif text-3xl text-foreground">Practices</h1>
-        <p className="text-muted-foreground">
-          Short, standalone tools. Use one when it fits. Skip when it doesn’t.
+        <p className="text-foreground">{PRACTICES_HOLDING_MESSAGE}</p>
+        <p className="text-sm text-muted-foreground">
+          Each day of The First Journey still offers its own practice, explained step by step.
         </p>
       </header>
 
-      <ul className="space-y-3">
-        {PRACTICES.map((p) => (
-          <li key={p.id}>
-            <Link
-              to="/practice/$id"
-              params={{ id: p.id }}
-              className="block rounded-xl border border-border bg-card p-4 hover:border-primary/60"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="font-serif text-lg text-foreground">{p.title}</h2>
-                <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                  {p.duration}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">{p.purpose}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="flex flex-wrap gap-3">
+        <Link
+          to="/"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground"
+        >
+          Return to your journey
+        </Link>
+        <Link
+          to="/support"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-sm font-medium text-foreground"
+        >
+          Support &amp; Safety
+        </Link>
+      </div>
     </section>
   );
 }

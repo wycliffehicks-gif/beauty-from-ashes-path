@@ -43,7 +43,7 @@ function SettingsPage() {
   return (
     <section className="space-y-6 pb-4">
       <header className="space-y-2">
-        <h1 className="font-serif text-3xl text-[color:var(--navy)]">Settings</h1>
+        <h1 className="bfa-heading font-serif text-3xl">Settings</h1>
         <p className="text-sm text-muted-foreground">Small choices, changeable any time.</p>
         <hr className="gold-seam w-24" />
       </header>
@@ -102,7 +102,7 @@ function SettingsPage() {
             aria-label="Include Scripture and spiritual reflection"
             onClick={() => update({ showSpiritual: !prefs.showSpiritual })}
             className={`relative h-11 w-[52px] shrink-0 rounded-full border border-border transition-colors ${
-              prefs.showSpiritual ? "bg-[color:var(--navy)]" : "bg-secondary"
+              prefs.showSpiritual ? "bg-primary" : "bg-secondary"
             }`}
           >
             <span

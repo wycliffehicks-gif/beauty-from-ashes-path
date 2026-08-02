@@ -1,16 +1,23 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
 import { VisualMotif } from "@/components/VisualMotifs";
 import { beginSplash, endSplash } from "@/lib/splash-state";
 
-const LOGO_URL =
-  "https://static.wixstatic.com/media/d90d81_7308aab6b29e4efba9deb306e951a8c8~mv2.png";
 const SESSION_KEY = "bfa_splash_shown_v1";
 
-
+/**
+ * The opening splash visually covers the whole app, so while it is showing the
+ * underlying app must not be reachable by keyboard or screen reader. The
+ * underlay is marked inert and aria-hidden without unmounting it, so no state
+ * is lost, and both are removed the moment the splash ends.
+ *
+ * The overlay itself is pure branding: it has no controls, so it is hidden from
+ * assistive technology rather than wrapped in an artificial focus trap.
+ */
 export function SplashGate({ children }: { children: ReactNode }) {
   const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [imgOk, setImgOk] = useState(true);
+  const underlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -48,11 +55,30 @@ export function SplashGate({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // `inert` is applied imperatively so older browsers simply keep aria-hidden.
+  useEffect(() => {
+    const node = underlayRef.current;
+    if (!node) return;
+    if (visible) node.setAttribute("inert", "");
+    else node.removeAttribute("inert");
+    return () => {
+      node.removeAttribute("inert");
+    };
+  }, [visible]);
+
   return (
     <>
-      {children}
+      <div
+        ref={underlayRef}
+        data-testid="splash-underlay"
+        aria-hidden={visible ? "true" : undefined}
+      >
+        {children}
+      </div>
       {visible && (
         <div
+          data-testid="splash-overlay"
+          aria-hidden="true"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--bfa-reading-backdrop,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
           style={{ opacity: leaving ? 0 : 1 }}
         >
@@ -63,25 +89,18 @@ export function SplashGate({ children }: { children: ReactNode }) {
                 <p className="bfa-visual-splash-title">Beauty from Ashes</p>
                 <p className="bfa-visual-splash-sub">The First Journey</p>
                 <hr className="bfa-visual-splash-seam" />
+                {/* Typographic parent lockup — no raster asset, no remote request. */}
                 <div className="bfa-visual-splash-parent">
-                  {imgOk ? (
-                    <img
-                      src={LOGO_URL}
-                      alt="Resurgence Therapeutics — Awaken, Rediscover, Hope"
-                      onError={() => setImgOk(false)}
-                      className="bfa-visual-splash-logo object-contain"
-                      draggable={false}
-                    />
-                  ) : (
-                    <p className="bfa-visual-splash-parent-text">
-                      Resurgence Therapeutics
-                    </p>
-                  )}
+                  <p className="bfa-visual-splash-parent-line">
+                    A Resurgence Therapeutics experience
+                  </p>
+                  <p className="bfa-visual-splash-parent-words">
+                    Awaken · Rediscover · Hope
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       )}
     </>

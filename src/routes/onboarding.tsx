@@ -106,7 +106,28 @@ function Opening() {
         acceptedAt: new Date().toISOString(),
       },
     });
-    navigate({ to: "/", replace: true });
+    // Collapse only the history entries this onboarding visit pushed, then
+    // replace the remaining entry with Home, so browser/Android Back after
+    // Begin cannot reveal an earlier onboarding screen. Unrelated prior
+    // site/browser history is never erased.
+    const depth = historyIndex - (entryHistoryIndex.current ?? historyIndex);
+    const finish = () => navigate({ to: "/", replace: true });
+    if (depth <= 0) {
+      finish();
+      return;
+    }
+    let done = false;
+    const settle = () => {
+      if (done) return;
+      done = true;
+      finish();
+    };
+    const unsub = router.history.subscribe(() => {
+      unsub();
+      settle();
+    });
+    if (typeof window !== "undefined") window.setTimeout(settle, 250);
+    router.history.go(-depth);
   };
 
   return (
@@ -151,7 +172,7 @@ function Opening() {
           </Link>
         </header>
 
-        <main className="flex flex-1 flex-col justify-center py-2">
+        <main className="bfa-safe-center flex-1 py-2">
           {isAgreement ? (
             <AgreementScreen
               adultConfirmed={adultConfirmed}
@@ -190,7 +211,7 @@ function ExplanatoryScreen({ index }: { index: number }) {
   return (
     <section className="space-y-5" data-screen={screen.key}>
       <p className="eyebrow">{screen.eyebrow}</p>
-      <h1 className="font-serif text-[1.7rem] leading-tight text-[color:var(--navy)] sm:text-4xl">
+      <h1 className="bfa-heading font-serif text-[1.7rem] leading-tight sm:text-4xl">
         {screen.title}
       </h1>
       <hr className="gold-seam w-24" />
@@ -224,7 +245,7 @@ function AgreementScreen({
   return (
     <section className="space-y-4" data-screen="agreement">
       <p className="eyebrow">{AGREEMENT_COPY.eyebrow}</p>
-      <h1 className="font-serif text-[1.6rem] leading-tight text-[color:var(--navy)] sm:text-3xl">
+      <h1 className="bfa-heading font-serif text-[1.6rem] leading-tight sm:text-3xl">
         {AGREEMENT_COPY.title}
       </h1>
       <p className="text-[0.98rem] leading-snug text-foreground">{AGREEMENT_COPY.lead}</p>

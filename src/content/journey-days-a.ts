@@ -759,39 +759,46 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
   {
     day: 4,
     title: "What It May Have Protected",
-    theme: "Looking at old responses with respect rather than blame.",
+    theme: "Meeting one familiar response with understanding rather than contempt.",
     motif: "shelter",
-    shape: "practise-mid",
-    descriptor: "Understanding your responses · about 12 minutes",
+    shape: "standard",
+    descriptor: "Understanding one response · about 12 minutes",
     arrive: {
-      lead: "The ways you have coped were not random. They usually made sense at the time.",
+      lead:
+        "A familiar response is not the whole of who you are. It may be something you learned to do when life became difficult.",
       body: [
-        "Today looks at habits and responses that may have started as protection — and does so without calling them faults.",
-        "Nothing here asks you to give anything up. Understanding comes first, and sometimes understanding is all a day needs to hold.",
+        "Today explores one familiar response — going quiet, taking over, staying busy, trying to get everything right, or another way of getting through — and wonders what it may have tried to prevent, preserve, or provide.",
+        "You will not be asked to prove where it came from, to relive a painful event, or to give it up.",
       ],
       settle: [
-        "Sit back rather than forward, if you can.",
-        "Press your feet gently into the floor for three seconds, then release.",
-        "Let your gaze soften on something neutral for a moment before reading on.",
+        "Settle in whatever position gives you the most support. Sitting, standing, lying down or moving are all fine.",
+        "Notice two or three neutral details around you, using any sense that works comfortably for you.",
+        "Only if gentle contact feels comfortable, notice where your hands, feet or body meet something supportive. Otherwise keep your attention outward.",
       ],
     },
     understand: {
-      heading: "Protection is intelligent before it is costly",
+      label: "Listen",
+      heading: "A familiar response may have had a job to do",
       body: [
-        "When something is repeatedly unsafe, painful or unpredictable, people adapt. Someone who was criticised may become excellent at getting things right. Someone who was let down may become fiercely self-reliant. Someone who lived with tension may become an expert at keeping everyone calm.",
-        "These are not defects. They are skilled responses, learned by a person doing their best with what was available.",
-        "The tentative question for today is not “what is wrong with me?” but “what was this response trying to protect me from?” — asked with curiosity rather than a verdict.",
+        "A pattern, here, means a response someone returns to in certain situations. It describes what tends to happen. It is not an identity.",
+        "“Protection” is one possible lens, not a verdict. A response may have tried to reduce pain, preserve connection, create predictability, conserve energy, or simply help someone get through. Not every pattern began in trauma, and some protection may be responding to danger, unfairness, illness, pressure or responsibility that is still real today.",
+        "Understanding does not make every effect acceptable, and it does not remove responsibility. It simply makes curiosity possible without contempt. No memory of when a response began is required for today.",
       ],
       info: [
         {
-          term: "What is overfunctioning?",
+          term: "What does “pattern” mean here?",
           explanation:
-            "Taking on more than your share — anticipating, organising, carrying, fixing — often to keep things stable or to keep others comfortable. It usually looks like competence from the outside and feels like exhaustion from the inside.",
+            "A response you notice yourself returning to in certain situations — something you do or experience more than once. It is a description, not a diagnosis, and not a statement about who you are.",
         },
         {
-          term: "Does this mean my coping was wrong?",
+          term: "What is overfunctioning?",
           explanation:
-            "No. This is not about judging how you survived. It is about noticing, gently, whether a response that once helped is still the best fit for your life now. Sometimes the honest answer is that it still is.",
+            "Taking on more than your share — anticipating, organising, carrying or fixing. It is described here only by what it looks like. It can have many different reasons, and no single hidden cause is being assigned to it.",
+        },
+        {
+          term: "What if protection does not fit?",
+          explanation:
+            "Then you may leave that lens aside. Some responses may be habit, preference, circumstance, or something you cannot name. No explanation needs to be manufactured today.",
         },
       ],
     },
@@ -799,185 +806,303 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "response",
         eyebrow: "Notice",
-        prompt: "When things become difficult, what do you tend to do?",
-        hint: "Choose any that feel familiar. There is no judgement attached to any of them.",
-        select: "many",
+        prompt: "When life feels difficult, which response feels most familiar today?",
+        hint: "Choose one to explore. A pattern is something you may return to; it is not who you are.",
+        select: "one",
         options: [
-          { id: "withdraw", label: "Withdraw — go quiet, keep to myself" },
-          { id: "numb", label: "Numb out — distract, scroll, switch off" },
-          { id: "overfunction", label: "Overfunction — take on more, hold it together" },
-          { id: "control", label: "Control — plan, tighten, leave nothing to chance" },
-          { id: "please", label: "Please — keep others comfortable first" },
-          { id: "perfect", label: "Perfect — get it exactly right so nothing can be said" },
-          { id: "anger", label: "Push back hard — anger arrives before anything else" },
-          { id: "busy", label: "Stay busy — keep moving so nothing catches up" },
-          { id: "alone", label: "Handle it alone — asking feels worse than coping" },
+          { id: "withdraw", label: "Go quiet or keep to myself" },
+          { id: "numb", label: "Distract myself, scroll, or switch off" },
+          { id: "overfunction", label: "Take on more and hold everything together" },
+          { id: "control", label: "Plan tightly or try to leave nothing to chance" },
+          { id: "please", label: "Keep others comfortable, even at my own expense" },
+          { id: "perfect", label: "Try to get everything exactly right" },
+          { id: "anger", label: "Push back hard or become angry quickly" },
+          { id: "busy", label: "Stay busy so there is no room to stop" },
+          { id: "alone", label: "Handle it alone rather than ask" },
+          { id: "unsure", label: "I am not sure which response fits" },
+          { id: "private", label: "I would rather keep this private today" },
         ],
         echo: {
-          heading: "What that may once have done for you",
+          heading: "What you chose to explore",
           byOption: {
-            withdraw: "Withdrawing may have reduced exposure when being seen was not safe.",
-            numb: "Numbing may have made an unbearable amount bearable, one evening at a time.",
-            overfunction: "Overfunctioning may have kept a fragile situation stable when nobody else would.",
-            control: "Control may have been the only available answer to unpredictability.",
-            pleasing: "Keeping others comfortable may have prevented something worse.",
-            please: "Keeping others comfortable may have prevented conflict that was not survivable then.",
-            perfect: "Getting it exactly right may have removed the opening for criticism.",
-            anger: "Anger may have created distance quickly when distance was needed.",
-            busy: "Staying busy may have kept grief or fear at a workable distance.",
-            alone: "Handling it alone may have been safer than depending on someone who did not follow through.",
+            withdraw:
+              "You chose going quiet or keeping to yourself as the response to explore. That describes what can happen; it does not tell us why.",
+            numb:
+              "You chose distracting yourself, scrolling or switching off as the response to explore. That describes what can happen; it does not tell us why.",
+            overfunction:
+              "You chose taking on more and holding everything together as the response to explore. That describes what can happen; it does not tell us why.",
+            control:
+              "You chose planning tightly or trying to leave nothing to chance as the response to explore. That describes what can happen; it does not tell us why.",
+            please:
+              "You chose keeping others comfortable as the response to explore. That describes what can happen; it does not tell us why.",
+            perfect:
+              "You chose trying to get everything exactly right as the response to explore. That describes what can happen; it does not tell us why.",
+            anger:
+              "You chose pushing back hard or becoming angry quickly as the response to explore. That describes what can happen; it does not tell us why.",
+            busy:
+              "You chose staying busy as the response to explore. That describes what can happen; it does not tell us why.",
+            alone:
+              "You chose handling it alone rather than asking as the response to explore. That describes what can happen; it does not tell us why.",
+            unsure:
+              "You said you are not sure which response fits. That is a real answer, and the rest of today works without one.",
+            private:
+              "You chose to keep this private today. Nothing has been recorded about it, and the day continues as it is.",
           },
           unanswered:
-            "You continued without selecting a response, and nothing will be assumed about how you cope. The teaching still stands: what looks like a flaw is often an old solution.",
+            "You continued without choosing a response, and none will be assumed. The rest of today can be read generally.",
           closing:
-            "This is a possibility, not a conclusion about your history. You know your own story better than any set of options does.",
+            "A response is something you do or experience. It is not a definition of who you are.",
         },
       },
       {
-        id: "then",
-        eyebrow: "Consider",
-        prompt: "What was going on back when this response first made sense?",
-        hint: "Choose gently, or continue without answering. No detail is needed, and nothing is stored as words.",
+        id: "doorway",
+        eyebrow: "Notice",
+        prompt: "When is this response most likely to show up?",
+        hint: "Choose any that fit. These are possible contexts, not explanations of the cause.",
         select: "many",
         options: [
-          { id: "unsafe", label: "Things were unpredictable or unsafe" },
-          { id: "criticised", label: "I was criticised or blamed often" },
-          { id: "unsupported", label: "There was no one to rely on" },
-          { id: "responsible", label: "I was responsible for others too early" },
-          { id: "loss", label: "There was loss, illness or upheaval" },
-          { id: "conflict", label: "Conflict was frightening or constant" },
-          { id: "unclear", label: "Nothing specific — it just built up" },
-          { id: "private", label: "I would rather not go into it" },
+          { id: "criticism", label: "After criticism, a mistake, or feeling judged" },
+          { id: "conflict", label: "During conflict or tension" },
+          { id: "needed", label: "When other people need something from me" },
+          { id: "uncertainty", label: "When life feels uncertain or outside my control" },
+          { id: "closeness", label: "Around closeness, vulnerability, or depending on someone" },
+          { id: "overload", label: "When I am overloaded, exhausted, ill, or in pain" },
+          { id: "loss", label: "Around loss or difficult reminders" },
+          {
+            id: "unfairness",
+            label: "When I feel excluded, treated unfairly, discriminated against, or unsafe",
+          },
+          {
+            id: "unclear",
+            label: "There is no clear pattern; it can build gradually",
+            exclusive: true,
+          },
+          { id: "private", label: "I would rather not answer this here", exclusive: true },
+        ],
+      },
+      {
+        id: "purpose",
+        eyebrow: "Wonder",
+        prompt:
+          "If this response has had a protective purpose, what might it have tried to prevent, preserve, or provide?",
+        hint: "Choose possibilities that fit, if any. This is wondering — not diagnosing yourself.",
+        select: "many",
+        options: [
+          { id: "conflict", label: "Make conflict or another person's reaction less likely" },
+          { id: "criticism", label: "Reduce criticism, shame, or feeling like a failure" },
+          { id: "predictability", label: "Create predictability or a sense of control" },
+          { id: "connection", label: "Preserve connection, approval, or belonging" },
+          { id: "distance", label: "Create space or keep needs and vulnerability private" },
+          { id: "overwhelm", label: "Keep feelings, grief, or pressure more manageable" },
+          { id: "energy", label: "Conserve energy or help me get through responsibilities" },
+          {
+            id: "disappointment",
+            label: "Reduce the risk of relying, hoping, or being disappointed",
+          },
+          {
+            id: "stillreal",
+            label: "Respond to something unsafe, unfair, or demanding that is still real",
+          },
+          { id: "other", label: "Something else not listed here" },
+          {
+            id: "notfit",
+            label: "Protection does not feel like the right word for me",
+            exclusive: true,
+          },
+          { id: "unsure", label: "I am not sure yet", exclusive: true },
+          { id: "private", label: "I would rather keep this private today", exclusive: true },
         ],
       },
     ],
     practise: {
       heading: "Two ways to practise today",
-      intro: "Both hold the same shape: then, and now.",
-      either: "Either or both. Neither requires you to change anything yet.",
+      intro:
+        "Both slow the rush to self-judgment and make room for careful understanding.",
+      either:
+        "You may open either one, both, or neither. Neither path is ranked as better, and nothing has to be resolved today.",
       reflection: {
-        title: "Reflection Practice — Then / Now",
+        title: "Reflection Practice — Then / Now, with room for what is still true",
         summary:
-          "A short, respectful comparison that separates an old solution from a present-day situation.",
+          "A respectful comparison that does not assume the response belongs only to the past.",
         steps: [
-          "Bring to mind one response you noticed today — the one that felt most familiar.",
-          "Say silently: “Back then, this helped me by ______.” Let the ending be whatever arrives, even if it is imprecise.",
-          "Then say: “What is different now is ______.” It may be small: a different home, more choice, one safer person, an adult body.",
-          "Notice any resistance to the second sentence. Resistance is not disagreement; sometimes it means the response is still needed.",
-          "Finish with: “I don't have to decide today whether to change this.”",
+          "Orient outward first: notice two neutral details around the room. No body attention is required.",
+          "Bring one response to mind and complete this privately: “When ______ happens, I sometimes ______.”",
+          "If a past context comes naturally, try: “Then, this may have helped me by ______.” If no past comes to mind, use: “In difficult moments, this may be trying to help me by ______.”",
+          "Ask: “Now, what is different, what remains true, or what is not yet clear?” Nothing assumes your circumstances are safer now or that the protection is obsolete.",
+          "Say: “Understanding this does not mean every effect is acceptable, and it does not mean I must change before I am ready.”",
+          "Reorient to the room, and leave the question unfinished if that is where it rests today.",
         ],
         notRequired:
-          "You are not required to reach a conclusion, drop a protection, or feel differently about your past.",
+          "There is no need to remember when this began, to identify trauma, to use parts language, to attend inwardly, or to decide whether to change it.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — held without accusation",
+        title: "Scripture & Spiritual Reflection — loved before readiness",
         summary:
-          "A Christian pathway about being known with compassion rather than judgement.",
+          "A Christian pathway in which love precedes performance, certainty, or release.",
         steps: [
-          "Read the passage slowly, twice.",
-          "Notice the reason given for compassion: not that we are strong, but that we are fragile and this is understood.",
-          "If you wish, hold one of your own responses in mind and say: “This is how I survived. Please meet me here.”",
-          "Sit quietly for a few breaths. Nothing needs to be surrendered, confessed or resolved for this to count.",
+          "Orient to the room, then read the short phrase slowly, twice.",
+          "Notice the order: Jesus' love is present before the young man's decision, and before he could release anything.",
+          "This story is not being used to equate your coping with the man's possessions, to label your response as sin, or to demand surrender.",
+          "If you wish, name one response and wonder, under mercy, what it may have tried to prevent, preserve, or provide.",
+          "If you would like a prayer: “Jesus, look on me with love. Help me understand without contempt. Show me what care, truth, boundary, or support is wise today.”",
+          "Sit in silence, or reorient outward. No feeling or answer is required.",
         ],
         notRequired:
-          "This is not about being told your coping was sinful, nor about handing anything over before you are ready. You may also read the passage and leave it there.",
+          "No confession, surrender, certainty, forgiveness, reconciliation or change is required. You may read without praying, or leave this path entirely.",
         scripture: {
-          reference: "Psalm 103:13–14 (World English Bible)",
-          body: "Like a father has compassion on his children, so Yahweh has compassion on those who fear him. For he knows how we are made. He remembers that we are dust.",
-          note: "The emphasis falls on being understood as fragile — not on being caused to suffer, tested, or required to explain yourself.",
+          reference: "Mark 10:21 (World English Bible)",
+          body: "Jesus looking at him loved him.",
+          note: "The emphasis falls on love being present before readiness. No claim is made that God caused this pattern or is ordering its release.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What feels possible to do with this today?",
-      hint: "One choice. Nothing here requires changing a pattern.",
+      prompt: "What is one small way to meet this response with curiosity rather than contempt?",
+      hint: "Specific, small, safe. You are not being asked to change the response today.",
       select: "one",
       options: [
-        { id: "thank", label: "Thank the response, silently, for what it did" },
-        { id: "watch", label: "Simply watch for it once this week, without acting" },
-        { id: "loosen", label: "Loosen it five percent in one safe moment" },
-        { id: "talk", label: "Mention it to a safe person or a professional" },
-        { id: "prepare", label: "Nothing outward — understanding it was the step" },
+        {
+          id: "notice",
+          label:
+            "Notice it once and say, “There it is. I wonder what it is trying to protect or provide.”",
+        },
+        {
+          id: "sentence",
+          label: "Write one private sentence: “When ______ happens, I tend to ______.”",
+        },
+        {
+          id: "reminder",
+          label: "Keep one word somewhere private to remind me to notice without judging",
+        },
+        {
+          id: "prepare-share",
+          label: "Prepare one sentence I could share with a safe person or professional",
+          note: "No need to send or say it today.",
+        },
+        { id: "settle", label: "No outward action — let today's understanding settle" },
       ],
     },
     reflection: {
-      intro: "Built from what you chose today, and held loosely.",
+      intro: "This uses only what you chose today. Keep what fits and leave what does not.",
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What you noticed",
           from: "response",
-          opening: "You recognised some familiar responses:",
           lines: {
-            withdraw: "Going quiet is familiar, which usually develops where being seen carried risk.",
-            numb: "Switching off is familiar, which is often how people survive an amount they cannot process at the time.",
-            overfunction: "Taking on more is familiar, and that competence may have been load-bearing for others.",
-            control: "Tightening control is familiar, which frequently grows in unpredictable conditions.",
-            please: "Keeping others comfortable is familiar, which often begins where conflict was unsafe.",
-            perfect: "Getting it exactly right is familiar, which tends to develop under criticism.",
-            anger: "Pushing back hard is familiar, and anger can be a fast, effective way to create space.",
-            busy: "Staying busy is familiar, and movement can keep difficult things at a workable distance.",
-            alone: "Handling it alone is familiar, which often follows being let down rather than preferring solitude.",
+            withdraw: "You chose going quiet or keeping to yourself as the response to look at today.",
+            numb: "You chose distracting yourself, scrolling or switching off as the response to look at today.",
+            overfunction:
+              "You chose taking on more and holding everything together as the response to look at today.",
+            control:
+              "You chose planning tightly or trying to leave nothing to chance as the response to look at today.",
+            please: "You chose keeping others comfortable as the response to look at today.",
+            perfect: "You chose trying to get everything exactly right as the response to look at today.",
+            anger:
+              "You chose pushing back hard or becoming angry quickly as the response to look at today.",
+            busy: "You chose staying busy as the response to look at today.",
+            alone: "You chose handling it alone rather than asking as the response to look at today.",
+            unsure: "You said you were not sure which response fits, which is an honest place to be.",
+            private: "You kept this private today, and nothing about it has been recorded.",
           },
           unanswered:
-            "You did not name a response, and none will be attributed to you. What today offered still applies: coping strategies usually began as solutions.",
+            "No response was chosen, and none will be attributed to you. Today can still be read generally.",
+        },
+        {
+          id: "underneath",
+          title: "When it tends to appear",
+          from: "doorway",
+          lines: {
+            criticism:
+              "You noted criticism, mistakes or feeling judged as a context where this can appear. A context is not a cause.",
+            conflict: "You noted conflict or tension as a context where this can appear.",
+            needed:
+              "You noted times when other people need something from you. A context is not a cause.",
+            uncertainty: "You noted uncertainty, or life feeling outside your control.",
+            closeness: "You noted closeness, vulnerability or depending on someone.",
+            overload:
+              "You noted being overloaded, exhausted, ill or in pain — real conditions, not explanations.",
+            loss: "You noted loss or difficult reminders as a context where this can appear.",
+            unfairness:
+              "You noted exclusion, unfair treatment, discrimination or feeling unsafe. Those are circumstances, not something you invented.",
+            unclear: "You said there is no clear pattern and it can build gradually. That is a real answer.",
+            private: "You chose not to answer this here, which is entirely reasonable.",
+          },
+          unanswered:
+            "No contexts were selected, and none will be guessed. Where a response appears can stay unclear for now.",
         },
         {
           id: "protected",
-          title: "What this may have been trying to protect",
-          from: "then",
-          opening: "Considering what was happening then:",
+          title: "What it may have been trying to protect or provide",
+          from: "purpose",
           lines: {
-            unsafe: "In unpredictable conditions, a reliable response is worth a great deal — even a costly one.",
-            criticised: "Where criticism was frequent, becoming difficult to criticise is an intelligent adaptation.",
-            unsupported: "Where no one was reliable, self-reliance was not a preference; it was the only option.",
-            responsible: "Carrying responsibility too early tends to leave a person very good at carrying and poor at putting down.",
-            loss: "After loss or upheaval, keeping things controlled or distant can be how a person stays upright.",
-            conflict: "Where conflict was frightening, keeping the peace may have been genuine protection for everyone.",
-            unclear: "It may have built up gradually, without a single identifiable cause. That is common.",
-            private: "You kept the detail to yourself, which is entirely reasonable and changes nothing about the work.",
+            conflict:
+              "You wondered whether it may have made conflict or another person's reaction less likely.",
+            criticism:
+              "You wondered whether it may have reduced criticism, shame, or feeling like a failure.",
+            predictability:
+              "One possibility you selected is that it may have created predictability or a sense of control.",
+            connection:
+              "You wondered whether it may have preserved connection, approval, or belonging.",
+            distance:
+              "One possibility you selected is that it may have created space, or kept needs and vulnerability private.",
+            overwhelm:
+              "You wondered whether it may have kept feelings, grief, or pressure more manageable.",
+            energy:
+              "One possibility you selected is that it may have conserved energy, or helped you get through responsibilities.",
+            disappointment:
+              "You wondered whether it may have reduced the risk of relying, hoping, or being disappointed.",
+            stillreal:
+              "You noted that it may be responding to something unsafe, unfair, or demanding that is still real. If so, it may still be needed.",
+            other: "You noted something else, not listed here. Your own words are closer than any list.",
+            notfit:
+              "You said protection does not feel like the right word, and that lens can be set aside.",
+            unsure: "You said you are not sure yet. Wondering can stay open.",
+            private: "You kept this private today, which is a complete answer.",
           },
           unanswered:
-            "Nothing was said about the past, and nothing will be inferred. What can be said generally is that protective responses are usually answers to something real.",
+            "Nothing was selected here, and there is no need to manufacture an answer. Protection may simply not be the right lens for this response.",
         },
         {
           id: "care",
-          title: "What may deserve care now",
+          title: "What understanding does — and does not — mean",
           opening:
-            "It is possible to be grateful to a response and honest about its cost at the same time. Both can be true, and neither cancels the other.",
+            "Compassion does not excuse harm, and understanding a response does not settle what to do about it. Some protection may still be necessary where a risk, injustice, limitation, illness or responsibility is ongoing. No origin and no decision to change are required today.",
           unanswered:
-            "However you coped, the person who did the coping deserves respect rather than a reprimand.",
+            "However much or little was chosen today, understanding without contempt is still available to you.",
         },
         {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
-            thank: "Thanking a response can reduce the internal argument about it.",
-            watch: "Watching without acting keeps you in charge of the pace.",
-            loosen: "Five percent, in a safe moment, is a real change and a modest risk.",
-            talk: "Talking it through with a safe person or professional is often where this work moves fastest.",
-            prepare: "Understanding it was the step. Nothing more is due today.",
+            notice: "You chose to notice it once and wonder what it may be trying to protect or provide.",
+            sentence: "You chose to write one private sentence about when this response tends to appear.",
+            reminder: "You chose to keep one private word as a reminder to notice without judging.",
+            "prepare-share":
+              "You chose to prepare one sentence for a safe person or professional. Nothing needs to be sent or said today.",
+            settle: "You chose no outward action, and let today's understanding settle.",
           },
           unanswered:
             "No step was chosen. Understanding, by itself, is a legitimate outcome for a day like this.",
         },
       ],
       closing:
-        "Nothing here is a psychological assessment, and no conclusion has been drawn about your history.",
+        "Only you know the fuller context. A response can make sense without becoming your identity. You are not only this pattern.",
     },
     close: {
-      heading: "Held with respect",
+      heading: "Understanding before change",
       body: [
-        "You looked at how you have coped without turning it into a case against yourself. That is unusual, and it matters.",
-        "Tomorrow looks at the pull in two directions that often follows this kind of honesty.",
+        "You looked at one possible pattern without reducing yourself to it. You did not have to prove where it came from or give it up.",
+        "Some protection may belong to the past, and some may be responding to what is still real.",
+        "When you continue, Day 5 makes room for both the pull toward movement and the pull toward safety.",
       ],
-      carryForward:
-        "Carry forward one sentence: this made sense, and I am allowed to look at it kindly.",
+      carryForward: "A pattern may be part of my story; it is not the whole of who I am.",
     },
   },
+
 
   {
     day: 5,

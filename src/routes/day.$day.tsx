@@ -995,20 +995,33 @@ function CloseScreen({
         <p className="eyebrow">Carry forward</p>
         <p className="mt-2 text-base text-foreground">{content.close.carryForward}</p>
       </div>
+      {/* Containment, not binge pressure: returning to Your Journey is the
+          primary, expected ending. The next day remains available, but as a
+          quieter secondary choice, and nothing suggests going straight on. */}
       <div className="space-y-3 pt-2">
+        <button
+          type="button"
+          onClick={onHome}
+          className="btn-primary-journey w-full"
+          data-testid="close-return-home"
+        >
+          Return to Your Journey
+        </button>
         {nextDay ? (
           <Link
             to="/day/$day"
             params={{ day: String(nextDay) }}
-            className="btn-primary-journey w-full"
+            className="btn-quiet block w-full text-center"
+            data-testid="close-next-day"
           >
             Continue to Day {nextDay}
           </Link>
         ) : null}
-        <button type="button" onClick={onHome} className="btn-quiet w-full">
-          Return to Your Journey
-        </button>
+        <p className="pt-1 text-center text-sm text-muted-foreground">
+          {CLOSE_CONTAINMENT_NOTE}
+        </p>
       </div>
+
     </div>
   );
 }

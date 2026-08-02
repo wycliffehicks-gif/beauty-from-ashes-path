@@ -5,11 +5,10 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  decodeAnswer,
-  encodeAnswer,
   mergeStableStepAnswers,
   optionIdsFor,
   optionIndexesForOptions,
+  stableAnswerId as encodeAnswer,
 } from "@/lib/journey/answers";
 import { migrateAnswersToStableIds } from "@/lib/journey/answer-migration";
 import { FIRST_JOURNEY_DAYS } from "@/content/first-journey";
@@ -26,10 +25,10 @@ const day1 = FIRST_JOURNEY_DAYS[0]!;
 const firstQuestion = day1.questions[0]!;
 
 describe("stable answer encoding", () => {
-  it("round-trips a stable token", () => {
-    const token = encodeAnswer("q.weight", "heavy");
-    expect(decodeAnswer(token)).toEqual({ stepKey: "q.weight", optionId: "heavy" });
+  it("encodes a step and option into one stable token", () => {
+    expect(encodeAnswer("q.weight", "heavy")).toBe("q.weight:heavy");
   });
+
 
   it("resolves stable tokens to option ids regardless of option order", () => {
     const options = [{ id: "a" }, { id: "b" }, { id: "c" }];

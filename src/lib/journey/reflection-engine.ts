@@ -12,7 +12,8 @@
 //  - only option positions are read, never anything a person typed.
 
 import type { JourneyDayContent } from "@/content/journey-types";
-import { optionIndexesFor } from "./resume";
+import { optionIdsFor } from "./answers";
+
 
 export interface ReflectionParagraphs {
   id: string;
@@ -47,10 +48,9 @@ export function selectedOptionIds(
 ): string[] {
   const question = questionById(day, questionId);
   if (!question) return [];
-  return optionIndexesFor(answerIds, answerKeyFor(day, questionId), question.options.length)
-    .map((idx) => question.options[idx]?.id)
-    .filter((id): id is string => Boolean(id));
+  return optionIdsFor(answerIds, answerKeyFor(day, questionId), question.options);
 }
+
 
 export function buildReflection(
   day: JourneyDayContent,

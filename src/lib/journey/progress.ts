@@ -11,12 +11,20 @@
 //    resume the screen they were on.
 
 import { useCallback, useEffect, useState } from "react";
+import { migrateAnswersToStableIds } from "./answer-migration";
 
 export const JOURNEY_STORAGE_KEY = "bfa.journey.v1";
-export const JOURNEY_STORE_VERSION = 1;
+/** v2 stores each option's stable id instead of its position. */
+export const JOURNEY_STORE_VERSION = 2;
 
-/** Legacy low-sensitivity store migrated from (visited days only). */
+/** Legacy low-sensitivity preference store (visited days only). */
 const LEGACY_PREFS_KEY = "bfa.v1";
+
+/** Every local/session key this app owns, for a complete, scoped clear. */
+export const APP_OWNED_LOCAL_KEYS = [JOURNEY_STORAGE_KEY, LEGACY_PREFS_KEY] as const;
+export const APP_OWNED_SESSION_KEYS = ["bfa_splash_shown_v1"] as const;
+export const APP_OWNED_KEY_PREFIXES = ["bfa.session.", "bfa."] as const;
+
 
 const MAX_ANSWER_ID_LENGTH = 64;
 const MAX_ANSWERS_PER_DAY = 40;
@@ -98,8 +106,10 @@ function sanitizeReflections(raw: unknown): Record<string, string> {
 }
 
 /**
- * Migrate the earlier `bfa.v1` visited-day markers into completion markers.
- * Only low-sensitivity day numbers ever existed there.
+ * Parse the earlier `bfa.v1` visited-day markers. Kept for reference only.
+ *
+ * "Visited" was never proof that a day was finished, so this is deliberately
+ * NOT used to create completion markers anywhere.
  */
 export function migrateLegacyVisitedDays(rawLegacy: string | null): string[] {
   if (!rawLegacy) return [];
@@ -114,17 +124,42 @@ export function migrateLegacyVisitedDays(rawLegacy: string | null): string[] {
   }
 }
 
-export function normalizeProgress(raw: unknown, legacyRaw: string | null = null): JourneyProgress {
+export function normalizeProgress(raw: unknown): JourneyProgress {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const completed = Array.isArray(r.completedDays) ? r.completedDays.filter(isSafeId) : [];
-  const legacy = raw ? [] : migrateLegacyVisitedDays(legacyRaw);
   return {
     version: JOURNEY_STORE_VERSION,
     locator: sanitizeLocator(r.locator),
     answers: sanitizeAnswers(r.answers),
-    completedDays: Array.from(new Set([...completed, ...legacy])),
+    completedDays: Array.from(new Set(completed)),
     reflections: sanitizeReflections(r.reflections),
     updatedAt: typeof r.updatedAt === "string" ? r.updatedAt : null,
+  };
+}
+
+/**
+ * One-time store upgrade. Positional answer tokens become stable option ids,
+ * and older completion markers are dropped rather than trusted (see
+ * ./answer-migration.ts for why). Locator, answers and saved reflections are
+ * preserved.
+ */
+export function upgradeStoredProgress(raw: unknown): {
+  progress: JourneyProgress;
+  changed: boolean;
+} {
+  const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const storedVersion = typeof r.version === "number" ? r.version : 1;
+  const normalized = normalizeProgress(raw);
+  if (!raw || storedVersion >= JOURNEY_STORE_VERSION) {
+    return { progress: normalized, changed: false };
+  }
+  return {
+    progress: {
+      ...normalized,
+      answers: migrateAnswersToStableIds(normalized.answers),
+      completedDays: [],
+    },
+    changed: true,
   };
 }
 
@@ -134,12 +169,23 @@ export function readProgress(): JourneyProgress {
   if (typeof window === "undefined") return emptyProgress;
   try {
     const raw = window.localStorage.getItem(JOURNEY_STORAGE_KEY);
-    const legacy = window.localStorage.getItem(LEGACY_PREFS_KEY);
-    return normalizeProgress(raw ? JSON.parse(raw) : null, legacy);
+    const { progress, changed } = upgradeStoredProgress(raw ? JSON.parse(raw) : null);
+    if (changed) {
+      try {
+        window.localStorage.setItem(
+          JOURNEY_STORAGE_KEY,
+          JSON.stringify({ ...progress, updatedAt: new Date().toISOString() }),
+        );
+      } catch {
+        /* storage may be unavailable; the migrated view still applies */
+      }
+    }
+    return progress;
   } catch {
     return emptyProgress;
   }
 }
+
 
 function write(next: JourneyProgress) {
   if (typeof window === "undefined") return;
@@ -215,18 +261,65 @@ export function hasMeaningfulProgress(
   return (progress.answers[loc.dayId]?.length ?? 0) > 0;
 }
 
-/** Explicit, confirmed clear. Also removes the legacy low-sensitivity store. */
+/** Keys this app owns in a given store, resolved defensively. */
+function appOwnedKeys(store: {
+  length?: number;
+  key?: (i: number) => string | null;
+}): string[] {
+  const out: string[] = [];
+  const len = typeof store.length === "number" ? store.length : 0;
+  if (typeof store.key !== "function") return out;
+  for (let i = 0; i < len; i += 1) {
+    const k = store.key(i);
+    if (!k) continue;
+    if (APP_OWNED_KEY_PREFIXES.some((p) => k.startsWith(p)) || k.startsWith("bfa_")) {
+      out.push(k);
+    }
+  }
+  return out;
+}
+
+/**
+ * Explicit, confirmed clear of every Beauty from Ashes-owned item on this
+ * device and browser: preferences and legal acceptance, the journey locator,
+ * stable and legacy structured selections, saved deterministic reflections,
+ * completion markers, legacy weekly-session state and the launch-screen
+ * session marker. Nothing else in the browser is touched.
+ */
 export function clearJourney() {
   if (typeof window === "undefined") return;
+
+  const removeAll = (store: Storage | undefined, extra: readonly string[]) => {
+    if (!store) return;
+    const keys = new Set<string>([...extra, ...appOwnedKeys(store)]);
+    for (const k of keys) {
+      try {
+        store.removeItem(k);
+      } catch {
+        /* ignore individual failures */
+      }
+    }
+  };
+
   try {
-    window.localStorage.removeItem(JOURNEY_STORAGE_KEY);
+    removeAll(window.localStorage, [...APP_OWNED_LOCAL_KEYS, ...APP_OWNED_SESSION_KEYS]);
   } catch {
     /* ignore */
   }
-  if (typeof window !== "undefined") {
+  try {
+    removeAll(window.sessionStorage, [...APP_OWNED_SESSION_KEYS, ...APP_OWNED_LOCAL_KEYS]);
+  } catch {
+    /* ignore */
+  }
+
+  try {
     window.dispatchEvent(new CustomEvent(JOURNEY_CHANGE_EVENT));
+    window.dispatchEvent(new CustomEvent("bfa-prefs-change"));
+  } catch {
+    /* ignore */
   }
 }
+
 
 /** SSR-safe subscription hook. Every future day can autosave through this. */
 export function useJourneyProgress(): {

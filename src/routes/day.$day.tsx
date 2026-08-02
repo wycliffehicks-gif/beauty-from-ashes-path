@@ -1,5 +1,5 @@
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
 import {
@@ -13,7 +13,7 @@ import {
   type ScreenKey,
 } from "@/content/journey-types";
 import { dayIdFor } from "@/content/journey";
-import { markDayVisited } from "@/lib/prefs";
+import { usePrefs } from "@/lib/prefs";
 import {
   markDayComplete,
   readProgress,
@@ -29,21 +29,24 @@ import {
 } from "@/lib/journey/reflection-engine";
 import { toggleSelection } from "@/lib/journey/selection";
 import {
-  mergeStepAnswers,
-  optionIndexesFor,
-  resolveResumeIndex,
-} from "@/lib/journey/resume";
+  mergeStableStepAnswers,
+  optionIdsFor,
+  optionIndexesForOptions,
+} from "@/lib/journey/answers";
+import { resolveResumeIndex } from "@/lib/journey/resume";
 
-/** Layout effect on the client, a no-op during server rendering. */
-const useIsomorphicLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+const SAFE_SCREEN_KEY = /^[A-Za-z0-9._-]{1,64}$/;
 
 export const Route = createFileRoute("/day/$day")({
-  validateSearch: (
-    search: Record<string, unknown>,
-  ): { step?: "close"; resume?: true } => {
-    const out: { step?: "close"; resume?: true } = {};
-    if (search.step === "close") out.step = "close";
+  /**
+   * `s` is a stable screen key, so device/browser Back moves exactly one
+   * in-day screen. It is never answer data. The old URL-addressable close
+   * state (`?step=close`) is deliberately ignored: a day may only be opened at
+   * Close, or completed, through real forward movement inside the day.
+   */
+  validateSearch: (search: Record<string, unknown>): { s?: string; resume?: true } => {
+    const out: { s?: string; resume?: true } = {};
+    if (typeof search.s === "string" && SAFE_SCREEN_KEY.test(search.s)) out.s = search.s;
     if (search.resume === true || search.resume === "true") out.resume = true;
     return out;
   },
@@ -93,6 +96,7 @@ function DayNotHere() {
 
 function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const navigate = useNavigate();
+  const router = useRouter();
   const search = Route.useSearch();
 
   const screens = useMemo(() => screensFor(content), [content]);
@@ -100,70 +104,96 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const closeIdx = screens.length - 1;
   const dayId = dayIdFor(content.day);
 
-  // Server render and first client render are identical: the opening screen,
-  // or the closing screen when the URL asks for it. Browser storage is never
-  // read during render, so there is no hydration mismatch.
-  const [i, setI] = useState(() => (search.step === "close" ? closeIdx : 0));
-  const [dayAnswers, setDayAnswers] = useState<string[]>([]);
+  // The visible screen comes from the URL only, so server render, first client
+  // render, reload and device Back all agree. An unknown key opens the day at
+  // its beginning rather than stranding anyone.
+  const urlIdx = search.s ? stepKeys.indexOf(search.s) : -1;
+  const i = urlIdx >= 0 ? urlIdx : 0;
 
-  /**
-   * Resume gate. While pending, autosave is held back so the opening-screen
-   * index can never overwrite the stored locator before it is restored.
-   */
-  const [resumeSettled, setResumeSettled] = useState(!search.resume);
+  const [dayAnswers, setDayAnswers] = useState<string[]>([]);
+  const [answersLoaded, setAnswersLoaded] = useState(false);
+
+  /** How many in-day screens this visit pushed onto the history stack. */
+  const pushDepth = useRef(0);
   const restoredForRef = useRef<string | null>(null);
 
-  useIsomorphicLayoutEffect(() => {
+  const goTo = useCallback(
+    (index: number, opts: { replace?: boolean } = {}) => {
+      navigate({
+        to: "/day/$day",
+        params: { day: String(content.day) },
+        search: { s: stepKeys[index] },
+        replace: opts.replace ?? false,
+      });
+      if (typeof window !== "undefined") window.scrollTo(0, 0);
+    },
+    [navigate, content.day, stepKeys],
+  );
+
+  // Load recorded answers, and restore the exact saved screen when asked.
+  // Resume replaces the current entry, so no synthetic history stack is built.
+  useEffect(() => {
     if (restoredForRef.current === dayId) return;
     restoredForRef.current = dayId;
 
     const progress = readProgress();
     setDayAnswers(progress.answers[dayId] ?? []);
+    setAnswersLoaded(true);
 
-    if (search.step !== "close") {
+    if (search.resume && urlIdx < 0) {
       const idx = resolveResumeIndex({
         stepKeys,
         dayId,
         locator: progress.locator,
-        requested: Boolean(search.resume),
+        requested: true,
       });
-      // Invalid, foreign or stale locator resolves to -1: stay at Arrive.
-      if (idx >= 0) setI(idx);
+      if (idx > 0) goTo(idx, { replace: true });
     }
-    setResumeSettled(true);
-  }, [dayId, stepKeys, search.resume, search.step]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dayId]);
 
   // Quiet autosave of the exact screen. Never completes a day.
   useEffect(() => {
-    if (!resumeSettled) return;
+    if (!answersLoaded) return;
     saveLocator({ dayId, step: stepKeys[i], index: i });
-  }, [dayId, stepKeys, i, resumeSettled]);
+  }, [dayId, stepKeys, i, answersLoaded]);
 
-  // Completion is recorded only on genuinely reaching the closing screen.
+  // Reflection readiness gate: Continue cannot bypass the reflection before the
+  // deterministic response is available.
+  const [reflectionReady, setReflectionReady] = useState(false);
   useEffect(() => {
-    if (screens[i]?.kind !== "close") return;
-    markDayComplete(dayId);
-    markDayVisited(content.day);
-  }, [screens, i, dayId, content.day]);
+    setReflectionReady(false);
+  }, [i]);
+  const onReflectionReady = useCallback(() => setReflectionReady(true), []);
 
-  const recordStepAnswers = (stepKey: string, optionIndexes: number[]) => {
+  const recordStepAnswers = (stepKey: string, optionIds: string[]) => {
     setDayAnswers((cur) => {
-      const next = mergeStepAnswers(cur, stepKey, optionIndexes);
+      const next = mergeStableStepAnswers(cur, stepKey, optionIds);
       saveDayAnswers(dayId, next);
       return next;
     });
   };
 
-  const scrollTop = () => {
-    if (typeof window !== "undefined") window.scrollTo(0, 0);
-  };
   const goNext = () => {
-    setI((n) => Math.min(closeIdx, n + 1));
-    scrollTop();
+    const next = Math.min(closeIdx, i + 1);
+    if (next === i) return;
+    // Completion is recorded only by a real forward transition into Close,
+    // which is only reachable from the reflection once it is available.
+    if (screens[next]?.kind === "close") markDayComplete(dayId);
+    pushDepth.current += 1;
+    goTo(next);
   };
+
   const goPrev = () => {
-    setI((n) => Math.max(0, n - 1));
-    scrollTop();
+    if (i <= 0) return;
+    if (pushDepth.current > 0) {
+      // Matches the browser/Android Back button exactly: one screen back.
+      pushDepth.current -= 1;
+      router.history.back();
+      if (typeof window !== "undefined") window.scrollTo(0, 0);
+      return;
+    }
+    goTo(i - 1, { replace: true });
   };
 
   const screen = screens[i];
@@ -180,9 +210,12 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onBack={i > 0 ? goPrev : undefined}
       onNext={goNext}
       answers={dayAnswers}
+      answersLoaded={answersLoaded}
       onAnswer={recordStepAnswers}
       nextDay={nextDay}
       onHome={() => navigate({ to: "/" })}
+      reflectionReady={reflectionReady}
+      onReflectionReady={onReflectionReady}
     />
   );
 }
@@ -195,9 +228,12 @@ function ScreenBody({
   onBack,
   onNext,
   answers,
+  answersLoaded,
   onAnswer,
   nextDay,
   onHome,
+  reflectionReady,
+  onReflectionReady,
 }: {
   content: JourneyDayContent;
   screen: ScreenKey;
@@ -206,15 +242,20 @@ function ScreenBody({
   onBack?: () => void;
   onNext: () => void;
   answers: string[];
-  onAnswer: (stepKey: string, indexes: number[]) => void;
+  answersLoaded: boolean;
+  onAnswer: (stepKey: string, optionIds: string[]) => void;
   nextDay: number | null;
   onHome: () => void;
+  reflectionReady: boolean;
+  onReflectionReady: () => void;
 }) {
   const shell = (
     node: React.ReactNode,
     nav: {
       onContinue?: () => void;
       continueLabel?: string;
+      continueDisabled?: boolean;
+      continueHint?: string;
       footer?: React.ReactNode;
     } = {},
   ) => (
@@ -225,6 +266,8 @@ function ScreenBody({
       backLabel="← Back"
       onContinue={nav.onContinue}
       continueLabel={nav.continueLabel}
+      continueDisabled={nav.continueDisabled}
+      continueHint={nav.continueHint}
       footer={nav.footer}
     >
       {node}
@@ -272,9 +315,21 @@ function ScreenBody({
       return shell(<PractiseScreen content={content} />, { onContinue: onNext });
 
     case "reflection":
-      return shell(<ReflectionScreen content={content} answers={answers} />, {
-        onContinue: onNext,
-      });
+      return shell(
+        <ReflectionScreen
+          content={content}
+          answers={answers}
+          answersLoaded={answersLoaded}
+          onReady={onReflectionReady}
+        />,
+        {
+          onContinue: onNext,
+          continueDisabled: !reflectionReady,
+          continueHint: reflectionReady
+            ? undefined
+            : "Your reflection is being prepared. Continue becomes available in a moment.",
+        },
+      );
 
     case "close":
       return shell(
@@ -363,32 +418,35 @@ function QuestionScreenShell({
   question: Question;
   stepKey: string;
   answers: string[];
-  onAnswer: (stepKey: string, indexes: number[]) => void;
+  onAnswer: (stepKey: string, optionIds: string[]) => void;
   onNext: () => void;
   label: string;
   progress: { current: number; total: number };
   onBack?: () => void;
 }) {
   const [selected, setSelected] = useState<number[]>(() =>
-    optionIndexesFor(answers, stepKey, question.options.length),
+    optionIndexesForOptions(answers, stepKey, question.options),
   );
 
   // Restore previously recorded choices once they arrive from storage.
   const restoredRef = useRef(false);
   useEffect(() => {
     if (restoredRef.current) return;
-    const prior = optionIndexesFor(answers, stepKey, question.options.length);
+    const prior = optionIndexesForOptions(answers, stepKey, question.options);
     if (prior.length > 0) {
       restoredRef.current = true;
       setSelected(prior);
     }
-  }, [answers, stepKey, question.options.length]);
+  }, [answers, stepKey, question.options]);
 
   const toggle = (idx: number) => {
     restoredRef.current = true;
     const next = toggleSelection(question, selected, idx);
     setSelected(next);
-    onAnswer(stepKey, next);
+    onAnswer(
+      stepKey,
+      next.map((n) => question.options[n]!.id),
+    );
   };
 
   return (
@@ -460,12 +518,8 @@ function EchoScreen({
   answers: string[];
 }) {
   const echo = question.echo!;
-  const chosen = optionIndexesFor(
-    answers,
-    answerKeyFor(content, question.id),
-    question.options.length,
-  )
-    .map((idx) => echo.byOption[question.options[idx]!.id])
+  const chosen = optionIdsFor(answers, answerKeyFor(content, question.id), question.options)
+    .map((id) => echo.byOption[id])
     .filter((line): line is string => Boolean(line));
   const lines = chosen.length > 0 ? chosen : [echo.unanswered];
 
@@ -488,7 +542,10 @@ function EchoScreen({
 }
 
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
+  const [prefs] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
+  const showSpiritual = prefs.showSpiritual;
+
   return (
     <div className="space-y-5">
       <p className="eyebrow">Practise</p>
@@ -496,17 +553,21 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
         {content.practise.heading}
       </h1>
       <p className="text-base text-foreground">{content.practise.intro}</p>
-      <p className="text-base text-muted-foreground">{content.practise.either}</p>
+      {showSpiritual && (
+        <p className="text-base text-muted-foreground">{content.practise.either}</p>
+      )}
       <PracticePanel
         path={content.practise.reflection}
         isOpen={open === "reflection"}
         onToggle={() => setOpen(open === "reflection" ? null : "reflection")}
       />
-      <PracticePanel
-        path={content.practise.spiritual}
-        isOpen={open === "spiritual"}
-        onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
-      />
+      {showSpiritual && (
+        <PracticePanel
+          path={content.practise.spiritual}
+          isOpen={open === "spiritual"}
+          onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
+        />
+      )}
     </div>
   );
 }
@@ -530,7 +591,8 @@ function PracticePanel({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="btn-quiet w-full"
+        aria-label={`${isOpen ? "Hide the steps" : "Show me how"} — ${path.title}`}
+        className="btn-quiet min-h-[44px] w-full"
       >
         {isOpen ? "Hide the steps" : "Show me how"}
       </button>
@@ -569,21 +631,34 @@ function PracticePanel({
   );
 }
 
+/**
+ * The personalized reflection appears automatically. There is no reveal
+ * control, no AI/curated/model label, and nothing new is claimed: the response
+ * is assembled on this device from founder-approved content for this day and
+ * the structured selections already gathered. Fully unanswered paths receive
+ * their approved substantive fallbacks.
+ */
 function ReflectionScreen({
   content,
   answers,
+  answersLoaded,
+  onReady,
 }: {
   content: JourneyDayContent;
   answers: string[];
+  answersLoaded: boolean;
+  onReady: () => void;
 }) {
   const [built, setBuilt] = useState<BuiltReflection | null>(null);
 
-  const reveal = () => {
+  useEffect(() => {
+    if (!answersLoaded) return;
     const next = buildReflection(content, answers);
     setBuilt(next);
-    // Saved locally only, so this screen can be resumed on this device.
+    // Saved locally only, so this exact screen restores on reload or resume.
     saveDayReflection(dayIdFor(content.day), reflectionToText(next));
-  };
+    onReady();
+  }, [content, answers, answersLoaded, onReady]);
 
   return (
     <div className="space-y-5">
@@ -593,27 +668,29 @@ function ReflectionScreen({
       </h1>
       <p className="text-base text-foreground">{content.reflection.intro}</p>
 
-      {!built ? (
-        <button type="button" onClick={reveal} className="btn-primary-journey w-full">
-          See My Personalized Reflection
-        </button>
-      ) : (
-        <div className="space-y-4">
-          {built.sections.map((section) => (
-            <section key={section.id} className="surface-card space-y-2">
-              <h2 className="font-serif text-lg text-[color:var(--navy)]">
-                {section.title}
-              </h2>
-              {section.paragraphs.map((p) => (
-                <p key={p} className="text-base text-foreground">
-                  {p}
-                </p>
-              ))}
-            </section>
-          ))}
-          <p className="text-base text-muted-foreground">{built.closing}</p>
-        </div>
-      )}
+      <div role="status" aria-live="polite">
+        {!built ? (
+          <p className="text-base text-muted-foreground">
+            Preparing your reflection…
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {built.sections.map((section) => (
+              <section key={section.id} className="surface-card space-y-2">
+                <h2 className="font-serif text-lg text-[color:var(--navy)]">
+                  {section.title}
+                </h2>
+                {section.paragraphs.map((p) => (
+                  <p key={p} className="text-base text-foreground">
+                    {p}
+                  </p>
+                ))}
+              </section>
+            ))}
+            <p className="text-base text-muted-foreground">{built.closing}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,64 @@
 # Change log
 
+## 2026-08-02 — Bounded Day 6 content-and-safety revision
+
+Day 6 (“What It Is Costing Now”) only; Days 1–5 and 7–10 untouched. No route,
+component, storage, resume, completion, reflection-mechanics, AI, spiritual-
+preference or other shared-system change. `src/routeTree.gen.ts` unchanged.
+Still private and unpublished. The nine-screen notice-first order (arrive →
+cost → Explore → Listen → protects → practise → step → reflection → close),
+title, day number, motif “cost”, question IDs `cost`/`protects` and step ID
+`step` are preserved, with every existing option ID kept in its existing order
+and new IDs appended only.
+
+- **Identity**: descriptor now “Noticing one present-day cost · about 12
+  minutes”; theme states cost noticed without blame, forced choice or invented
+  causes.
+- **Arrive**: removed “Yesterday”, jaw/tongue, full-weight and prescribed
+  settling copy; new lead separates seeing a cost from self-blame or a decision
+  to change; settling is optional, inclusive and outward-first.
+- **Question 1 (cost)**: now single-select with revised descriptive labels and
+  appended `none`, `unclear`, `private`; carries the Days 2–3 physical-symptom
+  note verbatim; echoes are descriptive and noncausal.
+- **Listen**: new label and teaching that something can help and cost at the
+  same time, naming illness, disability, caregiving, discrimination, financial
+  pressure, unsafe conditions and limited support as possible sources; two info
+  notes on real circumstances and why cost is examined at all.
+- **Question 2 (protects)**: now single-select, reframed as what may help this
+  continue or make change difficult; appended `belonging`, `limits`, `ongoing`,
+  `unclear`, `private`.
+- **Practise**: reflection path holds one cost beside what is also true and
+  distinguishes influence, needed support and what cannot be changed now; the
+  Christian path uses the complete verified World English Bible wording of
+  Matthew 11:28–30 (“gentle and humble in heart”) with an explicit note that it
+  is not a promise of immediate change and not “just give it to God”.
+- **One Honest Step**: all steps safe and reversible; `ask` and `return` are
+  preparatory with nothing sent or done today; `ask` and `support` carry safety
+  notes.
+- **Personalized reflection**: openings removed from `hearing`, `protected` and
+  `next` so partial and fully skipped paths never say “You named…”; new care
+  section distinguishes own choices, needed support and what may be grieved or
+  carried differently; closing reaches no conclusion about cause or change.
+- **Close**: “Seen clearly, held gently” with an honest whether-or-not opening,
+  a Day 7 signpost and the carry-forward line about noticing cost without
+  self-condemnation.
+- **Tests**: focused Day 6 block in `src/lib/journey/__tests__/selection.test.ts`
+  covering identity/shape/screen order, single-select on both questions, option
+  ID order and appended IDs, inclusive arrival, shared physical-symptom note,
+  both practices and the Matthew wording, step safety notes, absent section
+  openings, honest fully skipped reflection, none/unclear/private accuracy,
+  selected-only answered mapping, and absence of forbidden inferential phrasing.
+  Full suite 339 tests passing, standalone typecheck clean, production build
+  succeeded.
+- **Wording note**: two founder sentences were adjusted by three words to satisfy
+  the existing global safety guard forbidding directive “you should” phrasing —
+  “what you should change” → “what to change”, and “what you should do” →
+  “what to do”. Meaning unchanged.
+- **Unchanged known shared issues** (out of scope, not fixed): reflection
+  reveal/bypass and saved-response restoration, positional answer storage
+  migration, duplicate “Show me how” accessible labels, inactive spiritual
+  setting.
+
 ## 2026-08-01 — Bounded Day 5 content-and-safety revision
 
 Day 5 (“The Two Pulls Within You”) only; Days 1–4 and 6–10 untouched. No route,

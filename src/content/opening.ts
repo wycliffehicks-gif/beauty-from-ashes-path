@@ -70,7 +70,7 @@ export const AGREEMENT_COPY = {
   ],
   /** One calm sentence, no alarming technical language. */
   automatedProcessingSentence:
-    "To create your personalized reflection, the choices you select may be processed automatically for a moment and are not read by a person.",
+    "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and nothing is sent anywhere.",
   safetySentence:
     "If you are ever in immediate danger, please contact local emergency services or someone nearby.",
   adultLabel: "I confirm that I am 18 years of age or older.",

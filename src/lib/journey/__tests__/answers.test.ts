@@ -53,6 +53,7 @@ import {
   JOURNEY_STORAGE_KEY,
   JOURNEY_STORE_VERSION,
   clearJourney,
+  migrateLegacyVisitedDays,
   upgradeStoredProgress,
 } from "@/lib/journey/progress";
 
@@ -113,7 +114,7 @@ describe("conservative store migration", () => {
     ]);
   });
 
-  it("keeps selections and the saved place, and does not assert completion", () => {
+  it("keeps selections, the saved place and days genuinely finished", () => {
     const dayId = dayIdFor(day1.day);
     const { progress, changed } = upgradeStoredProgress({
       version: 1,
@@ -128,9 +129,24 @@ describe("conservative store migration", () => {
     expect(progress.locator?.dayId).toBe(dayId);
     expect(progress.reflections[dayId]).toBe("a saved reflection");
     expect(progress.answers[dayId]?.[0]).toContain(firstQuestion.options[0]!.id);
-    // Legacy completion was not proof of finishing a day, so it is dropped
-    // rather than trusted.
+    // Completion recorded by this app's own end-of-day path is real work and is
+    // preserved; only legacy `bfa.v1` visited-day markers are never promoted.
+    expect(progress.completedDays).toEqual([dayId]);
+  });
+
+  it("never promotes legacy visited days into completion", () => {
+    const { progress } = upgradeStoredProgress({
+      version: 1,
+      answers: {},
+      reflections: {},
+    });
     expect(progress.completedDays).toEqual([]);
+    // The legacy visited-day parser exists for reference only and produces day
+    // ids that no migration path writes to completedDays.
+    expect(migrateLegacyVisitedDays(JSON.stringify({ visitedDays: [1, 2] }))).toEqual([
+      "day-01",
+      "day-02",
+    ]);
   });
 
   it("leaves a current-version store untouched", () => {

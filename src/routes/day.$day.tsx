@@ -1,4 +1,10 @@
-import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
@@ -20,6 +26,7 @@ import {
   saveDayAnswers,
   saveDayReflection,
   saveLocator,
+  saveReached,
 } from "@/lib/journey/progress";
 import {
   answerKeyFor,
@@ -27,6 +34,8 @@ import {
   reflectionToText,
   type BuiltReflection,
 } from "@/lib/journey/reflection-engine";
+import { answersSnapshot, restoreReflection } from "@/lib/journey/reflection-restore";
+import { resolveVisibleIndex } from "@/lib/journey/screen-access";
 import { toggleSelection } from "@/lib/journey/selection";
 import {
   mergeStableStepAnswers,
@@ -101,43 +110,70 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
 
   const screens = useMemo(() => screensFor(content), [content]);
   const stepKeys = useMemo(() => screens.map(keyForScreen), [screens]);
+  const kinds = useMemo(() => screens.map((s) => s.kind), [screens]);
   const closeIdx = screens.length - 1;
   const dayId = dayIdFor(content.day);
 
-  // The visible screen comes from the URL only, so server render, first client
+  // The requested screen comes from the URL only, so server render, first client
   // render, reload and device Back all agree. An unknown key opens the day at
   // its beginning rather than stranding anyone.
   const urlIdx = search.s ? stepKeys.indexOf(search.s) : -1;
-  const i = urlIdx >= 0 ? urlIdx : 0;
+  const requested = urlIdx >= 0 ? urlIdx : 0;
 
   const [dayAnswers, setDayAnswers] = useState<string[]>([]);
   const [answersLoaded, setAnswersLoaded] = useState(false);
+  /** Proof of real movement: stored high-water screen plus this visit's own. */
+  const [reached, setReached] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [savedReflection, setSavedReflection] = useState<{
+    text?: string;
+    snapshot?: string;
+  }>({});
 
-  /** How many in-day screens this visit pushed onto the history stack. */
-  const pushDepth = useRef(0);
+  // A crafted ?s=reflection or ?s=close is never proof that the screen was
+  // reached. Until storage has been read, only the opening screen is shown for
+  // gated screens, so nothing can be completed before the clamp applies.
+  const i = answersLoaded
+    ? resolveVisibleIndex({ kinds, requested, reached, completed })
+    : resolveVisibleIndex({ kinds, requested, reached: 0, completed: false });
+
   const restoredForRef = useRef<string | null>(null);
+  /** History index when this day was first rendered, for a truthful Back. */
+  const historyIndex = useHistoryIndex();
+  const entryHistoryIndex = useRef<number | null>(null);
+  if (entryHistoryIndex.current === null) entryHistoryIndex.current = historyIndex;
 
   const goTo = useCallback(
     (index: number, opts: { replace?: boolean } = {}) => {
+      const key = stepKeys[index];
+      const sameScreen = search.s === key;
       navigate({
         to: "/day/$day",
         params: { day: String(content.day) },
-        search: { s: stepKeys[index] },
-        replace: opts.replace ?? false,
+        search: { s: key },
+        // Never push a duplicate entry for the screen already on display.
+        replace: opts.replace ?? sameScreen,
       });
       if (typeof window !== "undefined") window.scrollTo(0, 0);
     },
-    [navigate, content.day, stepKeys],
+    [navigate, content.day, stepKeys, search.s],
   );
 
-  // Load recorded answers, and restore the exact saved screen when asked.
-  // Resume replaces the current entry, so no synthetic history stack is built.
+  // Load recorded answers, reached position, completion and any saved
+  // reflection, and restore the exact saved screen when asked. Resume replaces
+  // the current entry, so no synthetic history stack is built.
   useEffect(() => {
     if (restoredForRef.current === dayId) return;
     restoredForRef.current = dayId;
 
     const progress = readProgress();
     setDayAnswers(progress.answers[dayId] ?? []);
+    setReached(progress.reached[dayId] ?? 0);
+    setCompleted(progress.completedDays.includes(dayId));
+    setSavedReflection({
+      text: progress.reflections[dayId],
+      snapshot: progress.reflectionSnapshots[dayId],
+    });
     setAnswersLoaded(true);
 
     if (search.resume && urlIdx < 0) {
@@ -152,19 +188,32 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayId]);
 
-  // Quiet autosave of the exact screen. Never completes a day.
+  // Quiet autosave of the exact screen, plus the high-water screen reached.
+  // Neither completes a day.
   useEffect(() => {
     if (!answersLoaded) return;
     saveLocator({ dayId, step: stepKeys[i], index: i });
-  }, [dayId, stepKeys, i, answersLoaded]);
+    if (i > reached) {
+      setReached(i);
+      saveReached(dayId, i);
+    }
+    // If the URL asked for a screen that has not been earned, correct the
+    // address bar so reload and Back stay consistent with what is shown.
+    if (requested !== i) goTo(i, { replace: true });
+  }, [dayId, stepKeys, i, answersLoaded, reached, requested, goTo]);
 
-  // Reflection readiness gate: Continue cannot bypass the reflection before the
-  // deterministic response is available.
-  const [reflectionReady, setReflectionReady] = useState(false);
-  useEffect(() => {
-    setReflectionReady(false);
-  }, [i]);
-  const onReflectionReady = useCallback(() => setReflectionReady(true), []);
+  /**
+   * Reflection readiness has exactly one owner: the screen key it belongs to.
+   * There is no separate reset effect to race with the child, so Continue can
+   * never be stranded disabled.
+   */
+  const [readyForKey, setReadyForKey] = useState<string | null>(null);
+  const currentKey = stepKeys[i];
+  const reflectionReady = readyForKey === currentKey;
+  const onReflectionReady = useCallback(
+    (key: string) => setReadyForKey(key),
+    [],
+  );
 
   const recordStepAnswers = (stepKey: string, optionIds: string[]) => {
     setDayAnswers((cur) => {
@@ -177,18 +226,22 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const goNext = () => {
     const next = Math.min(closeIdx, i + 1);
     if (next === i) return;
-    // Completion is recorded only by a real forward transition into Close,
-    // which is only reachable from the reflection once it is available.
-    if (screens[next]?.kind === "close") markDayComplete(dayId);
-    pushDepth.current += 1;
+    // Completion is recorded only by a real forward transition into Close from
+    // a ready reflection reached through valid journey state.
+    if (screens[next]?.kind === "close") {
+      if (screens[i]?.kind === "reflection" && !reflectionReady) return;
+      setCompleted(true);
+      markDayComplete(dayId);
+    }
     goTo(next);
   };
 
   const goPrev = () => {
     if (i <= 0) return;
-    if (pushDepth.current > 0) {
-      // Matches the browser/Android Back button exactly: one screen back.
-      pushDepth.current -= 1;
+    // Derived from the real history index, so mixed visible Back and
+    // browser/Android Back or Forward can never leave a stale depth counter.
+    const depth = historyIndex - (entryHistoryIndex.current ?? historyIndex);
+    if (depth > 0) {
       router.history.back();
       if (typeof window !== "undefined") window.scrollTo(0, 0);
       return;
@@ -215,9 +268,26 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       nextDay={nextDay}
       onHome={() => navigate({ to: "/" })}
       reflectionReady={reflectionReady}
-      onReflectionReady={onReflectionReady}
+      onReflectionReady={() => onReflectionReady(currentKey)}
+      savedReflection={savedReflection}
+      onReflectionSaved={(text, snapshot) =>
+        setSavedReflection({ text, snapshot })
+      }
     />
   );
+}
+
+/**
+ * The router's own history position. Used only to know whether this visit has
+ * pushed in-day entries, so the visible Back matches the device Back exactly.
+ */
+function useHistoryIndex(): number {
+  const router = useRouter();
+  return useRouterState({
+    select: (s) =>
+      (s.location.state as { __TSR_index?: number } | undefined)?.__TSR_index ??
+      router.history.length - 1,
+  });
 }
 
 function ScreenBody({
@@ -234,6 +304,8 @@ function ScreenBody({
   onHome,
   reflectionReady,
   onReflectionReady,
+  savedReflection,
+  onReflectionSaved,
 }: {
   content: JourneyDayContent;
   screen: ScreenKey;
@@ -248,6 +320,8 @@ function ScreenBody({
   onHome: () => void;
   reflectionReady: boolean;
   onReflectionReady: () => void;
+  savedReflection: { text?: string; snapshot?: string };
+  onReflectionSaved: (text: string, snapshot: string) => void;
 }) {
   const shell = (
     node: React.ReactNode,
@@ -321,6 +395,8 @@ function ScreenBody({
           answers={answers}
           answersLoaded={answersLoaded}
           onReady={onReflectionReady}
+          savedReflection={savedReflection}
+          onSaved={onReflectionSaved}
         />,
         {
           onContinue: onNext,
@@ -542,9 +618,13 @@ function EchoScreen({
 }
 
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
-  const [prefs] = usePrefs();
+  const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
-  const showSpiritual = prefs.showSpiritual;
+  // Nothing spiritual appears until the stored preference has actually been
+  // read, so someone who chose to leave it off never briefly sees the Christian
+  // panel, Scripture, prayer or companion wording. The nonreligious practice is
+  // complete on its own and always shown.
+  const showSpiritual = prefsHydrated && prefs.showSpiritual;
 
   return (
     <div className="space-y-5">
@@ -637,60 +717,96 @@ function PracticePanel({
  * is assembled on this device from founder-approved content for this day and
  * the structured selections already gathered. Fully unanswered paths receive
  * their approved substantive fallbacks.
+ *
+ * A previously saved response is restored word for word when it can be proven
+ * to belong to this day and to the same coded selections. If the selections
+ * changed, or the association cannot be proven, it is rebuilt on this device and
+ * the saved copy is replaced. No network call, no model, no free text.
  */
 function ReflectionScreen({
   content,
   answers,
   answersLoaded,
   onReady,
+  savedReflection,
+  onSaved,
 }: {
   content: JourneyDayContent;
   answers: string[];
   answersLoaded: boolean;
   onReady: () => void;
+  savedReflection: { text?: string; snapshot?: string };
+  onSaved: (text: string, snapshot: string) => void;
 }) {
   const [built, setBuilt] = useState<BuiltReflection | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
     if (!answersLoaded) return;
+    const dayId = dayIdFor(content.day);
+    const snapshot = answersSnapshot(answers);
+
+    // Restore the exact saved response when it still belongs to these answers.
+    if (savedReflection.snapshot && savedReflection.snapshot === snapshot) {
+      const restored = restoreReflection(content, savedReflection.text);
+      if (restored) {
+        setBuilt(restored);
+        onReady();
+        return;
+      }
+    }
+
+    // Otherwise rebuild deterministically and replace what was saved.
     const next = buildReflection(content, answers);
+    const text = reflectionToText(next);
     setBuilt(next);
-    // Saved locally only, so this exact screen restores on reload or resume.
-    saveDayReflection(dayIdFor(content.day), reflectionToText(next));
+    saveDayReflection(dayId, text, snapshot);
+    onSaved(text, snapshot);
     onReady();
-  }, [content, answers, answersLoaded, onReady]);
+    // savedReflection is read once per screen entry; rebuilding on our own save
+    // would loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content, answers, answersLoaded]);
+
+  // Once the reflection is present it is ordinary structured content, so the
+  // heading takes focus rather than the whole thing being announced at once.
+  useEffect(() => {
+    if (built) headingRef.current?.focus();
+  }, [built]);
 
   return (
     <div className="space-y-5">
       <p className="eyebrow">Your Reflection</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1
+        ref={headingRef}
+        tabIndex={-1}
+        className="font-serif text-2xl leading-tight text-foreground outline-none sm:text-3xl"
+      >
         A reflection drawn from today
       </h1>
       <p className="text-base text-foreground">{content.reflection.intro}</p>
 
-      <div role="status" aria-live="polite">
-        {!built ? (
-          <p className="text-base text-muted-foreground">
-            Preparing your reflection…
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {built.sections.map((section) => (
-              <section key={section.id} className="surface-card space-y-2">
-                <h2 className="font-serif text-lg text-[color:var(--navy)]">
-                  {section.title}
-                </h2>
-                {section.paragraphs.map((p) => (
-                  <p key={p} className="text-base text-foreground">
-                    {p}
-                  </p>
-                ))}
-              </section>
-            ))}
-            <p className="text-base text-muted-foreground">{built.closing}</p>
-          </div>
-        )}
-      </div>
+      {!built ? (
+        <p role="status" aria-live="polite" className="text-base text-muted-foreground">
+          Preparing your reflection…
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {built.sections.map((section) => (
+            <section key={section.id} className="surface-card space-y-2">
+              <h2 className="font-serif text-lg text-[color:var(--navy)]">
+                {section.title}
+              </h2>
+              {section.paragraphs.map((p) => (
+                <p key={p} className="text-base text-foreground">
+                  {p}
+                </p>
+              ))}
+            </section>
+          ))}
+          <p className="text-base text-muted-foreground">{built.closing}</p>
+        </div>
+      )}
     </div>
   );
 }

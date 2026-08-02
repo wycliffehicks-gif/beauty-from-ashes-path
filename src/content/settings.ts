@@ -57,9 +57,11 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
 
 export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
   "No Resurgence Therapeutics staff member is watching or reading your answers in real time.",
-  "Your saved place, the choices you selected, your reflections and your finished days are kept on this device and browser only. They are not sent to us and there is no account behind them.",
+  "Your saved place, the responses you selected, your reflections and your finished days are kept in this browser's own storage only. They are not sent to Resurgence Therapeutics and there is no account behind them.",
+  "The responses you select are saved as short coded option identifiers rather than the wording of the option, and never as anything you typed.",
+  "Your personalized reflection is assembled on this device, locally and deterministically, from the approved wording for that day and the options you selected. Nothing is sent anywhere to produce it.",
   "Because everything is local, your journey will not appear on another device or browser, and clearing this browser's data will remove it.",
-  "The responses you select may be processed automatically for a moment to create your personalized reflection.",
+  "Anyone with access to this device or browser profile may be able to see what is saved here, so this is not the same as a confidential record.",
   "Please avoid names and identifying details about yourself or anyone else.",
   "You can clear everything this app has saved here in Settings, at any time.",
   "Using this app is not the same legally protected confidential relationship as psychotherapy.",

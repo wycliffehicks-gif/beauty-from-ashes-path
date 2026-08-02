@@ -2183,7 +2183,7 @@ describe("Day 10 revision", () => {
       expect(section.unanswered.length).toBeGreaterThan(60);
     }
     expect(day10.reflection.closing).toBe(
-      "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next.",
+      "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Your worth is not conditional on resolving anything, and unresolved difficulty does not cancel it. Being heard and accompanied, even when nothing has changed, may itself be meaningful.",
     );
   });
 

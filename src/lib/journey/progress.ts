@@ -227,8 +227,9 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
 
   let derived = idx;
   if (loc.step === "close") {
-    // An unfinished Close locator proves nothing about the reflection screen.
-    derived = completed ? closeIdx : hasReflection ? reflectionIdx : reflectionIdx - 1;
+    // An unfinished Close locator never makes Close itself trusted, and never
+    // implies completion; the reflection screen before it stays reachable.
+    derived = completed ? closeIdx : reflectionIdx;
   } else if (loc.step === "reflection") {
     derived = hasReflection ? idx : idx - 1;
   }

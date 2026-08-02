@@ -1354,7 +1354,7 @@ describe("Day 8 revision", () => {
     expect(day9.arrive.lead).toBe(
       "A different response can be tried privately before you decide whether it belongs in real life.",
     );
-    expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise.");
+    expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise");
   });
   it("applies the final acceptance cleanup wording", () => {
     expect(route.prompt).toContain("if anything");

@@ -1055,53 +1055,53 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "practice",
           lines: {
             grounding:
-              "A pause and orienting outward was selected. Nothing here says whether it would be available under pressure, or what it would change.",
+              "You considered a pause and orienting outward. Nothing here says whether it would be available under pressure, or what it would change.",
             unsent:
-              "Putting private words to what you feel or need was selected. The words themselves are not collected, and nothing about them is assumed.",
+              "You considered putting private words to what you feel or need. The words themselves are not collected, and nothing about them is assumed.",
             boundary:
-              "Rehearsing a limit or a delay was selected. Whether such a limit is safe, available, or ready for real life is not established here.",
+              "You considered rehearsing a limit or a delay. Whether such a limit is safe, available, or ready for real life is not established here.",
             support:
-              "Rehearsing asking for one kind of support was selected. No person, request, or disclosure is identified.",
+              "You considered rehearsing asking for one kind of support. No person, request, or disclosure is identified.",
             lament:
-              "Naming grief, anger, disappointment, or longing privately was selected. No history, cause, or required release is inferred.",
+              "You considered naming grief, anger, disappointment, or longing privately. No history, cause, or required release is inferred.",
             prepare:
-              "Preparing without deciding to act was selected. Preparation stands on its own here, with no action implied.",
+              "You considered preparing without deciding to act. Preparation stands on its own here, with no action implied.",
             loosen:
-              "A very small variation in a familiar response was selected. No pattern, reason, or outcome is inferred from that.",
+              "You considered a very small variation in a familiar response. No pattern, reason, or outcome is inferred from that.",
             unclear:
-              "Not being sure what to practise was selected. That uncertainty is left as it is, and no response will be guessed for you.",
+              "You said you were not sure what to practise. That uncertainty is left as it is, and no response will be guessed for you.",
             none:
-              "That no different response feels available today was selected. That absence is left intact, without being treated as failure.",
+              "You said no different response feels available today. That absence is left intact, without being treated as failure.",
             private:
-              "A private choice was selected. That structured choice is saved on this device, and its content stays with you.",
+              "You kept this private. Its content is not known or interpreted here.",
           },
           unanswered:
-            "No response was selected here, and none will be assigned. Nothing is assumed about what you might need, whether any rehearsal happened, or what may be available to you later.",
+            "You left this open, and no response will be assigned. Nothing is assumed about what you might need, whether any rehearsal happened, or what may be available to you later.",
         },
         {
           id: "underneath",
           title: "The setting — or what remained open",
           from: "where",
           lines: {
-            home: "Home was selected as a setting that came to mind. Nothing about who is there, or what happens there, is assumed.",
-            work: "Work was selected as a setting that came to mind. No estimate is made here about power, consequences, accommodation needs, or safety.",
+            home: "You named home as a setting that came to mind. Nothing about who is there, or what happens there, is assumed.",
+            work: "You named work as a setting that came to mind. No estimate is made here about power, consequences, accommodation needs, or safety.",
             family:
-              "Family was selected as a setting that came to mind. No roles, closeness, safety, conflict, or history are assumed.",
+              "You named family as a setting that came to mind. No roles, closeness, safety, conflict, or history are assumed.",
             friend:
-              "A friend or partner was selected as a setting that came to mind. No closeness, safety, conflict, or history is assumed.",
-            self: "How you speak to yourself was selected as a setting that came to mind. No form, cause, or diagnosis is inferred.",
+              "You named a friend or partner as a setting that came to mind. No closeness, safety, conflict, or history is assumed.",
+            self: "You named how you speak to yourself as a setting that came to mind. No form, cause, or diagnosis is inferred.",
             faith:
-              "Faith or spiritual life was selected as a setting that came to mind. Nothing is assumed about belief, practice, community, spiritual struggle, or whether honesty is welcomed there.",
+              "You named faith or spiritual life as a setting that came to mind. Nothing is assumed about belief, practice, community, spiritual struggle, or whether honesty is welcomed there.",
             private:
-              "Keeping the setting unspecified was selected. That structured choice is saved on this device, and what it refers to stays with you.",
+              "You left the setting unspecified. What it refers to stays with you, and its content is not known or interpreted here.",
             other:
-              "A setting outside the listed options was selected. Its content is not collected here, and nothing about it is assumed.",
+              "You named a setting outside the listed options. Its content is not collected here, and nothing about it is assumed.",
             unclear:
-              "Not being sure of a setting was selected. It stays uncertain here, and no setting will be assigned.",
-            none: "No particular setting was selected, and none will be added. A rehearsal can stay general.",
+              "You said you were not sure of a setting. It stays uncertain here, and no setting will be assigned.",
+            none: "You left the setting general, and none will be added. A rehearsal can stay general.",
           },
           unanswered:
-            "No setting was selected here, and none will be assigned. No person, relationship, risk, or context is inferred from that.",
+            "You left the setting open, and none will be assigned. No person, relationship, risk, or context is inferred from that.",
         },
         {
           id: "next",
@@ -1109,25 +1109,26 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             again:
-              "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
+              "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
             sentence:
-              "Shortening or revising one sentence was selected. Whether it is ever spoken anywhere is left entirely open.",
-            use: "Naming what would have to be true before any real-world use was selected. That names conditions only; it does not commit you to using anything.",
+              "You considered shortening or revising one sentence. Whether it is ever spoken anywhere is left entirely open.",
+            use: "You considered naming what would have to be true before any real-world use. That names conditions only; it does not commit you to using anything.",
             ground:
-              "Keeping one accessible outward-orienting cue was selected. Nothing is claimed about whether it will be reached for.",
+              "You considered keeping one accessible outward-orienting cue. Nothing is claimed about whether it will be reached for.",
             support:
-              "Identifying support you might want before any real-world action was selected. No contact and no disclosure are part of that.",
+              "You considered identifying support you might want before any real-world action. No contact and no disclosure are part of that.",
             prepare:
-              "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
+              "You chose to leave the exercise here. Nothing more is implied or required by this step.",
             unclear:
-              "Not being sure of a step was selected. That is left uncertain, and no step will be chosen for you.",
-            none: "That no step feels right today was selected. That is left as it is, and none will be pressed or inferred.",
+              "You said you were not sure of a step. That is left uncertain, and no step will be chosen for you.",
+            none: "You said no step feels right today. That is left as it is, and none will be pressed or inferred.",
             private:
-              "A private step was selected. That structured choice is saved on this device, and its content stays with you.",
+              "You kept the step private. Its content is not known or interpreted here.",
           },
           unanswered:
-            "No step was selected here, and none will be added. Nothing is claimed about whether any rehearsal happened, what became available, or what happens after today.",
+            "You left the step open, and none will be added. Nothing is claimed about whether any rehearsal happened, what became available, or what happens after today.",
         },
+
       ],
       closing:
         "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",

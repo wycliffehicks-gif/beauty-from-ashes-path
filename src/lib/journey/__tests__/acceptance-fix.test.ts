@@ -144,10 +144,14 @@ describe("crafted screens are clamped, gated or not", () => {
 });
 
 describe("versioned compatibility for existing stores", () => {
-  /** Shaped like a cb1 v1 store: positional answers, no reached, real completion. */
+  /**
+   * Shaped like a cb1 v1 store: positional answers, no reached, real completion.
+   * Day 3's canonical screen at index 4 is "q.shows", and the saved step must
+   * match it exactly for anything to be conferred.
+   */
   const v1Store = {
     version: 1,
-    locator: { dayId: "day-03", step: "understand", index: 4 },
+    locator: { dayId: "day-03", step: "q.shows", index: 4 },
     answers: { "day-02": ["notice.0", "notice.2"] },
     completedDays: ["day-01"],
     reflections: {},
@@ -157,7 +161,7 @@ describe("versioned compatibility for existing stores", () => {
   /** Shaped like the pre-correction v2 store: stable ids, no reached field. */
   const v2Store = {
     version: 2,
-    locator: { dayId: "day-05", step: "reflection", index: 6 },
+    locator: { dayId: "day-05", step: "reflection", index: 7 },
     answers: { "day-05": ["q.pulls:toward", "step:one"] },
     completedDays: ["day-01", "day-02"],
     reflections: { "day-05": "saved words" },
@@ -182,23 +186,91 @@ describe("versioned compatibility for existing stores", () => {
   it("derives a conservative reached position so a mid-day resume is not lost", () => {
     expect(upgradeStoredProgress(v1Store).progress.reached["day-03"]).toBe(4);
     // A reflection locator is only trusted because a saved reflection supports it.
-    expect(upgradeStoredProgress(v2Store).progress.reached["day-05"]).toBe(6);
+    expect(upgradeStoredProgress(v2Store).progress.reached["day-05"]).toBe(7);
     const withoutSaved = upgradeStoredProgress({
       ...v2Store,
       reflections: {},
       reflectionSnapshots: {},
     });
-    expect(withoutSaved.progress.reached["day-05"]).toBe(5);
+    expect(withoutSaved.progress.reached["day-05"]).toBe(6);
+  });
+
+  it("confers nothing when the saved step is not the canonical key at that index", () => {
+    // "understand" is Day 3's index 1, never its index 4.
+    const mismatched = normalizeProgress({
+      locator: { dayId: "day-03", step: "understand", index: 4 },
+      completedDays: [],
+    });
+    expect(deriveReachedFromLocator(mismatched)["day-03"]).toBeUndefined();
+  });
+
+  it("confers nothing for an unknown day or an out-of-range index", () => {
+    const badDay = normalizeProgress({
+      locator: { dayId: "day-99", step: "arrive", index: 1 },
+      completedDays: [],
+    });
+    expect(deriveReachedFromLocator(badDay)["day-99"]).toBeUndefined();
+
+    const badIndex = normalizeProgress({
+      locator: { dayId: "day-07", step: "close", index: 42 },
+      completedDays: [],
+    });
+    expect(deriveReachedFromLocator(badIndex)["day-07"]).toBeUndefined();
   });
 
   it("never lets an uncompleted Close locator make Close trusted, or infer completion", () => {
+    // Day 7: index 8 is "close"; index 7 is "reflection". Without a genuine
+    // saved reflection an unfinished Close stays strictly below Reflection.
     const p = normalizeProgress({
       locator: { dayId: "day-07", step: "close", index: 8 },
       completedDays: [],
     });
-    expect(deriveReachedFromLocator(p)["day-07"]).toBe(7);
+    expect(deriveReachedFromLocator(p)["day-07"]).toBe(6);
     expect(p.completedDays).toEqual([]);
   });
+
+  it("lets an uncompleted Close reach Reflection only with a genuine saved reflection", () => {
+    const withSaved = normalizeProgress({
+      locator: { dayId: "day-07", step: "close", index: 8 },
+      completedDays: [],
+      reflections: { "day-07": "the exact words that were read" },
+    });
+    expect(deriveReachedFromLocator(withSaved)["day-07"]).toBe(7);
+    expect(withSaved.completedDays).toEqual([]);
+  });
+
+  it("lets a completed, exactly valid Close stay trusted", () => {
+    const completed = normalizeProgress({
+      locator: { dayId: "day-07", step: "close", index: 8 },
+      completedDays: ["day-07"],
+    });
+    expect(deriveReachedFromLocator(completed)["day-07"]).toBe(8);
+  });
+
+  it("caps a Reflection locator below Reflection without a genuine saved reflection", () => {
+    const noSaved = normalizeProgress({
+      locator: { dayId: "day-07", step: "reflection", index: 7 },
+      completedDays: [],
+    });
+    expect(deriveReachedFromLocator(noSaved)["day-07"]).toBe(6);
+
+    const saved = normalizeProgress({
+      locator: { dayId: "day-07", step: "reflection", index: 7 },
+      completedDays: [],
+      reflections: { "day-07": "the exact words that were read" },
+    });
+    expect(deriveReachedFromLocator(saved)["day-07"]).toBe(7);
+  });
+
+  it("never lowers a pre-existing higher reached value", () => {
+    const higher = normalizeProgress({
+      locator: { dayId: "day-07", step: "close", index: 8 },
+      completedDays: [],
+      reached: { "day-07": 8 },
+    });
+    expect(deriveReachedFromLocator(higher)["day-07"]).toBe(8);
+  });
+
 
   it("leaves an existing reached value untouched and needs no second upgrade", () => {
     const current = {

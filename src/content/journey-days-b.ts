@@ -1132,9 +1132,9 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",
     },
     close: {
-      heading: "Possibility, not a promise.",
+      heading: "Possibility, not a promise",
       body: [
-        "Whether today was rehearsed, read, kept private, or left open, no real-world action was required, and none is required now.",
+        "Whether you rehearsed a response, read the practice, kept your response private, or left everything open, no real-world action was required, and none is required now.",
         "A private rehearsal may make one option feel more familiar, may show that it needs revising or needs support, or may leave it unavailable for now. It does not guarantee access under pressure, and it does not make a situation safe.",
         "Day 10 gathers what may be worth keeping, what remains unfinished, and what support or next step, if any, fits your actual life.",
       ],

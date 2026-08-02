@@ -1,4 +1,10 @@
-import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
@@ -20,6 +26,7 @@ import {
   saveDayAnswers,
   saveDayReflection,
   saveLocator,
+  saveReached,
 } from "@/lib/journey/progress";
 import {
   answerKeyFor,
@@ -27,6 +34,8 @@ import {
   reflectionToText,
   type BuiltReflection,
 } from "@/lib/journey/reflection-engine";
+import { answersSnapshot, restoreReflection } from "@/lib/journey/reflection-restore";
+import { resolveVisibleIndex } from "@/lib/journey/screen-access";
 import { toggleSelection } from "@/lib/journey/selection";
 import {
   mergeStableStepAnswers,

@@ -132,6 +132,27 @@ restoration, positional-storage migration to stable answer IDs, direct-day
 agreement bypass, duplicate “Show me how” accessible labels, the inactive
 spiritual preference, and other shared Back/onboarding mechanics.
 
+**Final acceptance cleanup (same day).** Day 8 wording only, no mechanics
+touched. Branch-neutral prompts and headings: route prompt “What, if anything,
+feels worth making a little room for today?”, route Explore heading “Room for
+what is clear — and what is not”, One Honest Step prompt/hint (“if anything” /
+“One choice if one fits”), first reflection section title “The thread — or what
+remained open”, reflection intro, and close heading “Held without force”.
+Removed “medication” from the `body` echo (no medical advice) and removed “only
+you hold that information”, replacing it with wording that says the app cannot
+decide whether a person is safe and that uncertain safety requires no contact —
+so sole responsibility for a safety assessment is not placed on the user. The
+`outside` step label and its reflection line became accessible and
+mobility-neutral (“Spend a moment with a window, sound, object, memory, or
+another point of contact within reach”). Removed defensive comparison and
+system-like phrases: “Either counts as contact”, “silence is not a lesser
+option” (now “silence can be the whole practice”), “no contact is the right
+answer”, “proof that you are good”, “for it to count as yours”, “This page can
+only reflect selections”, “complete outcome”, “complete answer”, and “estimated
+on your behalf”; unanswered fallbacks now simply leave the direction and amount
+open. Arrive uses “one small moment of contact”. Tests in the existing Day 8
+block assert the final wording and guard the removed phrases; 372 pass.
+
 
 
 ## 2026-08-02 — Bounded Day 7 content, safety and branch-accuracy revision

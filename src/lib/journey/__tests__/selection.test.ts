@@ -1106,7 +1106,7 @@ describe("Day 8 revision", () => {
     expect(u).toContain("respects a no or a limit");
     expect(u).toContain("does not require you to disclose anything");
     expect(u).toContain("use your vulnerability against you");
-    expect(u).toContain("If safety is uncertain, no contact is needed");
+    expect(u).toContain("If safety is uncertain, no contact is required");
     expect(u).toContain(
       "Nothing here requires contact, disclosure, reconciliation, forgiveness, public action, a bodily response, hope, clarity or change.",
     );
@@ -1183,7 +1183,7 @@ describe("Day 8 revision", () => {
     ].join(" ");
     expect(spiritual).not.toContain("reprimand");
     expect(spiritual).toContain("Reading only is a complete way to do this");
-    expect(spiritual).toContain("silence is not a lesser option");
+    expect(spiritual).toContain("silence can be the whole practice");
     expect(spiritual).toContain("Doubt, anger, numbness, distance and spiritual struggle");
     expect(day8.practise.spiritual.notRequired).toContain("you may leave this path entirely");
   });
@@ -1192,8 +1192,10 @@ describe("Day 8 revision", () => {
     const labels = Object.fromEntries(day8.step.options.map((o) => [o.id, o.label]));
     expect(labels["message"]).toContain("safe enough");
     expect(labels["message"]).toContain("sending it is optional");
+    expect(labels["outside"]).toMatch(/^Spend a moment/);
     expect(labels["outside"]).toContain("window");
     expect(labels["outside"]).toContain("memory");
+    expect(labels["outside"]).toContain("another point of contact within reach");
     expect(labels["act"]).not.toContain("I identified");
     expect(labels["rehearse"]).not.toMatch(/rehears/i);
     expect(labels["none"]).toContain("will not force one");
@@ -1264,7 +1266,7 @@ describe("Day 8 revision", () => {
       .join(" ");
     expect(none).toContain("That absence is left intact");
     expect(none).toContain("without being treated as failure");
-    expect(none).toContain("Not forcing one is a complete answer");
+    expect(none).toContain("none will be pressed or inferred");
 
     const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
@@ -1317,6 +1319,18 @@ describe("Day 8 revision", () => {
       "Decide when",
       "first sentence",
       "rehearse it instead",
+      "proof that you are good",
+      "for it to count as yours",
+      "medication",
+      "only you hold that information",
+      "right answer",
+      "Go to a window",
+      "not a lesser option",
+      "complete outcome",
+      "One thread, held as it is",
+      "This page can only reflect selections",
+      "Either counts as contact",
+      "estimated on your behalf",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
         phrase.toLowerCase(),
@@ -1341,5 +1355,45 @@ describe("Day 8 revision", () => {
       "New responses are practised long before they are performed.",
     );
     expect(day9.understand.heading).toBe("Why rehearsal works");
+  });
+  it("applies the final acceptance cleanup wording", () => {
+    expect(route.prompt).toContain("if anything");
+    expect(route.echo!.heading).toBe("Room for what is clear — and what is not");
+    expect(day8.step.prompt).toContain("if anything");
+    expect(day8.step.hint).toMatch(/^One choice if one fits/);
+
+    const echoes = route.echo!.byOption;
+    expect(echoes["body"]).not.toContain("medication");
+    expect(echoes["body"]).toContain("No sensation, movement, or improvement is expected");
+    expect(echoes["person"]).toContain("no contact is required");
+    expect(echoes["person"]).not.toContain("right answer");
+    expect(echoes["creativity"]).toContain(
+      "Contact may mean making something or simply noticing",
+    );
+    expect(echoes["creativity"]).not.toContain("counts as contact");
+
+    const note = day8.understand.info!.map((i) => i.explanation).join(" ");
+    expect(note).not.toContain("only you hold that information");
+    expect(note).toContain("This app cannot decide whether a particular person is safe");
+    expect(note).toContain("another route can be chosen instead");
+
+    const understand = day8.understand.body.join(" ");
+    expect(understand).toContain("a rule imposed on you, or a test you have to pass");
+    expect(understand).toContain("It can remain yours without that explanation");
+    expect(day8.arrive.body.join(" ")).toContain("one small moment of contact");
+
+    expect(day8.reflection.sections[0]!.title).toBe("The thread — or what remained open");
+    expect(day8.reflection.intro).toBe(
+      "This reflection uses only what was selected; it will not fill in what was left open.",
+    );
+    expect(day8.close.heading).toBe("Held without force");
+
+    const skipped = buildReflection(day8, [])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(skipped).toContain("The direction simply remains open");
+    expect(skipped).toContain("What is available remains open");
+    expect(skipped).not.toContain("This page can only reflect selections");
+    expect(skipped).not.toContain("complete outcome");
   });
 });

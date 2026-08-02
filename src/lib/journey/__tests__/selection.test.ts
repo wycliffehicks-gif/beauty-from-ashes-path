@@ -901,7 +901,7 @@ describe("Day 7 revision", () => {
       "without treating self-punishment as the same thing as accountability or repair",
     );
     expect(text).toContain(
-      "That does not require approving of the feeling or acting on it.",
+      "that does not require approving of the feeling or acting on it.",
     );
     expect(text).toContain(
       "and no explanation or hidden meaning will be assigned",

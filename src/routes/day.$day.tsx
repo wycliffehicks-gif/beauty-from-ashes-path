@@ -405,8 +405,14 @@ function ScreenBody({
           label={label}
           progress={progress}
           onBack={onBack}
+          prototypeVisual={
+            content.day === 1 &&
+            screen.kind === "question" &&
+            question.id === content.questions[0]?.id
+          }
         />
       );
+
     }
 
     case "echo": {

@@ -42,12 +42,15 @@ export function resetStorageStatusForTests() {
   persistenceAvailable = true;
 }
 
-/** Read an app-owned key. Falls back to this tab's in-memory value. */
+/**
+ * Read an app-owned key. Real persistence is authoritative whenever it works;
+ * the in-memory fallback is consulted only when it does not, so a fallback
+ * value can never shadow or resurrect a genuinely absent stored value.
+ */
 export function readLocal(key: string): string | null {
   if (typeof window === "undefined") return null;
   try {
-    const value = window.localStorage.getItem(key);
-    if (value !== null) return value;
+    return window.localStorage.getItem(key);
   } catch {
     markUnavailable();
   }
@@ -55,20 +58,22 @@ export function readLocal(key: string): string | null {
 }
 
 /**
- * Write an app-owned key. Always records the value in memory first so the
- * current tab stays coherent, then attempts real persistence.
+ * Write an app-owned key. Attempts real persistence first; only if that fails
+ * is the value kept in this tab's memory so the session stays coherent.
  */
 export function writeLocal(key: string, value: string): boolean {
-  memory.set(key, value);
   if (typeof window === "undefined") return false;
   try {
     window.localStorage.setItem(key, value);
+    memory.delete(key);
     return true;
   } catch {
+    memory.set(key, value);
     markUnavailable();
     return false;
   }
 }
+
 
 /** Remove an app-owned key. Idempotent and never throws. */
 export function removeLocal(key: string) {

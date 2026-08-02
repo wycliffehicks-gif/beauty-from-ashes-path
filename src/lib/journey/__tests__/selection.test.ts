@@ -1954,9 +1954,9 @@ describe("Day 10 revision", () => {
     ]);
   });
 
-  it("makes all three choice sets single-select with exact positional options", () => {
-    expect(different.select).toBe("one");
-    expect(unfinished.select).toBe("one");
+  it("keeps honest selection contracts with exact positional options", () => {
+    expect(different.select).toBe("many");
+    expect(unfinished.select).toBe("many");
     expect(day10.step.select).toBe("one");
 
     expect(different.options.map((o) => o.id)).toEqual([
@@ -2000,7 +2000,7 @@ describe("Day 10 revision", () => {
 
     const exclusive = (q: { options: { id: string; exclusive?: boolean }[] }) =>
       q.options.filter((o) => o.exclusive).map((o) => o.id);
-    expect(exclusive(different)).toEqual(["nothing", "unclear", "private"]);
+    expect(exclusive(different)).toEqual(["unclear", "private"]);
     expect(exclusive(unfinished)).toEqual(["unclear", "outside", "none", "private"]);
     expect(exclusive(day10.step)).toEqual(["unavailable", "unclear", "none", "private"]);
   });
@@ -2013,8 +2013,11 @@ describe("Day 10 revision", () => {
     expect(arrive).toContain("mainly read");
     expect(arrive).toContain("Any position that works");
     expect(arrive).toContain("Simply reading is complete");
+    expect(arrive).toContain("arrived here directly");
+    expect(arrive).toContain("No one path is treated here as more complete than another.");
+    expect(arrive).toContain("no clear meaning is required");
     expect(arrive).toContain(
-      "Finishing screens is not evidence of healing, readiness, insight, attention, courage, or progress.",
+      "Reaching this page does not have to prove healing, readiness, insight, attention, courage, or progress.",
     );
     expect(arrive).toContain("no relaxation, calm, gratitude, emotional response, or sense of closure is required");
     for (const phrase of [
@@ -2088,19 +2091,25 @@ describe("Day 10 revision", () => {
       expect(line.length, `short echo: ${id}`).toBeGreaterThan(60);
     }
     expect(echo.byOption["protective"]).toContain(
-      "No origin, past danger, protective purpose, or present usefulness is established",
+      "This choice does not tell us where it came from",
     );
-    expect(echo.byOption["named"]).toContain("Nothing about manageability or relief is assumed");
-    expect(echo.byOption["twopulls"]).toContain("No current conflict or ambivalence");
-    expect(echo.byOption["cost"]).toContain("No particular cost, cause, available choice");
+    expect(echo.byOption["named"]).toContain("does not tell us that anything has become");
+    expect(echo.byOption["twopulls"]).toContain("any particular conflict is alive in you");
+    expect(echo.byOption["cost"]).toContain("where blame belongs");
     expect(echo.byOption["harsh"]).toContain("accountability remains possible");
-    expect(echo.byOption["small"]).toContain("No step is assumed to have occurred");
+    expect(echo.byOption["small"]).toContain("does not tell us that any step has happened");
     expect(echo.byOption["notalone"]).toContain(
-      "No support, person, disclosure, resource, safety, or access is assigned",
+      "does not tell us what support exists, who is safe, or what you can reach",
     );
-    expect(echo.byOption["nothing"]).toContain("nothing is promised to arrive later");
-    expect(echo.byOption["unclear"]).toContain("Uncertainty remains uncertainty");
+    expect(echo.byOption["nothing"]).toContain(
+      "An idea may resonate without becoming a finished outcome",
+    );
+    expect(echo.byOption["nothing"]).not.toContain(
+      "No particular thread feels worth carrying",
+    );
+    expect(echo.byOption["unclear"]).toContain("Uncertainty stays uncertainty");
     expect(echo.byOption["private"]).toContain("saved on this device");
+    expect(echo.byOption["private"]).toContain("remains yours");
     expect(echo.byOption["private"]).not.toContain("nothing was recorded");
     expect(echo.unanswered).toBe(
       "You continued without selecting a thread. Nothing will be chosen, interpreted, or summarised on your behalf.",
@@ -2154,7 +2163,7 @@ describe("Day 10 revision", () => {
 
   it("keeps the reflection answer-driven with complete line coverage", () => {
     expect(day10.reflection.intro).toBe(
-      "This uses only today’s selected structured responses; it does not summarise earlier days or decide what the journey meant.",
+      "This reflection stays with what you chose—or left open—today. It does not fill in earlier days or decide what the journey meant for you.",
     );
     expect(day10.reflection.sections.map((s) => [s.id, s.title, s.from])).toEqual([
       ["hearing", "What may be carried — or left here", "different"],
@@ -2174,7 +2183,7 @@ describe("Day 10 revision", () => {
       expect(section.unanswered.length).toBeGreaterThan(60);
     }
     expect(day10.reflection.closing).toBe(
-      "Today’s selections do not establish progress, readiness, cause, safety, or what will happen next. They show only what was selected here—including uncertainty, privacy, no clear thread, or no step.",
+      "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next.",
     );
   });
 
@@ -2182,9 +2191,13 @@ describe("Day 10 revision", () => {
     const text = buildReflection(day10, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("No thread was selected");
-    expect(text).toContain("No unfinished place was selected");
-    expect(text).toContain("No step was selected");
+    expect(text).toContain(
+      "You left the first question open. Nothing is being chosen or interpreted for you.",
+    );
+    expect(text).toContain("You did not name an unfinished place. Nothing needs to be added.");
+    expect(text).toContain(
+      "You did not choose a next step. The journey can end here without one.",
+    );
     for (const phrase of [
       "ten days of honest attention",
       "you have gathered",
@@ -2195,6 +2208,8 @@ describe("Day 10 revision", () => {
       "you disclosed",
       "will surface when it is ready",
       "most practical next thing",
+      "screens having been navigated",
+      "engagement",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
         phrase.toLowerCase(),
@@ -2212,12 +2227,12 @@ describe("Day 10 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain("truth and responsibility do not require self-attack");
-    expect(text).toContain("Grief, loss, or mourning was selected");
-    expect(text).toContain("Choosing one day or practice you may return to was selected");
+    expect(text).toContain("You named grief, loss, or mourning");
+    expect(text).toContain("You chose one day or practice you may return to");
     expect(text).not.toContain("a small or preparatory response");
-    expect(text).not.toContain("Something relational was selected");
-    expect(text).not.toContain("Keeping one fair sentence");
-    expect(text).not.toContain("No thread was selected");
+    expect(text).not.toContain("something relational that remains unresolved");
+    expect(text).not.toContain("one fair sentence");
+    expect(text).not.toContain("You left the first question open");
   });
 
   it("keeps private, unclear, outside-control and unavailable paths accurate", () => {
@@ -2229,7 +2244,9 @@ describe("Day 10 revision", () => {
     const text = buildReflection(day10, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("saved on this device");
+    expect(text).toContain("what was held privately remains yours");
+    expect(text).toContain("That privacy choice is saved on this device");
+    expect(text).toContain("no private content is known or inferred");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");
@@ -2241,28 +2258,68 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(quiet).toContain("recorded as uncertainty only");
-    expect(quiet).toContain("That absence is left exactly as it is");
+    expect(quiet).toContain("That uncertainty stays uncertainty here");
+    expect(quiet).toContain("That is left exactly as it is");
     expect(quiet).toContain("That uncertainty stays as uncertainty");
   });
 
-  it("keeps legacy multi-select stored answers from creating a global claim", () => {
-    const text = buildReflection(day10, [
-      answer("q.different", idx(different, "protective")),
-      answer("q.different", idx(different, "named")),
-    ])
+  it("keeps legacy many-answer arrays coherent for Q1 and Q2", () => {
+    const legacyQ1 = (positions: number[]) =>
+      buildReflection(
+        day10,
+        positions.map((p) => answer("q.different", p)),
+      )
+        .sections.flatMap((s) => s.paragraphs)
+        .join(" ");
+
+    for (const positions of [
+      [0, 7],
+      [7, 0],
+      [0, 1, 2, 3, 4, 5, 6, 7],
+    ]) {
+      const text = legacyQ1(positions);
+      expect(text).toContain("may have helped you cope");
+      expect(text).toContain("An idea may resonate without becoming a finished outcome");
+      expect(text).not.toContain("No particular thread feels worth carrying");
+      expect(text).not.toContain("You left the first question open");
+    }
+
+    const full = legacyQ1([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(full).toContain("putting words to something");
+    expect(full).toContain("more than one pull or truth");
+    expect(full).toContain("what support exists");
+
+    const alone = legacyQ1([7]);
+    expect(alone).toContain("nothing feels settled or complete right now");
+    expect(alone).toContain("An idea may resonate without becoming a finished outcome");
+
+    const q2 = buildReflection(
+      day10,
+      [0, 1, 2, 3, 4, 5, 6, 7].map((p) => answer("q.unfinished", p)),
+    )
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("may have helped you cope");
-    expect(text).toContain("putting words to something");
-    expect(text).not.toContain("ten days");
-    expect(text).not.toContain("you have changed");
+    expect(q2).toContain("You named grief, loss, or mourning");
+    expect(q2).toContain("something relational that remains unresolved");
+    expect(q2).toContain("cannot or do not want to name");
+    expect(q2).not.toContain("You did not name an unfinished place");
+  });
+
+  it("treats a restored legacy many state as valid and normalizes a fresh exclusive click", () => {
+    const legacy = [0, 1, 2, 3, 4, 5, 6, 7];
+    // A legacy many array stays a many state when a further non-exclusive option
+    // is toggled — no collapse to a single choice.
+    expect(toggleSelection(different, legacy, 1)).toEqual([0, 2, 3, 4, 5, 6, 7]);
+    const unclearIdx = idx(different, "unclear");
+    // A fresh exclusive click normalizes according to existing shared behaviour.
+    expect(toggleSelection(different, legacy, unclearIdx)).toEqual([unclearIdx]);
+    expect(toggleSelection(different, [unclearIdx], 0)).toEqual([0]);
   });
 
   it("closes with permission and no continuation pressure", () => {
     expect(day10.close.heading).toBe("A complete stopping place");
-    expect(day10.close.body[0]).toContain(
-      "None of those paths establishes healing, progress, readiness, or a particular meaning.",
+    expect(day10.close.body[0]).toBe(
+      "You may have answered, kept things private, simply read, or left everything open. None of those paths has to prove healing, progress, readiness, or meaning.",
     );
     expect(day10.close.body[1]).toContain("Unfinished is not the same as failed.");
     expect(day10.close.body[2]).toContain("you owe the app no repetition or continuation");
@@ -2275,6 +2332,15 @@ describe("Day 10 revision", () => {
   it("guards every forbidden old, inferential or outcome phrase", () => {
     const text = allText10();
     for (const phrase of [
+      "selected structured responses",
+      "screens having been navigated",
+      "is established",
+      "is assigned",
+      "is claimed",
+      "Today’s selections",
+      "the right next step",
+      "the right place",
+      "No particular thread feels worth carrying",
       "You have spent ten days",
       "same person who opened Day 1",
       "with a little more information",

@@ -763,3 +763,37 @@ Files changed: `src/content/journey-days-a.ts`,
 `src/content/journey-types.ts`, `src/routes/day.$day.tsx`,
 `src/lib/journey/selection.ts` (new),
 `src/lib/journey/__tests__/selection.test.ts` (new), `.lovable/change-log.md`.
+
+## Consolidated First Journey shared-integrity repair
+
+One bounded technical, safety and accessibility repair across all ten days. No
+content revision, no visual redesign, no database, no publication.
+
+- **Agreement gate.** `src/lib/agreement.ts` + `src/components/AgreementGate.tsx`
+  gate every surface from the root route, so root-level routes (`/day/$day`,
+  `/practice/*`) are covered as well as `_shell` children. Restricted routes do
+  not render and write nothing to storage before the current legal bundle is
+  accepted. Support, the legal pages, contact and Pause & Ground stay reachable.
+- **False completion removed.** The URL-addressable close state (`?step=close`)
+  is gone. A day is marked complete only by real forward movement into Close,
+  which is only reachable from the reflection once it is available.
+- **Automatic, non-bypassable, restorable reflection.** No reveal control and no
+  AI/curated/model label. The reflection is assembled on this device, announced
+  with `role="status" aria-live="polite"`, saved locally for exact-screen resume,
+  and Continue stays disabled until it is present.
+- **Stable answer ids and conservative migration.** `answers.ts` stores
+  `step:optionId`; legacy `step.index` tokens are still read through the current
+  frozen option lists. Store version 2 keeps the saved place, selections and
+  reflections, and drops older completion markers rather than trusting them.
+- **In-day and onboarding Back.** Screens are addressed by a stable `?s=` key, so
+  device/browser Back moves exactly one screen and matches the in-app Back.
+- **Spiritual preference honoured.** The Christian path and the "either or both"
+  line only appear when the Settings preference is on; practice controls are
+  named per path ("Show me how — <practice title>").
+- **Complete scoped clear and accurate copy.** `clearJourney()` now removes every
+  app-owned local and session item, including preferences, the recorded
+  agreement, legacy weekly-session state and the launch marker, and nothing else.
+  Privacy Notice and Settings copy now describe exactly what is stored.
+
+Verification: TypeScript clean, 418 tests pass (403 baseline + 15 new), mobile
+checked at 360px and 390px with no horizontal overflow and no console errors.

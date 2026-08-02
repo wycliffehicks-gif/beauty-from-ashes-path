@@ -1861,7 +1861,479 @@ describe("Day 9 revision", () => {
     expect(day10.shape).toBe("notice-first");
     expect(day10.descriptor).toBe("Gathering the journey · about 15 minutes");
     expect(day10.arrive.lead).toBe(
-      "This is the last day of the First Journey, and it does not tie anything up.",
+      "This is the last day of the First Journey. It completes a ten-day container without claiming that your healing is complete.",
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Day 10 revision — "Carry It Forward"
+// Integration and a complete stopping place, without manufactured progress.
+// ---------------------------------------------------------------------------
+describe("Day 10 revision", () => {
+  const day10 = getFirstJourneyDay(10)!;
+  const different = day10.questions.find((q) => q.id === "different")!;
+  const unfinished = day10.questions.find((q) => q.id === "unfinished")!;
+  const idx = (q: { options: { id: string }[] }, id: string) =>
+    q.options.findIndex((o) => o.id === id);
+  const answer = (key: string, i: number) => `${key}.${i}`;
+
+  const allText10 = () =>
+    [
+      day10.theme,
+      day10.descriptor,
+      day10.arrive.lead,
+      ...day10.arrive.body,
+      ...(day10.arrive.settle ?? []),
+      day10.understand.heading,
+      ...day10.understand.body,
+      ...(day10.understand.info ?? []).flatMap((i) => [i.term, i.explanation]),
+      ...day10.questions.flatMap((q) => [
+        q.prompt,
+        q.hint ?? "",
+        ...q.options.flatMap((o) => [o.label, o.note ?? ""]),
+        ...(q.echo
+          ? [
+              q.echo.heading,
+              ...Object.values(q.echo.byOption),
+              q.echo.unanswered,
+              q.echo.closing ?? "",
+            ]
+          : []),
+      ]),
+      day10.practise.heading,
+      day10.practise.intro,
+      day10.practise.either,
+      ...[day10.practise.reflection, day10.practise.spiritual].flatMap((p) => [
+        p.title,
+        p.summary,
+        ...p.steps,
+        p.notRequired,
+        p.scripture?.reference ?? "",
+        p.scripture?.body ?? "",
+        p.scripture?.note ?? "",
+      ]),
+      day10.step.prompt,
+      day10.step.hint ?? "",
+      ...day10.step.options.flatMap((o) => [o.label, o.note ?? ""]),
+      day10.reflection.intro,
+      ...day10.reflection.sections.flatMap((s) => [
+        s.title,
+        s.opening ?? "",
+        ...Object.values(s.lines ?? {}),
+        s.unanswered,
+      ]),
+      day10.reflection.closing,
+      day10.close.heading,
+      ...day10.close.body,
+      day10.close.carryForward,
+    ].join(" ");
+
+  it("locks identity, structure and the nine-screen sequence", () => {
+    expect(day10.day).toBe(10);
+    expect(day10.title).toBe("Carry It Forward");
+    expect(day10.theme).toBe(
+      "Integration and a complete stopping place without manufactured progress, forced closure, or required action.",
+    );
+    expect(day10.motif).toBe("carry");
+    expect(day10.shape).toBe("notice-first");
+    expect(day10.descriptor).toBe("Gathering the journey · about 15 minutes");
+    expect(day10.understand.label).toBe("Listen");
+    expect(day10.questions.map((q) => q.id)).toEqual(["different", "unfinished"]);
+    expect(day10.step.id).toBe("step");
+    expect(screensFor(day10).map(screenKey)).toEqual([
+      "arrive",
+      "q.different",
+      "e.different",
+      "understand",
+      "q.unfinished",
+      "practise",
+      "step",
+      "reflection",
+      "close",
+    ]);
+  });
+
+  it("makes all three choice sets single-select with exact positional options", () => {
+    expect(different.select).toBe("one");
+    expect(unfinished.select).toBe("one");
+    expect(day10.step.select).toBe("one");
+
+    expect(different.options.map((o) => o.id)).toEqual([
+      "protective",
+      "named",
+      "twopulls",
+      "cost",
+      "harsh",
+      "small",
+      "notalone",
+      "nothing",
+      "unclear",
+      "private",
+    ]);
+    expect(unfinished.options.map((o) => o.id)).toEqual([
+      "grief",
+      "relationship",
+      "limit",
+      "support",
+      "self",
+      "faith",
+      "rest",
+      "unclear",
+      "outside",
+      "none",
+      "private",
+    ]);
+    expect(day10.step.options.map((o) => o.id)).toEqual([
+      "support",
+      "conversation",
+      "limit",
+      "rest",
+      "kind",
+      "revisit",
+      "prepare",
+      "unavailable",
+      "unclear",
+      "none",
+      "private",
+    ]);
+
+    const exclusive = (q: { options: { id: string; exclusive?: boolean }[] }) =>
+      q.options.filter((o) => o.exclusive).map((o) => o.id);
+    expect(exclusive(different)).toEqual(["nothing", "unclear", "private"]);
+    expect(exclusive(unfinished)).toEqual(["unclear", "outside", "none", "private"]);
+    expect(exclusive(day10.step)).toEqual(["unavailable", "unclear", "none", "private"]);
+  });
+
+  it("keeps arrival inclusive and free of bodily or closure requirements", () => {
+    expect(day10.arrive.lead).toBe(
+      "This is the last day of the First Journey. It completes a ten-day container without claiming that your healing is complete.",
+    );
+    const arrive = [...day10.arrive.body, ...(day10.arrive.settle ?? [])].join(" ");
+    expect(arrive).toContain("mainly read");
+    expect(arrive).toContain("Any position that works");
+    expect(arrive).toContain("Simply reading is complete");
+    expect(arrive).toContain(
+      "Finishing screens is not evidence of healing, readiness, insight, attention, courage, or progress.",
+    );
+    expect(arrive).toContain("no relaxation, calm, gratitude, emotional response, or sense of closure is required");
+    for (const phrase of [
+      "sit for a moment",
+      "let one breath out",
+      "breathe",
+      "relax your",
+      "close your eyes",
+      "feel your feet",
+      "same person who opened Day 1",
+      "with a little more information",
+      "You have spent ten days",
+    ]) {
+      expect(arrive.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
+  });
+
+  it("restores the integration and new-life teaching with real constraints", () => {
+    expect(day10.understand.heading).toBe(
+      "A journey can be complete while healing remains unfinished",
+    );
+    const teach = [
+      ...day10.understand.body,
+      ...(day10.understand.info ?? []).flatMap((i) => [i.term, i.explanation]),
+    ].join(" ");
+    expect(teach).toContain("By integration, we mean allowing pieces of experience");
+    expect(teach).toContain("not going back to an untouched earlier self");
+    expect(teach).toContain(
+      "does not mean carrying it alone, calling harm good, suppressing lament, pretending the ashes never existed",
+    );
+    for (const constraint of [
+      "grief",
+      "illness",
+      "disability",
+      "caregiving",
+      "discrimination",
+      "unsafe conditions",
+      "financial pressure",
+      "power",
+      "relationships",
+      "limited resources",
+      "limited support",
+    ]) {
+      expect(teach.toLowerCase(), `missing constraint: ${constraint}`).toContain(
+        constraint.toLowerCase(),
+      );
+    }
+    expect(teach).toContain("It is not automatically a personal failure");
+    expect(teach).toContain("The First Journey is complete here");
+    const terms = (day10.understand.info ?? []).map((i) => i.term);
+    expect(terms).toEqual([
+      "What does integration mean?",
+      "What does ‘carry it forward’ mean?",
+      "What if nothing changed?",
+      "What if I feel more unsettled?",
+      "Do I have to continue after this?",
+    ]);
+    expect(teach).toContain("worsening is not treated here as a necessary phase of healing");
+    expect(teach).toContain("Support & Safety");
+  });
+
+  it("gives every gathered idea a substantive, branch-accurate echo", () => {
+    const echo = different.echo!;
+    expect(echo.heading).toBe("What may be worth keeping — or leaving here");
+    expect(Object.keys(echo.byOption).sort()).toEqual(
+      different.options.map((o) => o.id).sort(),
+    );
+    for (const [id, line] of Object.entries(echo.byOption)) {
+      expect(line.length, `short echo: ${id}`).toBeGreaterThan(60);
+    }
+    expect(echo.byOption["protective"]).toContain(
+      "No origin, past danger, protective purpose, or present usefulness is established",
+    );
+    expect(echo.byOption["named"]).toContain("Nothing about manageability or relief is assumed");
+    expect(echo.byOption["twopulls"]).toContain("No current conflict or ambivalence");
+    expect(echo.byOption["cost"]).toContain("No particular cost, cause, available choice");
+    expect(echo.byOption["harsh"]).toContain("accountability remains possible");
+    expect(echo.byOption["small"]).toContain("No step is assumed to have occurred");
+    expect(echo.byOption["notalone"]).toContain(
+      "No support, person, disclosure, resource, safety, or access is assigned",
+    );
+    expect(echo.byOption["nothing"]).toContain("nothing is promised to arrive later");
+    expect(echo.byOption["unclear"]).toContain("Uncertainty remains uncertainty");
+    expect(echo.byOption["private"]).toContain("saved on this device");
+    expect(echo.byOption["private"]).not.toContain("nothing was recorded");
+    expect(echo.unanswered).toBe(
+      "You continued without selecting a thread. Nothing will be chosen, interpreted, or summarised on your behalf.",
+    );
+    expect(echo.closing).toBe(
+      "A thread may be kept, revised, set down, or left unclear. None becomes a promise or proof of change.",
+    );
+  });
+
+  it("gives both practices equal depth and the same integration movement", () => {
+    const { reflection: nonreligious, spiritual } = day10.practise;
+    expect(day10.practise.heading).toBe("Two ways to gather without forcing closure");
+    expect(day10.practise.either).toBe(
+      "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the practice unfinished.",
+    );
+    expect(nonreligious.steps.length).toBeGreaterThanOrEqual(7);
+    expect(spiritual.steps.length).toBeGreaterThanOrEqual(7);
+    expect(nonreligious.title).toBe(
+      "Integration Practice — what to keep, what to leave open, and what may support you",
+    );
+    expect(spiritual.title).toBe(
+      "Scripture & Spiritual Reflection — blessing without forced closure",
+    );
+
+    for (const path of [nonreligious, spiritual]) {
+      const text = [...path.steps, path.notRequired].join(" ").toLowerCase();
+      expect(text).toContain("unfinished");
+      expect(text).toContain("support");
+      expect(text).toContain("accommodation");
+      expect(text).toContain("advocacy");
+      expect(text).toContain("boundary");
+      expect(text).toContain("waiting");
+      expect(text).toContain("outward");
+      expect(text).toContain("reading");
+      expect(text).toContain("or any outcome");
+    }
+    expect(nonreligious.steps[0]).toContain("No touch, posture change, breathing change");
+    expect(spiritual.scripture!.reference).toBe("Numbers 6:24–26 (World English Bible)");
+    expect(spiritual.scripture!.body).toBe(
+      "Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace.",
+    );
+    expect(spiritual.scripture!.note).toBe(
+      "This ancient priestly blessing from Israel’s Scriptures entrusts people to God’s keeping, grace, attentive presence, and shalom. It is not a forecast that pain, danger, illness, grief, or circumstances will change, and it should not silence lament or replace practical care.",
+    );
+    expect(spiritual.scripture!.note).not.toContain("A blessing asks for");
+    expect(spiritual.steps.join(" ")).toContain(
+      "may be set aside without any spiritual judgment",
+    );
+    expect(spiritual.notRequired).toContain("receiving the blessing");
+  });
+
+  it("keeps the reflection answer-driven with complete line coverage", () => {
+    expect(day10.reflection.intro).toBe(
+      "This uses only today’s selected structured responses; it does not summarise earlier days or decide what the journey meant.",
+    );
+    expect(day10.reflection.sections.map((s) => [s.id, s.title, s.from])).toEqual([
+      ["hearing", "What may be carried — or left here", "different"],
+      ["care", "What remains unfinished — or unnamed", "unfinished"],
+      ["next", "How the journey was left — or left open", "step"],
+    ]);
+    const sources = { different, unfinished, step: day10.step };
+    for (const section of day10.reflection.sections) {
+      expect(section.opening).toBeUndefined();
+      const source = sources[section.from as keyof typeof sources];
+      expect(Object.keys(section.lines ?? {}).sort()).toEqual(
+        source.options.map((o) => o.id).sort(),
+      );
+      for (const [id, line] of Object.entries(section.lines ?? {})) {
+        expect(line.length, `short line: ${section.id}.${id}`).toBeGreaterThan(60);
+      }
+      expect(section.unanswered.length).toBeGreaterThan(60);
+    }
+    expect(day10.reflection.closing).toBe(
+      "Today’s selections do not establish progress, readiness, cause, safety, or what will happen next. They show only what was selected here—including uncertainty, privacy, no clear thread, or no step.",
+    );
+  });
+
+  it("invents nothing on a fully skipped path", () => {
+    const text = buildReflection(day10, [])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(text).toContain("No thread was selected");
+    expect(text).toContain("No unfinished place was selected");
+    expect(text).toContain("No step was selected");
+    for (const phrase of [
+      "ten days of honest attention",
+      "you have gathered",
+      "you noticed",
+      "you practised",
+      "you stayed",
+      "you understood",
+      "you disclosed",
+      "will surface when it is ready",
+      "most practical next thing",
+    ]) {
+      expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
+  });
+
+  it("reflects only the selected options on an answered path", () => {
+    const answers = [
+      answer("q.different", idx(different, "harsh")),
+      answer("q.unfinished", idx(unfinished, "grief")),
+      answer("step", idx(day10.step, "revisit")),
+    ];
+    const text = buildReflection(day10, answers)
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(text).toContain("truth and responsibility do not require self-attack");
+    expect(text).toContain("Grief, loss, or mourning was selected");
+    expect(text).toContain("Choosing one day or practice you may return to was selected");
+    expect(text).not.toContain("a small or preparatory response");
+    expect(text).not.toContain("Something relational was selected");
+    expect(text).not.toContain("Keeping one fair sentence");
+    expect(text).not.toContain("No thread was selected");
+  });
+
+  it("keeps private, unclear, outside-control and unavailable paths accurate", () => {
+    const answers = [
+      answer("q.different", idx(different, "private")),
+      answer("q.unfinished", idx(unfinished, "outside")),
+      answer("step", idx(day10.step, "unavailable")),
+    ];
+    const text = buildReflection(day10, answers)
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(text).toContain("saved on this device");
+    expect(text).toContain("responsibility is not handed back to you");
+    expect(text).toContain("none feels safe or available now");
+    expect(text.toLowerCase()).not.toContain("nothing was recorded");
+
+    const quiet = buildReflection(day10, [
+      answer("q.different", idx(different, "unclear")),
+      answer("q.unfinished", idx(unfinished, "none")),
+      answer("step", idx(day10.step, "unclear")),
+    ])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(quiet).toContain("recorded as uncertainty only");
+    expect(quiet).toContain("That absence is left exactly as it is");
+    expect(quiet).toContain("That uncertainty stays as uncertainty");
+  });
+
+  it("keeps legacy multi-select stored answers from creating a global claim", () => {
+    const text = buildReflection(day10, [
+      answer("q.different", idx(different, "protective")),
+      answer("q.different", idx(different, "named")),
+    ])
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(text).toContain("may have helped you cope");
+    expect(text).toContain("putting words to something");
+    expect(text).not.toContain("ten days");
+    expect(text).not.toContain("you have changed");
+  });
+
+  it("closes with permission and no continuation pressure", () => {
+    expect(day10.close.heading).toBe("A complete stopping place");
+    expect(day10.close.body[0]).toContain(
+      "None of those paths establishes healing, progress, readiness, or a particular meaning.",
+    );
+    expect(day10.close.body[1]).toContain("Unfinished is not the same as failed.");
+    expect(day10.close.body[2]).toContain("you owe the app no repetition or continuation");
+    expect(day10.close.body[2]).toContain("Support & Safety");
+    expect(day10.close.carryForward).toBe(
+      "I can let this journey be complete without forcing myself to be finished.",
+    );
+  });
+
+  it("guards every forbidden old, inferential or outcome phrase", () => {
+    const text = allText10();
+    for (const phrase of [
+      "You have spent ten days",
+      "same person who opened Day 1",
+      "with a little more information",
+      "Let one breath out slowly",
+      "make something visible",
+      "give it a name",
+      "make one small movement possible",
+      "long avoided",
+      "heavier before it feels lighter",
+      "understanding sometimes arrives weeks later",
+      "first practical relief",
+      "removes a great deal",
+      "puts the choice back",
+      "single most useful",
+      "only one that holds",
+      "worth more than most insights",
+      "will surface when it is ready",
+      "will keep. It does not expire",
+      "most practical next thing",
+      "can shift more than several days",
+      "accumulates quietly",
+      "choose and rehearse",
+      "Only one — the rest can wait",
+      "shrink it until",
+      "what, when",
+      "picture the moment",
+      "make it specific",
+      "mean it as a step, not a delay",
+      "step you are carrying out",
+      "without being asked",
+      "the right next place",
+      "I began where I was",
+      "I stayed with what was true",
+      "Ten days of honest attention",
+      "A blessing asks for",
+      "you are healed",
+      "you will feel",
+    ]) {
+      expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
+  });
+
+  it("leaves Days 6 to 9 at their accepted canonical boundaries", () => {
+    const day6 = getFirstJourneyDay(6)!;
+    expect(day6.title).toBe("What It Is Costing Now");
+    expect(day6.motif).toBe("cost");
+    const day7 = getFirstJourneyDay(7)!;
+    expect(day7.close.carryForward).toBe(
+      "I can face what is true without turning myself into the enemy.",
+    );
+    const day8 = getFirstJourneyDay(8)!;
+    expect(day8.close.heading).toBe("Held without force");
+    const day9 = getFirstJourneyDay(9)!;
+    expect(day9.title).toBe("Practise a Different Response");
+    expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise");
+    expect(day9.close.carryForward).toBe(
+      "I can rehearse a possibility without promising to use it.",
     );
   });
 });

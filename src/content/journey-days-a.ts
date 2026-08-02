@@ -1108,34 +1108,42 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
   {
     day: 5,
     title: "The Two Pulls Within You",
-    theme: "Wanting change and wanting safety, at the same time.",
+    theme:
+      "A pull toward movement and a pull toward caution can be present together, without a decision being required.",
     motif: "two-pulls",
     shape: "standard",
-    descriptor: "Working with ambivalence · about 10 minutes",
+    descriptor: "Making room for mixed feelings · about 10 minutes",
     arrive: {
-      lead: "Being pulled two ways is not weakness or hypocrisy.",
+      lead: "Wanting something to change and feeling cautious about it can both be true.",
       body: [
-        "Almost everyone who wants something to change also has a part that would rather not risk it.",
-        "Today makes room for both, without requiring you to pick a winner.",
+        "One pull may want honesty, rest, help, grief, a limit, reconnection, or some other movement.",
+        "Another pull may carry concern about safety, energy, consequences, responsibilities, uncertainty, belonging, timing, or something not yet clear.",
+        "Today is for listening, not deciding. You do not have to find two pulls if that is not your experience.",
       ],
       settle: [
-        "Notice the weight of your hands wherever they are resting.",
-        "Take one breath in through the nose and let it out slowly through the mouth.",
-        "Let both feet be flat, as though you could stand up if you chose to.",
+        "Settle into any position that works for you today — sitting, standing, lying down, or moving.",
+        "Orient outward first: notice one or two neutral details around you, using any sense that is comfortable.",
+        "Only if attention to your body or breath feels comfortable, notice the support beneath you or one ordinary breath. Otherwise stay with your surroundings.",
       ],
     },
     understand: {
-      heading: "Two pulls, both trying to help",
+      label: "Listen",
+      heading: "Two truths can ask for room at the same time",
       body: [
-        "One part of a person may want movement: honesty, repair, rest, a different life. Another part may want safety, distance or control — often because it remembers what change cost last time.",
-        "It is tempting to treat the second part as the enemy. That usually backfires: the more it is attacked, the harder it holds on.",
-        "So today is not about defeating anything. It is about hearing both pulls clearly enough that they stop fighting in the dark.",
+        "Mixed feelings about the same area of life are common. A wish for something to move and a concern about moving can sit side by side.",
+        "The pull toward movement may point toward what matters to you or what you long for. The cautious pull may point toward risk, capacity, responsibility, timing, uncertainty, or a need for more information or support. Either may be faint, or absent today.",
+        "Listening to both can make the conflict more visible. It does not require obeying either, deciding today, or treating them as equally right — and it does not excuse harmful effects.",
       ],
       info: [
         {
           term: "What is ambivalence?",
           explanation:
-            "Holding two opposing wants at the same time — for example wanting to speak honestly and wanting to keep the peace. It is a normal human state, not indecision or a lack of commitment.",
+            "Mixed or competing wishes, concerns, needs or loyalties about the same area of life. It is not proof of weakness, laziness, insincerity or lack of commitment, and it is not a diagnosis.",
+        },
+        {
+          term: "What does “a part of me” mean here?",
+          explanation:
+            "Ordinary shorthand for one feeling, motive, wish, concern or side of an inner conflict. It does not mean separate personalities, and it is not a clinical label.",
         },
       ],
     },
@@ -1143,168 +1151,236 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "forward",
         eyebrow: "Listen",
-        prompt: "The part of you that wants something to move — what does it want?",
-        hint: "Choose any that fit. Wanting something does not commit you to doing it.",
-        select: "many",
+        prompt: "If one pull wants something to move, what is it reaching toward?",
+        hint: "Choose the one closest to today. Wanting something does not commit you to doing it.",
+        select: "one",
         options: [
-          { id: "honest", label: "To be honest about something I have kept quiet" },
-          { id: "rest", label: "To stop and actually rest" },
-          { id: "limit", label: "To set a limit that is overdue" },
-          { id: "repair", label: "To repair or clear something with someone" },
-          { id: "help", label: "To ask for help properly" },
-          { id: "grieve", label: "To let myself grieve something" },
-          { id: "live", label: "To live in a way that feels like mine again" },
-          { id: "unclear", label: "Something needs to move — I can't name what" },
+          { id: "honest", label: "More honesty about something I have kept quiet" },
+          { id: "rest", label: "Genuine rest" },
+          { id: "limit", label: "A needed limit or boundary" },
+          {
+            id: "repair",
+            label: "Understanding or addressing something unresolved in a relationship",
+            note: "No contact, reconciliation or forgiveness is required.",
+          },
+          { id: "help", label: "Asking for or receiving support" },
+          { id: "grieve", label: "Making some room for grief, at my own pace" },
+          { id: "live", label: "Reconnecting with a life that feels more like my own" },
+          { id: "unclear", label: "Some movement I can sense without a clear name" },
+          { id: "none", label: "I do not notice a clear pull toward movement today" },
+          { id: "private", label: "I would rather keep this private today" },
         ],
         echo: {
-          heading: "The other side of it",
+          heading: "What may be drawing you forward",
           byOption: {
-            honest: "The wish to be honest usually arrives with a fear of what honesty could cost. Both are reasonable.",
-            rest: "Wanting rest often meets a fear that things will fall apart if you stop.",
-            limit: "Wanting a limit often meets a fear of being seen as difficult, or of someone's reaction.",
-            repair: "Wanting repair often meets a fear of being rejected again, or of it changing nothing.",
-            help: "Wanting help often meets an old lesson that asking was not safe or not answered.",
-            grieve: "Wanting to grieve often meets a fear that once it starts it will not stop.",
-            live: "Wanting your life to feel like yours often meets the practical weight of other people's needs.",
-            unclear: "An unnamed pull is still a real pull. It does not have to be specified to be listened to.",
+            honest:
+              "You named a wish for more honesty about something kept quiet. Nothing here decides whether, when, how, or with whom that would be safe or wise.",
+            rest: "You named a wish for genuine rest. Nothing is assumed here about why rest has been difficult.",
+            limit:
+              "You named a wish for a needed limit or boundary. What that limit would be, and with whom, stays with you.",
+            repair:
+              "You named a wish for understanding or addressing something unresolved in a relationship. This does not imply contact, reconciliation or forgiveness, and it does not say anything about whether the relationship still matters.",
+            help: "You named a wish to ask for or receive support. No past experience of asking is assumed from that.",
+            grieve:
+              "You named a wish to make some room for grief at your own pace. Nothing is predicted here about what grief will feel like or do.",
+            live: "You named a wish to reconnect with a life that feels more like your own.",
+            unclear:
+              "You sensed some movement without a clear name. An unnamed sense is still something you noticed, and it does not have to be specified today.",
+            none: "You noted that you do not notice a clear pull toward movement today. That is a legitimate answer, and no pull will be assumed.",
+            private:
+              "You chose to keep this private today. No pull will be inferred from that choice, and the day continues.",
           },
           unanswered:
-            "You continued without naming a pull forward, and today still works. Ambivalence can be present without either side having found its words.",
-          closing: "Neither pull is the enemy. Both are usually trying, in their own way, to look after you.",
+            "No pull toward movement was named here, and none will be assumed. Today still works without it.",
+          closing:
+            "Wanting something is information, not an instruction. The next prompt invites a possible concern or hesitation, but does not assume one exists.",
         },
       },
       {
         id: "holdback",
         eyebrow: "Listen",
-        prompt: "And the part that holds back — what is it protecting?",
-        hint: "Choose any that fit. This part is not the villain of the story.",
-        select: "many",
+        prompt: "If another pull makes movement feel risky or difficult, what concern might it carry?",
+        hint: "Choose the one closest to today. The concern may relate to past experience, present reality, anticipated consequences, or no clear reason.",
+        select: "one",
         options: [
-          { id: "hurt", label: "Me, from being hurt again" },
-          { id: "others", label: "Other people, from the fallout" },
-          { id: "stability", label: "The stability I have managed to build" },
-          { id: "energy", label: "The little energy I have left" },
-          { id: "hope", label: "Me, from hoping and being disappointed" },
-          { id: "identity", label: "Who I have had to be to get through" },
-          { id: "unknown", label: "Something I can't name yet" },
+          { id: "hurt", label: "Risk of hurt, rejection, criticism or disappointment" },
+          {
+            id: "others",
+            label: "Possible effects on people or responsibilities that genuinely depend on me",
+          },
+          { id: "stability", label: "Possible loss of safety, privacy, stability or predictability" },
+          { id: "energy", label: "Limits in energy, health or capacity" },
+          { id: "hope", label: "The risk of hoping and being disappointed" },
+          {
+            id: "identity",
+            label: "A role, relationship, belonging, culture, faith or sense of identity that may feel at stake",
+          },
+          { id: "unknown", label: "I am not sure what the concern is yet" },
+          { id: "ongoing", label: "Something difficult, unfair, demanding or unsafe is still real" },
+          { id: "none", label: "I do not notice a clear second pull today" },
+          { id: "private", label: "I would rather keep this private today" },
+        ],
+        info: [
+          {
+            term: "What if the concern is about something still real?",
+            explanation:
+              "Caution may be wise where safety, unfairness, illness, disability, limited resources or capacity, dependence, responsibility, or another present reality is involved. Nothing here asks you to override it.",
+          },
         ],
       },
     ],
     practise: {
       heading: "Two ways to practise today",
-      intro: "Both are private, and neither asks you to decide anything.",
-      either: "Either or both, in either order.",
+      intro:
+        "Both are private, both are complete on their own, and neither asks you to decide anything.",
+      either: "Either, both, or neither — in whatever order suits you.",
       reflection: {
-        title: "Reflection Practice — the two-voice exercise",
+        title: "Reflection Practice — let both pulls speak",
         summary:
-          "A structured way to let both pulls speak, so neither has to shout.",
+          "A private sentence-stem practice for hearing a longing and a concern without forcing a decision.",
         steps: [
-          "Sit with both feet on the floor. You will speak for two parts of yourself, silently, one at a time.",
-          "First, complete: “A part of me wants ______.” Let it finish however it finishes.",
-          "Then, complete: “Another part of me is afraid that ______.”",
-          "Now the important step: say to the second part, “Thank you. I understand why.” Do not argue with it.",
-          "Finally, complete: “Something small that both parts could live with is ______.”",
-          "If nothing arrives for that last line, leave it open. An unfinished sentence is an acceptable ending.",
+          "Begin outwardly: notice one or two neutral details around you, in any position that is workable today.",
+          "Privately complete: “One side of me hopes for…” or “One side of me wants…”. It may remain unfinished.",
+          "Privately complete: “Another concern says…” or “Another side of me wants me to take seriously…”. “I don't know” is a valid ending.",
+          "Reflect back plainly, without forced gratitude or agreement: “I hear the hope for ____. I hear the concern about ____.” If only one side is present, name only that one.",
+          "Ask: “Before any decision, what might help me listen well — time, information, support, rest, safety, a boundary, or something else?”",
+          "Finish with: “I do not have to settle this today,” then reorient to your surroundings. If the exercise becomes too uncomfortable, stop and return to neutral surroundings.",
         ],
         notRequired:
-          "No decision is required today. Nothing must be resolved, and nothing is written down.",
+          "You do not need to write or save anything from this practice. No origin story, no two distinct parts, no decision, no resolution and no action are required.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — honest divided faith",
+        title: "Scripture & Spiritual Reflection — two truths in one honest prayer",
         summary:
-          "A Christian pathway for belief and doubt arriving together.",
+          "One biblical example of mixed honesty spoken to God — offered as an example, not as a judgement on your caution.",
         steps: [
-          "Read the sentence. Notice that it contains both halves and is not corrected in the text.",
-          "Notice that the man is not asked to sort himself out before being met.",
-          "If you wish, say your own version — belief and doubt in the same breath, in your own words.",
-          "Sit for a few breaths. You do not have to land on one side of it before you finish.",
+          "Orient outward for a moment, then read the sentence slowly if you wish.",
+          "Notice that a father seeking help speaks belief and uncertainty together, and Scripture keeps both in one honest sentence.",
+          "Your caution is not being equated with unbelief. Faith does not require overriding safety, wisdom, limits, responsibilities or current reality.",
+          "If you wish, name the tension before God: “Part of me longs for ____. Another part of me is concerned about ____.” Either line may be left blank.",
+          "If you wish, pray briefly for truth, mercy, wisdom, safety, support and an honest pace. No answer or outcome is promised here.",
+          "Sit in silence or reorient outward. No feeling, certainty, answer or action is required.",
         ],
         notRequired:
-          "Certainty is not the entry requirement. Doubt is not a failure, and you may leave this path at any point.",
+          "You may read without praying, or leave this path entirely. No certainty, surrender, forgiveness, reconciliation, contact, decision or change is required.",
         scripture: {
           reference: "Mark 9:24 (World English Bible)",
           body: "I believe. Help my unbelief!",
-          note: "One short sentence holding two opposite things — offered without apology and without being corrected.",
+          note: "The verse makes room for mixed honesty. It does not define caution as spiritual failure, and it does not promise that the tension will be resolved.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What would honour both pulls today?",
-      hint: "One choice, small enough that the cautious part can bear it.",
+      prompt: "What may help you honour what you heard without forcing a decision?",
+      hint: "Choose one small, safe, reversible response. Listening may be the step.",
       select: "one",
       options: [
-        { id: "thank", label: "Thank the cautious part without giving it the final vote" },
-        { id: "tiny", label: "Take one step so small both parts can live with it" },
-        { id: "wait", label: "Wait deliberately, rather than by default" },
-        { id: "talk", label: "Talk it through with someone who will not rush me" },
-        { id: "prepare", label: "Nothing outward — hearing both sides was the step" },
+        {
+          id: "thank",
+          label:
+            "Offer one respectful sentence to each pull: “I hear the hope…” and “I hear the concern…”",
+        },
+        {
+          id: "tiny",
+          label:
+            "Identify one thing I may need before deciding: information, support, rest, safety, time or a boundary",
+        },
+        { id: "wait", label: "Choose a later time to revisit this, without deciding today" },
+        {
+          id: "talk",
+          label: "Prepare one sentence for a safe, unhurried person or professional",
+          note: "No need to share it today, and do not involve anyone who feels unsafe.",
+        },
+        {
+          id: "prepare",
+          label: "No outward action — making room for more than one possibility was the step",
+        },
       ],
     },
     reflection: {
-      intro: "From what you chose today. Nothing is assumed about what you did not choose.",
+      intro:
+        "This stays within what you chose — or did not choose — today. Keep what fits and leave what does not.",
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What may be drawing you forward",
           from: "forward",
-          opening: "Part of you is reaching for something:",
           lines: {
-            honest: "There is a wish to be honest about something that has stayed quiet.",
-            rest: "There is a wish to stop and rest — properly, not in the gaps.",
-            limit: "There is a limit waiting to be set, possibly overdue.",
-            repair: "There is a wish for repair, which usually means the relationship still matters.",
-            help: "There is a wish to ask for help, which is often harder than carrying on.",
-            grieve: "There is a wish to grieve, which suggests something has not yet been allowed its space.",
-            live: "There is a wish for your life to feel like yours again.",
-            unclear: "There is a pull toward movement without a name yet, and it still counts.",
+            honest: "You named a wish for more honesty about something kept quiet.",
+            rest: "You named a wish for genuine rest.",
+            limit: "You named a wish for a needed limit or boundary.",
+            repair:
+              "You named a wish for understanding or addressing something unresolved in a relationship. Nothing about contact, reconciliation or forgiveness follows from that.",
+            help: "You named a wish to ask for or receive support.",
+            grieve: "You named a wish to make some room for grief, at your own pace.",
+            live: "You named a wish to reconnect with a life that feels more like your own.",
+            unclear: "You sensed some movement without a clear name, and that still counts as something noticed.",
+            none: "You noted that no clear pull toward movement is present today.",
+            private: "You chose to keep this private today, and no pull will be inferred from that.",
           },
           unanswered:
-            "The forward pull was not named today. It may not be ready for words, and it does not stop existing while it waits.",
+            "No pull toward movement was named today, and none will be attributed to you here.",
         },
         {
           id: "protected",
-          title: "What the other part may be protecting",
+          title: "What may be asking for caution",
           from: "holdback",
-          opening: "And part of you is holding the line:",
           lines: {
-            hurt: "It may be protecting you from being hurt in a way you have already survived once.",
-            others: "It may be protecting other people from fallout you would then have to manage.",
-            stability: "It may be protecting a stability that took real effort to build.",
-            energy: "It may be protecting the little energy left, which is a practical concern rather than an excuse.",
-            hope: "It may be protecting you from hoping and being disappointed again.",
-            identity: "It may be protecting who you had to become in order to get through.",
-            unknown: "It may be protecting something not yet nameable, which is still worth listening to.",
+            hurt: "You pointed to a concern about hurt, rejection, criticism or disappointment.",
+            others:
+              "You pointed to possible effects on people or responsibilities that genuinely depend on you.",
+            stability:
+              "You pointed to a possible loss of safety, privacy, stability or predictability.",
+            energy: "You pointed to limits in energy, health or capacity — a practical concern, not an excuse.",
+            hope: "You pointed to the risk of hoping and being disappointed.",
+            identity:
+              "You pointed to a role, relationship, belonging, culture, faith or sense of identity that may feel at stake.",
+            unknown: "You noted that the concern is not clear yet, which is a fair place to stop.",
+            ongoing:
+              "You noted that something difficult, unfair, demanding or unsafe is still real. Nothing here asks you to override it, and caution may be carrying important current information.",
+            none: "You noted that no clear second pull is present today.",
+            private: "You chose to keep this private today, and no concern will be inferred from that.",
           },
           unanswered:
-            "The cautious part was not described, and it will not be second-guessed here. It is usually protecting something that once mattered a great deal.",
+            "No concern was described here. No motive, history or purpose will be assigned to a pull you did not name.",
+        },
+        {
+          id: "care",
+          title: "What both may need from you",
+          opening:
+            "Longing and caution can both carry information. Longing may point toward what matters; caution may point toward risk, capacity, responsibility, timing or uncertainty. Sometimes only one is clear. Neither has to decide alone today.",
+          unanswered:
+            "Longing and caution can both carry information, and sometimes only one is clear. Neither has to decide alone today.",
         },
         {
           id: "next",
-          title: "One honest next step",
+          title: "One honest listening step",
           from: "step",
           lines: {
-            thank: "Thanking the cautious part tends to reduce how loudly it has to argue.",
-            tiny: "A step both parts can live with is more durable than a decisive one they cannot.",
-            wait: "Waiting on purpose is different from stalling, and it keeps the choice yours.",
-            talk: "Talking with someone unhurried can make ambivalence far less exhausting.",
-            prepare: "Hearing both sides was the step, and it is a substantial one.",
+            thank: "You chose to offer one respectful sentence to each pull you noticed.",
+            wait: "You chose to revisit this at a later time, without deciding today.",
+            tiny: "You chose to identify one thing you may need before deciding.",
+            talk: "You chose to prepare one sentence for a safe, unhurried person or professional.",
+            prepare:
+              "You chose no outward action. Making room for more than one possibility was the step.",
           },
           unanswered:
-            "Nothing was chosen, and nothing needs deciding. Both pulls were listened to, which was the work.",
+            "No step was chosen, and no action is required. Reaching this point may simply leave the question open.",
         },
       ],
-      closing: "No decision has been made here, and none is being urged on you.",
+      closing:
+        "This app cannot know the whole context or decide what is wise. Ambivalence may contain information; it is not a verdict, and it does not require action today.",
     },
     close: {
-      heading: "Both parts heard",
+      heading: "Room for more than one truth",
       body: [
-        "You let two opposing things be true without forcing a conclusion. That is difficult, and it is genuinely useful.",
-        "Tomorrow turns gently toward what the current arrangement is costing — without blame.",
+        "Today made room for the possibility that movement and caution may both have something to say.",
+        "You did not have to find two pulls, explain where they came from, treat them as opponents, or decide anything. Where listening happened, listening is not obeying either side automatically.",
+        "When you continue, Day 6 turns gently toward present-day cost, without blame or pressure to change.",
       ],
-      carryForward:
-        "Carry forward one sentence: I can want change and want safety at the same time.",
+      carryForward: "More than one truth can be present, and I can choose my pace.",
     },
   },
 ];

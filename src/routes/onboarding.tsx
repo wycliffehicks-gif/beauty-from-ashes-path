@@ -198,7 +198,7 @@ function Opening() {
           </Link>
         </header>
 
-        <main className="bfa-safe-center flex-1 py-2">
+        <main ref={mainRef} className="bfa-safe-center journey-main flex-1 py-2 outline-none">
           {isAgreement ? (
             <AgreementScreen
               adultConfirmed={adultConfirmed}

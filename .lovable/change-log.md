@@ -1,5 +1,94 @@
 # Change log
 
+## 2026-08-02 — Bounded Day 7 content, safety and branch-accuracy revision
+
+Day 7 (“A More Compassionate Way to Hold It”) only; Days 1–6 and 8–10 untouched.
+No route, component, storage, resume, completion, reflection-mechanics, AI,
+spiritual-preference or other shared-system change. `src/routeTree.gen.ts`
+unchanged. Still private and unpublished. Identity is preserved: day 7, title,
+motif “compassion”, shape `standard`, question IDs `tone`/`need`, step ID `step`,
+the nine-screen order (arrive → understand → q.tone → e.tone → q.need → practise
+→ step → reflection → close), and every existing option ID in its existing
+positional order, with new IDs appended only.
+
+- **Identity**: theme “Truth, context, dignity and responsibility held together
+  without self-attack.”; descriptor “Holding truth without self-attack · about 12
+  minutes”. Central movement: face what is true without turning yourself into the
+  enemy.
+- **Arrive**: new lead and body separating facing truth from self-attack and from
+  praise or pretence; compassion defined as truth, context, dignity and
+  appropriate responsibility with no required feeling. Settling is inclusive,
+  outward-first, and explicitly requires no touch, posture, breathing change,
+  relaxation or settled feeling.
+- **Listen**: `understand.label` “Listen”; heading “Compassion can be honest
+  without becoming cruel”. Defines an inner response in ordinary language
+  including wordless forms; states that accurate compassion neither flatters nor
+  excuses harm and holds only responsibility within the person’s influence;
+  states that harshness may feel like honesty but may add shame, without claiming
+  it always does, that the person is “defended”, or that compassion guarantees
+  change; distinguishes chosen action from grief, illness, disability,
+  caregiving, discrimination, unsafe conditions and limited resources; states
+  that nothing today requires forgiveness, confession, disclosure, repair,
+  confrontation, changed behaviour, a changed feeling or a decision. New
+  InfoNotes: “What does ‘hold it’ mean?”, “What if compassion feels false or
+  undeserved?”, “What if I have hurt someone?”.
+- **Question 1 (`tone`)**: now single-select, reworded in place for the seven
+  existing IDs, with `none`, `unclear`, `private` appended as exclusive choices.
+  Echo heading “What you noticed about the inner response”; every echo mirrors
+  only the selected present response and infers no origin, motive, history or
+  unselected opposite. All prior causal/origin stories (borrowed voice, somebody
+  spoke that way first, trained to minimise, bounce-back expectations, harm
+  prevention, kindness never modelled, reserve-tracking, “tone was learned
+  somewhere”) removed.
+- **Question 2 (`need`)**: ID retained but reframed as a chosen less-punishing way
+  of holding this rather than an underlying need identified by the app; now
+  single-select, with `none` and `private` appended.
+- **Practise**: equal-depth paths on one screen; “either, both or neither”,
+  read-only and stop-at-any-point consent. Nonreligious “Reflection Practice —
+  truth without self-attack” has seven steps separating observation from verdict,
+  adding context without excusing harm, keeping responsibility specific and only
+  where it exists, offering an accurate less-punishing response with a wordless
+  accessible alternative, and reorienting outward. Christian “Scripture &
+  Spiritual Reflection — gentleness without abandoning truth” has six steps and
+  now quotes the complete World English Bible wording of Isaiah 42:3 including
+  “He will faithfully bring justice.”, with a note that it does not explain
+  suffering, excuse harm, promise a feeling or describe the reader as damaged. The
+  “damaged things”, “deserved to break”, “wick should try harder”, “handled
+  carefully rather than corrected” and “barely holding on” readings are removed.
+- **One Honest Step**: same five IDs and order, reworded so all five are internal,
+  safe, reversible and non-performative; the former “let one kindness from
+  someone else land” is now “let one fair sentence remain … without forcing
+  belief”, leaving relational reconnection to Day 8.
+- **Personalized reflection** (mechanism unchanged): openings removed from
+  `hearing`, `care` and `next` so partial and fully skipped paths never claim the
+  person noticed or considered anything. Every existing and appended option ID has
+  a nonempty mapped line; branch boundaries respected for `rest` (availability not
+  assumed), `notalone` (no person, contact or disclosure), `permission` (the app
+  grants nothing and no action is required), `safety` (no reason assumed),
+  `forgiveness` (accountability without self-punishment, no forgiveness required)
+  and `unsure`/`none`/`private` (uncertainty, absence and privacy left intact).
+  Private branches acknowledge the locally stored structured choice and never say
+  nothing was recorded. New closing states the selections establish no cause,
+  desert or outcome.
+- **Close**: “Truth without contempt”, with a whether-or-not opening, a statement
+  that compassion erases neither harm, consequence, grief, boundaries, limits nor
+  responsibility, and a Day 8 signpost (no “tomorrow”). Carry-forward: “I can face
+  what is true without turning myself into the enemy.”
+- **Tests**: focused “Day 7 revision” block appended to
+  `src/lib/journey/__tests__/selection.test.ts` covering identity/shape/screen
+  order, single-select on both questions, exact positional option ID arrays,
+  “Listen” label and newcomer definitions, inclusive arrival, full echo coverage
+  with no inference, both practices’ depth and consent plus the exact Isaiah
+  wording and wordless alternative, absent section openings with substantive
+  fallbacks and complete line coverage, a fully skipped reflection that invents
+  nothing, private/unclear/none accuracy without “nothing was recorded”, a single
+  answered positional path excluding adjacent options, a guard list for the
+  removed inferential/outcome-promising/time-dependent phrases, and a Day 8
+  snapshot check. Full suite 353 tests passing.
+- **Unchanged known shared issues** (out of scope): reflection reveal/bypass and
+  saved-response restoration, positional answer storage migration, duplicate
+  “Show me how” accessible labels, inactive spiritual setting.
+
 ## 2026-08-02 — Bounded Day 6 content-and-safety revision
 
 Day 6 (“What It Is Costing Now”) only; Days 1–5 and 7–10 untouched. No route,

@@ -5,7 +5,7 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** The router's own history position, for a truthful visible Back. */
 function useHistoryIndex(): number {

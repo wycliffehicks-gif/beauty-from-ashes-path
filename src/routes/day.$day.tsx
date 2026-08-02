@@ -665,6 +665,14 @@ function EchoScreen({
   );
 }
 
+/**
+ * When Scripture and spiritual reflection are switched off, the day offers one
+ * practice, so the copy must promise exactly one — never "either" of two.
+ */
+export const PRACTICE_SINGLE_HEADING = "A practice for today";
+export const PRACTICE_SINGLE_INTRO =
+  "You may open this practice, read without doing it, stop at any point, or continue without opening it.";
+
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
   const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);

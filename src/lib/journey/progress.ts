@@ -106,8 +106,10 @@ function sanitizeReflections(raw: unknown): Record<string, string> {
 }
 
 /**
- * Migrate the earlier `bfa.v1` visited-day markers into completion markers.
- * Only low-sensitivity day numbers ever existed there.
+ * Parse the earlier `bfa.v1` visited-day markers. Kept for reference only.
+ *
+ * "Visited" was never proof that a day was finished, so this is deliberately
+ * NOT used to create completion markers anywhere.
  */
 export function migrateLegacyVisitedDays(rawLegacy: string | null): string[] {
   if (!rawLegacy) return [];
@@ -122,17 +124,42 @@ export function migrateLegacyVisitedDays(rawLegacy: string | null): string[] {
   }
 }
 
-export function normalizeProgress(raw: unknown, legacyRaw: string | null = null): JourneyProgress {
+export function normalizeProgress(raw: unknown): JourneyProgress {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const completed = Array.isArray(r.completedDays) ? r.completedDays.filter(isSafeId) : [];
-  const legacy = raw ? [] : migrateLegacyVisitedDays(legacyRaw);
   return {
     version: JOURNEY_STORE_VERSION,
     locator: sanitizeLocator(r.locator),
     answers: sanitizeAnswers(r.answers),
-    completedDays: Array.from(new Set([...completed, ...legacy])),
+    completedDays: Array.from(new Set(completed)),
     reflections: sanitizeReflections(r.reflections),
     updatedAt: typeof r.updatedAt === "string" ? r.updatedAt : null,
+  };
+}
+
+/**
+ * One-time store upgrade. Positional answer tokens become stable option ids,
+ * and older completion markers are dropped rather than trusted (see
+ * ./answer-migration.ts for why). Locator, answers and saved reflections are
+ * preserved.
+ */
+export function upgradeStoredProgress(raw: unknown): {
+  progress: JourneyProgress;
+  changed: boolean;
+} {
+  const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const storedVersion = typeof r.version === "number" ? r.version : 1;
+  const normalized = normalizeProgress(raw);
+  if (!raw || storedVersion >= JOURNEY_STORE_VERSION) {
+    return { progress: normalized, changed: false };
+  }
+  return {
+    progress: {
+      ...normalized,
+      answers: migrateAnswersToStableIds(normalized.answers),
+      completedDays: [],
+    },
+    changed: true,
   };
 }
 
@@ -142,12 +169,23 @@ export function readProgress(): JourneyProgress {
   if (typeof window === "undefined") return emptyProgress;
   try {
     const raw = window.localStorage.getItem(JOURNEY_STORAGE_KEY);
-    const legacy = window.localStorage.getItem(LEGACY_PREFS_KEY);
-    return normalizeProgress(raw ? JSON.parse(raw) : null, legacy);
+    const { progress, changed } = upgradeStoredProgress(raw ? JSON.parse(raw) : null);
+    if (changed) {
+      try {
+        window.localStorage.setItem(
+          JOURNEY_STORAGE_KEY,
+          JSON.stringify({ ...progress, updatedAt: new Date().toISOString() }),
+        );
+      } catch {
+        /* storage may be unavailable; the migrated view still applies */
+      }
+    }
+    return progress;
   } catch {
     return emptyProgress;
   }
 }
+
 
 function write(next: JourneyProgress) {
   if (typeof window === "undefined") return;

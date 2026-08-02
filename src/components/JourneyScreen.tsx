@@ -55,8 +55,9 @@ export function JourneyScreen({
             {label ?? ""}
           </p>
           <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
-            <MenuIcon />
+            <SettingsIcon />
           </Link>
+
         </header>
 
         {progress && progress.total > 1 && (

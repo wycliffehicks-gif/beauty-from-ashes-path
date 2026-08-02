@@ -415,7 +415,9 @@ function ScreenBody({
           progress={progress}
           onBack={onBack}
           motif={content.motif}
+          focusKey={screenFocusKey}
         />
+
       );
 
     }

@@ -55,18 +55,18 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           { id: "unsure", label: "I genuinely can't tell" },
         ],
         echo: {
-          heading: "What that might mean today",
+          heading: "What you noticed today",
           byOption: {
             heavy:
-              "Heaviness often means you have been carrying something for longer than you have admitted, not that you are failing. Today can be small.",
+              "You arrived feeling heavy. Heaviness can come from many things. It does not mean you are failing, and today can be small.",
             tense:
-              "Bracing is the body staying ready for something. It usually has a history. We will not ask you to relax on command.",
+              "You arrived tense or braced. This app cannot know why, and it will not ask you to relax on command.",
             flat:
-              "Feeling far away is common and protective. Nothing today depends on you feeling more than you feel.",
+              "You arrived feeling flat or numb. That can be noticed without deciding what it means or asking it to change.",
             restless:
-              "Restlessness can be energy with nowhere safe to go. Movement while you read this is completely allowed.",
+              "You arrived restless or unable to settle. You may continue without becoming still.",
             tender:
-              "Tenderness usually means something true is close to the surface. You can go slowly and still be doing this properly.",
+              "You arrived feeling tender or close to tears. You do not have to explain, deepen, or move away from that feeling.",
             steady:
               "Steadier days are good days to look at something honestly, while there is a little room to do it.",
             unsure:
@@ -156,33 +156,35 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "hearing",
           title: "What I'm hearing",
           from: "state",
-          opening: "From what you selected today, it sounds like this:",
+          opening:
+            "Only what you selected is named back to you here. This app cannot know why you arrived that way, or what lies beneath it:",
           lines: {
-            heavy: "You arrived carrying something heavy, and you opened this anyway.",
-            tense: "You arrived braced, as though some part of you is still standing guard.",
-            flat: "You arrived at a distance from yourself, which often means something is being kept at arm's length for good reason.",
-            restless: "You arrived restless, with energy that has not found anywhere useful to go.",
-            tender: "You arrived tender, with something close to the surface.",
-            steady: "You arrived steadier than usual, and you chose to use that steadiness for something honest.",
-            unsure: "You arrived unable to name your state, which is its own kind of honesty.",
+            heavy: "You selected that you arrived feeling heavy, and you opened this anyway.",
+            tense: "You selected that you arrived tense or braced.",
+            flat: "You selected that you arrived feeling flat or far away from yourself.",
+            restless: "You selected that you arrived restless and hard to settle.",
+            tender: "You selected that you arrived tender, or close to tears.",
+            steady: "You selected that you arrived steadier than usual.",
+            unsure: "You selected that you genuinely could not tell, and nothing is assumed from that.",
           },
           unanswered:
             "You moved through today without naming how you arrived. That is allowed, and it does not make this less real: you still came, and you stayed to the end.",
         },
         {
           id: "underneath",
-          title: "What may be underneath",
+          title: "What you named",
           from: "brought",
-          opening: "You named what brought you here. Perhaps some of this fits:",
+          opening:
+            "This is only what you selected. Nothing about the reasons, the history, or what may lie beneath it is known here:",
           lines: {
-            stuck: "Feeling stuck often means there is a real obstacle that has not yet been named, rather than a shortage of willpower.",
-            loss: "Loss can keep asking for attention long after we expect it to be finished with us.",
-            hurt: "Something unresolved may still be shaping ordinary days, quietly and without permission.",
-            tired: "Holding everything together is work. Exhaustion may be the honest cost of doing it for a long time.",
-            distant: "Distance is often protective before it is a problem — it usually starts as a way of getting through.",
-            shame: "What we feel bad about tends to grow in private. It may need company more than it needs judgement.",
-            hope: "Wanting to hope again, while not knowing how, is not a contradiction. It is often where hope begins.",
-            private: "You kept the details to yourself, and that is a reasonable way to begin something new.",
+            stuck: "You named feeling stuck and not being able to see the way out.",
+            loss: "You named that something was lost, or someone was.",
+            hurt: "You named something that happened and has never been resolved.",
+            tired: "You named being worn out from holding everything together.",
+            distant: "You named feeling distant — from people, from yourself, or from God.",
+            shame: "You named carrying something you feel bad about.",
+            hope: "You named wanting to hope again without knowing how.",
+            private: "You chose not to put it into words here, and that choice is respected.",
           },
           unanswered:
             "You did not name what brought you here, and nothing about you needs to be guessed. What can be said is that something made today worth beginning.",
@@ -191,7 +193,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Beginning is not a small thing when a difficulty has been kept at a distance for a while.",
+            "Beginning something like this is not a small thing, whatever brought you to it.",
           unanswered:
             "Whatever else is true, the part of you that opened this may deserve some credit rather than more pressure.",
         },
@@ -613,7 +615,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "Let the sentence rest there for now. You do not need to keep repeating it or make it disappear.",
         ],
         notRequired:
-          "The goal is not breakthrough. The goal is a little more clarity. You may keep the sentence private, write it outside the app, share it with a safe person or stop. No further disclosure is required.",
+          "The goal is not breakthrough. The goal is a little more clarity. Allowing a feeling or grief to be acknowledged in a tolerable amount may itself be meaningful; it does not have to become insight, relief, or action. You may keep the sentence private, write it outside the app, share it with a safe person, stop at any point, turn your attention to something ordinary around you, or seek support. No further disclosure is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest lament",

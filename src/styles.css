@@ -518,6 +518,12 @@
 .bfa-visual-home-hero-inner {
   position: relative;
   z-index: 1;
+  background: radial-gradient(
+    120% 100% at 40% 40%,
+    color-mix(in oklab, var(--ivory) 88%, transparent) 0%,
+    color-mix(in oklab, var(--ivory) 62%, transparent) 60%,
+    transparent 100%
+  );
 }
 .bfa-visual-thread-track {
   position: relative;
@@ -562,6 +568,12 @@
 .bfa-visual-quiet-edge-inner {
   position: relative;
   z-index: 1;
+  background: radial-gradient(
+    120% 100% at 40% 40%,
+    color-mix(in oklab, var(--ivory) 88%, transparent) 0%,
+    color-mix(in oklab, var(--ivory) 62%, transparent) 60%,
+    transparent 100%
+  );
 }
 .bfa-prototype-surface {
   background: var(--bfa-paper);

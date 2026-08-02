@@ -40,17 +40,21 @@ function JourneyHome() {
 
   return (
     <section className="space-y-8 pb-6">
-      <header className="space-y-3">
-        <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
-          {JOURNEY_HOME_TITLE}
-        </h1>
-        <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
-        <hr className="gold-seam w-28" />
-        <p className="text-base text-foreground">
-          Open a day when you have a little space. Days stay open, and you can return to any of
-          them as often as you like.
-        </p>
-      </header>
+      <div className="bfa-visual-home-hero">
+        <VisualMotif variant="home" />
+        <header className="bfa-visual-home-hero-inner space-y-3">
+          <h1 className="font-serif text-3xl leading-tight text-[color:var(--navy)] sm:text-4xl">
+            {JOURNEY_HOME_TITLE}
+          </h1>
+          <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
+          <hr className="gold-seam w-28" />
+          <p className="text-base text-foreground">
+            Open a day when you have a little space. Days stay open, and you can return to any of
+            them as often as you like.
+          </p>
+        </header>
+      </div>
+
 
       {resume && resumeDay && (
         <div

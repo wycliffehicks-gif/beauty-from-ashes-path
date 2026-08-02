@@ -946,12 +946,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "Not being sure what you would practise was selected, and that uncertainty is left as it is. Nothing will be chosen on your behalf.",
             none:
-              "That no different response feels available today was selected, and that is left intact. It is treated as accurate information, not as failure.",
+              "That no different response feels available today was selected, and that absence is left intact. No explanation or pressure is added.",
             private:
               "A private choice was selected. The structured choice is saved on this device; what it refers to stays with you and is not collected here.",
           },
           unanswered:
-            "This page was continued without a selection, and nothing will be chosen on your behalf. The shared practice ahead does not depend on a choice, and it can be read only.",
+            "No response was selected here. The shared practice ahead does not depend on a choice and may simply be read; nothing will be chosen or inferred on your behalf.",
           closing:
             "Anything here can stay private, be revised later, be set aside, or never be used at all.",
         },

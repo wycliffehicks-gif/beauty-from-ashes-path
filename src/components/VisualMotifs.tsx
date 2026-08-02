@@ -13,7 +13,10 @@
  *  - "thread"     a vertical living gold thread beside a list
  */
 
+import type { MotifKey } from "@/content/journey-types";
+
 export type MotifVariant = "splash" | "home" | "threshold" | "quiet-edge" | "thread";
+
 
 const GOLD = "var(--bfa-gold-line)";
 const CHAMPAGNE = "var(--bfa-champagne-line)";

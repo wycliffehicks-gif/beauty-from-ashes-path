@@ -24,19 +24,24 @@ export function LegalPage({
           </Link>
         </div>
 
-        <header className="space-y-2 pb-6">
-          <p className="eyebrow">Resurgence Therapeutics</p>
-          <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
-            {title}
-          </h1>
-          <p className="text-xs text-muted-foreground">
-            Last updated: {lastUpdated}
-          </p>
-        </header>
+        {/* Exactly one main landmark for this page: the legal document itself,
+            heading included. Nothing else on the route renders a main. */}
+        <main>
+          <header className="space-y-2 pb-6">
+            <p className="eyebrow">Resurgence Therapeutics</p>
+            <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+              {title}
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              Last updated: {lastUpdated}
+            </p>
+          </header>
 
-        <div className="legal-prose space-y-5 pb-10 text-[17px] leading-relaxed text-foreground">
-          {children}
-        </div>
+          <div className="legal-prose space-y-5 pb-10 text-[17px] leading-relaxed text-foreground">
+            {children}
+          </div>
+        </main>
+
 
         <div className="border-t border-border/60 pt-6 text-sm">
           <p className="text-muted-foreground">

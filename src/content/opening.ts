@@ -49,7 +49,7 @@ export const OPENING_SCREENS: OpeningScreen[] = [
       "You can answer, or continue without answering.",
       "Your place is saved on this device, so you can leave and return.",
       "Nothing is scored, timed or compared. There are no streaks.",
-      "Spiritual reflection is offered only if you choose it.",
+      "Scripture and spiritual reflection stay off unless you turn them on in Settings.",
     ],
   },
 ];

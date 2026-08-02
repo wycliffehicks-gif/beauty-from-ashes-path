@@ -292,9 +292,31 @@
   padding-block: 0.75rem;
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
   border-top: 1px solid color-mix(in oklab, var(--champagne) 80%, transparent);
-  background: color-mix(in oklab, var(--ivory) 92%, transparent);
-  backdrop-filter: blur(6px);
+  /* Fully opaque: the dock overlaps content while scrolling, so no underlying
+     text may ever show through it. */
+  background: var(--ivory);
 }
+
+/* Main-content clearance for the sticky dock (about 73px) plus the safe area,
+   so the last control or sentence can always be scrolled clear of it — at
+   320-430px and at high zoom. */
+@utility journey-main {
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+}
+
+/* In-day progress segments. Both states hold at least 3:1 against the ivory
+   reading ground and against the dark reading ground, while keeping the gold /
+   navy character. ARIA progress information is unchanged. */
+@utility bfa-progress-segment {
+  height: 3px;
+  flex: 1 1 0%;
+  border-radius: 999px;
+  background: #737B8B;
+}
+.bfa-progress-segment[data-state="reached"] {
+  background: #9A7723;
+}
+
 
 @utility btn-primary-journey {
   display: inline-flex;
@@ -404,10 +426,14 @@
     padding-inline: 3rem;
     padding-bottom: 1rem;
   }
+  /* Desktop framing is preserved, but the dock stays opaque so scrolled text
+     can never show through it. The panel's own ground at that point is the page
+     ground, so the framing still reads as one surface. */
   .journey-page .journey-dock {
-    background: transparent;
+    background: var(--ivory);
     backdrop-filter: none;
   }
+
 }
 
 /* ---------------------------------------------------------------------------
@@ -736,12 +762,19 @@
     border-color: var(--border);
     background: linear-gradient(180deg, var(--card) 0%, var(--background) 65%);
   }
+  /* Semantic ground, so the opaque desktop dock follows the page in both
+     appearances instead of holding the light brand value. */
+  .journey-page .journey-dock {
+    background: var(--background);
+  }
 }
+
 
 .journey-dock {
   border-top-color: var(--border);
-  background: color-mix(in oklab, var(--background) 92%, transparent);
+  background: var(--background);
 }
+
 
 .btn-primary-journey {
   background: var(--primary);

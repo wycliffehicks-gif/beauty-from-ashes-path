@@ -69,8 +69,27 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
 ];
 
 
+/**
+ * The short, plain-language summary shown in Settings. The full detail lives on
+ * the Privacy Notice page, which is linked directly beneath it — nothing is
+ * removed from there.
+ */
+export const PRIVACY_SUMMARY_POINTS: string[] = [
+  "Everything this app saves stays in this browser, on this device only.",
+  "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
+  "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
+  "You can clear or restart everything saved here at any time, from this page.",
+];
+
+export const PRIVACY_SUMMARY_LINK_LABEL = "Read the full Privacy Notice";
+
 export const PRIVACY_CONFIDENTIALITY_REVIEW_NOTE =
-  "This wording is provisional and is being finalized with legal and privacy review.";
+  "This wording is provisional. Ontario legal and privacy review is still required before any public or paid release.";
+
+export const SPIRITUAL_TOGGLE_TITLE = "Scripture & spiritual reflection";
+
+export const SPIRITUAL_TOGGLE_DESCRIPTION =
+  "Off by default, and changeable any time. Turn it on to include optional Christian Scripture and prayer where a day offers them. The complete nonreligious journey remains available without it.";
 
 export const ABOUT_BEAUTY_FROM_ASHES =
   "Beauty from Ashes is a guided psycho-spiritual reflection journey for adults who feel heavy, hidden, guarded, disconnected, numb, ashamed, overwhelmed or stuck. It is educational and reflective, and it does not promise a cure or an outcome.";
@@ -78,6 +97,13 @@ export const ABOUT_BEAUTY_FROM_ASHES =
 export const ABOUT_RESURGENCE =
   "Resurgence Therapeutics is a psychotherapy practice grounded in the belief that people are worth returning to. Awaken, Rediscover, Hope is not a slogan here; it is the order in which most healing seems to happen.";
 
+export const CREATOR_ATTRIBUTION =
+  "Created by Carl Wycliffe Hicks Jr., BRE, MDiv, RP, founder of Resurgence Therapeutics.";
+
+export const CREATOR_SCOPE_NOTE =
+  "This educational resource is informed by psychotherapy and spiritual-care experience, but using it does not create a therapist-client, pastoral-care or other professional relationship.";
+
 export const CLEAR_CONFIRM_QUESTION =
   "Clear everything this app has saved on this device? Your saved place, the choices you selected, your reflections, your finished days and your preferences will all be removed. This cannot be undone.";
+
 

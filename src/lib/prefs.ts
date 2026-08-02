@@ -52,20 +52,60 @@ export function readPrefs(): Prefs {
   return read();
 }
 
+/** Whole positive integers only, deduplicated and bounded. */
+function sanitizeVisitedDays(raw: unknown): number[] {
+  if (!Array.isArray(raw)) return [];
+  const out: number[] = [];
+  for (const value of raw) {
+    if (typeof value !== "number" || !Number.isInteger(value)) continue;
+    if (value <= 0 || value > 3650) continue;
+    if (!out.includes(value)) out.push(value);
+    if (out.length >= 400) break;
+  }
+  return out;
+}
+
+function sanitizeLegalAcceptance(raw: unknown): LegalAcceptance | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const r = raw as Record<string, unknown>;
+  const version = typeof r.version === "string" ? r.version.slice(0, 64) : "";
+  const acceptedAt = typeof r.acceptedAt === "string" ? r.acceptedAt.slice(0, 64) : "";
+  if (version.length === 0 || acceptedAt.length === 0) return undefined;
+  return { version, acceptedAt };
+}
+
+/**
+ * Fail-safe field-by-field validation. Arbitrary parsed JSON is never spread
+ * over the defaults, so a corrupt, hostile or legacy store cannot turn an
+ * opt-in preference on: ONLY a literal `true` enables `showSpiritual`. The
+ * string "false", the string "true", numbers, null, arrays, objects and unknown
+ * keys are all discarded. Any legacy field (such as `favourites`) is dropped by
+ * simply never being read.
+ */
+export function sanitizePrefs(raw: unknown): Prefs {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ...defaults };
+  const r = raw as Record<string, unknown>;
+  const next: Prefs = {
+    onboarded: r.onboarded === true,
+    showSpiritual: r.showSpiritual === true,
+    visitedDays: sanitizeVisitedDays(r.visitedDays),
+  };
+  const acceptance = sanitizeLegalAcceptance(r.legalAcceptance);
+  if (acceptance) next.legalAcceptance = acceptance;
+  return next;
+}
+
 function read(): Prefs {
   if (typeof window === "undefined") return defaults;
   try {
     const raw = readLocal(STORAGE_KEY);
     if (!raw) return defaults;
-    const parsed = JSON.parse(raw) as Partial<Prefs> & { favourites?: unknown };
-    // Drop any legacy `favourites` field silently.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { favourites: _drop, ...rest } = parsed;
-    return { ...defaults, ...rest };
+    return sanitizePrefs(JSON.parse(raw));
   } catch {
     return defaults;
   }
 }
+
 
 function write(next: Prefs) {
   if (typeof window === "undefined") return;

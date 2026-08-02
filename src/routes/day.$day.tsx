@@ -357,6 +357,12 @@ function ScreenBody({
   onReflectionSaved: (text: string, snapshot: string) => void;
 
 }) {
+  // Screen identity for single-page focus management. The reflection screen is
+  // deliberately excluded: it moves focus to its own heading once the response
+  // is ready, so it must not be focused twice.
+  const screenFocusKey =
+    screen.kind === "reflection" ? undefined : `${content.day}:${keyForScreen(screen)}`;
+
   const shell = (
     node: React.ReactNode,
     nav: {
@@ -377,10 +383,12 @@ function ScreenBody({
       continueDisabled={nav.continueDisabled}
       continueHint={nav.continueHint}
       footer={nav.footer}
+      focusKey={screenFocusKey}
     >
       {node}
     </JourneyScreen>
   );
+
 
   switch (screen.kind) {
     case "arrive":
@@ -407,7 +415,9 @@ function ScreenBody({
           progress={progress}
           onBack={onBack}
           motif={content.motif}
+          focusKey={screenFocusKey}
         />
+
       );
 
     }
@@ -567,6 +577,7 @@ function QuestionScreenShell({
   progress,
   onBack,
   motif,
+  focusKey,
 }: {
   question: Question;
   stepKey: string;
@@ -578,7 +589,10 @@ function QuestionScreenShell({
   onBack?: () => void;
   /** Presentation only: which day geometry the quiet divider draws. */
   motif: MotifKey;
+  /** Stable screen identity, so a screen change moves focus to the question. */
+  focusKey?: string;
 }) {
+
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),
   );
@@ -656,9 +670,11 @@ function QuestionScreenShell({
       backLabel="← Back"
       onContinue={onNext}
       continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
+      focusKey={focusKey}
     >
       {body}
     </JourneyScreen>
+
   );
 }
 
@@ -705,6 +721,16 @@ export const PRACTICE_SINGLE_HEADING = "A practice for today";
 export const PRACTICE_SINGLE_INTRO =
   "You may open this practice, read without doing it, stop at any point, or continue without opening it.";
 
+/**
+ * Day 1 only, and only when the preference has been read and is off: one quiet,
+ * nonblocking mention that the Christian option exists, so nobody has to guess
+ * where it lives. It never appears again on a later day, and it applies no
+ * pressure — the Reflection Practice is complete on its own.
+ */
+export const SPIRITUAL_INVITATION_TEXT =
+  "The Reflection Practice above is complete on its own. If you would like optional Christian Scripture and prayer alongside it, you can turn that on in Settings at any time.";
+export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
+
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
   const [prefs, , prefsHydrated] = usePrefs();
   const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
@@ -713,6 +739,7 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
   // panel, Scripture, prayer or companion wording. The nonreligious practice is
   // complete on its own and always shown.
   const showSpiritual = prefsHydrated && prefs.showSpiritual;
+  const showSpiritualInvitation = content.day === 1 && prefsHydrated && !prefs.showSpiritual;
 
   return (
     <div className="space-y-5">
@@ -739,9 +766,26 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
           onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
         />
       )}
+      {showSpiritualInvitation && (
+        <aside
+          data-testid="spiritual-invitation"
+          className="rounded-xl border border-border bg-card p-4"
+        >
+          <p className="text-sm leading-snug text-muted-foreground">
+            {SPIRITUAL_INVITATION_TEXT}
+          </p>
+          <Link
+            to="/settings"
+            className="btn-quiet mt-3 inline-flex min-h-[44px] w-full sm:w-auto"
+          >
+            {SPIRITUAL_INVITATION_LINK_LABEL}
+          </Link>
+        </aside>
+      )}
     </div>
   );
 }
+
 
 function PracticePanel({
   path,
@@ -926,7 +970,15 @@ function ReflectionScreen({
   );
 }
 
+/**
+ * Chrome-level pacing note on every daily close. It sets no task and makes no
+ * claim: one day at a time is enough.
+ */
+export const CLOSE_CONTAINMENT_NOTE =
+  "One day at a time is enough. There is no need to continue now.";
+
 function CloseScreen({
+
   content,
   nextDay,
   onHome,
@@ -951,20 +1003,33 @@ function CloseScreen({
         <p className="eyebrow">Carry forward</p>
         <p className="mt-2 text-base text-foreground">{content.close.carryForward}</p>
       </div>
+      {/* Containment, not binge pressure: returning to Your Journey is the
+          primary, expected ending. The next day remains available, but as a
+          quieter secondary choice, and nothing suggests going straight on. */}
       <div className="space-y-3 pt-2">
+        <button
+          type="button"
+          onClick={onHome}
+          className="btn-primary-journey w-full"
+          data-testid="close-return-home"
+        >
+          Return to Your Journey
+        </button>
         {nextDay ? (
           <Link
             to="/day/$day"
             params={{ day: String(nextDay) }}
-            className="btn-primary-journey w-full"
+            className="btn-quiet block w-full text-center"
+            data-testid="close-next-day"
           >
             Continue to Day {nextDay}
           </Link>
         ) : null}
-        <button type="button" onClick={onHome} className="btn-quiet w-full">
-          Return to Your Journey
-        </button>
+        <p className="pt-1 text-center text-sm text-muted-foreground">
+          {CLOSE_CONTAINMENT_NOTE}
+        </p>
       </div>
+
     </div>
   );
 }

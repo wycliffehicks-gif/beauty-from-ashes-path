@@ -23,7 +23,7 @@ export const Route = createFileRoute("/contact-support")({
 
 function ContactSupportPage() {
   return (
-    <LegalPage title="Contact & Technical Support">
+    <LegalPage title="Contact & Technical Support" lastUpdated="August 2, 2026">
       <p>
         This page is for technical problems with the app, accessibility
         concerns, factual corrections and product feedback before public
@@ -35,10 +35,9 @@ function ContactSupportPage() {
           This is not a therapy or crisis channel
         </h2>
         <p className="text-sm text-muted-foreground">
-          This contact page is not monitored continuously. It is not a
-          therapy, counselling, pastoral-care or crisis-response channel.
-          Please do not send confidential, identifying or health information
-          here.
+          Contact is not a therapy, counselling, pastoral-care or crisis-response
+          channel, and it is not monitored continuously. Please do not send
+          confidential, identifying or health information here.
         </p>
         <p className="text-sm">
           If you need urgent help, please visit{" "}
@@ -60,14 +59,20 @@ function ContactSupportPage() {
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">Contact details</h2>
-        <p className="text-sm text-muted-foreground">
-          Direct support contact will be added before public release.
+        <h2 className="font-serif text-lg text-foreground">How to reach us</h2>
+        <p className="text-sm text-foreground">
+          Customer contact and support will be provided through the Resurgence
+          Therapeutics website, <strong>ResurgenceTherapeutics.ca</strong>, when
+          its contact channel launches.
         </p>
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">
-          Coming soon
+        <p className="text-sm text-muted-foreground">
+          That website contact channel is not finished yet, so this private
+          version does not currently offer a monitored telephone or email
+          channel. The domain is shown as plain text on purpose, rather than as a
+          link that would not reach anyone.
         </p>
       </div>
+
 
       <h2 className="font-serif text-xl">Helpful details to include</h2>
       <p>

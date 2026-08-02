@@ -109,9 +109,13 @@ function JourneyHome() {
                     {d.day}
                   </span>
                   <span className="min-w-0">
+                    {/* The day number is decorative in the marker, so the row
+                        still needs a real "Day N" name for assistive tech. */}
+                    <span className="sr-only">Day {d.day}: </span>
                     <span className="block font-serif text-lg leading-snug text-foreground">
                       {d.title}
                     </span>
+
                     <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
                       {d.theme}
                     </span>

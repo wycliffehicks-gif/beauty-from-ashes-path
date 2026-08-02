@@ -393,20 +393,28 @@ export function isDayComplete(progress: JourneyProgress, dayId: string): boolean
 
 /**
  * A resume card is only meaningful when there is somewhere real to return to:
- * a saved locator for a day that is not already finished, and either some
- * movement past the opening screen or at least one recorded answer.
+ * a saved locator with either some movement past the opening screen or at least
+ * one recorded answer.
+ *
+ * A finished day still counts when the saved place is genuinely mid-day, so
+ * someone who re-opened a completed day and stopped part-way is returned to
+ * exactly where they were. A finished day whose saved place is its own closing
+ * screen is not a resume: there is nothing left to return to.
  */
 export function hasMeaningfulProgress(
   progress: JourneyProgress,
   firstStepKey = "arrive",
+  lastStepKey = "close",
 ): boolean {
   const loc = progress.locator;
   if (!loc) return false;
-  if (progress.completedDays.includes(loc.dayId)) return false;
+  const completed = progress.completedDays.includes(loc.dayId);
+  if (completed && loc.step === lastStepKey) return false;
   if (loc.step !== firstStepKey) return true;
   if ((loc.index ?? 0) > 0) return true;
   return (progress.answers[loc.dayId]?.length ?? 0) > 0;
 }
+
 
 /** Keys this app owns in a given store, resolved defensively. */
 function appOwnedKeys(store: {

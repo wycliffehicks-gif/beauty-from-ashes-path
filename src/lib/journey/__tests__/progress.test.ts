@@ -95,9 +95,15 @@ describe("journey progress store", () => {
     expect(hasMeaningfulProgress(readProgress())).toBe(false);
     saveLocator({ dayId: "day-01", step: "listen", index: 3 });
     expect(hasMeaningfulProgress(readProgress())).toBe(true);
+    // A finished day re-opened and left mid-day is still a real place to
+    // return to, so the resume card keeps that exact place.
     markDayComplete("day-01");
+    expect(hasMeaningfulProgress(readProgress())).toBe(true);
+    // A finished day sitting on its own closing screen has nothing to resume.
+    saveLocator({ dayId: "day-01", step: "close", index: 0 });
     expect(hasMeaningfulProgress(readProgress())).toBe(false);
   });
+
 
   it("clears everything explicitly", () => {
     saveLocator({ dayId: "day-01", step: "name", index: 2 });

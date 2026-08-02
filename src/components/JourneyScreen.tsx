@@ -1,5 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+
+/**
+ * Last screen whose focus was managed, remembered across remounts of this
+ * component. A single-page screen change is not a document load, so nothing
+ * would otherwise tell a screen-reader user that the screen changed. The first
+ * screen of a visit is recorded WITHOUT taking focus, so an ordinary page load
+ * never steals focus from the top of the document.
+ */
+let lastFocusedScreenKey: string | null = null;
+
+/** Test-only: forget the remembered screen so each case starts from a load. */
+export function __resetScreenFocusTracking() {
+  lastFocusedScreenKey = null;
+}
 
 /**
  * Reusable therapeutic screen shell for The First Journey.
@@ -25,6 +39,7 @@ export function JourneyScreen({
   continueHint,
   footer,
   progress,
+  focusKey,
 }: {
   /** Quiet centre label, e.g. "Day 4 · Notice". */
   label?: string;
@@ -39,7 +54,31 @@ export function JourneyScreen({
   footer?: ReactNode;
   /** Progress ticks: { current, total } — no scores, no streaks. */
   progress?: { current: number; total: number };
+  /**
+   * Stable key for the screen being shown. When it changes between renders of
+   * this shell, focus moves to the new heading (or the main container) so a
+   * Continue or Back genuinely announces the new screen. Omit it for screens
+   * that manage their own focus, such as the personalized reflection.
+   */
+  focusKey?: string;
 }) {
+  const mainRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!focusKey) return;
+    const previous = lastFocusedScreenKey;
+    lastFocusedScreenKey = focusKey;
+    // Initial load of a visit, or the same screen re-rendering, must not move
+    // focus; only a genuine screen change does.
+    if (previous === null || previous === focusKey) return;
+    const node = mainRef.current;
+    if (!node) return;
+    const heading = node.querySelector("h1");
+    const target = (heading ?? node) as HTMLElement;
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus();
+  }, [focusKey]);
+
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
@@ -72,15 +111,16 @@ export function JourneyScreen({
             {Array.from({ length: progress.total }).map((_, idx) => (
               <span
                 key={idx}
-                className={`h-0.5 flex-1 rounded ${
-                  idx <= progress.current ? "bg-[color:var(--gold)]" : "bg-border"
-                }`}
+                data-state={idx <= progress.current ? "reached" : "unreached"}
+                className="bfa-progress-segment"
               />
             ))}
           </div>
         )}
 
-        <main className="flex-1 pb-6">{children}</main>
+        <main ref={mainRef} className="journey-main flex-1 outline-none">
+          {children}
+        </main>
 
         {footer}
 
@@ -120,6 +160,7 @@ export function JourneyScreen({
     </div>
   );
 }
+
 
 function HomeIcon() {
   return (

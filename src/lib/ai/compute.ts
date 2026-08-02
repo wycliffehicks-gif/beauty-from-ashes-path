@@ -15,10 +15,16 @@ import { buildSystemPolicy, SYSTEM_POLICY_VERSION } from "@/lib/ai/system-policy
 import { validateReflectionOutput, VALIDATOR_VERSION } from "@/lib/ai/validator";
 import type { ReflectionOutput } from "@/lib/ai/types";
 
-// Server-side feature flag default. `true` means live AI is enabled by default
-// when the env var is absent (private founder test). Set env LIVE_AI_ENABLED=false
-// or LIVE_AI_ENABLED=0 as an emergency switch to force curated fallback.
-export const LIVE_AI_ENABLED_DEFAULT = true;
+// Dormant-module feature flag default. These AI modules are NOT wired into the
+// app: nothing in the customer-facing journey imports or calls them, and there
+// is no provider, gateway, endpoint or network call in the shipped product.
+//
+// The default is `false` so the flag FAILS CLOSED. Absence, a blank value or any
+// unrecognized value must stay disabled; only the exact documented values
+// "true" or "1" (case-insensitively) may ever enable it. Accidental activation
+// is therefore impossible without a deliberate, documented env change.
+export const LIVE_AI_ENABLED_DEFAULT = false;
+
 
 export type ReflectionServerResult =
   | { kind: "input-invalid"; reason: "schema" | "text-too-long" }

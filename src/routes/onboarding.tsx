@@ -139,6 +139,22 @@ function Opening() {
     router.history.go(-depth);
   };
 
+  // A step change here is not a document load, so focus is moved to the new
+  // heading and the new screen is announced. The first screen of a visit is
+  // left alone, so an ordinary load never steals focus from the document top.
+  const mainRef = useRef<HTMLElement | null>(null);
+  const focusedStep = useRef<number | null>(null);
+  useEffect(() => {
+    const previous = focusedStep.current;
+    focusedStep.current = step;
+    if (previous === null || previous === step) return;
+    const node = mainRef.current;
+    if (!node) return;
+    const target = (node.querySelector("h1") ?? node) as HTMLElement;
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus();
+  }, [step]);
+
 
   return (
     <div className="journey-page">
@@ -182,7 +198,7 @@ function Opening() {
           </Link>
         </header>
 
-        <main className="bfa-safe-center flex-1 py-2">
+        <main ref={mainRef} className="bfa-safe-center journey-main flex-1 py-2 outline-none">
           {isAgreement ? (
             <AgreementScreen
               adultConfirmed={adultConfirmed}

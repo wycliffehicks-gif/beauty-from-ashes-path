@@ -1549,8 +1549,12 @@ describe("Day 9 revision", () => {
     expect(byOption["private"]).toContain("saved on this device");
     expect(byOption["unclear"]).toContain("left as it is");
     expect(byOption["none"]).toContain("left intact");
-    expect(practice.echo!.heading).toBe("What was selected — and what is not established");
-    expect(practice.echo!.unanswered).toContain("nothing will be chosen on your behalf");
+    expect(practice.echo!.heading).toBe("Room for what is clear — and what is not");
+    expect(practice.echo!.unanswered).toContain(
+      "nothing will be chosen or inferred on your behalf",
+    );
+    expect(practice.echo!.unanswered).toContain("may simply be read");
+    expect(practice.echo!.byOption["none"]).toContain("No explanation or pressure is added");
     expect(practice.echo!.unanswered.length).toBeGreaterThan(80);
     expect(practice.echo!.closing).toContain("can stay private, be revised later, be set aside");
     expect(practice.hint).toContain("One choice if one fits");

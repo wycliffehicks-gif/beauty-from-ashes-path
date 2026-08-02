@@ -1626,7 +1626,7 @@ describe("Day 9 revision", () => {
       for (const term of [
         "confrontation",
         "disclosure",
-        "message sent",
+        "sending a message",
         "contact",
         "real-world test",
         "emotional release",

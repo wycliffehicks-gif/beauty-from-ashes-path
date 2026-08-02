@@ -927,7 +927,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           { id: "private", label: "I have one in mind and prefer to keep it private" },
         ],
         echo: {
-          heading: "What was selected — and what is not established",
+          heading: "Room for what is clear — and what is not",
           byOption: {
             grounding:
               "A pause and orienting outward was selected. That says nothing about whether escalation is present, what would happen if you paused, or whether pausing will be available when it matters.",

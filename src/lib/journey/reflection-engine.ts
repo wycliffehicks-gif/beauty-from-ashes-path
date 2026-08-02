@@ -12,7 +12,8 @@
 //  - only option positions are read, never anything a person typed.
 
 import type { JourneyDayContent } from "@/content/journey-types";
-import { optionIndexesFor } from "./resume";
+import { optionIdsFor } from "./answers";
+
 
 export interface ReflectionParagraphs {
   id: string;

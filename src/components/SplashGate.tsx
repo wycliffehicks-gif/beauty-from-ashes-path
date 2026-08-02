@@ -1,9 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { VisualMotif } from "@/components/VisualMotifs";
 import { beginSplash, endSplash } from "@/lib/splash-state";
 
 const LOGO_URL =
   "https://static.wixstatic.com/media/d90d81_7308aab6b29e4efba9deb306e951a8c8~mv2.png";
 const SESSION_KEY = "bfa_splash_shown_v1";
+
 
 export function SplashGate({ children }: { children: ReactNode }) {
   const [visible, setVisible] = useState(false);

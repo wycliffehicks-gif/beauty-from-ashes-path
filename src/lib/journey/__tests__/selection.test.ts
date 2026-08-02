@@ -1801,6 +1801,50 @@ describe("Day 9 revision", () => {
     }
   });
 
+  it("applies the final acceptance cleanup wording", () => {
+    expect(day9.arrive.settle!.at(-1)).toBe(
+      "You may simply read, and you may stop at any point. No particular feeling or response is required.",
+    );
+
+    expect(day9.step.prompt).toBe("How, if at all, would you like to leave this practice?");
+    expect(day9.step.hint).toBe(
+      "You may choose one if it fits, simply read, or leave this open.",
+    );
+    const stepLabel = (id: string) => day9.step.options.find((o) => o.id === id)!.label;
+    expect(stepLabel("again")).toBe(
+      "Read one possible response, or try its opening once, privately",
+    );
+    expect(stepLabel("sentence")).toBe(
+      "Shorten or revise one possible sentence until it sounds like me",
+    );
+    expect(stepLabel("prepare")).toBe("Leave the exercise here, with nothing more required");
+
+    const next = day9.reflection.sections.find((s) => s.id === "next")!;
+    expect(next.lines!["again"]).toBe(
+      "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
+    );
+    expect(next.lines!["prepare"]).toBe(
+      "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
+    );
+
+    const text = allText9();
+    for (const phrase of [
+      "at the same depth",
+      "Both paths below work",
+      "today's rehearsal",
+      "the response once more",
+      "reading or rehearsing was enough",
+      "today was rehearsed",
+      "message sent",
+      "and no change is required",
+    ]) {
+      expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
+  });
+
+
   it("leaves Day 8 and Day 10 at their canonical boundaries", () => {
     const day8b = getFirstJourneyDay(8)!;
     expect(day8b.title).toBe("Reconnect With What Matters");

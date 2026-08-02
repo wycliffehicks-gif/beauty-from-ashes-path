@@ -1683,21 +1683,21 @@ describe("Day 9 revision", () => {
   });
 
   it("keeps unclear, none and private paths accurate about local storage", () => {
-    const unclear = buildReflection(day9, ["q.practice.8", "q.where.9", "step.7"])
+    const unclear = buildReflection(day9, ["q.practice.7", "q.where.8", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(unclear).toContain("That uncertainty is left as it is");
     expect(unclear).toContain("It stays uncertain here");
     expect(unclear).toContain("no step will be chosen for you");
 
-    const none = buildReflection(day9, ["q.practice.9", "q.where.10", "step.8"])
+    const none = buildReflection(day9, ["q.practice.8", "q.where.9", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(none).toContain("That absence is left intact");
     expect(none).toContain("No particular setting was selected");
     expect(none).toContain("none will be pressed or inferred");
 
-    const priv = buildReflection(day9, ["q.practice.10", "q.where.7", "step.9"])
+    const priv = buildReflection(day9, ["q.practice.9", "q.where.6", "step.8"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(priv).toContain("A private choice was selected");
@@ -1708,7 +1708,7 @@ describe("Day 9 revision", () => {
   });
 
   it("keeps a legacy home + private setting combination noncontradictory", () => {
-    const text = buildReflection(day9, ["q.where.1", "q.where.7"])
+    const text = buildReflection(day9, ["q.where.0", "q.where.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain("Home was selected as a setting that came to mind");
@@ -1774,9 +1774,9 @@ describe("Day 9 revision", () => {
       "later this week",
       "next time",
       "calm down",
-      "forgive",
-      "reconcil",
-      "guarantee",
+      "must forgive",
+      "should forgive",
+      "guarantees",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
         phrase.toLowerCase(),

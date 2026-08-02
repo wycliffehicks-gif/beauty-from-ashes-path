@@ -1009,7 +1009,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Bring one manageable concern, or keep it general. Please leave aside anything that is dangerous or high-risk right now.",
           "Pour out only as much as fits. Anger, grief, doubt, numbness, difficulty trusting, silence, or having no words at all may all be present.",
           "If it is clear, name the familiar response without a moral verdict. If it is unclear, let it stay unclear.",
-          "Name one possible alternative that would be truthful and safe for you: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
+          "Name one possible alternative that seems truthful while leaving safety and real-world use undecided: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
           "Rehearse only its opening moment, once — in words, in writing, or in silence before God. Hold it as a possibility, not a vow, not a divine command or direction, not proof of faith, and not a promise to act.",
           "Name any practical support, safety, accommodation, or wisdom that would be needed. Prayer does not replace real-world help or planning.",
           "Reorient outward. No relief, certainty, trust, felt refuge or closeness, forgiveness, reconciliation, contact, disclosure, or action is required.",

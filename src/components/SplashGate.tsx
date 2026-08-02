@@ -57,9 +57,9 @@ export function SplashGate({ children }: { children: ReactNode }) {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--ivory,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
           style={{ opacity: leaving ? 0 : 1 }}
         >
-          <div className="flex w-full items-center justify-center px-4">
+          <VisualMotif variant="splash" className="bfa-visual-splash-bg" />
+          <div className="relative flex w-full items-center justify-center px-4">
             <div className="bfa-visual-splash">
-              <VisualMotif variant="splash" />
               <div className="bfa-visual-splash-inner">
                 <p className="bfa-visual-splash-title">Beauty from Ashes</p>
                 <p className="bfa-visual-splash-sub">The First Journey</p>

@@ -1039,7 +1039,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           label:
             "Identify support I might want before any real-world action — no contact or disclosure today",
         },
-        { id: "prepare", label: "Leave it here; reading or rehearsing was enough" },
+        { id: "prepare", label: "Leave the exercise here, with nothing more required" },
         { id: "unclear", label: "I am not sure" },
         { id: "none", label: "No step feels right today" },
         { id: "private", label: "I have one in mind and prefer to keep it private" },

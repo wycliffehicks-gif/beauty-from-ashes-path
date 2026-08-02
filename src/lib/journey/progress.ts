@@ -49,6 +49,17 @@ export interface JourneyProgress {
   completedDays: string[];
   /** dayId → deterministic personalized reflection text, for resume only. */
   reflections: Record<string, string>;
+  /**
+   * dayId → fingerprint of the coded selections the saved reflection was built
+   * from, so a saved response is only restored when it still belongs to those
+   * exact answers. Coded option IDs only; never labels or typed text.
+   */
+  reflectionSnapshots: Record<string, string>;
+  /**
+   * dayId → highest in-day screen index genuinely reached. Used only to stop a
+   * crafted URL from opening (or completing) a screen nobody walked to.
+   */
+  reached: Record<string, number>;
   updatedAt: string | null;
 }
 
@@ -58,6 +69,8 @@ export const emptyProgress: JourneyProgress = {
   answers: {},
   completedDays: [],
   reflections: {},
+  reflectionSnapshots: {},
+  reached: {},
   updatedAt: null,
 };
 

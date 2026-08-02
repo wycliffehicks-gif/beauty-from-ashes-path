@@ -888,7 +888,53 @@ describe("Day 7 revision", () => {
     }
   });
 
-  it("leaves Day 8 unchanged", () => {
-    expect(JSON.stringify(getFirstJourneyDay(8)!)).toBe(day8Snapshot);
+  it("applies the final acceptance wording corrections", () => {
+    const understandBody = day7.understand.body.join(" ");
+    expect(understandBody).toContain(
+      "Neither possibility tells us why your inner response developed, and a more compassionate response does not guarantee that anything will change.",
+    );
+    expect(understandBody).toContain(
+      "Some difficulties are shaped by choices; others arise partly or largely from circumstances",
+    );
+    expect(understandBody).toContain("caregiving demands");
+    expect(text).toContain(
+      "without treating self-punishment as the same thing as accountability or repair",
+    );
+    expect(text).toContain(
+      "That does not require approving of the feeling or acting on it.",
+    );
+    expect(text).toContain(
+      "and no explanation or hidden meaning will be assigned",
+    );
+    expect(text).toContain("what it says about your worth");
+    expect(text).toContain(
+      "this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
+    );
+
+    for (const phrase of [
+      "it does not mean you are defended",
+      "caregiving, discrimination, unsafe conditions and limited resources are not chosen",
+      "proof that you are good",
+      "nothing grants you that",
+      "read as avoidance",
+      "what you deserve",
+      "you spent some time near a question",
+    ]) {
+      expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase);
+    }
+  });
+
+  it("keeps Day 8 at its canonical boundary", () => {
+    const day8 = getFirstJourneyDay(8)!;
+    expect(day8.title).toBe("Reconnect With What Matters");
+    expect(day8.motif).toBe("reconnect");
+    expect(day8.shape).toBe("practise-mid");
+    expect(day8.questions.map((q) => q.id)).toEqual(["route", "size"]);
+    expect(day8.arrive.lead).toBe(
+      "Reconnection does not mean going back to anything unsafe.",
+    );
+    expect(day8.close.carryForward).toBe(
+      "Carry forward one sentence: small and safe is not a compromise — it is the method.",
+    );
   });
 });

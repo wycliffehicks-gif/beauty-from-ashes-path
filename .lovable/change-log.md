@@ -85,6 +85,23 @@ positional order, with new IDs appended only.
   answered positional path excluding adjacent options, a guard list for the
   removed inferential/outcome-promising/time-dependent phrases, and a Day 8
   snapshot check. Full suite 353 tests passing.
+- **Final acceptance clarification (same day)**: seven public-copy corrections in
+  Day 7 only — harshness paragraph no longer says “that is not always the case”
+  or “it does not mean you are defended” and instead states that neither
+  possibility explains why the inner response developed; the choice-versus-
+  constraint paragraph no longer classes caregiving and the other examples as
+  categorically unchosen, keeping Day 6’s distinction; the “What if I have hurt
+  someone?” note replaces “proof that you are good” with self-punishment not
+  being the same thing as accountability or repair; the `permission` reflection
+  line no longer says “Nothing grants you that”; the `none` reflection line no
+  longer mentions avoidance and instead assigns no explanation or hidden
+  meaning; the reflection closing replaces “what you deserve” with “what it says
+  about your worth”; and the close opening no longer claims the person “spent
+  some time near a question”, posing the question itself instead. The Day 7 test
+  block gained one focused assertion set for the revised phrases and removed
+  phrases, and the tautological Day 8 self-snapshot was replaced with a real
+  canonical boundary guard (title, motif, shape, question IDs, arrive lead,
+  carry-forward). Day 8 itself unchanged.
 - **Unchanged known shared issues** (out of scope): reflection reveal/bypass and
   saved-response restoration, positional answer storage migration, duplicate
   “Show me how” accessible labels, inactive spiritual setting.

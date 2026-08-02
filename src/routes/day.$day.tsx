@@ -717,60 +717,96 @@ function PracticePanel({
  * is assembled on this device from founder-approved content for this day and
  * the structured selections already gathered. Fully unanswered paths receive
  * their approved substantive fallbacks.
+ *
+ * A previously saved response is restored word for word when it can be proven
+ * to belong to this day and to the same coded selections. If the selections
+ * changed, or the association cannot be proven, it is rebuilt on this device and
+ * the saved copy is replaced. No network call, no model, no free text.
  */
 function ReflectionScreen({
   content,
   answers,
   answersLoaded,
   onReady,
+  savedReflection,
+  onSaved,
 }: {
   content: JourneyDayContent;
   answers: string[];
   answersLoaded: boolean;
   onReady: () => void;
+  savedReflection: { text?: string; snapshot?: string };
+  onSaved: (text: string, snapshot: string) => void;
 }) {
   const [built, setBuilt] = useState<BuiltReflection | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
     if (!answersLoaded) return;
+    const dayId = dayIdFor(content.day);
+    const snapshot = answersSnapshot(answers);
+
+    // Restore the exact saved response when it still belongs to these answers.
+    if (savedReflection.snapshot && savedReflection.snapshot === snapshot) {
+      const restored = restoreReflection(content, savedReflection.text);
+      if (restored) {
+        setBuilt(restored);
+        onReady();
+        return;
+      }
+    }
+
+    // Otherwise rebuild deterministically and replace what was saved.
     const next = buildReflection(content, answers);
+    const text = reflectionToText(next);
     setBuilt(next);
-    // Saved locally only, so this exact screen restores on reload or resume.
-    saveDayReflection(dayIdFor(content.day), reflectionToText(next));
+    saveDayReflection(dayId, text, snapshot);
+    onSaved(text, snapshot);
     onReady();
-  }, [content, answers, answersLoaded, onReady]);
+    // savedReflection is read once per screen entry; rebuilding on our own save
+    // would loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content, answers, answersLoaded]);
+
+  // Once the reflection is present it is ordinary structured content, so the
+  // heading takes focus rather than the whole thing being announced at once.
+  useEffect(() => {
+    if (built) headingRef.current?.focus();
+  }, [built]);
 
   return (
     <div className="space-y-5">
       <p className="eyebrow">Your Reflection</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1
+        ref={headingRef}
+        tabIndex={-1}
+        className="font-serif text-2xl leading-tight text-foreground outline-none sm:text-3xl"
+      >
         A reflection drawn from today
       </h1>
       <p className="text-base text-foreground">{content.reflection.intro}</p>
 
-      <div role="status" aria-live="polite">
-        {!built ? (
-          <p className="text-base text-muted-foreground">
-            Preparing your reflection…
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {built.sections.map((section) => (
-              <section key={section.id} className="surface-card space-y-2">
-                <h2 className="font-serif text-lg text-[color:var(--navy)]">
-                  {section.title}
-                </h2>
-                {section.paragraphs.map((p) => (
-                  <p key={p} className="text-base text-foreground">
-                    {p}
-                  </p>
-                ))}
-              </section>
-            ))}
-            <p className="text-base text-muted-foreground">{built.closing}</p>
-          </div>
-        )}
-      </div>
+      {!built ? (
+        <p role="status" aria-live="polite" className="text-base text-muted-foreground">
+          Preparing your reflection…
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {built.sections.map((section) => (
+            <section key={section.id} className="surface-card space-y-2">
+              <h2 className="font-serif text-lg text-[color:var(--navy)]">
+                {section.title}
+              </h2>
+              {section.paragraphs.map((p) => (
+                <p key={p} className="text-base text-foreground">
+                  {p}
+                </p>
+              ))}
+            </section>
+          ))}
+          <p className="text-base text-muted-foreground">{built.closing}</p>
+        </div>
+      )}
     </div>
   );
 }

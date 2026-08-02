@@ -467,31 +467,38 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       lead: "Naming something is not the same as fixing it, and it is not a diagnosis.",
       body: [
         "Today you are invited to give one ordinary word to something you have been carrying.",
-        "It does not have to be the right word, or the whole truth. A word you can bear is enough.",
+        "It does not have to be the right word or the whole truth. A word you can bear is enough.",
+        "You do not need to name an event, person or history. One broad word — or no word today — is enough.",
       ],
       settle: [
-        "Let your hands rest open or closed, whichever is more comfortable.",
-        "Notice the sound furthest away from you, then the sound closest.",
-        "Let one breath out slowly before you read on.",
+        "Settle in whatever position your body allows. You do not need to change your posture.",
+        "Notice the sound furthest away and then the sound closest — or, if sound is not useful, notice two colours in the room.",
+        "Take one ordinary breath if that is comfortable, or simply continue.",
       ],
     },
     understand: {
+      label: "Listen",
       heading: "Why a word helps",
       body: [
-        "What has no name tends to run the day from behind us. It shows up as irritability, avoidance, exhaustion or a low hum of dread that seems to come from nowhere.",
-        "Putting a plain word to it does something specific: it moves the thing from being everywhere to being somewhere. That is usually a relief, though it can feel briefly heavier first, because you are finally looking directly at it.",
-        "Naming is not confession, analysis, or a claim about the past. You are choosing a word, not filing a report.",
+        "Sometimes experience arrives as a general heaviness before clear words come. A plain word can help you notice one part of it, communicate it or decide what support may be needed.",
+        "A word is a beginning, not a full explanation. “I am carrying grief” is different from “grief is all I am.” Naming can create a little space between what you are experiencing and who you are.",
+        "Some words bring clarity. Some feel incomplete. Naming may bring discomfort, relief, mixed feelings or no noticeable shift. You do not have to find the perfect word, and you may decide not to name anything today.",
       ],
       info: [
         {
           term: "What is the difference between naming and diagnosis?",
           explanation:
-            "A diagnosis is a clinical judgement made by a qualified professional after proper assessment. Naming is simply you choosing an everyday word for your own experience. Nothing here assesses, labels or classifies you.",
+            "A diagnosis is a clinical judgement made by a qualified professional after proper assessment. Naming is simply you choosing an everyday word for your own experience. This app does not assess, diagnose, label or classify you.",
+        },
+        {
+          term: "What does “carrying” mean here?",
+          explanation:
+            "When this journey speaks of what you are carrying, it means any grief, worry, responsibility, hurt, shame or unanswered question that continues to take energy — even when other people cannot see it.",
         },
         {
           term: "What does “unresolved hurt” mean?",
           explanation:
-            "Something painful that was never fully acknowledged, repaired or grieved — often because there was no safe time or person available. It can stay quietly active for years without being dramatic.",
+            "Here it means a hurt that still feels unfinished or continues to matter. You do not need to decide why it remains present, tell the whole story or work through it here.",
         },
       ],
     },
@@ -499,184 +506,245 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "carrying",
         eyebrow: "Name",
-        prompt: "If you had to use plain words, what are you carrying?",
-        hint: "Choose as many as fit, or none. Nothing you pick is recorded as a wording.",
+        prompt: "If you had to use plain words, what might you be carrying?",
+        hint: "Choose any that fit, or continue without choosing. These are everyday words, not diagnoses.",
         select: "many",
         options: [
-          { id: "grief", label: "Grief — something or someone is gone" },
-          { id: "fear", label: "Fear — something ahead feels unsafe" },
-          { id: "shame", label: "Shame — a sense of being wrong, not just doing wrong" },
-          { id: "anger", label: "Anger — something was not right" },
-          { id: "exhaustion", label: "Exhaustion — I have run out of reserve" },
-          { id: "loneliness", label: "Loneliness — I am not known right now" },
-          { id: "hurt", label: "Unresolved hurt — something old that never closed" },
+          { id: "grief", label: "Grief — something or someone has been lost or changed" },
+          { id: "fear", label: "Fear — something feels threatening or uncertain" },
+          { id: "shame", label: "Shame — a painful sense that something is wrong with me" },
+          {
+            id: "anger",
+            label: "Anger — irritation, resentment or a sense that something is not right",
+          },
+          { id: "exhaustion", label: "Exhaustion — I have little or no reserve left" },
+          { id: "loneliness", label: "Loneliness — I feel alone, unseen or disconnected" },
+          { id: "hurt", label: "Unresolved hurt — something painful still feels unfinished" },
+          { id: "regret", label: "Regret — something I wish had been different" },
           { id: "pressure", label: "Pressure — too much is being asked of me" },
-          { id: "mixed", label: "Several at once, tangled together" },
-          { id: "unsure", label: "I am not sure what to call it" },
+          { id: "unsure", label: "I know something is there, but I do not have a word yet" },
+          {
+            id: "private",
+            label: "I would rather not name it here today",
+            exclusive: true,
+          },
         ],
         echo: {
           heading: "A word for it",
           byOption: {
-            grief: "Grief is not a problem to be solved. It is usually love with nowhere to put itself.",
-            fear: "Fear is often an accurate signal about something unsafe, even when the danger is not in the room.",
-            shame: "Shame tends to speak in a voice that sounds like honesty, which is why it convinces people so easily.",
-            anger: "Anger often marks a boundary that was crossed. It can be information before it is a problem.",
-            exhaustion: "Exhaustion is a limit, not a character flaw. Limits are real whether or not they are convenient.",
-            loneliness: "Loneliness is not the same as being alone. It is the gap between being present and being known.",
-            hurt: "Something unfinished can stay quietly active for years without ever becoming a story you tell.",
-            pressure: "Pressure that never lets up gets normalised. That does not make it sustainable.",
-            mixed: "Tangled is normal. Several true things can sit in one person without contradiction.",
-            unsure: "Not knowing the word is common. Staying near the question is still naming, more slowly.",
+            grief:
+              "You chose grief as one word for today. It may include many kinds of loss. You do not need to explain or solve it here.",
+            fear: "You chose fear as one word for today. It deserves respectful attention without this app deciding its cause or meaning.",
+            shame:
+              "You chose shame — a painful sense that something is wrong with you. Shame is an experience, not proof of identity.",
+            anger:
+              "You chose anger as one word for today. Naming it does not require acting on it, suppressing it or deciding yet what it means.",
+            exhaustion:
+              "You chose exhaustion as one word for today. Having little reserve is not a moral failure, and its causes may be many.",
+            loneliness:
+              "You chose loneliness as one word for today. It may involve feeling alone, unseen, disconnected or something else only you can name.",
+            hurt:
+              "You chose unresolved hurt as one word for today. You do not need to tell the whole story or decide what to do with it here.",
+            regret:
+              "You chose regret as one word for today. It names something you wish had been different without deciding what responsibility, repair or self-forgiveness may be needed.",
+            pressure:
+              "You chose pressure as one word for today. It may come from several places, and naming it does not mean you should be able to carry it alone.",
+            unsure:
+              "The word has not arrived yet. “I do not have the word yet” is itself one honest sentence.",
+            private:
+              "You chose not to name it here. You remain in charge of what you share, when and with whom.",
           },
           unanswered:
-            "You continued without choosing a word, and the day continues fully. Some things are named more safely in private, or later, or with a person you trust.",
-          closing: "Whatever you chose or did not choose, nothing here is a label on you.",
+            "You continued without choosing a word. Nothing will be assumed. Some things are named more safely later, in private or with a person you trust.",
+          closing:
+            "Whatever you chose or did not choose, this may be part of what you are carrying; it is not a definition of you. You are not what you carry.",
         },
       },
       {
         id: "shows",
         eyebrow: "Locate",
-        prompt: "Where does it show up in ordinary life?",
-        hint: "This is often more useful than the word itself. Choose any that fit.",
+        prompt: "Where, if anywhere, do you notice this alongside ordinary life?",
+        hint: "Choose any that fit. These experiences may or may not share a cause; you do not have to work that out here.",
         select: "many",
         options: [
           { id: "sleep", label: "Sleep — falling asleep, staying asleep, waking early" },
           { id: "patience", label: "Patience with people close to me" },
           { id: "focus", label: "Concentration and getting things done" },
           { id: "withdraw", label: "Wanting to be left alone" },
-          { id: "body", label: "My body — tension, appetite, illness" },
+          {
+            id: "body",
+            label: "Physical comfort or energy — tension, appetite, pain, restlessness or fatigue",
+          },
           { id: "mornings", label: "Mornings, or particular times of day" },
           { id: "faith", label: "My faith or sense of meaning" },
-          { id: "hidden", label: "It doesn't show — I keep it well hidden" },
+          { id: "hidden", label: "Other people may not see it — I usually keep it private" },
+          { id: "unclear", label: "I am not sure where it shows up", exclusive: true },
+        ],
+        info: [
+          {
+            term: "A note about physical symptoms",
+            explanation:
+              "This reflection cannot tell you why a physical sensation is present. If a symptom is new, severe, worsening or concerning, pause and seek appropriate medical care.",
+          },
         ],
       },
     ],
     practise: {
       heading: "Two ways to practise today",
-      intro: "Both give the word somewhere to sit, rather than leaving it circling.",
-      either: "Either or both, in whichever order suits you.",
+      intro:
+        "Both help you give one honest sentence somewhere safe enough to rest for today. One uses private reflection; the other uses Scripture and lament.",
+      either:
+        "Either or both. You may read without doing, stop after one step or continue without opening either.",
       reflection: {
-        title: "Reflection Practice — a private naming sentence",
+        title: "Reflection Practice — One Honest Sentence",
         summary:
-          "One sentence, held privately, that names the weight and where it lands.",
+          "A private sentence that names one part of what you are carrying. No full story is required.",
         steps: [
-          "Choose the plainest word available, even if it feels too simple. Simple words tend to be the honest ones.",
-          "Complete this sentence silently: “What I am carrying is ______, and it mostly shows up in ______.”",
-          "Say it once, slowly, in your head. Notice whether anything in your body responds — a loosening, a tightening, nothing at all.",
-          "Say it a second time, and add three words: “and that makes sense”.",
-          "Let it go. You do not need to hold it for the rest of the day.",
+          "Choose one broad word from today, or use “not sure”.",
+          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “I regret…” or “I feel unseen when…”.",
+          "Stop after one sentence. You do not have to add details or make the sentence explain everything.",
+          "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, look around and notice three neutral details in the room.",
+          "Finish with: “This is real, and it is not all that is real about me.”",
+          "Let the sentence rest there for now. You do not need to keep repeating it or make it disappear.",
         ],
         notRequired:
-          "Nothing is typed, saved or shared. You do not need to tell anyone, and you do not need to be certain the word is right.",
+          "The goal is not breakthrough. The goal is a little more clarity. You may keep the sentence private, write it outside the app, share it with a safe person or stop. No further disclosure is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest lament",
         summary:
-          "A Christian pathway for saying the hard thing plainly. Chosen only if you want it.",
+          "A Christian pathway for giving one honest sentence to God. Choose it only if you want it.",
         steps: [
-          "Read the passage. Notice that this complaint is in Scripture, uncensored and unanswered for several verses.",
-          "Notice the form: it says how long, it says what hurts, and it does not tidy itself up.",
-          "If you wish, borrow that form. Say plainly: “How long…” and then the honest ending, whatever it is.",
-          "Finish by sitting quietly for a few breaths. Lament does not require a resolution to be complete prayer.",
+          "Read the passage and notice that the complaint is present in Scripture without being tidied up.",
+          "If you wish, borrow the form “How long…” and add one honest ending.",
+          "You may also say “This is what hurts…” or “What I long for is…”. One line is enough.",
+          "Finish by pausing, noticing the room around you or stopping. A completed resolution is not required.",
         ],
         notRequired:
-          "Anger toward God, silence, or an unfinished sentence are all acceptable here. There is no requirement to end on a hopeful note.",
+          "Anger toward God, silence, doubt or an unfinished sentence may all be present. You may read without praying or leave this path entirely.",
         scripture: {
           reference: "Psalm 13:1–2 (World English Bible)",
           body: "How long, Yahweh? Will you forget me forever? How long will you hide your face from me? How long shall I take counsel in my soul, having sorrow in my heart every day?",
-          note: "Lament is not a lapse of faith. It is a long-established way of speaking honestly rather than politely.",
+          note: "In this translation, “Yahweh” is the divine name often rendered “LORD”. Within Scripture, lament is an established form of honest prayer, not a failure of faith.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What would you like to do with the word you found?",
-      hint: "One choice, small enough to be real.",
+      prompt: "What small, safe step — if any — fits what happened today?",
+      hint: "Choose one, or continue without choosing. It should be small enough for today’s version of you.",
       select: "one",
       options: [
-        { id: "hold", label: "Keep the word quietly and see if it still fits tomorrow" },
-        { id: "write", label: "Write it somewhere private, outside this app" },
-        { id: "tell", label: "Tell one safe person one sentence about it" },
-        { id: "kind", label: "Say “and that makes sense” to myself once more" },
-        { id: "prepare", label: "Nothing outward — finding a word was the step" },
+        { id: "hold", label: "Keep the word and return to it when I have a little space" },
+        { id: "write", label: "Write one honest sentence somewhere outside this app" },
+        {
+          id: "tell",
+          label: "Tell one trusted person one sentence about it",
+          note: "Only if the person and relationship feel safe.",
+        },
+        { id: "kind", label: "Say to myself, “This is real, and it is not all of me”" },
+        {
+          id: "prepare",
+          label: "Nothing outward — finding a word, or choosing not to, was the step",
+        },
       ],
     },
     reflection: {
-      intro: "Drawn only from what you chose today, and offered as a possibility.",
+      intro: "Built only from what you selected today and offered tentatively.",
       sections: [
         {
           id: "hearing",
           title: "What I'm hearing",
           from: "carrying",
-          opening: "You put words to some of what you are carrying:",
           lines: {
-            grief: "Grief is present, and grief keeps its own timetable regardless of what is convenient.",
-            fear: "Fear is present, which usually means something feels genuinely unsafe rather than imagined.",
-            shame: "Shame is present, and shame is unusually good at sounding like the truth.",
-            anger: "Anger is present, and anger often points at something that was not right.",
-            exhaustion: "Exhaustion is present, and exhaustion is a limit rather than a weakness.",
-            loneliness: "Loneliness is present, which is about being unknown rather than being alone.",
-            hurt: "Something old and unresolved is present, quietly shaping ordinary days.",
-            pressure: "Sustained pressure is present, and it may have been normalised for a long time.",
-            mixed: "Several things are present at once, which is ordinary and not a contradiction.",
-            unsure: "The word has not arrived yet, and staying near the question is still real work.",
+            grief:
+              "You chose grief. That word may include many kinds of loss, and it does not need to be solved today.",
+            fear: "You chose fear. It deserves respectful attention while this reflection leaves its cause and meaning open.",
+            shame:
+              "You chose shame. Shame can feel like a verdict on the self, but an experience is not proof of identity.",
+            anger:
+              "You chose anger. Naming it does not require acting on it, suppressing it or deciding yet what it means.",
+            exhaustion:
+              "You chose exhaustion. Having little reserve is not a moral failure, and its causes and needs may be multiple.",
+            loneliness:
+              "You chose loneliness. It may involve feeling alone, unseen, disconnected or something else only you can name.",
+            hurt:
+              "You chose unresolved hurt. You do not need to tell the whole story or decide what to do with it today.",
+            regret:
+              "You chose regret. That names something you wish had been different without deciding what responsibility, repair or self-forgiveness may be needed.",
+            pressure:
+              "You chose pressure. It may come from several places, and naming it does not mean you should be able to carry it alone.",
+            unsure: "“I do not have the word yet” is itself an honest sentence.",
+            private:
+              "You chose not to name it here. You remain in charge of what you share, when and with whom.",
           },
           unanswered:
-            "You did not name a word today, and nothing will be assumed about what you are carrying. The day still did its work: you stayed near a question that many people avoid entirely.",
+            "You did not choose a word today. Nothing will be assumed. Staying near the question — or deciding not today — is a valid place to stop.",
         },
         {
           id: "underneath",
           title: "Where it may be landing",
           from: "shows",
-          opening: "You noticed where it shows up:",
           lines: {
-            sleep: "Sleep is often the first place a carried weight appears, before we consciously acknowledge it.",
-            patience: "Shortened patience with people close to you is usually a capacity problem, not a character problem.",
-            focus: "Difficulty concentrating can be what happens when part of your attention is already occupied.",
-            withdraw: "Wanting to be left alone may be your system asking for less input, not less connection.",
-            body: "The body frequently keeps score before the mind agrees to.",
-            mornings: "Particular times of day can hold more than the rest — mornings especially.",
-            faith: "When something heavy is being carried, faith and meaning often go quiet rather than disappearing.",
-            hidden: "Hiding it well takes energy, and that energy has to come from somewhere.",
+            sleep:
+              "You noticed this alongside changes or difficulty with sleep. Sleep can be affected by many factors; no cause is being assumed here.",
+            patience:
+              "You noticed this alongside changes in patience with people close to you. That is useful context, not a verdict on your character.",
+            focus:
+              "You noticed this alongside concentration or getting things done. Many factors can affect focus; you do not have to sort them here.",
+            withdraw:
+              "You noticed wanting to be left alone. You do not have to decide whether that reflects rest, protection, overwhelm or something else.",
+            body:
+              "You noticed physical comfort or energy alongside what you are carrying. This app cannot tell why a physical symptom is present. If a symptom is new, severe, worsening or concerning, seek appropriate medical care.",
+            mornings:
+              "You noticed that particular times of day may feel different. The pattern can be noticed without explaining it.",
+            faith:
+              "You noticed this in your faith or sense of meaning. Questions, distance, anger, silence or uncertainty do not have to be resolved here.",
+            hidden:
+              "You noticed that other people may not see what you are carrying. You decide whether, when and with whom to share.",
+            unclear: "You are not sure where it shows up. Nothing has to be located today.",
           },
           unanswered:
-            "You did not locate where it lands, and nothing needs pinning down today. It can be enough to know that something is being carried.",
+            "You did not identify where it may be landing, and nothing needs to be pinned down today.",
         },
         {
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Naming often costs something before it eases anything. If today felt heavier rather than lighter, that is a recognised part of it, not a sign you did it wrong.",
-          unanswered: "Whatever was named or left unnamed, the person carrying it deserves some gentleness today.",
+            "Naming may bring clarity, discomfort, relief, mixed feelings or no noticeable shift. None of these means you failed. If what you named feels too much to carry alone, one honest sentence to a safe person or professional may be wiser than working harder by yourself.",
+          unanswered:
+            "Naming may bring clarity, discomfort, relief, mixed feelings or no noticeable shift. None of these means you failed. If what you named feels too much to carry alone, one honest sentence to a safe person or professional may be wiser than working harder by yourself.",
         },
         {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
-            hold: "Letting the word sit until tomorrow is a way of testing it without forcing it.",
-            write: "Writing it privately, outside this app, keeps it yours entirely.",
-            tell: "One sentence to one safe person can change how heavy something is to carry.",
-            kind: "Repeating “and that makes sense” is a small act of accuracy, not indulgence.",
-            prepare: "Finding a word was the step. That is enough for one day.",
+            hold: "Letting the word rest and returning later respects your pacing.",
+            write:
+              "Writing one honest sentence may help you see it more clearly. Choose a place that feels suitably private.",
+            tell: "One sentence to a trusted person may open support, but you decide how much to say and safety matters.",
+            kind: "Saying it is real but not all of you separates experience from identity without denying either.",
+            prepare:
+              "Finding a word — or choosing not to — was the step. Nothing more is required today.",
           },
           unanswered:
-            "No step was chosen, and none is required. Naming, or standing near the possibility of naming, already happened.",
+            "No step was chosen, and none is required. Naming, staying near the question or deciding not today may be enough.",
         },
       ],
       closing:
-        "This is not an assessment, and nothing here is a clinical judgement about you.",
+        "Only you know the fuller context. Keep what fits and leave what does not. You are not what you carry.",
     },
     close: {
-      heading: "Words placed down",
+      heading: "A word, not a verdict",
       body: [
-        "You gave something a plain word, or you stayed near the question without forcing one. Both are the day.",
-        "Tomorrow turns toward something gentler: what your responses may have been protecting.",
+        "You gave something a plain word, or you stayed near the question without forcing one. Either is enough for today.",
+        "Day 4 turns toward what a response or pattern may be trying to protect. Continue when you have a little space, or stop here if you need.",
       ],
-      carryForward:
-        "Carry forward one sentence: naming it does not make it bigger — it makes it locatable.",
+      carryForward: "What I carry is real, but it is not all that is real about me.",
     },
+
   },
 
   {

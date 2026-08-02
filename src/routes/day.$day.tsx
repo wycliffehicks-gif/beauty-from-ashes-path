@@ -515,7 +515,7 @@ function InfoNotes({ notes }: { notes?: InfoNote[] }) {
     <div className="space-y-2">
       {notes.map((n) => (
         <details key={n.term} className="surface-card">
-          <summary className="min-h-[44px] cursor-pointer list-none py-2 font-serif text-base text-[color:var(--navy)]">
+          <summary className="bfa-heading min-h-[44px] cursor-pointer list-none py-2 font-serif text-base">
             {n.term}
           </summary>
           <p className="pb-1 text-base text-foreground">{n.explanation}</p>
@@ -722,7 +722,7 @@ function PracticePanel({
 }) {
   return (
     <section className="surface-card space-y-3">
-      <h2 className="font-serif text-xl leading-snug text-[color:var(--navy)]">
+      <h2 className="bfa-heading font-serif text-xl leading-snug">
         {path.title}
       </h2>
       <p className="text-base text-foreground">{path.summary}</p>
@@ -877,7 +877,7 @@ function ReflectionScreen({
         <div className="space-y-4">
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">
-              <h2 className="font-serif text-lg text-[color:var(--navy)]">
+              <h2 className="bfa-heading font-serif text-lg">
                 {section.title}
               </h2>
               {section.paragraphs.map((p) => (

@@ -29,28 +29,20 @@ describe("spiritual preference is opt-in", () => {
   });
 
   it("is off for a fresh or cleared device", async () => {
-    const prefs = await import("@/lib/prefs");
-    // Read through the same path the app uses.
-    prefs.resetAll();
-    const raw = window.localStorage.getItem("bfa.v1");
-    expect(raw).toBeNull();
-    // No stored value means the default applies, and the default is off.
-    const { showSpiritual } = JSON.parse(
-      JSON.stringify({ showSpiritual: false }),
-    ) as { showSpiritual: boolean };
-    expect(showSpiritual).toBe(false);
+    const { PREF_DEFAULTS, readPrefs, resetAll } = await import("@/lib/prefs");
+    expect(PREF_DEFAULTS.showSpiritual).toBe(false);
+    resetAll();
+    expect(readPrefs().showSpiritual).toBe(false);
   });
 
-  it("preserves an explicitly stored true or false", () => {
+  it("preserves an explicitly stored true or false", async () => {
+    const { readPrefs } = await import("@/lib/prefs");
     for (const value of [true, false]) {
       window.localStorage.setItem(
         "bfa.v1",
         JSON.stringify({ onboarded: true, showSpiritual: value, visitedDays: [] }),
       );
-      const stored = JSON.parse(window.localStorage.getItem("bfa.v1")!) as {
-        showSpiritual: boolean;
-      };
-      expect(stored.showSpiritual).toBe(value);
+      expect(readPrefs().showSpiritual).toBe(value);
     }
   });
 });

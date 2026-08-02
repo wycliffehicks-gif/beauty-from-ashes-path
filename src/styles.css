@@ -426,10 +426,14 @@
     padding-inline: 3rem;
     padding-bottom: 1rem;
   }
+  /* Desktop framing is preserved, but the dock stays opaque so scrolled text
+     can never show through it. The panel's own ground at that point is the page
+     ground, so the framing still reads as one surface. */
   .journey-page .journey-dock {
-    background: transparent;
+    background: var(--ivory);
     backdrop-filter: none;
   }
+
 }
 
 /* ---------------------------------------------------------------------------

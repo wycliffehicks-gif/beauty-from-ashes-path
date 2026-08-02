@@ -4,6 +4,41 @@
 // re-interpreted as a different option.
 
 import { beforeEach, describe, expect, it } from "vitest";
+
+// Minimal in-memory storage stub, with key()/length so the scoped clear can
+// enumerate app-owned keys exactly as a real browser store would.
+class MemoryStorage {
+  private map = new Map<string, string>();
+  get length() {
+    return this.map.size;
+  }
+  key(i: number) {
+    return Array.from(this.map.keys())[i] ?? null;
+  }
+  getItem(k: string) {
+    return this.map.has(k) ? this.map.get(k)! : null;
+  }
+  setItem(k: string, v: string) {
+    this.map.set(k, String(v));
+  }
+  removeItem(k: string) {
+    this.map.delete(k);
+  }
+  clear() {
+    this.map.clear();
+  }
+}
+(globalThis as unknown as { window: unknown }).window = {
+  localStorage: new MemoryStorage(),
+  sessionStorage: new MemoryStorage(),
+  dispatchEvent: () => true,
+  addEventListener: () => {},
+  removeEventListener: () => {},
+};
+(globalThis as unknown as { CustomEvent: unknown }).CustomEvent = class {
+  constructor(public type: string) {}
+};
+
 import {
   mergeStableStepAnswers,
   optionIdsFor,

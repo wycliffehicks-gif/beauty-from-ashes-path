@@ -509,6 +509,36 @@ function UnderstandScreen({ content }: { content: JourneyDayContent }) {
   );
 }
 
+/**
+ * Renders body copy, turning the exact phrase "Support & Safety" into one real
+ * link to /support without changing the sentence. No banner, no repeated alarm
+ * icon: the sentence itself simply becomes actionable where the day already
+ * mentions it.
+ */
+const SUPPORT_PHRASE = "Support & Safety";
+
+function SupportText({ text }: { text: string }) {
+  if (!text.includes(SUPPORT_PHRASE)) return <>{text}</>;
+  const parts = text.split(SUPPORT_PHRASE);
+  return (
+    <>
+      {parts.map((part, idx) => (
+        <span key={idx}>
+          {part}
+          {idx < parts.length - 1 && (
+            <Link
+              to="/support"
+              className="inline-link text-primary underline underline-offset-4"
+            >
+              {SUPPORT_PHRASE}
+            </Link>
+          )}
+        </span>
+      ))}
+    </>
+  );
+}
+
 function InfoNotes({ notes }: { notes?: InfoNote[] }) {
   if (!notes || notes.length === 0) return null;
   return (
@@ -518,7 +548,9 @@ function InfoNotes({ notes }: { notes?: InfoNote[] }) {
           <summary className="bfa-heading min-h-[44px] cursor-pointer list-none py-2 font-serif text-base">
             {n.term}
           </summary>
-          <p className="pb-1 text-base text-foreground">{n.explanation}</p>
+          <p className="pb-1 text-base text-foreground">
+            <SupportText text={n.explanation} />
+          </p>
         </details>
       ))}
     </div>
@@ -912,7 +944,7 @@ function CloseScreen({
       </h1>
       {content.close.body.map((p) => (
         <p key={p} className="text-base text-foreground">
-          {p}
+          <SupportText text={p} />
         </p>
       ))}
       <div className="surface-card">

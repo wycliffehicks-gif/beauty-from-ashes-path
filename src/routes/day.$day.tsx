@@ -15,7 +15,7 @@ import {
 } from "react";
 
 import { JourneyScreen } from "@/components/JourneyScreen";
-import { VisualMotif } from "@/components/VisualMotifs";
+import { DayMotif } from "@/components/VisualMotifs";
 
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
 import {
@@ -24,6 +24,7 @@ import {
   screensFor,
   type InfoNote,
   type JourneyDayContent,
+  type MotifKey,
   type PracticePath,
   type Question,
   type ScreenKey,
@@ -405,7 +406,7 @@ function ScreenBody({
           label={label}
           progress={progress}
           onBack={onBack}
-          prototypeVisual={content.day === 1 && question.id === "state"}
+          motif={content.motif}
         />
       );
 
@@ -457,11 +458,7 @@ function ScreenBody({
 function ArriveScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
-      {content.day === 1 && (
-        <div className="bfa-visual-threshold">
-          <VisualMotif variant="threshold" />
-        </div>
-      )}
+      <DayMotif motif={content.motif} treatment="arrival" />
       <p className="eyebrow">Arrive</p>
 
 
@@ -501,6 +498,7 @@ function UnderstandScreen({ content }: { content: JourneyDayContent }) {
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
         {content.understand.heading}
       </h1>
+      <DayMotif motif={content.motif} treatment="quiet" />
       {content.understand.body.map((p) => (
         <p key={p} className="text-base text-foreground">
           {p}
@@ -536,7 +534,7 @@ function QuestionScreenShell({
   label,
   progress,
   onBack,
-  prototypeVisual = false,
+  motif,
 }: {
   question: Question;
   stepKey: string;
@@ -546,8 +544,8 @@ function QuestionScreenShell({
   label: string;
   progress: { current: number; total: number };
   onBack?: () => void;
-  /** Presentation only: the prototype "quiet edge" treatment. */
-  prototypeVisual?: boolean;
+  /** Presentation only: which day geometry the quiet divider draws. */
+  motif: MotifKey;
 }) {
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),
@@ -583,6 +581,7 @@ function QuestionScreenShell({
       {question.hint && (
         <p className="text-base text-muted-foreground">{question.hint}</p>
       )}
+      <DayMotif motif={motif} treatment="quiet" />
       <ul className="space-y-2" role="list">
         {question.options.map((option, idx) => {
           const isOn = selected.includes(idx);
@@ -592,37 +591,17 @@ function QuestionScreenShell({
                 type="button"
                 aria-pressed={isOn}
                 onClick={() => toggle(idx)}
-                className={
-                  prototypeVisual
-                    ? "bfa-prototype-choice"
-                    : `flex min-h-[52px] w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-base transition-colors ${
-                        isOn
-                          ? "border-[color:var(--gold)] bg-[color:var(--champagne)]/35 text-foreground"
-                          : "border-border bg-card text-foreground hover:border-[color:var(--gold)]"
-                      }`
-                }
+                className="bfa-journey-choice"
               >
                 <span
                   aria-hidden
-                  className={
-                    prototypeVisual
-                      ? "bfa-prototype-choice-dot"
-                      : `mt-1 h-3 w-3 shrink-0 rounded-full border ${
-                          isOn
-                            ? "border-[color:var(--gold)] bg-[color:var(--gold)]"
-                            : "border-border"
-                        }`
-                  }
+                  className="bfa-journey-choice-dot"
                 />
                 <span className="min-w-0">
                   <span className="block">{option.label}</span>
                   {option.note && (
                     <span
-                      className={
-                        prototypeVisual
-                          ? "bfa-prototype-choice-note"
-                          : "mt-0.5 block text-sm text-muted-foreground"
-                      }
+                      className="bfa-journey-choice-note"
                     >
                       {option.note}
                     </span>
@@ -646,14 +625,7 @@ function QuestionScreenShell({
       onContinue={onNext}
       continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
     >
-      {prototypeVisual ? (
-        <div className="bfa-visual-quiet-edge">
-          <VisualMotif variant="quiet-edge" />
-          <div className="bfa-visual-quiet-edge-inner">{body}</div>
-        </div>
-      ) : (
-        body
-      )}
+      {body}
     </JourneyScreen>
   );
 }
@@ -680,6 +652,7 @@ function EchoScreen({
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
         {echo.heading}
       </h1>
+      <DayMotif motif={content.motif} treatment="quiet" />
       {lines.map((line) => (
         <p key={line} className="text-base text-foreground">
           {line}
@@ -711,6 +684,7 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
       {showSpiritual && (
         <p className="text-base text-muted-foreground">{content.practise.either}</p>
       )}
+      <DayMotif motif={content.motif} treatment="quiet" />
       <PracticePanel
         path={content.practise.reflection}
         isOpen={open === "reflection"}
@@ -882,6 +856,7 @@ function ReflectionScreen({
       <p className="text-base text-foreground">
         {built ? built.intro : content.reflection.intro}
       </p>
+      <DayMotif motif={content.motif} treatment="quiet" />
 
 
       {!built ? (
@@ -920,6 +895,7 @@ function CloseScreen({
 }) {
   return (
     <div className="space-y-5">
+      <DayMotif motif={content.motif} treatment="closing" />
       <p className="eyebrow">Carry Forward</p>
       <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
         {content.close.heading}

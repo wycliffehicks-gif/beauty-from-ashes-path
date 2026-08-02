@@ -7,34 +7,41 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
   {
     day: 6,
     title: "What It Is Costing Now",
-    theme: "Present-day cost, noticed without blame.",
+    theme: "Present-day cost noticed without blame, forced choice or invented causes.",
     motif: "cost",
     shape: "notice-first",
-    descriptor: "An honest inventory · about 12 minutes",
+    descriptor: "Noticing one present-day cost · about 12 minutes",
     arrive: {
-      lead: "This is not an audit of your failures.",
+      lead: "Seeing a cost clearly is not the same as blaming yourself—or deciding to change.",
       body: [
-        "Yesterday held two pulls together. Today looks at what the current arrangement asks of you now — in your body, your energy, your relationships and your sense of meaning.",
-        "The aim is accuracy, not guilt. Noticing a cost does not oblige you to pay a different one.",
+        "Choose one familiar response, way of coping, role, or current arrangement to hold lightly today. It may be something you noticed in Days 4 or 5, or something else. If nothing comes to mind, you can read generally or leave any question unanswered.",
+        "Today asks what strain or loss may be connected with it now, and what benefit, responsibility, constraint, or ongoing reality may help keep it in place. The aim is accuracy without guilt.",
       ],
       settle: [
-        "Let your jaw unclench slightly and your tongue rest away from the roof of your mouth.",
-        "Feel the surface under you taking your full weight for one breath.",
-        "Notice one sound in the room without following it anywhere.",
+        "Settle in any position that works for you.",
+        "If it feels comfortable, notice one place where your body is supported. Otherwise, notice one neutral detail nearby using any sense that is available and comfortable.",
+        "Nothing needs to change in your posture, breathing, or level of tension.",
       ],
     },
     understand: {
-      heading: "Intention and cost are different questions",
+      label: "Listen",
+      heading: "Something can help and cost you at the same time",
       body: [
-        "A response can be well-intentioned and expensive at the same time. Keeping the peace may protect a relationship and quietly drain you. Self-reliance may keep you upright and keep you alone.",
-        "People often avoid this question because it seems to require immediate action. It does not. You can look at a cost clearly and still choose to keep paying it for now — with your eyes open, which is different from paying it by default.",
-        "Nothing today asks you to confront anyone, end anything or make a major decision.",
+        "By cost, we mean present-day strain, loss or narrowing that may be connected with a way of coping, a role or a difficult arrangement—such as less energy, closeness, choice, rest, meaning or hope. Cost is not blame, and it is not always avoidable.",
+        "A response may help you function, reduce conflict, meet responsibilities or remain safer and may also add to the strain. What helped you get through before may not help in the same way now—but it may still be needed, or it may not be the main problem.",
+        "Sometimes the cost comes mainly from illness, disability, caregiving, discrimination, financial pressure, unsafe conditions, limited support or another reality you did not choose. Noticing does not create choices that are unavailable or make the situation your fault.",
+        "Nothing today asks you to confront anyone, end anything, forgive, surrender a necessary boundary or make a major decision.",
       ],
       info: [
         {
+          term: "What if the circumstances are still real?",
+          explanation:
+            "The task may be support, accommodation, resistance to something unjust, carrying differently, grieving what cannot be changed, or waiting for safer conditions—not simply letting go.",
+        },
+        {
           term: "Why look at cost at all?",
           explanation:
-            "Because a cost paid unknowingly tends to be paid indefinitely. Naming it puts the choice back in your hands, even if today you choose exactly what you were already doing.",
+            "Noticing may help distinguish what is within your influence, what would require support or change around you, and what is not safe or possible to alter now. It does not require action.",
         },
       ],
     },
@@ -42,103 +49,168 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       {
         id: "cost",
         eyebrow: "Notice",
-        prompt: "Where is the cost showing up at the moment?",
-        hint: "Choose any that fit. This is observation, not accusation.",
-        select: "many",
+        prompt:
+          "Thinking about that response, role, or situation, where—if anywhere—do you notice the clearest cost now?",
+        hint: "Choose the closest fit. This is observation, not proof of cause.",
+        select: "one",
         options: [
-          { id: "body", label: "My body — tension, pain, sleep, appetite" },
-          { id: "energy", label: "My energy — nothing left after the essentials" },
-          { id: "closeness", label: "Closeness — people are near but not close" },
-          { id: "patience", label: "My patience with the people I love" },
-          { id: "choices", label: "My choices — I have narrowed my own life" },
-          { id: "values", label: "My values — I am living against something I believe" },
-          { id: "meaning", label: "Meaning — things feel greyer than they should" },
-          { id: "hope", label: "Hope — I have quietly stopped expecting change" },
+          {
+            id: "body",
+            label: "Physical well-being — sleep, appetite, tension, pain, or other strain",
+          },
+          { id: "energy", label: "Energy or capacity — less available after essential demands" },
+          { id: "closeness", label: "Connection — less closeness or less room to be known" },
+          {
+            id: "patience",
+            label: "My impact on others — less patience, presence, or availability than I want",
+          },
+          { id: "choices", label: "Room in my life — fewer choices or less space for what matters" },
+          {
+            id: "values",
+            label: "Values or self-respect — tension between how I am living and what matters",
+          },
+          { id: "meaning", label: "Meaning or aliveness — things feel greyer or less engaging" },
+          { id: "hope", label: "Hope or possibility — less expectation that change is possible" },
+          { id: "none", label: "No clear cost stands out right now" },
+          { id: "unclear", label: "I am not sure what is connected" },
+          { id: "private", label: "I would rather keep this private today" },
+        ],
+        info: [
+          {
+            term: "A note about physical symptoms",
+            explanation:
+              "This reflection cannot tell you why a physical sensation is present. If a symptom is new, severe, worsening or concerning, pause and seek appropriate medical care.",
+          },
         ],
         echo: {
-          heading: "What that cost may indicate",
+          heading: "What you noticed",
           byOption: {
-            body: "A physical cost often appears before we consciously admit the load is too much.",
-            energy: "Running on empty after essentials suggests the reserve has been spent, not misspent.",
-            closeness: "Having people near without being close is a particular kind of lonely, and a common one.",
-            patience: "Short patience with people you love is usually a capacity signal rather than a character one.",
-            choices: "A life narrowed for safety can become smaller than the danger it was avoiding.",
-            values: "Living against your own values costs something even when nobody notices.",
-            meaning: "Greyness is frequently what protection looks like from the inside after a long time.",
-            hope: "Quietly lowering expectations is a way of preventing disappointment, and it has its own price.",
+            body: "You noticed possible physical strain alongside this. This exercise cannot determine whether it is connected, partly connected, or unrelated.",
+            energy:
+              "You noticed reduced energy or capacity after essential demands. That limit deserves to be treated as real without assigning a cause.",
+            closeness:
+              "You noticed less closeness or less room to be known. That experience can matter without telling us why it developed.",
+            patience:
+              "You noticed less patience, presence, or availability than you want. Capacity may be relevant, and the effect on other people can still matter.",
+            choices:
+              "You noticed that your life or options feel narrower. How much comes from this response and how much from current circumstances remains open.",
+            values:
+              "You noticed tension between how you are living and something that matters to you. That deserves attention without becoming a verdict on your character.",
+            meaning: "You noticed less meaning, colour, or engagement. Nothing here determines why.",
+            hope: "You noticed less expectation that change is possible. Nothing is assumed about why, and hope does not have to be manufactured today.",
+            none: "No clear cost stands out right now. You do not need to invent one.",
+            unclear:
+              "You are not sure what is connected. Uncertainty is an honest answer, and no cause will be assigned.",
+            private:
+              "You chose to keep the cost private. No particular cost or cause will be inferred from that choice.",
           },
           unanswered:
-            "You continued without naming a cost, and nothing will be assumed. It is also possible that the honest answer today is that things are bearable.",
-          closing: "Naming a cost does not commit you to changing anything about it.",
+            "You continued without choosing a cost. No cost or cause will be assigned. You can still use today's practice with a general strain, or simply read it.",
+          closing:
+            "Naming one cost is not a promise to change, and it is not proof that one response caused it.",
         },
       },
       {
         id: "protects",
         eyebrow: "Balance",
-        prompt: "And what is it still doing for you?",
-        hint: "The honest answer usually includes something real. Choose any that fit.",
-        select: "many",
+        prompt: "What, if anything, may be helping this continue or making it difficult to change?",
+        hint: "Choose the closest fit. A benefit, responsibility, constraint or ongoing reality may be present—and none has to be invented.",
+        select: "one",
         options: [
-          { id: "peace", label: "Keeping things peaceful" },
-          { id: "functioning", label: "Keeping me functioning day to day" },
-          { id: "safe", label: "Keeping me safe from something specific" },
-          { id: "others", label: "Protecting other people" },
-          { id: "predictable", label: "Keeping life predictable" },
-          { id: "little", label: "Honestly, not much any more" },
+          { id: "peace", label: "It helps reduce conflict or disruption" },
+          { id: "functioning", label: "It supports day-to-day functioning" },
+          { id: "safe", label: "It protects safety, privacy or stability" },
+          { id: "others", label: "It helps me meet genuine responsibilities to others" },
+          { id: "predictable", label: "It preserves predictability or familiarity" },
+          { id: "little", label: "I do not notice much benefit or protection now" },
+          { id: "belonging", label: "It preserves belonging, connection or a valued role" },
+          {
+            id: "limits",
+            label: "Limits in health, energy, capacity, resources or support matter here",
+          },
+          {
+            id: "ongoing",
+            label: "Current circumstances or lack of a safe alternative make change difficult",
+          },
+          { id: "unclear", label: "I am not sure" },
+          { id: "private", label: "I would rather keep this private today" },
         ],
       },
     ],
     practise: {
       heading: "Two ways to practise today",
-      intro: "Both hold cost and care together, rather than one at a time.",
-      either: "Either or both, whichever fits the energy you have.",
+      intro:
+        "Both help you hold one possible cost beside what remains helpful, necessary, constrained or unresolved.",
+      either:
+        "Choose either, both or neither. You may read without doing, stop at any point, or continue.",
       reflection: {
-        title: "Reflection Practice — the cost-and-care inventory",
+        title: "Reflection Practice — what it costs and what keeps it in place",
         summary:
-          "A short, balanced look at what is being spent and what would ease it slightly.",
+          "A focused practice for acknowledging one possible cost, respecting what is still true, and noticing what kind of support or safer alternative may be needed.",
         steps: [
-          "Bring to mind one cost you noticed today. Keep it in view without arguing with it.",
-          "Say silently: “This costs me ______.” Be specific and unsparing, but not cruel.",
-          "Then: “It is also still doing ______ for me.” Both halves belong.",
-          "Then ask the gentler question: “What would make this one percent less expensive this week?”",
-          "Notice whether your answer is something you could actually do, or something someone else would have to do. If it is the second, that is worth knowing.",
-          "Finish with: “I am allowed to see this clearly without changing it today.”",
+          "Orient outward first. Notice one neutral detail nearby, then bring to mind one possible cost or strain. If no clear cost came to mind, you may use the words 'something is taking more from me than I want' or simply keep reading.",
+          "Complete one sentence privately: 'One strain I notice is…' Keep it broad; no names, identifying details or proof are needed.",
+          "Complete a second sentence if it fits: 'What is also true is…' This may name a benefit, responsibility, limit, ongoing danger or difficult circumstance. 'I do not know' is a complete answer.",
+          "Ask three different questions: What is within my influence? What would require support, accommodation, resources, safer conditions or change around me? What is not safe or possible to change now?",
+          "If there is a loss here, you may acknowledge it once: 'I wish this had not cost me…' You do not need to intensify, relive or explain it.",
+          "If one small easing is safe and realistic, name it. If none is, naming that limit is the practice. Finish by returning your attention to one neutral detail nearby.",
         ],
         notRequired:
-          "No confrontation, no ultimatum, no decision. Nothing here requires you to speak to anyone.",
+          "No confrontation, disclosure, decision, forgiveness, surrender of necessary safety or attempt to 'let go' is required. If the practice becomes too much, stop and reorient to the room or leave it here.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — rest without a slogan",
         summary:
-          "A Christian pathway about being met while tired, offered only if you choose it.",
+          "A Christian practice for bringing both the cost and what remains real before Christ, without turning faith into a demand for instant release.",
         steps: [
-          "Read the passage once, slowly. Notice it is addressed to people already labouring, not to people who have sorted themselves out.",
-          "Notice the words “gentle and lowly”. The invitation is to a manner, not a transaction.",
-          "If you wish, say plainly what you are tired of carrying. There is no requirement to hand it over neatly or feel lighter afterwards.",
-          "Sit for a few breaths. If nothing shifts, nothing has gone wrong.",
+          "Orient outward first, then read the passage slowly if you wish. Notice that burdened people are invited; they are not scolded for being burdened.",
+          "In prayer or silence, name one possible cost—or keep it private: 'Jesus, one thing this may be costing me is…'",
+          "Name what remains real: a responsibility, illness, grief, need for safety, injustice, limited resource or difficult circumstance. You may also say, 'I do not know what keeps this here.'",
+          "Let both truths remain before God without making either cancel the other. If you wish, pray: 'Jesus, help me see truthfully what I am carrying, what may still matter, and what support I may need. Meet me with gentleness and give me an honest pace.'",
+          "Notice one practical form of care that may matter: rest, help from a safe person, professional care, community support, advocacy, accommodation, a boundary or a safer way of carrying. Prayer may accompany practical support; it does not replace it.",
+          "Return attention to one neutral detail nearby. If you feel no relief or clarity, nothing has gone wrong.",
         ],
         notRequired:
-          "This is not “just give it to God”. Nothing is solved by a phrase, and being tired is not a spiritual failure. You may read and leave it there.",
+          "This passage is not being used to tell you to remain in harm, carry everything alone, surrender a boundary or avoid practical support. This is not 'just give it to God.' No prayer, release, forgiveness or lighter feeling is required.",
         scripture: {
           reference: "Matthew 11:28–30 (World English Bible)",
-          body: "Come to me, all you who labor and are heavily burdened, and I will give you rest… for I am gentle and lowly in heart; and you will find rest for your souls.",
-          note: "Rest here is offered to the exhausted as they are. It is not a reward for surrendering correctly.",
+          body: "Come to me, all you who labor and are heavily burdened, and I will give you rest. Take my yoke upon you and learn from me, for I am gentle and humble in heart; and you will find rest for your souls. For my yoke is easy, and my burden is light.",
+          note: "Jesus addresses people who are already burdened and describes himself as gentle and humble. This is not a promise that every circumstance will immediately feel easy or change.",
         },
       },
     },
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What is one small thing that would ease the cost slightly?",
-      hint: "One choice. Nothing large, nothing confrontational.",
+      prompt: "What is one safe, reversible way to respond to what you noticed—if anything?",
+      hint: "Choose one. Nothing large, confrontational or irreversible.",
       select: "one",
       options: [
-        { id: "rest", label: "Protect one small piece of rest this week" },
-        { id: "ask", label: "Ask for one specific thing from one person" },
-        { id: "return", label: "Return one task that was never mine" },
-        { id: "notice", label: "Notice the cost once more, without acting" },
-        { id: "support", label: "Speak to a professional or trusted support about it" },
-        { id: "prepare", label: "Nothing outward — seeing it clearly was the step" },
+        { id: "rest", label: "Protect one brief piece of rest, if realistically possible" },
+        {
+          id: "ask",
+          label:
+            "Prepare one specific request for a safe person; nothing must be sent or said today",
+          note: "Choose someone reasonably safe. No identifying details are needed here.",
+        },
+        {
+          id: "return",
+          label:
+            "Identify one responsibility that may need review, sharing, support or accommodation; no action today",
+        },
+        {
+          id: "notice",
+          label: "Notice the cost and what keeps it in place once more, without acting",
+        },
+        {
+          id: "support",
+          label: "Identify one professional, community or trusted support I could consider",
+          note: "If no person or service feels safe or available, choose another step.",
+        },
+        {
+          id: "prepare",
+          label: "Nothing outward — seeing what is and is not changeable was the step",
+        },
       ],
     },
     reflection: {
@@ -146,72 +218,97 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What you noticed",
           from: "cost",
-          opening: "You named where it is landing:",
           lines: {
-            body: "The body is carrying part of this, which usually means the load is not theoretical.",
-            energy: "Energy is depleted after the essentials, which is a real limit rather than a motivation problem.",
-            closeness: "Closeness has thinned, which can be lonely in a way that is hard to explain to anyone nearby.",
-            patience: "Patience is short with the people who matter most, which is often the first cost people notice.",
-            choices: "The range of your life has narrowed, perhaps more than the original danger required.",
-            values: "Something is being lived against your own values, and that friction is expensive.",
-            meaning: "Colour has drained out of things somewhat, which frequently accompanies long-term protection.",
-            hope: "Expectation has been quietly lowered, which prevents disappointment and costs something else.",
+            body: "You noticed possible physical strain alongside this. This exercise cannot determine whether it is connected, partly connected, or unrelated.",
+            energy:
+              "You noticed reduced energy or capacity after essential demands. That limit deserves to be treated as real without assigning a cause.",
+            closeness:
+              "You noticed less closeness or less room to be known. That experience can matter without telling us why it developed.",
+            patience:
+              "You noticed less patience, presence, or availability than you want. Capacity may be relevant, and the effect on other people can still matter.",
+            choices:
+              "You noticed that your life or options feel narrower. How much comes from this response and how much from current circumstances remains open.",
+            values:
+              "You noticed tension between how you are living and something that matters to you. That deserves attention without becoming a verdict on your character.",
+            meaning: "You noticed less meaning, colour, or engagement. Nothing here determines why.",
+            hope: "You noticed less expectation that change is possible. Nothing is assumed about why, and hope does not have to be manufactured today.",
+            none: "No clear cost stands out right now. You do not need to invent one.",
+            unclear:
+              "You are not sure what is connected. Uncertainty is an honest answer, and no cause will be assigned.",
+            private:
+              "You chose to keep the cost private. No particular cost or cause will be inferred from that choice.",
           },
           unanswered:
-            "You did not name a cost today. That may be because nothing pressing surfaced, and it may be because it is not the right week to look. Both are legitimate.",
+            "You did not choose a cost today. No cost, cause or hidden meaning will be assigned.",
         },
         {
           id: "protected",
-          title: "What it may still be protecting",
+          title: "What may be keeping it in place",
           from: "protects",
-          opening: "You also named what it still does:",
           lines: {
-            peace: "It keeps the peace, and peace is not nothing — even peace that costs you.",
-            functioning: "It keeps you functioning, which matters when other people depend on you.",
-            safe: "It keeps you safe from something specific, which deserves respect rather than override.",
-            others: "It protects other people, which is often the hardest thread to pull.",
-            predictable: "It keeps life predictable, which can be worth a great deal after unpredictability.",
-            little: "It may be doing less for you now than it once did, which is worth noticing without haste.",
+            peace: "Reducing conflict or disruption may matter, especially when conflict has consequences. This does not decide what to do.",
+            functioning:
+              "You named day-to-day functioning as something this supports. Any alternative may need enough stability and practical support for real life.",
+            safe: "You named safety, privacy or stability. If a risk still matters, it deserves consideration rather than override.",
+            others:
+              "You named genuine responsibilities to other people. Their needs may matter, and so do yours; this day does not decide the balance.",
+            predictable:
+              "You named predictability or familiarity as something this provides. No past history is inferred from that.",
+            little:
+              "You do not notice much benefit or protection now. That recognition can remain unfinished and unhurried.",
+            belonging:
+              "You named belonging, connection or a valued role. Any future change may need to respect what is meaningful rather than dismiss it.",
+            limits:
+              "You named real limits in health, energy, capacity, resources or support. A limit is not a moral failure.",
+            ongoing:
+              "You named circumstances or a lack of safe alternatives that remain real. The response may not be the whole problem, and release may not be the right task.",
+            unclear:
+              "You are not sure what keeps this in place. No motive or hidden benefit will be assigned.",
+            private: "You chose to keep this private. No reason will be inferred from that choice.",
           },
           unanswered:
-            "The other side of the ledger was left blank. It is usually there, though — most costly arrangements are still buying something.",
+            "No benefit, protection, responsibility or constraint was named. Nothing about why this remains will be guessed.",
         },
         {
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Seeing a cost accurately can be uncomfortable. It may help to remember that noticing is not the same as being obliged to act.",
+            "Some costs can be eased through your own choices; some require support, accommodation, resources, safer conditions or change from others; some may need to be grieved or carried differently for now. Noticing that difference is information, not failure.",
           unanswered:
-            "Whatever the ledger holds, the person paying it may deserve some gentleness today.",
+            "However today went, the person living with this may deserve some gentleness now.",
         },
         {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
-            rest: "One protected piece of rest is a small, defensible change.",
-            ask: "One specific request of one person is far more achievable than a general one of everyone.",
-            return: "Returning a task that was never yours is a boundary in practical clothing.",
-            notice: "Noticing again, without acting, keeps the pace yours.",
-            support: "Talking it through with a professional or trusted support is a sound use of this.",
-            prepare: "Seeing it clearly was the step, and clarity is not a small thing.",
+            rest: "Protecting a brief piece of rest, if possible, treats your capacity as real.",
+            ask: "Preparing one specific request keeps the step reversible and gives you time to decide whether and with whom to share it.",
+            return:
+              "Identifying a responsibility that may need review, sharing, support or accommodation creates information without forcing action.",
+            notice: "Noticing once more without acting keeps the pace yours.",
+            support:
+              "Identifying a professional, community or trusted support may help place this cost somewhere it does not have to be carried alone.",
+            prepare:
+              "Seeing what is and is not changeable was the step. Clarity can coexist with unfinishedness.",
           },
           unanswered:
-            "No step was chosen. The honest look you took today stands on its own.",
+            "No step was chosen. The honest attention you gave the question can stand on its own.",
         },
       ],
-      closing: "Nothing here is advice about a decision, and nothing has been concluded about your life.",
+      closing:
+        "No conclusion has been reached about what caused the cost or what to change. What you noticed may point toward choice, support, grief, a safer condition or simply more time.",
     },
     close: {
       heading: "Seen clearly, held gently",
       body: [
-        "You looked at a cost without turning it into a verdict on yourself. That is the difficult version of honesty.",
-        "Tomorrow moves toward a kinder way of holding all of this.",
+        "Whether or not you named a cost, you spent some time near the question without turning it into a verdict.",
+        "You did not have to blame yourself, dismiss what is still real or decide what to change. When you continue, Day 7 turns toward how you hold yourself while seeing what is true.",
       ],
       carryForward:
-        "Carry forward one sentence: I can see the cost and still choose my own pace.",
+        "I can notice the cost without condemning myself or ignoring what is still real.",
     },
   },
 

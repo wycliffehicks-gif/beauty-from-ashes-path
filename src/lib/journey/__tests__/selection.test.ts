@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getFirstJourneyDay } from "@/content/first-journey";
+import { screenKey, screensFor } from "@/content/journey-types";
 import { toggleSelection } from "../selection";
 import { buildReflection } from "../reflection-engine";
 
@@ -471,5 +472,181 @@ describe("Day 5 revision", () => {
     expect(day5.close.carryForward).toBe(
       "More than one truth can be present, and I can choose my pace.",
     );
+  });
+});
+
+describe("Day 6 revision", () => {
+  const day6 = getFirstJourneyDay(6)!;
+  const q = (id: string) => day6.questions.find((x) => x.id === id)!;
+  const cost = q("cost");
+  const protects = q("protects");
+  const ids = (options: { id: string }[]) => options.map((o) => o.id);
+  const text = JSON.stringify(day6).toLowerCase();
+
+  it("keeps the canonical identity, shape and screen sequence", () => {
+    expect(day6.title).toBe("What It Is Costing Now");
+    expect(day6.motif).toBe("cost");
+    expect(day6.shape).toBe("notice-first");
+    expect(day6.descriptor).toBe("Noticing one present-day cost · about 12 minutes");
+    expect(screensFor(day6).map(screenKey)).toEqual([
+      "arrive",
+      "q.cost",
+      "e.cost",
+      "understand",
+      "q.protects",
+      "practise",
+      "step",
+      "reflection",
+      "close",
+    ]);
+    expect(day6.questions.map((x) => x.id)).toEqual(["cost", "protects"]);
+    expect(day6.step.id).toBe("step");
+  });
+
+  it("makes both questions single-select", () => {
+    expect(cost.select).toBe("one");
+    expect(protects.select).toBe("one");
+  });
+
+  it("preserves existing option ids and order, appending only the new ones", () => {
+    expect(ids(cost.options)).toEqual([
+      "body",
+      "energy",
+      "closeness",
+      "patience",
+      "choices",
+      "values",
+      "meaning",
+      "hope",
+      "none",
+      "unclear",
+      "private",
+    ]);
+    expect(ids(protects.options)).toEqual([
+      "peace",
+      "functioning",
+      "safe",
+      "others",
+      "predictable",
+      "little",
+      "belonging",
+      "limits",
+      "ongoing",
+      "unclear",
+      "private",
+    ]);
+    expect(ids(day6.step.options)).toEqual([
+      "rest",
+      "ask",
+      "return",
+      "notice",
+      "support",
+      "prepare",
+    ]);
+  });
+
+  it("uses an inclusive, optional arrival with no prescribed posture or breathing", () => {
+    const settle = (day6.arrive.settle ?? []).join(" ").toLowerCase();
+    for (const phrase of ["jaw", "tongue", "full weight", "feet flat", "sit up", "through the nose"]) {
+      expect(settle, `unexpected phrase: ${phrase}`).not.toContain(phrase);
+    }
+    expect(settle).toContain("any position that works for you");
+    expect(text).not.toContain("yesterday");
+    expect(text).not.toContain("tomorrow");
+  });
+
+  it("labels the educational screen 'Listen' and carries the shared physical-symptom note", () => {
+    expect(day6.understand.label).toBe("Listen");
+    const day2Note = getFirstJourneyDay(2)!
+      .questions.find((x) => x.id === "body")!
+      .info!.find((n) => n.term === "A note about physical symptoms")!;
+    expect(cost.info).toEqual(expect.arrayContaining([day2Note]));
+    const terms = (day6.understand.info ?? []).map((n) => n.term);
+    expect(terms).toContain("What if the circumstances are still real?");
+    expect(terms).toContain("Why look at cost at all?");
+  });
+
+  it("keeps both practices substantial with the corrected Matthew wording", () => {
+    expect(day6.practise.reflection.steps.length).toBeGreaterThanOrEqual(6);
+    expect(day6.practise.spiritual.steps.length).toBeGreaterThanOrEqual(6);
+    expect(day6.practise.either.toLowerCase()).toContain("neither");
+    expect(day6.practise.spiritual.scripture?.reference).toContain("Matthew 11:28–30");
+    expect(day6.practise.spiritual.scripture?.body).toContain("gentle and humble in heart");
+    expect(day6.practise.spiritual.scripture?.note).toContain("gentle and humble");
+  });
+
+  it("carries the safety notes on the step options", () => {
+    expect(day6.step.options.find((o) => o.id === "ask")!.note).toMatch(/reasonably safe/i);
+    expect(day6.step.options.find((o) => o.id === "ask")!.label).toMatch(
+      /nothing must be sent or said today/i,
+    );
+    expect(day6.step.options.find((o) => o.id === "support")!.note).toMatch(/safe or available/i);
+    expect(day6.step.options.find((o) => o.id === "return")!.label).toMatch(/no action today/i);
+  });
+
+  it("leaves answer-driven reflection sections without openings", () => {
+    for (const id of ["hearing", "protected", "next"]) {
+      const section = day6.reflection.sections.find((s) => s.id === id)!;
+      expect(section.opening).toBeUndefined();
+      expect(section.unanswered.length).toBeGreaterThan(40);
+    }
+    const care = day6.reflection.sections.find((s) => s.id === "care")!;
+    expect(care.from).toBeUndefined();
+    expect(care.opening).toContain("information, not failure");
+  });
+
+  it("produces an honest fully skipped reflection", () => {
+    const built = buildReflection(day6, undefined);
+    const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
+    expect(body).not.toContain("You named");
+    expect(body).not.toContain("You also named");
+    expect(body).toContain("No cost, cause or hidden meaning will be assigned");
+    expect(body).toContain("Nothing about why this remains will be guessed");
+    expect(body).toContain("No step was chosen");
+    expect(built.closing).toContain("No conclusion has been reached");
+  });
+
+  it("states none, unclear and private cost paths accurately", () => {
+    const echo = cost.echo!;
+    for (const id of ids(cost.options)) {
+      expect(echo.byOption[id], `missing echo: ${id}`).toBeTruthy();
+    }
+    expect(echo.byOption["none"]).toContain("do not need to invent one");
+    expect(echo.byOption["unclear"]).toContain("no cause will be assigned");
+    expect(echo.byOption["private"]).toContain("No particular cost or cause will be inferred");
+    expect(JSON.stringify(day6)).not.toContain("Nothing has been recorded");
+    expect(JSON.stringify(day6)).not.toContain("nothing about it has been recorded");
+  });
+
+  it("maps only the selected ids on an answered path", () => {
+    const answers = [
+      `q.cost.${cost.options.findIndex((o) => o.id === "energy")}`,
+      `q.protects.${protects.options.findIndex((o) => o.id === "ongoing")}`,
+      `step.${day6.step.options.findIndex((o) => o.id === "notice")}`,
+    ];
+    const built = buildReflection(day6, answers);
+    const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
+    expect(body).toContain("reduced energy or capacity");
+    expect(body).toContain("lack of safe alternatives");
+    expect(body).toContain("keeps the pace yours");
+    expect(body).not.toContain("less closeness");
+    expect(body).not.toContain("A limit is not a moral failure");
+  });
+
+  it("removes forbidden old and inferential language", () => {
+    for (const phrase of [
+      "choose to keep paying",
+      "puts the choice back",
+      "usually there",
+      "buying something",
+      "smaller than the danger",
+      "frequently what protection",
+      "preventing disappointment",
+      "when other people depend on you",
+      "after unpredictability",
+      "specific and unsparing",
+    ]) {
+      expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase);
+    }
   });
 });

@@ -465,6 +465,7 @@ function ArriveScreen({ content }: { content: JourneyDayContent }) {
       <p className="eyebrow">Arrive</p>
 
 
+
       <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
         {content.title}
       </h1>

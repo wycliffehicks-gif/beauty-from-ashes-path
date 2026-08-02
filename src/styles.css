@@ -779,3 +779,12 @@
 .dark .bfa-visual-splash-sub {
   color: var(--foreground);
 }
+
+/* Dark mode: the two brand inks are used for text in several journey and
+   opening surfaces. Remapping them here keeps light mode byte-identical while
+   removing dark-on-dark headings. Every place they carry a background instead
+   is overridden explicitly above. */
+.dark {
+  --navy: #F6F2EA;
+  --deep-navy: #E8D3AF;
+}

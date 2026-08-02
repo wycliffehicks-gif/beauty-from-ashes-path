@@ -58,25 +58,34 @@ export function SplashGate({ children }: { children: ReactNode }) {
           style={{ opacity: leaving ? 0 : 1 }}
         >
           <div className="flex w-full items-center justify-center px-4">
-            {imgOk ? (
-              <img
-                src={LOGO_URL}
-                alt="Resurgence Therapeutics — Awaken, Rediscover, Hope"
-                onError={() => setImgOk(false)}
-                className="h-auto w-[86vw] max-w-[400px] object-contain sm:max-w-[520px]"
-                draggable={false}
-              />
-            ) : (
-              <div className="text-center">
-                <p className="font-serif text-2xl text-[#1A355E]">
-                  Resurgence Therapeutics
-                </p>
-                <p className="mt-3 whitespace-nowrap font-sans text-[0.78rem] font-bold tracking-[0.18em] text-[#1A355E]">
-                  AWAKEN&nbsp;|&nbsp;REDISCOVER&nbsp;|&nbsp;HOPE
-                </p>
+            <div className="bfa-visual-splash">
+              <VisualMotif variant="splash" />
+              <div className="bfa-visual-splash-inner">
+                <p className="bfa-visual-splash-title">Beauty from Ashes</p>
+                <p className="bfa-visual-splash-sub">The First Journey</p>
+                <hr className="bfa-visual-splash-seam" />
+                <div className="bfa-visual-splash-parent">
+                  {imgOk ? (
+                    <img
+                      src={LOGO_URL}
+                      alt=""
+                      onError={() => setImgOk(false)}
+                      className="object-contain"
+                      draggable={false}
+                    />
+                  ) : (
+                    <p className="bfa-visual-splash-parent-text">
+                      Resurgence Therapeutics
+                    </p>
+                  )}
+                  <p className="bfa-visual-splash-parent-text">
+                    Awaken&nbsp;· Rediscover&nbsp;· Hope
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
+
         </div>
       )}
     </>

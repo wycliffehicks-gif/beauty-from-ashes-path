@@ -2135,7 +2135,7 @@ describe("Day 10 revision", () => {
       expect(text).toContain("waiting");
       expect(text).toContain("outward");
       expect(text).toContain("reading");
-      expect(text).toContain("no outcome");
+      expect(text).toContain("or any outcome");
     }
     expect(nonreligious.steps[0]).toContain("No touch, posture change, breathing change");
     expect(spiritual.scripture!.reference).toBe("Numbers 6:24–26 (World English Bible)");

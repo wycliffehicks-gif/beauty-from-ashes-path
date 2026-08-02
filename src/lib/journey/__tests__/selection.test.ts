@@ -192,3 +192,87 @@ describe("Day 3 wording refinement", () => {
     expect(day3.close.heading).toBe("One honest beginning");
   });
 });
+
+describe("Day 4 revision", () => {
+  const day4 = getFirstJourneyDay(4)!;
+  const q = (id: string) => day4.questions.find((x) => x.id === id)!;
+  const response = q("response");
+  const doorway = q("doorway");
+  const purpose = q("purpose");
+  const text = JSON.stringify(day4).toLowerCase();
+  const idx = (question: typeof doorway, id: string) =>
+    question.options.findIndex((o) => o.id === id);
+
+  it("uses the standard shape and exactly the three revised questions", () => {
+    expect(day4.shape).toBe("standard");
+    expect(day4.questions.map((x) => x.id)).toEqual(["response", "doorway", "purpose"]);
+  });
+
+  it("makes the response question single-select with unsure and private", () => {
+    expect(response.select).toBe("one");
+    expect(response.options.map((o) => o.id)).toContain("unsure");
+    expect(response.options.map((o) => o.id)).toContain("private");
+  });
+
+  it("makes doorway unclear and private exclusive in both directions", () => {
+    for (const id of ["unclear", "private"]) {
+      const ex = idx(doorway, id);
+      const other = idx(doorway, "conflict");
+      expect(toggleSelection(doorway, [other], ex)).toEqual([ex]);
+      expect(toggleSelection(doorway, [ex], other)).toEqual([other]);
+    }
+  });
+
+  it("makes purpose notfit, unsure and private exclusive in both directions", () => {
+    for (const id of ["notfit", "unsure", "private"]) {
+      const ex = idx(purpose, id);
+      const other = idx(purpose, "energy");
+      expect(toggleSelection(purpose, [other], ex)).toEqual([ex]);
+      expect(toggleSelection(purpose, [ex], other)).toEqual([other]);
+    }
+  });
+
+  it("keeps both practice paths substantial, with Mark 10:21 retained", () => {
+    expect(day4.practise.reflection.steps.length).toBeGreaterThanOrEqual(5);
+    expect(day4.practise.spiritual.steps.length).toBeGreaterThanOrEqual(5);
+    expect(day4.practise.spiritual.scripture?.reference).toContain("Mark 10:21");
+    const steps = day4.practise.reflection.steps.join(" ");
+    expect(steps).toContain("what remains true");
+    expect(steps).not.toMatch(/adult body/i);
+    expect(steps).not.toMatch(/Resistance is not disagreement/i);
+  });
+
+  it("removes historical-origin, cost and change wording", () => {
+    for (const phrase of [
+      "when being seen was not safe",
+      "only available answer to unpredictability",
+      "responsible for others too early",
+      "loosen it five percent",
+      "usually develops",
+      "often how people survive",
+      "frequently grows",
+      "tends to develop",
+      "was the only option",
+      "protective responses are usually answers",
+      "tomorrow",
+    ]) {
+      expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase.toLowerCase());
+    }
+  });
+
+  it("keeps the answer-driven sections free of contradictory openings", () => {
+    for (const id of ["hearing", "underneath", "protected"]) {
+      const section = day4.reflection.sections.find((s) => s.id === id)!;
+      expect(section.opening).toBeUndefined();
+      expect(section.unanswered.length).toBeGreaterThan(40);
+    }
+    expect(day4.reflection.sections.find((s) => s.id === "protected")!.unanswered).toMatch(
+      /no need to manufacture an answer/i,
+    );
+  });
+
+  it("carries the safe prepare-share step note", () => {
+    const share = day4.step.options.find((o) => o.id === "prepare-share")!;
+    expect(share.note).toMatch(/No need to send or say it today/i);
+  });
+});

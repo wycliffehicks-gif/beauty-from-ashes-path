@@ -436,15 +436,38 @@ function appOwnedKeys(store: {
 export function clearJourney() {
   if (typeof window === "undefined") return;
 
-  const removeAll = (store: Storage | undefined, extra: readonly string[]) => {
-    if (!store) return;
-    let discovered: string[] = [];
+  const discover = (store: Storage | undefined): string[] => {
+    if (!store) return [];
     try {
-      discovered = appOwnedKeys(store);
+      return appOwnedKeys(store);
     } catch {
       /* enumeration may throw in a locked-down browser */
+      return [];
     }
-    const keys = new Set<string>([...extra, ...discovered]);
+  };
+
+  // localStorage removals go through removeLocal, so a removal the browser
+  // refuses is tombstoned and stale persistent data can never resurrect.
+  const localKeys = new Set<string>([
+    ...APP_OWNED_LOCAL_KEYS,
+    ...APP_OWNED_SESSION_KEYS,
+    ...(() => {
+      try {
+        return discover(window.localStorage);
+      } catch {
+        return [];
+      }
+    })(),
+  ]);
+  for (const k of localKeys) removeLocal(k);
+
+  try {
+    const store = window.sessionStorage;
+    const keys = new Set<string>([
+      ...APP_OWNED_SESSION_KEYS,
+      ...APP_OWNED_LOCAL_KEYS,
+      ...discover(store),
+    ]);
     for (const k of keys) {
       try {
         store.removeItem(k);
@@ -452,21 +475,10 @@ export function clearJourney() {
         /* ignore individual failures */
       }
     }
-  };
-
-  // Also drop the in-memory fallback copies of app-owned keys.
-  for (const k of APP_OWNED_LOCAL_KEYS) removeLocal(k);
-
-  try {
-    removeAll(window.localStorage, [...APP_OWNED_LOCAL_KEYS, ...APP_OWNED_SESSION_KEYS]);
   } catch {
     /* ignore */
   }
-  try {
-    removeAll(window.sessionStorage, [...APP_OWNED_SESSION_KEYS, ...APP_OWNED_LOCAL_KEYS]);
-  } catch {
-    /* ignore */
-  }
+
 
   try {
     window.dispatchEvent(new CustomEvent(JOURNEY_CHANGE_EVENT));

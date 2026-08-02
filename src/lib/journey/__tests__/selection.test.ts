@@ -1861,7 +1861,7 @@ describe("Day 9 revision", () => {
     expect(day10.shape).toBe("notice-first");
     expect(day10.descriptor).toBe("Gathering the journey · about 15 minutes");
     expect(day10.arrive.lead).toBe(
-      "This is the last day of the First Journey, and it does not tie anything up.",
+      "This is the last day of the First Journey. It completes a ten-day container without claiming that your healing is complete.",
     );
   });
 });

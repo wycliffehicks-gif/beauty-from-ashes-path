@@ -265,12 +265,41 @@ export function saveDayAnswers(dayId: string, answerIds: string[]) {
   mutate((cur) => ({ ...cur, answers: { ...cur.answers, [dayId]: ids } }));
 }
 
-export function saveDayReflection(dayId: string, text: string) {
+/**
+ * Save the exact deterministic reflection a person read, together with a
+ * fingerprint of the coded selections it was assembled from, so it can be
+ * restored later only when it still belongs to those same answers.
+ */
+export function saveDayReflection(dayId: string, text: string, snapshot?: string) {
   if (!isSafeId(dayId) || typeof text !== "string" || text.trim().length === 0) return;
+  const clean =
+    typeof snapshot === "string" &&
+    snapshot.length > 0 &&
+    snapshot.length <= MAX_SNAPSHOT_LENGTH &&
+    /^[A-Za-z0-9._:|-]+$/.test(snapshot)
+      ? snapshot
+      : undefined;
   mutate((cur) => ({
     ...cur,
     reflections: { ...cur.reflections, [dayId]: text.slice(0, MAX_REFLECTION_LENGTH) },
+    reflectionSnapshots: clean
+      ? { ...cur.reflectionSnapshots, [dayId]: clean }
+      : cur.reflectionSnapshots,
   }));
+}
+
+/**
+ * Record the furthest in-day screen genuinely reached. This is the only proof
+ * that a reflection or Close screen was walked to rather than typed into the
+ * address bar. It never marks a day complete.
+ */
+export function saveReached(dayId: string, index: number) {
+  if (!isSafeId(dayId) || !Number.isInteger(index) || index <= 0) return;
+  mutate((cur) =>
+    (cur.reached[dayId] ?? 0) >= index
+      ? cur
+      : { ...cur, reached: { ...cur.reached, [dayId]: Math.min(index, 64) } },
+  );
 }
 
 /** Only a genuine end-of-day action may call this. */

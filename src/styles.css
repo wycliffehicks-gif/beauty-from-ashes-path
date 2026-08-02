@@ -448,6 +448,16 @@
 .bfa-visual-splash-inner {
   position: relative;
   z-index: 1;
+  padding-block: 1.25rem;
+  background: radial-gradient(
+    120% 90% at 50% 45%,
+    color-mix(in oklab, var(--ivory) 92%, transparent) 0%,
+    color-mix(in oklab, var(--ivory) 70%, transparent) 55%,
+    transparent 100%
+  );
+}
+.bfa-visual-splash-logo {
+  mix-blend-mode: multiply;
 }
 .bfa-visual-splash-title {
   font-family: var(--font-serif);

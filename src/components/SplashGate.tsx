@@ -70,7 +70,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
                       src={LOGO_URL}
                       alt=""
                       onError={() => setImgOk(false)}
-                      className="object-contain"
+                      className="bfa-visual-splash-logo object-contain"
                       draggable={false}
                     />
                   ) : (
@@ -78,9 +78,6 @@ export function SplashGate({ children }: { children: ReactNode }) {
                       Resurgence Therapeutics
                     </p>
                   )}
-                  <p className="bfa-visual-splash-parent-text">
-                    Awaken&nbsp;· Rediscover&nbsp;· Hope
-                  </p>
                 </div>
               </div>
             </div>

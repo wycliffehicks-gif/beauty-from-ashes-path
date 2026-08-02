@@ -1354,7 +1354,7 @@ describe("Day 8 revision", () => {
     expect(day9.arrive.lead).toBe(
       "A different response can be tried privately before you decide whether it belongs in real life.",
     );
-    expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise.");
+    expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise");
   });
   it("applies the final acceptance cleanup wording", () => {
     expect(route.prompt).toContain("if anything");
@@ -1549,8 +1549,12 @@ describe("Day 9 revision", () => {
     expect(byOption["private"]).toContain("saved on this device");
     expect(byOption["unclear"]).toContain("left as it is");
     expect(byOption["none"]).toContain("left intact");
-    expect(practice.echo!.heading).toBe("What was selected — and what is not established");
-    expect(practice.echo!.unanswered).toContain("nothing will be chosen on your behalf");
+    expect(practice.echo!.heading).toBe("Room for what is clear — and what is not");
+    expect(practice.echo!.unanswered).toContain(
+      "nothing will be chosen or inferred on your behalf",
+    );
+    expect(practice.echo!.unanswered).toContain("may simply be read");
+    expect(practice.echo!.byOption["none"]).toContain("No explanation or pressure is added");
     expect(practice.echo!.unanswered.length).toBeGreaterThan(80);
     expect(practice.echo!.closing).toContain("can stay private, be revised later, be set aside");
     expect(practice.hint).toContain("One choice if one fits");
@@ -1566,12 +1570,22 @@ describe("Day 9 revision", () => {
       ...day9.practise.reflection.steps,
       ...day9.practise.spiritual.steps,
     ].join(" ");
-    expect(day9.practise.heading).toBe("Two ways to rehearse without committing to act.");
-    expect(day9.practise.intro).toContain("whether or not anything was selected earlier");
-    expect(day9.practise.either).toContain("Either, both, or neither");
-    expect(day9.practise.either).toContain("Reading only is complete");
-    expect(day9.practise.either).toContain("stopping at any point is complete");
-    expect(day9.practise.either).toContain("leaving the exercise unfinished is complete");
+    expect(day9.practise.heading).toBe("Two ways to rehearse without committing to act");
+    expect(day9.practise.intro).toBe(
+      "You do not need a clear response or setting to read or use either path. Everything may stay general, private, unclear, or unanswered.",
+    );
+    expect(day9.practise.either).toBe(
+      "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
+    );
+    expect(day9.practise.reflection.summary).toContain(
+      "without deciding to use it in real life",
+    );
+    expect(day9.practise.spiritual.summary).toBe(
+      "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
+    );
+    expect(day9.practise.spiritual.steps.join(" ")).toContain(
+      "leaving safety and real-world use undecided",
+    );
     expect(panels).toContain("keep this entirely general");
     for (const phrase of [
       "whichever practice you chose",
@@ -1612,7 +1626,7 @@ describe("Day 9 revision", () => {
       for (const term of [
         "confrontation",
         "disclosure",
-        "message sent",
+        "sending a message",
         "contact",
         "real-world test",
         "emotional release",
@@ -1719,7 +1733,10 @@ describe("Day 9 revision", () => {
 
   it("closes without claiming selection, rehearsal, action, readiness or progress", () => {
     const close = [day9.close.heading, ...day9.close.body, day9.close.carryForward].join(" ");
-    expect(day9.close.heading).toBe("Possibility, not a promise.");
+    expect(day9.close.heading).toBe("Possibility, not a promise");
+    expect(day9.close.body[0]).toBe(
+      "Whether you rehearsed a response, read the practice, kept your response private, or left everything open, no real-world action was required, and none is required now.",
+    );
     expect(close).toContain("no real-world action was required");
     expect(close).toContain("does not guarantee access under pressure");
     expect(close).toContain("does not make a situation safe");
@@ -1783,6 +1800,50 @@ describe("Day 9 revision", () => {
       );
     }
   });
+
+  it("applies the final acceptance cleanup wording", () => {
+    expect(day9.arrive.settle!.at(-1)).toBe(
+      "You may simply read, and you may stop at any point. No particular feeling or response is required.",
+    );
+
+    expect(day9.step.prompt).toBe("How, if at all, would you like to leave this practice?");
+    expect(day9.step.hint).toBe(
+      "You may choose one if it fits, simply read, or leave this open.",
+    );
+    const stepLabel = (id: string) => day9.step.options.find((o) => o.id === id)!.label;
+    expect(stepLabel("again")).toBe(
+      "Read one possible response, or try its opening once, privately",
+    );
+    expect(stepLabel("sentence")).toBe(
+      "Shorten or revise one possible sentence until it sounds like me",
+    );
+    expect(stepLabel("prepare")).toBe("Leave the exercise here, with nothing more required");
+
+    const next = day9.reflection.sections.find((s) => s.id === "next")!;
+    expect(next.lines!["again"]).toBe(
+      "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
+    );
+    expect(next.lines!["prepare"]).toBe(
+      "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
+    );
+
+    const text = allText9();
+    for (const phrase of [
+      "at the same depth",
+      "Both paths below work",
+      "today's rehearsal",
+      "the response once more",
+      "reading or rehearsing was enough",
+      "today was rehearsed",
+      "message sent",
+      "and no change is required",
+    ]) {
+      expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
+        phrase.toLowerCase(),
+      );
+    }
+  });
+
 
   it("leaves Day 8 and Day 10 at their canonical boundaries", () => {
     const day8b = getFirstJourneyDay(8)!;

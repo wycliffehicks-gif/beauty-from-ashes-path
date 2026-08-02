@@ -124,6 +124,23 @@ guard list for posture, senses, mobility, forced breath, unsafe contact, causal,
 universal, time-dependent and outcome-promising phrases, and literal Day 8 and
 Day 10 boundary checks. Full suite: 387 tests passing.
 
+**Final acceptance cleanup (same day).** Public-copy only, within Day 9. Internal
+design phrasing was humanized (“Room for what is clear — and what is not”; “You do
+not need a clear response or setting to read or use either path”), and the
+repeated defensive “complete” wording was replaced with plain permission (“You may
+simply read, stop at any point, or leave the exercise unfinished”). Three headings
+lost trailing periods. One Honest Step became branch-neutral and no longer assumes
+a prior rehearsal or a chosen response: “How, if at all, would you like to leave
+this practice?”, with reworded `again`, `sentence` and `prepare` labels and their
+matching reflection lines. The Christian path is now described by what it does
+rather than as equal “depth”, and its alternative-naming step leaves safety and
+real-world use undecided. Grammar in both `notRequired` lines was corrected
+(“sending a message”, “or change is required”), and the close no longer says
+“today was rehearsed”. No option ID, order, select mode, exclusivity, screen
+sequence, pathway or other Day 9 meaning changed. Full suite: 388 tests passing.
+
+
+
 ## 2026-08-02 — Bounded Day 8 content, safety, branch-accuracy and source-alignment revision
 
 Day 8 (“Reconnect With What Matters”) only. Days 1–7 and 9–10, routes,

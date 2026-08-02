@@ -878,12 +878,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "Settle in whatever position works for you, including standing, lying down, moving, or staying exactly as you are.",
         "If it helps, notice one neutral outward detail or point of orientation through any sense available to you — something seen, heard, touched, or simply known to be nearby.",
         "Attention to body or breath can be left alone entirely. No stillness, calm, sensation, movement, or settled feeling is required.",
-        "Reading only is a complete way to do today, and stopping at any point remains available.",
+        "You may simply read, and you may stop at any point. No particular feeling or response is required.",
       ],
     },
     understand: {
       label: "Listen",
-      heading: "Rehearsal is a possibility, not a promise.",
+      heading: "Rehearsal is a possibility, not a promise",
       body: [
         "A response is what someone does, says, delays, prepares, or chooses not to do when a familiar moment appears. Rehearsal means privately trying only the opening of one possible response — in silent words, in writing you will not send, or as a simple outline — without involving another person and without committing to use it.",
         "Rehearsing may clarify whether an option fits, how it might be worded, what conditions would matter, or what support would be needed. It cannot control what happens under pressure, and it does not prove readiness.",
@@ -927,7 +927,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           { id: "private", label: "I have one in mind and prefer to keep it private" },
         ],
         echo: {
-          heading: "What was selected — and what is not established",
+          heading: "Room for what is clear — and what is not",
           byOption: {
             grounding:
               "A pause and orienting outward was selected. That says nothing about whether escalation is present, what would happen if you paused, or whether pausing will be available when it matters.",
@@ -946,12 +946,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "Not being sure what you would practise was selected, and that uncertainty is left as it is. Nothing will be chosen on your behalf.",
             none:
-              "That no different response feels available today was selected, and that is left intact. It is treated as accurate information, not as failure.",
+              "That no different response feels available today was selected, and that absence is left intact. No explanation or pressure is added.",
             private:
               "A private choice was selected. The structured choice is saved on this device; what it refers to stays with you and is not collected here.",
           },
           unanswered:
-            "This page was continued without a selection, and nothing will be chosen on your behalf. The shared practice ahead does not depend on a choice, and it can be read only.",
+            "No response was selected here. The shared practice ahead does not depend on a choice and may simply be read; nothing will be chosen or inferred on your behalf.",
           closing:
             "Anything here can stay private, be revised later, be set aside, or never be used at all.",
         },
@@ -977,15 +977,15 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       },
     ],
     practise: {
-      heading: "Two ways to rehearse without committing to act.",
+      heading: "Two ways to rehearse without committing to act",
       intro:
-        "Both paths below work whether or not anything was selected earlier, and whether what you have in mind is clear, unclear, private, or absent.",
+        "You do not need a clear response or setting to read or use either path. Everything may stay general, private, unclear, or unanswered.",
       either:
-        "Either, both, or neither. Reading only is complete, stopping at any point is complete, and leaving the exercise unfinished is complete.",
+        "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
       reflection: {
         title: "Reflection Practice — one private rehearsal",
         summary:
-          "A short private structure for trying only the opening moment of one possible response, without using it anywhere.",
+          "A short private structure for trying only the opening moment of one possible response, without deciding to use it in real life.",
         steps: [
           "Orient outward through one neutral detail or point of orientation available to you. No posture, touch, breath change, particular sense, stillness, or calm is required, and reading only is available.",
           "Bring to mind one manageable ordinary moment, or keep this entirely general. No names or identifying details are needed. Please do not use the most dangerous, traumatic, overwhelming, or high-consequence situation you are living with.",
@@ -997,25 +997,25 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Reorient outward however suits you. The response can be revised, kept private, discarded, or never used.",
         ],
         notRequired:
-          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. You may stop at any point.",
+          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest rehearsal before God",
         summary:
-          "A Christian path through the same movement, at the same depth, offered only if you choose it.",
+          "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
         steps: [
           "Orient outward however works for you. Reading only is available here too.",
           "Read Psalm 62:8 below, only if you would like to.",
           "Bring one manageable concern, or keep it general. Please leave aside anything that is dangerous or high-risk right now.",
           "Pour out only as much as fits. Anger, grief, doubt, numbness, difficulty trusting, silence, or having no words at all may all be present.",
           "If it is clear, name the familiar response without a moral verdict. If it is unclear, let it stay unclear.",
-          "Name one possible alternative that would be truthful and safe for you: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
+          "Name one possible alternative that seems truthful while leaving safety and real-world use undecided: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
           "Rehearse only its opening moment, once — in words, in writing, or in silence before God. Hold it as a possibility, not a vow, not a divine command or direction, not proof of faith, and not a promise to act.",
           "Name any practical support, safety, accommodation, or wisdom that would be needed. Prayer does not replace real-world help or planning.",
           "Reorient outward. No relief, certainty, trust, felt refuge or closeness, forgiveness, reconciliation, contact, disclosure, or action is required.",
         ],
         notRequired:
-          "No confrontation, disclosure, message sent, contact, real-world test, emotional release, decision, outcome, particular body or breath response, and no change is required. Stopping at any point is available, and you may leave this path entirely.",
+          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point or leave this path entirely.",
         scripture: {
           reference: "Psalm 62:8 (World English Bible)",
           body: "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",
@@ -1026,12 +1026,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "How would you like to complete today's rehearsal—if one choice fits?",
-      hint: "One choice if one fits. Reading, or leaving it open, remains available.",
+      prompt: "How, if at all, would you like to leave this practice?",
+      hint: "You may choose one if it fits, simply read, or leave this open.",
       select: "one",
       options: [
-        { id: "again", label: "Read or rehearse the response once more, privately" },
-        { id: "sentence", label: "Shorten or revise one sentence until it sounds like me" },
+        { id: "again", label: "Read one possible response, or try its opening once, privately" },
+        { id: "sentence", label: "Shorten or revise one possible sentence until it sounds like me" },
         { id: "use", label: "Name what would have to be true before any real-world use" },
         { id: "ground", label: "Keep one accessible outward-orienting cue" },
         {
@@ -1039,7 +1039,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           label:
             "Identify support I might want before any real-world action — no contact or disclosure today",
         },
-        { id: "prepare", label: "Leave it here; reading or rehearsing was enough" },
+        { id: "prepare", label: "Leave the exercise here, with nothing more required" },
         { id: "unclear", label: "I am not sure" },
         { id: "none", label: "No step feels right today" },
         { id: "private", label: "I have one in mind and prefer to keep it private" },
@@ -1108,7 +1108,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             again:
-              "Reading or rehearsing the response once more, privately, was selected. It stays private, and nothing outward follows from it.",
+              "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
             sentence:
               "Shortening or revising one sentence was selected. Whether it is ever spoken anywhere is left entirely open.",
             use: "Naming what would have to be true before any real-world use was selected. That names conditions only; it does not commit you to using anything.",
@@ -1117,7 +1117,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             support:
               "Identifying support you might want before any real-world action was selected. No contact and no disclosure are part of that.",
             prepare:
-              "Leaving it here was selected, with reading or rehearsing being enough. That is complete as it stands.",
+              "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
             unclear:
               "Not being sure of a step was selected. That is left uncertain, and no step will be chosen for you.",
             none: "That no step feels right today was selected. That is left as it is, and none will be pressed or inferred.",
@@ -1132,9 +1132,9 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",
     },
     close: {
-      heading: "Possibility, not a promise.",
+      heading: "Possibility, not a promise",
       body: [
-        "Whether today was rehearsed, read, kept private, or left open, no real-world action was required, and none is required now.",
+        "Whether you rehearsed a response, read the practice, kept your response private, or left everything open, no real-world action was required, and none is required now.",
         "A private rehearsal may make one option feel more familiar, may show that it needs revising or needs support, or may leave it unavailable for now. It does not guarantee access under pressure, and it does not make a situation safe.",
         "Day 10 gathers what may be worth keeping, what remains unfinished, and what support or next step, if any, fits your actual life.",
       ],

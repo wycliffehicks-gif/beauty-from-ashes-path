@@ -402,7 +402,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "You are not sure what happens inside. That uncertainty can simply remain, and no hidden meaning will be assigned to it.",
             private:
-              "You chose to keep this private today. Your choice is saved on this device, and no tone, cause, purpose or history will be inferred from it.",
+              "You chose to keep this private today. Its content is not known or interpreted here, and no tone, cause, purpose or history will be inferred from it.",
           },
           unanswered:
             "You continued without naming an inner response. No tone, cause, purpose or history will be assigned.",
@@ -690,7 +690,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             other: "Something else that matters to you is a complete answer. It does not have to fit a listed category to be real.",
             unclear: "Not being sure what matters, or where to begin, is left as it is here. No direction will be guessed for you.",
             none: "Nothing feeling available or safe today is left intact. No hidden meaning is read into it, and it is not treated as failure.",
-            private: "The direction stays with you. This structured choice is saved on this device so you can return to today; nothing about which direction you hold is recorded or inferred.",
+            private: "The direction stays with you. Nothing about which direction you hold is recorded or inferred here.",
           },
           unanswered:
             "You continued without making a selection, and nothing will be chosen on your behalf. Today's screens still hold without one.",
@@ -949,7 +949,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             none:
               "That no different response feels available today was selected, and that absence is left intact. No explanation or pressure is added.",
             private:
-              "A private choice was selected. The structured choice is saved on this device; what it refers to stays with you and is not collected here.",
+              "A private choice was selected. What it refers to stays with you and is not collected here.",
           },
           unanswered:
             "No response was selected here. The shared practice ahead does not depend on a choice and may simply be read; nothing will be chosen or inferred on your behalf.",
@@ -1274,7 +1274,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "You noted that you are not sure what, if anything, you want to carry forward. Uncertainty stays uncertainty here, with no hidden meaning read into it.",
             private:
-              "You chose to keep this private. That choice is saved on this device, and what you held privately remains yours.",
+              "You chose to keep this private. What you held privately remains yours, and its content is not known or interpreted here.",
           },
           unanswered:
             "You continued without selecting a thread. Nothing will be chosen, interpreted, or summarised on your behalf.",
@@ -1469,7 +1469,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             unclear:
               "You noted that you are not sure what, if anything, you want to carry forward. That uncertainty stays uncertainty here, and nothing is read into it.",
             private:
-              "You chose to keep this private. That choice is saved on this device, and what was held privately remains yours—its content is not known or interpreted.",
+              "You chose to keep this private. What was held privately remains yours—its content is not known or interpreted here.",
           },
           unanswered:
             "You left the first question open. Nothing is being chosen or interpreted for you.",
@@ -1500,7 +1500,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             none:
               "You noted that nothing in particular feels unfinished today. That is left exactly as it is.",
             private:
-              "You kept this unfinished place private. That privacy choice is saved on this device, and its content is not known or interpreted.",
+              "You kept this unfinished place private. Its content is not known or interpreted here.",
           },
           unanswered:
             "You did not name an unfinished place. Nothing needs to be added.",
@@ -1531,7 +1531,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             none:
               "You noted that no next step feels right or needed today. That stays exactly as you left it.",
             private:
-              "You kept how you are leaving this journey private. That choice is saved on this device, and no private content is known or inferred.",
+              "You kept how you are leaving this journey private. No private content is known or inferred here.",
           },
           unanswered:
             "You did not choose a next step. The journey can end here without one.",

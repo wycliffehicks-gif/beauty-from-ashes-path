@@ -649,4 +649,19 @@ describe("Day 6 revision", () => {
       expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase);
     }
   });
+
+  it("does not manufacture a cost on none, unclear or unanswered paths", () => {
+    const practice = day6.practise.reflection.steps.join(" ");
+    expect(practice).not.toContain("something is taking more from me than I want");
+    expect(practice).toContain("If no clear cost came to mind, let that remain true");
+    expect(practice).toContain("without linking it to this response");
+    expect(day6.close.carryForward).toBe(
+      "I can stay honest about what is clear and unclear without condemning myself or ignoring what is still real.",
+    );
+    const noneIdx = cost.options.findIndex((o) => o.id === "none");
+    const built = buildReflection(day6, [`q.cost.${noneIdx}`]);
+    const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
+    expect(body).toContain("do not need to invent one");
+    expect(body).not.toContain("You named");
+  });
 });

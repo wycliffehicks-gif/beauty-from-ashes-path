@@ -148,7 +148,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         summary:
           "A focused practice for acknowledging one possible cost, respecting what is still true, and noticing what kind of support or safer alternative may be needed.",
         steps: [
-          "Orient outward first. Notice one neutral detail nearby, then bring to mind one possible cost or strain. If no clear cost came to mind, you may use the words 'something is taking more from me than I want' or simply keep reading.",
+          "Orient outward first. Notice one neutral detail nearby, then bring to mind one possible cost or strain. If no clear cost came to mind, let that remain true. You may hold a general strain without linking it to this response, or simply keep reading.",
           "Complete one sentence privately: 'One strain I notice is…' Keep it broad; no names, identifying details or proof are needed.",
           "Complete a second sentence if it fits: 'What is also true is…' This may name a benefit, responsibility, limit, ongoing danger or difficult circumstance. 'I do not know' is a complete answer.",
           "Ask three different questions: What is within my influence? What would require support, accommodation, resources, safer conditions or change around me? What is not safe or possible to change now?",
@@ -308,7 +308,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "You did not have to blame yourself, dismiss what is still real or decide what to change. When you continue, Day 7 turns toward how you hold yourself while seeing what is true.",
       ],
       carryForward:
-        "I can notice the cost without condemning myself or ignoring what is still real.",
+        "I can stay honest about what is clear and unclear without condemning myself or ignoring what is still real.",
     },
   },
 

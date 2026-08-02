@@ -54,6 +54,13 @@ and new IDs appended only.
   the existing global safety guard forbidding directive “you should” phrasing —
   “what you should change” → “what to change”, and “what you should do” →
   “what to do”. Meaning unchanged.
+- **Final branch-consistency clarification (same day)**: the nonreligious
+  reflection practice Step 1 no longer supplies substitute wording that would
+  manufacture a cost when none was named, so `none`, `unclear`, `private` and
+  fully unanswered paths may simply let the absence remain true or hold a
+  general strain without linking it to this response; the carry-forward is now
+  branch-neutral — “I can stay honest about what is clear and unclear without
+  condemning myself or ignoring what is still real.”
 - **Unchanged known shared issues** (out of scope, not fixed): reflection
   reveal/bypass and saved-response restoration, positional answer storage
   migration, duplicate “Show me how” accessible labels, inactive spiritual

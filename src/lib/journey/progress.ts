@@ -11,12 +11,20 @@
 //    resume the screen they were on.
 
 import { useCallback, useEffect, useState } from "react";
+import { migrateAnswersToStableIds } from "./answer-migration";
 
 export const JOURNEY_STORAGE_KEY = "bfa.journey.v1";
-export const JOURNEY_STORE_VERSION = 1;
+/** v2 stores each option's stable id instead of its position. */
+export const JOURNEY_STORE_VERSION = 2;
 
-/** Legacy low-sensitivity store migrated from (visited days only). */
+/** Legacy low-sensitivity preference store (visited days only). */
 const LEGACY_PREFS_KEY = "bfa.v1";
+
+/** Every local/session key this app owns, for a complete, scoped clear. */
+export const APP_OWNED_LOCAL_KEYS = [JOURNEY_STORAGE_KEY, LEGACY_PREFS_KEY] as const;
+export const APP_OWNED_SESSION_KEYS = ["bfa_splash_shown_v1"] as const;
+export const APP_OWNED_KEY_PREFIXES = ["bfa.session.", "bfa."] as const;
+
 
 const MAX_ANSWER_ID_LENGTH = 64;
 const MAX_ANSWERS_PER_DAY = 40;

@@ -198,10 +198,20 @@ export function normalizeProgress(raw: unknown): JourneyProgress {
  * Derive a conservative trusted high-water screen for a store written before
  * `reached` existed, using only a validated same-day locator.
  *
- * Rules: a Reflection locator is trusted only when a saved reflection for that
- * day supports it; an uncompleted Close locator is capped below Close so it can
- * never become trusted; nothing here ever infers completion, and an existing
- * higher `reached` value is never lowered.
+ * Every one of these must hold or nothing is conferred:
+ *  - the locator names a real First Journey day;
+ *  - its index is inside that day's real screen list;
+ *  - its step EXACTLY equals the canonical screen key at that index.
+ *
+ * Then, conservatively:
+ *  - a Reflection locator confers Reflection only when a genuine saved
+ *    reflection for that day exists; otherwise it is capped strictly below it;
+ *  - an uncompleted Close locator may confer Reflection only when a genuine
+ *    saved reflection exists; otherwise it is capped strictly below Reflection;
+ *  - a completed, exactly valid Close may remain trusted.
+ *
+ * Nothing here ever infers completion, and an existing higher `reached` value is
+ * never lowered.
  */
 export function deriveReachedFromLocator(p: JourneyProgress): Record<string, number> {
   const loc = p.locator;
@@ -209,17 +219,15 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
   const idx = loc.index;
   if (typeof idx !== "number" || !Number.isInteger(idx) || idx <= 0) return p.reached;
 
-  // The locator must describe a real First Journey day, a real index inside
-  // that day's actual screen list, and the exact canonical key at that index.
   const dayMatch = /^day-(\d{2})$/.exec(loc.dayId);
   if (!dayMatch) return p.reached;
   const day = getFirstJourneyDay(Number(dayMatch[1]));
   if (!day) return p.reached;
   const keys = screensFor(day).map(screenKey);
-  // A legacy store's step label may not line up with today's screen order, so
-  // only the index is validated against the day's real screen list. Reflection
-  // and Close are still treated conservatively by step below.
   if (idx >= keys.length) return p.reached;
+  // The saved step must be exactly the canonical key at that index. A stale or
+  // crafted mismatch confers nothing at all.
+  if (loc.step !== keys[idx]) return p.reached;
 
   const closeIdx = keys.length - 1;
   const reflectionIdx = keys.indexOf("reflection");
@@ -229,9 +237,12 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
 
   let derived = idx;
   if (loc.step === "close") {
-    // An unfinished Close locator never makes Close itself trusted, and never
-    // implies completion; the reflection screen before it stays reachable.
-    derived = completed ? closeIdx : reflectionIdx;
+    // An unfinished Close never makes Close itself trusted and never implies
+    // completion. It may only reach back to Reflection when a genuine saved
+    // reflection supports it; otherwise it stays strictly below Reflection.
+    if (completed) derived = closeIdx;
+    else if (reflectionIdx < 0) derived = 0;
+    else derived = hasReflection ? reflectionIdx : reflectionIdx - 1;
   } else if (loc.step === "reflection") {
     derived = hasReflection ? idx : idx - 1;
   }
@@ -240,6 +251,7 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
   if (derived <= existing || derived <= 0) return p.reached;
   return { ...p.reached, [loc.dayId]: Math.min(derived, 64) };
 }
+
 
 /**
  * One-time store upgrade. Positional answer tokens become stable option ids
@@ -424,15 +436,38 @@ function appOwnedKeys(store: {
 export function clearJourney() {
   if (typeof window === "undefined") return;
 
-  const removeAll = (store: Storage | undefined, extra: readonly string[]) => {
-    if (!store) return;
-    let discovered: string[] = [];
+  const discover = (store: Storage | undefined): string[] => {
+    if (!store) return [];
     try {
-      discovered = appOwnedKeys(store);
+      return appOwnedKeys(store);
     } catch {
       /* enumeration may throw in a locked-down browser */
+      return [];
     }
-    const keys = new Set<string>([...extra, ...discovered]);
+  };
+
+  // localStorage removals go through removeLocal, so a removal the browser
+  // refuses is tombstoned and stale persistent data can never resurrect.
+  const localKeys = new Set<string>([
+    ...APP_OWNED_LOCAL_KEYS,
+    ...APP_OWNED_SESSION_KEYS,
+    ...(() => {
+      try {
+        return discover(window.localStorage);
+      } catch {
+        return [];
+      }
+    })(),
+  ]);
+  for (const k of localKeys) removeLocal(k);
+
+  try {
+    const store = window.sessionStorage;
+    const keys = new Set<string>([
+      ...APP_OWNED_SESSION_KEYS,
+      ...APP_OWNED_LOCAL_KEYS,
+      ...discover(store),
+    ]);
     for (const k of keys) {
       try {
         store.removeItem(k);
@@ -440,21 +475,10 @@ export function clearJourney() {
         /* ignore individual failures */
       }
     }
-  };
-
-  // Also drop the in-memory fallback copies of app-owned keys.
-  for (const k of APP_OWNED_LOCAL_KEYS) removeLocal(k);
-
-  try {
-    removeAll(window.localStorage, [...APP_OWNED_LOCAL_KEYS, ...APP_OWNED_SESSION_KEYS]);
   } catch {
     /* ignore */
   }
-  try {
-    removeAll(window.sessionStorage, [...APP_OWNED_SESSION_KEYS, ...APP_OWNED_LOCAL_KEYS]);
-  } catch {
-    /* ignore */
-  }
+
 
   try {
     window.dispatchEvent(new CustomEvent(JOURNEY_CHANGE_EVENT));

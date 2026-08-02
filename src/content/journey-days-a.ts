@@ -68,7 +68,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             tender:
               "You arrived feeling tender or close to tears. You do not have to explain, deepen, or move away from that feeling.",
             steady:
-              "Steadier days are good days to look at something honestly, while there is a little room to do it.",
+              "You arrived feeling steadier than usual. That can simply be noticed, without deciding what it means or what it makes possible.",
             unsure:
               "Not being able to tell is an honest answer, and a common one. You can stay near the question without solving it.",
           },
@@ -615,7 +615,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "Let the sentence rest there for now. You do not need to keep repeating it or make it disappear.",
         ],
         notRequired:
-          "The goal is not breakthrough. The goal is a little more clarity. Allowing a feeling or grief to be acknowledged in a tolerable amount may itself be meaningful; it does not have to become insight, relief, or action. You may keep the sentence private, write it outside the app, share it with a safe person, stop at any point, turn your attention to something ordinary around you, or seek support. No further disclosure is required.",
+          "The goal is not breakthrough or a particular outcome. Making room to recognize or express a feeling—or to mourn some grief in a tolerable amount—may itself be meaningful; it does not have to become clarity, insight, relief, or action. You may keep the sentence private, write it outside the app, share it with a safe person, stop at any point, turn your attention to something ordinary around you, or seek support. No further disclosure is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest lament",

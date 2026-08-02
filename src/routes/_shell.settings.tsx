@@ -2,6 +2,7 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { usePrefs, resetAll } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
+import { useStorageStatus } from "@/lib/storage-status";
 import {
   ABOUT_BEAUTY_FROM_ASHES,
   ABOUT_RESURGENCE,
@@ -39,6 +40,8 @@ function SettingsPage() {
   const [prefs, update] = usePrefs();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
+  const { persistent, hydrated: storageHydrated } = useStorageStatus();
+  const volatileStorage = storageHydrated && !persistent;
 
   return (
     <section className="space-y-6 pb-4">
@@ -136,10 +139,10 @@ function SettingsPage() {
         className="rounded-xl border border-border bg-card p-5"
       >
         <h2 className="font-serif text-lg text-foreground">{sectionTitle("clear-or-restart")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Everything this app saves stays on this device and browser only: your saved place, the
-          choices you selected, your reflections, your finished days, your preferences and your
-          recorded agreement. Clearing removes all of it and returns you to the opening.
+        <p className="mt-2 text-sm text-muted-foreground" data-testid="settings-storage-note">
+          {volatileStorage
+            ? "Saving is unavailable in this browser right now, so what this app holds — your place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement — is available in this tab only, and may be lost when the tab closes or reloads. Clearing removes all of it and returns you to the opening."
+            : "Everything this app saves stays in this browser, on this device only: your saved place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement. Clearing removes all of it and returns you to the opening."}
         </p>
 
         {!confirming ? (

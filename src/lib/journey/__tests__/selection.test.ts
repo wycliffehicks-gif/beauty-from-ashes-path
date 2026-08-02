@@ -831,7 +831,7 @@ describe("Day 7 revision", () => {
     const unclearIdx = need.options.findIndex((o) => o.id === "unsure");
     const built = buildReflection(day7, [`q.tone.${privateIdx}`, `q.need.${unclearIdx}`]);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(body).toContain("saved on this device");
+    expect(body).toContain("not known or interpreted here");
     expect(body).toContain("no underlying need will be guessed at");
     expect(body).not.toContain("nothing was recorded");
 
@@ -1123,7 +1123,7 @@ describe("Day 8 revision", () => {
     expect(byOption["person"]).toContain("No contact and no disclosure are required");
     expect(byOption["god"]).not.toContain("in whatever form");
     expect(byOption["god"]).toContain("does not assume prayer");
-    expect(byOption["private"]).toContain("saved on this device");
+    expect(byOption["private"]).toContain("is recorded or inferred here");
     expect(byOption["none"]).toContain("left intact");
     expect(byOption["unclear"]).toContain("No direction will be guessed for you");
     expect(route.echo!.closing).not.toContain("Whatever you chose");
@@ -1223,9 +1223,9 @@ describe("Day 8 revision", () => {
   it("invents nothing on the fully skipped reflection path", () => {
     const built = buildReflection(day8, undefined);
     const text = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(text).toContain("No thread was selected, and none will be assigned");
-    expect(text).toContain("No amount was selected");
-    expect(text).toContain("No step was selected");
+    expect(text).toContain("You left the thread unnamed, and none will be assigned");
+    expect(text).toContain("You left the amount unnamed");
+    expect(text).toContain("You left the step unnamed");
     for (const phrase of [
       "You chose",
       "you learned",
@@ -1243,9 +1243,9 @@ describe("Day 8 revision", () => {
     const text = buildReflection(day8, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("One person who may be safe enough was selected");
-    expect(text).toContain("One small outward action, if safe and realistic");
-    expect(text).toContain("Drafting one brief message to someone safe enough");
+    expect(text).toContain("You named one person who may be safe enough");
+    expect(text).toContain("one small outward action, if safe and realistic");
+    expect(text).toContain("drafting one brief message to someone safe enough");
     expect(text).not.toContain("Creativity, beauty, learning or nature was selected");
     expect(text).not.toContain("A community, culture, tradition or place of belonging was selected");
     expect(text).not.toContain("A few private minutes, or one small moment, was selected");
@@ -1271,10 +1271,10 @@ describe("Day 8 revision", () => {
     const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(priv).toContain("A private direction was selected");
-    expect(priv).toContain("saved on this device");
-    expect(priv).toContain("A private amount was selected");
-    expect(priv).toContain("A private step was selected");
+    expect(priv).toContain("You kept the direction private");
+    expect(priv).toContain("Its content is not known or interpreted here");
+    expect(priv).toContain("You kept the amount private");
+    expect(priv).toContain("You kept the step private");
     expect(priv).not.toContain("nothing was recorded");
   });
 
@@ -1546,7 +1546,7 @@ describe("Day 9 revision", () => {
     expect(byOption["support"]).toContain("No person, disclosure, or request is identified");
     expect(byOption["lament"]).toContain("No history, cause, or required emotional release");
     expect(byOption["loosen"]).toContain("No old pattern, reason, or outcome is inferred");
-    expect(byOption["private"]).toContain("saved on this device");
+    expect(byOption["private"]).toContain("What it refers to stays with you");
     expect(byOption["unclear"]).toContain("left as it is");
     expect(byOption["none"]).toContain("left intact");
     expect(practice.echo!.heading).toBe("Room for what is clear — and what is not");
@@ -1667,9 +1667,9 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("No response was selected here, and none will be assigned");
-    expect(text).toContain("No setting was selected here, and none will be assigned");
-    expect(text).toContain("No step was selected here, and none will be added");
+    expect(text).toContain("You left this open, and no response will be assigned");
+    expect(text).toContain("You left the setting open, and none will be assigned");
+    expect(text).toContain("You left the step open, and none will be added");
     for (const phrase of [
       "You chose",
       "You located",
@@ -1687,9 +1687,9 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.practice.2", "q.where.1", "step.4"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("Rehearsing a limit or a delay was selected");
-    expect(text).toContain("Work was selected as a setting that came to mind");
-    expect(text).toContain("Identifying support you might want before any real-world action");
+    expect(text).toContain("You considered rehearsing a limit or a delay");
+    expect(text).toContain("You named work as a setting that came to mind");
+    expect(text).toContain("identifying support you might want before any real-world action");
     expect(text).not.toContain("Rehearsing asking for one kind of support was selected");
     expect(text).not.toContain("Putting private words");
     expect(text).not.toContain("Home was selected");
@@ -1708,16 +1708,16 @@ describe("Day 9 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(none).toContain("That absence is left intact");
-    expect(none).toContain("No particular setting was selected");
+    expect(none).toContain("You left the setting general");
     expect(none).toContain("none will be pressed or inferred");
 
     const priv = buildReflection(day9, ["q.practice.9", "q.where.6", "step.8"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(priv).toContain("A private choice was selected");
-    expect(priv).toContain("Keeping the setting unspecified was selected");
-    expect(priv).toContain("A private step was selected");
-    expect(priv.match(/saved on this device/g)!.length).toBe(3);
+    expect(priv).toContain("You kept this private");
+    expect(priv).toContain("You left the setting unspecified");
+    expect(priv).toContain("You kept the step private");
+    expect(priv.match(/not known or interpreted here/g)!.length).toBe(3);
     expect(priv).not.toContain("nothing was recorded");
   });
 
@@ -1725,8 +1725,8 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.where.0", "q.where.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("Home was selected as a setting that came to mind");
-    expect(text).toContain("Keeping the setting unspecified was selected");
+    expect(text).toContain("You named home as a setting that came to mind");
+    expect(text).toContain("You left the setting unspecified");
     expect(text).not.toContain("No setting was selected");
     expect(text).not.toContain("no named setting");
   });
@@ -1821,10 +1821,10 @@ describe("Day 9 revision", () => {
 
     const next = day9.reflection.sections.find((s) => s.id === "next")!;
     expect(next.lines!["again"]).toBe(
-      "Reading or privately trying the opening of one possible response was selected. It remains a possibility, and nothing outward follows from it.",
+      "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
     );
     expect(next.lines!["prepare"]).toBe(
-      "Leaving the exercise here was selected. Nothing more is implied or required by this step.",
+      "You chose to leave the exercise here. Nothing more is implied or required by this step.",
     );
 
     const text = allText9();
@@ -2091,15 +2091,15 @@ describe("Day 10 revision", () => {
       expect(line.length, `short echo: ${id}`).toBeGreaterThan(60);
     }
     expect(echo.byOption["protective"]).toContain(
-      "This choice does not tell us where it came from",
+      "Nothing here tells us where it came from",
     );
-    expect(echo.byOption["named"]).toContain("does not tell us that anything has become");
+    expect(echo.byOption["named"]).toContain("that anything has become");
     expect(echo.byOption["twopulls"]).toContain("any particular conflict is alive in you");
     expect(echo.byOption["cost"]).toContain("where blame belongs");
     expect(echo.byOption["harsh"]).toContain("accountability remains possible");
-    expect(echo.byOption["small"]).toContain("does not tell us that any step has happened");
+    expect(echo.byOption["small"]).toContain("that any step has happened");
     expect(echo.byOption["notalone"]).toContain(
-      "does not tell us what support exists, who is safe, or what you can reach",
+      "what support exists, who is safe, or what you can reach",
     );
     expect(echo.byOption["nothing"]).toContain(
       "An idea may resonate without becoming a finished outcome",
@@ -2108,7 +2108,7 @@ describe("Day 10 revision", () => {
       "No particular thread feels worth carrying",
     );
     expect(echo.byOption["unclear"]).toContain("Uncertainty stays uncertainty");
-    expect(echo.byOption["private"]).toContain("saved on this device");
+    expect(echo.byOption["private"]).toContain("What you held privately remains yours");
     expect(echo.byOption["private"]).toContain("remains yours");
     expect(echo.byOption["private"]).not.toContain("nothing was recorded");
     expect(echo.unanswered).toBe(
@@ -2183,7 +2183,7 @@ describe("Day 10 revision", () => {
       expect(section.unanswered.length).toBeGreaterThan(60);
     }
     expect(day10.reflection.closing).toBe(
-      "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Your worth is not conditional on resolving anything, and unresolved difficulty does not cancel it. Being heard and accompanied, even when nothing has changed, may itself be meaningful.",
+      "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",
     );
   });
 
@@ -2244,7 +2244,7 @@ describe("Day 10 revision", () => {
     const text = buildReflection(day10, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("what was held privately remains yours");
+    expect(text).toContain("What was held privately remains yours");
     const allPrivate = buildReflection(day10, [
       answer("q.different", idx(different, "private")),
       answer("q.unfinished", idx(unfinished, "private")),
@@ -2252,9 +2252,9 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(allPrivate).toContain("what was held privately remains yours");
-    expect(allPrivate).toContain("That privacy choice is saved on this device");
-    expect(allPrivate).toContain("no private content is known or inferred");
+    expect(allPrivate).toContain("What was held privately remains yours");
+    expect(allPrivate).toContain("Its content is not known or interpreted here");
+    expect(allPrivate).toContain("private content is known or inferred");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");

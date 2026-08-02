@@ -111,8 +111,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap",
       },
+
     ],
 
   }),
@@ -146,9 +147,10 @@ function RootComponent() {
         <AgreementGate>
           <Outlet />
         </AgreementGate>
+        {/* Inside the splash underlay, so it is inert while splash covers the app. */}
+        <StorageNotice />
       </SplashGate>
-      <StorageNotice />
-
     </QueryClientProvider>
+
   );
 }

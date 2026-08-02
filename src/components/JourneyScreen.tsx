@@ -55,8 +55,9 @@ export function JourneyScreen({
             {label ?? ""}
           </p>
           <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
-            <MenuIcon />
+            <SettingsIcon />
           </Link>
+
         </header>
 
         {progress && progress.total > 1 && (
@@ -139,7 +140,8 @@ function HomeIcon() {
   );
 }
 
-function MenuIcon() {
+/** Conventional settings glyph: this control navigates to Settings, not a menu. */
+function SettingsIcon() {
   return (
     <svg
       width="20"
@@ -149,9 +151,12 @@ function MenuIcon() {
       stroke="currentColor"
       strokeWidth="1.6"
       strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M4 7h16M4 12h16M4 17h16" />
+      <circle cx="12" cy="12" r="3.1" />
+      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a1.5 1.5 0 1 1-2.12 2.12l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a1.5 1.5 0 1 1-3 0v-.11a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a1.5 1.5 0 1 1-2.12-2.12l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a1.5 1.5 0 1 1 0-3h.11a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a1.5 1.5 0 1 1 2.12-2.12l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a1.5 1.5 0 1 1 3 0v.11a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a1.5 1.5 0 1 1 2.12 2.12l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1.03H21a1.5 1.5 0 1 1 0 3h-.11a1.7 1.7 0 0 0-1.49 1.03z" />
     </svg>
   );
 }
+

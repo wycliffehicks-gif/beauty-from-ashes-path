@@ -5,7 +5,7 @@ import {
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** The router's own history position, for a truthful visible Back. */
 function useHistoryIndex(): number {
@@ -97,6 +97,20 @@ function Opening() {
 
 
 
+  // Deterministic post-acceptance transition. Home replaces the remaining entry
+  // only once this visit's pushed entries have actually collapsed back to the
+  // entry position — no timer, so Home can never land before the collapse and
+  // strand the person back in onboarding.
+  const [collapsing, setCollapsing] = useState(false);
+  useEffect(() => {
+    if (!collapsing) return;
+    const entry = entryHistoryIndex.current ?? historyIndex;
+    if (historyIndex <= entry) {
+      setCollapsing(false);
+      navigate({ to: "/", replace: true });
+    }
+  }, [collapsing, historyIndex, navigate]);
+
   const accept = () => {
     if (!canAdvance) return;
     update({
@@ -111,24 +125,14 @@ function Opening() {
     // Begin cannot reveal an earlier onboarding screen. Unrelated prior
     // site/browser history is never erased.
     const depth = historyIndex - (entryHistoryIndex.current ?? historyIndex);
-    const finish = () => navigate({ to: "/", replace: true });
     if (depth <= 0) {
-      finish();
+      navigate({ to: "/", replace: true });
       return;
     }
-    let done = false;
-    const settle = () => {
-      if (done) return;
-      done = true;
-      finish();
-    };
-    const unsub = router.history.subscribe(() => {
-      unsub();
-      settle();
-    });
-    if (typeof window !== "undefined") window.setTimeout(settle, 250);
+    setCollapsing(true);
     router.history.go(-depth);
   };
+
 
   return (
     <div className="journey-page">

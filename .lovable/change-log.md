@@ -1,5 +1,129 @@
 # Change log
 
+## 2026-08-02 — Bounded Day 9 clinical-content, psychospiritual, safety, accessibility, branch-accuracy and source-alignment revision
+
+Day 9 (“Practise a Different Response”) only. Days 1–8 and Day 10, routes,
+components, types, storage/resume/completion logic, the reflection engine, AI
+files, settings, shared mechanics, package files and `src/routeTree.gen.ts` are
+untouched. Still private and unpublished. Three files changed: the Day 9 object
+in `src/content/journey-days-b.ts`, a focused “Day 9 revision” block plus the two
+Day 8→Day 9 boundary literals in
+`src/lib/journey/__tests__/selection.test.ts`, and this entry.
+
+**Preserved identity, order and positional IDs.** day 9; title “Practise a
+Different Response”; motif `practise`; shape `standard`; question IDs `practice`
+and `where`; step ID `step`; nine-screen order arrive → understand → q.practice →
+e.practice → q.where → practise → step → reflection → close. Existing option IDs
+kept in place and order (practice: grounding, unsent, boundary, support, lament,
+prepare, loosen; where: home, work, family, friend, self, faith, private; step:
+again, sentence, use, ground, support, prepare). Labels reworded in place only.
+Appended: practice — unclear, none, private; where — other, unclear, none; step —
+unclear, none, private. `practice` and `step` remain single-select; `where`
+remains multi-select, with `private`, `unclear` and `none` now exclusive in both
+directions.
+
+**Central movement.** Privately try the opening moment of one small possible
+alternative to a familiar response, notice whether it seems usable, incomplete,
+unclear, unavailable, or unwise, and remain free to revise it, keep it private,
+discard it, seek support, or never use it. Rehearsal may make an option more
+familiar, clarify wording, or reveal what support or conditions would be needed;
+it does not guarantee access under pressure, prove readiness or progress, make an
+unsafe situation safe, or create an obligation to act.
+
+**Source alignment (Part 7 / 7.5A, contained).** Insight needs somewhere
+practical to land; what has been carried may be carried differently; courage and
+wisdom belong together. Repeated real-world implementation, higher-stakes
+exposure, communication training, actual difficult conversations, relationship
+decisions, habit tracking and longer-term integration remain reserved for later
+work. Day 10 keeps whole-journey integration and the carry-forward decision.
+
+**Arrive and settling.** New theme, descriptor (“A small private rehearsal ·
+about 12 minutes”) and lead. Two concise paragraphs list what a different
+response may be and state that it does not mean the familiar response was
+defective or that real-world use is required. Sit / hands-still / feet-flat /
+breath-noticing instructions replaced with any workable position, one optional
+neutral outward point of orientation through any available sense, explicit
+permission to leave body and breath attention alone, and reading-only/stopping.
+
+**Understand (“Listen”).** Branch-neutral heading “Rehearsal is a possibility,
+not a promise.” Defines a response and rehearsal in plain language, states what
+rehearsal can and cannot do, and names illness, disability, fatigue, dependence,
+caregiving, discrimination, coercion, power differences, limited resources and
+real consequences as genuine limits — preparation alone or no outward action can
+be the whole practice. The boundary note now defines a boundary as a limit,
+decision or action within one's own control, including delaying, declining,
+leaving only if safe, using an intermediary, requesting accommodation, and
+deciding what to take part in, with support and safety caveats. Two new
+point-of-need notes cover “no situation feels manageable” and uncertain
+safety/consequences, routing present danger to real-world help and Support &
+Safety.
+
+**Questions.** `practice` reworded around one coherent question with a
+permissive hint; every echo mirrors only the selection and states what is not
+established (no escalation, overdue limit, “needed saying for a while”, silence,
+support being harder, or realistic-change claims). `where` reframed
+branch-neutrally as which setting or settings, if any, came to mind, with all
+causal relational statements removed; work makes no estimate of power,
+consequences, accommodation needs or safety; faith assumes nothing about belief,
+practice, community or welcome; `other` content is not collected.
+
+**Practice screen.** Genuinely branch-neutral (it receives no answers): heading
+“Two ways to rehearse without committing to act.”, either/both/neither, and
+reading-only, stopping and leaving it unfinished all named as complete. The
+nonreligious path gives eight steps ending in reorientation, with no rigid
+5-4-3-2-1 sequence, no forced posture or bodily response, an explicit caution
+against using the most dangerous or overwhelming situation, and a conditions
+question that accepts “I do not know”. The Christian path parallels the same
+movement at equal depth, quotes Psalm 62:8 (WEB) in full, and treats the
+rehearsed response as a possibility rather than a vow, divine direction or proof
+of faith; prayer is stated not to replace real-world help or planning. Both
+`notRequired` texts rule out confrontation, disclosure, sending, contact,
+real-world test, emotional release, decision, outcome, particular body or breath
+response, and change, and allow stopping.
+
+**One Honest Step.** New prompt and hint; existing IDs reworded in place to stay
+private and non-scheduled; no “later this week”, “next time”, real-world use or
+contact. Appended unclear, none, private.
+
+**Personalized reflection.** Unconditional openings removed from all
+answer-driven sections; neutral titles (“The response — or what remained open”,
+“The setting — or what remained open”, “How today was completed — or left open”);
+a substantive literal line for every retained and appended ID; fully skipped,
+unclear, none and private paths leave absence, uncertainty and privacy intact;
+private wording accurately acknowledges a structured choice saved on this device
+without saying nothing was recorded; legacy `home` + `private` yields two
+individually accurate, noncontradictory lines. Closing: “A rehearsal is
+information, not a contract.”
+
+**Close.** Branch-neutral heading “Possibility, not a promise.”; claims no
+selection, rehearsal, action, success, readiness or progress; refers to Day 10
+directly and preserves its role. Carry-forward: “I can rehearse a possibility
+without promising to use it.”
+
+**Removed or guarded.** “New responses are practised long before they are
+performed”, “Under pressure, people do what they have practised”, “new response
+usually fails”, “Rehearsal changes that”, “more possible later”, “without
+risk”/“without having to risk anything”, feet flat / hands still / prescribed
+breath attention, the rigid five-senses sequence, “Tightening is expected”,
+“Usually the answer is … end the conversation and leave”, “Whatever you chose”,
+“Nothing is missed”, “You chose a practice”, “You located”, “Practising at all
+already changes”, “You rehearsed something new”, “Tomorrow”, the causal
+relational statements attached to home/work/family/friend/self/faith, “nothing
+was recorded”, and any forced calm, visualisation, touch, movement, emotional
+release, trust, forgiveness, reconciliation, contact, disclosure, unsafe-person
+directive or outcome promise.
+
+**Tests.** A “Day 9 revision” suite (15 cases) covers identity and the nine-screen
+sequence, select modes, exact positional arrays with append-only additions,
+`where` exclusivity in both directions via `toggleSelection`, complete echo
+mapping and branch-neutral unanswered/closing copy, branch-neutral equal-depth
+practice panels with the exact full Psalm 62:8 wording, absence of unconditional
+openings with a line per option, fully skipped/answered/unclear/none/private
+reflection paths, the legacy `home` + `private` combination, close claims, a
+guard list for posture, senses, mobility, forced breath, unsafe contact, causal,
+universal, time-dependent and outcome-promising phrases, and literal Day 8 and
+Day 10 boundary checks. Full suite: 387 tests passing.
+
 ## 2026-08-02 — Bounded Day 8 content, safety, branch-accuracy and source-alignment revision
 
 Day 8 (“Reconnect With What Matters”) only. Days 1–7 and 9–10, routes,

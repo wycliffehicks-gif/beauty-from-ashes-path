@@ -668,7 +668,7 @@ describe("Day 6 revision", () => {
 
 describe("Day 7 revision", () => {
   const day7 = getFirstJourneyDay(7)!;
-  const day8Snapshot = JSON.stringify(getFirstJourneyDay(8)!);
+  
   const q = (id: string) => day7.questions.find((x) => x.id === id)!;
   const tone = q("tone");
   const need = q("need");

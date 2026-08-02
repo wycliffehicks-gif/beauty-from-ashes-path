@@ -216,8 +216,10 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
   const day = getFirstJourneyDay(Number(dayMatch[1]));
   if (!day) return p.reached;
   const keys = screensFor(day).map(screenKey);
+  // A legacy store's step label may not line up with today's screen order, so
+  // only the index is validated against the day's real screen list. Reflection
+  // and Close are still treated conservatively by step below.
   if (idx >= keys.length) return p.reached;
-  if (keys[idx] !== loc.step) return p.reached;
 
   const closeIdx = keys.length - 1;
   const reflectionIdx = keys.indexOf("reflection");

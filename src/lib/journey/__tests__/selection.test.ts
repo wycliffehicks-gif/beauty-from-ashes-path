@@ -373,6 +373,9 @@ describe("Day 5 revision", () => {
     ]) {
       expect(echoText, `unexpected phrase: ${phrase}`).not.toContain(phrase);
     }
+    expect(echo.byOption["repair"]).toContain(
+      "does not say anything about whether the relationship still matters",
+    );
     expect(echo.closing).toContain("does not assume one exists");
   });
 
@@ -395,7 +398,6 @@ describe("Day 5 revision", () => {
       "part of you is reaching",
       "holding the line",
       "both pulls were listened to",
-      "the relationship still matters",
     ]) {
       expect(text, `unexpected phrase: ${phrase}`).not.toContain(phrase.toLowerCase());
     }

@@ -4,6 +4,8 @@
 
 import { useEffect, useState } from "react";
 
+import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+
 const STORAGE_KEY = "bfa.v1";
 
 export interface LegalAcceptance {
@@ -27,8 +29,10 @@ export interface Prefs {
  * is required. Bumped to 2026-08-02 because the Privacy Notice wording changed
  * materially, so a previously recorded agreement is asked for again. Founder
  * note: final wording pending Ontario lawyer review before public launch.
+ * Bumped to 2026-08-02.2 because Important Information changed materially
+ * (crisis actions and overwhelmed-state guidance).
  */
-export const LEGAL_BUNDLE_VERSION = "2026-08-02";
+export const LEGAL_BUNDLE_VERSION = "2026-08-02.2";
 
 /**
  * Spiritual reflection is opt-in: the opening says it is offered only if the
@@ -51,7 +55,7 @@ export function readPrefs(): Prefs {
 function read(): Prefs {
   if (typeof window === "undefined") return defaults;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = readLocal(STORAGE_KEY);
     if (!raw) return defaults;
     const parsed = JSON.parse(raw) as Partial<Prefs> & { favourites?: unknown };
     // Drop any legacy `favourites` field silently.
@@ -65,11 +69,13 @@ function read(): Prefs {
 
 function write(next: Prefs) {
   if (typeof window === "undefined") return;
+  // The in-memory fallback keeps this tab coherent when persistence fails, and
+  // the normal change notification is dispatched either way.
+  writeLocal(STORAGE_KEY, JSON.stringify(next));
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     window.dispatchEvent(new CustomEvent("bfa-prefs-change"));
   } catch {
-    /* storage may be blocked; that's fine */
+    /* ignore */
   }
 }
 
@@ -105,8 +111,13 @@ export function markDayVisited(day: number) {
   }
 }
 
+/** Idempotent and nonthrowing, even when removal itself throws. */
 export function resetAll() {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(STORAGE_KEY);
-  window.dispatchEvent(new CustomEvent("bfa-prefs-change"));
+  removeLocal(STORAGE_KEY);
+  try {
+    window.dispatchEvent(new CustomEvent("bfa-prefs-change"));
+  } catch {
+    /* ignore */
+  }
 }

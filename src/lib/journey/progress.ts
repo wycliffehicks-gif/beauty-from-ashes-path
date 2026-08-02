@@ -11,6 +11,11 @@
 //    resume the screen they were on.
 
 import { useCallback, useEffect, useState } from "react";
+
+import { getFirstJourneyDay } from "@/content/first-journey";
+import { screenKey, screensFor } from "@/content/journey-types";
+import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+
 import { migrateAnswersToStableIds } from "./answer-migration";
 
 export const JOURNEY_STORAGE_KEY = "bfa.journey.v1";
@@ -204,13 +209,33 @@ export function deriveReachedFromLocator(p: JourneyProgress): Record<string, num
   const idx = loc.index;
   if (typeof idx !== "number" || !Number.isInteger(idx) || idx <= 0) return p.reached;
 
-  let derived = Math.min(idx, 64);
-  if (loc.step === "close" && !p.completedDays.includes(loc.dayId)) derived -= 1;
-  else if (loc.step === "reflection" && !p.reflections[loc.dayId]) derived -= 1;
+  // The locator must describe a real First Journey day, a real index inside
+  // that day's actual screen list, and the exact canonical key at that index.
+  const dayMatch = /^day-(\d{2})$/.exec(loc.dayId);
+  if (!dayMatch) return p.reached;
+  const day = getFirstJourneyDay(Number(dayMatch[1]));
+  if (!day) return p.reached;
+  const keys = screensFor(day).map(screenKey);
+  if (idx >= keys.length) return p.reached;
+  if (keys[idx] !== loc.step) return p.reached;
+
+  const closeIdx = keys.length - 1;
+  const reflectionIdx = keys.indexOf("reflection");
+  const completed = p.completedDays.includes(loc.dayId);
+  const saved = p.reflections[loc.dayId];
+  const hasReflection = typeof saved === "string" && saved.length > 0;
+
+  let derived = idx;
+  if (loc.step === "close") {
+    // An unfinished Close locator proves nothing about the reflection screen.
+    derived = completed ? closeIdx : hasReflection ? reflectionIdx : reflectionIdx - 1;
+  } else if (loc.step === "reflection") {
+    derived = hasReflection ? idx : idx - 1;
+  }
 
   const existing = p.reached[loc.dayId] ?? 0;
   if (derived <= existing || derived <= 0) return p.reached;
-  return { ...p.reached, [loc.dayId]: derived };
+  return { ...p.reached, [loc.dayId]: Math.min(derived, 64) };
 }
 
 /**
@@ -251,17 +276,13 @@ export const JOURNEY_CHANGE_EVENT = "bfa-journey-change";
 export function readProgress(): JourneyProgress {
   if (typeof window === "undefined") return emptyProgress;
   try {
-    const raw = window.localStorage.getItem(JOURNEY_STORAGE_KEY);
+    const raw = readLocal(JOURNEY_STORAGE_KEY);
     const { progress, changed } = upgradeStoredProgress(raw ? JSON.parse(raw) : null);
     if (changed) {
-      try {
-        window.localStorage.setItem(
-          JOURNEY_STORAGE_KEY,
-          JSON.stringify({ ...progress, updatedAt: new Date().toISOString() }),
-        );
-      } catch {
-        /* storage may be unavailable; the migrated view still applies */
-      }
+      writeLocal(
+        JOURNEY_STORAGE_KEY,
+        JSON.stringify({ ...progress, updatedAt: new Date().toISOString() }),
+      );
     }
     return progress;
   } catch {
@@ -272,14 +293,13 @@ export function readProgress(): JourneyProgress {
 
 function write(next: JourneyProgress) {
   if (typeof window === "undefined") return;
+  // The in-memory fallback keeps this tab working when persistence fails; the
+  // change notification is dispatched either way so the UI stays coherent.
+  writeLocal(JOURNEY_STORAGE_KEY, JSON.stringify({ ...next, updatedAt: new Date().toISOString() }));
   try {
-    window.localStorage.setItem(
-      JOURNEY_STORAGE_KEY,
-      JSON.stringify({ ...next, updatedAt: new Date().toISOString() }),
-    );
     window.dispatchEvent(new CustomEvent(JOURNEY_CHANGE_EVENT));
   } catch {
-    /* storage may be unavailable; the journey still works for this visit */
+    /* ignore */
   }
 }
 
@@ -403,7 +423,13 @@ export function clearJourney() {
 
   const removeAll = (store: Storage | undefined, extra: readonly string[]) => {
     if (!store) return;
-    const keys = new Set<string>([...extra, ...appOwnedKeys(store)]);
+    let discovered: string[] = [];
+    try {
+      discovered = appOwnedKeys(store);
+    } catch {
+      /* enumeration may throw in a locked-down browser */
+    }
+    const keys = new Set<string>([...extra, ...discovered]);
     for (const k of keys) {
       try {
         store.removeItem(k);
@@ -412,6 +438,9 @@ export function clearJourney() {
       }
     }
   };
+
+  // Also drop the in-memory fallback copies of app-owned keys.
+  for (const k of APP_OWNED_LOCAL_KEYS) removeLocal(k);
 
   try {
     removeAll(window.localStorage, [...APP_OWNED_LOCAL_KEYS, ...APP_OWNED_SESSION_KEYS]);

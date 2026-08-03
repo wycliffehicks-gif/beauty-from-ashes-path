@@ -1227,9 +1227,9 @@ describe("Day 8 revision", () => {
   it("invents nothing on the fully skipped reflection path", () => {
     const built = buildReflection(day8, undefined);
     const text = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(text).toContain("You left the thread unnamed, and none will be assigned");
-    expect(text).toContain("You left the amount unnamed");
-    expect(text).toContain("You left the step unnamed");
+    expect(text).toContain("You left the thread unnamed");
+    expect(text).toContain("You left the amount open");
+    expect(text).toContain("You left the step open");
     for (const phrase of [
       "You chose",
       "you learned",

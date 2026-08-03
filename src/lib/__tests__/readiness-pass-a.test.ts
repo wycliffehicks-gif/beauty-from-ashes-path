@@ -107,28 +107,58 @@ describe("daily closing supports containment", () => {
   });
 });
 
-describe("in-day screen transition tracking", () => {
-  it("never focuses the first screen of a visit, then focuses each change", async () => {
-    const { recordScreenTransition, markScreenLeft, __resetScreenFocusTracking } =
-      await import("@/components/JourneyScreen");
-    __resetScreenFocusTracking();
-    // Ordinary document load: nothing to announce, so focus is left alone.
-    expect(recordScreenTransition("1:practise")).toBe(false);
-    // Same screen re-rendering is not a change either.
-    expect(recordScreenTransition("1:practise")).toBe(false);
-    // Practise -> Reflection is tracked even though Reflection focuses itself.
-    expect(recordScreenTransition("1:reflection")).toBe(true);
-    // Browser Back from Reflection to Practise is now seen as a real change.
-    expect(recordScreenTransition("1:practise")).toBe(true);
-    // Leaving for Settings/Home and returning to the same screen announces it.
-    markScreenLeft();
-    expect(recordScreenTransition("1:practise")).toBe(true);
-    __resetScreenFocusTracking();
-    // Leaving before anything was shown must not manufacture a transition.
-    markScreenLeft();
+describe("route-aware in-day screen transition tracking", () => {
+  async function tracking() {
+    const mod = await import("@/components/JourneyScreen");
+    mod.__resetScreenFocusTracking();
+    return mod;
+  }
+
+  it("never focuses on a direct document load of a day", async () => {
+    const { recordRouteTransition, recordScreenTransition } = await tracking();
+    recordRouteTransition("/day/1");
     expect(recordScreenTransition("1:arrive")).toBe(false);
   });
+
+  it("announces the first Home -> Day client navigation", async () => {
+    const { recordRouteTransition, recordScreenTransition } = await tracking();
+    recordRouteTransition("/");
+    recordRouteTransition("/day/1");
+    expect(recordScreenTransition("1:arrive")).toBe(true);
+  });
+
+  it("is idempotent under StrictMode-style repeated recording", async () => {
+    const { recordRouteTransition, recordScreenTransition } = await tracking();
+    recordRouteTransition("/");
+    recordRouteTransition("/");
+    recordRouteTransition("/day/1");
+    recordRouteTransition("/day/1");
+    expect(recordScreenTransition("1:arrive")).toBe(true);
+    // Second setup of the same effect must not focus a second time.
+    expect(recordScreenTransition("1:arrive")).toBe(false);
+    expect(recordScreenTransition("1:arrive")).toBe(false);
+  });
+
+  it("tracks Reflection then browser Back to Practise", async () => {
+    const { recordRouteTransition, recordScreenTransition } = await tracking();
+    recordRouteTransition("/");
+    recordRouteTransition("/day/1");
+    expect(recordScreenTransition("1:practise")).toBe(true);
+    // Reflection focuses its own heading, but still updates tracking.
+    expect(recordScreenTransition("1:reflection")).toBe(true);
+    expect(recordScreenTransition("1:practise")).toBe(true);
+  });
+
+  it("announces returning from Settings to the very same day screen", async () => {
+    const { recordRouteTransition, recordScreenTransition } = await tracking();
+    recordRouteTransition("/day/1");
+    expect(recordScreenTransition("1:practise")).toBe(false);
+    recordRouteTransition("/settings");
+    recordRouteTransition("/day/1");
+    expect(recordScreenTransition("1:practise")).toBe(true);
+  });
 });
+
 
 describe("daily close offers the next day as clearly optional", () => {
   it("labels the quiet secondary action without urging continuation", async () => {

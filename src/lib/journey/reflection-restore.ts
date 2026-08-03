@@ -9,12 +9,67 @@
 // is replaced. Nothing here calls a network or a model.
 
 import type { JourneyDayContent } from "@/content/journey-types";
-import type { BuiltReflection } from "./reflection-engine";
+import { buildReflection, reflectionToText, type BuiltReflection } from "./reflection-engine";
 
 /** A stable, order-independent fingerprint of a day's coded selections. */
 export function answersSnapshot(answerIds: readonly string[] | undefined): string {
   const ids = Array.from(new Set(answerIds ?? [])).sort();
   return ids.length === 0 ? "none" : ids.join("|");
+}
+
+/**
+ * Snapshot format marker. Bumping this alone invalidates every saved
+ * reflection, because a saved snapshot must match character for character.
+ */
+export const REFLECTION_SNAPSHOT_VERSION = "r2";
+
+/** Small deterministic non-cryptographic hash (FNV-1a, 32-bit, hex). */
+function hashText(text: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, "0");
+}
+
+/**
+ * A fingerprint of the founder-approved reflection copy for one day: its
+ * intro, every section (id, title, opening, source question, each option line
+ * and the unanswered line) and its closing. Only approved day content goes in
+ * — never a label the person chose, never anything typed, never notes. A future
+ * edit to any of that copy changes this value, so a reflection saved under the
+ * older wording can no longer be restored.
+ */
+export function reflectionContentFingerprint(day: JourneyDayContent): string {
+  const r = day.reflection;
+  const parts: string[] = [`day:${day.day}`, `intro:${r.intro}`];
+  for (const s of r.sections) {
+    parts.push(`s:${s.id}`, `t:${s.title}`, `o:${s.opening ?? ""}`, `f:${s.from ?? ""}`);
+    const lines = s.lines ?? {};
+    for (const key of Object.keys(lines).sort()) {
+      parts.push(`l:${key}=${lines[key]}`);
+    }
+    parts.push(`u:${s.unanswered}`);
+  }
+  parts.push(`c:${r.closing}`);
+  return hashText(parts.join("\u0001"));
+}
+
+/**
+ * The full proof stored beside a saved reflection: snapshot format, the
+ * approved reflection content for that day, and the day's coded selections.
+ * Storage-safe characters only.
+ */
+export function reflectionSnapshot(
+  day: JourneyDayContent,
+  answerIds: readonly string[] | undefined,
+): string {
+  return [
+    REFLECTION_SNAPSHOT_VERSION,
+    reflectionContentFingerprint(day),
+    answersSnapshot(answerIds),
+  ].join(":");
 }
 
 /**
@@ -64,4 +119,33 @@ export function restoreReflection(
   } catch {
     return null;
   }
+}
+
+/**
+ * Decide, deterministically and locally, what a person sees on the reflection
+ * screen: the exact saved words when the full proof matches, otherwise a fresh
+ * build from the current founder-approved content. `replaceSaved` tells the
+ * caller that the stored copy must be overwritten, so pre-fix wording can never
+ * be rendered or announced again.
+ */
+export function resolveReflection(
+  day: JourneyDayContent,
+  answers: readonly string[] | undefined,
+  saved: { text?: string; snapshot?: string },
+): { built: BuiltReflection; text: string; snapshot: string; restored: boolean; replaceSaved: boolean } {
+  const snapshot = reflectionSnapshot(day, answers);
+  if (saved.snapshot && saved.snapshot === snapshot) {
+    const restored = restoreReflection(day, saved.text);
+    if (restored) {
+      return {
+        built: restored,
+        text: saved.text ?? "",
+        snapshot,
+        restored: true,
+        replaceSaved: false,
+      };
+    }
+  }
+  const built = buildReflection(day, Array.from(answers ?? []));
+  return { built, text: reflectionToText(built), snapshot, restored: false, replaceSaved: true };
 }

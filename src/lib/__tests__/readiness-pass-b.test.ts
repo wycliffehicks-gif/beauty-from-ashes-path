@@ -78,13 +78,13 @@ describe("Pass B — exact clinical safeguards", () => {
   });
 
   it("Day 9 does not decide whether a rehearsed limit is safe or available", () => {
-    expect(line(9, "next", "boundary")).toContain(
+    expect(line(9, "hearing", "boundary")).toContain(
       "This reflection cannot decide whether using it would be safe or available in real life, and no use is required.",
     );
   });
 
   it("Day 10 does not decide whether contact or sharing would be safe", () => {
-    expect(line(10, "underneath", "relationship")).toContain(
+    expect(line(10, "care", "relationship")).toContain(
       "this reflection cannot decide whether contact would be safe.",
     );
     expect(line(10, "next", "conversation")).toContain(
@@ -202,7 +202,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // section, close-body count or screen order will fail this test.
     // Update ONLY with founder approval for a deliberate structural change.
     expect(structuralFingerprint()).toBe(
-      "__FINGERPRINT__",
+      "bd6cacf3a6ebb8b7a29860a09991617949781a178880da87f6df55f92d19d7bc",
     );
   });
 });

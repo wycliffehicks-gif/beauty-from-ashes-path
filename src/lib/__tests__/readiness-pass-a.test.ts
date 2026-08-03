@@ -8,6 +8,12 @@ import { sanitizePrefs, PREF_DEFAULTS } from "@/lib/prefs";
 import { hasMeaningfulProgress, type JourneyProgress } from "@/lib/journey/progress";
 import { LIVE_AI_ENABLED_DEFAULT } from "@/lib/ai/compute";
 
+/** Read a project source file so assertions can check real implementation. */
+async function readSource(relativePath: string): Promise<string> {
+  const { readFile } = await import("node:fs/promises");
+  return readFile(new URL(`../../../${relativePath}`, import.meta.url), "utf8");
+}
+
 function progress(patch: Partial<JourneyProgress>): JourneyProgress {
   return {
     version: 3,
@@ -101,15 +107,94 @@ describe("daily closing supports containment", () => {
   });
 });
 
-describe("unfinished legacy surfaces are not reachable", () => {
-  it("resolves the retired practices and resources paths to the journey home", async () => {
+describe("in-day screen transition tracking", () => {
+  it("never focuses the first screen of a visit, then focuses each change", async () => {
+    const { recordScreenTransition, markScreenLeft, __resetScreenFocusTracking } =
+      await import("@/components/JourneyScreen");
+    __resetScreenFocusTracking();
+    // Ordinary document load: nothing to announce, so focus is left alone.
+    expect(recordScreenTransition("1:practise")).toBe(false);
+    // Same screen re-rendering is not a change either.
+    expect(recordScreenTransition("1:practise")).toBe(false);
+    // Practise -> Reflection is tracked even though Reflection focuses itself.
+    expect(recordScreenTransition("1:reflection")).toBe(true);
+    // Browser Back from Reflection to Practise is now seen as a real change.
+    expect(recordScreenTransition("1:practise")).toBe(true);
+    // Leaving for Settings/Home and returning to the same screen announces it.
+    markScreenLeft();
+    expect(recordScreenTransition("1:practise")).toBe(true);
+    __resetScreenFocusTracking();
+    // Leaving before anything was shown must not manufacture a transition.
+    markScreenLeft();
+    expect(recordScreenTransition("1:arrive")).toBe(false);
+  });
+});
+
+describe("daily close offers the next day as clearly optional", () => {
+  it("labels the quiet secondary action without urging continuation", async () => {
+    const { closeNextDayLabel } = await import("@/routes/day.$day");
+    expect(closeNextDayLabel(2)).toBe("Open Day 2 when you\u2019re ready");
+    expect(closeNextDayLabel(9)).toBe("Open Day 9 when you\u2019re ready");
+    for (const n of [2, 5, 9]) {
+      expect(closeNextDayLabel(n)).not.toMatch(/continue/i);
+    }
+    // Day 10 has no next day, so there is no label and no action.
+    expect(closeNextDayLabel(null)).toBeNull();
+  });
+
+  it("keeps Return to Your Journey primary and the next day secondary", async () => {
+    const source = await readSource("src/routes/day.$day.tsx");
+    const primary = source.indexOf('data-testid="close-return-home"');
+    const secondary = source.indexOf('data-testid="close-next-day"');
+    expect(primary).toBeGreaterThan(-1);
+    expect(secondary).toBeGreaterThan(primary);
+    expect(source).toMatch(/close-return-home[\s\S]{0,200}Return to Your Journey/);
+    // The primary uses the primary button style, the secondary the quiet one.
+    expect(source).toMatch(/btn-primary-journey w-full[\s\S]{0,120}close-return-home/);
+    expect(source).toMatch(/btn-quiet block w-full text-center[\s\S]{0,120}close-next-day/);
+    expect(source).toContain("{closeNextDayLabel(nextDay)}");
+  });
+});
+
+describe("progress states are distinguishable without colour vision", () => {
+  it("differs in thickness and colour, not hue alone", async () => {
+    const css = await readSource("src/styles.css");
+    const base = css.slice(css.indexOf("@utility bfa-progress-segment"));
+    const unreached = base.slice(0, base.indexOf("}"));
+    const reached = base.slice(base.indexOf('[data-state="reached"]'));
+    expect(unreached).toContain("height: 2px");
+    expect(unreached).toContain("#0D2B55");
+    expect(reached.slice(0, reached.indexOf("}"))).toContain("height: 4px");
+    expect(reached.slice(0, reached.indexOf("}"))).toContain("#9A7723");
+    // The old near-identical grey state is gone entirely.
+    expect(css).not.toContain("#737B8B");
+  });
+});
+
+describe("unfinished legacy surfaces redirect instead of holding content", () => {
+  it("sends /practices, /resources and /practice/$id to Your Journey", async () => {
     for (const mod of [
       "@/routes/_shell.practices",
       "@/routes/_shell.resources",
       "@/routes/practice.$id",
     ]) {
-      const loaded = (await import(mod)) as { Route: { options?: unknown } };
-      expect(loaded.Route).toBeTruthy();
+      const loaded = (await import(mod)) as {
+        Route: { options: { beforeLoad?: () => void; component?: () => unknown } };
+      };
+      const beforeLoad = loaded.Route.options.beforeLoad as undefined | (() => void);
+      expect(typeof beforeLoad).toBe("function");
+      let thrown: unknown;
+      try {
+        beforeLoad!();
+      } catch (err) {
+        thrown = err;
+      }
+      const redirectOptions = thrown as { to?: string; replace?: boolean } | undefined;
+      expect(redirectOptions).toBeTruthy();
+      expect(redirectOptions!.to).toBe("/");
+      expect(redirectOptions!.replace).toBe(true);
+      // Nothing renders even if the redirect were somehow bypassed.
+      expect(loaded.Route.options.component?.()).toBeNull();
     }
   });
 });

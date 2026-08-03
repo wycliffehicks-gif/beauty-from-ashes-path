@@ -103,6 +103,39 @@ describe("journey progress store", () => {
     saveLocator({ dayId: "day-01", step: "close", index: 0 });
     expect(hasMeaningfulProgress(readProgress())).toBe(false);
   });
+  it("never resumes a completed day at its beginning or its close", () => {
+    saveDayAnswers("day-01", ["state:heavy"]);
+    markDayComplete("day-01");
+
+    // Completed + Arrive, with answers still retained, is not a resume.
+    saveLocator({ dayId: "day-01", step: "arrive", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(false);
+
+    // Completed + genuinely mid-day is still a real place to return to.
+    saveLocator({ dayId: "day-01", step: "name", index: 2 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(true);
+
+    // Completed + Reflection is mid-day too.
+    saveLocator({ dayId: "day-01", step: "reflection", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(true);
+
+    // Completed + Close has nothing left to resume.
+    saveLocator({ dayId: "day-01", step: "close", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(false);
+
+    // Completed status itself is untouched by any of the above.
+    expect(isDayComplete(readProgress(), "day-01")).toBe(true);
+  });
+
+  it("keeps unfinished-day semantics unchanged", () => {
+    // Incomplete Arrive with nothing recorded is not meaningful.
+    saveLocator({ dayId: "day-02", step: "arrive", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(false);
+    // A normal incomplete mid-day place is.
+    saveLocator({ dayId: "day-02", step: "listen", index: 1 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(true);
+  });
+
 
 
   it("clears everything explicitly", () => {

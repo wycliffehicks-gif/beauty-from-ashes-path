@@ -357,11 +357,12 @@ function ScreenBody({
   onReflectionSaved: (text: string, snapshot: string) => void;
 
 }) {
-  // Screen identity for single-page focus management. The reflection screen is
-  // deliberately excluded: it moves focus to its own heading once the response
-  // is ready, so it must not be focused twice.
-  const screenFocusKey =
-    screen.kind === "reflection" ? undefined : `${content.day}:${keyForScreen(screen)}`;
+  // Screen identity for single-page focus management. Every screen, including
+  // the reflection, reports its identity so transition tracking stays true; the
+  // reflection then focuses its own heading once its response is ready.
+  const screenFocusKey = `${content.day}:${keyForScreen(screen)}`;
+  const manageFocus = screen.kind !== "reflection";
+
 
   const shell = (
     node: React.ReactNode,
@@ -384,7 +385,9 @@ function ScreenBody({
       continueHint={nav.continueHint}
       footer={nav.footer}
       focusKey={screenFocusKey}
+      manageFocus={manageFocus}
     >
+
       {node}
     </JourneyScreen>
   );
@@ -977,6 +980,16 @@ function ReflectionScreen({
 export const CLOSE_CONTAINMENT_NOTE =
   "One day at a time is enough. There is no need to continue now.";
 
+/**
+ * Quiet secondary label on a daily close. It offers the next day as clearly
+ * optional and never urges going straight on; Day 10 has no next day, so there
+ * is no label and no action at all.
+ */
+export function closeNextDayLabel(nextDay: number | null): string | null {
+  return nextDay ? `Open Day ${nextDay} when you’re ready` : null;
+}
+
+
 function CloseScreen({
 
   content,
@@ -1022,9 +1035,10 @@ function CloseScreen({
             className="btn-quiet block w-full text-center"
             data-testid="close-next-day"
           >
-            Continue to Day {nextDay}
+            {closeNextDayLabel(nextDay)}
           </Link>
         ) : null}
+
         <p className="pt-1 text-center text-sm text-muted-foreground">
           {CLOSE_CONTAINMENT_NOTE}
         </p>

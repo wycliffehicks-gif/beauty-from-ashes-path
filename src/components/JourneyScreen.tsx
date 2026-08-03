@@ -10,10 +10,37 @@ import { useEffect, useRef, type ReactNode } from "react";
  */
 let lastFocusedScreenKey: string | null = null;
 
+/**
+ * Sentinel recorded when a journey screen unmounts (the person opened Settings,
+ * went Home, or otherwise left the day). It is deliberately not a real screen
+ * key, so returning to the very same screen still counts as a screen change and
+ * is announced, while a first document load (null) never steals focus.
+ */
+const SCREEN_LEFT = "\u0000screen-left";
+
+/**
+ * Record that `key` is now the visible screen and report whether that was a
+ * genuine screen transition (as opposed to the first screen of a visit or the
+ * same screen re-rendering). Every in-day screen identity — including the
+ * reflection, which manages its own focus — must call this so browser Back from
+ * it is still recognised as a change.
+ */
+export function recordScreenTransition(key: string): boolean {
+  const previous = lastFocusedScreenKey;
+  lastFocusedScreenKey = key;
+  return previous !== null && previous !== key;
+}
+
+/** Note that the journey screen was left, so coming back announces the screen. */
+export function markScreenLeft() {
+  if (lastFocusedScreenKey !== null) lastFocusedScreenKey = SCREEN_LEFT;
+}
+
 /** Test-only: forget the remembered screen so each case starts from a load. */
 export function __resetScreenFocusTracking() {
   lastFocusedScreenKey = null;
 }
+
 
 /**
  * Reusable therapeutic screen shell for The First Journey.
@@ -40,6 +67,7 @@ export function JourneyScreen({
   footer,
   progress,
   focusKey,
+  manageFocus = true,
 }: {
   /** Quiet centre label, e.g. "Day 4 · Notice". */
   label?: string;
@@ -55,29 +83,39 @@ export function JourneyScreen({
   /** Progress ticks: { current, total } — no scores, no streaks. */
   progress?: { current: number; total: number };
   /**
-   * Stable key for the screen being shown. When it changes between renders of
-   * this shell, focus moves to the new heading (or the main container) so a
-   * Continue or Back genuinely announces the new screen. Omit it for screens
-   * that manage their own focus, such as the personalized reflection.
+   * Stable key for the screen being shown. Every in-day screen should pass one,
+   * including screens that focus themselves, so transition tracking stays true.
    */
   focusKey?: string;
+  /**
+   * When false the shell only records the transition and leaves focus alone —
+   * used by the personalized reflection, which focuses its own heading once its
+   * content is ready so nothing is focused or announced twice.
+   */
+  manageFocus?: boolean;
 }) {
   const mainRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!focusKey) return;
-    const previous = lastFocusedScreenKey;
-    lastFocusedScreenKey = focusKey;
+    const changed = recordScreenTransition(focusKey);
     // Initial load of a visit, or the same screen re-rendering, must not move
     // focus; only a genuine screen change does.
-    if (previous === null || previous === focusKey) return;
+    if (!changed || !manageFocus) return;
     const node = mainRef.current;
     if (!node) return;
     const heading = node.querySelector("h1");
     const target = (heading ?? node) as HTMLElement;
     if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
     target.focus();
+    // manageFocus is a fixed per-screen intent, so tracking follows focusKey.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey]);
+
+  // Leaving the day entirely (Settings, Home, a full unmount) means returning to
+  // the very same screen is a real change again and must be announced.
+  useEffect(() => markScreenLeft, []);
+
 
   return (
     <div className="journey-page">

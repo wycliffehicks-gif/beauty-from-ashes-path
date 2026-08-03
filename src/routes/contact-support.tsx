@@ -76,9 +76,10 @@ function ContactSupportPage() {
 
       <h2 className="font-serif text-xl">Helpful details to include</h2>
       <p>
-        When something in the app is not working as expected, these non-
-        sensitive details help us understand quickly:
+        When something in the app is not working as expected, these
+        non-sensitive details help us understand quickly:
       </p>
+
       <ul className="list-disc space-y-1 pl-5">
         <li>Device type (for example, iPhone, Android, laptop).</li>
         <li>Browser (for example, Safari, Chrome, Firefox) and version if known.</li>

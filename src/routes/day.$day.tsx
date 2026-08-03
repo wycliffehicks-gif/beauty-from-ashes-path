@@ -107,7 +107,7 @@ function DayFlow() {
 
 function DayNotHere() {
   return (
-    <JourneyScreen label="Day">
+    <JourneyScreen label="Day" focusKey="day:not-here">
       <div className="space-y-4">
         <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
         <p className="text-muted-foreground">

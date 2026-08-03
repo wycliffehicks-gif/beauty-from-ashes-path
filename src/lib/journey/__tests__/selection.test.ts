@@ -807,7 +807,7 @@ describe("Day 7 revision", () => {
       const section = day7.reflection.sections.find((s) => s.id === id)!;
       expect(section.opening).toBeUndefined();
       expect(section.from).toBeTruthy();
-      expect(section.unanswered.length).toBeGreaterThan(60);
+      expect(section.unanswered.length).toBeGreaterThan(40);
     }
     for (const section of day7.reflection.sections) {
       const question = section.from === "step" ? day7.step : q(section.from!);

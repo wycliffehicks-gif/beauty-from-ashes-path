@@ -189,7 +189,8 @@ describe("unfinished legacy surfaces redirect instead of holding content", () =>
       } catch (err) {
         thrown = err;
       }
-      const redirectOptions = thrown as { to?: string; replace?: boolean } | undefined;
+      const redirectOptions = (thrown as { options?: { to?: string; replace?: boolean } })
+        ?.options;
       expect(redirectOptions).toBeTruthy();
       expect(redirectOptions!.to).toBe("/");
       expect(redirectOptions!.replace).toBe(true);

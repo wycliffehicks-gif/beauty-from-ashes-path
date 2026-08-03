@@ -199,7 +199,69 @@ describe("progress states are distinguishable without colour vision", () => {
     // The old near-identical grey state is gone entirely.
     expect(css).not.toContain("#737B8B");
   });
+
+  it("keeps both states visible on the dark reading ground", async () => {
+    const css = await readSource("src/styles.css");
+    const darkUnreached = css.slice(css.indexOf(".dark .bfa-progress-segment {"));
+    expect(darkUnreached.slice(0, darkUnreached.indexOf("}"))).toContain("#9A7723");
+    const darkReached = css.slice(
+      css.indexOf('.dark .bfa-progress-segment[data-state="reached"]'),
+    );
+    expect(darkReached.slice(0, darkReached.indexOf("}"))).toContain("#F6F2EA");
+    // Navy must not remain as a dark-mode segment colour: it is ~1.14:1 there.
+    expect(darkUnreached.slice(0, darkUnreached.indexOf("}"))).not.toContain("#0D2B55");
+    // Thickness stays the second cue in dark mode: it is not re-declared.
+    expect(darkReached.slice(0, darkReached.indexOf("}"))).not.toContain("height");
+  });
 });
+
+describe("legal acceptance timestamps must be canonical", () => {
+  it("rejects prose, impossible and non-canonical timestamps", async () => {
+    const { sanitizePrefs, LEGAL_BUNDLE_VERSION } = await import("@/lib/prefs");
+    const bad = [
+      "x",
+      "",
+      "yesterday",
+      "2026-02-30T00:00:00.000Z",
+      "2026-08-02",
+      "2026-08-02T00:00:00Z",
+      "2026-08-02T00:00:00.000+00:00",
+      " 2026-08-02T00:00:00.000Z",
+      "2026-08-02T00:00:00.000Z ",
+      "2026-08-02T00:00:00.000Z" + "0".repeat(64),
+      123,
+      null,
+      {},
+      [],
+    ];
+    for (const acceptedAt of bad) {
+      expect(
+        sanitizePrefs({
+          legalAcceptance: { version: LEGAL_BUNDLE_VERSION, acceptedAt },
+        }).legalAcceptance,
+      ).toBeUndefined();
+    }
+  });
+
+  it("preserves a genuine current acceptance", async () => {
+    const { sanitizePrefs, LEGAL_BUNDLE_VERSION } = await import("@/lib/prefs");
+    const acceptedAt = new Date().toISOString();
+    expect(
+      sanitizePrefs({ legalAcceptance: { version: LEGAL_BUNDLE_VERSION, acceptedAt } })
+        .legalAcceptance,
+    ).toEqual({ version: LEGAL_BUNDLE_VERSION, acceptedAt });
+  });
+
+  it("still requires a nonempty version", async () => {
+    const { sanitizePrefs } = await import("@/lib/prefs");
+    expect(
+      sanitizePrefs({
+        legalAcceptance: { version: "", acceptedAt: new Date().toISOString() },
+      }).legalAcceptance,
+    ).toBeUndefined();
+  });
+});
+
 
 describe("unfinished legacy surfaces redirect instead of holding content", () => {
   it("sends /practices, /resources and /practice/$id to Your Journey", async () => {

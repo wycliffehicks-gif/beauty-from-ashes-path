@@ -409,11 +409,14 @@ export function hasMeaningfulProgress(
   const loc = progress.locator;
   if (!loc) return false;
   const completed = progress.completedDays.includes(loc.dayId);
-  if (completed && loc.step === lastStepKey) return false;
+  // A finished day reopened at its very beginning, or sitting on its own close,
+  // is not a place to resume — retained answers from that day do not change it.
+  if (completed && (loc.step === lastStepKey || loc.step === firstStepKey)) return false;
   if (loc.step !== firstStepKey) return true;
   if ((loc.index ?? 0) > 0) return true;
   return (progress.answers[loc.dayId]?.length ?? 0) > 0;
 }
+
 
 
 /** Keys this app owns in a given store, resolved defensively. */

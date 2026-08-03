@@ -822,10 +822,12 @@ describe("Day 7 revision", () => {
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
     expect(body).not.toContain("You noticed");
     expect(body).not.toContain("You considered");
-    expect(body).toContain("No inner response was selected");
-    expect(body).toContain("No more compassionate way of holding this was selected");
-    expect(body).toContain("No step was selected");
-    expect(built.closing).toContain("do not establish why this inner response exists");
+    expect(body).toContain("You left your inner response unnamed");
+    expect(body).toContain("Nothing you did not name will be placed on you");
+    expect(body).toContain("No next step was named");
+    expect(built.closing).toContain(
+      "Nothing here explains where an inner response came from or promises change",
+    );
   });
 
   it("states private, unclear and none paths accurately", () => {

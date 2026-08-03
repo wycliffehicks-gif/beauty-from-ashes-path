@@ -600,10 +600,12 @@ describe("Day 6 revision", () => {
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
     expect(body).not.toContain("You named");
     expect(body).not.toContain("You also named");
-    expect(body).toContain("No cost, cause or hidden meaning will be assigned");
-    expect(body).toContain("Nothing about why this remains will be guessed");
-    expect(body).toContain("No step was chosen");
-    expect(built.closing).toContain("No conclusion has been reached");
+    expect(body).toContain("The fuller picture remains yours, without anything being added");
+    expect(body).toContain(
+      "No explanation is needed before your present reality can be taken seriously",
+    );
+    expect(body).toContain("No next step was named");
+    expect(built.closing).toContain("without blame or a rushed conclusion");
   });
 
   it("states none, unclear and private cost paths accurately", () => {

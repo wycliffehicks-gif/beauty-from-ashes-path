@@ -1661,9 +1661,9 @@ describe("Day 9 revision", () => {
       expect(Object.keys(section.lines ?? {}).sort()).toEqual([...ids].sort());
     }
     expect(day9.reflection.sections.map((s) => s.title)).toEqual([
-      "The response — or what remained open",
-      "The setting — or what remained open",
-      "How today was completed — or left open",
+      "A possible response",
+      "The setting, if any",
+      "How the practice was left",
     ]);
   });
 

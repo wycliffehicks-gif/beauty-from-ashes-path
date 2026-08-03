@@ -600,10 +600,12 @@ describe("Day 6 revision", () => {
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
     expect(body).not.toContain("You named");
     expect(body).not.toContain("You also named");
-    expect(body).toContain("No cost, cause or hidden meaning will be assigned");
-    expect(body).toContain("Nothing about why this remains will be guessed");
-    expect(body).toContain("No step was chosen");
-    expect(built.closing).toContain("No conclusion has been reached");
+    expect(body).toContain("The fuller picture remains yours, without anything being added");
+    expect(body).toContain(
+      "No explanation is needed before your present reality can be taken seriously",
+    );
+    expect(body).toContain("No next step was named");
+    expect(built.closing).toContain("without blame or a rushed conclusion");
   });
 
   it("states none, unclear and private cost paths accurately", () => {
@@ -661,7 +663,7 @@ describe("Day 6 revision", () => {
     const noneIdx = cost.options.findIndex((o) => o.id === "none");
     const built = buildReflection(day6, [`q.cost.${noneIdx}`]);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(body).toContain("do not need to invent one");
+    expect(body).toContain("without inventing an answer");
     expect(body).not.toContain("You named");
   });
 });
@@ -805,7 +807,7 @@ describe("Day 7 revision", () => {
       const section = day7.reflection.sections.find((s) => s.id === id)!;
       expect(section.opening).toBeUndefined();
       expect(section.from).toBeTruthy();
-      expect(section.unanswered.length).toBeGreaterThan(60);
+      expect(section.unanswered.length).toBeGreaterThan(40);
     }
     for (const section of day7.reflection.sections) {
       const question = section.from === "step" ? day7.step : q(section.from!);
@@ -820,10 +822,12 @@ describe("Day 7 revision", () => {
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
     expect(body).not.toContain("You noticed");
     expect(body).not.toContain("You considered");
-    expect(body).toContain("No inner response was selected");
-    expect(body).toContain("No more compassionate way of holding this was selected");
-    expect(body).toContain("No step was selected");
-    expect(built.closing).toContain("do not establish why this inner response exists");
+    expect(body).toContain("You left your inner response unnamed");
+    expect(body).toContain("Nothing you did not name will be placed on you");
+    expect(body).toContain("No next step was named");
+    expect(built.closing).toContain(
+      "Nothing here explains where an inner response came from or promises change",
+    );
   });
 
   it("states private, unclear and none paths accurately", () => {
@@ -831,15 +835,15 @@ describe("Day 7 revision", () => {
     const unclearIdx = need.options.findIndex((o) => o.id === "unsure");
     const built = buildReflection(day7, [`q.tone.${privateIdx}`, `q.need.${unclearIdx}`]);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(body).toContain("not known or interpreted here");
-    expect(body).toContain("no underlying need will be guessed at");
+    expect(body).toContain("You kept your inner response private. That boundary is respected");
+    expect(body).toContain("You can begin with accuracy and non-cruelty");
     expect(body).not.toContain("nothing was recorded");
 
     const noneIdx = need.options.findIndex((o) => o.id === "none");
     const noneBody = buildReflection(day7, [`q.need.${noneIdx}`])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(noneBody).toContain("That absence stays as it is");
+    expect(noneBody).toContain("That is a complete answer");
   });
 
   it("maps only the selected ids on an answered path", () => {
@@ -904,9 +908,9 @@ describe("Day 7 revision", () => {
       "that does not require approving of the feeling or acting on it.",
     );
     expect(text).toContain(
-      "and no explanation or hidden meaning will be assigned",
+      "that is a complete answer; you do not have to force words that feel false",
     );
-    expect(text).toContain("what it says about your worth");
+    expect(text).toContain("your worth does not depend on attacking yourself");
     expect(text).toContain(
       "this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
     );
@@ -1204,7 +1208,7 @@ describe("Day 8 revision", () => {
   it("has no unconditional reflection openings and maps every option to a line", () => {
     for (const section of day8.reflection.sections) {
       expect(section.opening, section.id).toBeUndefined();
-      expect(section.unanswered.length, section.id).toBeGreaterThan(80);
+      expect(section.unanswered.length, section.id).toBeGreaterThan(40);
     }
     const pairs: Array<[string, string[]]> = [
       ["hearing", route.options.map((o) => o.id)],
@@ -1223,9 +1227,9 @@ describe("Day 8 revision", () => {
   it("invents nothing on the fully skipped reflection path", () => {
     const built = buildReflection(day8, undefined);
     const text = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(text).toContain("You left the thread unnamed, and none will be assigned");
-    expect(text).toContain("You left the amount unnamed");
-    expect(text).toContain("You left the step unnamed");
+    expect(text).toContain("You left the thread unnamed");
+    expect(text).toContain("You left the amount open");
+    expect(text).toContain("You left the step open");
     for (const phrase of [
       "You chose",
       "you learned",
@@ -1244,7 +1248,7 @@ describe("Day 8 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain("You named one person who may be safe enough");
-    expect(text).toContain("one small outward action, if safe and realistic");
+    expect(text).toContain("One small outward action felt possible, if safe and realistic");
     expect(text).toContain("drafting one brief message to someone safe enough");
     expect(text).not.toContain("Creativity, beauty, learning or nature was selected");
     expect(text).not.toContain("A community, culture, tradition or place of belonging was selected");
@@ -1257,22 +1261,22 @@ describe("Day 8 revision", () => {
     const unclear = buildReflection(day8, ["q.route.9", "q.size.4", "step.5"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(unclear).toContain("That uncertainty is left as it is");
-    expect(unclear).toContain("It stays uncertain here");
-    expect(unclear).toContain("No step will be chosen for you");
+    expect(unclear).toContain("Uncertainty is an honest place to be");
+    expect(unclear).toContain("Your pace can stay undecided");
+    expect(unclear).toContain("You can leave it undecided");
 
     const none = buildReflection(day8, ["q.route.10", "q.size.5", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(none).toContain("That absence is left intact");
-    expect(none).toContain("without being treated as failure");
-    expect(none).toContain("none will be pressed or inferred");
+    expect(none).toContain("That is not a failure");
+    expect(none).toContain("That limit is respected");
+    expect(none).toContain("That is a complete way to leave this day");
 
     const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(priv).toContain("You kept the direction private");
-    expect(priv).toContain("Its content is not known or interpreted here");
+    expect(priv).toContain("what matters remains yours");
     expect(priv).toContain("You kept the amount private");
     expect(priv).toContain("You kept the step private");
     expect(priv).not.toContain("nothing was recorded");
@@ -1290,7 +1294,7 @@ describe("Day 8 revision", () => {
       "What matters can be met in a way that is small, safe, and mine to choose.",
     );
     expect(day8.reflection.closing).toContain(
-      "do not establish why something matters to you, why it became distant, whether reconnection is possible, or what will change",
+      "remain yours to know\u2014or not know",
     );
   });
 
@@ -1382,17 +1386,17 @@ describe("Day 8 revision", () => {
     expect(understand).toContain("It can remain yours without that explanation");
     expect(day8.arrive.body.join(" ")).toContain("one small moment of contact");
 
-    expect(day8.reflection.sections[0]!.title).toBe("The thread — or what remained open");
+    expect(day8.reflection.sections[0]!.title).toBe("A thread\u2014or an open question");
     expect(day8.reflection.intro).toBe(
-      "This reflection uses only what was selected; it will not fill in what was left open.",
+      "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
     );
     expect(day8.close.heading).toBe("Held without force");
 
     const skipped = buildReflection(day8, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(skipped).toContain("The direction simply remains open");
-    expect(skipped).toContain("What is available remains open");
+    expect(skipped).toContain("It can remain open without being chosen for you");
+    expect(skipped).toContain("Nothing here asks you to decide it");
     expect(skipped).not.toContain("This page can only reflect selections");
     expect(skipped).not.toContain("complete outcome");
   });
@@ -1642,7 +1646,7 @@ describe("Day 9 revision", () => {
   it("has no unconditional openings and a line for every retained or appended id", () => {
     for (const section of day9.reflection.sections) {
       expect(section.opening, section.id).toBeUndefined();
-      expect(section.unanswered.length, section.id).toBeGreaterThan(80);
+      expect(section.unanswered.length, section.id).toBeGreaterThan(40);
     }
     const pairs: Array<[string, string[]]> = [
       ["hearing", practice.options.map((o) => o.id)],
@@ -1657,9 +1661,9 @@ describe("Day 9 revision", () => {
       expect(Object.keys(section.lines ?? {}).sort()).toEqual([...ids].sort());
     }
     expect(day9.reflection.sections.map((s) => s.title)).toEqual([
-      "The response — or what remained open",
-      "The setting — or what remained open",
-      "How today was completed — or left open",
+      "A possible response",
+      "The setting, if any",
+      "How the practice was left",
     ]);
   });
 
@@ -1667,9 +1671,9 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You left this open, and no response will be assigned");
-    expect(text).toContain("You left the setting open, and none will be assigned");
-    expect(text).toContain("You left the step open, and none will be added");
+    expect(text).toContain("You left the response open. No rehearsal or need is being presumed");
+    expect(text).toContain("You left the setting open");
+    expect(text).toContain("You left the step open");
     for (const phrase of [
       "You chose",
       "You located",
@@ -1687,12 +1691,12 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.practice.2", "q.where.1", "step.4"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You considered rehearsing a limit or a delay");
-    expect(text).toContain("You named work as a setting that came to mind");
-    expect(text).toContain("identifying support you might want before any real-world action");
+    expect(text).toContain("You considered rehearsing a limit or delay");
+    expect(text).toContain("Work came to mind");
+    expect(text).toContain("You considered identifying support before any real-world action");
     expect(text).not.toContain("Rehearsing asking for one kind of support was selected");
     expect(text).not.toContain("Putting private words");
-    expect(text).not.toContain("Home was selected");
+    expect(text).not.toContain("Home was the setting that came to mind");
     expect(text).not.toContain("Keeping one accessible outward-orienting cue");
   });
 
@@ -1700,24 +1704,24 @@ describe("Day 9 revision", () => {
     const unclear = buildReflection(day9, ["q.practice.7", "q.where.8", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(unclear).toContain("That uncertainty is left as it is");
-    expect(unclear).toContain("It stays uncertain here");
-    expect(unclear).toContain("no step will be chosen for you");
+    expect(unclear).toContain("You are not sure what to practise");
+    expect(unclear).toContain("The setting is not clear. It can remain unclear");
+    expect(unclear).toContain("You are not sure what step fits");
 
     const none = buildReflection(day9, ["q.practice.8", "q.where.9", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(none).toContain("That absence is left intact");
-    expect(none).toContain("You left the setting general");
-    expect(none).toContain("none will be pressed or inferred");
+    expect(none).toContain("That is not a failure");
+    expect(none).toContain("The rehearsal can stay general");
+    expect(none).toContain("That is a complete way to leave the practice");
 
     const priv = buildReflection(day9, ["q.practice.9", "q.where.6", "step.8"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(priv).toContain("You kept this private");
-    expect(priv).toContain("You left the setting unspecified");
+    expect(priv).toContain("You kept the response private");
+    expect(priv).toContain("You kept the setting private");
     expect(priv).toContain("You kept the step private");
-    expect(priv.match(/not known or interpreted here/g)!.length).toBe(3);
+    expect(priv.match(/That boundary is respected/g)!.length).toBe(2);
     expect(priv).not.toContain("nothing was recorded");
   });
 
@@ -1725,8 +1729,8 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.where.0", "q.where.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You named home as a setting that came to mind");
-    expect(text).toContain("You left the setting unspecified");
+    expect(text).toContain("Home was the setting that came to mind");
+    expect(text).toContain("You kept the setting private");
     expect(text).not.toContain("No setting was selected");
     expect(text).not.toContain("no named setting");
   });
@@ -1746,9 +1750,9 @@ describe("Day 9 revision", () => {
     expect(day9.close.carryForward).toBe(
       "I can rehearse a possibility without promising to use it.",
     );
-    expect(day9.reflection.closing).toContain("A rehearsal is information, not a contract");
+    expect(day9.reflection.closing).toContain("A rehearsal is a possibility, not a contract");
     expect(day9.reflection.closing).toContain(
-      "whether another response is safe or available to you",
+      "make another response safe, or promise access under pressure",
     );
   });
 
@@ -1821,10 +1825,10 @@ describe("Day 9 revision", () => {
 
     const next = day9.reflection.sections.find((s) => s.id === "next")!;
     expect(next.lines!["again"]).toBe(
-      "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
+      "You considered reading or privately trying the opening of one response. Nothing outward has to follow.",
     );
     expect(next.lines!["prepare"]).toBe(
-      "You chose to leave the exercise here. Nothing more is implied or required by this step.",
+      "You chose to leave the exercise here. Nothing more is required.",
     );
 
     const text = allText9();
@@ -2163,12 +2167,12 @@ describe("Day 10 revision", () => {
 
   it("keeps the reflection answer-driven with complete line coverage", () => {
     expect(day10.reflection.intro).toBe(
-      "This reflection stays with what you chose—or left open—today. It does not fill in earlier days or decide what the journey meant for you.",
+      "This reflection stays with what you chose\u2014or left open\u2014today. It offers a gentle gathering, not a verdict on what the journey meant or whether anything changed.",
     );
     expect(day10.reflection.sections.map((s) => [s.id, s.title, s.from])).toEqual([
-      ["hearing", "What may be carried — or left here", "different"],
-      ["care", "What remains unfinished — or unnamed", "unfinished"],
-      ["next", "How the journey was left — or left open", "step"],
+      ["hearing", "What you may carry", "different"],
+      ["care", "What can remain unfinished", "unfinished"],
+      ["next", "How you are leaving the journey", "step"],
     ]);
     const sources = { different, unfinished, step: day10.step };
     for (const section of day10.reflection.sections) {
@@ -2180,7 +2184,7 @@ describe("Day 10 revision", () => {
       for (const [id, line] of Object.entries(section.lines ?? {})) {
         expect(line.length, `short line: ${section.id}.${id}`).toBeGreaterThan(60);
       }
-      expect(section.unanswered.length).toBeGreaterThan(60);
+      expect(section.unanswered.length).toBeGreaterThan(40);
     }
     expect(day10.reflection.closing).toBe(
       "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",
@@ -2192,9 +2196,9 @@ describe("Day 10 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain(
-      "You left the first question open. Nothing is being chosen or interpreted for you.",
+      "You left this open. Nothing needs to be chosen for the journey to have a complete stopping place.",
     );
-    expect(text).toContain("You did not name an unfinished place. Nothing needs to be added.");
+    expect(text).toContain("You left this open. Nothing needs to be added.");
     expect(text).toContain(
       "You did not choose a next step. The journey can end here without one.",
     );
@@ -2244,7 +2248,7 @@ describe("Day 10 revision", () => {
     const text = buildReflection(day10, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("What was held privately remains yours");
+    expect(text).toContain("You kept what you may carry private");
     const allPrivate = buildReflection(day10, [
       answer("q.different", idx(different, "private")),
       answer("q.unfinished", idx(unfinished, "private")),
@@ -2252,9 +2256,9 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(allPrivate).toContain("What was held privately remains yours");
-    expect(allPrivate).toContain("Its content is not known or interpreted here");
-    expect(allPrivate).toContain("private content is known or inferred");
+    expect(allPrivate).toContain("You kept what you may carry private");
+    expect(allPrivate).toContain("You kept the unfinished place private");
+    expect(allPrivate).toContain("You kept how you are leaving private");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");
@@ -2266,9 +2270,9 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(quiet).toContain("That uncertainty stays uncertainty here");
-    expect(quiet).toContain("That is left exactly as it is");
-    expect(quiet).toContain("That uncertainty stays as uncertainty");
+    expect(quiet).toContain("Uncertainty is a complete way to arrive at this ending");
+    expect(quiet).toContain("That answer is complete as it is");
+    expect(quiet).toContain("The journey can still end gently without an answer");
   });
 
   it("keeps legacy many-answer arrays coherent for Q1 and Q2", () => {
@@ -2287,19 +2291,19 @@ describe("Day 10 revision", () => {
     ]) {
       const text = legacyQ1(positions);
       expect(text).toContain("may have helped you cope");
-      expect(text).toContain("An idea may resonate without becoming a finished outcome");
+      expect(text).toContain("Resonance does not have to become an outcome");
       expect(text).not.toContain("No particular thread feels worth carrying");
-      expect(text).not.toContain("You left the first question open");
+      expect(text).not.toContain("You left this open. Nothing needs to be chosen");
     }
 
     const full = legacyQ1([0, 1, 2, 3, 4, 5, 6, 7]);
     expect(full).toContain("putting words to something");
     expect(full).toContain("more than one pull or truth");
-    expect(full).toContain("what support exists");
+    expect(full).toContain("may need support or safer conditions");
 
     const alone = legacyQ1([7]);
-    expect(alone).toContain("nothing feels settled or complete right now");
-    expect(alone).toContain("An idea may resonate without becoming a finished outcome");
+    expect(alone).toContain("nothing feels settled or complete");
+    expect(alone).toContain("Resonance does not have to become an outcome");
 
     const q2 = buildReflection(
       day10,

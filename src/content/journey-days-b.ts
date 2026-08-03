@@ -214,7 +214,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "Drawn only from today's selections, and offered tentatively.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It is offered gently, without deciding what caused anything or what should change.",
       sections: [
         {
           id: "hearing",
@@ -234,14 +235,15 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "You noticed tension between how you are living and something that matters to you. That deserves attention without becoming a verdict on your character.",
             meaning: "You noticed less meaning, colour, or engagement. Nothing here determines why.",
             hope: "You noticed less expectation that change is possible. Nothing is assumed about why, and hope does not have to be manufactured today.",
-            none: "No clear cost stands out right now. You do not need to invent one.",
+            none:
+              "No clear cost stood out today. You are allowed to leave the question there without inventing an answer.",
             unclear:
-              "You are not sure what is connected. Uncertainty is an honest answer, and no cause will be assigned.",
+              "You are not sure what is connected. That uncertainty deserves the same respect as a clearer answer, and no cause needs to be decided today.",
             private:
-              "You chose to keep the cost private. No particular cost or cause will be inferred from that choice.",
+              "You kept the cost private. That boundary is respected; no cost or cause is being filled in for you.",
           },
           unanswered:
-            "You did not choose a cost today. No cost, cause or hidden meaning will be assigned.",
+            "You left the question of cost unanswered. The fuller picture remains yours, without anything being added.",
         },
         {
           id: "protected",
@@ -265,11 +267,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             ongoing:
               "You named circumstances or a lack of safe alternatives that remain real. The response may not be the whole problem, and release may not be the right task.",
             unclear:
-              "You are not sure what keeps this in place. No motive or hidden benefit will be assigned.",
-            private: "You chose to keep this private. No reason will be inferred from that choice.",
+              "You are not sure what may be keeping this in place. You do not have to find a motive or benefit today.",
+            private:
+              "You kept this part private. That boundary is respected; the reason remains yours.",
           },
           unanswered:
-            "No benefit, protection, responsibility or constraint was named. Nothing about why this remains will be guessed.",
+            "You left this part open. No explanation is needed before your present reality can be taken seriously.",
         },
         {
           id: "care",
@@ -277,7 +280,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           opening:
             "Some costs can be eased through your own choices; some require support, accommodation, resources, safer conditions or change from others; some may need to be grieved or carried differently for now. Noticing that difference is information, not failure.",
           unanswered:
-            "However today went, the person living with this may deserve some gentleness now.",
+            "Whatever today held, the person living with this deserves gentleness without needing a complete explanation.",
         },
         {
           id: "next",
@@ -295,11 +298,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "Seeing what is and is not changeable was the step. Clarity can coexist with unfinishedness.",
           },
           unanswered:
-            "No step was chosen. The honest attention you gave the question can stand on its own.",
+            "No next step was named. The question can remain open; nothing else is required today.",
         },
       ],
       closing:
-        "No conclusion has been reached about what caused the cost or what to change. What you noticed may point toward choice, support, grief, a safer condition or simply more time.",
+        "What you noticed can be held without blame or a rushed conclusion. It may point toward choice, support, grief, safer conditions\u2014or simply more time, and your pace still matters.",
     },
     close: {
       heading: "Seen clearly, held gently",
@@ -514,11 +517,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "From what you chose today, tentatively and without conclusion.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It offers no verdict\u2014only a gentler way of holding what may be true.",
       sections: [
         {
           id: "hearing",
-          title: "The inner response you named",
+          title: "The inner response",
           from: "tone",
           lines: {
             harsh: "The familiar inner response runs harsh or shaming. That is what is here; nothing is being said about its origin, purpose or meaning.",
@@ -532,15 +536,16 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "The familiar response is more wordless — pressure, blankness or withdrawal. That is described, not interpreted.",
             mixed:
               "The response changes. Neither the kinder nor the harsher version has to stand for the whole.",
-            kind: "The response is mostly fair or kind. That is a resource already present, without any need to keep it perfect.",
-            none: "No particular inner response stood out, and none will be invented here.",
+            kind:
+              "The response you named is mostly fair or kind. It can be acknowledged without requiring it to stay that way all the time.",
+            none: "No particular inner response stood out today. Nothing needs to be invented.",
             unclear:
-              "What happens inside is not clear to you. That uncertainty stays as it is, with no hidden meaning attached.",
+              "What happens inside is not clear yet. Uncertainty can be met without judgement or explanation.",
             private:
-              "You kept this private. Its content is not known or interpreted here, and no tone, cause or history is inferred from it.",
+              "You kept your inner response private. That boundary is respected, and the fuller experience remains yours.",
           },
           unanswered:
-            "No inner response was selected, and none will be inferred. No tone, cause, purpose or history is being assigned to you from this day.",
+            "You left your inner response unnamed. You do not have to describe it for this reflection to meet you without judgement.",
         },
         {
           id: "care",
@@ -561,13 +566,13 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             forgiveness:
               "You chose to separate accountability from self-punishment. That excuses nothing, and no forgiveness of yourself or anyone else is required.",
             unsure:
-              "What compassion would look like is not clear yet. That can remain unclear, and no underlying need will be guessed at.",
-            none: "No different way of holding this felt right today. That absence stays as it is, and no explanation or hidden meaning will be assigned.",
-            private:
-              "You kept this private. Its content is not known or interpreted here, and no need or response is inferred from it.",
+              "Compassion is not clear yet. You can begin with accuracy and non-cruelty without forcing warmth or an answer.",
+            none:
+              "No different way of holding this felt right today. That is a complete answer; you do not have to force words that feel false.",
+            private: "You kept what might help private. That boundary is respected.",
           },
           unanswered:
-            "No more compassionate way of holding this was selected, and none will be inferred. Nothing here concludes that you need something you did not name.",
+            "You left this open. Nothing you did not name will be placed on you; the possibility of truth without self-attack can remain available.",
         },
         {
           id: "next",
@@ -583,12 +588,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             prepare:
               "Nothing outward. Considering a less-punishing way of holding this was the step, and it stands as one.",
           },
-          unanswered:
-            "No step was selected, and none will be assumed. Reading through the day without choosing anything is a complete way to have spent it.",
+          unanswered: "No next step was named. The day can end without one.",
         },
       ],
       closing:
-        "Today's selections do not establish why this inner response exists, what it says about your worth, or what will change. They point only to one way honesty and dignity might remain in the same room.",
+        "Nothing here explains where an inner response came from or promises change. It does hold one possibility near: your worth does not depend on attacking yourself, and honesty and dignity can remain in the same room.",
     },
     close: {
       heading: "Truth without contempt",
@@ -790,11 +794,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This reflection uses only what was selected; it will not fill in what was left open.",
+        "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
       sections: [
         {
           id: "hearing",
-          title: "The thread — or what remained open",
+          title: "A thread\u2014or an open question",
           from: "route",
           lines: {
             self: "You named something of your own as the thread that matters — a preference or an interest, rather than a duty.",
@@ -806,28 +810,34 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             community: "You named a community, culture, tradition or place of belonging as the thread that matters, with nothing to perform.",
             god: "You named God as the thread that matters, within the Christian path offered here.",
             other: "You named something outside the listed routes as the thread that matters. It does not need to be described here to be real.",
-            unclear: "You said you were not sure what matters, or where to begin. That uncertainty is left as it is, with no direction supplied and no meaning read into it.",
-            none: "You said nothing felt available or safe to reconnect with today. That absence is left intact, without a hidden reason and without being treated as failure.",
-            private: "You kept the direction private. Its content is not known or interpreted here, and none will be inferred.",
+            unclear:
+              "You are not sure what matters or where to begin. Uncertainty is an honest place to be; no direction has to be found today.",
+            none:
+              "Nothing felt available or safe to reconnect with today. That is not a failure, and nothing asks you to push past what is unavailable.",
+            private:
+              "You kept the direction private. That boundary is respected; what matters remains yours.",
           },
           unanswered:
-            "You left the thread unnamed, and none will be assigned. The direction simply remains open; no personal meaning or conclusion is drawn from that.",
+            "You left the thread unnamed. It can remain open without being chosen for you.",
         },
         {
           id: "care",
-          title: "What may deserve care now",
+          title: "Your pace and amount",
           from: "size",
           lines: {
-            tiny: "You named naming or noticing only as the amount of contact available now.",
-            small: "You named a few private minutes, or one small moment, as the amount available now.",
-            moderate: "You named one small outward action, if safe and realistic, as the amount available now.",
-            rehearse: "You chose to keep it inward — remembered, imagined or symbolic — as the amount available now.",
-            unclear: "You said you were not sure what amount fits. It stays uncertain here, and no amount will be suggested in its place.",
-            none: "You said no contact felt available today. That is left as it is, with nothing read into it.",
-            private: "You kept the amount private. Its content is not known or interpreted here, and none will be inferred.",
+            tiny:
+              "Naming or noticing only was the amount available today. That can be enough.",
+            small:
+              "A few private minutes, or one small moment, was the amount available today.",
+            moderate: "One small outward action felt possible, if safe and realistic.",
+            rehearse:
+              "Keeping it inward\u2014remembered, imagined, or symbolic\u2014was the amount that fit.",
+            unclear: "You are not sure what amount fits. Your pace can stay undecided.",
+            none: "No contact felt available today. That limit is respected.",
+            private: "You kept the amount private. The pace remains yours.",
           },
           unanswered:
-            "You left the amount unnamed. What is available remains open, and no amount will be estimated or supplied here.",
+            "You left the amount open. Nothing here asks you to decide it.",
         },
         {
           id: "next",
@@ -839,17 +849,17 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             outside: "You considered a window, a sound, an object, a memory, or another point of contact within reach. No change in how you feel is promised.",
             own: "You considered a few minutes for something that is yours and not a duty.",
             rehearse: "You chose to keep it inward — naming or remembering what matters. That naming is the whole of it.",
-            unclear: "You said you were not sure which step fits. No step will be chosen for you.",
-            none: "You said no step felt available, and none will be pressed or inferred.",
-            private: "You kept the step private. What it is remains yours alone.",
+            unclear: "You are not sure which step fits. You can leave it undecided.",
+            none: "No step felt available today. That is a complete way to leave this day.",
+            private: "You kept the step private. It remains yours.",
           },
           unanswered:
-            "You left the step unnamed. Nothing will be assumed about what you may or may not do after this page.",
+            "You left the step open. No action or decision is required after this page.",
         },
 
       ],
       closing:
-        "These selections do not establish why something matters to you, why it became distant, whether reconnection is possible, or what will change. Nothing here suggests moving toward anyone unsafe, and no reconnection is owed to anybody.",
+        "What matters, why it became distant, and whether reconnection is possible remain yours to know\u2014or not know. This day asks for no movement toward anyone unsafe, and no reconnection is owed to anybody. If a thread matters, it can still matter even when the safest amount of contact is none.",
     },
     close: {
       heading: "Held without force",
@@ -1047,91 +1057,90 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "This reflection uses only what was selected; it will not fill in what was left open.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It holds the practice as a possibility, never a promise or an instruction to use it.",
       sections: [
         {
           id: "hearing",
-          title: "The response — or what remained open",
+          title: "A possible response",
           from: "practice",
           lines: {
             grounding:
-              "You considered a pause and orienting outward. Nothing here says whether it would be available under pressure, or what it would change.",
+              "You considered pausing and orienting outward. Whether that cue is reachable under pressure remains open.",
             unsent:
-              "You considered putting private words to what you feel or need. The words themselves are not collected, and nothing about them is assumed.",
+              "You considered putting private words to what you feel or need. The words stay private, and nothing has to be shared.",
             boundary:
-              "You considered rehearsing a limit or a delay. Whether such a limit is safe, available, or ready for real life is not established here.",
+              "You considered rehearsing a limit or delay. This reflection cannot decide whether using it would be safe or available in real life, and no use is required.",
             support:
-              "You considered rehearsing asking for one kind of support. No person, request, or disclosure is identified.",
+              "You considered rehearsing one request for support. No person, disclosure, or action is required.",
             lament:
-              "You considered naming grief, anger, disappointment, or longing privately. No history, cause, or required release is inferred.",
+              "You considered privately naming grief, anger, disappointment, or longing. The feeling does not need to be explained, released, or resolved.",
             prepare:
-              "You considered preparing without deciding to act. Preparation stands on its own here, with no action implied.",
+              "You considered preparing without deciding to act. Preparation can remain complete in itself.",
             loosen:
-              "You considered a very small variation in a familiar response. No pattern, reason, or outcome is inferred from that.",
+              "You considered one very small variation in a familiar response. It remains a possibility, with no outcome promised.",
             unclear:
-              "You said you were not sure what to practise. That uncertainty is left as it is, and no response will be guessed for you.",
+              "You are not sure what to practise. The possibility can remain open without a response being chosen for you.",
             none:
-              "You said no different response feels available today. That absence is left intact, without being treated as failure.",
-            private:
-              "You kept this private. Its content is not known or interpreted here.",
+              "No different response felt available today. That is not a failure, and nothing asks you to manufacture one.",
+            private: "You kept the response private. That boundary is respected.",
           },
           unanswered:
-            "You left this open, and no response will be assigned. Nothing is assumed about what you might need, whether any rehearsal happened, or what may be available to you later.",
+            "You left the response open. No rehearsal or need is being presumed.",
         },
         {
           id: "underneath",
-          title: "The setting — or what remained open",
+          title: "The setting, if any",
           from: "where",
           lines: {
-            home: "You named home as a setting that came to mind. Nothing about who is there, or what happens there, is assumed.",
-            work: "You named work as a setting that came to mind. No estimate is made here about power, consequences, accommodation needs, or safety.",
+            home:
+              "Home was the setting that came to mind. The people and circumstances involved remain private.",
+            work:
+              "Work came to mind. Power, consequences, accommodation, and safety remain real considerations that this reflection cannot decide.",
             family:
-              "You named family as a setting that came to mind. No roles, closeness, safety, conflict, or history are assumed.",
+              "Family came to mind. No closeness, conflict, safety, or history is presumed.",
             friend:
-              "You named a friend or partner as a setting that came to mind. No closeness, safety, conflict, or history is assumed.",
-            self: "You named how you speak to yourself as a setting that came to mind. No form, cause, or diagnosis is inferred.",
+              "A friend or partner came to mind. No closeness, conflict, safety, or history is presumed.",
+            self:
+              "How you speak to yourself came to mind. It can be noticed without assigning a cause or label.",
             faith:
-              "You named faith or spiritual life as a setting that came to mind. Nothing is assumed about belief, practice, community, spiritual struggle, or whether honesty is welcomed there.",
-            private:
-              "You left the setting unspecified. What it refers to stays with you, and its content is not known or interpreted here.",
+              "Faith or spiritual life came to mind. Belief, practice, community, struggle, and whether honesty feels welcome all remain open.",
+            private: "You kept the setting private. That boundary is respected.",
             other:
-              "You named a setting outside the listed options. Its content is not collected here, and nothing about it is assumed.",
-            unclear:
-              "You said you were not sure of a setting. It stays uncertain here, and no setting will be assigned.",
-            none: "You left the setting general, and none will be added. A rehearsal can stay general.",
+              "A setting outside the list came to mind. You do not need to identify it here.",
+            unclear: "The setting is not clear. It can remain unclear.",
+            none: "No particular setting came to mind. The rehearsal can stay general.",
           },
           unanswered:
-            "You left the setting open, and none will be assigned. No person, relationship, risk, or context is inferred from that.",
+            "You left the setting open. No person, relationship, risk, or context is being filled in.",
         },
         {
           id: "next",
-          title: "How today was completed — or left open",
+          title: "How the practice was left",
           from: "step",
           lines: {
             again:
-              "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
+              "You considered reading or privately trying the opening of one response. Nothing outward has to follow.",
             sentence:
-              "You considered shortening or revising one sentence. Whether it is ever spoken anywhere is left entirely open.",
-            use: "You considered naming what would have to be true before any real-world use. That names conditions only; it does not commit you to using anything.",
+              "You considered shortening or revising one sentence. It never has to be spoken.",
+            use: "You considered what would need to be true before any real-world use. Naming conditions does not commit you to action.",
             ground:
-              "You considered keeping one accessible outward-orienting cue. Nothing is claimed about whether it will be reached for.",
+              "You considered keeping one accessible outward cue. Whether you use it later remains entirely yours.",
             support:
-              "You considered identifying support you might want before any real-world action. No contact and no disclosure are part of that.",
+              "You considered identifying support before any real-world action. No contact or disclosure is required.",
             prepare:
-              "You chose to leave the exercise here. Nothing more is implied or required by this step.",
-            unclear:
-              "You said you were not sure of a step. That is left uncertain, and no step will be chosen for you.",
-            none: "You said no step feels right today. That is left as it is, and none will be pressed or inferred.",
-            private:
-              "You kept the step private. Its content is not known or interpreted here.",
+              "You chose to leave the exercise here. Nothing more is required.",
+            unclear: "You are not sure what step fits. It can remain undecided.",
+            none: "No step felt right today. That is a complete way to leave the practice.",
+            private: "You kept the step private. It remains yours.",
           },
           unanswered:
-            "You left the step open, and none will be added. Nothing is claimed about whether any rehearsal happened, what became available, or what happens after today.",
+            "You left the step open. No rehearsal, action, or future response is being assumed.",
         },
 
       ],
       closing:
-        "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",
+        "A rehearsal is a possibility, not a contract. It does not explain how a familiar response began, make another response safe, or promise access under pressure. Whether you tried something, kept it private, or left it open, you remain free to revise it, seek support, or set it down.",
     },
     close: {
       heading: "Possibility, not a promise",
@@ -1443,95 +1452,94 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This reflection stays with what you chose—or left open—today. It does not fill in earlier days or decide what the journey meant for you.",
+        "This reflection stays with what you chose\u2014or left open\u2014today. It offers a gentle gathering, not a verdict on what the journey meant or whether anything changed.",
       sections: [
         {
           id: "hearing",
-          title: "What may be carried — or left here",
+          title: "What you may carry",
           from: "different",
           lines: {
             protective:
-              "One idea you chose to keep near is that a familiar response may have helped you cope. That does not establish where it began, what danger there was, what it protected, or whether it still helps.",
+              "You kept near the possibility that a familiar response may have helped you cope. Its beginnings, what it protected, and whether it still helps remain open; no danger or history is being assumed.",
             named:
-              "You kept near the idea that putting words to something may change how you relate to it. This cannot tell us that anything has become lighter, clearer, or easier to manage.",
+              "You kept near the idea that putting words to something can change how you relate to it. No relief or clarity has to be claimed for that idea to matter to you.",
             twopulls:
-              "You kept near the idea that more than one pull or truth can be present at once. Nothing here tells us that any particular conflict or ambivalence is alive in you now.",
+              "You kept near the idea that more than one pull or truth can be present at once. It can remain useful without defining any particular conflict in you.",
             cost:
-              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. That does not establish what any cost is, what caused it, what choice was available, or where blame belongs.",
+              "You kept near the idea that noticing a possible cost is not the same as blaming yourself. Cause, choice, responsibility, and blame can remain specific, complex, or unclear.",
             harsh:
-              "You kept near the idea that truth and responsibility do not require self-attack. This cannot tell us how you speak to yourself or how you have behaved, and honest accountability remains possible.",
+              "You kept near the idea that truth and responsibility do not require self-attack. Accountability remains possible without turning your whole self into the problem.",
             small:
-              "One idea you chose to keep near is that a small or preparatory response can matter without proving progress. Nothing here tells us that any step happened or that it mattered.",
+              "You kept near the idea that a small or preparatory response can matter without proving progress. The idea can remain meaningful without this app claiming that a step happened.",
             notalone:
-              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. That does not establish what support exists, who is safe, or what is within reach for you.",
+              "You kept near the idea that some things may need support or safer conditions rather than more effort from you. What support is safe or reachable remains an honest practical question\u2014not a measure of your worth.",
             nothing:
-              "You noted that nothing feels settled or complete right now, even if an idea resonates. An idea may resonate without becoming a finished outcome, a commitment, or a clear thing to carry forward, and nothing is promised to arrive later instead.",
+              "You noted that nothing feels settled or complete, even if an idea resonates. Resonance does not have to become an outcome, commitment, or promise.",
             unclear:
-              "You noted that you are not sure what, if anything, you want to carry forward. That uncertainty stays uncertainty here, and nothing is read into it.",
+              "You are not sure what, if anything, you want to carry forward. Uncertainty is a complete way to arrive at this ending.",
             private:
-              "You chose to keep this private. What was held privately remains yours—its content is not known or interpreted here.",
+              "You kept what you may carry private. That boundary is respected; it remains yours.",
           },
           unanswered:
-            "You left the first question open. Nothing is being chosen or interpreted for you.",
+            "You left this open. Nothing needs to be chosen for the journey to have a complete stopping place.",
         },
         {
           id: "care",
-          title: "What remains unfinished — or unnamed",
+          title: "What can remain unfinished",
           from: "unfinished",
           lines: {
             grief:
-              "You named grief, loss, or mourning as something still open. This cannot tell us any history, and no particular grief work is asked of you.",
+              "You named grief, loss, or mourning as still open. It can deserve care without being explained or turned into an assignment.",
             relationship:
-              "You named something relational that remains unresolved. No contact, reconciliation, forgiveness, or action follows from that, and no one is treated here as safe or unsafe.",
+              "You named something relational that remains unresolved. Nothing here requires contact, reconciliation, forgiveness, or action; this reflection cannot decide whether contact would be safe.",
             limit:
-              "You named a limit, boundary, or condition that may need consideration. Nothing here tells us that it is overdue, safe, available, or within your control.",
+              "You named a limit, boundary, or condition that may need consideration. Whether it is safe, available, or within your control can remain open.",
             support:
-              "You named support, accommodation, advocacy, or practical care that is not yet in place. That does not establish what service or person exists, or what you can reach.",
+              "You named support, accommodation, advocacy, or practical care that is not yet in place. Difficulty reaching care is not a personal failure.",
             self:
-              "You named how you relate to yourself in difficulty as something still open. This cannot tell us how you speak to yourself, and no compassionate outcome is required.",
+              "You named how you relate to yourself in difficulty as still open. It can be met with care without requiring a particular compassionate feeling or outcome.",
             faith:
-              "You named questions about faith, God, meaning, or belonging as open. No spiritual resolution, certainty, or prayer is required of you.",
+              "You named questions about faith, God, meaning, or belonging as still open. They are allowed to remain questions; no prayer or spiritual resolution is required.",
             rest:
               "You named rest, reduced demand, or recovery time as something still open. Rest may not be available to you, and that is not a fault of yours.",
             unclear:
-              "You noted that something remains open that you cannot or do not want to name. Its content stays yours, and nothing is promised to emerge later.",
+              "Something remains open that you cannot or do not want to name. It can remain private and unfinished without pressure to surface later.",
             outside:
               "You noted that what remains is mostly outside your control or influence. That limit is respected here, and responsibility is not handed back to you.",
             none:
-              "You noted that nothing in particular feels unfinished today. That is left exactly as it is.",
+              "Nothing in particular feels unfinished today. That answer is complete as it is.",
             private:
-              "You kept this unfinished place private. Its content is not known or interpreted here.",
+              "You kept the unfinished place private. That boundary is respected.",
           },
-          unanswered:
-            "You did not name an unfinished place. Nothing needs to be added.",
+          unanswered: "You left this open. Nothing needs to be added.",
         },
         {
           id: "next",
-          title: "How the journey was left — or left open",
+          title: "How you are leaving the journey",
           from: "step",
           lines: {
             support:
-              "You chose to identify one possible kind of support, accommodation, advocacy, or practical care. Nothing here tells us that anyone was contacted, that a service exists, or that it is within reach.",
+              "You identified one possible kind of support, accommodation, advocacy, or practical care. Considering it does not require contact, and availability remains a real question.",
             conversation:
-              "You chose to prepare one sentence you might share. Nothing has to be sent or said, no one is treated here as safe, and this choice does not tell us that anything happened.",
+              "You chose the possibility of preparing one sentence you might share. Nothing has to be sent or said, and this reflection cannot decide whether sharing would be safe.",
             limit:
-              "You chose to name one limit or condition you may want to consider. That does not establish that it is safe, available, or acted on.",
+              "You chose the possibility of naming one limit or condition. No action is required, and safety and availability remain open.",
             rest:
-              "You chose to identify one realistic form of rest or reduced demand. Rest may not be available to you, and this choice does not tell us that anything changed.",
+              "You identified one realistic form of rest or reduced demand, if available. Whether it happens does not decide the worth of the need.",
             kind:
-              "You chose to keep one fair sentence for a difficult moment. No daily promise, habit, or effect follows from that.",
+              "You chose to keep one fair sentence available for a difficult moment, without turning it into a promise or habit.",
             revisit:
-              "You chose one day or practice you may return to. Nothing is scheduled, and returning is not required.",
+              "You chose one day or practice you may return to. It remains available without being scheduled or owed.",
             prepare:
-              "You chose to let the journey end here with nothing outward required. Nothing further follows from that.",
+              "You chose to let the journey end here with nothing outward required. That is a complete way to leave.",
             unavailable:
-              "You noted that a step may matter, but none feels safe or available now. That stays exactly as you left it, and nothing is asked of you.",
+              "A step may matter, but none feels safe or available now. That limit is respected; you are not being asked to override it.",
             unclear:
-              "You noted that you are not sure how you want to leave this. That uncertainty stays as uncertainty.",
+              "You are not sure how you want to leave this. The journey can still end gently without an answer.",
             none:
-              "You noted that no next step feels right or needed today. That stays exactly as you left it.",
+              "No next step feels right or needed today. The journey can be complete without one.",
             private:
-              "You kept how you are leaving this journey private. No private content is known or inferred here.",
+              "You kept how you are leaving private. That boundary is respected.",
           },
           unanswered:
             "You did not choose a next step. The journey can end here without one.",

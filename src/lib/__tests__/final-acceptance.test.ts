@@ -114,7 +114,7 @@ describe("approved therapeutic wording", () => {
   it("keeps Day 1's arrival echo purely descriptive", () => {
     const day1 = getFirstJourneyDay(1)!;
     const text = JSON.stringify(day1);
-    expect(text).toContain("You selected that you arrived steadier than usual.");
+    expect(text).toContain("You arrived steadier than usual.");
     expect(text).not.toContain("more room than usual");
   });
 

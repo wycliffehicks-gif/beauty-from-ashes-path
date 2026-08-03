@@ -835,15 +835,15 @@ describe("Day 7 revision", () => {
     const unclearIdx = need.options.findIndex((o) => o.id === "unsure");
     const built = buildReflection(day7, [`q.tone.${privateIdx}`, `q.need.${unclearIdx}`]);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(body).toContain("not known or interpreted here");
-    expect(body).toContain("no underlying need will be guessed at");
+    expect(body).toContain("You kept your inner response private. That boundary is respected");
+    expect(body).toContain("You can begin with accuracy and non-cruelty");
     expect(body).not.toContain("nothing was recorded");
 
     const noneIdx = need.options.findIndex((o) => o.id === "none");
     const noneBody = buildReflection(day7, [`q.need.${noneIdx}`])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(noneBody).toContain("That absence stays as it is");
+    expect(noneBody).toContain("That is a complete answer");
   });
 
   it("maps only the selected ids on an answered path", () => {

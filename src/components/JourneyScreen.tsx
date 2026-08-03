@@ -139,9 +139,8 @@ export function JourneyScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey]);
 
-  // Leaving the day entirely (Settings, Home, a full unmount) means returning to
-  // the very same screen is a real change again and must be announced.
-  useEffect(() => markScreenLeft, []);
+
+
 
 
   return (

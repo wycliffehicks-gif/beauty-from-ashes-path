@@ -980,6 +980,16 @@ function ReflectionScreen({
 export const CLOSE_CONTAINMENT_NOTE =
   "One day at a time is enough. There is no need to continue now.";
 
+/**
+ * Quiet secondary label on a daily close. It offers the next day as clearly
+ * optional and never urges going straight on; Day 10 has no next day, so there
+ * is no label and no action at all.
+ */
+export function closeNextDayLabel(nextDay: number | null): string | null {
+  return nextDay ? `Open Day ${nextDay} when you’re ready` : null;
+}
+
+
 function CloseScreen({
 
   content,

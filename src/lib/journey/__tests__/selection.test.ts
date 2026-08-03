@@ -908,9 +908,9 @@ describe("Day 7 revision", () => {
       "that does not require approving of the feeling or acting on it.",
     );
     expect(text).toContain(
-      "and no explanation or hidden meaning will be assigned",
+      "that is a complete answer; you do not have to force words that feel false",
     );
-    expect(text).toContain("what it says about your worth");
+    expect(text).toContain("your worth does not depend on attacking yourself");
     expect(text).toContain(
       "this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
     );

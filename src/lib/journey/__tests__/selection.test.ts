@@ -2167,12 +2167,12 @@ describe("Day 10 revision", () => {
 
   it("keeps the reflection answer-driven with complete line coverage", () => {
     expect(day10.reflection.intro).toBe(
-      "This reflection stays with what you chose—or left open—today. It does not fill in earlier days or decide what the journey meant for you.",
+      "This reflection stays with what you chose\u2014or left open\u2014today. It offers a gentle gathering, not a verdict on what the journey meant or whether anything changed.",
     );
     expect(day10.reflection.sections.map((s) => [s.id, s.title, s.from])).toEqual([
-      ["hearing", "What may be carried — or left here", "different"],
-      ["care", "What remains unfinished — or unnamed", "unfinished"],
-      ["next", "How the journey was left — or left open", "step"],
+      ["hearing", "What you may carry", "different"],
+      ["care", "What can remain unfinished", "unfinished"],
+      ["next", "How you are leaving the journey", "step"],
     ]);
     const sources = { different, unfinished, step: day10.step };
     for (const section of day10.reflection.sections) {

@@ -10,10 +10,37 @@ import { useEffect, useRef, type ReactNode } from "react";
  */
 let lastFocusedScreenKey: string | null = null;
 
+/**
+ * Sentinel recorded when a journey screen unmounts (the person opened Settings,
+ * went Home, or otherwise left the day). It is deliberately not a real screen
+ * key, so returning to the very same screen still counts as a screen change and
+ * is announced, while a first document load (null) never steals focus.
+ */
+const SCREEN_LEFT = "\u0000screen-left";
+
+/**
+ * Record that `key` is now the visible screen and report whether that was a
+ * genuine screen transition (as opposed to the first screen of a visit or the
+ * same screen re-rendering). Every in-day screen identity — including the
+ * reflection, which manages its own focus — must call this so browser Back from
+ * it is still recognised as a change.
+ */
+export function recordScreenTransition(key: string): boolean {
+  const previous = lastFocusedScreenKey;
+  lastFocusedScreenKey = key;
+  return previous !== null && previous !== key;
+}
+
+/** Note that the journey screen was left, so coming back announces the screen. */
+export function markScreenLeft() {
+  if (lastFocusedScreenKey !== null) lastFocusedScreenKey = SCREEN_LEFT;
+}
+
 /** Test-only: forget the remembered screen so each case starts from a load. */
 export function __resetScreenFocusTracking() {
   lastFocusedScreenKey = null;
 }
+
 
 /**
  * Reusable therapeutic screen shell for The First Journey.

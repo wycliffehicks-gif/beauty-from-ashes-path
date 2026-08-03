@@ -663,7 +663,7 @@ describe("Day 6 revision", () => {
     const noneIdx = cost.options.findIndex((o) => o.id === "none");
     const built = buildReflection(day6, [`q.cost.${noneIdx}`]);
     const body = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(body).toContain("do not need to invent one");
+    expect(body).toContain("without inventing an answer");
     expect(body).not.toContain("You named");
   });
 });

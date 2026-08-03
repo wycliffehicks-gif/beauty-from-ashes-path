@@ -935,31 +935,20 @@ function ReflectionScreen({
     const dayId = dayIdFor(content.day);
     // The proof carries the snapshot format, the current approved reflection
     // content for this day, and the coded answers. A saved reflection from an
-    // older wording (or with no proof at all) therefore cannot be restored.
-    const snapshot = reflectionSnapshot(content, answers);
-
-    // Restore the exact saved response when it still belongs to these answers.
-    if (savedReflection.snapshot && savedReflection.snapshot === snapshot) {
-      const restored = restoreReflection(content, savedReflection.text);
-      if (restored) {
-        setState({ token, built: restored });
-        onReady(token);
-        return;
-      }
+    // older wording (or with no proof at all) therefore cannot be restored: it
+    // is rebuilt deterministically and the stored copy is replaced.
+    const resolved = resolveReflection(content, answers, savedReflection);
+    setState({ token, built: resolved.built });
+    if (resolved.replaceSaved) {
+      saveDayReflection(dayId, resolved.text, resolved.snapshot);
+      onSaved(resolved.text, resolved.snapshot);
     }
-
-
-    // Otherwise rebuild deterministically and replace what was saved.
-    const next = buildReflection(content, answers);
-    const text = reflectionToText(next);
-    setState({ token, built: next });
-    saveDayReflection(dayId, text, snapshot);
-    onSaved(text, snapshot);
     onReady(token);
     // savedReflection is read once per screen entry; rebuilding on our own save
     // would loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, token, answersLoaded]);
+
 
   // Only a response built for the current answers may be shown.
   const built = state && state.token === token ? state.built : null;

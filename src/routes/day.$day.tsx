@@ -47,7 +47,7 @@ import {
 } from "@/lib/journey/reflection-engine";
 import {
   answersSnapshot,
-  reflectionSnapshot,
+  resolveReflection,
   restoreReflection,
 } from "@/lib/journey/reflection-restore";
 import { resolveVisibleIndex } from "@/lib/journey/screen-access";

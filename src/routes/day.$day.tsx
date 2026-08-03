@@ -929,7 +929,10 @@ function ReflectionScreen({
   useEffect(() => {
     if (!answersLoaded) return;
     const dayId = dayIdFor(content.day);
-    const snapshot = answersSnapshot(answers);
+    // The proof carries the snapshot format, the current approved reflection
+    // content for this day, and the coded answers. A saved reflection from an
+    // older wording (or with no proof at all) therefore cannot be restored.
+    const snapshot = reflectionSnapshot(content, answers);
 
     // Restore the exact saved response when it still belongs to these answers.
     if (savedReflection.snapshot && savedReflection.snapshot === snapshot) {
@@ -940,6 +943,7 @@ function ReflectionScreen({
         return;
       }
     }
+
 
     // Otherwise rebuild deterministically and replace what was saved.
     const next = buildReflection(content, answers);

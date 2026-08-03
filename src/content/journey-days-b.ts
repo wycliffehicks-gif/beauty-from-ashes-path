@@ -298,11 +298,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "Seeing what is and is not changeable was the step. Clarity can coexist with unfinishedness.",
           },
           unanswered:
-            "No step was chosen. The honest attention you gave the question can stand on its own.",
+            "No next step was named. The question can remain open; nothing else is required today.",
         },
       ],
       closing:
-        "No conclusion has been reached about what caused the cost or what to change. What you noticed may point toward choice, support, grief, a safer condition or simply more time.",
+        "What you noticed can be held without blame or a rushed conclusion. It may point toward choice, support, grief, safer conditions\u2014or simply more time, and your pace still matters.",
     },
     close: {
       heading: "Seen clearly, held gently",

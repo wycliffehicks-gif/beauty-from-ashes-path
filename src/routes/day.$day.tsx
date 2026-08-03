@@ -1035,9 +1035,10 @@ function CloseScreen({
             className="btn-quiet block w-full text-center"
             data-testid="close-next-day"
           >
-            Continue to Day {nextDay}
+            {closeNextDayLabel(nextDay)}
           </Link>
         ) : null}
+
         <p className="pt-1 text-center text-sm text-muted-foreground">
           {CLOSE_CONTAINMENT_NOTE}
         </p>

@@ -2291,9 +2291,9 @@ describe("Day 10 revision", () => {
     ]) {
       const text = legacyQ1(positions);
       expect(text).toContain("may have helped you cope");
-      expect(text).toContain("An idea may resonate without becoming a finished outcome");
+      expect(text).toContain("Resonance does not have to become an outcome");
       expect(text).not.toContain("No particular thread feels worth carrying");
-      expect(text).not.toContain("You left the first question open");
+      expect(text).not.toContain("You left this open. Nothing needs to be chosen");
     }
 
     const full = legacyQ1([0, 1, 2, 3, 4, 5, 6, 7]);

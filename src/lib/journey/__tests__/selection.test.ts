@@ -1294,7 +1294,7 @@ describe("Day 8 revision", () => {
       "What matters can be met in a way that is small, safe, and mine to choose.",
     );
     expect(day8.reflection.closing).toContain(
-      "do not establish why something matters to you, why it became distant, whether reconnection is possible, or what will change",
+      "remain yours to know\u2014or not know",
     );
   });
 

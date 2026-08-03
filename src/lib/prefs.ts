@@ -65,12 +65,25 @@ function sanitizeVisitedDays(raw: unknown): number[] {
   return out;
 }
 
+/**
+ * True only for the canonical UTC ISO form the app itself writes, e.g.
+ * "2026-08-02T00:00:00.000Z". Any other prose, an impossible date, or a
+ * non-canonical rendering of a real date is rejected, so a crafted record
+ * cannot pose as a current acceptance.
+ */
+function isCanonicalIsoTimestamp(value: string): boolean {
+  const ms = Date.parse(value);
+  if (Number.isNaN(ms)) return false;
+  return new Date(ms).toISOString() === value;
+}
+
 function sanitizeLegalAcceptance(raw: unknown): LegalAcceptance | undefined {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
   const r = raw as Record<string, unknown>;
   const version = typeof r.version === "string" ? r.version.slice(0, 64) : "";
   const acceptedAt = typeof r.acceptedAt === "string" ? r.acceptedAt.slice(0, 64) : "";
   if (version.length === 0 || acceptedAt.length === 0) return undefined;
+  if (acceptedAt.length > 24 || !isCanonicalIsoTimestamp(acceptedAt)) return undefined;
   return { version, acceptedAt };
 }
 

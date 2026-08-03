@@ -18,6 +18,61 @@ export function answersSnapshot(answerIds: readonly string[] | undefined): strin
 }
 
 /**
+ * Snapshot format marker. Bumping this alone invalidates every saved
+ * reflection, because a saved snapshot must match character for character.
+ */
+export const REFLECTION_SNAPSHOT_VERSION = "r2";
+
+/** Small deterministic non-cryptographic hash (FNV-1a, 32-bit, hex). */
+function hashText(text: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(16).padStart(8, "0");
+}
+
+/**
+ * A fingerprint of the founder-approved reflection copy for one day: its
+ * intro, every section (id, title, opening, source question, each option line
+ * and the unanswered line) and its closing. Only approved day content goes in
+ * — never a label the person chose, never anything typed, never notes. A future
+ * edit to any of that copy changes this value, so a reflection saved under the
+ * older wording can no longer be restored.
+ */
+export function reflectionContentFingerprint(day: JourneyDayContent): string {
+  const r = day.reflection;
+  const parts: string[] = [`day:${day.day}`, `intro:${r.intro}`];
+  for (const s of r.sections) {
+    parts.push(`s:${s.id}`, `t:${s.title}`, `o:${s.opening ?? ""}`, `f:${s.from ?? ""}`);
+    const lines = s.lines ?? {};
+    for (const key of Object.keys(lines).sort()) {
+      parts.push(`l:${key}=${lines[key]}`);
+    }
+    parts.push(`u:${s.unanswered}`);
+  }
+  parts.push(`c:${r.closing}`);
+  return hashText(parts.join("\u0001"));
+}
+
+/**
+ * The full proof stored beside a saved reflection: snapshot format, the
+ * approved reflection content for that day, and the day's coded selections.
+ * Storage-safe characters only.
+ */
+export function reflectionSnapshot(
+  day: JourneyDayContent,
+  answerIds: readonly string[] | undefined,
+): string {
+  return [
+    REFLECTION_SNAPSHOT_VERSION,
+    reflectionContentFingerprint(day),
+    answersSnapshot(answerIds),
+  ].join(":");
+}
+
+/**
  * Rebuild the structured reflection from saved plain text, so the exact words a
  * person already read are what they see again. Returns null whenever the saved
  * text cannot be mapped confidently onto this day's approved sections; the

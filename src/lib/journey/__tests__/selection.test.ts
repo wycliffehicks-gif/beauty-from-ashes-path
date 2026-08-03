@@ -2299,11 +2299,11 @@ describe("Day 10 revision", () => {
     const full = legacyQ1([0, 1, 2, 3, 4, 5, 6, 7]);
     expect(full).toContain("putting words to something");
     expect(full).toContain("more than one pull or truth");
-    expect(full).toContain("what support exists");
+    expect(full).toContain("may need support or safer conditions");
 
     const alone = legacyQ1([7]);
-    expect(alone).toContain("nothing feels settled or complete right now");
-    expect(alone).toContain("An idea may resonate without becoming a finished outcome");
+    expect(alone).toContain("nothing feels settled or complete");
+    expect(alone).toContain("Resonance does not have to become an outcome");
 
     const q2 = buildReflection(
       day10,

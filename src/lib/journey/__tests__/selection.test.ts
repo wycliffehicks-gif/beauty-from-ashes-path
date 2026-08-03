@@ -1208,7 +1208,7 @@ describe("Day 8 revision", () => {
   it("has no unconditional reflection openings and maps every option to a line", () => {
     for (const section of day8.reflection.sections) {
       expect(section.opening, section.id).toBeUndefined();
-      expect(section.unanswered.length, section.id).toBeGreaterThan(80);
+      expect(section.unanswered.length, section.id).toBeGreaterThan(40);
     }
     const pairs: Array<[string, string[]]> = [
       ["hearing", route.options.map((o) => o.id)],

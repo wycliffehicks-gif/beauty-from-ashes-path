@@ -45,7 +45,11 @@ import {
   reflectionToText,
   type BuiltReflection,
 } from "@/lib/journey/reflection-engine";
-import { answersSnapshot, restoreReflection } from "@/lib/journey/reflection-restore";
+import {
+  answersSnapshot,
+  reflectionSnapshot,
+  restoreReflection,
+} from "@/lib/journey/reflection-restore";
 import { resolveVisibleIndex } from "@/lib/journey/screen-access";
 import { toggleSelection } from "@/lib/journey/selection";
 import {

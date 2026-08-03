@@ -517,11 +517,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "From what you chose today, tentatively and without conclusion.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It offers no verdict\u2014only a gentler way of holding what may be true.",
       sections: [
         {
           id: "hearing",
-          title: "The inner response you named",
+          title: "The inner response",
           from: "tone",
           lines: {
             harsh: "The familiar inner response runs harsh or shaming. That is what is here; nothing is being said about its origin, purpose or meaning.",

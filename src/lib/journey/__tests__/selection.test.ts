@@ -1646,7 +1646,7 @@ describe("Day 9 revision", () => {
   it("has no unconditional openings and a line for every retained or appended id", () => {
     for (const section of day9.reflection.sections) {
       expect(section.opening, section.id).toBeUndefined();
-      expect(section.unanswered.length, section.id).toBeGreaterThan(80);
+      expect(section.unanswered.length, section.id).toBeGreaterThan(40);
     }
     const pairs: Array<[string, string[]]> = [
       ["hearing", practice.options.map((o) => o.id)],

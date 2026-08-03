@@ -304,23 +304,25 @@
   padding-bottom: calc(6rem + env(safe-area-inset-bottom));
 }
 
-/* In-day progress segments. Both states hold at least 3:1 against the ivory
-   reading ground and against the dark reading ground, while keeping the gold /
-   navy character. ARIA progress information is unchanged. */
-/* Reached and unreached segments must differ by more than hue: unreached is a
-   thin navy #0D2B55 rule, reached a thicker gold #9A7723 one (about 3.37:1
-   against each other, each above 3:1 against ivory), vertically centred so the
-   indicator stays quiet. */
-@utility bfa-progress-segment {
-  height: 2px;
-  align-self: center;
-  flex: 1 1 0%;
-  border-radius: 999px;
-  background: #0D2B55;
-}
+/* In-day progress segments. Reached and unreached differ by more than hue:
+   thickness is always a second cue, and each state holds at least 3:1 against
+   its own reading ground and against the other state.
+
+   Light ground (ivory #F6F2EA): unreached 2px navy #0D2B55, reached 4px gold
+   #9A7723 — about 3.37:1 against each other, each above 3:1 against ivory.
+   Dark ground (#12213D, see the dark override below): navy would fall to about
+   1.14:1 and vanish, so the pair becomes unreached 2px gold #9A7723 and reached
+   4px ivory #F6F2EA — about 3.84:1 and 14.35:1 against #12213D, and about
+   3.73:1 against each other. ARIA progress information is unchanged. */
 .bfa-progress-segment[data-state="reached"] {
   height: 4px;
   background: #9A7723;
+}
+.dark .bfa-progress-segment {
+  background: #9A7723;
+}
+.dark .bfa-progress-segment[data-state="reached"] {
+  background: #F6F2EA;
 }
 
 

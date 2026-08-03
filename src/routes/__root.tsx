@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -13,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SplashGate } from "../components/SplashGate";
 import { AgreementGate } from "../components/AgreementGate";
+import { recordRouteTransition } from "../components/JourneyScreen";
 
 /**
  * System dark mode, applied before the body paints so there is no light flash
@@ -142,6 +144,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // Recorded during render, before the routed child mounts, so a screen knows
+  // whether it arrived through a client navigation or an ordinary document
+  // load. Idempotent and client-only, so StrictMode's repeated render probe and
+  // SSR both leave it unchanged.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  recordRouteTransition(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>

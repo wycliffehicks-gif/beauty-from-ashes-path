@@ -9,7 +9,7 @@
 // is replaced. Nothing here calls a network or a model.
 
 import type { JourneyDayContent } from "@/content/journey-types";
-import type { BuiltReflection } from "./reflection-engine";
+import { buildReflection, reflectionToText, type BuiltReflection } from "./reflection-engine";
 
 /** A stable, order-independent fingerprint of a day's coded selections. */
 export function answersSnapshot(answerIds: readonly string[] | undefined): string {
@@ -119,4 +119,33 @@ export function restoreReflection(
   } catch {
     return null;
   }
+}
+
+/**
+ * Decide, deterministically and locally, what a person sees on the reflection
+ * screen: the exact saved words when the full proof matches, otherwise a fresh
+ * build from the current founder-approved content. `replaceSaved` tells the
+ * caller that the stored copy must be overwritten, so pre-fix wording can never
+ * be rendered or announced again.
+ */
+export function resolveReflection(
+  day: JourneyDayContent,
+  answers: readonly string[] | undefined,
+  saved: { text?: string; snapshot?: string },
+): { built: BuiltReflection; text: string; snapshot: string; restored: boolean; replaceSaved: boolean } {
+  const snapshot = reflectionSnapshot(day, answers);
+  if (saved.snapshot && saved.snapshot === snapshot) {
+    const restored = restoreReflection(day, saved.text);
+    if (restored) {
+      return {
+        built: restored,
+        text: saved.text ?? "",
+        snapshot,
+        restored: true,
+        replaceSaved: false,
+      };
+    }
+  }
+  const built = buildReflection(day, Array.from(answers ?? []));
+  return { built, text: reflectionToText(built), snapshot, restored: false, replaceSaved: true };
 }

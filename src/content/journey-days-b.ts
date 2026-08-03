@@ -536,15 +536,16 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "The familiar response is more wordless — pressure, blankness or withdrawal. That is described, not interpreted.",
             mixed:
               "The response changes. Neither the kinder nor the harsher version has to stand for the whole.",
-            kind: "The response is mostly fair or kind. That is a resource already present, without any need to keep it perfect.",
-            none: "No particular inner response stood out, and none will be invented here.",
+            kind:
+              "The response you named is mostly fair or kind. It can be acknowledged without requiring it to stay that way all the time.",
+            none: "No particular inner response stood out today. Nothing needs to be invented.",
             unclear:
-              "What happens inside is not clear to you. That uncertainty stays as it is, with no hidden meaning attached.",
+              "What happens inside is not clear yet. Uncertainty can be met without judgement or explanation.",
             private:
-              "You kept this private. Its content is not known or interpreted here, and no tone, cause or history is inferred from it.",
+              "You kept your inner response private. That boundary is respected, and the fuller experience remains yours.",
           },
           unanswered:
-            "No inner response was selected, and none will be inferred. No tone, cause, purpose or history is being assigned to you from this day.",
+            "You left your inner response unnamed. You do not have to describe it for this reflection to meet you without judgement.",
         },
         {
           id: "care",

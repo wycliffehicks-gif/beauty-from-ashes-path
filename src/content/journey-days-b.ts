@@ -566,13 +566,13 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             forgiveness:
               "You chose to separate accountability from self-punishment. That excuses nothing, and no forgiveness of yourself or anyone else is required.",
             unsure:
-              "What compassion would look like is not clear yet. That can remain unclear, and no underlying need will be guessed at.",
-            none: "No different way of holding this felt right today. That absence stays as it is, and no explanation or hidden meaning will be assigned.",
-            private:
-              "You kept this private. Its content is not known or interpreted here, and no need or response is inferred from it.",
+              "Compassion is not clear yet. You can begin with accuracy and non-cruelty without forcing warmth or an answer.",
+            none:
+              "No different way of holding this felt right today. That is a complete answer; you do not have to force words that feel false.",
+            private: "You kept what might help private. That boundary is respected.",
           },
           unanswered:
-            "No more compassionate way of holding this was selected, and none will be inferred. Nothing here concludes that you need something you did not name.",
+            "You left this open. Nothing you did not name will be placed on you; the possibility of truth without self-attack can remain available.",
         },
         {
           id: "next",

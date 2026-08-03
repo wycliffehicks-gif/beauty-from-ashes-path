@@ -209,10 +209,20 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
         locator: progress.locator,
         requested: true,
       });
-      if (idx > 0) goTo(idx, { replace: true });
+      // Only a real earned resume target defers announcement. With nothing to
+      // resume to, the state settles immediately so Arrive is still announced.
+      if (idx > 0) {
+        setResumePending(true);
+        goTo(idx, { replace: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayId]);
+
+  // The resume navigation has landed: the URL now names a real screen.
+  useEffect(() => {
+    if (resumePending && urlIdx >= 0) setResumePending(false);
+  }, [resumePending, urlIdx]);
 
   // Quiet autosave of the exact screen actually being shown. This effect never
   // creates trust: a URL render can no longer raise the high-water mark, so a
@@ -224,6 +234,13 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     // address bar so reload and Back stay consistent with what is shown.
     if (requested !== i) goTo(i, { replace: true });
   }, [dayId, stepKeys, i, answersLoaded, requested, goTo]);
+
+  /**
+   * Focus/announcement may only happen once the storage read, the resume
+   * decision and any URL correction have all settled. Until then no in-day
+   * focus key exists, so a temporary opening screen is never announced.
+   */
+  const focusSettled = answersLoaded && !resumePending && requested === i;
 
   /**
    * Reflection readiness is keyed to BOTH the reflection screen and the current

@@ -1261,22 +1261,22 @@ describe("Day 8 revision", () => {
     const unclear = buildReflection(day8, ["q.route.9", "q.size.4", "step.5"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(unclear).toContain("That uncertainty is left as it is");
-    expect(unclear).toContain("It stays uncertain here");
-    expect(unclear).toContain("No step will be chosen for you");
+    expect(unclear).toContain("Uncertainty is an honest place to be");
+    expect(unclear).toContain("Your pace can stay undecided");
+    expect(unclear).toContain("You can leave it undecided");
 
     const none = buildReflection(day8, ["q.route.10", "q.size.5", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(none).toContain("That absence is left intact");
-    expect(none).toContain("without being treated as failure");
-    expect(none).toContain("none will be pressed or inferred");
+    expect(none).toContain("That is not a failure");
+    expect(none).toContain("That limit is respected");
+    expect(none).toContain("That is a complete way to leave this day");
 
     const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(priv).toContain("You kept the direction private");
-    expect(priv).toContain("Its content is not known or interpreted here");
+    expect(priv).toContain("what matters remains yours");
     expect(priv).toContain("You kept the amount private");
     expect(priv).toContain("You kept the step private");
     expect(priv).not.toContain("nothing was recorded");

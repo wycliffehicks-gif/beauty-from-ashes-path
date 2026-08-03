@@ -2196,9 +2196,9 @@ describe("Day 10 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain(
-      "You left the first question open. Nothing is being chosen or interpreted for you.",
+      "You left this open. Nothing needs to be chosen for the journey to have a complete stopping place.",
     );
-    expect(text).toContain("You did not name an unfinished place. Nothing needs to be added.");
+    expect(text).toContain("You left this open. Nothing needs to be added.");
     expect(text).toContain(
       "You did not choose a next step. The journey can end here without one.",
     );

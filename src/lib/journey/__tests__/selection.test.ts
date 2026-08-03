@@ -1704,24 +1704,24 @@ describe("Day 9 revision", () => {
     const unclear = buildReflection(day9, ["q.practice.7", "q.where.8", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(unclear).toContain("That uncertainty is left as it is");
-    expect(unclear).toContain("It stays uncertain here");
-    expect(unclear).toContain("no step will be chosen for you");
+    expect(unclear).toContain("You are not sure what to practise");
+    expect(unclear).toContain("The setting is not clear. It can remain unclear");
+    expect(unclear).toContain("You are not sure what step fits");
 
     const none = buildReflection(day9, ["q.practice.8", "q.where.9", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(none).toContain("That absence is left intact");
-    expect(none).toContain("You left the setting general");
-    expect(none).toContain("none will be pressed or inferred");
+    expect(none).toContain("That is not a failure");
+    expect(none).toContain("The rehearsal can stay general");
+    expect(none).toContain("That is a complete way to leave the practice");
 
     const priv = buildReflection(day9, ["q.practice.9", "q.where.6", "step.8"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(priv).toContain("You kept this private");
-    expect(priv).toContain("You left the setting unspecified");
+    expect(priv).toContain("You kept the response private");
+    expect(priv).toContain("You kept the setting private");
     expect(priv).toContain("You kept the step private");
-    expect(priv.match(/not known or interpreted here/g)!.length).toBe(3);
+    expect(priv.match(/That boundary is respected/g)!.length).toBe(2);
     expect(priv).not.toContain("nothing was recorded");
   });
 
@@ -1729,8 +1729,8 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.where.0", "q.where.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You named home as a setting that came to mind");
-    expect(text).toContain("You left the setting unspecified");
+    expect(text).toContain("Home was the setting that came to mind");
+    expect(text).toContain("You kept the setting private");
     expect(text).not.toContain("No setting was selected");
     expect(text).not.toContain("no named setting");
   });

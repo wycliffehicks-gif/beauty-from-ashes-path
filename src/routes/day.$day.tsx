@@ -385,7 +385,9 @@ function ScreenBody({
       continueHint={nav.continueHint}
       footer={nav.footer}
       focusKey={screenFocusKey}
+      manageFocus={manageFocus}
     >
+
       {node}
     </JourneyScreen>
   );

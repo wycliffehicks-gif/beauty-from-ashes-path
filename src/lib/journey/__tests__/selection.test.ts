@@ -1691,12 +1691,12 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, ["q.practice.2", "q.where.1", "step.4"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You considered rehearsing a limit or a delay");
-    expect(text).toContain("You named work as a setting that came to mind");
-    expect(text).toContain("identifying support you might want before any real-world action");
+    expect(text).toContain("You considered rehearsing a limit or delay");
+    expect(text).toContain("Work came to mind");
+    expect(text).toContain("You considered identifying support before any real-world action");
     expect(text).not.toContain("Rehearsing asking for one kind of support was selected");
     expect(text).not.toContain("Putting private words");
-    expect(text).not.toContain("Home was selected");
+    expect(text).not.toContain("Home was the setting that came to mind");
     expect(text).not.toContain("Keeping one accessible outward-orienting cue");
   });
 

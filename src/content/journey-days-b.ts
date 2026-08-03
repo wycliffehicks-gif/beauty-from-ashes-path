@@ -214,7 +214,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "Drawn only from today's selections, and offered tentatively.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It is offered gently, without deciding what caused anything or what should change.",
       sections: [
         {
           id: "hearing",

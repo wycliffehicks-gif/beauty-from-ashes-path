@@ -280,7 +280,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           opening:
             "Some costs can be eased through your own choices; some require support, accommodation, resources, safer conditions or change from others; some may need to be grieved or carried differently for now. Noticing that difference is information, not failure.",
           unanswered:
-            "However today went, the person living with this may deserve some gentleness now.",
+            "Whatever today held, the person living with this deserves gentleness without needing a complete explanation.",
         },
         {
           id: "next",

@@ -794,11 +794,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This reflection uses only what was selected; it will not fill in what was left open.",
+        "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
       sections: [
         {
           id: "hearing",
-          title: "The thread — or what remained open",
+          title: "A thread\u2014or an open question",
           from: "route",
           lines: {
             self: "You named something of your own as the thread that matters — a preference or an interest, rather than a duty.",
@@ -810,28 +810,34 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             community: "You named a community, culture, tradition or place of belonging as the thread that matters, with nothing to perform.",
             god: "You named God as the thread that matters, within the Christian path offered here.",
             other: "You named something outside the listed routes as the thread that matters. It does not need to be described here to be real.",
-            unclear: "You said you were not sure what matters, or where to begin. That uncertainty is left as it is, with no direction supplied and no meaning read into it.",
-            none: "You said nothing felt available or safe to reconnect with today. That absence is left intact, without a hidden reason and without being treated as failure.",
-            private: "You kept the direction private. Its content is not known or interpreted here, and none will be inferred.",
+            unclear:
+              "You are not sure what matters or where to begin. Uncertainty is an honest place to be; no direction has to be found today.",
+            none:
+              "Nothing felt available or safe to reconnect with today. That is not a failure, and nothing asks you to push past what is unavailable.",
+            private:
+              "You kept the direction private. That boundary is respected; what matters remains yours.",
           },
           unanswered:
-            "You left the thread unnamed, and none will be assigned. The direction simply remains open; no personal meaning or conclusion is drawn from that.",
+            "You left the thread unnamed. It can remain open without being chosen for you.",
         },
         {
           id: "care",
-          title: "What may deserve care now",
+          title: "Your pace and amount",
           from: "size",
           lines: {
-            tiny: "You named naming or noticing only as the amount of contact available now.",
-            small: "You named a few private minutes, or one small moment, as the amount available now.",
-            moderate: "You named one small outward action, if safe and realistic, as the amount available now.",
-            rehearse: "You chose to keep it inward — remembered, imagined or symbolic — as the amount available now.",
-            unclear: "You said you were not sure what amount fits. It stays uncertain here, and no amount will be suggested in its place.",
-            none: "You said no contact felt available today. That is left as it is, with nothing read into it.",
-            private: "You kept the amount private. Its content is not known or interpreted here, and none will be inferred.",
+            tiny:
+              "Naming or noticing only was the amount available today. That can be enough.",
+            small:
+              "A few private minutes, or one small moment, was the amount available today.",
+            moderate: "One small outward action felt possible, if safe and realistic.",
+            rehearse:
+              "Keeping it inward\u2014remembered, imagined, or symbolic\u2014was the amount that fit.",
+            unclear: "You are not sure what amount fits. Your pace can stay undecided.",
+            none: "No contact felt available today. That limit is respected.",
+            private: "You kept the amount private. The pace remains yours.",
           },
           unanswered:
-            "You left the amount unnamed. What is available remains open, and no amount will be estimated or supplied here.",
+            "You left the amount open. Nothing here asks you to decide it.",
         },
         {
           id: "next",
@@ -843,17 +849,17 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             outside: "You considered a window, a sound, an object, a memory, or another point of contact within reach. No change in how you feel is promised.",
             own: "You considered a few minutes for something that is yours and not a duty.",
             rehearse: "You chose to keep it inward — naming or remembering what matters. That naming is the whole of it.",
-            unclear: "You said you were not sure which step fits. No step will be chosen for you.",
-            none: "You said no step felt available, and none will be pressed or inferred.",
-            private: "You kept the step private. What it is remains yours alone.",
+            unclear: "You are not sure which step fits. You can leave it undecided.",
+            none: "No step felt available today. That is a complete way to leave this day.",
+            private: "You kept the step private. It remains yours.",
           },
           unanswered:
-            "You left the step unnamed. Nothing will be assumed about what you may or may not do after this page.",
+            "You left the step open. No action or decision is required after this page.",
         },
 
       ],
       closing:
-        "These selections do not establish why something matters to you, why it became distant, whether reconnection is possible, or what will change. Nothing here suggests moving toward anyone unsafe, and no reconnection is owed to anybody.",
+        "What matters, why it became distant, and whether reconnection is possible remain yours to know\u2014or not know. This day asks for no movement toward anyone unsafe, and no reconnection is owed to anybody. If a thread matters, it can still matter even when the safest amount of contact is none.",
     },
     close: {
       heading: "Held without force",

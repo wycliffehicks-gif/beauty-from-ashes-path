@@ -1750,9 +1750,9 @@ describe("Day 9 revision", () => {
     expect(day9.close.carryForward).toBe(
       "I can rehearse a possibility without promising to use it.",
     );
-    expect(day9.reflection.closing).toContain("A rehearsal is information, not a contract");
+    expect(day9.reflection.closing).toContain("A rehearsal is a possibility, not a contract");
     expect(day9.reflection.closing).toContain(
-      "whether another response is safe or available to you",
+      "make another response safe, or promise access under pressure",
     );
   });
 

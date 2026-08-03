@@ -267,11 +267,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             ongoing:
               "You named circumstances or a lack of safe alternatives that remain real. The response may not be the whole problem, and release may not be the right task.",
             unclear:
-              "You are not sure what keeps this in place. No motive or hidden benefit will be assigned.",
-            private: "You chose to keep this private. No reason will be inferred from that choice.",
+              "You are not sure what may be keeping this in place. You do not have to find a motive or benefit today.",
+            private:
+              "You kept this part private. That boundary is respected; the reason remains yours.",
           },
           unanswered:
-            "No benefit, protection, responsibility or constraint was named. Nothing about why this remains will be guessed.",
+            "You left this part open. No explanation is needed before your present reality can be taken seriously.",
         },
         {
           id: "care",

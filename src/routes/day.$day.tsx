@@ -315,6 +315,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onNext={goNext}
       answers={dayAnswers}
       answersLoaded={answersLoaded}
+      focusSettled={focusSettled}
       onAnswer={recordStepAnswers}
       nextDay={nextDay}
       onHome={() => navigate({ to: "/" })}

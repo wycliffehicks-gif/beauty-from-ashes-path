@@ -41,14 +41,11 @@ import {
 } from "@/lib/journey/progress";
 import {
   answerKeyFor,
-  buildReflection,
-  reflectionToText,
   type BuiltReflection,
 } from "@/lib/journey/reflection-engine";
 import {
   answersSnapshot,
   resolveReflection,
-  restoreReflection,
 } from "@/lib/journey/reflection-restore";
 import { resolveVisibleIndex } from "@/lib/journey/screen-access";
 import { toggleSelection } from "@/lib/journey/selection";

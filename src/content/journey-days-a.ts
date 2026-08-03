@@ -675,7 +675,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What you named",
           from: "carrying",
           lines: {
             grief:

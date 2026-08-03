@@ -155,6 +155,14 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     ? resolveVisibleIndex({ kinds, requested, reached, completed })
     : resolveVisibleIndex({ kinds, requested, reached: 0, completed: false });
 
+  /**
+   * True while an EARNED resume navigation has been requested but the URL has
+   * not yet resolved to its final screen. While this is true the in-day focus
+   * key is withheld, so a temporary opening screen can never be announced and
+   * then replaced by the real target.
+   */
+  const [resumePending, setResumePending] = useState(false);
+
   const restoredForRef = useRef<string | null>(null);
   /** History index when this day was first rendered, for a truthful Back. */
   const historyIndex = useHistoryIndex();

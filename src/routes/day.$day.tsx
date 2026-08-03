@@ -354,6 +354,7 @@ function ScreenBody({
   onNext,
   answers,
   answersLoaded,
+  focusSettled,
   onAnswer,
   nextDay,
   onHome,
@@ -372,6 +373,8 @@ function ScreenBody({
   onNext: () => void;
   answers: string[];
   answersLoaded: boolean;
+  /** True once storage, resume and URL correction have settled. */
+  focusSettled: boolean;
   onAnswer: (stepKey: string, optionIds: string[]) => void;
   nextDay: number | null;
   onHome: () => void;
@@ -386,7 +389,11 @@ function ScreenBody({
   // Screen identity for single-page focus management. Every screen, including
   // the reflection, reports its identity so transition tracking stays true; the
   // reflection then focuses its own heading once its response is ready.
-  const screenFocusKey = `${content.day}:${keyForScreen(screen)}`;
+  // No identity is supplied while the screen shown could still be a temporary
+  // one, so nothing is ever announced twice.
+  const screenFocusKey = focusSettled
+    ? `${content.day}:${keyForScreen(screen)}`
+    : undefined;
   const manageFocus = screen.kind !== "reflection";
 
 

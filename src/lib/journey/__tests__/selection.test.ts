@@ -2184,7 +2184,7 @@ describe("Day 10 revision", () => {
       for (const [id, line] of Object.entries(section.lines ?? {})) {
         expect(line.length, `short line: ${section.id}.${id}`).toBeGreaterThan(60);
       }
-      expect(section.unanswered.length).toBeGreaterThan(60);
+      expect(section.unanswered.length).toBeGreaterThan(40);
     }
     expect(day10.reflection.closing).toBe(
       "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",

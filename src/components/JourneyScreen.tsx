@@ -67,6 +67,7 @@ export function JourneyScreen({
   footer,
   progress,
   focusKey,
+  manageFocus = true,
 }: {
   /** Quiet centre label, e.g. "Day 4 · Notice". */
   label?: string;
@@ -82,29 +83,39 @@ export function JourneyScreen({
   /** Progress ticks: { current, total } — no scores, no streaks. */
   progress?: { current: number; total: number };
   /**
-   * Stable key for the screen being shown. When it changes between renders of
-   * this shell, focus moves to the new heading (or the main container) so a
-   * Continue or Back genuinely announces the new screen. Omit it for screens
-   * that manage their own focus, such as the personalized reflection.
+   * Stable key for the screen being shown. Every in-day screen should pass one,
+   * including screens that focus themselves, so transition tracking stays true.
    */
   focusKey?: string;
+  /**
+   * When false the shell only records the transition and leaves focus alone —
+   * used by the personalized reflection, which focuses its own heading once its
+   * content is ready so nothing is focused or announced twice.
+   */
+  manageFocus?: boolean;
 }) {
   const mainRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!focusKey) return;
-    const previous = lastFocusedScreenKey;
-    lastFocusedScreenKey = focusKey;
+    const changed = recordScreenTransition(focusKey);
     // Initial load of a visit, or the same screen re-rendering, must not move
     // focus; only a genuine screen change does.
-    if (previous === null || previous === focusKey) return;
+    if (!changed || !manageFocus) return;
     const node = mainRef.current;
     if (!node) return;
     const heading = node.querySelector("h1");
     const target = (heading ?? node) as HTMLElement;
     if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
     target.focus();
+    // manageFocus is a fixed per-screen intent, so tracking follows focusKey.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey]);
+
+  // Leaving the day entirely (Settings, Home, a full unmount) means returning to
+  // the very same screen is a real change again and must be announced.
+  useEffect(() => markScreenLeft, []);
+
 
   return (
     <div className="journey-page">

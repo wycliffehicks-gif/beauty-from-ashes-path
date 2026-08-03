@@ -588,12 +588,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             prepare:
               "Nothing outward. Considering a less-punishing way of holding this was the step, and it stands as one.",
           },
-          unanswered:
-            "No step was selected, and none will be assumed. Reading through the day without choosing anything is a complete way to have spent it.",
+          unanswered: "No next step was named. The day can end without one.",
         },
       ],
       closing:
-        "Today's selections do not establish why this inner response exists, what it says about your worth, or what will change. They point only to one way honesty and dignity might remain in the same room.",
+        "Nothing here explains where an inner response came from or promises change. It does hold one possibility near: your worth does not depend on attacking yourself, and honesty and dignity can remain in the same room.",
     },
     close: {
       heading: "Truth without contempt",

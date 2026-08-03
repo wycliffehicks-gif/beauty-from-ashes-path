@@ -149,7 +149,7 @@ function RootComponent() {
   // load. Idempotent and client-only, so StrictMode's repeated render probe and
   // SSR both leave it unchanged.
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  recordRouteTransition(pathname);
+  if (typeof document !== "undefined") recordRouteTransition(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>

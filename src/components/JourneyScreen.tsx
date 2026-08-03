@@ -14,8 +14,8 @@ import { useEffect, useRef, type ReactNode } from "react";
  *
  * Both recorders are idempotent: recording the same value twice (React
  * StrictMode's repeated render/effect probe) reports no second transition, so a
- * heading can never be focused twice. Nothing is recorded during SSR, so no
- * cross-request server state is mutated.
+ * heading can never be focused twice. The root only records in the browser, so
+ * no cross-request server state is mutated during SSR.
  */
 let lastPath: string | null = null;
 let lastScreenKey: string | null = null;
@@ -28,7 +28,6 @@ let pathChanged = false;
  * arrived through a client-side navigation or an ordinary document load.
  */
 export function recordRouteTransition(pathname: string) {
-  if (typeof window === "undefined") return;
   if (lastPath === null) {
     // Initial document path of this tab: nothing to announce.
     lastPath = pathname;

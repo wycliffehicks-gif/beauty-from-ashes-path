@@ -314,6 +314,13 @@
    1.14:1 and vanish, so the pair becomes unreached 2px gold #9A7723 and reached
    4px ivory #F6F2EA — about 3.84:1 and 14.35:1 against #12213D, and about
    3.73:1 against each other. ARIA progress information is unchanged. */
+@utility bfa-progress-segment {
+  height: 2px;
+  align-self: center;
+  flex: 1 1 0%;
+  border-radius: 999px;
+  background: #0D2B55;
+}
 .bfa-progress-segment[data-state="reached"] {
   height: 4px;
   background: #9A7723;

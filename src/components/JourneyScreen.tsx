@@ -2,44 +2,71 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * Last screen whose focus was managed, remembered across remounts of this
- * component. A single-page screen change is not a document load, so nothing
- * would otherwise tell a screen-reader user that the screen changed. The first
- * screen of a visit is recorded WITHOUT taking focus, so an ordinary page load
- * never steals focus from the top of the document.
+ * Client-only transition tracking for screen-reader announcement.
+ *
+ * A single-page change is not a document load, so nothing would otherwise tell
+ * a screen-reader user that the screen changed. Two facts are remembered:
+ *
+ *  - `lastPath`: the pathname most recently recorded by the root. `null` means
+ *    nothing has been recorded yet, so the very first record is the initial
+ *    document path and must never move focus.
+ *  - `lastScreenKey`: the in-day screen identity last recorded.
+ *
+ * Both recorders are idempotent: recording the same value twice (React
+ * StrictMode's repeated render/effect probe) reports no second transition, so a
+ * heading can never be focused twice. Nothing is recorded during SSR, so no
+ * cross-request server state is mutated.
  */
-let lastFocusedScreenKey: string | null = null;
+let lastPath: string | null = null;
+let lastScreenKey: string | null = null;
+/** A client pathname change is pending announcement by the next screen shown. */
+let pathChanged = false;
 
 /**
- * Sentinel recorded when a journey screen unmounts (the person opened Settings,
- * went Home, or otherwise left the day). It is deliberately not a real screen
- * key, so returning to the very same screen still counts as a screen change and
- * is announced, while a first document load (null) never steals focus.
+ * Record the current router pathname. Called from the root during render, before
+ * the routed child mounts, so the screen that mounts next knows whether it
+ * arrived through a client-side navigation or an ordinary document load.
  */
-const SCREEN_LEFT = "\u0000screen-left";
+export function recordRouteTransition(pathname: string) {
+  if (typeof window === "undefined") return;
+  if (lastPath === null) {
+    // Initial document path of this tab: nothing to announce.
+    lastPath = pathname;
+    return;
+  }
+  if (lastPath === pathname) return;
+  lastPath = pathname;
+  // Leaving a day and coming back to the very same screen is a real change,
+  // so the remembered screen identity is cleared with the path.
+  lastScreenKey = null;
+  pathChanged = true;
+}
 
 /**
  * Record that `key` is now the visible screen and report whether that was a
- * genuine screen transition (as opposed to the first screen of a visit or the
- * same screen re-rendering). Every in-day screen identity — including the
+ * genuine transition (as opposed to the first screen after a document load, or
+ * the same screen re-rendering). Every in-day screen identity — including the
  * reflection, which manages its own focus — must call this so browser Back from
  * it is still recognised as a change.
  */
 export function recordScreenTransition(key: string): boolean {
-  const previous = lastFocusedScreenKey;
-  lastFocusedScreenKey = key;
+  if (pathChanged) {
+    pathChanged = false;
+    lastScreenKey = key;
+    return true;
+  }
+  const previous = lastScreenKey;
+  lastScreenKey = key;
   return previous !== null && previous !== key;
 }
 
-/** Note that the journey screen was left, so coming back announces the screen. */
-export function markScreenLeft() {
-  if (lastFocusedScreenKey !== null) lastFocusedScreenKey = SCREEN_LEFT;
+/** Test-only: forget everything so each case starts from a fresh document load. */
+export function __resetScreenFocusTracking() {
+  lastPath = null;
+  lastScreenKey = null;
+  pathChanged = false;
 }
 
-/** Test-only: forget the remembered screen so each case starts from a load. */
-export function __resetScreenFocusTracking() {
-  lastFocusedScreenKey = null;
-}
 
 
 /**

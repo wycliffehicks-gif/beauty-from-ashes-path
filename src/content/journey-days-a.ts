@@ -150,32 +150,38 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This is drawn only from what you chose today. It is tentative on purpose, and it may be wrong.",
+        "This reflection stays close to what you chose\u2014or left open\u2014today. Keep what feels true, and leave anything that does not.",
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "How you arrived",
           from: "state",
-          opening:
-            "Only what you selected is named back to you here. This app cannot know why you arrived that way, or what lies beneath it:",
+          opening: "You arrived as you were today. The fuller reasons remain yours:",
           lines: {
-            heavy: "You selected that you arrived feeling heavy, and you opened this anyway.",
-            tense: "You selected that you arrived tense or braced.",
-            flat: "You selected that you arrived feeling flat or far away from yourself.",
-            restless: "You selected that you arrived restless and hard to settle.",
-            tender: "You selected that you arrived tender, or close to tears.",
-            steady: "You selected that you arrived steadier than usual.",
-            unsure: "You selected that you genuinely could not tell, and nothing is assumed from that.",
+            heavy:
+              "You arrived feeling heavy. That weight does not need to be explained here to be taken seriously.",
+            tense:
+              "You arrived tense or braced. You did not need to become settled before beginning.",
+            flat:
+              "You arrived feeling flat or far away from yourself. That distance can be named without being judged.",
+            restless:
+              "You arrived restless and hard to settle. You did not need to become calm before beginning.",
+            tender:
+              "You arrived tender or close to tears. That tenderness deserves room, not pressure.",
+            steady:
+              "You arrived steadier than usual. Steadiness is welcome without needing to mean that everything is well.",
+            unsure:
+              "You could not tell how you arrived. Not knowing is an honest place to begin.",
           },
           unanswered:
-            "You moved through today without naming how you arrived. That is allowed, and it does not make this less real: you still came, and you stayed to the end.",
+            "You left how you arrived unnamed. You do not need to explain yourself for this reflection to meet you with care.",
         },
         {
           id: "underneath",
           title: "What you named",
           from: "brought",
           opening:
-            "This is only what you selected. Nothing about the reasons, the history, or what may lie beneath it is known here:",
+            "You gave some words to what brought you here, while the fuller story, reasons, and history remain yours:",
           lines: {
             stuck: "You named feeling stuck and not being able to see the way out.",
             loss: "You named that something was lost, or someone was.",
@@ -184,18 +190,19 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             distant: "You named feeling distant — from people, from yourself, or from God.",
             shame: "You named carrying something you feel bad about.",
             hope: "You named wanting to hope again without knowing how.",
-            private: "You chose not to put it into words here, and that choice is respected.",
+            private:
+              "You kept what brought you here private today. That boundary is respected; you still belong fully in this journey.",
           },
           unanswered:
-            "You did not name what brought you here, and nothing about you needs to be guessed. What can be said is that something made today worth beginning.",
+            "You left what brought you here unnamed. Nothing needs to be guessed or explained for your experience to deserve care.",
         },
         {
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Beginning something like this is not a small thing, whatever brought you to it.",
+            "Beginning something like this can ask something of a person. Whatever brought you here, you do not have to earn gentleness.",
           unanswered:
-            "Whatever else is true, the part of you that opened this may deserve some credit rather than more pressure.",
+            "Whatever else is true, the part of you that opened this deserves less pressure and more gentleness.",
         },
         {
           id: "next",
@@ -204,16 +211,18 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           lines: {
             name: "Holding one honest word may be enough to keep today from disappearing.",
             care: "One small act of physical care is a real step, not a substitute for one.",
-            tell: "One true sentence to someone safe can change how heavy a thing feels to carry.",
+            tell:
+              "You considered saying one true sentence to someone safe enough. Nothing has to be shared, and this reflection cannot decide who is safe.",
             return: "Coming back when there is space is a step, not a delay.",
-            prepare: "Preparation counts. Noticing is where almost everything else begins.",
+            prepare:
+              "Nothing outward is required. Noticing can be a complete way to leave today.",
           },
           unanswered:
-            "No step was chosen, and none is owed. If anything at all carries forward, let it be that beginning happened.",
+            "No next step was named. None is owed; the day can end here without one.",
         },
       ],
       closing:
-        "Nothing here is a diagnosis or an assessment. It is a way of being accompanied for a moment.",
+        "This is not a diagnosis or assessment. It is a gentle reflection back\u2014one moment in which you did not have to explain more than you chose.",
     },
     close: {
       heading: "You began",

@@ -1057,91 +1057,90 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     reflection: {
-      intro: "This reflection uses only what was selected; it will not fill in what was left open.",
+      intro:
+        "This reflection stays close to what you chose\u2014or left open\u2014today. It holds the practice as a possibility, never a promise or an instruction to use it.",
       sections: [
         {
           id: "hearing",
-          title: "The response — or what remained open",
+          title: "A possible response",
           from: "practice",
           lines: {
             grounding:
-              "You considered a pause and orienting outward. Nothing here says whether it would be available under pressure, or what it would change.",
+              "You considered pausing and orienting outward. Whether that cue is reachable under pressure remains open.",
             unsent:
-              "You considered putting private words to what you feel or need. The words themselves are not collected, and nothing about them is assumed.",
+              "You considered putting private words to what you feel or need. The words stay private, and nothing has to be shared.",
             boundary:
-              "You considered rehearsing a limit or a delay. Whether such a limit is safe, available, or ready for real life is not established here.",
+              "You considered rehearsing a limit or delay. This reflection cannot decide whether using it would be safe or available in real life, and no use is required.",
             support:
-              "You considered rehearsing asking for one kind of support. No person, request, or disclosure is identified.",
+              "You considered rehearsing one request for support. No person, disclosure, or action is required.",
             lament:
-              "You considered naming grief, anger, disappointment, or longing privately. No history, cause, or required release is inferred.",
+              "You considered privately naming grief, anger, disappointment, or longing. The feeling does not need to be explained, released, or resolved.",
             prepare:
-              "You considered preparing without deciding to act. Preparation stands on its own here, with no action implied.",
+              "You considered preparing without deciding to act. Preparation can remain complete in itself.",
             loosen:
-              "You considered a very small variation in a familiar response. No pattern, reason, or outcome is inferred from that.",
+              "You considered one very small variation in a familiar response. It remains a possibility, with no outcome promised.",
             unclear:
-              "You said you were not sure what to practise. That uncertainty is left as it is, and no response will be guessed for you.",
+              "You are not sure what to practise. The possibility can remain open without a response being chosen for you.",
             none:
-              "You said no different response feels available today. That absence is left intact, without being treated as failure.",
-            private:
-              "You kept this private. Its content is not known or interpreted here.",
+              "No different response felt available today. That is not a failure, and nothing asks you to manufacture one.",
+            private: "You kept the response private. That boundary is respected.",
           },
           unanswered:
-            "You left this open, and no response will be assigned. Nothing is assumed about what you might need, whether any rehearsal happened, or what may be available to you later.",
+            "You left the response open. No rehearsal or need is being presumed.",
         },
         {
           id: "underneath",
-          title: "The setting — or what remained open",
+          title: "The setting, if any",
           from: "where",
           lines: {
-            home: "You named home as a setting that came to mind. Nothing about who is there, or what happens there, is assumed.",
-            work: "You named work as a setting that came to mind. No estimate is made here about power, consequences, accommodation needs, or safety.",
+            home:
+              "Home was the setting that came to mind. The people and circumstances involved remain private.",
+            work:
+              "Work came to mind. Power, consequences, accommodation, and safety remain real considerations that this reflection cannot decide.",
             family:
-              "You named family as a setting that came to mind. No roles, closeness, safety, conflict, or history are assumed.",
+              "Family came to mind. No closeness, conflict, safety, or history is presumed.",
             friend:
-              "You named a friend or partner as a setting that came to mind. No closeness, safety, conflict, or history is assumed.",
-            self: "You named how you speak to yourself as a setting that came to mind. No form, cause, or diagnosis is inferred.",
+              "A friend or partner came to mind. No closeness, conflict, safety, or history is presumed.",
+            self:
+              "How you speak to yourself came to mind. It can be noticed without assigning a cause or label.",
             faith:
-              "You named faith or spiritual life as a setting that came to mind. Nothing is assumed about belief, practice, community, spiritual struggle, or whether honesty is welcomed there.",
-            private:
-              "You left the setting unspecified. What it refers to stays with you, and its content is not known or interpreted here.",
+              "Faith or spiritual life came to mind. Belief, practice, community, struggle, and whether honesty feels welcome all remain open.",
+            private: "You kept the setting private. That boundary is respected.",
             other:
-              "You named a setting outside the listed options. Its content is not collected here, and nothing about it is assumed.",
-            unclear:
-              "You said you were not sure of a setting. It stays uncertain here, and no setting will be assigned.",
-            none: "You left the setting general, and none will be added. A rehearsal can stay general.",
+              "A setting outside the list came to mind. You do not need to identify it here.",
+            unclear: "The setting is not clear. It can remain unclear.",
+            none: "No particular setting came to mind. The rehearsal can stay general.",
           },
           unanswered:
-            "You left the setting open, and none will be assigned. No person, relationship, risk, or context is inferred from that.",
+            "You left the setting open. No person, relationship, risk, or context is being filled in.",
         },
         {
           id: "next",
-          title: "How today was completed — or left open",
+          title: "How the practice was left",
           from: "step",
           lines: {
             again:
-              "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
+              "You considered reading or privately trying the opening of one response. Nothing outward has to follow.",
             sentence:
-              "You considered shortening or revising one sentence. Whether it is ever spoken anywhere is left entirely open.",
-            use: "You considered naming what would have to be true before any real-world use. That names conditions only; it does not commit you to using anything.",
+              "You considered shortening or revising one sentence. It never has to be spoken.",
+            use: "You considered what would need to be true before any real-world use. Naming conditions does not commit you to action.",
             ground:
-              "You considered keeping one accessible outward-orienting cue. Nothing is claimed about whether it will be reached for.",
+              "You considered keeping one accessible outward cue. Whether you use it later remains entirely yours.",
             support:
-              "You considered identifying support you might want before any real-world action. No contact and no disclosure are part of that.",
+              "You considered identifying support before any real-world action. No contact or disclosure is required.",
             prepare:
-              "You chose to leave the exercise here. Nothing more is implied or required by this step.",
-            unclear:
-              "You said you were not sure of a step. That is left uncertain, and no step will be chosen for you.",
-            none: "You said no step feels right today. That is left as it is, and none will be pressed or inferred.",
-            private:
-              "You kept the step private. Its content is not known or interpreted here.",
+              "You chose to leave the exercise here. Nothing more is required.",
+            unclear: "You are not sure what step fits. It can remain undecided.",
+            none: "No step felt right today. That is a complete way to leave the practice.",
+            private: "You kept the step private. It remains yours.",
           },
           unanswered:
-            "You left the step open, and none will be added. Nothing is claimed about whether any rehearsal happened, what became available, or what happens after today.",
+            "You left the step open. No rehearsal, action, or future response is being assumed.",
         },
 
       ],
       closing:
-        "A rehearsal is information, not a contract. What was selected does not establish why a response developed, whether another response is safe or available to you, whether any rehearsal took place, or what will happen under pressure.",
+        "A rehearsal is a possibility, not a contract. It does not explain how a familiar response began, make another response safe, or promise access under pressure. Whether you tried something, kept it private, or left it open, you remain free to revise it, seek support, or set it down.",
     },
     close: {
       heading: "Possibility, not a promise",

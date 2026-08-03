@@ -1395,8 +1395,8 @@ describe("Day 8 revision", () => {
     const skipped = buildReflection(day8, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(skipped).toContain("The direction simply remains open");
-    expect(skipped).toContain("What is available remains open");
+    expect(skipped).toContain("It can remain open without being chosen for you");
+    expect(skipped).toContain("Nothing here asks you to decide it");
     expect(skipped).not.toContain("This page can only reflect selections");
     expect(skipped).not.toContain("complete outcome");
   });

@@ -1386,9 +1386,9 @@ describe("Day 8 revision", () => {
     expect(understand).toContain("It can remain yours without that explanation");
     expect(day8.arrive.body.join(" ")).toContain("one small moment of contact");
 
-    expect(day8.reflection.sections[0]!.title).toBe("The thread — or what remained open");
+    expect(day8.reflection.sections[0]!.title).toBe("A thread\u2014or an open question");
     expect(day8.reflection.intro).toBe(
-      "This reflection uses only what was selected; it will not fill in what was left open.",
+      "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
     );
     expect(day8.close.heading).toBe("Held without force");
 

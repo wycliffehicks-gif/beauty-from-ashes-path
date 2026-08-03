@@ -235,14 +235,15 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "You noticed tension between how you are living and something that matters to you. That deserves attention without becoming a verdict on your character.",
             meaning: "You noticed less meaning, colour, or engagement. Nothing here determines why.",
             hope: "You noticed less expectation that change is possible. Nothing is assumed about why, and hope does not have to be manufactured today.",
-            none: "No clear cost stands out right now. You do not need to invent one.",
+            none:
+              "No clear cost stood out today. You are allowed to leave the question there without inventing an answer.",
             unclear:
-              "You are not sure what is connected. Uncertainty is an honest answer, and no cause will be assigned.",
+              "You are not sure what is connected. That uncertainty deserves the same respect as a clearer answer, and no cause needs to be decided today.",
             private:
-              "You chose to keep the cost private. No particular cost or cause will be inferred from that choice.",
+              "You kept the cost private. That boundary is respected; no cost or cause is being filled in for you.",
           },
           unanswered:
-            "You did not choose a cost today. No cost, cause or hidden meaning will be assigned.",
+            "You left the question of cost unanswered. The fuller picture remains yours, without anything being added.",
         },
         {
           id: "protected",

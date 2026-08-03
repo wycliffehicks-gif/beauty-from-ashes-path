@@ -1671,9 +1671,9 @@ describe("Day 9 revision", () => {
     const text = buildReflection(day9, [])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You left this open, and no response will be assigned");
-    expect(text).toContain("You left the setting open, and none will be assigned");
-    expect(text).toContain("You left the step open, and none will be added");
+    expect(text).toContain("You left the response open. No rehearsal or need is being presumed");
+    expect(text).toContain("You left the setting open");
+    expect(text).toContain("You left the step open");
     for (const phrase of [
       "You chose",
       "You located",

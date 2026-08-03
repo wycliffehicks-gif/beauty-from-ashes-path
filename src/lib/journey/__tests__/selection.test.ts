@@ -2248,7 +2248,7 @@ describe("Day 10 revision", () => {
     const text = buildReflection(day10, answers)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("What was held privately remains yours");
+    expect(text).toContain("You kept what you may carry private");
     const allPrivate = buildReflection(day10, [
       answer("q.different", idx(different, "private")),
       answer("q.unfinished", idx(unfinished, "private")),
@@ -2256,9 +2256,9 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(allPrivate).toContain("What was held privately remains yours");
-    expect(allPrivate).toContain("Its content is not known or interpreted here");
-    expect(allPrivate).toContain("private content is known or inferred");
+    expect(allPrivate).toContain("You kept what you may carry private");
+    expect(allPrivate).toContain("You kept the unfinished place private");
+    expect(allPrivate).toContain("You kept how you are leaving private");
     expect(text).toContain("responsibility is not handed back to you");
     expect(text).toContain("none feels safe or available now");
     expect(text.toLowerCase()).not.toContain("nothing was recorded");
@@ -2270,9 +2270,9 @@ describe("Day 10 revision", () => {
     ])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(quiet).toContain("That uncertainty stays uncertainty here");
-    expect(quiet).toContain("That is left exactly as it is");
-    expect(quiet).toContain("That uncertainty stays as uncertainty");
+    expect(quiet).toContain("Uncertainty is a complete way to arrive at this ending");
+    expect(quiet).toContain("That answer is complete as it is");
+    expect(quiet).toContain("The journey can still end gently without an answer");
   });
 
   it("keeps legacy many-answer arrays coherent for Q1 and Q2", () => {

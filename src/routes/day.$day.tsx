@@ -107,7 +107,7 @@ function DayFlow() {
 
 function DayNotHere() {
   return (
-    <JourneyScreen label="Day">
+    <JourneyScreen label="Day" focusKey="day:not-here">
       <div className="space-y-4">
         <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
         <p className="text-muted-foreground">
@@ -155,6 +155,14 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     ? resolveVisibleIndex({ kinds, requested, reached, completed })
     : resolveVisibleIndex({ kinds, requested, reached: 0, completed: false });
 
+  /**
+   * True while an EARNED resume navigation has been requested but the URL has
+   * not yet resolved to its final screen. While this is true the in-day focus
+   * key is withheld, so a temporary opening screen can never be announced and
+   * then replaced by the real target.
+   */
+  const [resumePending, setResumePending] = useState(false);
+
   const restoredForRef = useRef<string | null>(null);
   /** History index when this day was first rendered, for a truthful Back. */
   const historyIndex = useHistoryIndex();
@@ -201,10 +209,20 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
         locator: progress.locator,
         requested: true,
       });
-      if (idx > 0) goTo(idx, { replace: true });
+      // Only a real earned resume target defers announcement. With nothing to
+      // resume to, the state settles immediately so Arrive is still announced.
+      if (idx > 0) {
+        setResumePending(true);
+        goTo(idx, { replace: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayId]);
+
+  // The resume navigation has landed: the URL now names a real screen.
+  useEffect(() => {
+    if (resumePending && urlIdx >= 0) setResumePending(false);
+  }, [resumePending, urlIdx]);
 
   // Quiet autosave of the exact screen actually being shown. This effect never
   // creates trust: a URL render can no longer raise the high-water mark, so a
@@ -216,6 +234,13 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     // address bar so reload and Back stay consistent with what is shown.
     if (requested !== i) goTo(i, { replace: true });
   }, [dayId, stepKeys, i, answersLoaded, requested, goTo]);
+
+  /**
+   * Focus/announcement may only happen once the storage read, the resume
+   * decision and any URL correction have all settled. Until then no in-day
+   * focus key exists, so a temporary opening screen is never announced.
+   */
+  const focusSettled = answersLoaded && !resumePending && requested === i;
 
   /**
    * Reflection readiness is keyed to BOTH the reflection screen and the current
@@ -290,6 +315,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onNext={goNext}
       answers={dayAnswers}
       answersLoaded={answersLoaded}
+      focusSettled={focusSettled}
       onAnswer={recordStepAnswers}
       nextDay={nextDay}
       onHome={() => navigate({ to: "/" })}
@@ -328,6 +354,7 @@ function ScreenBody({
   onNext,
   answers,
   answersLoaded,
+  focusSettled,
   onAnswer,
   nextDay,
   onHome,
@@ -346,6 +373,8 @@ function ScreenBody({
   onNext: () => void;
   answers: string[];
   answersLoaded: boolean;
+  /** True once storage, resume and URL correction have settled. */
+  focusSettled: boolean;
   onAnswer: (stepKey: string, optionIds: string[]) => void;
   nextDay: number | null;
   onHome: () => void;
@@ -360,7 +389,11 @@ function ScreenBody({
   // Screen identity for single-page focus management. Every screen, including
   // the reflection, reports its identity so transition tracking stays true; the
   // reflection then focuses its own heading once its response is ready.
-  const screenFocusKey = `${content.day}:${keyForScreen(screen)}`;
+  // No identity is supplied while the screen shown could still be a temporary
+  // one, so nothing is ever announced twice.
+  const screenFocusKey = focusSettled
+    ? `${content.day}:${keyForScreen(screen)}`
+    : undefined;
   const manageFocus = screen.kind !== "reflection";
 
 

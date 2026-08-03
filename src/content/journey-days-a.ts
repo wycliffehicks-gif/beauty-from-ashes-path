@@ -399,7 +399,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What you noticed",
           from: "body",
           opening: "You noticed the following:",
           lines: {
@@ -675,7 +675,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       sections: [
         {
           id: "hearing",
-          title: "What I'm hearing",
+          title: "What you named",
           from: "carrying",
           lines: {
             grief:

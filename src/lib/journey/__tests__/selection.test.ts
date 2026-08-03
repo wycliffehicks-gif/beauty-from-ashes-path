@@ -1825,10 +1825,10 @@ describe("Day 9 revision", () => {
 
     const next = day9.reflection.sections.find((s) => s.id === "next")!;
     expect(next.lines!["again"]).toBe(
-      "You considered reading, or privately trying, the opening of one possible response. It remains a possibility, and nothing outward follows from it.",
+      "You considered reading or privately trying the opening of one response. Nothing outward has to follow.",
     );
     expect(next.lines!["prepare"]).toBe(
-      "You chose to leave the exercise here. Nothing more is implied or required by this step.",
+      "You chose to leave the exercise here. Nothing more is required.",
     );
 
     const text = allText9();

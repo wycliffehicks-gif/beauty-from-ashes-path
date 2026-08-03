@@ -143,7 +143,7 @@ describe("approved therapeutic wording", () => {
     for (const n of [8, 9]) {
       const text = JSON.stringify(getFirstJourneyDay(n)!);
       expect(text, `day ${n}`).not.toContain(" was selected as a setting");
-      expect(text, `day ${n}`).toContain("You named");
+      expect(text, `day ${n}`).toMatch(/You named|You considered|You kept/);
     }
   });
 

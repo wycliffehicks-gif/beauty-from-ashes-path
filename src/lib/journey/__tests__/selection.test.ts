@@ -1248,7 +1248,7 @@ describe("Day 8 revision", () => {
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(text).toContain("You named one person who may be safe enough");
-    expect(text).toContain("one small outward action, if safe and realistic");
+    expect(text).toContain("One small outward action felt possible, if safe and realistic");
     expect(text).toContain("drafting one brief message to someone safe enough");
     expect(text).not.toContain("Creativity, beauty, learning or nature was selected");
     expect(text).not.toContain("A community, culture, tradition or place of belonging was selected");

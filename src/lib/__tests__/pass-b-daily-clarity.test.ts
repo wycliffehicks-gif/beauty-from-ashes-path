@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
 import { FIRST_JOURNEY_DAYS, getFirstJourneyDay } from "@/content/first-journey";
 import { screenKey, screensFor, type JourneyDayContent } from "@/content/journey-types";
 import { OPENING_SCREENS } from "@/content/opening";
-import { ABOUT_JOURNEY } from "@/content/settings";
+import { ABOUT_BEAUTY_FROM_ASHES } from "@/content/settings";
 import {
   ARRIVE_PURPOSE_HEADING,
   PRACTICE_BOTH_OPEN_NOTE,
@@ -172,8 +172,8 @@ describe("no bare ambiguous heaviness in canonical client copy", () => {
   it("defines carrying on Welcome and drops jargon from the About copy", () => {
     const welcome = OPENING_SCREENS.find((s) => s.key === "welcome")!;
     expect(welcome.points.join(" ")).toMatch(/emotional or spiritual strain/i);
-    expect(ABOUT_JOURNEY).not.toMatch(/feel heavy/i);
-    expect(ABOUT_JOURNEY).toContain("emotionally weighed down");
+    expect(ABOUT_BEAUTY_FROM_ASHES).not.toMatch(/feel heavy/i);
+    expect(ABOUT_BEAUTY_FROM_ASHES).toContain("emotionally weighed down");
   });
 });
 

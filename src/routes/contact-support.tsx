@@ -31,15 +31,15 @@ function ContactSupportPage() {
       </p>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">
+        <h2 className="bfa-h3 font-serif text-foreground">
           This is not a therapy or crisis channel
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="bfa-copy-support text-muted-foreground">
           Contact is not a therapy, counselling, pastoral-care or crisis-response
           channel, and it is not monitored continuously. Please do not send
           confidential, identifying or health information here.
         </p>
-        <p className="text-sm">
+        <p className="bfa-copy-support">
           If you need urgent help, please visit{" "}
           <Link
             to="/important-information"
@@ -59,13 +59,13 @@ function ContactSupportPage() {
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">How to reach us</h2>
-        <p className="text-sm text-foreground">
+        <h2 className="bfa-h3 font-serif text-foreground">How to reach us</h2>
+        <p className="bfa-copy-support text-foreground">
           Customer contact and support will be provided through the Resurgence
           Therapeutics website, <strong>ResurgenceTherapeutics.ca</strong>, when
           its contact channel launches.
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="bfa-copy-support text-muted-foreground">
           That website contact channel is not finished yet, so this private
           version does not currently offer a monitored telephone or email
           channel. The domain is shown as plain text on purpose, rather than as a
@@ -74,7 +74,7 @@ function ContactSupportPage() {
       </div>
 
 
-      <h2 className="font-serif text-xl">Helpful details to include</h2>
+      <h2 className="bfa-h2 font-serif">Helpful details to include</h2>
       <p>
         When something in the app is not working as expected, these
         non-sensitive details help us understand quickly:
@@ -87,7 +87,7 @@ function ContactSupportPage() {
         <li>What happened, and what you expected instead.</li>
         <li>Whether refreshing the page changed anything.</li>
       </ul>
-      <p className="text-sm text-muted-foreground">
+      <p className="bfa-copy-support text-muted-foreground">
         Please leave out any personal, identifying or health information — it
         is not needed to reproduce a technical issue.
       </p>

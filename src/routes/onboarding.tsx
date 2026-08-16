@@ -38,12 +38,13 @@ export const Route = createFileRoute("/onboarding")({
       {
         name: "description",
         content:
-          "A quiet place to slow down and look honestly. Beauty from Ashes: The First Journey.",
+          "A private, self-paced 10-day reflection journey for adults when life feels painful, stuck or hard to carry. Not psychotherapy or crisis care.",
       },
       { property: "og:title", content: "Welcome — Beauty from Ashes" },
       {
         property: "og:description",
-        content: "A quiet place to slow down and look honestly.",
+        content:
+          "A private, self-paced 10-day reflection journey for adults. Not psychotherapy or crisis care.",
       },
       { name: "robots", content: "noindex, nofollow" },
     ],
@@ -51,7 +52,7 @@ export const Route = createFileRoute("/onboarding")({
   component: Opening,
 });
 
-const TOTAL = OPENING_SCREENS.length + 1; // three explanatory screens + agreement
+const TOTAL = OPENING_SCREENS.length + 1; // four explanatory screens + agreement
 
 function Opening() {
   const [, update] = usePrefs();
@@ -164,7 +165,7 @@ function Opening() {
             <button
               type="button"
               onClick={goBack}
-              className="journey-chrome-btn text-sm"
+              className="journey-chrome-btn"
               aria-label="Back"
             >
               ←
@@ -172,7 +173,7 @@ function Opening() {
           ) : (
             <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           )}
-          <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="bfa-copy-meta min-w-0 truncate text-center uppercase tracking-[0.2em] text-muted-foreground">
             {step + 1} of {TOTAL}
           </p>
           <Link
@@ -232,7 +233,7 @@ function Opening() {
                 : "Continue"}
           </button>
           {isAgreement && !canAdvance && !collapsing && (
-            <p className="pt-2 text-center text-sm text-muted-foreground">
+            <p className="bfa-copy-support pt-2 text-center text-muted-foreground">
               Please confirm both statements above to continue.
             </p>
           )}
@@ -247,21 +248,19 @@ function ExplanatoryScreen({ index }: { index: number }) {
   return (
     <section className="space-y-5" data-screen={screen.key}>
       <p className="eyebrow">{screen.eyebrow}</p>
-      <h1 className="bfa-heading font-serif text-[1.7rem] leading-tight sm:text-4xl">
-        {screen.title}
-      </h1>
+      <h1 className="bfa-heading bfa-h1 font-serif">{screen.title}</h1>
       <hr className="gold-seam w-24" />
-      <p className="text-[1.02rem] leading-relaxed text-foreground sm:text-lg">{screen.lead}</p>
-      <ul className="space-y-2.5">
+      <p className="bfa-copy-lead text-foreground">{screen.lead}</p>
+      <ul className="space-y-3.5">
         {screen.points.map((p) => (
-          <li key={p} className="flex gap-3 text-[0.98rem] leading-snug text-foreground sm:text-base">
+          <li key={p} className="bfa-copy flex gap-3 text-foreground">
             <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
             <span>{p}</span>
           </li>
         ))}
       </ul>
       {screen.closing && (
-        <p className="text-[0.95rem] italic leading-snug text-muted-foreground">{screen.closing}</p>
+        <p className="bfa-copy italic text-muted-foreground">{screen.closing}</p>
       )}
     </section>
   );
@@ -281,35 +280,31 @@ function AgreementScreen({
   return (
     <section className="space-y-4" data-screen="agreement">
       <p className="eyebrow">{AGREEMENT_COPY.eyebrow}</p>
-      <h1 className="bfa-heading font-serif text-[1.6rem] leading-tight sm:text-3xl">
-        {AGREEMENT_COPY.title}
-      </h1>
-      <p className="text-[0.98rem] leading-snug text-foreground">{AGREEMENT_COPY.lead}</p>
+      <h1 className="bfa-heading bfa-h1 font-serif">{AGREEMENT_COPY.title}</h1>
+      <p className="bfa-copy-lead text-foreground">{AGREEMENT_COPY.lead}</p>
 
       <div className="rounded-xl border border-border bg-card p-4">
-        <p className="eyebrow text-[0.72rem]">What this is</p>
-        <ul className="mt-2 space-y-1 text-[0.94rem] leading-snug text-foreground">
+        <p className="eyebrow">What this is</p>
+        <ul className="bfa-copy mt-2 space-y-2 text-foreground">
           {AGREEMENT_COPY.isPoints.map((p) => (
             <li key={p}>· {p}</li>
           ))}
         </ul>
-        <p className="eyebrow mt-4 text-[0.72rem]">What it is not</p>
-        <ul className="mt-2 space-y-1 text-[0.94rem] leading-snug text-foreground">
+        <p className="eyebrow mt-4">What it is not</p>
+        <ul className="bfa-copy mt-2 space-y-2 text-foreground">
           {AGREEMENT_COPY.isNotPoints.map((p) => (
             <li key={p}>· {p}</li>
           ))}
         </ul>
       </div>
 
-      <p className="text-[0.9rem] leading-snug text-muted-foreground">
+      <p className="bfa-copy-support text-muted-foreground">
         {AGREEMENT_COPY.automatedProcessingSentence}
       </p>
-      <p className="text-[0.9rem] leading-snug text-muted-foreground">
-        {AGREEMENT_COPY.safetySentence}
-      </p>
+      <p className="bfa-copy-support text-muted-foreground">{AGREEMENT_COPY.safetySentence}</p>
 
-      <p className="text-[0.86rem] leading-snug text-muted-foreground">
-        {AGREEMENT_COPY.reviewNote}{" "}
+      {/* A standalone, readable link row — the three documents, nothing else. */}
+      <p className="bfa-copy-support text-muted-foreground">
         <Link to="/terms" target="_blank" className="inline-link text-primary underline underline-offset-4">
           Terms
         </Link>
@@ -327,28 +322,28 @@ function AgreementScreen({
         </Link>
       </p>
 
-      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+      <label className="flex min-h-[52px] items-start gap-3 rounded-xl border border-[color:var(--bfa-control-border)] bg-card p-4">
         <input
           type="checkbox"
           data-testid="agree-adult"
           checked={adultConfirmed}
           onChange={(e) => setAdultConfirmed(e.target.checked)}
-          className="mt-1 h-5 w-5 shrink-0"
+          className="mt-1 h-6 w-6 shrink-0"
         />
-        <span className="text-[0.94rem] leading-snug text-foreground">
+        <span className="bfa-copy text-foreground">
           {AGREEMENT_COPY.adultLabel}
         </span>
       </label>
 
-      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+      <label className="flex min-h-[52px] items-start gap-3 rounded-xl border border-[color:var(--bfa-control-border)] bg-card p-4">
         <input
           type="checkbox"
           data-testid="agree-terms"
           checked={termsAgreed}
           onChange={(e) => setTermsAgreed(e.target.checked)}
-          className="mt-1 h-5 w-5 shrink-0"
+          className="mt-1 h-6 w-6 shrink-0"
         />
-        <span className="text-[0.94rem] leading-snug text-foreground">
+        <span className="bfa-copy text-foreground">
           {AGREEMENT_COPY.termsLabel}
         </span>
       </label>

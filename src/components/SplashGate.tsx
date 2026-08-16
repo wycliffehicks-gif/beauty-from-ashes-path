@@ -96,19 +96,12 @@ export function SplashGate({ children }: { children: ReactNode }) {
           <VisualMotif variant="splash" className="bfa-visual-splash-bg" />
           <div className="relative flex w-full items-center justify-center px-4">
             <div className="bfa-visual-splash">
+              {/* Product-first: the title and what it is. Resurgence identity is
+                  preserved in About, the legal pages and page metadata. */}
               <div className="bfa-visual-splash-inner">
                 <p className="bfa-visual-splash-title">Beauty from Ashes</p>
-                <p className="bfa-visual-splash-sub">The First Journey</p>
+                <p className="bfa-visual-splash-sub">A 10-Day Guided Reflection Journey</p>
                 <hr className="bfa-visual-splash-seam" />
-                {/* Typographic parent lockup — no raster asset, no remote request. */}
-                <div className="bfa-visual-splash-parent">
-                  <p className="bfa-visual-splash-parent-line">
-                    A Resurgence Therapeutics experience
-                  </p>
-                  <p className="bfa-visual-splash-parent-words">
-                    Awaken · Rediscover · Hope
-                  </p>
-                </div>
               </div>
             </div>
           </div>

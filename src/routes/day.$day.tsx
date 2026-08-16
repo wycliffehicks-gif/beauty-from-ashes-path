@@ -110,8 +110,8 @@ function DayNotHere() {
   return (
     <JourneyScreen label="Day" focusKey="day:not-here">
       <div className="space-y-4">
-        <h1 className="font-serif text-2xl text-foreground">This day isn’t here</h1>
-        <p className="text-muted-foreground">
+        <h1 className="bfa-h1 font-serif text-foreground">This day isn’t here</h1>
+        <p className="bfa-copy text-muted-foreground">
           Nothing is lost. Please choose a day from Your Journey.
         </p>
         <Link to="/" className="btn-primary-journey mt-2 inline-flex">
@@ -510,19 +510,17 @@ function ArriveScreen({ content }: { content: JourneyDayContent }) {
 
 
 
-      <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
-        {content.title}
-      </h1>
-      <p className="text-lg text-foreground">{content.arrive.lead}</p>
+      <h1 className="bfa-h1 font-serif text-foreground">{content.title}</h1>
+      <p className="bfa-copy-lead text-foreground">{content.arrive.lead}</p>
       {content.arrive.body.map((p) => (
-        <p key={p} className="text-base text-foreground">
+        <p key={p} className="bfa-copy text-foreground">
           {p}
         </p>
       ))}
       {content.arrive.settle && content.arrive.settle.length > 0 && (
         <div className="surface-card space-y-3">
           <p className="eyebrow">A place to settle</p>
-          <ol className="space-y-2 text-base text-foreground">
+          <ol className="bfa-copy space-y-2 text-foreground">
             {content.arrive.settle.map((s) => (
               <li key={s} className="flex gap-3">
                 <span aria-hidden className="text-[color:var(--gold)]">
@@ -542,12 +540,12 @@ function UnderstandScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
       <p className="eyebrow">{content.understand.label ?? "Understand"}</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1 className="bfa-h1 font-serif text-foreground">
         {content.understand.heading}
       </h1>
       <DayMotif motif={content.motif} treatment="quiet" />
       {content.understand.body.map((p) => (
-        <p key={p} className="text-base text-foreground">
+        <p key={p} className="bfa-copy text-foreground">
           {p}
         </p>
       ))}
@@ -592,10 +590,10 @@ function InfoNotes({ notes }: { notes?: InfoNote[] }) {
     <div className="space-y-2">
       {notes.map((n) => (
         <details key={n.term} className="surface-card">
-          <summary className="bfa-heading min-h-[44px] cursor-pointer list-none py-2 font-serif text-base">
+          <summary className="bfa-heading bfa-h3 min-h-[48px] cursor-pointer list-none py-2 font-serif">
             {n.term}
           </summary>
-          <p className="pb-1 text-base text-foreground">
+          <p className="bfa-copy pb-1 text-foreground">
             <SupportText text={n.explanation} />
           </p>
         </details>
@@ -658,11 +656,11 @@ function QuestionScreenShell({
   const body = (
     <div className="space-y-5">
       <p className="eyebrow">{question.eyebrow}</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1 className="bfa-h1 font-serif text-foreground">
         {question.prompt}
       </h1>
       {question.hint && (
-        <p className="text-base text-muted-foreground">{question.hint}</p>
+        <p className="bfa-copy text-muted-foreground">{question.hint}</p>
       )}
       <DayMotif motif={motif} treatment="quiet" />
       <ul className="space-y-2" role="list">
@@ -734,17 +732,17 @@ function EchoScreen({
   return (
     <div className="space-y-5">
       <p className="eyebrow">Explore</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1 className="bfa-h1 font-serif text-foreground">
         {echo.heading}
       </h1>
       <DayMotif motif={content.motif} treatment="quiet" />
       {lines.map((line) => (
-        <p key={line} className="text-base text-foreground">
+        <p key={line} className="bfa-copy text-foreground">
           {line}
         </p>
       ))}
       {echo.closing && (
-        <p className="text-base text-muted-foreground">{echo.closing}</p>
+        <p className="bfa-copy text-muted-foreground">{echo.closing}</p>
       )}
     </div>
   );
@@ -781,14 +779,14 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
       <p className="eyebrow">Practise</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1 className="bfa-h1 font-serif text-foreground">
         {showSpiritual ? content.practise.heading : PRACTICE_SINGLE_HEADING}
       </h1>
-      <p className="text-base text-foreground">
+      <p className="bfa-copy text-foreground">
         {showSpiritual ? content.practise.intro : PRACTICE_SINGLE_INTRO}
       </p>
       {showSpiritual && (
-        <p className="text-base text-muted-foreground">{content.practise.either}</p>
+        <p className="bfa-copy text-muted-foreground">{content.practise.either}</p>
       )}
       <DayMotif motif={content.motif} treatment="quiet" />
       <PracticePanel
@@ -808,7 +806,7 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
           data-testid="spiritual-invitation"
           className="rounded-xl border border-border bg-card p-4"
         >
-          <p className="text-sm leading-snug text-muted-foreground">
+          <p className="bfa-copy-support text-muted-foreground">
             {SPIRITUAL_INVITATION_TEXT}
           </p>
           <Link
@@ -835,10 +833,10 @@ function PracticePanel({
 }) {
   return (
     <section className="surface-card space-y-3">
-      <h2 className="bfa-heading font-serif text-xl leading-snug">
+      <h2 className="bfa-heading bfa-h2 font-serif">
         {path.title}
       </h2>
-      <p className="text-base text-foreground">{path.summary}</p>
+      <p className="bfa-copy text-foreground">{path.summary}</p>
       <button
         type="button"
         onClick={onToggle}
@@ -852,23 +850,23 @@ function PracticePanel({
         <div className="space-y-3 pt-1">
           {path.scripture && (
             <blockquote className="rounded-xl border-l-2 border-[color:var(--gold)] bg-[color:var(--champagne)]/25 px-4 py-3">
-              <p className="font-serif text-base leading-relaxed text-foreground">
+              <p className="bfa-copy font-serif text-foreground">
                 {path.scripture.body}
               </p>
-              <cite className="mt-2 block text-sm not-italic text-muted-foreground">
+              <cite className="bfa-copy-support mt-2 block not-italic text-muted-foreground">
                 {path.scripture.reference}
               </cite>
-              <p className="mt-2 text-sm text-muted-foreground">
+              <p className="bfa-copy-support mt-2 text-muted-foreground">
                 {path.scripture.note}
               </p>
             </blockquote>
           )}
-          <ol className="space-y-2 text-base text-foreground">
+          <ol className="bfa-copy space-y-2 text-foreground">
             {path.steps.map((s, idx) => (
               <li key={s} className="flex gap-3">
                 <span
                   aria-hidden
-                  className="shrink-0 text-sm text-[color:var(--gold)]"
+                  className="shrink-0 text-[color:var(--bfa-interactive-gold)]"
                 >
                   {idx + 1}
                 </span>
@@ -876,7 +874,7 @@ function PracticePanel({
               </li>
             ))}
           </ol>
-          <p className="text-sm text-muted-foreground">{path.notRequired}</p>
+          <p className="bfa-copy-support text-muted-foreground">{path.notRequired}</p>
         </div>
       )}
     </section>
@@ -962,38 +960,38 @@ function ReflectionScreen({
       <h1
         ref={headingRef}
         tabIndex={-1}
-        className="font-serif text-2xl leading-tight text-foreground outline-none sm:text-3xl"
+        className="bfa-h1 font-serif text-foreground outline-none"
       >
         A reflection drawn from today
       </h1>
       {/* When a saved response is restored, its own opening words are shown, not
           the current day's generic intro. While preparing, the neutral current
           intro stands in and nothing is claimed to be exact. */}
-      <p className="text-base text-foreground">
+      <p className="bfa-copy text-foreground">
         {built ? built.intro : content.reflection.intro}
       </p>
       <DayMotif motif={content.motif} treatment="quiet" />
 
 
       {!built ? (
-        <p role="status" aria-live="polite" className="text-base text-muted-foreground">
+        <p role="status" aria-live="polite" className="bfa-copy text-muted-foreground">
           Preparing your reflection…
         </p>
       ) : (
         <div className="space-y-4">
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">
-              <h2 className="bfa-heading font-serif text-lg">
+              <h2 className="bfa-heading bfa-h3 font-serif">
                 {section.title}
               </h2>
               {section.paragraphs.map((p) => (
-                <p key={p} className="text-base text-foreground">
+                <p key={p} className="bfa-copy text-foreground">
                   {p}
                 </p>
               ))}
             </section>
           ))}
-          <p className="text-base text-muted-foreground">{built.closing}</p>
+          <p className="bfa-copy text-muted-foreground">{built.closing}</p>
         </div>
       )}
     </div>
@@ -1031,17 +1029,17 @@ function CloseScreen({
     <div className="space-y-5">
       <DayMotif motif={content.motif} treatment="closing" />
       <p className="eyebrow">Carry Forward</p>
-      <h1 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+      <h1 className="bfa-h1 font-serif text-foreground">
         {content.close.heading}
       </h1>
       {content.close.body.map((p) => (
-        <p key={p} className="text-base text-foreground">
+        <p key={p} className="bfa-copy text-foreground">
           <SupportText text={p} />
         </p>
       ))}
       <div className="surface-card">
         <p className="eyebrow">Carry forward</p>
-        <p className="mt-2 text-base text-foreground">{content.close.carryForward}</p>
+        <p className="bfa-copy mt-2 text-foreground">{content.close.carryForward}</p>
       </div>
       {/* Containment, not binge pressure: returning to Your Journey is the
           primary, expected ending. The next day remains available, but as a
@@ -1066,7 +1064,7 @@ function CloseScreen({
           </Link>
         ) : null}
 
-        <p className="pt-1 text-center text-sm text-muted-foreground">
+        <p className="bfa-copy-support pt-1 text-center text-muted-foreground">
           {CLOSE_CONTAINMENT_NOTE}
         </p>
       </div>

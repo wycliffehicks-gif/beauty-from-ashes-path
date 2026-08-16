@@ -51,8 +51,8 @@ function SettingsPage() {
   return (
     <section className="space-y-6 pb-4">
       <header className="space-y-2">
-        <h1 className="bfa-heading font-serif text-3xl">Settings</h1>
-        <p className="text-sm text-muted-foreground">Small choices, changeable any time.</p>
+        <h1 className="bfa-heading bfa-h1 font-serif">Settings</h1>
+        <p className="bfa-copy-support text-muted-foreground">Small choices, changeable any time.</p>
         <hr className="gold-seam w-24" />
       </header>
 
@@ -64,8 +64,10 @@ function SettingsPage() {
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="font-serif text-lg text-foreground">{SPIRITUAL_TOGGLE_TITLE}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{SPIRITUAL_TOGGLE_DESCRIPTION}</p>
+            <h2 className="bfa-h2 font-serif text-foreground">{SPIRITUAL_TOGGLE_TITLE}</h2>
+            <p className="bfa-copy-support mt-1 text-muted-foreground">
+              {SPIRITUAL_TOGGLE_DESCRIPTION}
+            </p>
           </div>
           <button
             type="button"
@@ -73,7 +75,7 @@ function SettingsPage() {
             aria-checked={prefs.showSpiritual}
             aria-label="Include Scripture and spiritual reflection"
             onClick={() => update({ showSpiritual: !prefs.showSpiritual })}
-            className={`relative h-11 w-[52px] shrink-0 rounded-full border border-border transition-colors ${
+            className={`relative h-12 w-[58px] shrink-0 rounded-full border border-[color:var(--bfa-control-border)] transition-colors ${
               prefs.showSpiritual ? "bg-primary" : "bg-secondary"
             }`}
           >
@@ -108,10 +110,10 @@ function SettingsPage() {
         data-testid="settings-privacy-confidentiality"
         className="rounded-xl border border-border bg-card p-5"
       >
-        <h2 className="font-serif text-xl text-foreground">
+        <h2 className="bfa-h2 font-serif text-foreground">
           {sectionTitle("privacy-confidentiality")}
         </h2>
-        <ul className="mt-3 space-y-2.5 text-[0.95rem] leading-snug text-foreground">
+        <ul className="bfa-copy mt-3 space-y-3 text-foreground">
           {PRIVACY_SUMMARY_POINTS.map((p) => (
             <li key={p} className="flex gap-3">
               <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--gold)]" />
@@ -119,7 +121,7 @@ function SettingsPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-sm">
+        <p className="bfa-copy-support mt-4">
           <Link
             to="/privacy"
             data-testid="settings-privacy-full-link"
@@ -128,28 +130,30 @@ function SettingsPage() {
             {PRIVACY_SUMMARY_LINK_LABEL}
           </Link>
         </p>
-        <p className="mt-3 text-xs text-muted-foreground">{PRIVACY_CONFIDENTIALITY_REVIEW_NOTE}</p>
+        <p className="bfa-copy-support mt-3 text-muted-foreground">
+          {PRIVACY_CONFIDENTIALITY_REVIEW_NOTE}
+        </p>
       </section>
 
       {/* About */}
       <section data-testid="settings-about" className="space-y-4">
         <div className="rounded-xl border border-border bg-card p-5">
-          <h2 className="font-serif text-lg text-foreground">
+          <h2 className="bfa-h2 font-serif text-foreground">
             {sectionTitle("about-beauty-from-ashes")}
           </h2>
-          <p className="mt-2 text-[0.95rem] leading-relaxed text-foreground">
+          <p className="bfa-copy mt-2 text-foreground">
             {ABOUT_BEAUTY_FROM_ASHES}
           </p>
-          <p className="mt-3 text-[0.95rem] leading-relaxed text-foreground">
+          <p className="bfa-copy mt-3 text-foreground">
             {CREATOR_ATTRIBUTION}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          <p className="bfa-copy-support mt-2 text-muted-foreground">
             {CREATOR_SCOPE_NOTE}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-card p-5">
-          <h2 className="font-serif text-lg text-foreground">{sectionTitle("about-resurgence")}</h2>
-          <p className="mt-2 text-[0.95rem] leading-relaxed text-foreground">{ABOUT_RESURGENCE}</p>
+          <h2 className="bfa-h2 font-serif text-foreground">{sectionTitle("about-resurgence")}</h2>
+          <p className="bfa-copy mt-2 text-foreground">{ABOUT_RESURGENCE}</p>
         </div>
       </section>
 
@@ -158,8 +162,11 @@ function SettingsPage() {
         data-testid="settings-clear-or-restart"
         className="rounded-xl border border-border bg-card p-5"
       >
-        <h2 className="font-serif text-lg text-foreground">{sectionTitle("clear-or-restart")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground" data-testid="settings-storage-note">
+        <h2 className="bfa-h2 font-serif text-foreground">{sectionTitle("clear-or-restart")}</h2>
+        <p
+          className="bfa-copy-support mt-2 text-muted-foreground"
+          data-testid="settings-storage-note"
+        >
           {volatileStorage
             ? "Saving is unavailable in this browser right now, so what this app holds — your place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement — is available in this tab only, and may be lost when the tab closes or reloads. Clearing removes all of it and returns you to the opening."
             : "Everything this app saves stays in this browser, on this device only: your saved place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement. Clearing removes all of it and returns you to the opening."}
@@ -176,7 +183,7 @@ function SettingsPage() {
           </button>
         ) : (
           <div className="mt-4 space-y-3" data-testid="clear-journey-confirm">
-            <p className="text-[0.95rem] text-foreground">{CLEAR_CONFIRM_QUESTION}</p>
+            <p className="bfa-copy text-foreground">{CLEAR_CONFIRM_QUESTION}</p>
             <div className="flex flex-col gap-2 sm:flex-row">
               <button
                 type="button"
@@ -210,7 +217,7 @@ function SettingsLink({ to, title }: { to: string; title: string }) {
   return (
     <Link
       to={to}
-      className="flex min-h-[56px] items-center justify-between gap-3 px-5 py-3 text-foreground hover:bg-[color:var(--champagne)]/35"
+      className="bfa-copy flex min-h-[56px] items-center justify-between gap-3 px-5 py-3 text-foreground hover:bg-[color:var(--champagne)]/35"
     >
       <span className="min-w-0 font-medium">{title}</span>
       <span aria-hidden className="text-[color:var(--gold)]">

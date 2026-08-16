@@ -46,30 +46,33 @@ function SplashMotif() {
       focusable="false"
     >
       <g fill="none" strokeLinecap="round">
-        <ellipse cx="196" cy="300" rx="188" ry="248" fill={MINERAL} opacity="0.5" />
-        <ellipse cx="150" cy="392" rx="150" ry="150" fill={MINERAL} opacity="0.35" />
-        <path d="M-20 168 C 96 132, 190 214, 300 176 C 360 156, 392 168, 412 160" stroke={ASH} strokeWidth="1" opacity="0.5" />
-        <path d="M-20 208 C 104 176, 196 252, 306 216 C 364 198, 394 208, 414 202" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.8" />
-        <path d="M-20 470 C 108 436, 188 508, 300 470 C 362 450, 392 462, 412 456" stroke={ASH} strokeWidth="1" opacity="0.4" />
-        <path d="M-20 508 C 112 476, 200 546, 308 510 C 366 492, 396 502, 416 498" stroke={CHAMPAGNE} strokeWidth="1" opacity="0.65" />
-        {/* the living gold thread — one irregular seam */}
+        <ellipse cx="196" cy="300" rx="188" ry="248" fill={MINERAL} opacity="0.7" />
+        <ellipse cx="150" cy="392" rx="150" ry="150" fill={MINERAL} opacity="0.5" />
+        <path d="M-20 168 C 96 132, 190 214, 300 176 C 360 156, 392 168, 412 160" stroke={ASH} strokeWidth="1.2" opacity="0.6" />
+        <path d="M-20 208 C 104 176, 196 252, 306 216 C 364 198, 394 208, 414 202" stroke={CHAMPAGNE} strokeWidth="1.3" opacity="0.9" />
+        <path d="M-20 470 C 108 436, 188 508, 300 470 C 362 450, 392 462, 412 456" stroke={ASH} strokeWidth="1.2" opacity="0.5" />
+        <path d="M-20 508 C 112 476, 200 546, 308 510 C 366 492, 396 502, 416 498" stroke={CHAMPAGNE} strokeWidth="1.3" opacity="0.75" />
+        {/* the living gold thread — one irregular seam, drawn once on entry */}
         <path
+          className="bfa-splash-thread"
           d="M62 -10 C 92 96, 46 168, 108 246 C 168 320, 130 388, 196 452 C 258 512, 240 578, 288 652"
           stroke={GOLD}
-          strokeWidth="1.6"
-          opacity="0.9"
+          strokeWidth="1.9"
+          opacity="0.95"
         />
         <path
+          className="bfa-splash-thread-tributary"
+          style={{ ["--bfa-thread-rest-opacity" as string]: 0.55 }}
           d="M108 246 C 142 262, 168 250, 206 226"
           stroke={GOLD}
-          strokeWidth="1"
-          opacity="0.5"
+          strokeWidth="1.1"
         />
         <path
+          className="bfa-splash-thread-tributary"
+          style={{ ["--bfa-thread-rest-opacity" as string]: 0.45 }}
           d="M196 452 C 232 462, 262 448, 292 420"
           stroke={GOLD}
-          strokeWidth="1"
-          opacity="0.4"
+          strokeWidth="1.1"
         />
       </g>
     </svg>

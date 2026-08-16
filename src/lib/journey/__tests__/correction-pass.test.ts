@@ -159,7 +159,7 @@ describe("reflection readiness has one owner", () => {
 describe("onboarding history keys", () => {
   it("names every opening screen plus the agreement, in order", () => {
     const keys = [...OPENING_SCREENS.map((s) => s.key), "agreement"];
-    expect(keys).toEqual(["welcome", "find-here", "how-it-works", "agreement"]);
+    expect(keys).toEqual(["orientation", "welcome", "find-here", "how-it-works", "agreement"]);
     for (const k of keys) expect(k).toMatch(/^[a-z-]{1,32}$/);
   });
 });

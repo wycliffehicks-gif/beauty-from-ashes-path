@@ -6,7 +6,7 @@
 // viewport without scrolling.
 
 export interface OpeningScreen {
-  key: "welcome" | "find-here" | "how-it-works";
+  key: "orientation" | "welcome" | "find-here" | "how-it-works";
   /** Small navy line above the heading. */
   eyebrow: string;
   title: string;
@@ -17,12 +17,28 @@ export interface OpeningScreen {
 
 export const OPENING_SCREENS: OpeningScreen[] = [
   {
+    // Plain orientation first: what this is, who it is for, what the ten days
+    // help a person do, that it stands alone, and one realistic boundary.
+    key: "orientation",
+    eyebrow: "Beauty from Ashes",
+    title: "A 10-day guided journey for when life feels painful, stuck or hard to carry",
+    lead: "Beauty from Ashes is a private, self-paced reflection journey for adults who want to understand more of what may be happening within them and do not know where to begin.",
+    points: [
+      "Over ten days, you will be helped to notice feelings, body signals, thoughts and patterns; put ordinary words to what hurts; and consider how earlier experiences may still affect life now.",
+      "Each day offers clear teaching, a guided practice, an optional Scripture and spiritual reflection, and one small, realistic step.",
+      "You do not need to have watched the videos, been in therapy, know exactly what you feel, or share your story with anyone.",
+    ],
+    closing:
+      "It is not psychotherapy or crisis care. It is a careful place to begin — and to notice when support from another person may matter.",
+  },
+  {
     key: "welcome",
     eyebrow: "Welcome",
     title: "You don’t have to arrive with the words yet",
-    lead: "Many people come here carrying something heavy, hidden or numb — and no clear way to begin.",
+    lead: "Some people arrive with grief, stress, shame, worry, exhaustion, numbness or unresolved hurt — and no clear way to begin.",
     points: [
       "This is a quiet place to slow down and look honestly.",
+      "When this journey speaks of feeling ‘heavy’ or ‘carrying’ something, it means emotional or spiritual strain that keeps taking energy — not physical weight unless the screen says so.",
       "Nothing here asks you to explain yourself to anyone.",
       "You set the pace, and you can stop at any point.",
     ],
@@ -76,7 +92,5 @@ export const AGREEMENT_COPY = {
   adultLabel: "I confirm that I am 18 years of age or older.",
   termsLabel:
     "I have had the opportunity to review, and I agree to, the Terms of Use, Privacy Notice and Important Information.",
-  reviewNote:
-    "You are welcome to open these, and you are not required to read them to continue.",
   beginLabel: "Begin",
 } as const;

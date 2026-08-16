@@ -29,7 +29,7 @@ function PrivacyPage() {
         version of the app.
       </p>
 
-      <h2 className="font-serif text-xl">What the app does not collect</h2>
+      <h2 className="bfa-h2 font-serif">What the app does not collect</h2>
       <p>
         The current app does not require you to create an account. It does not
         intentionally collect your name, email address, journal entries,
@@ -39,7 +39,7 @@ function PrivacyPage() {
         Resurgence Therapeutics receives or reads them.
       </p>
 
-      <h2 className="font-serif text-xl">What is kept on this device</h2>
+      <h2 className="bfa-h2 font-serif">What is kept on this device</h2>
       <p>
         The app stores a small amount of low-sensitivity information in your own
         browser or device storage only:
@@ -116,7 +116,7 @@ function PrivacyPage() {
 
 
 
-      <h2 className="font-serif text-xl">Please do not send sensitive information</h2>
+      <h2 className="bfa-h2 font-serif">Please do not send sensitive information</h2>
       <p>
         You should not enter or send sensitive personal or health information
         through the app, because the app does not need it. If you contact us
@@ -124,7 +124,7 @@ function PrivacyPage() {
         clinical or identifying information there either.
       </p>
 
-      <h2 className="font-serif text-xl">Standard technical information</h2>
+      <h2 className="bfa-h2 font-serif">Standard technical information</h2>
       <p>
         Delivering any web app involves some standard technical information —
         for example your IP address, device and browser type, and access logs —
@@ -142,7 +142,7 @@ function PrivacyPage() {
         information.
       </p>
 
-      <h2 className="font-serif text-xl">What the app does not do</h2>
+      <h2 className="bfa-h2 font-serif">What the app does not do</h2>
       <ul className="list-disc space-y-1 pl-5">
         <li>No behavioural advertising.</li>
         <li>No profiling of users.</li>
@@ -151,7 +151,7 @@ function PrivacyPage() {
         <li>No artificial-intelligence analysis of your reflections.</li>
       </ul>
 
-      <h2 className="font-serif text-xl">External links</h2>
+      <h2 className="bfa-h2 font-serif">External links</h2>
       <p>
         The app may link to third-party resources (for example crisis lines,
         the Resurgence Therapeutics website, or the Beauty from Ashes video
@@ -159,7 +159,7 @@ function PrivacyPage() {
         privacy practices apply, not this policy.
       </p>
 
-      <h2 className="font-serif text-xl">Future changes</h2>
+      <h2 className="bfa-h2 font-serif">Future changes</h2>
       <p>
         Privacy practices may change if future versions of the app add
         accounts, payments, cloud storage or analytics. You will be told, and
@@ -167,7 +167,7 @@ function PrivacyPage() {
         used with your information.
       </p>
 
-      <h2 className="font-serif text-xl">Privacy questions</h2>
+      <h2 className="bfa-h2 font-serif">Privacy questions</h2>
       <p>
         For privacy questions during this version, please see the{" "}
         <Link
@@ -183,7 +183,7 @@ function PrivacyPage() {
       </p>
 
 
-      <p className="text-sm text-muted-foreground">
+      <p className="bfa-copy-support text-muted-foreground">
         This policy is written in plain language and is not legal advice. It
         does not create rights or obligations beyond what applicable law
         already provides.

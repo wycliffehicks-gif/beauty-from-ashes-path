@@ -27,7 +27,7 @@ function ImportantInfoPage() {
       title="Important Information, Clinical Disclaimer &amp; Crisis Support"
       lastUpdated="August 2, 2026"
     >
-      <p className="text-lg">
+      <p className="bfa-copy-lead">
         <strong className="font-medium text-foreground">
           Beauty from Ashes is not psychotherapy.
         </strong>
@@ -39,14 +39,14 @@ function ImportantInfoPage() {
         know when you are in danger.
       </p>
 
-      <h2 className="font-serif text-xl">What the app cannot do</h2>
+      <h2 className="bfa-h2 font-serif">What the app cannot do</h2>
       <p>
         Information, reflections and exercises in the app do not replace
         clinical assessment, diagnosis, psychotherapy, medical care, medication
         advice, spiritual direction or individualized safety planning.
       </p>
 
-      <h2 className="font-serif text-xl">Confidentiality</h2>
+      <h2 className="bfa-h2 font-serif">Confidentiality</h2>
       <p>
         Using this app is not a confidential psychotherapy session. Local
         device preferences the app stores (see the{" "}
@@ -60,7 +60,7 @@ function ImportantInfoPage() {
         information.
       </p>
 
-      <h2 className="font-serif text-xl">If you feel overwhelmed</h2>
+      <h2 className="bfa-h2 font-serif">If you feel overwhelmed</h2>
       <p>
         It is okay to stop, and stopping is allowed at any point. You may close
         the app, put it down, or leave a day unfinished. If it helps, you might
@@ -74,7 +74,7 @@ function ImportantInfoPage() {
         for crisis lines and other kinds of help.
       </p>
 
-      <h2 className="font-serif text-xl">This app may complement therapy</h2>
+      <h2 className="bfa-h2 font-serif">This app may complement therapy</h2>
       <p>
         Beauty from Ashes may accompany work you are already doing with a
         therapist, doctor or trusted professional. It does not replace that
@@ -82,17 +82,17 @@ function ImportantInfoPage() {
       </p>
 
       <div className="surface-card space-y-3 border-l-4 border-l-destructive">
-        <h2 className="font-serif text-lg text-foreground">
+        <h2 className="bfa-h3 font-serif text-foreground">
           If safety is at immediate risk
         </h2>
-        <p className="text-sm text-foreground">
+        <p className="bfa-copy-support text-foreground">
           Call{" "}
           <a href="tel:911" className="text-primary underline underline-offset-4">
             911
           </a>{" "}
           or go to your nearest emergency department.
         </p>
-        <p className="text-sm text-foreground">
+        <p className="bfa-copy-support text-foreground">
           If you are thinking about suicide, or are worried about someone else,
           the 9-8-8 Suicide Crisis Helpline in Canada is free, confidential and
           available 24/7 by phone or text.
@@ -100,24 +100,24 @@ function ImportantInfoPage() {
         <div className="flex flex-wrap gap-2">
           <a
             href="tel:988"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-primary underline underline-offset-4"
+            className="bfa-copy-support inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[color:var(--bfa-control-border)] bg-background px-4 py-2 font-medium text-primary underline underline-offset-4"
           >
             Call 988
           </a>
           <a
             href="sms:988"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-primary underline underline-offset-4"
+            className="bfa-copy-support inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[color:var(--bfa-control-border)] bg-background px-4 py-2 font-medium text-primary underline underline-offset-4"
           >
             Text 988
           </a>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="bfa-copy-support text-muted-foreground">
           If you are outside Canada, please use your local emergency or crisis
           service.
         </p>
       </div>
 
-      <p className="text-sm">
+      <p className="bfa-copy-support">
         For the full list of Canadian crisis lines and other kinds of help used
         in this app, see{" "}
         <Link to="/support" className="inline-link text-primary underline underline-offset-4">

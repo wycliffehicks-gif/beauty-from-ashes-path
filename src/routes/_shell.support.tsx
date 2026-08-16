@@ -35,15 +35,15 @@ function prettyTel(tel: string) {
 }
 
 const ACTION =
-  "inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-primary underline underline-offset-4";
+  "bfa-copy-support inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[color:var(--bfa-control-border)] bg-background px-4 py-2 font-medium text-primary underline underline-offset-4";
 
 /** One registry entry, with separate Call and Text actions where both exist. */
 function LineCard({ line }: { line: CrisisLine }) {
   return (
     <li className="rounded-lg border border-border bg-secondary/40 p-3">
-      <p className="font-medium text-foreground">{line.name}</p>
-      <p className="mt-1 text-sm text-muted-foreground">{line.detail}</p>
-      {line.caution && <p className="mt-2 text-sm text-foreground">{line.caution}</p>}
+      <p className="bfa-copy font-medium text-foreground">{line.name}</p>
+      <p className="bfa-copy-support mt-1 text-muted-foreground">{line.detail}</p>
+      {line.caution && <p className="bfa-copy-support mt-2 text-foreground">{line.caution}</p>}
       <div className="mt-3 flex flex-wrap gap-2">
         {line.tel && (
           <a href={`tel:${line.tel}`} className={ACTION}>
@@ -69,7 +69,7 @@ function LineCard({ line }: { line: CrisisLine }) {
 
 function RegionBlock({ region }: { region: RegionResource }) {
   return (
-    <ul className="space-y-2 text-sm">
+    <ul className="space-y-2">
       {region.crisisLines.map((line) => (
         <LineCard key={line.name} line={line} />
       ))}
@@ -81,29 +81,29 @@ function SupportPage() {
   return (
     <section className="space-y-6 py-6">
       <header className="space-y-2">
-        <h1 className="font-serif text-3xl text-foreground">Support &amp; Safety</h1>
-        <p className="text-muted-foreground">
+        <h1 className="bfa-h1 font-serif text-foreground">Support &amp; Safety</h1>
+        <p className="bfa-copy text-muted-foreground">
           Please read this before continuing. Your safety matters more than any exercise in this
           app.
         </p>
       </header>
 
       <div className="surface-card space-y-3 border-l-4 border-l-destructive">
-        <h2 className="font-serif text-lg text-foreground">If you are in immediate danger</h2>
-        <p className="text-sm text-foreground">{CA_REGION.emergencyGuidance}</p>
+        <h2 className="bfa-h2 font-serif text-foreground">If you are in immediate danger</h2>
+        <p className="bfa-copy text-foreground">{CA_REGION.emergencyGuidance}</p>
         {CA_REGION.emergencyTel && (
           <a href={`tel:${CA_REGION.emergencyTel}`} className={ACTION}>
             Call {CA_REGION.emergencyTel}
           </a>
         )}
-        <p className="text-sm text-muted-foreground">
+        <p className="bfa-copy-support text-muted-foreground">
           This app is not monitored. It cannot see, hear, or respond to emergencies.
         </p>
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">What this app is not</h2>
-        <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+        <h2 className="bfa-h2 font-serif text-foreground">What this app is not</h2>
+        <ul className="bfa-copy-support list-disc space-y-1.5 pl-5 text-muted-foreground">
           <li>It is not psychotherapy or counselling.</li>
           <li>It is not medical treatment or diagnosis.</li>
           <li>It is not crisis care or emergency support.</li>
@@ -112,8 +112,8 @@ function SupportPage() {
       </div>
 
       <div className="surface-card space-y-3">
-        <h2 className="font-serif text-lg text-foreground">Crisis lines in Canada</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="bfa-h2 font-serif text-foreground">Crisis lines in Canada</h2>
+        <p className="bfa-copy-support text-muted-foreground">
           If you are not in immediate danger but need to talk to someone, these lines are free and
           confidential.
         </p>
@@ -122,12 +122,12 @@ function SupportPage() {
 
       {CA_REGION.supportLines && (
         <div className="surface-card space-y-3" data-testid="support-non-crisis">
-          <h2 className="font-serif text-lg text-foreground">Other kinds of help</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="bfa-h2 font-serif text-foreground">Other kinds of help</h2>
+          <p className="bfa-copy-support text-muted-foreground">
             These are not crisis lines. They may help with finding services, safety planning or
             practical support.
           </p>
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-2">
             {CA_REGION.supportLines.map((line) => (
               <LineCard key={line.name} line={line} />
             ))}
@@ -136,8 +136,8 @@ function SupportPage() {
       )}
 
       <div className="surface-card space-y-3" data-testid="support-global">
-        <h2 className="font-serif text-lg text-foreground">If you are outside Canada</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="bfa-h2 font-serif text-foreground">If you are outside Canada</h2>
+        <p className="bfa-copy-support text-muted-foreground">
           This is a Canada-only private pilot, and its resources have not yet been localized for
           other countries. {GLOBAL_REGION.emergencyGuidance}
         </p>
@@ -145,20 +145,20 @@ function SupportPage() {
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="font-serif text-lg text-foreground">Reach a person</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="bfa-h2 font-serif text-foreground">Reach a person</h2>
+        <p className="bfa-copy-support text-muted-foreground">
           If you can, contact a trusted friend, family member, elder, pastor, community worker,
           doctor, or therapist. You do not have to be alone with this.
         </p>
       </div>
 
-      <p className="text-xs text-muted-foreground">
+      <p className="bfa-copy-support text-muted-foreground">
         Resources last verified {CA_REGION.lastVerified}. If a line has changed, please contact your
         local emergency services instead.
       </p>
 
       <div className="pt-2">
-        <Link to="/" className="inline-link text-sm text-primary underline underline-offset-4">
+        <Link to="/" className="inline-link bfa-copy-support text-primary underline underline-offset-4">
           ← Return to Today
         </Link>
       </div>

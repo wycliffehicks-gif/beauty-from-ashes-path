@@ -600,7 +600,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
       ],
       closing:
-        "Nothing here explains where an inner response came from or promises change. It does hold one possibility near: your worth does not depend on attacking yourself, and honesty and dignity can remain in the same room.",
+        "Today offered a distinction between a whole-person verdict and an accountable stance. Whether or not you made selections, worth does not depend on attacking yourself; dignity and responsibility can remain in the same room.",
     },
     close: {
       heading: "Truth without contempt",

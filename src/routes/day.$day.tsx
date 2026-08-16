@@ -720,6 +720,7 @@ function QuestionScreenShell({
   question,
   stepKey,
   answers,
+  showSpiritualChoices = false,
   onAnswer,
   onNext,
   label,
@@ -730,7 +731,15 @@ function QuestionScreenShell({
 }: {
   question: Question;
   stepKey: string;
+  /** Presentation answers: a dormant Christian selection is already withheld. */
   answers: string[];
+  /**
+   * True only when preferences are hydrated AND spiritual content is on. While
+   * false, spiritualOnly choices are not rendered at all, so nothing Christian
+   * can flash before hydration. Canonical indexes are preserved: the visible
+   * entries are filtered, never reindexed.
+   */
+  showSpiritualChoices?: boolean;
   onAnswer: (stepKey: string, optionIds: string[]) => void;
   onNext: () => void;
   label: string;
@@ -741,6 +750,11 @@ function QuestionScreenShell({
   /** Stable screen identity, so a screen change moves focus to the question. */
   focusKey?: string;
 }) {
+  const visibleOptions = presentationOptions(question, {
+    hydrated: true,
+    showSpiritual: showSpiritualChoices,
+  });
+
 
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),

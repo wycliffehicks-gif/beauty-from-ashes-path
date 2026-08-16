@@ -18,7 +18,7 @@ export function LegalPage({
         <div className="pb-4">
           <Link
             to="/"
-            className="inline-link text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            className="inline-link bfa-copy-support text-muted-foreground underline underline-offset-4 hover:text-foreground"
           >
             ← Back
           </Link>
@@ -29,21 +29,21 @@ export function LegalPage({
         <main>
           <header className="space-y-2 pb-6">
             <p className="eyebrow">Resurgence Therapeutics</p>
-            <h1 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+            <h1 className="bfa-h1 font-serif text-foreground">
               {title}
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="bfa-copy-meta text-muted-foreground">
               Last updated: {lastUpdated}
             </p>
           </header>
 
-          <div className="legal-prose space-y-5 pb-10 text-[17px] leading-relaxed text-foreground">
+          <div className="legal-prose space-y-5 pb-10 text-foreground">
             {children}
           </div>
         </main>
 
 
-        <div className="border-t border-border/60 pt-6 text-sm">
+        <div className="bfa-copy-support border-t border-border/60 pt-6">
           <p className="text-muted-foreground">
             See also:{" "}
             <Link to="/privacy" className="inline-link text-primary underline underline-offset-4">

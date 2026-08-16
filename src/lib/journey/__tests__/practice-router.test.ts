@@ -109,7 +109,7 @@ describe("Day 9 routed practice", () => {
     );
     expect(day9.questions.map((q) => `${q.id}:${q.select}`)).toEqual([
       "practice:one",
-      "where:one",
+      "where:many",
     ]);
     expect(screensFor(day9).map(screenKey)).toEqual([
       "arrive",
@@ -135,13 +135,20 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
   it("marks only Day 8 route.god, at its unchanged canonical position", () => {
     const route = day8.questions.find((q) => q.id === "route")!;
     expect(route.options.map((o) => o.id)).toEqual([
+      "self",
+      "body",
+      "reality",
+      "values",
+      "creativity",
       "person",
-      "help",
-      "comfort",
+      "community",
       "god",
+      "other",
       "unclear",
+      "none",
+      "private",
     ]);
-    expect(godIndex).toBe(3);
+    expect(godIndex).toBe(7);
     expect(route.options[godIndex]!.spiritualOnly).toBe(true);
     for (const n of [1, 2, 3, 4, 5, 6, 7, 9, 10]) {
       for (const q of [...day(n).questions, day(n).step]) {
@@ -152,7 +159,7 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
 
   it("withholds the stable and legacy token while unhydrated or off, without deleting it", () => {
     for (const token of [godToken, `q.route.${godIndex}`]) {
-      const raw = ["q.notice:softening", token, "step.1"];
+      const raw = ["q.size:tiny", token, "step.1"];
       const frozen = [...raw];
       for (const opts of [
         { hydrated: false, showSpiritual: true },
@@ -161,7 +168,7 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
       ]) {
         const shown = presentationAnswers(day8, raw, opts);
         expect(shown).not.toContain(token);
-        expect(shown).toEqual(["q.notice:softening", "step.1"]);
+        expect(shown).toEqual(["q.size:tiny", "step.1"]);
       }
       expect(raw).toEqual(frozen);
       expect(isSpiritualOnlyToken(day8, token)).toBe(true);
@@ -186,13 +193,25 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
       { hydrated: true, showSpiritual: false },
     ]) {
       const visible = presentationOptions(route, opts);
-      expect(visible.map((v) => v.option.id)).toEqual(["person", "help", "comfort", "unclear"]);
+      expect(visible.map((v) => v.option.id)).toEqual([
+      "self",
+      "body",
+      "reality",
+      "values",
+      "creativity",
+      "person",
+      "community",
+      "other",
+      "unclear",
+      "none",
+      "private",
+    ]);
       // Canonical indexes are preserved, never reindexed.
-      expect(visible.map((v) => v.index)).toEqual([0, 1, 2, 4]);
+      expect(visible.map((v) => v.index)).toEqual([0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11]);
     }
     const on = presentationOptions(route, { hydrated: true, showSpiritual: true });
-    expect(on.map((v) => v.index)).toEqual([0, 1, 2, 3, 4]);
-    expect(on[3]!.option.id).toBe("god");
+    expect(on.map((v) => v.index)).toEqual(route.options.map((_, i) => i));
+    expect(on[7]!.option.id).toBe("god");
   });
 
   it("produces no Christian Echo, reflection or snapshot line while off", () => {

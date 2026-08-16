@@ -154,9 +154,14 @@ export interface JourneyDayContent {
     intro: string;
     /** Makes "either or both" explicit. */
     either: string;
+    /** Required fallback, used whenever no route resolves. */
     reflection: PracticePath;
+    /** Required shared Christian path. Always opt-in. */
     spiritual: PracticePath;
+    /** Optional routed practice: one question's single choice selects a path. */
+    route?: RoutedPractice;
   };
+
   /** One Honest Step, gathered as a structured choice. */
   step: Question;
   reflection: {

@@ -165,6 +165,8 @@ describe("no bare ambiguous heaviness in canonical client copy", () => {
   it("has no unexplained heavy/heaviness wording in the ten days", () => {
     const suspects = strings(FIRST_JOURNEY_DAYS)
       .filter((s) => /heav/i.test(s))
+      // The stable option ID token itself is not visible copy.
+      .filter((s) => s !== "heavy")
       .filter((s) => !ALLOWED.some((a) => s.includes(a)));
     expect(suspects).toEqual([]);
   });
@@ -283,7 +285,9 @@ describe("optional local post-practice check", () => {
     expect(text).toMatch(/colour.*shape.*sound/i);
     expect(text).toMatch(/immediate in-person help/i);
     expect(text).not.toMatch(/breath|breathe|inhale|exhale/i);
-    expect(text).not.toMatch(/dissociat|disorder|diagnos/i);
+    expect(text).not.toMatch(/dissociat|disorder/i);
+    // It may say no diagnosis is being made, but never assert one.
+    expect(text).not.toMatch(/you are (being )?diagnos|this is a diagnos/i);
   });
 
   it("offers Return home and Support & Safety in both branches", async () => {

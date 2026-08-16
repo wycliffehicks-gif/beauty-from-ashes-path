@@ -511,6 +511,7 @@ function ScreenBody({
           question={question}
           stepKey={answerKeyFor(content, question.id)}
           answers={answers}
+          showSpiritualChoices={showSpiritualChoices}
           onAnswer={onAnswer}
           onNext={onNext}
           label={label}
@@ -534,7 +535,10 @@ function ScreenBody({
     }
 
     case "practise":
-      return shell(<PractiseScreen content={content} />, { onContinue: onNext });
+      return shell(<PractiseScreen content={content} answers={answers} />, {
+        onContinue: onNext,
+      });
+
 
     case "reflection":
       return shell(

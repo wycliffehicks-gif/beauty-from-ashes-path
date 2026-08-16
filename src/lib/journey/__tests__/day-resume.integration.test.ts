@@ -96,7 +96,7 @@ describe("Day flow exact resume (regression)", () => {
   it("opens on the exact saved step and does not overwrite it with index 0", () => {
     // Person progressed partway through Day 2 and returned Home.
     saveLocator({ dayId: "day-02", step: "name", index: 3 });
-    saveDayAnswers("day-02", ["notice.2", "name.0"]);
+    saveDayAnswers({ dayId: "day-02", meaningVersion: "v1" }, ["notice.2", "name.0"]);
 
     const view = mountDayFlow({ dayId: "day-02", requested: true });
 

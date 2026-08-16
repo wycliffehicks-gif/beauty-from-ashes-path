@@ -181,7 +181,7 @@ describe("a stale saved reflection can never be shown", () => {
 describe("no other progress is disturbed", () => {
   it("keeps answers, completion, reached and locator through replacement", () => {
     const answers = codedAnswers(day7);
-    saveDayAnswers("day-07", answers);
+    saveDayAnswers({ dayId: "day-07", meaningVersion: "v1" }, answers);
     saveReached("day-07", 6);
     saveLocator({ dayId: "day-07", step: "reflection", index: 6 });
     markDayComplete("day-06");

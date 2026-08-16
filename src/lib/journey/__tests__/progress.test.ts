@@ -81,7 +81,7 @@ describe("journey progress store", () => {
   });
 
   it("stores structured answer ids and resume reflection text", () => {
-    saveDayAnswers("day-01", ["heavy", "guarded"]);
+    saveDayAnswers({ dayId: "day-01", meaningVersion: "v1" }, ["heavy", "guarded"]);
     saveDayReflection("day-01", "A provisional reflection.");
     const p = readProgress();
     expect(p.answers["day-01"]).toEqual(["heavy", "guarded"]);
@@ -104,7 +104,7 @@ describe("journey progress store", () => {
     expect(hasMeaningfulProgress(readProgress())).toBe(false);
   });
   it("never resumes a completed day at its beginning or its close", () => {
-    saveDayAnswers("day-01", ["state:heavy"]);
+    saveDayAnswers({ dayId: "day-01", meaningVersion: "v1" }, ["state:heavy"]);
     markDayComplete("day-01");
 
     // Completed + Arrive, with answers still retained, is not a resume.

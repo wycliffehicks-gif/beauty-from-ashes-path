@@ -43,7 +43,14 @@ function hashText(text: string): string {
  */
 export function reflectionContentFingerprint(day: JourneyDayContent): string {
   const r = day.reflection;
-  const parts: string[] = [`day:${day.day}`, `intro:${r.intro}`];
+  // The day's ANSWER MEANING is part of the proof: if the questions were
+  // revised, a reflection written under the older meaning can never be restored.
+  const parts: string[] = [
+    `day:${day.day}`,
+    `am:${day.answerMeaningVersion}`,
+    `intro:${r.intro}`,
+  ];
+
   for (const s of r.sections) {
     parts.push(`s:${s.id}`, `t:${s.title}`, `o:${s.opening ?? ""}`, `f:${s.from ?? ""}`);
     const lines = s.lines ?? {};

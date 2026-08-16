@@ -365,7 +365,9 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       progress={{ current: i, total: screens.length }}
       onBack={i > 0 ? goPrev : undefined}
       onNext={goNext}
-      answers={dayAnswers}
+      answers={presentation}
+      showSpiritualChoices={showSpiritualChoices}
+
       answersLoaded={answersLoaded}
       revisionPending={pendingRevision}
       focusSettled={focusSettled}

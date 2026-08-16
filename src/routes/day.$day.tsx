@@ -943,17 +943,18 @@ function PractiseScreen({
       )}
       <DayMotif motif={content.motif} treatment="quiet" />
       <PracticePanel
-        path={content.practise.reflection}
+        path={resolved.reflection}
         isOpen={reflectionOpen}
         onToggle={() => setReflectionOpen((v) => !v)}
       />
       {showSpiritual && (
         <PracticePanel
-          path={content.practise.spiritual}
+          path={resolved.spiritual}
           isOpen={spiritualOpen}
           onToggle={() => setSpiritualOpen((v) => !v)}
         />
       )}
+
       {showSpiritualInvitation && (
         <aside
           data-testid="spiritual-invitation"

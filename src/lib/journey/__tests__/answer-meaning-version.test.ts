@@ -81,7 +81,10 @@ const { resolveResumeIndex } = await import("@/lib/journey/resume");
 import type { JourneyDayContent } from "@/content/journey-types";
 
 const day1 = getFirstJourneyDay(1)!;
-const day8 = getFirstJourneyDay(8)!;
+/** Canonical Day 8 — semantically revised in PASS C2B, so meaning version v2. */
+const day8Canonical = getFirstJourneyDay(8)!;
+/** The pre-C2B meaning of Day 8, used to model legacy stores and rollback. */
+const day8: JourneyDayContent = { ...day8Canonical, answerMeaningVersion: "v1" };
 
 /**
  * FROZEN pre-C2 Day 8 option IDs, in their exact stored order, for q.route,
@@ -107,12 +110,12 @@ const FROZEN_DAY_8_V1 = {
   step: ["act", "message", "outside", "own", "rehearse", "unclear", "none", "private"],
 } as const;
 
-/** A simulated FUTURE revision of Day 8: same IDs, new answer meaning. */
+/** The live revised Day 8 (meaning v2). */
 function day8AsV2(): JourneyDayContent {
-  return { ...day8, answerMeaningVersion: "v2" };
+  return day8Canonical;
 }
 function day8AsV3(): JourneyDayContent {
-  return { ...day8, answerMeaningVersion: "v3" };
+  return { ...day8Canonical, answerMeaningVersion: "v3" };
 }
 
 function stored(value: unknown) {

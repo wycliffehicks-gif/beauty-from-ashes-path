@@ -12,13 +12,40 @@
 // `practise.reflection` fallback.
 
 import type { JourneyDayContent, PracticePath } from "@/content/journey-types";
-import { selectedOptionIds } from "@/lib/journey/reflection-engine";
+import { answerKeyFor } from "@/lib/journey/reflection-engine";
 
 export interface ResolvedPractice {
   reflection: PracticePath;
   spiritual: PracticePath;
   /** The option id that selected the path, when one did. Presentation only. */
   routedBy: string | null;
+}
+
+/**
+ * Tokens owned by exactly this step key, in both supported forms: the stable
+ * `q.practice:grounding` form and the legacy positional `q.practice.0` form.
+ * Ownership is decided BEFORE decoding, so an invalid same-question token is
+ * never silently dropped.
+ */
+function routeOwnedTokens(stepKey: string, answers: string[] | undefined): string[] {
+  return (answers ?? []).filter(
+    (t) => t.startsWith(`${stepKey}:`) || t.startsWith(`${stepKey}.`),
+  );
+}
+
+/** The option id a single owned token decodes to, or null. Never repaired. */
+function decodeOwnedToken(
+  token: string,
+  stepKey: string,
+  options: readonly { id: string }[],
+): string | null {
+  if (token.startsWith(`${stepKey}:`)) {
+    const candidate = token.slice(stepKey.length + 1);
+    return options.some((o) => o.id === candidate) ? candidate : null;
+  }
+  const n = Number(token.slice(stepKey.length + 1));
+  if (Number.isInteger(n) && n >= 0 && n < options.length) return options[n]!.id;
+  return null;
 }
 
 /** The single mapped option id for this day's route, or null. */
@@ -28,11 +55,17 @@ export function resolvedRouteOptionId(
 ): string | null {
   const route = day.practise.route;
   if (!route) return null;
-  const selected = selectedOptionIds(day, route.from, answers);
-  if (selected.length !== 1) return null;
-  const id = selected[0]!;
+  const question = day.questions.find((q) => q.id === route.from);
+  if (!question) return null;
+  const stepKey = answerKeyFor(day, route.from);
+  const owned = routeOwnedTokens(stepKey, answers);
+  // Fail closed: anything other than exactly one route-owned raw token.
+  if (owned.length !== 1) return null;
+  const id = decodeOwnedToken(owned[0]!, stepKey, question.options);
+  if (!id) return null;
   return Object.prototype.hasOwnProperty.call(route.reflectionByOption, id) ? id : null;
 }
+
 
 /**
  * The practice pair to present. Always returns the day's required paths when

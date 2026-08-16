@@ -175,7 +175,11 @@ function structuralFingerprint(): string {
     step: {
       id: d.step.id,
       select: d.step.select,
-      options: d.step.options.map((o) => ({ id: o.id, exclusive: o.exclusive === true })),
+      options: d.step.options.map((o) => ({
+        id: o.id,
+        exclusive: o.exclusive === true,
+        spiritualOnly: o.spiritualOnly === true,
+      })),
       echo: d.step.echo ? Object.keys(d.step.echo.byOption).sort() : null,
     },
     practise: {
@@ -184,7 +188,17 @@ function structuralFingerprint(): string {
       reflectionScripture: typeof d.practise.reflection.scripture !== "undefined",
       spiritualSteps: d.practise.spiritual.steps.length,
       spiritualScripture: typeof d.practise.spiritual.scripture !== "undefined",
+      route: d.practise.route
+        ? {
+            from: d.practise.route.from,
+            reflectionByOption: Object.keys(d.practise.route.reflectionByOption),
+            spiritualByOption: d.practise.route.spiritualByOption
+              ? Object.keys(d.practise.route.spiritualByOption)
+              : null,
+          }
+        : null,
     },
+
     reflection: d.reflection.sections.map((s) => ({
       id: s.id,
       from: s.from ?? null,

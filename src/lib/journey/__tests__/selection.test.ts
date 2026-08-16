@@ -56,7 +56,7 @@ describe("Day 2 revision", () => {
 
   it("offers the safe sharing step with its caution", () => {
     const share = day2.step.options.find((o) => o.id === "share")!;
-    expect(share.note).toMatch(/respected your limits/i);
+    expect(share.note).toMatch(/respect for your limits/i);
     const next = day2.reflection.sections.find((s) => s.id === "next")!;
     expect(next.lines?.["share"]).toBeTruthy();
   });

@@ -865,8 +865,9 @@ describe("Day 7 revision", () => {
     expect(body).toContain("Nothing you did not name will be placed on you");
     expect(body).toContain("No next step was named");
     expect(built.closing).toContain(
-      "Nothing here explains where an inner response came from or promises change",
+      "Whether or not you made selections, worth does not depend on attacking yourself",
     );
+    expect(built.closing).toContain("dignity and responsibility can remain in the same room");
   });
 
   it("states private, unclear and none paths accurately", () => {

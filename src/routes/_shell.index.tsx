@@ -49,12 +49,10 @@ function JourneyHome() {
       <div className="bfa-visual-home-hero">
         <VisualMotif variant="home" />
         <header className="bfa-visual-home-hero-inner space-y-3">
-          <h1 className="bfa-heading font-serif text-3xl leading-tight sm:text-4xl">
-            {JOURNEY_HOME_TITLE}
-          </h1>
-          <p className="text-[0.95rem] text-muted-foreground">{JOURNEY_IDENTITY}</p>
+          <h1 className="bfa-heading bfa-h1 font-serif">{JOURNEY_HOME_TITLE}</h1>
+          <p className="bfa-copy-support text-muted-foreground">{JOURNEY_IDENTITY}</p>
           <hr className="gold-seam w-28" />
-          <p className="text-base text-foreground">
+          <p className="bfa-copy text-foreground">
             Open a day when you have a little space. Days stay open, and you can return to any of
             them as often as you like.
           </p>
@@ -67,11 +65,14 @@ function JourneyHome() {
           data-testid="resume-card"
           className="rounded-xl border border-[color:var(--gold)] bg-card p-5"
         >
-          <p className="eyebrow text-[0.72rem]">Continue where you left off</p>
-          <h2 className="mt-2 font-serif text-xl text-foreground">
+          <p className="eyebrow">Continue where you left off</p>
+          <h2 className="bfa-h2 mt-2 font-serif text-foreground">
             Day {resumeDay.day} · {resumeDay.title}
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground" data-testid="resume-storage-note">
+          <p
+            className="bfa-copy-support mt-1 text-muted-foreground"
+            data-testid="resume-storage-note"
+          >
             {!storageHydrated || persistent
               ? "Your place is saved in this browser, on this device."
               : "Your place is available in this tab for now. It may be lost if this tab closes or reloads."}
@@ -88,7 +89,7 @@ function JourneyHome() {
       )}
 
       <div className="space-y-3">
-        <h2 className="font-serif text-lg text-foreground">The ten days</h2>
+        <h2 className="bfa-h2 font-serif text-foreground">The 10-Day Journey</h2>
         <div className="bfa-visual-thread-track">
         <VisualMotif variant="thread" />
         <ol className="space-y-3">
@@ -105,21 +106,23 @@ function JourneyHome() {
                   data-state={state}
                   data-testid={`day-row-${d.id}`}
                 >
+                  {/* Visible "Day N" in digits, for fast scanning. It is
+                      decorative for assistive tech, which reads the row's own
+                      "Day N:" name once instead. */}
                   <span aria-hidden className="day-marker">
-                    {d.day}
+                    <span className="day-marker-word">Day</span>
+                    <span className="day-marker-num">{d.day}</span>
                   </span>
                   <span className="min-w-0">
                     {/* The day number is decorative in the marker, so the row
                         still needs a real "Day N" name for assistive tech. */}
                     <span className="sr-only">Day {d.day}: </span>
-                    <span className="block font-serif text-lg leading-snug text-foreground">
-                      {d.title}
-                    </span>
+                    <span className="bfa-h3 block font-serif text-foreground">{d.title}</span>
 
-                    <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">
+                    <span className="bfa-copy-support mt-1 block text-muted-foreground">
                       {d.theme}
                     </span>
-                    <span className="mt-1.5 block text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="bfa-copy-meta mt-1.5 block uppercase tracking-[0.12em] text-muted-foreground">
                       {state === "complete"
                         ? "Finished · open any time"
                         : state === "current"
@@ -139,7 +142,7 @@ function JourneyHome() {
         </ol>
         </div>
 
-        <p className="pt-1 text-sm text-muted-foreground">
+        <p className="bfa-copy-support pt-1 text-muted-foreground">
           Nothing here is timed, scored or compared.
         </p>
       </div>

@@ -322,26 +322,26 @@ function AgreementScreen({
         </Link>
       </p>
 
-      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+      <label className="flex min-h-[52px] items-start gap-3 rounded-xl border border-[color:var(--bfa-control-border)] bg-card p-4">
         <input
           type="checkbox"
           data-testid="agree-adult"
           checked={adultConfirmed}
           onChange={(e) => setAdultConfirmed(e.target.checked)}
-          className="mt-1 h-5 w-5 shrink-0"
+          className="mt-1 h-6 w-6 shrink-0"
         />
         <span className="bfa-copy text-foreground">
           {AGREEMENT_COPY.adultLabel}
         </span>
       </label>
 
-      <label className="flex min-h-[44px] items-start gap-3 rounded-xl border border-border bg-card p-3.5">
+      <label className="flex min-h-[52px] items-start gap-3 rounded-xl border border-[color:var(--bfa-control-border)] bg-card p-4">
         <input
           type="checkbox"
           data-testid="agree-terms"
           checked={termsAgreed}
           onChange={(e) => setTermsAgreed(e.target.checked)}
-          className="mt-1 h-5 w-5 shrink-0"
+          className="mt-1 h-6 w-6 shrink-0"
         />
         <span className="bfa-copy text-foreground">
           {AGREEMENT_COPY.termsLabel}

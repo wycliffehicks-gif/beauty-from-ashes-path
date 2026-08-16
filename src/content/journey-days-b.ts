@@ -166,19 +166,19 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         summary:
           "A Christian practice for bringing both the cost and what remains real before Christ, without turning faith into a demand for instant release.",
         steps: [
-          "Orient outward first, then read the passage slowly if you wish. Notice that burdened people are invited; they are not scolded for being burdened.",
-          "In prayer or silence, name one possible cost—or keep it private: 'Jesus, one thing this may be costing me is…'",
-          "Name what remains real: a responsibility, illness, grief, need for safety, injustice, limited resource or difficult circumstance. You may also say, 'I do not know what keeps this here.'",
-          "Let both truths remain before God without making either cancel the other. If you wish, pray: 'Jesus, help me see truthfully what I am carrying, what may still matter, and what support I may need. Meet me with gentleness and give me an honest pace.'",
-          "Notice one practical form of care that may matter: rest, help from a safe person, professional care, community support, advocacy, accommodation, a boundary or a safer way of carrying. Prayer may accompany practical support; it does not replace it.",
-          "Return attention to one neutral detail nearby. If you feel no relief or clarity, nothing has gone wrong.",
+          "Orient outward, then read the invitation if you wish.",
+          "Name one possible cost, or keep it private.",
+          "Name what remains useful, necessary, constrained or still unsafe.",
+          "If workable, name one loss: ‘I wish this had not cost…’",
+          "Ask what practical care, support, accommodation, safer condition or alternative response would need to accompany any easing. Prayer does not replace it.",
+          "Return attention outward. No release, lighter feeling or answer is required.",
         ],
         notRequired:
           "This passage is not being used to tell you to remain in harm, carry everything alone, surrender a boundary or avoid practical support. This is not 'just give it to God.' No prayer, release, forgiveness or lighter feeling is required.",
         scripture: {
-          reference: "Matthew 11:28–30 (World English Bible)",
-          body: "Come to me, all you who labor and are heavily burdened, and I will give you rest. Take my yoke upon you and learn from me, for I am gentle and humble in heart; and you will find rest for your souls. For my yoke is easy, and my burden is light.",
-          note: "Jesus addresses people who are already burdened and describes himself as gentle and humble. This is not a promise that every circumstance will immediately feel easy or change.",
+          reference: "Matthew 11:28 (World English Bible)",
+          body: "Come to me, all you who labor and are heavily burdened, and I will give you rest.",
+          note: "This is an invitation addressed to burdened people, not a command to remain in harm, carry alone, surrender a boundary or avoid practical help. It does not promise immediate relief or changed circumstances.",
         },
       },
     },

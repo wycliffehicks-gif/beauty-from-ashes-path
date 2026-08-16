@@ -81,7 +81,10 @@ const { resolveResumeIndex } = await import("@/lib/journey/resume");
 import type { JourneyDayContent } from "@/content/journey-types";
 
 const day1 = getFirstJourneyDay(1)!;
-const day8 = getFirstJourneyDay(8)!;
+/** Canonical Day 8 — semantically revised in PASS C2B, so meaning version v2. */
+const day8Canonical = getFirstJourneyDay(8)!;
+/** The pre-C2B meaning of Day 8, used to model legacy stores and rollback. */
+const day8: JourneyDayContent = { ...day8Canonical, answerMeaningVersion: "v1" };
 
 /**
  * FROZEN pre-C2 Day 8 option IDs, in their exact stored order, for q.route,
@@ -107,12 +110,12 @@ const FROZEN_DAY_8_V1 = {
   step: ["act", "message", "outside", "own", "rehearse", "unclear", "none", "private"],
 } as const;
 
-/** A simulated FUTURE revision of Day 8: same IDs, new answer meaning. */
+/** The live revised Day 8 (meaning v2). */
 function day8AsV2(): JourneyDayContent {
-  return { ...day8, answerMeaningVersion: "v2" };
+  return day8Canonical;
 }
 function day8AsV3(): JourneyDayContent {
-  return { ...day8, answerMeaningVersion: "v3" };
+  return { ...day8Canonical, answerMeaningVersion: "v3" };
 }
 
 function stored(value: unknown) {
@@ -124,10 +127,20 @@ beforeEach(() => {
 });
 
 describe("content stamps its answer meaning, and nothing else", () => {
-  it("marks every canonical day v1 in this architecture-only pass", () => {
-    expect(FIRST_JOURNEY_DAYS.map((d) => d.answerMeaningVersion)).toEqual(
-      Array(10).fill("v1"),
-    );
+  it("marks Day 8 v2 after its C2B semantic rewrite and every other day v1", () => {
+    expect(FIRST_JOURNEY_DAYS.map((d) => d.answerMeaningVersion)).toEqual([
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v2",
+      "v1",
+      "v1",
+    ]);
+    expect(day8Canonical.answerMeaningVersion).toBe("v2");
   });
 
   it("agrees with the frozen pre-v4 meaning map for every day", () => {
@@ -315,8 +328,13 @@ describe("version-aware helpers", () => {
   });
 
   it("keeps meaningful-progress logic on the current meaning", () => {
+    // Legacy v1-only selections are pending, not active, so they alone do not
+    // count as meaningful progress under the revised Day 8.
     saveDayAnswers(day8, ["q.route:self"]);
     saveLocator({ dayId: "day-08", step: "arrive", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(false);
+
+    saveDayAnswers(day8Canonical, ["q.route:self"]);
     expect(hasMeaningfulProgress(readProgress())).toBe(true);
   });
 });

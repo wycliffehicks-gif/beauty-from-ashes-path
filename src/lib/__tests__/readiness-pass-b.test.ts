@@ -92,10 +92,12 @@ describe("Pass B — exact clinical safeguards", () => {
     );
   });
 
-  it("Day 8 closing owes no reconnection and asks no unsafe movement", () => {
+  it("Day 8 closing owes no further receiving and keeps boundaries intact", () => {
     const closing = day(8).reflection.closing;
-    expect(closing).toContain("no movement toward anyone unsafe");
-    expect(closing).toContain("no reconnection is owed");
+    expect(closing).toContain("does not require receiving more");
+    expect(closing).toContain(
+      "Care, discernment, accountability and boundaries can remain together",
+    );
   });
 
   it("Day 9 closing stays nonbinding and promises neither safety nor access", () => {
@@ -221,7 +223,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // index, question/option/step ID, selection mode, exclusivity, echo branch,
     // practice pathway or reflection section changed.
     expect(structuralFingerprint()).toBe(
-      "7b0c3dcb05ca24cc7dcb3636096d8a04df5ba66b09851b1749c6de47e1bee530",
+      "ea232f0f1314555cf9222ef3d69543d279eeded2bde01c8a5a2247536826991d",
     );
   });
 });

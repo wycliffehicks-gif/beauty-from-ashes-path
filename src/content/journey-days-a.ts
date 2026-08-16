@@ -26,17 +26,17 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       ],
     },
     understand: {
-      heading: "Why starting is hard, and why that makes sense",
+      heading: "A simple map, not a demand to change",
       body: [
-        "Most people who open something like this have already tried to feel better in other ways. Putting a difficulty off is rarely laziness. Avoidance is usually protective: it keeps a person functioning when looking directly at something feels like more than they can hold.",
-        "That protection was not a mistake. It may still be doing quiet work now. So this journey does not ask you to tear it down. It asks something smaller: to let one honest thing become visible, at a pace your body can bear.",
-        "You will not be asked to relive anything, explain yourself, or tell this app anything private.",
+        "People postpone difficult things for many reasons: fear, exhaustion, uncertainty, limited support, present demands, or a response that has helped them cope. Delay is not proof of laziness or unwillingness.",
+        "Today offers a simple map: Where am I now? What needs attention? What do I hope may become a little different? What has helped me keep going?",
+        "You will not be asked to relive anything, explain yourself, or disclose private details. The purpose is orientation, not breakthrough.",
       ],
       info: [
         {
           term: "What does “protective” mean here?",
           explanation:
-            "It means a response that once helped you cope or stay safe, even if it costs you something now. Calling it protective is not praise or blame — it is simply a more accurate description than “weakness”.",
+            "A protective response is something that may help a person cope, preserve safety, reduce pain or keep functioning. It may still be needed in some circumstances. The word is a possibility, not praise, blame or diagnosis.",
         },
       ],
     },
@@ -76,7 +76,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           },
           unanswered:
             "You continued without choosing, and that is a real answer too. Sometimes the state we are in has no available word — the day works the same without one.",
-          closing: "Whatever is here right now is the material we work with. Nothing needs to change first.",
+          closing: "Whatever is here right now is enough to begin with. Nothing has to change first.",
         },
       },
       {
@@ -86,13 +86,13 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         hint: "Choose as many as fit. You are not committing to working on any of them.",
         select: "many",
         options: [
-          { id: "stuck", label: "I feel stuck and can't see the way out" },
+          { id: "stuck", label: "I feel stuck and cannot yet see a way forward" },
           { id: "loss", label: "Something was lost, or someone was" },
-          { id: "hurt", label: "Something happened that I have never resolved" },
+          { id: "hurt", label: "A hurt or unresolved experience still affects me" },
           { id: "tired", label: "I am worn out from holding everything together" },
           { id: "distant", label: "I feel distant — from people, from myself, from God" },
-          { id: "shame", label: "I am carrying something I feel bad about" },
-          { id: "hope", label: "I want to hope again and don't know how" },
+          { id: "shame", label: "I feel shame or painful self-blame" },
+          { id: "hope", label: "I want to feel more hope or possibility" },
           { id: "private", label: "I would rather not put it into words here" },
         ],
       },
@@ -108,31 +108,33 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         summary:
           "A short way of telling yourself the truth without having to explain or justify it to anyone.",
         steps: [
-          "Sit or stand however you are, and let your attention come to the room rather than your thoughts.",
-          "Name silently three things you can see. Ordinary things: a mug, a door frame, the light on the wall.",
-          "Notice one place in your body that is holding on — jaw, shoulders, chest, stomach. Do not try to change it.",
-          "Say one sentence to yourself, beginning with “Right now…”. For example: “Right now, I am tired and I still showed up.”",
-          "Say it once more, slowly. Then let it go and return your attention to the room.",
+          "Begin outwardly. Notice three neutral things around you—objects, colours, shapes or sounds.",
+          "Choose one broad area from what brought you here. No event, person or history needs to be named.",
+          "Privately complete: ‘Right now, this part of life feels…’ One plain phrase is enough.",
+          "If it feels workable, add: ‘What I wish could be a little different is…’ ‘I do not know yet’ is a complete ending.",
+          "Name one resource that has helped you reach today—a quality in you, a person, a practice, faith, practical help or simple necessity.",
+          "Finish with: ‘I can begin here without solving this today,’ and return your attention to the room.",
         ],
         notRequired:
-          "You do not have to write it down, say it aloud, or tell anyone. Thinking it once is enough.",
+          "Gentler route: choose only one sentence stem. Read-only route: read the stems without answering. No writing, disclosure, decision or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — an honest opening",
         summary:
           "A Christian pathway, offered only if you choose it. It is an invitation, not a requirement or a test of faith.",
         steps: [
-          "Read the passage once slowly. Read it again, more slowly still.",
-          "Notice this is a request, not a verdict: the writer is asking to be known, rather than being inspected against his will.",
-          "If you want to, borrow the writer's honesty and say one plain sentence of your own — including doubt, anger or silence if that is what is true.",
-          "If prayer is difficult or unwanted today, simply sit with the words for a few breaths. That is a complete way to do this.",
+          "Orient to the room, then read the words once if you wish.",
+          "Notice that the speaker begins from being known, not from proving worthiness.",
+          "If useful, offer one honest sentence about where you are and one sentence about what you hope may become different.",
+          "You may ask for enough light, strength, support or wisdom for one next step. No answer or outcome is promised.",
+          "End in silence or return your attention to the room.",
         ],
         notRequired:
           "No belief, certainty or particular feeling is required. Silence counts. You may also leave this path entirely.",
         scripture: {
-          reference: "Psalm 139:23–24 (World English Bible)",
-          body: "Search me, God, and know my heart. Try me, and know my thoughts. See if there is any wicked way in me, and lead me in the everlasting way.",
-          note: "This is not surveillance and it is not an accusation. It reads more like a person opening a door they have kept shut, in their own time.",
+          reference: "Psalm 139:1, 23 (World English Bible)",
+          body: "Yahweh, you have searched me, and you know me… Search me, God, and know my heart. Try me, and know my thoughts.",
+          note: "The prayer begins with being known. ‘Search me’ is a voluntary invitation, not surveillance, accusation or a demand to expose yourself.",
         },
       },
     },
@@ -145,7 +147,11 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       options: [
         { id: "name", label: "Hold one honest word for what is going on", note: "Privately, without explaining it to anyone." },
         { id: "care", label: "Do one small thing that cares for my body", note: "Water, food, rest, air, a shower." },
-        { id: "tell", label: "Say one true sentence to someone safe" },
+        {
+          id: "tell",
+          label: "Say one true sentence to someone safe",
+          note: "Only with someone who has consistently respected your limits and can listen without pressure or retaliation. This app cannot decide who is safe; preparing a sentence without sharing it counts.",
+        },
         { id: "return", label: "Come back to Day 2 when there is space" },
         { id: "prepare", label: "Nothing outward today — simply noticing is my step" },
       ],
@@ -202,7 +208,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Beginning something like this can ask something of a person. Whatever brought you here, you do not have to earn gentleness.",
+            "Taken together, how you arrived describes today’s capacity, while what brought you describes why this journey matters. Those are two parts of a starting map—not an explanation of your life and not a demand that today’s capacity solve the concern.",
           unanswered:
             "Whatever else is true, the part of you that opened this deserves less pressure and more gentleness.",
         },
@@ -331,7 +337,11 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         hint: "Choose any that fit. This is sorting, not confessing.",
         select: "many",
         options: [
-          { id: "feeling", label: "Feelings — sadness, fear, anger, longing" },
+          {
+            id: "feeling",
+            label:
+              "A feeling—sadness or grief, fear, anger, shame, loneliness, longing, relief or hope",
+          },
           { id: "thoughts", label: "Thoughts that keep circling" },
           { id: "pressure", label: "Pressure and demands from outside" },
           { id: "selfpressure", label: "Pressure I put on myself" },
@@ -350,15 +360,15 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         summary:
           "A structured two-minute practice that gives your attention somewhere specific to go. Two routes are offered: inward or outward. Both are complete.",
         steps: [
-          "Choose one route. Inward attention is optional, and the outward route is equally complete.",
-          "Outward route: look slowly around the room and notice five neutral things — by colour, by shape, or by where they sit in the space.",
-          "Name each one silently as you find it, at whatever pace suits you. There is nothing to score.",
-          "Inward route, only if it feels workable today: notice contact and temperature where your body meets what is supporting you. Two breaths.",
-          "Inward route, continuing: notice one other area — stomach, chest, or jaw — and whether anything is settled, tight or unclear. Two breaths.",
-          "Finish either route by naming, silently, one word for the whole of it — even if the word is “blank”.",
+          "Choose a route. Outward attention and inward attention are equally complete.",
+          "Outward route: notice three neutral things by colour, shape, sound or position. Name them silently.",
+          "Inward route, only if workable: notice one point of support or one body sensation. Describe it without assigning a cause.",
+          "Privately sort one thing you noticed: ‘A body signal is…’, ‘A feeling is…’, ‘A thought is…’, ‘A pressure is…’ or ‘Tiredness is…’. ‘Nothing clear’ also works.",
+          "Ask: ‘What kind of response might fit this moment—acknowledgment, practical action, rest, support, a limit, medical attention, or no action?’",
+          "Reorient to the room. No response has to be chosen or completed today.",
         ],
         notRequired:
-          "You are not aiming to become calm, and nothing has to change. If inward attention feels unsettling, use the outward route only. Two stops is a complete practice.",
+          "Gentler route: use only the outward step. Read-only route: read the categories without sorting anything. The goal is clearer description, not calmness, insight or symptom change.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — permission to lament",
@@ -367,7 +377,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Read the passage once. Notice that the writer is not pretending to be fine.",
           "Notice, too, that he speaks to himself and to God at the same time, and does not resolve it in one line.",
-          "If you wish, name one honest thing to God the way the writer does — including “I don't know where you are” if that is true.",
+          "If you wish, name one feeling, question or need before God. You do not have to move from despair to hope on demand.",
           "Sit for a few breaths afterwards. You do not need to arrive at hope by the end of the passage; the psalm itself takes longer than that.",
         ],
         notRequired:
@@ -386,14 +396,21 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       hint: "One choice. It should be small enough that today's version of you can do it.",
       select: "one",
       options: [
-        { id: "checkin", label: "Check in with my body once more later today" },
-        { id: "ease", label: "Loosen one held place — jaw, shoulders, hands" },
+        {
+          id: "checkin",
+          label:
+            "Do one brief check-in later, if repeated checking feels helpful rather than increasing anxiety",
+        },
+        {
+          id: "ease",
+          label: "If comfortable, experiment with softening my jaw, shoulders or hands once",
+        },
         { id: "rest", label: "Give myself ten honest minutes of rest" },
         { id: "word", label: "Write down one word and leave the reflection there for today" },
         {
           id: "share",
           label: "Share one honest sentence with someone I trust",
-          note: "Only if that relationship feels safe.",
+          note: "Only with someone who has shown respect for your limits. The app cannot determine who is safe; preparing the sentence counts.",
         },
         { id: "prepare", label: "Nothing outward — noticing was the step" },
       ],
@@ -441,13 +458,21 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             "The day was not sorted into parts, and it does not have to be. Noticing that something is here is the first move; naming it can wait.",
         },
         {
+          id: "care",
+          title: "What the distinction may offer",
+          opening:
+            "Taken together, the body signal and the kind of load you selected are two separate pieces of information. One does not prove the cause of the other. Separating them may help you choose acknowledgment, practical care, rest, support, a limit, medical attention or no action.",
+          unanswered:
+            "No connection will be assumed. Sensation, emotion, thought and pressure can remain unclear or separate today.",
+        },
+        {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
             checkin: "One more check-in later today keeps this from being a one-off exercise.",
-            ease: "Loosening one held place is a small, real act of care.",
-            rest: "Ten honest minutes of rest is not indulgence; it is maintenance.",
+            ease: "If comfortable, softening one held place is one small experiment. No result is required.",
+            rest: "A brief period of rest may be a practical response to tiredness or overload; it does not have to solve the day.",
             word: "Writing down one word and leaving the reflection there is a reasonable way to carry a day.",
             share:
               "One honest sentence to someone you trust can lighten a day — as long as that relationship feels safe to you.",
@@ -483,9 +508,9 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         "Naming one manageable part of an experience can make it less vague and easier to respond to. Naming is not diagnosis, and it does not fix what happened.",
       lead: "Naming something is not the same as fixing it, and it is not a diagnosis.",
       body: [
-        "Today you are invited to give one ordinary word to something you have been carrying.",
-        "It does not have to be the right word or the whole truth. A word you can bear is enough.",
-        "You do not need to name an event, person or history. One broad word — or no word today — is enough.",
+        "By ‘carrying,’ this journey means grief, worry, responsibility, hurt, shame, anger, loneliness, regret or another experience that continues to take energy, whether or not anyone else can see it.",
+        "Today you may give one manageable part of it an ordinary word. The word does not have to be perfect or complete.",
+        "You do not need to name an event, person or history. One broad word, ‘not sure,’ keeping it private, or no word today are all valid routes.",
       ],
       settle: [
         "Settle in whatever position your body allows. You do not need to change your posture.",
@@ -506,11 +531,6 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           term: "What is the difference between naming and diagnosis?",
           explanation:
             "A diagnosis is a clinical judgement made by a qualified professional after proper assessment. Naming is simply you choosing an everyday word for your own experience. This app does not assess, diagnose, label or classify you.",
-        },
-        {
-          term: "What does “carrying” mean here?",
-          explanation:
-            "When this journey speaks of what you are carrying, it means any grief, worry, responsibility, hurt, shame or unanswered question that continues to take energy — even when other people cannot see it.",
         },
         {
           term: "What does “hurt that still affects me” mean?",
@@ -584,7 +604,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "shows",
         eyebrow: "Locate",
-        prompt: "In what parts of life, if any, does this word feel relevant right now?",
+        prompt: "Where, if anywhere, do you notice its presence or effects in life right now?",
         hint: "Choose any that fit. Noticing it in more than one place does not mean those experiences share the same cause.",
         select: "many",
         options: [
@@ -621,26 +641,25 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         summary:
           "A private sentence that names one part of what you are carrying. No full story is required.",
         steps: [
-          "Choose one broad word from today, or use “not sure”.",
-          "Keep this as broad as you need. You do not have to describe what happened or include names or identifying details. You may stop or leave the sentence unfinished.",
-          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “Something I regret is…”, “I feel unseen when…” or “What is taking most of my energy today is…”.",
-          "Stop after one sentence. You do not have to add details or make the sentence explain everything.",
-          "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, notice up to three neutral details around you, using any sense that works comfortably for you.",
-          "Finish with: “This is real, and it is not all that is real about me.”",
-          "Let the sentence rest there for now. You do not need to keep repeating it or make it disappear.",
+          "Choose one broad word from today, use ‘not sure,’ or keep the word private.",
+          "Choose a form that feels workable: think one sentence, write it outside the app, speak it privately, use it in prayer, or prepare it for a safe person later. Nothing has to be shared today.",
+          "Complete one stem: ‘I am carrying…’, ‘I am afraid…’, ‘What hurts is…’, ‘I feel unseen when…’ or ‘What is taking most of my energy is…’.",
+          "Stop after one sentence. Do not add details unless you freely choose to do so somewhere appropriate.",
+          "If workable, ask: ‘What might I need after naming this—space, comfort, rest, practical help, witness, protection, or no clear response yet?’",
+          "Reorient to ordinary details around you and let the sentence rest.",
         ],
         notRequired:
-          "The goal is not breakthrough or a particular outcome. Making room to recognize or express a feeling—or to mourn some grief in a tolerable amount—may itself be meaningful; it does not have to become clarity, insight, relief, or action. You may keep the sentence private, write it outside the app, share it with a safe person, stop at any point, turn your attention to something ordinary around you, or seek support. No further disclosure is required.",
+          "Gentler route: choose a word without making a sentence. Read-only route: read the stems and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest lament",
         summary:
           "A Christian pathway for giving one honest sentence to God. Choose it only if you want it.",
         steps: [
-          "Read the passage and notice that the complaint is present in Scripture without being tidied up.",
-          "If you wish, borrow the form “How long…” and add one honest ending.",
-          "You may also say “This is what hurts…” or “What I long for is…”. One line is enough.",
-          "Finish by pausing, noticing the room around you or stopping. A completed resolution is not required.",
+          "Read the lament and notice that pain and unanswered questions are allowed to remain present.",
+          "If you wish, choose one line: ‘God, this is what hurts…’, ‘This is what I have lost…’, ‘This is what I do not understand…’ or ‘This is what I need…’.",
+          "Complete only that line. It may also remain unfinished.",
+          "Stop, sit in silence or reorient to the room. Resolution, praise and certainty are not required.",
         ],
         notRequired:
           "You may remain with the question, anger, doubt or silence. You do not have to resolve the lament or move toward praise today. You may read without praying or leave this path entirely.",
@@ -667,7 +686,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         {
           id: "tell",
           label: "Share one honest sentence with someone I reasonably trust to respond with care",
-          note: "Only if doing so feels safe.",
+          note: "Only with someone who has consistently respected your limits and can respond without pressure, retaliation or misuse of what you share. Preparing the sentence counts.",
         },
         { id: "kind", label: "Say to myself, “This is real, and it is not all of me”" },
         {
@@ -738,7 +757,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Naming may bring clarity, discomfort, relief, mixed feelings or no noticeable shift. None of these means you failed. If what you named feels too much to carry alone, one honest sentence to a safe person or professional may be wiser than working harder by yourself.",
+            "The word you selected and where you notice it do not establish a cause. Together, they form a modest map: one experience taking energy, and one or more places where acknowledgment, practical care, support, protection or professional attention may be useful.",
           unanswered:
             "Naming may bring clarity, discomfort, relief, mixed feelings or no noticeable shift. None of these means you failed. If what you named feels too much to carry alone, one honest sentence to a safe person or professional may be wiser than working harder by yourself.",
         },
@@ -799,9 +818,9 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       label: "Listen",
       heading: "A familiar response may have had a job to do",
       body: [
-        "A pattern, here, means a response someone returns to in certain situations. It describes what tends to happen. It is not an identity.",
-        "“Protection” is one possible lens, not a verdict. A response may have tried to reduce pain, preserve connection, create predictability, conserve energy, or simply help someone get through. Not every pattern began in trauma, and some protection may be responding to danger, unfairness, illness, pressure or responsibility that is still real today.",
-        "Understanding does not make every effect acceptable, and it does not remove responsibility. It simply makes curiosity possible without contempt. No memory of when a response began is required for today.",
+        "A pattern means a response that tends to return in certain situations. It describes what happens; it is not an identity or diagnosis.",
+        "‘Protection’ is one possible lens. A response may reduce pain, preserve connection, create predictability, conserve energy or help someone meet real present demands. Protection may still be necessary where danger, unfairness, illness, disability or responsibility remains.",
+        "Understanding does not excuse harmful effects or remove responsibility. It creates a clearer map: what happens, when it appears, what it may do in the short term, and what it may cost now. No origin memory is required.",
       ],
       info: [
         {
@@ -940,31 +959,30 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       either:
         "You may open either one, both, or neither. Neither path is ranked as better, and nothing has to be resolved today.",
       reflection: {
-        title: "Reflection Practice — Then / Now, with room for what is still true",
+        title: "Reflection Practice — map one response with compassion",
         summary:
-          "A respectful comparison that does not assume the response belongs only to the past.",
+          "A current-context map of what happens, what the response may do, and what it may cost—without requiring an origin story or change.",
         steps: [
-          "Orient outward first: notice two neutral details around the room. No body attention is required.",
-          "Bring one response to mind and complete this privately: “When ______ happens, I sometimes ______.”",
-          "If a past context comes naturally, try: “Then, this may have helped me by ______.” If no past comes to mind, use: “In difficult moments, this may be trying to help me by ______.”",
-          "Ask: “Now, what is different, what remains true, or what is not yet clear?” Nothing assumes your circumstances are safer now or that the protection is obsolete.",
-          "Say: “Understanding this does not mean every effect is acceptable, and it does not mean I must change before I am ready.”",
-          "Reorient to the room, and leave the question unfinished if that is where it rests today.",
+          "Orient outward and notice two neutral details. No body attention is required.",
+          "Complete privately: ‘When ______ happens, I sometimes ______.’",
+          "If the protection lens fits, add: ‘In that moment, this may be trying to prevent, preserve or provide ______.’ If it does not fit, say: ‘I do not know what keeps this going.’",
+          "Ask both: ‘How might this help in the short term?’ and ‘What might it cost now?’ A present cost does not prove the response is unnecessary.",
+          "Reflect back: ‘This response may make sense in context. Understanding it does not excuse every effect or decide whether, when or how I should change.’",
+          "Reorient to the room and leave any part unfinished.",
         ],
         notRequired:
-          "There is no need to remember when this began, to identify trauma, to use parts language, to attend inwardly, or to decide whether to change it.",
+          "Gentler route: complete only ‘When…, I tend to…’. Read-only route: read the map without applying it. No past event, trauma label, parts language, body focus, surrender or change decision is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — loved before readiness",
         summary:
           "A Christian pathway in which love precedes performance, certainty, or release.",
         steps: [
-          "Orient to the room, then read the short phrase slowly, twice.",
-          "Notice the order: Jesus' love is present before the young man's decision, and before he could release anything.",
-          "This story is not being used to equate your coping with the man's possessions, to label your response as sin, or to demand surrender.",
-          "If you wish, name one response and wonder, under mercy, what it may have tried to prevent, preserve, or provide.",
-          "If you would like a prayer: “Jesus, look on me with love. Help me understand without contempt. Show me what care, truth, boundary, or support is wise today.”",
-          "Sit in silence, or reorient outward. No feeling or answer is required.",
+          "Orient to the room, then read the phrase slowly.",
+          "Notice the order: Jesus sees and loves before the young man decides anything.",
+          "This story is not equating your coping with possessions or labelling your response as sin.",
+          "If you wish, name one response and wonder, under mercy, what it may be trying to prevent, preserve or provide.",
+          "Ask for truthful understanding and whatever care, boundary, support or wisdom is appropriate. No release or outcome is required.",
         ],
         notRequired:
           "No confession, surrender, certainty, forgiveness, reconciliation or change is required. You may read without praying, or leave this path entirely.",
@@ -978,7 +996,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     step: {
       id: "step",
       eyebrow: "One Honest Step",
-      prompt: "What is one small way to meet this response with curiosity rather than contempt?",
+      prompt: "What is one small way to remember this map without forcing change?",
       hint: "Specific, small, safe. You are not being asked to change the response today.",
       select: "one",
       options: [
@@ -998,7 +1016,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         {
           id: "prepare-share",
           label: "Prepare one sentence I could share with a safe person or professional",
-          note: "No need to send or say it today.",
+          note: "Preparing counts. Share only with someone who has consistently respected your limits; the app cannot determine who is safe.",
         },
         { id: "settle", label: "No outward action — let today's understanding settle" },
       ],
@@ -1089,7 +1107,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What understanding does — and does not — mean",
           opening:
-            "Compassion does not excuse harm, and understanding a response does not settle what to do about it. Some protection may still be necessary where a risk, injustice, limitation, illness or responsibility is ongoing. No origin and no decision to change are required today.",
+            "Taken together, the response, the situations where it appears and its possible protective purpose form a working map—not a diagnosis or origin story. The map may explain short-term usefulness while leaving room to notice present cost, ongoing necessity and responsibility for effects.",
           unanswered:
             "However much or little was chosen today, understanding without contempt is still available to you.",
         },
@@ -1151,9 +1169,10 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       label: "Listen",
       heading: "Two truths can ask for room at the same time",
       body: [
-        "Mixed feelings about the same area of life are common. A wish for something to move and a concern about moving can sit side by side.",
-        "The pull toward movement may point toward what matters to you or what you long for. The cautious pull may point toward risk, capacity, responsibility, timing, uncertainty, or a need for more information or support. Either may be faint, or absent today.",
-        "Listening to both can make the conflict more visible. It does not require obeying either, deciding today, or treating them as equally right — and it does not excuse harmful effects.",
+        "Mixed wishes, needs or concerns about the same area of life are common. A pull toward movement and a pull toward caution can exist together.",
+        "Movement may point toward what matters or what is longed for. Caution may carry information about safety, capacity, responsibility, timing, uncertainty, belonging or the need for support.",
+        "Capacity here means being able to stay with one manageable truth without immediately escaping it or becoming overwhelmed. Capacity grows through brief, safe contact—not pressure. Stopping when you are too stirred or far away is part of wise pacing.",
+        "Listening makes the conflict clearer. It does not require finding two pulls, obeying either one, treating them as equally right or deciding today.",
       ],
       info: [
         {
@@ -1260,27 +1279,27 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         summary:
           "A private sentence-stem practice for hearing a longing and a concern without forcing a decision.",
         steps: [
-          "Begin outwardly: notice one or two neutral details around you, in any position that is workable today.",
-          "Privately complete: “One side of me hopes for…” or “One side of me wants…”. It may remain unfinished.",
-          "Privately complete: “Another concern says…” or “Another side of me wants me to take seriously…”. “I don't know” is a valid ending.",
-          "Reflect back plainly, without forced gratitude or agreement: “I hear the hope for ____. I hear the concern about ____.” If only one side is present, name only that one.",
-          "Ask: “Before any decision, what might help me listen well — time, information, support, rest, safety, a boundary, or something else?”",
-          "Finish with: “I do not have to settle this today,” then reorient to your surroundings. If the exercise becomes too uncomfortable, stop and return to neutral surroundings.",
+          "Begin outwardly by noticing one or two neutral details around you.",
+          "Privately complete: ‘One side of me hopes for…’ or ‘One side of me wants…’. It may remain unfinished.",
+          "Complete: ‘Another concern wants me to take seriously…’ ‘I do not know’ is a valid ending.",
+          "Reflect back: ‘I hear the hope for ______. I hear the concern about ______.’ If only one is present, name only that one.",
+          "If workable, remain with the sentence or sentences for one brief pause—without debating, solving or choosing.",
+          "Ask: ‘What might make listening or one future step more workable—time, information, support, rest, safety, a boundary, or something else?’",
+          "Finish with: ‘I do not have to settle this today,’ and reorient outward.",
         ],
         notRequired:
-          "You do not need to write or save anything from this practice. No origin story, no two distinct parts, no decision, no resolution and no action are required.",
+          "Gentler route: name only one pull. Read-only route: read the stems without answering. No two distinct parts, origin story, decision, resolution or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — two truths in one honest prayer",
         summary:
           "One biblical example of mixed honesty spoken to God — offered as an example, not as a judgement on your caution.",
         steps: [
-          "Orient outward for a moment, then read the sentence slowly if you wish.",
-          "Notice that a father seeking help speaks belief and uncertainty together, and Scripture keeps both in one honest sentence.",
-          "Your caution is not being equated with unbelief. Faith does not require overriding safety, wisdom, limits, responsibilities or current reality.",
-          "If you wish, name the tension before God: “Part of me longs for ____. Another part of me is concerned about ____.” Either line may be left blank.",
-          "If you wish, pray briefly for truth, mercy, wisdom, safety, support and an honest pace. No answer or outcome is promised here.",
-          "Sit in silence or reorient outward. No feeling, certainty, answer or action is required.",
+          "Orient outward, then read the sentence if you wish.",
+          "Notice that belief and uncertainty are held together in one honest prayer.",
+          "Caution is not being equated with unbelief, and faith does not require overriding safety, limits or present reality.",
+          "If useful, pray: ‘Part of me longs for ______. Another part is concerned about ______. Give me truth, mercy, wisdom and an honest pace.’",
+          "End in silence or reorient outward. No answer or action is required.",
         ],
         notRequired:
           "You may read without praying, or leave this path entirely. No certainty, surrender, forgiveness, reconciliation, contact, decision or change is required.",
@@ -1312,7 +1331,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         {
           id: "talk",
           label: "Prepare one sentence for a safe, unhurried person or professional",
-          note: "No need to share it today, and do not involve anyone who feels unsafe.",
+          note: "No need to share today. Use only a person who has consistently respected your limits; the app cannot determine who is safe.",
         },
         {
           id: "prepare",
@@ -1371,7 +1390,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What may need room",
           opening:
-            "Longing and caution can both carry information. Longing may point toward what matters; caution may point toward risk, capacity, responsibility, timing or uncertainty. Sometimes only one is clear. No single pull has to decide today.",
+            "Taken together, the longing and the concern form a decision map: one points toward what matters, while the other may identify conditions that need respect. The map does not establish which direction is wiser, and sometimes only one side is clear.",
           unanswered:
             "Longing and caution can both carry information, and sometimes only one is clear. No single pull has to decide today.",
         },

@@ -56,7 +56,7 @@ describe("Day 2 revision", () => {
 
   it("offers the safe sharing step with its caution", () => {
     const share = day2.step.options.find((o) => o.id === "share")!;
-    expect(share.note).toMatch(/feels safe/i);
+    expect(share.note).toMatch(/respect for your limits/i);
     const next = day2.reflection.sections.find((s) => s.id === "next")!;
     expect(next.lines?.["share"]).toBeTruthy();
   });
@@ -77,7 +77,7 @@ describe("Day 2 revision", () => {
 
   it("offers an outward alternative in the reflection practice", () => {
     const steps = day2.practise.reflection.steps.join(" ").toLowerCase();
-    expect(steps).toContain("five neutral things");
+    expect(steps).toContain("three neutral things");
     expect(day2.practise.spiritual.scripture?.reference).toMatch(/Psalm 42/);
   });
 });
@@ -110,9 +110,12 @@ describe("Day 3 revision", () => {
     expect(toggleSelection(shows, [unclear], sleep)).toEqual([sleep]);
   });
 
-  it("labels the educational screen 'Listen' and defines 'carrying'", () => {
+  it("labels the educational screen 'Listen' and defines 'carrying' on Arrive", () => {
     expect(day3.understand.label).toBe("Listen");
-    expect(day3.understand.info?.some((n) => n.term.includes("carrying"))).toBe(true);
+    // Pass C1: the definition of "carrying" now opens the Arrive screen, so the
+    // duplicate info note was removed.
+    expect(day3.understand.info?.some((n) => n.term.includes("carrying"))).toBe(false);
+    expect(day3.arrive.body[0]).toContain("carrying");
   });
 
   it("drops the 'illness' body wording and adds the physical-symptom note", () => {
@@ -122,7 +125,7 @@ describe("Day 3 revision", () => {
 
   it("uses the One Honest Sentence practice with an outward alternative", () => {
     expect(day3.practise.reflection.title).toContain("One Honest Sentence");
-    expect(day3.practise.reflection.steps.join(" ")).toContain("three neutral details");
+    expect(day3.practise.reflection.steps.join(" ")).toContain("Reorient to ordinary details");
     expect(day3.practise.reflection.steps.join(" ")).not.toMatch(/Let it go/);
   });
 
@@ -175,16 +178,16 @@ describe("Day 3 wording refinement", () => {
   });
 
   it("uses the revised Locate prompt and non-shared-cause hint", () => {
-    expect(shows.prompt).toContain("feel relevant");
+    expect(shows.prompt).toContain("notice its presence or effects");
     expect(shows.hint).toContain("does not mean those experiences share the same cause");
   });
 
   it("includes the refined One Honest Sentence wording", () => {
     const steps = day3.practise.reflection.steps.join(" ");
-    expect(steps).toContain("Something I regret is");
-    expect(steps).toContain("What is taking most of my energy today is");
-    expect(steps).toContain("identifying details");
-    expect(steps).toContain("using any sense");
+    expect(steps).toContain("What hurts is");
+    expect(steps).toContain("What is taking most of my energy is");
+    expect(steps).toContain("Nothing has to be shared today");
+    expect(steps).toContain("Reorient to ordinary details");
   });
 
   it("uses the revised hold step and close heading", () => {
@@ -239,7 +242,7 @@ describe("Day 4 revision", () => {
     expect(day4.practise.spiritual.steps.length).toBeGreaterThanOrEqual(5);
     expect(day4.practise.spiritual.scripture?.reference).toContain("Mark 10:21");
     const steps = day4.practise.reflection.steps.join(" ");
-    expect(steps).toContain("what remains true");
+    expect(steps).toContain("What might it cost now?");
     expect(steps).not.toMatch(/adult body/i);
     expect(steps).not.toMatch(/Resistance is not disagreement/i);
   });
@@ -275,7 +278,7 @@ describe("Day 4 revision", () => {
 
   it("carries the safe prepare-share step note", () => {
     const share = day4.step.options.find((o) => o.id === "prepare-share")!;
-    expect(share.note).toMatch(/No need to send or say it today/i);
+    expect(share.note).toMatch(/Preparing counts/i);
   });
   it("states the private response choice accurately", () => {
     const json = JSON.stringify(day4);
@@ -411,8 +414,8 @@ describe("Day 5 revision", () => {
     expect(day5.practise.spiritual.steps.join(" ")).toContain(
       "not being equated with unbelief",
     );
-    expect(day5.practise.reflection.steps.join(" ")).toContain("stop and return to neutral");
-    expect(day5.practise.reflection.notRequired).toContain("do not need to write or save");
+    expect(day5.practise.reflection.steps.join(" ")).toContain("reorient outward");
+    expect(day5.practise.reflection.notRequired).toContain("Read-only route");
     expect(day5.practise.either.toLowerCase()).toContain("neither");
   });
 
@@ -420,7 +423,9 @@ describe("Day 5 revision", () => {
     expect(forward.options.find((o) => o.id === "repair")!.note).toMatch(
       /No contact, reconciliation or forgiveness is required/i,
     );
-    expect(day5.step.options.find((o) => o.id === "talk")!.note).toMatch(/unsafe/i);
+    expect(day5.step.options.find((o) => o.id === "talk")!.note).toMatch(
+      /respected your limits/i,
+    );
   });
 
   it("leaves answer-driven reflection sections without openings", () => {
@@ -433,7 +438,7 @@ describe("Day 5 revision", () => {
     expect(care.from).toBeUndefined();
     expect(care.title).toBe("What may need room");
     expect(care.title).not.toContain("both");
-    expect(care.opening).toContain("No single pull has to decide today");
+    expect(care.opening).toContain("does not establish which direction is wiser");
     expect(JSON.stringify(day5)).not.toContain("not an excuse");
   });
 

@@ -542,7 +542,14 @@ function ScreenBody({
     }
 
     case "practise":
-      return shell(<PractiseScreen content={content} answers={answers} />, {
+      return shell(
+        <PractiseScreen
+          content={content}
+          answers={answers}
+          prefsHydrated={prefsHydrated}
+          showSpiritual={showSpiritualChoices}
+        />,
+        {
         onContinue: onNext,
       });
 

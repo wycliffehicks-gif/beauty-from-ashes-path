@@ -281,7 +281,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           id: "care",
           title: "What may deserve care now",
           opening:
-            "Some costs can be eased through your own choices; some require support, accommodation, resources, safer conditions or change from others; some may need to be grieved or carried differently for now. Noticing that difference is information, not failure.",
+            "A possible cost and what may keep something in place can hold two truths: something may be straining life, and something may still be useful, necessary or constrained. When both are available, any future easing would need support or replacement rather than subtraction alone. One loss may also deserve grief without requiring change.",
           unanswered:
             "Whatever today held, the person living with this deserves gentleness without needing a complete explanation.",
         },

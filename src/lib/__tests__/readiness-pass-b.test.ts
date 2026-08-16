@@ -144,6 +144,7 @@ describe("Pass B — prohibited procedural or interpretive phrasing", () => {
 function structuralFingerprint(): string {
   const shape = FIRST_JOURNEY_DAYS.map((d) => ({
     day: d.day,
+    answerMeaning: d.answerMeaningVersion,
     motif: d.motif,
     flowShape: d.shape,
     hasPurpose: typeof d.arrive.purpose === "string" && d.arrive.purpose.length > 80,
@@ -213,8 +214,14 @@ describe("canonical ten-day structural fingerprint", () => {
     // one duplicate info note now covered on Arrive. No day, screen, screen
     // order, progress index, question/option ID, selection mode, exclusivity,
     // echo branch, practice pathway or storage version changed.
+    //
+    // Updated in Pass C2A (answer-meaning firewall): every day now stamps its
+    // answer SEMANTICS version, hashed here so a future meaning change cannot
+    // pass silently. All ten days are "v1". No screen, screen order, progress
+    // index, question/option/step ID, selection mode, exclusivity, echo branch,
+    // practice pathway or reflection section changed.
     expect(structuralFingerprint()).toBe(
-      "a0aa4c06f6de16940bb1e2004086cab09a0323e73912d7c9cae205f05c5625eb",
+      "7b0c3dcb05ca24cc7dcb3636096d8a04df5ba66b09851b1749c6de47e1bee530",
     );
   });
 });

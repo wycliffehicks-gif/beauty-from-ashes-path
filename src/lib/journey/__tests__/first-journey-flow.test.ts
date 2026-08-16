@@ -157,7 +157,7 @@ function mountDay(dayNumber: number, opts: { resume?: boolean } = {}) {
     answer(questionId: string, optionIndexes: number[]) {
       const key = answerKeyFor(day, questionId);
       const next = mergeStepAnswers(readProgress().answers[dayId], key, optionIndexes);
-      saveDayAnswers(dayId, next);
+      saveDayAnswers({ dayId, meaningVersion: "v1" }, next);
       return next;
     },
     advanceTo(kind: string) {

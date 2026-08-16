@@ -87,8 +87,31 @@ export interface ReflectionSection {
   unanswered: string;
 }
 
+/**
+ * Answer SEMANTICS identity for one day.
+ *
+ * This names what a day's coded selections MEAN, nothing else. It is bumped
+ * ONLY when a question, an option set or an option's meaning changes such that
+ * an older stored selection would no longer say what the person said. It is
+ * deliberately NOT bumped for ordinary copy edits, and it carries no screen,
+ * order, ID or storage implication of its own.
+ *
+ * Bounded to eight versions, matching the per-day bound in the progress store.
+ */
+export type AnswerMeaningVersion =
+  | "v1"
+  | "v2"
+  | "v3"
+  | "v4"
+  | "v5"
+  | "v6"
+  | "v7"
+  | "v8";
+
 export interface JourneyDayContent {
   day: number;
+  /** Meaning of this day's coded answers. See AnswerMeaningVersion. */
+  answerMeaningVersion: AnswerMeaningVersion;
   title: string;
   theme: string;
   /** Which line-art motif accompanies this day. */
@@ -97,6 +120,7 @@ export interface JourneyDayContent {
   shape: FlowShape;
   /** Honest short descriptor for the journey home. */
   descriptor: string;
+
   arrive: {
     /**
      * Required plain-language reason this day exists, shown on Arrive under

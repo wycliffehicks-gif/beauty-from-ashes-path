@@ -182,7 +182,7 @@ describe("Day 3 wording refinement", () => {
   it("includes the refined One Honest Sentence wording", () => {
     const steps = day3.practise.reflection.steps.join(" ");
     expect(steps).toContain("Something I regret is");
-    expect(steps).toContain("What feels heaviest today is");
+    expect(steps).toContain("What is taking most of my energy today is");
     expect(steps).toContain("identifying details");
     expect(steps).toContain("using any sense");
   });

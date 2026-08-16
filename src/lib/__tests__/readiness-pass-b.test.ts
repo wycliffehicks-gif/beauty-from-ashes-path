@@ -208,7 +208,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // order, progress index, question/option ID, selection mode, echo branch,
     // practice pathway, reflection section or storage version changed.
     expect(structuralFingerprint()).toBe(
-      "bd6cacf3a6ebb8b7a29860a09991617949781a178880da87f6df55f92d19d7bc",
+      "3b0c4f0ca13256980cafa6a9349ac96d82d7206ae3650fdc5370c03f1928454a",
     );
   });
 });

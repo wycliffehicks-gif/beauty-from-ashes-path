@@ -571,22 +571,39 @@ describe("Day 6 revision", () => {
     expect(terms).toContain("Why look at cost at all?");
   });
 
-  it("keeps both practices substantial with the corrected Matthew wording", () => {
+  it("keeps both practices substantial with the C2B Matthew 11:28 wording", () => {
     expect(day6.practise.reflection.steps.length).toBeGreaterThanOrEqual(6);
     expect(day6.practise.spiritual.steps.length).toBeGreaterThanOrEqual(6);
     expect(day6.practise.either.toLowerCase()).toContain("neither");
-    expect(day6.practise.spiritual.scripture?.reference).toContain("Matthew 11:28–30");
-    expect(day6.practise.spiritual.scripture?.body).toContain("gentle and humble in heart");
-    expect(day6.practise.spiritual.scripture?.note).toContain("gentle and humble");
+    expect(day6.practise.reflection.title).toBe(
+      "Reflection Practice — recognize, respect, grieve and consider what would be needed instead",
+    );
+    expect(day6.practise.spiritual.scripture?.reference).toBe(
+      "Matthew 11:28 (World English Bible)",
+    );
+    expect(day6.practise.spiritual.scripture?.body).toBe(
+      "Come to me, all you who labor and are heavily burdened, and I will give you rest.",
+    );
+    expect(day6.practise.spiritual.scripture?.note).toContain(
+      "not a command to remain in harm",
+    );
+    expect(day6.practise.spiritual.scripture?.note).toContain(
+      "does not promise immediate relief",
+    );
   });
 
   it("carries the safety notes on the step options", () => {
-    expect(day6.step.options.find((o) => o.id === "ask")!.note).toMatch(/reasonably safe/i);
-    expect(day6.step.options.find((o) => o.id === "ask")!.label).toMatch(
-      /nothing must be sent or said today/i,
+    expect(day6.step.options.find((o) => o.id === "ask")!.note).toMatch(
+      /consistently respected your limits/i,
+    );
+    expect(day6.step.options.find((o) => o.id === "ask")!.note).toMatch(
+      /cannot determine who is safe/i,
     );
     expect(day6.step.options.find((o) => o.id === "support")!.note).toMatch(/safe or available/i);
     expect(day6.step.options.find((o) => o.id === "return")!.label).toMatch(/no action today/i);
+    expect(day6.step.options.find((o) => o.id === "return")!.label).toMatch(
+      /support, sharing, accommodation or another response/i,
+    );
   });
 
   it("leaves answer-driven reflection sections without openings", () => {
@@ -597,7 +614,11 @@ describe("Day 6 revision", () => {
     }
     const care = day6.reflection.sections.find((s) => s.id === "care")!;
     expect(care.from).toBeUndefined();
-    expect(care.opening).toContain("information, not failure");
+    expect(care.opening).toContain(
+      "A possible cost and what may keep something in place can hold two truths",
+    );
+    expect(care.opening).toContain("rather than subtraction alone");
+    expect(care.opening).not.toContain("you selected");
   });
 
   it("produces an honest fully skipped reflection", () => {

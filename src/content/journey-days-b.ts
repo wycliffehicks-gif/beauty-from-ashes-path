@@ -470,28 +470,27 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         summary:
           "One contained moment of facing something true, with context and any real responsibility included, and without adding self-attack.",
         steps: [
-          "Orient outward first. Notice one neutral detail nearby, or one accessible point of support. No touch, posture, breathing, relaxation or bodily sensation is required.",
-          "Bring to mind one difficulty, limit, need, response or mistake. Keep it broad and private — no names and no identifying details.",
-          "Separate observation from verdict. Try “Something I notice is…” rather than a whole-person label such as “I am a failure.”",
-          "Add context: “What was also true was…” Context may include a limit, a need, an impact, a choice or a circumstance. It adds accuracy; it does not automatically excuse harm.",
-          "If responsibility is clear, make it specific: “What is mine to acknowledge or address is…” If nothing is clear, or nothing is within your influence, do not invent responsibility.",
-          "Offer one accurate, less-punishing response. For example: “This is difficult, and I do not need to attack myself to face it.” Or “I can be accountable without making this my whole identity.” Or “I do not know yet; I can leave the question open without contempt.” If words do not fit, choose a brief wordless act of non-hostility or ordinary care that is realistically available to you. No outcome is required.",
-          "Reorient outward — one detail nearby again. If no warmth, relief or clarity appeared, nothing failed.",
+          "Orient outward to one neutral detail. Keep the exercise broad and private.",
+          "Name the observable fact: ‘Something I notice is…’ Avoid a whole-person label.",
+          "Add relevant context: ‘What was also true was…’ Context improves accuracy; it does not automatically excuse impact.",
+          "Sort responsibility: ‘What is mine to acknowledge or address is…’ and, if useful, ‘What is not mine or was outside my control is…’ Do not invent either answer.",
+          "Notice the possible shame verdict: ‘The whole-person story my mind may add is…’ If no words appear, leave this blank.",
+          "Offer a fairer statement: ‘A more complete truth is…’ For example, ‘I made a mistake and may need to address it; I am not only this mistake,’ or ‘This affected me deeply; it is not proof that I lack worth.’",
+          "Let the fairer statement remain for one brief pause without forcing belief, then reorient outward.",
         ],
         notRequired:
-          "Nothing has to be written, spoken, believed or forgiven. No disclosure, contact, repair, action or improved feeling is required, and you may stop if distress grows.",
+          "Gentler route: name only the observable fact and omit the verdict. Read-only route: read the sequence without applying it. No memory, confession, forgiveness, repair, disclosure, changed feeling or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — gentleness without abandoning truth",
         summary:
           "A Christian pathway in which gentleness toward what is vulnerable and a commitment to justice are held together, chosen only if it fits.",
         steps: [
-          "Read the passage slowly if you wish, and notice that gentleness and justice are held together rather than traded against each other.",
-          "Notice whether the image feels comforting, distant, difficult or neutral. Any of those responses may simply remain, and the passage may be set aside.",
-          "If it fits, bring one difficulty, limit, need, response or mistake before Christ — or keep it private. No explanation is required.",
-          "If it fits, name one truth and one mercy. If responsibility is yours, name only what is specific and within your influence.",
-          "Optional prayer: “Jesus, help me face what is true without contempt, receive care without pretending, and recognise any honest response that is mine.”",
-          "Let prayer remain alongside practical care, accountability, boundaries or support rather than replacing them. Then reorient outward. No relief or clarity is required.",
+          "Read the verse if you wish. Notice that gentleness and justice remain together.",
+          "The image may feel comforting, difficult, distant or neutral. It may be set aside.",
+          "Name one observable truth and any specific responsibility that is actually yours.",
+          "If useful, pray: ‘Jesus, help me face what is true without contempt, keep what is just, and recognise the response that is mine.’",
+          "Let prayer accompany practical accountability, boundaries and support rather than replace them. Reorient outward.",
         ],
         notRequired:
           "There is no requirement to confess, forgive, reconcile, surrender safety or boundaries, feel differently, pray at all, or find this passage comforting.",

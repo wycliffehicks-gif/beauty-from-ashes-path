@@ -153,7 +153,7 @@ export function JourneyScreen({
           >
             <HomeIcon />
           </Link>
-          <p className="min-w-0 truncate text-center text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="bfa-copy-meta min-w-0 truncate text-center uppercase tracking-[0.2em] text-muted-foreground">
             {label ?? ""}
           </p>
           <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
@@ -213,7 +213,7 @@ export function JourneyScreen({
               <span aria-hidden />
             )}
             {continueHint && (
-              <p className="col-span-2 text-center text-sm text-muted-foreground">
+              <p className="bfa-copy-support col-span-2 text-center text-muted-foreground">
                 {continueHint}
               </p>
             )}

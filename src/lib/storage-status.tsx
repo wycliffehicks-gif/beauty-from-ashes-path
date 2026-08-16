@@ -151,7 +151,7 @@ export function StorageNotice({ suppressed = false }: { suppressed?: boolean } =
       aria-live="polite"
       className="border-b border-border bg-card px-4 py-3"
     >
-      <p className="container-page text-center text-sm text-foreground">
+      <p className="bfa-copy-support container-page text-center text-foreground">
         {STORAGE_UNAVAILABLE_NOTICE}
       </p>
     </div>

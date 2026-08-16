@@ -31,20 +31,20 @@ function TermsPage() {
         They are not legal advice.
       </p>
 
-      <h2 className="font-serif text-xl">Who this is for</h2>
+      <h2 className="bfa-h2 font-serif">Who this is for</h2>
       <p>
         Beauty from Ashes is intended for adults age 18 and older, unless
         Resurgence Therapeutics later says otherwise.
       </p>
 
-      <h2 className="font-serif text-xl">What this app is</h2>
+      <h2 className="bfa-h2 font-serif">What this app is</h2>
       <p>
         Beauty from Ashes is an educational, reflective and spiritually
         sensitive self-help resource. It is intended to accompany daily
         practice and reflection.
       </p>
 
-      <h2 className="font-serif text-xl">What this app is not</h2>
+      <h2 className="bfa-h2 font-serif">What this app is not</h2>
       <p>
         Beauty from Ashes is not psychotherapy, counselling, medical care,
         diagnosis, treatment, crisis intervention or an emergency service.
@@ -54,7 +54,7 @@ function TermsPage() {
         app.
       </p>
 
-      <h2 className="font-serif text-xl">Your own care and safety</h2>
+      <h2 className="bfa-h2 font-serif">Your own care and safety</h2>
       <p>
         You remain responsible for your own decisions, safety and for seeking
         qualified professional care when you need it. If an exercise increases
@@ -68,14 +68,14 @@ function TermsPage() {
       </p>
 
 
-      <h2 className="font-serif text-xl">No guarantee of outcomes</h2>
+      <h2 className="bfa-h2 font-serif">No guarantee of outcomes</h2>
       <p>
         Every person is different. The app does not guarantee healing,
         symptom improvement, accuracy for every situation, uninterrupted
         availability, or any particular outcome.
       </p>
 
-      <h2 className="font-serif text-xl">Content and intellectual property</h2>
+      <h2 className="bfa-h2 font-serif">Content and intellectual property</h2>
       <p>
         The written reflections, teachings, exercises, structure, visual design
         and other content of Beauty from Ashes are protected intellectual
@@ -89,21 +89,21 @@ function TermsPage() {
         permitted.
       </p>
 
-      <h2 className="font-serif text-xl">Third-party links and resources</h2>
+      <h2 className="bfa-h2 font-serif">Third-party links and resources</h2>
       <p>
         The app may link to third-party websites, videos and support services
         for your convenience. Resurgence Therapeutics does not control those
         resources and does not endorse every aspect of them.
       </p>
 
-      <h2 className="font-serif text-xl">Changes</h2>
+      <h2 className="bfa-h2 font-serif">Changes</h2>
       <p>
         The app and these terms may change over time. When changes are
         significant, the “last updated” date at the top of this page will
         change.
       </p>
 
-      <h2 className="font-serif text-xl">Limitation of liability</h2>
+      <h2 className="bfa-h2 font-serif">Limitation of liability</h2>
       <p>
         To the fullest extent permitted by law, Resurgence Therapeutics, Carl
         Wycliffe Hicks Jr., and contributors to the app are not responsible for
@@ -113,7 +113,7 @@ function TermsPage() {
         cannot legally be excluded or limited.
       </p>
 
-      <h2 className="font-serif text-xl">Governing law</h2>
+      <h2 className="bfa-h2 font-serif">Governing law</h2>
       <p>
         These terms are governed by the laws of the Province of Ontario and
         the laws of Canada that apply there, without regard to conflict-of-laws

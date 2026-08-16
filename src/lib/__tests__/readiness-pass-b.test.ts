@@ -223,7 +223,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // index, question/option/step ID, selection mode, exclusivity, echo branch,
     // practice pathway or reflection section changed.
     expect(structuralFingerprint()).toBe(
-      "7b0c3dcb05ca24cc7dcb3636096d8a04df5ba66b09851b1749c6de47e1bee530",
+      "ea232f0f1314555cf9222ef3d69543d279eeded2bde01c8a5a2247536826991d",
     );
   });
 });

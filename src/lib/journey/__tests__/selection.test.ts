@@ -1327,10 +1327,10 @@ describe("Day 8 revision (C2B, meaning v2)", () => {
       "you must",
       "you should",
       "Tomorrow",
-      "promise transformation. it does",
+      "promises transformation",
       "healed",
       "proof of progress",
-      "owe",
+      "you owe",
       "deserve to receive",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(

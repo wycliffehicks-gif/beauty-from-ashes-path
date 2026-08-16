@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
 import { FIRST_JOURNEY_DAYS, getFirstJourneyDay } from "@/content/first-journey";
 import { screenKey, screensFor, type JourneyDayContent } from "@/content/journey-types";
 import { OPENING_SCREENS } from "@/content/opening";
-import { ABOUT_JOURNEY } from "@/content/settings";
+import { ABOUT_BEAUTY_FROM_ASHES } from "@/content/settings";
 import {
   ARRIVE_PURPOSE_HEADING,
   PRACTICE_BOTH_OPEN_NOTE,
@@ -165,6 +165,8 @@ describe("no bare ambiguous heaviness in canonical client copy", () => {
   it("has no unexplained heavy/heaviness wording in the ten days", () => {
     const suspects = strings(FIRST_JOURNEY_DAYS)
       .filter((s) => /heav/i.test(s))
+      // The stable option ID token itself is not visible copy.
+      .filter((s) => s !== "heavy")
       .filter((s) => !ALLOWED.some((a) => s.includes(a)));
     expect(suspects).toEqual([]);
   });
@@ -172,8 +174,8 @@ describe("no bare ambiguous heaviness in canonical client copy", () => {
   it("defines carrying on Welcome and drops jargon from the About copy", () => {
     const welcome = OPENING_SCREENS.find((s) => s.key === "welcome")!;
     expect(welcome.points.join(" ")).toMatch(/emotional or spiritual strain/i);
-    expect(ABOUT_JOURNEY).not.toMatch(/feel heavy/i);
-    expect(ABOUT_JOURNEY).toContain("emotionally weighed down");
+    expect(ABOUT_BEAUTY_FROM_ASHES).not.toMatch(/feel heavy/i);
+    expect(ABOUT_BEAUTY_FROM_ASHES).toContain("emotionally weighed down");
   });
 });
 
@@ -283,7 +285,9 @@ describe("optional local post-practice check", () => {
     expect(text).toMatch(/colour.*shape.*sound/i);
     expect(text).toMatch(/immediate in-person help/i);
     expect(text).not.toMatch(/breath|breathe|inhale|exhale/i);
-    expect(text).not.toMatch(/dissociat|disorder|diagnos/i);
+    expect(text).not.toMatch(/dissociat|disorder/i);
+    // It may say no diagnosis is being made, but never assert one.
+    expect(text).not.toMatch(/you are (being )?diagnos|this is a diagnos/i);
   });
 
   it("offers Return home and Support & Safety in both branches", async () => {

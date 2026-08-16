@@ -411,6 +411,8 @@ function ScreenBody({
   onNext,
   answers,
   showSpiritualChoices,
+  prefsHydrated,
+
   answersLoaded,
   revisionPending,
   focusSettled,

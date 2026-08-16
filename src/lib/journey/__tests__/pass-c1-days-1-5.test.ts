@@ -216,7 +216,7 @@ describe("Pass C1 — Day 2 exact replacements", () => {
   });
 
   it("adds a STATIC care section immediately before the next-step section", () => {
-    const ids = d.reflection.sections.map((s: JourneyDayContent["reflection"]["sections"][number]) => s.id);
+    const ids = d.reflection.sections.map((s) => s.id);
     expect(ids).toEqual(["hearing", "underneath", "care", "next"]);
     const care = d.reflection.sections.find((s) => s.id === "care")!;
     expect(care.title).toBe("What the distinction may offer");

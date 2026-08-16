@@ -50,7 +50,13 @@ import {
   answersSnapshot,
   resolveReflection,
 } from "@/lib/journey/reflection-restore";
+import {
+  presentationAnswers,
+  presentationOptions,
+} from "@/lib/journey/presentation-answers";
+import { resolvePractice } from "@/lib/journey/practice-router";
 import { resolveVisibleIndex } from "@/lib/journey/screen-access";
+
 import { toggleSelection } from "@/lib/journey/selection";
 import {
   mergeStableStepAnswers,

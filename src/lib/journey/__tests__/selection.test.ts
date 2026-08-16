@@ -914,7 +914,7 @@ describe("Day 7 revision", () => {
       "bounce back",
       "trying to prevent harm",
       "never modelled",
-      "reserve",
+      "emotional reserve",
       "recovery rarely",
       "let someone near",
       "you are allowed to give it",

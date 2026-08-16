@@ -932,32 +932,34 @@ describe("Day 7 revision", () => {
     }
   });
 
-  it("applies the final acceptance wording corrections", () => {
+  it("applies the C2B wording corrections", () => {
     const understandBody = day7.understand.body.join(" ");
     expect(understandBody).toContain(
-      "Neither possibility tells us why your inner response developed, and a more compassionate response does not guarantee that anything will change.",
+      "‘I made a mistake’ becomes ‘I am the mistake’",
     );
     expect(understandBody).toContain(
-      "Some difficulties are shaped by choices; others arise partly or largely from circumstances",
+      "refusing to make contempt the price of honesty",
     );
-    expect(understandBody).toContain("caregiving demands");
-    expect(text).toContain(
-      "without treating self-punishment as the same thing as accountability or repair",
+    expect(understandBody).toContain(
+      "an action, wound, limitation or response is not the whole measure of a person",
     );
-    expect(text).toContain(
-      "that does not require approving of the feeling or acting on it.",
+    expect(understandBody).toContain("grief, illness, disability, caregiving, discrimination");
+    expect(day7.questions.find((x) => x.id === "need")!.options.find((o) => o.id === "acknowledged")!
+      .label).toBe(
+      "Acknowledge that this has genuinely been difficult without turning it into my identity",
     );
-    expect(text).toContain(
-      "that is a complete answer; you do not have to force words that feel false",
+    expect(day7.practise.reflection.notRequired).toContain(
+      "No memory, confession, forgiveness, repair, disclosure, changed feeling or action is required",
     );
-    expect(text).toContain("your worth does not depend on attacking yourself");
-    expect(text).toContain(
-      "this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
+    expect(day7.reflection.closing).toBe(
+      "Today offered a distinction between a whole-person verdict and an accountable stance. Whether or not you made selections, worth does not depend on attacking yourself; dignity and responsibility can remain in the same room.",
+    );
+    expect(day7.close.body[2]).toBe(
+      "Day 8 explores what can happen when already-safe kindness, help, compassion or grace comes near—and how to receive only an amount that preserves discernment and boundaries.",
     );
 
     for (const phrase of [
       "it does not mean you are defended",
-      "caregiving, discrimination, unsafe conditions and limited resources are not chosen",
       "proof that you are good",
       "nothing grants you that",
       "read as avoidance",
@@ -970,15 +972,16 @@ describe("Day 7 revision", () => {
 
   it("keeps Day 8 at its canonical boundary", () => {
     const day8 = getFirstJourneyDay(8)!;
-    expect(day8.title).toBe("Reconnect With What Matters");
+    expect(day8.title).toBe("Let Something Good Reach You");
     expect(day8.motif).toBe("reconnect");
     expect(day8.shape).toBe("practise-mid");
+    expect(day8.answerMeaningVersion).toBe("v2");
     expect(day8.questions.map((q) => q.id)).toEqual(["route", "size"]);
     expect(day8.arrive.lead).toBe(
-      "Reconnection is not going back, and it never means returning to harm.",
+      "Receiving is not the same as trusting everyone, owing access or lowering a needed guard.",
     );
     expect(day8.close.carryForward).toBe(
-      "What matters can be met in a way that is small, safe, and mine to choose.",
+      "I can receive only what is safe, true and mine to choose.",
     );
   });
 });

@@ -8,15 +8,22 @@ import {
 import { JOURNEY_DAYS, JOURNEY_HOME_TITLE, JOURNEY_IDENTITY, dayIdFor } from "@/content/journey";
 
 describe("opening flow content", () => {
-  it("has exactly the three explanatory screens before the agreement", () => {
-    expect(OPENING_SCREENS).toHaveLength(3);
-    expect(OPENING_SCREENS.map((s) => s.key)).toEqual(["welcome", "find-here", "how-it-works"]);
+  it("has exactly the four explanatory screens before the agreement", () => {
+    expect(OPENING_SCREENS).toHaveLength(4);
+    expect(OPENING_SCREENS.map((s) => s.key)).toEqual([
+      "orientation",
+      "welcome",
+      "find-here",
+      "how-it-works",
+    ]);
   });
 
-  it("keeps each explanatory screen short enough to fit a phone viewport", () => {
+  it("keeps each explanatory screen readable without becoming an essay", () => {
     for (const screen of OPENING_SCREENS) {
       const chars = [screen.eyebrow, screen.title, screen.lead, ...screen.points, screen.closing ?? ""].join(" ").length;
-      expect(chars).toBeLessThan(700);
+      // The plain orientation screen is deliberately fuller; scrolling is
+      // preferred to shrinking substantive copy.
+      expect(chars).toBeLessThan(900);
       expect(screen.points.length).toBeLessThanOrEqual(4);
     }
   });

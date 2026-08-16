@@ -922,12 +922,19 @@ export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
 function PractiseScreen({
   content,
   answers = [],
+  prefsHydrated,
+  showSpiritual: showSpiritualPref,
 }: {
   content: JourneyDayContent;
   /** Presentation answers only, used to resolve a routed practice. */
   answers?: string[];
+  /**
+   * Preference values are read ONCE by the day flow and passed down, so this
+   * screen never performs a second read of its own.
+   */
+  prefsHydrated: boolean;
+  showSpiritual: boolean;
 }) {
-  const [prefs, , prefsHydrated] = usePrefs();
   // The complete nonreligious practice is visible by default. The spiritual
   // path is never auto-opened.
   const [reflectionOpen, setReflectionOpen] = useState(true);
@@ -936,8 +943,9 @@ function PractiseScreen({
   // read, so someone who chose to leave it off never briefly sees the Christian
   // panel, Scripture, prayer or companion wording. The nonreligious practice is
   // complete on its own and always shown.
-  const showSpiritual = prefsHydrated && prefs.showSpiritual;
-  const showSpiritualInvitation = content.day === 1 && prefsHydrated && !prefs.showSpiritual;
+  const showSpiritual = prefsHydrated && showSpiritualPref;
+  const showSpiritualInvitation = content.day === 1 && prefsHydrated && !showSpiritualPref;
+
   // A routed day shows the practice its single choice selected; everything else
   // falls back to the day's required paths. Pure read, no storage, no state.
   const resolved = resolvePractice(content, answers);

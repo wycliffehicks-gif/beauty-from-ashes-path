@@ -12,7 +12,9 @@
 //  - When hydrated and on, the canonical answer returns to presentation with no
 //    storage write of any kind.
 //  - Both supported token forms are handled: the stable `q.route:god` form and
-//    the legacy positional `q.route.3` form, decoded exactly as the existing
+//    the legacy positional `q.route.7` form (the frozen canonical position of
+//    Day 8's optional Christian choice), decoded exactly as the existing
+
 //    answer helpers decode them.
 //  - Unknown or malformed tokens are passed through untouched, so existing
 //    normalization keeps sole authority over their meaning.

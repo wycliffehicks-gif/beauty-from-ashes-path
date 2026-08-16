@@ -41,7 +41,7 @@ const PURPOSES: Record<number, string> = {
   3: "Naming one manageable part of an experience can make it less vague and easier to respond to. Naming is not diagnosis, and it does not fix what happened.",
   4: "A familiar response may make more sense when you see what happens before it, what it tries to protect and what it affects now. Understanding is not excusing harm; it creates more room for choice.",
   5: "Wanting change and wanting safety can exist together. Hearing both sides can reduce self-attack and show what would make one next step more workable.",
-  6: "A response can have helped you survive and still cost you something now. Honouring both truths can make room to grieve the cost and look for a safer replacement.",
+  6: "A response, role or arrangement may still help you cope, function, meet real responsibilities or stay safe—and may also carry a cost. Holding both possibilities can make room to acknowledge one loss and consider what support or replacement any future easing would require.",
   7: "Shame can turn pain or mistakes into a verdict about who you are. Separating what happened or what you did from your worth can support honesty, responsibility and dignity together.",
   8: "Some people can face pain more easily than they can receive safe kindness, help, compassion or grace. Noticing your reaction can help you choose what feels safe enough to let in.",
   9: "Insight becomes more usable when a new response is practised before it is needed. Private rehearsal can reveal what fits, what needs changing and what support would make it safer.",
@@ -190,7 +190,7 @@ describe("core practice is visible by default and spiritual stays opt-in", () =>
     const src = await readSource("src/routes/day.$day.tsx");
     expect(src).toContain("const [reflectionOpen, setReflectionOpen] = useState(true);");
     expect(src).toContain("const [spiritualOpen, setSpiritualOpen] = useState(false);");
-    expect(src).toContain("path={content.practise.reflection}");
+    expect(src).toContain("path={resolved.reflection}");
     expect(src).toContain("isOpen={reflectionOpen}");
     expect(src).toContain("isOpen={spiritualOpen}");
     // The Christian panel is still gated behind the hydrated preference.
@@ -246,7 +246,7 @@ describe("optional local post-practice check", () => {
   it("never blocks Continue: the Practice screen keeps its plain continue action", async () => {
     const src = await readSource("src/routes/day.$day.tsx");
     expect(src).toContain(
-      "return shell(<PractiseScreen content={content} />, { onContinue: onNext });",
+      "return shell(<PractiseScreen content={content} answers={answers} />, {",
     );
   });
 

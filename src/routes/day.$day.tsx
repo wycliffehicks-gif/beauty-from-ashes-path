@@ -264,6 +264,24 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const focusSettled = answersLoaded && !resumePending && requested === i;
 
   /**
+   * `dayAnswers` is the RAW stored record and the only value ever merged or
+   * saved. `presentationAnswers` is a derived, storage-free view: while the
+   * spiritual preference is unhydrated or off, a token selecting a
+   * spiritualOnly choice is withheld, so it produces no option, Echo,
+   * reflection line, practice routing or stale snapshot. Turning the
+   * preference back on restores the dormant canonical selection with no
+   * storage rewrite.
+   */
+  const presentation = useMemo(
+    () =>
+      presentationAnswers(content, dayAnswers, {
+        hydrated: prefsHydrated,
+        showSpiritual: prefs.showSpiritual,
+      }),
+    [content, dayAnswers, prefsHydrated, prefs.showSpiritual],
+  );
+
+  /**
    * Reflection readiness is keyed to BOTH the reflection screen and the current
    * coded answers, so it cannot survive leaving the screen, a browser Forward,
    * or an answer change: the token simply stops matching. The reflection child
@@ -271,7 +289,8 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
    */
   const [readyToken, setReadyToken] = useState<string | null>(null);
   const currentKey = stepKeys[i];
-  const reflectionToken = `${currentKey}|${answersSnapshot(dayAnswers)}`;
+  const reflectionToken = `${currentKey}|${answersSnapshot(presentation)}`;
+
   const reflectionReady = readyToken === reflectionToken;
   const onReflectionPreparing = useCallback(() => setReadyToken(null), []);
   const onReflectionReady = useCallback((token: string) => setReadyToken(token), []);

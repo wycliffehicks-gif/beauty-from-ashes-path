@@ -127,10 +127,20 @@ beforeEach(() => {
 });
 
 describe("content stamps its answer meaning, and nothing else", () => {
-  it("marks every canonical day v1 in this architecture-only pass", () => {
-    expect(FIRST_JOURNEY_DAYS.map((d) => d.answerMeaningVersion)).toEqual(
-      Array(10).fill("v1"),
-    );
+  it("marks Day 8 v2 after its C2B semantic rewrite and every other day v1", () => {
+    expect(FIRST_JOURNEY_DAYS.map((d) => d.answerMeaningVersion)).toEqual([
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v1",
+      "v2",
+      "v1",
+      "v1",
+    ]);
+    expect(day8Canonical.answerMeaningVersion).toBe("v2");
   });
 
   it("agrees with the frozen pre-v4 meaning map for every day", () => {

@@ -129,12 +129,18 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const navigate = useNavigate();
   const router = useRouter();
   const search = Route.useSearch();
+  // Read once for this day. Christian choices, Echoes, reflections and practice
+  // routing are all withheld until the stored preference has actually been read
+  // AND is on, so nothing Christian can flash before hydration.
+  const [prefs, , prefsHydrated] = usePrefs();
+  const showSpiritualChoices = prefsHydrated && prefs.showSpiritual;
 
   const screens = useMemo(() => screensFor(content), [content]);
   const stepKeys = useMemo(() => screens.map(keyForScreen), [screens]);
   const kinds = useMemo(() => screens.map((s) => s.kind), [screens]);
   const closeIdx = screens.length - 1;
   const dayId = dayIdFor(content.day);
+
 
   // The requested screen comes from the URL only, so server render, first client
   // render, reload and device Back all agree. An unknown key opens the day at

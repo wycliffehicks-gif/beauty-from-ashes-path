@@ -207,9 +207,14 @@ describe("canonical ten-day structural fingerprint", () => {
     // arrive.purpose field, hashed here as a presence flag. No screen, screen
     // order, progress index, question/option ID, selection mode, echo branch,
     // practice pathway, reflection section or storage version changed.
-    console.log("FP=" + structuralFingerprint());
+    //
+    // Updated in Pass C1 (Days 1-5 depth revision): Day 2 gained one STATIC
+    // reflection section ("care", no `from`, no stored answer) and Day 3 lost
+    // one duplicate info note now covered on Arrive. No day, screen, screen
+    // order, progress index, question/option ID, selection mode, exclusivity,
+    // echo branch, practice pathway or storage version changed.
     expect(structuralFingerprint()).toBe(
-      "3b0c4f0ca13256980cafa6a9349ac96d82d7206ae3650fdc5370c03f1928454a",
+      "a0aa4c06f6de16940bb1e2004086cab09a0323e73912d7c9cae205f05c5625eb",
     );
   });
 });

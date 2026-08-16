@@ -770,8 +770,11 @@ describe("Day 7 revision", () => {
   it("labels the educational screen 'Listen' and explains the terms for a newcomer", () => {
     expect(day7.understand.label).toBe("Listen");
     const understand = day7.understand.body.join(" ");
-    expect(understand).toContain("An inner response is whatever happens inside");
-    expect(understand).toContain("no verbal inner voice");
+    expect(understand).toContain("Shame turns that information into a whole-person verdict");
+    expect(understand).toContain("Self-punishment is not the same as repair");
+    expect(understand).toContain(
+      "does not assign blame for what was outside your control or erase impact",
+    );
     const terms = (day7.understand.info ?? []).map((n) => n.term);
     expect(terms).toContain("What does “hold it” mean?");
     expect(terms).toContain("What if compassion feels false or undeserved?");

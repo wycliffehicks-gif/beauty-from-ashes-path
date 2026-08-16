@@ -1037,44 +1037,164 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         "You do not need a clear response or setting to read or use either path. Everything may stay general, private, unclear, or unanswered.",
       either:
         "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
+      /**
+       * Routed practice: the substantive Reflection Practice shown on Day 9 follows
+       * the single rehearsal the person chose on q.practice. Unclear, none, private,
+       * unanswered, unknown or multiple selections use the base fallback path below.
+       * The Christian path is shared and remains opt-in.
+       */
+      route: {
+        from: "practice",
+        reflectionByOption: {
+          grounding: {
+              title: "Private Rehearsal — pause and orient outward",
+              summary:
+                "A brief rehearsal of making one moment of space before responding, without relying on breath or body awareness and without deciding to use it in real life.",
+              steps: [
+                "Orient outward to one neutral detail available through any comfortable sense. Reading only is available.",
+                "Use one manageable, ordinary moment, or keep the situation general. Do not use a dangerous, traumatic, overwhelming or high-consequence situation.",
+                "If it is clear, name the familiar first impulse in a few words—answer quickly, agree, withdraw, go blank, become harsh, or something else. No cause is needed.",
+                "Privately rehearse one opening: ‘I do not have to answer this second,’ or ‘I can pause before I respond.’ If pausing could increase risk, keep this private or set it aside.",
+                "Choose one outward cue that could mark the pause: a colour, sound, object, written word or known point in the room. No calm or bodily change is required.",
+                "Try only that opening once in silent words or unsent writing. Do not replay the scene or imagine another person’s response.",
+                "Call the possibility usable, incomplete, unclear, unavailable or unwise; name any condition that would matter, then reorient outward.",
+              ],
+              notRequired:
+                "No real-world pause, confrontation, disclosure, contact, breath change, calm, successful use, changed feeling or outcome is required. If pausing may be unsafe, do not test it.",
+            },
+          unsent: {
+              title: "Private Rehearsal — put one feeling or need into words",
+              summary:
+                "One or two private sentences that name what may be present, without explaining the history or preparing a disclosure.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Use one manageable feeling or need from an ordinary moment, or keep everything general. No event, person, history or identifying detail is needed.",
+                "Choose one broad word if one fits—sad, angry, afraid, ashamed, lonely, tired, relieved, hopeful, unsure—or keep the word private.",
+                "Privately complete one line: ‘I feel…’ or ‘Something in me feels…’ ‘I do not know’ is complete.",
+                "Only if useful, add one line: ‘What I need or hope for is…’ The answer may be rest, time, information, support, a limit, practical help, acknowledgment, or ‘unclear.’",
+                "Let the line remain private. It does not need to sound polished, fair to everyone, shareable or complete.",
+                "Call the wording usable, incomplete, unclear, unavailable or unwise, then reorient outward. It may be revised or discarded.",
+              ],
+              notRequired:
+                "No detailed story, emotional intensification, journalling, saving, disclosure, message, conversation, explanation, resolution, relief or action is required.",
+            },
+          boundary: {
+              title: "Private Rehearsal — a limit or a delay",
+              summary:
+                "A private opening sentence for a limit within your control, with consequences, power and safety left fully in view.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Use a manageable, lower-consequence situation or keep it general. Do not use a situation involving likely retaliation, coercion, violence or immediate danger.",
+                "Choose only a limit within your control: delaying your answer, declining, limiting what you will do, requesting an accommodation, or ending a conversation only if that is safe and available.",
+                "Choose or adapt one opening: ‘I need time before I answer.’ ‘I am not available for that.’ ‘I can do X, not Y.’ ‘I can continue only if this stays respectful.’",
+                "If no sentence fits, leave it blank or use: ‘I need more time to decide what is possible.’",
+                "Read the opening once silently or in unsent writing. Do not rehearse the other person’s reply or a whole confrontation.",
+                "Call it usable, incomplete, unclear, unavailable or unwise; name any support, safer condition or ability to stop that would matter, then reorient outward.",
+              ],
+              notRequired:
+                "No communication, confrontation, refusal, departure, disclosure, contact, enforcement, forgiveness, reconciliation, real-world test or decision is required. This app cannot decide whether a boundary is safe.",
+            },
+          support: {
+              title: "Private Rehearsal — one specific request for support",
+              summary:
+                "A private draft of one bounded request, without deciding who is safe, making contact or assuming help is available.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Choose one manageable practical or emotional need, or keep it general. Do not use the highest-risk or most urgent situation for this rehearsal.",
+                "If a person comes to mind, consider only someone who has consistently respected your limits. This app cannot assess that person. ‘No one safe or available’ is a valid answer.",
+                "Privately begin: ‘Would you be willing to…?’ or ‘Could you help by…?’",
+                "Make the possible request specific and bounded: one check-in, one task, one piece of information, one appointment, one period of company, or one kind of practical help.",
+                "Read the sentence once silently or keep it as unsent writing. Nothing must be sent, said or promised.",
+                "Call it usable, incomplete, unclear, unavailable or unwise; name another kind of support or condition if needed, then reorient outward.",
+              ],
+              notRequired:
+                "No person, disclosure, request, contact, trust, acceptance of help, gratitude, reply, availability or outcome is required. Difficulty finding support is not a personal failure.",
+            },
+          lament: {
+              title: "Private Rehearsal — one plain line of lament",
+              summary:
+                "A contained way to give grief, anger, disappointment or longing one honest line, without telling the whole story or forcing release.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Stay with one manageable edge of what is present, or keep it general. Do not enter the most overwhelming event, loss or history.",
+                "Choose one broad feeling or form of pain if one fits—grief, anger, disappointment, longing, hurt, confusion—or leave it unnamed.",
+                "Privately use one line only: ‘This hurts.’ ‘I am grieving…’ ‘I am angry about…’ ‘I wish…’ or ‘What I need is…’",
+                "Only if it remains workable, add one second line: ‘What I wish were different is…’ or ‘What I need today is…’ ‘I do not know’ is complete.",
+                "Stop there. Do not search for a lesson, gratitude, forgiveness, a reason, a complete account or a hopeful ending.",
+                "If you feel more stirred, stop and orient outward. Otherwise call the line usable, incomplete, unclear, unavailable or unwise, then reorient outward.",
+              ],
+              notRequired:
+                "No detailed memory, explanation, tears, emotional release, forgiveness, gratitude, hope, spiritual meaning, sharing, saving or resolution is required. Anger may be named without being acted on.",
+            },
+          prepare: {
+              title: "Private Rehearsal — prepare without deciding",
+              summary:
+                "A short private outline that separates preparation from commitment, scheduling, contact or action.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Choose one manageable possibility to prepare for, or keep it general. No name, date, place or identifying detail is needed.",
+                "Privately complete: ‘One response I may want available is…’ This is a possibility, not a decision.",
+                "Make a three-line outline: ‘My opening might be…’ ‘Before this, I would need…’ ‘I would stop or pause if…’",
+                "Name one practical condition that could matter: time, privacy, information, support, an accommodation, another person carrying a message, the ability to leave, or safer circumstances.",
+                "Read the outline once. Call it usable, incomplete, unclear, unavailable or unwise. Do not schedule, send or test it.",
+                "Keep it private, revise it, discard it or leave it unfinished, then reorient outward.",
+              ],
+              notRequired:
+                "No decision, deadline, plan completion, contact, disclosure, conversation, commitment, real-world test, readiness, confidence or action is required.",
+            },
+          loosen: {
+              title: "Private Rehearsal — a five-percent variation",
+              summary:
+                "A very small, reversible variation in a familiar response, practised only as an opening and without treating the familiar response as defective.",
+              steps: [
+                "Orient outward to one neutral detail. Reading only is available.",
+                "Use one ordinary, lower-consequence moment or keep it general. Do not use a dangerous, traumatic, overwhelming or high-consequence situation.",
+                "If clear, name the familiar response in a few words without judging it or explaining its origin. If unclear, leave it unnamed.",
+                "Choose a variation small enough to remain reversible: answer later, use one fairer sentence, ask for clarification, say one need privately, reduce one task, or do nothing outward.",
+                "Privately rehearse only the opening once—in silent words, unsent writing or a simple outline. Do not replay a whole scene.",
+                "Ask whether the variation seems usable, incomplete, unclear, unavailable or unwise—not whether it is better, braver or more healed.",
+                "Name any condition that would make it safer or more realistic, then reorient outward. The variation may be revised or discarded.",
+              ],
+              notRequired:
+                "No interruption of an old pattern, real-world experiment, risk, disclosure, contact, successful use, changed feeling, progress or outcome is required.",
+            },
+        },
+      },
       reflection: {
-        title: "Reflection Practice — one private rehearsal",
+        title: "Reflection Practice — leave the route open",
         summary:
-          "A short private structure for trying only the opening moment of one possible response, without deciding to use it in real life.",
+          "A read-only safety frame that keeps an unclear, unavailable or private response from being chosen or interpreted by the app.",
         steps: [
-          "Orient outward through one neutral detail or point of orientation available to you. No posture, touch, breath change, particular sense, stillness, or calm is required, and reading only is available.",
-          "Bring to mind one manageable ordinary moment, or keep this entirely general. No names or identifying details are needed. Please do not use the most dangerous, traumatic, overwhelming, or high-consequence situation you are living with.",
-          "If it is clear, name the familiar response in a few words, without judging it and without explaining where it came from. If it is unclear, leave it unnamed.",
-          "Name one slightly different possibility: a pause and orienting outward; asking for time; one brief first-person sentence; preparing a limit; preparing a request; a less hostile way of speaking to yourself; telling a private truth or naming grief; preparation only; or nothing outward at all.",
-          "Try only its opening moment, once — in silent words, in writing you will not send, or as a simple outline. There is no need to replay a whole scene. If imagining or turning inward is unhelpful, read this step only.",
-          "Notice whether it seems usable, incomplete, unclear, unavailable, or unwise. No bodily response is required, and discomfort is not proof of growth.",
-          "Ask what condition would matter before any real-world use: time, privacy, support, an accommodation, someone else carrying a message, the ability to stop, or safer circumstances. “I do not know” and “not available” are both valid answers.",
-          "Reorient outward however suits you. The response can be revised, kept private, discarded, or never used.",
+          "Orient outward to one neutral detail, or simply read.",
+          "Your route may remain unclear, unavailable, private or unanswered. Nothing will be chosen on your behalf.",
+          "If you already have a private possibility, you do not need to reveal it. Keep only its opening in mind, or leave it entirely alone.",
+          "Any possible rehearsal should concern a manageable ordinary moment, remain within your control, involve no real contact, and stop before a whole scene develops.",
+          "If safety, consequences or fit are uncertain, read only or stop.",
+          "If useful, call the possibility usable, incomplete, unclear, unavailable or unwise. No answer is required.",
+          "Reorient outward. Nothing needs to follow.",
         ],
         notRequired:
-          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point.",
+          "No route, private content, rehearsal, decision, disclosure, contact, explanation, insight, readiness or outcome is required.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — honest rehearsal before God",
+        title: "Scripture & Spiritual Reflection — honesty before God without a promise",
         summary:
-          "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
+          "A Christian path for holding one manageable concern and one possible response before God, without treating Scripture or prayer as a command, prediction or plan.",
         steps: [
-          "Orient outward however works for you. Reading only is available here too.",
-          "Read Psalm 62:8 below, only if you would like to.",
-          "Bring one manageable concern, or keep it general. Please leave aside anything that is dangerous or high-risk right now.",
-          "Pour out only as much as fits. Anger, grief, doubt, numbness, difficulty trusting, silence, or having no words at all may all be present.",
-          "If it is clear, name the familiar response without a moral verdict. If it is unclear, let it stay unclear.",
-          "Name one possible alternative that seems truthful while leaving safety and real-world use undecided: a pause, a short sentence, a prepared limit or request, a more compassionate word to yourself, private lament, preparation, or nothing outward.",
-          "Rehearse only its opening moment, once — in words, in writing, or in silence before God. Hold it as a possibility, not a vow, not a divine command or direction, not proof of faith, and not a promise to act.",
-          "Name any practical support, safety, accommodation, or wisdom that would be needed. Prayer does not replace real-world help or planning.",
-          "Reorient outward. No relief, certainty, trust, felt refuge or closeness, forgiveness, reconciliation, contact, disclosure, or action is required.",
+          "Orient outward in any accessible way. Reading only is available.",
+          "Read Psalm 62:8 below only if you wish. Its language of trust and refuge is not a demand to feel trust or safety.",
+          "Bring one manageable concern, keep it general, or bring nothing in particular. Leave aside anything dangerous, traumatic, overwhelming or high-risk.",
+          "If words fit, use one plain line: ‘God, this is what is true right now…’ Silence, uncertainty, anger, grief, numbness or no prayer are also allowed.",
+          "Name one possible response only as a possibility: a pause, private words, a prepared limit or request, lament, preparation, a small variation, or nothing outward.",
+          "If useful, ask for wisdom about safety, timing, support, accommodation and what is or is not yours to do. Prayer does not replace practical care or planning.",
+          "Reorient outward. No response becomes a vow, divine direction or proof of faith, and no relief, trust, closeness or action is required.",
         ],
         notRequired:
-          "No confrontation, disclosure, sending a message, contact, real-world test, emotional release, decision, outcome, particular body or breath response, or change is required. You may stop at any point or leave this path entirely.",
+          "No prayer, trust on command, confession, forgiveness, reconciliation, disclosure, contact, real-world test, spiritual feeling, answer, relief, decision or action is required. You may leave this path entirely.",
         scripture: {
           reference: "Psalm 62:8 (World English Bible)",
           body: "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",
-          note: "This is the psalmist's invitation to speak honestly. It does not explain suffering, does not declare a situation safe, does not promise that refuge will be felt, does not require trust on command, and does not turn a rehearsed response into divine direction.",
+          note: "This is the psalmist’s invitation to speak honestly. It does not explain suffering, declare a person or situation safe, require trust on command, promise that refuge will be felt, or turn a possible response into divine direction.",
         },
       },
     },
@@ -1157,6 +1277,14 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           },
           unanswered:
             "You left the setting open. No person, relationship, risk, or context is being filled in.",
+        },
+        {
+          id: "care",
+          title: "Before anything leaves the page",
+          opening:
+            "The possibilities on this page are private possibilities, not a plan. This app does not store whether any practice was attempted, so this reflection does not claim that you rehearsed anything. Safety, access under pressure, consequences and needed support remain open.",
+          unanswered:
+            "Whatever this page held, it remains a private possibility rather than a plan, and nothing is being attributed to you.",
         },
         {
           id: "next",

@@ -216,13 +216,18 @@ describe("Pass C1 — Day 2 exact replacements", () => {
   });
 
   it("adds a STATIC care section immediately before the next-step section", () => {
-    const ids = d.reflection.sections.map((s) => s.id);
+    const ids = d.reflection.sections.map((s: JourneyDayContent["reflection"]["sections"][number]) => s.id);
     expect(ids).toEqual(["hearing", "underneath", "care", "next"]);
     const care = d.reflection.sections.find((s) => s.id === "care")!;
     expect(care.title).toBe("What the distinction may offer");
     expect(care.from).toBeUndefined();
     expect(care.lines).toBeUndefined();
-    expect(care.opening).toContain("One does not prove the cause of the other.");
+    expect(care.opening).toBe(
+      "A body signal and a kind of load are two separate pieces of information. One does not prove the cause of the other. When both are available, separating them may help you choose acknowledgment, practical care, rest, support, a limit, medical attention or no action.",
+    );
+    // The static opening must never imply either question was answered.
+    expect(care.opening).not.toMatch(/you selected/i);
+    expect(care.opening).not.toMatch(/you (chose|answered|picked)/i);
     expect(care.unanswered).toBe(
       "No connection will be assumed. Sensation, emotion, thought and pressure can remain unclear or separate today.",
     );
@@ -233,8 +238,10 @@ describe("Pass C1 — Day 2 exact replacements", () => {
       const built = buildReflection(d, answers);
       const care = built.sections.find((s) => s.id === "care")!;
       expect(care.paragraphs[0]).toContain("two separate pieces of information");
+      expect(care.paragraphs[0]).not.toMatch(/you selected/i);
     }
   });
+
 
   it("refines the step labels and notes without changing their IDs", () => {
     const opt = (id: string) => d.step.options.find((o) => o.id === id)!;

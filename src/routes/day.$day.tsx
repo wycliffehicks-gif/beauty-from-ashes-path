@@ -512,6 +512,20 @@ function ArriveScreen({ content }: { content: JourneyDayContent }) {
 
       <h1 className="bfa-h1 font-serif text-foreground">{content.title}</h1>
       <p className="bfa-copy-lead text-foreground">{content.arrive.lead}</p>
+      <section
+        data-testid="arrive-purpose"
+        aria-labelledby={`arrive-purpose-${content.day}`}
+        className="surface-card space-y-2"
+      >
+        <h2
+          id={`arrive-purpose-${content.day}`}
+          className="bfa-heading bfa-h3 font-serif text-foreground"
+        >
+          {ARRIVE_PURPOSE_HEADING}
+        </h2>
+        <p className="bfa-copy text-foreground">{content.arrive.purpose}</p>
+      </section>
+
       {content.arrive.body.map((p) => (
         <p key={p} className="bfa-copy text-foreground">
           {p}

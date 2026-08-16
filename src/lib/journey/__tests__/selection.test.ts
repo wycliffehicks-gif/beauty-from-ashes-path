@@ -681,8 +681,10 @@ describe("Day 6 revision", () => {
   it("does not manufacture a cost on none, unclear or unanswered paths", () => {
     const practice = day6.practise.reflection.steps.join(" ");
     expect(practice).not.toContain("something is taking more from me than I want");
-    expect(practice).toContain("If no clear cost came to mind, let that remain true");
-    expect(practice).toContain("without linking it to this response");
+    expect(practice).toContain("No proof of cause is required");
+    expect(practice).toContain("‘I do not know.’");
+    expect(practice).toContain("‘Nothing available now’ is valid");
+    expect(day6.practise.reflection.notRequired).toContain("Read-only route");
     expect(day6.close.carryForward).toBe(
       "I can stay honest about what is clear and unclear without condemning myself or ignoring what is still real.",
     );

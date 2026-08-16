@@ -13,18 +13,31 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { getFirstJourneyDay } from "@/content/first-journey";
+import { dayIdFor } from "@/content/journey";
 import { screenKey, screensFor } from "@/content/journey-types";
+import type { AnswerMeaningVersion, JourneyDayContent } from "@/content/journey-types";
 import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
 
+import {
+  MAX_MEANING_VERSIONS_PER_DAY,
+  isSafeMeaningVersion,
+  preV4MeaningVersion,
+} from "./answer-meaning";
 import { migrateAnswersToStableIds } from "./answer-migration";
+
 
 export const JOURNEY_STORAGE_KEY = "bfa.journey.v1";
 /**
  * v2 stores each option's stable id instead of its position.
  * v3 additionally guarantees a trusted `reached` high-water screen, derived
  * conservatively for older stores so a legitimate mid-day resume is not lost.
+ * v4 records coded selections per ANSWER MEANING VERSION (`answerSets`), so a
+ * later revision of a day's questions can never re-interpret older choices. The
+ * storage KEY is unchanged, and the flat `answers` map is retained as a frozen
+ * v1 compatibility/rollback mirror.
  */
-export const JOURNEY_STORE_VERSION = 3;
+export const JOURNEY_STORE_VERSION = 4;
+
 
 
 /** Legacy low-sensitivity preference store (visited days only). */
@@ -59,8 +72,18 @@ export interface JourneyProgress {
   version: number;
   /** Where the person was last, for "Continue where you left off". */
   locator: JourneyLocator | null;
-  /** dayId → structured answer IDs chosen that day. */
+  /**
+   * FROZEN v1 compatibility/rollback mirror: dayId → structured answer IDs.
+   * Only upgrade and compatibility code may read this. Every app surface reads
+   * `answerSets` through the version-aware helpers below.
+   */
   answers: Record<string, string[]>;
+  /**
+   * dayId → answer meaning version → the coded selections made under that
+   * meaning. An explicitly present empty array is meaningful: it records that
+   * the current meaning has been adopted with nothing yet chosen.
+   */
+  answerSets: Record<string, Record<string, string[]>>;
   /** dayIds genuinely finished. Never set merely by opening a day or Home. */
   completedDays: string[];
   /** dayId → deterministic personalized reflection text, for resume only. */
@@ -83,12 +106,14 @@ export const emptyProgress: JourneyProgress = {
   version: JOURNEY_STORE_VERSION,
   locator: null,
   answers: {},
+  answerSets: {},
   completedDays: [],
   reflections: {},
   reflectionSnapshots: {},
   reached: {},
   updatedAt: null,
 };
+
 
 function isSafeId(value: unknown): value is string {
   return (
@@ -122,6 +147,33 @@ function sanitizeAnswers(raw: unknown): Record<string, string[]> {
   }
   return out;
 }
+
+/**
+ * Versioned coded selections. Rules:
+ *  - only bounded, safe meaning-version identifiers survive;
+ *  - only an actual array survives, so a malformed or corrupt value can never
+ *    become the current set implicitly;
+ *  - an explicitly present EMPTY array is preserved, because it is the
+ *    acknowledgment marker that the current meaning was adopted;
+ *  - at most eight versions per day, and the existing coded-token cap per set.
+ */
+function sanitizeAnswerSets(raw: unknown): Record<string, Record<string, string[]>> {
+  if (!raw || typeof raw !== "object") return {};
+  const out: Record<string, Record<string, string[]>> = {};
+  for (const [dayId, versions] of Object.entries(raw as Record<string, unknown>)) {
+    if (!isSafeId(dayId)) continue;
+    if (!versions || typeof versions !== "object" || Array.isArray(versions)) continue;
+    const byVersion: Record<string, string[]> = {};
+    for (const [version, list] of Object.entries(versions as Record<string, unknown>)) {
+      if (!isSafeMeaningVersion(version) || !Array.isArray(list)) continue;
+      if (Object.keys(byVersion).length >= MAX_MEANING_VERSIONS_PER_DAY) break;
+      byVersion[version] = list.filter(isSafeId).slice(0, MAX_ANSWERS_PER_DAY);
+    }
+    if (Object.keys(byVersion).length > 0) out[dayId] = byVersion;
+  }
+  return out;
+}
+
 
 function sanitizeReflections(raw: unknown): Record<string, string> {
   if (!raw || typeof raw !== "object") return {};
@@ -186,6 +238,8 @@ export function normalizeProgress(raw: unknown): JourneyProgress {
     version: JOURNEY_STORE_VERSION,
     locator: sanitizeLocator(r.locator),
     answers: sanitizeAnswers(r.answers),
+    answerSets: sanitizeAnswerSets(r.answerSets),
+
     completedDays: Array.from(new Set(completed)),
     reflections: sanitizeReflections(r.reflections),
     reflectionSnapshots: sanitizeSnapshots(r.reflectionSnapshots),
@@ -275,15 +329,45 @@ export function upgradeStoredProgress(raw: unknown): {
   if (!raw || storedVersion >= JOURNEY_STORE_VERSION) {
     return { progress: normalized, changed: false };
   }
+  // a) positional v1 tokens become stable option ids.
   const withAnswers: JourneyProgress =
     storedVersion < 2
       ? { ...normalized, answers: migrateAnswersToStableIds(normalized.answers) }
       : normalized;
+  // b) `reached` is derived exactly as before.
+  const withReached: JourneyProgress = {
+    ...withAnswers,
+    reached: deriveReachedFromLocator(withAnswers),
+  };
+  // c) every pre-v4 active answers entry is copied into the meaning version it
+  //    actually carried, taken from the FROZEN map — never from current content.
+  // d) the migrated legacy `answers` mirror is kept untouched.
+  const answerSets =
+    storedVersion < 4 ? seedPreV4AnswerSets(withReached) : withReached.answerSets;
+  // e) the store is now version 4.
   return {
-    progress: { ...withAnswers, reached: deriveReachedFromLocator(withAnswers) },
+    progress: { ...withReached, answerSets },
     changed: true,
   };
 }
+
+/**
+ * Copy pre-v4 selections into `answerSets` under their FROZEN meaning version.
+ * An existing set for that version always wins, so this is idempotent, and an
+ * unrecognised day id confers nothing at all.
+ */
+function seedPreV4AnswerSets(p: JourneyProgress): Record<string, Record<string, string[]>> {
+  const out: Record<string, Record<string, string[]>> = { ...p.answerSets };
+  for (const [dayId, tokens] of Object.entries(p.answers)) {
+    const version = preV4MeaningVersion(dayId);
+    if (!version) continue;
+    const existing = out[dayId] ?? {};
+    if (Object.prototype.hasOwnProperty.call(existing, version)) continue;
+    out[dayId] = { ...existing, [version]: [...tokens] };
+  }
+  return out;
+}
+
 
 
 export const JOURNEY_CHANGE_EVENT = "bfa-journey-change";
@@ -333,12 +417,111 @@ export function clearLocator() {
   mutate((cur) => ({ ...cur, locator: null }));
 }
 
-/** Replace the structured answer IDs recorded for a day. */
-export function saveDayAnswers(dayId: string, answerIds: string[]) {
-  if (!isSafeId(dayId)) return;
-  const ids = answerIds.filter(isSafeId).slice(0, MAX_ANSWERS_PER_DAY);
-  mutate((cur) => ({ ...cur, answers: { ...cur.answers, [dayId]: ids } }));
+/**
+ * Either a day's own content (preferred) or an explicit meaning-version
+ * context. A bare day id is deliberately NOT accepted: writing coded answers
+ * without naming their meaning is what this pass exists to prevent.
+ */
+export type AnswerMeaningTarget =
+  | JourneyDayContent
+  | { dayId: string; meaningVersion: AnswerMeaningVersion };
+
+function resolveTarget(
+  target: AnswerMeaningTarget,
+): { dayId: string; version: AnswerMeaningVersion } | null {
+  if (typeof (target as JourneyDayContent).day === "number") {
+    const day = target as JourneyDayContent;
+    if (!isSafeMeaningVersion(day.answerMeaningVersion)) return null;
+    return { dayId: dayIdFor(day.day), version: day.answerMeaningVersion };
+  }
+  const ctx = target as { dayId: string; meaningVersion: AnswerMeaningVersion };
+  if (!isSafeId(ctx.dayId) || !isSafeMeaningVersion(ctx.meaningVersion)) return null;
+  return { dayId: ctx.dayId, version: ctx.meaningVersion };
 }
+
+/** Keep at most eight meanings for one day, never dropping the current one. */
+function boundVersions(
+  sets: Record<string, string[]>,
+  keep: AnswerMeaningVersion,
+): Record<string, string[]> {
+  const keys = Object.keys(sets);
+  if (keys.length <= MAX_MEANING_VERSIONS_PER_DAY) return sets;
+  const ordered = [keep, ...keys.filter((k) => k !== keep)].slice(
+    0,
+    MAX_MEANING_VERSIONS_PER_DAY,
+  );
+  const out: Record<string, string[]> = {};
+  for (const k of ordered) out[k] = sets[k]!;
+  return out;
+}
+
+/** The coded selections for a day under its CURRENT answer meaning only. */
+export function answersForDay(
+  progress: JourneyProgress,
+  day: JourneyDayContent,
+): string[] {
+  return progress.answerSets[dayIdFor(day.day)]?.[day.answerMeaningVersion] ?? [];
+}
+
+/**
+ * True only when this day's questions have been revised since the person
+ * answered: there is no property at all for the current meaning, and at least
+ * one older meaning holds real selections.
+ */
+export function hasPendingAnswerMeaningRevision(
+  progress: JourneyProgress,
+  day: JourneyDayContent,
+): boolean {
+  const sets = progress.answerSets[dayIdFor(day.day)];
+  if (!sets) return false;
+  if (Object.prototype.hasOwnProperty.call(sets, day.answerMeaningVersion)) return false;
+  return Object.entries(sets).some(
+    ([version, ids]) => version !== day.answerMeaningVersion && ids.length > 0,
+  );
+}
+
+/**
+ * Acknowledge a revised day: create the current meaning's set as explicitly
+ * empty. Older sets and the legacy mirror are left exactly as they are.
+ */
+export function adoptCurrentAnswerMeaning(day: JourneyDayContent) {
+  const t = resolveTarget(day);
+  if (!t) return;
+  mutate((cur) => {
+    const sets = cur.answerSets[t.dayId] ?? {};
+    if (Object.prototype.hasOwnProperty.call(sets, t.version)) return cur;
+    return {
+      ...cur,
+      answerSets: {
+        ...cur.answerSets,
+        [t.dayId]: boundVersions({ ...sets, [t.version]: [] }, t.version),
+      },
+    };
+  });
+}
+
+/**
+ * Replace the structured answer IDs recorded for a day, under that day's
+ * current answer meaning only. Older meanings are never merged or overwritten.
+ * The flat legacy mirror is written only while the meaning is still v1.
+ */
+export function saveDayAnswers(target: AnswerMeaningTarget, answerIds: string[]) {
+  const t = resolveTarget(target);
+  if (!t) return;
+  const ids = answerIds.filter(isSafeId).slice(0, MAX_ANSWERS_PER_DAY);
+  mutate((cur) => ({
+    ...cur,
+    answerSets: {
+      ...cur.answerSets,
+      [t.dayId]: boundVersions(
+        { ...(cur.answerSets[t.dayId] ?? {}), [t.version]: ids },
+        t.version,
+      ),
+    },
+    answers: t.version === "v1" ? { ...cur.answers, [t.dayId]: ids } : cur.answers,
+  }));
+}
+
 
 /**
  * Save the exact deterministic reflection a person read, together with a
@@ -414,8 +597,21 @@ export function hasMeaningfulProgress(
   if (completed && (loc.step === lastStepKey || loc.step === firstStepKey)) return false;
   if (loc.step !== firstStepKey) return true;
   if ((loc.index ?? 0) > 0) return true;
-  return (progress.answers[loc.dayId]?.length ?? 0) > 0;
+  return currentAnswersForDayId(progress, loc.dayId).length > 0;
 }
+
+/**
+ * Current-meaning selections for a stored day id. Canonical days resolve their
+ * meaning from content; anything unrecognised falls back to the frozen legacy
+ * mirror, which is compatibility code and the only reader permitted to do so.
+ */
+function currentAnswersForDayId(progress: JourneyProgress, dayId: string): string[] {
+  const m = /^day-(\d{2,})$/.exec(dayId);
+  const day = m ? getFirstJourneyDay(Number(m[1])) : undefined;
+  if (day) return answersForDay(progress, day);
+  return progress.answers[dayId] ?? [];
+}
+
 
 
 
@@ -505,7 +701,7 @@ export function useJourneyProgress(): {
   progress: JourneyProgress;
   hydrated: boolean;
   saveLocator: (locator: JourneyLocator) => void;
-  saveAnswers: (dayId: string, ids: string[]) => void;
+  saveAnswers: (target: AnswerMeaningTarget, ids: string[]) => void;
   complete: (dayId: string) => void;
 } {
   const [progress, setProgress] = useState<JourneyProgress>(emptyProgress);
@@ -527,7 +723,11 @@ export function useJourneyProgress(): {
     progress,
     hydrated,
     saveLocator: useCallback((locator: JourneyLocator) => saveLocator(locator), []),
-    saveAnswers: useCallback((dayId: string, ids: string[]) => saveDayAnswers(dayId, ids), []),
+    saveAnswers: useCallback(
+      (target: AnswerMeaningTarget, ids: string[]) => saveDayAnswers(target, ids),
+      [],
+    ),
+
     complete: useCallback((dayId: string) => markDayComplete(dayId), []),
   };
 }

@@ -121,7 +121,7 @@ describe("approved therapeutic wording", () => {
   it("says Day 3's practice may itself be meaningful without clarity or action", () => {
     const day3 = JSON.stringify(getFirstJourneyDay(3)!);
     expect(day3).toContain(
-      "may itself be meaningful; it does not have to become clarity, insight, relief, or action",
+      "No fuller story, body focus, disclosure, insight, relief or action is required",
     );
   });
 

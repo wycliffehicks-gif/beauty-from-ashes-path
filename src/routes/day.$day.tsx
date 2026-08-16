@@ -32,6 +32,9 @@ import {
 import { dayIdFor } from "@/content/journey";
 import { usePrefs } from "@/lib/prefs";
 import {
+  adoptCurrentAnswerMeaning,
+  answersForDay,
+  hasPendingAnswerMeaningRevision,
   markDayComplete,
   readProgress,
   saveDayAnswers,
@@ -141,6 +144,13 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
 
   const [dayAnswers, setDayAnswers] = useState<string[]>([]);
   const [answersLoaded, setAnswersLoaded] = useState(false);
+  /**
+   * True only when this day's questions were revised after the person answered:
+   * older coded choices exist on this device and nothing has been recorded under
+   * the current meaning yet. While true the day opens at its existing Arrive
+   * screen and the stored reached/completed/locator values are left untouched.
+   */
+  const [pendingRevision, setPendingRevision] = useState(false);
   /** Proof of real movement: stored high-water screen plus this visit's own. */
   const [reached, setReached] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -152,9 +162,11 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   // A crafted ?s=reflection or ?s=close is never proof that the screen was
   // reached. Until storage has been read, only the opening screen is shown for
   // gated screens, so nothing can be completed before the clamp applies.
-  const i = answersLoaded
-    ? resolveVisibleIndex({ kinds, requested, reached, completed })
-    : resolveVisibleIndex({ kinds, requested, reached: 0, completed: false });
+  const i = !answersLoaded
+    ? resolveVisibleIndex({ kinds, requested, reached: 0, completed: false })
+    : pendingRevision
+      ? 0
+      : resolveVisibleIndex({ kinds, requested, reached, completed });
 
   /**
    * True while an EARNED resume navigation has been requested but the URL has
@@ -194,7 +206,8 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     restoredForRef.current = dayId;
 
     const progress = readProgress();
-    setDayAnswers(progress.answers[dayId] ?? []);
+    setDayAnswers(answersForDay(progress, content));
+    setPendingRevision(hasPendingAnswerMeaningRevision(progress, content));
     setReached(progress.reached[dayId] ?? 0);
     setCompleted(progress.completedDays.includes(dayId));
     setSavedReflection({
@@ -203,7 +216,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     });
     setAnswersLoaded(true);
 
-    if (search.resume && urlIdx < 0) {
+    if (search.resume && urlIdx < 0 && !hasPendingAnswerMeaningRevision(progress, content)) {
       const idx = resolveResumeIndex({
         stepKeys,
         dayId,
@@ -230,11 +243,12 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   // crafted address can neither open nor become a reached screen.
   useEffect(() => {
     if (!answersLoaded) return;
-    saveLocator({ dayId, step: stepKeys[i], index: i });
+    // A clamped revised day must not rewrite the saved place a person left.
+    if (!pendingRevision) saveLocator({ dayId, step: stepKeys[i], index: i });
     // If the URL asked for a screen that has not been earned, correct the
     // address bar so reload and Back stay consistent with what is shown.
     if (requested !== i) goTo(i, { replace: true });
-  }, [dayId, stepKeys, i, answersLoaded, requested, goTo]);
+  }, [dayId, stepKeys, i, answersLoaded, pendingRevision, requested, goTo]);
 
   /**
    * Focus/announcement may only happen once the storage read, the resume
@@ -260,12 +274,18 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const recordStepAnswers = (stepKey: string, optionIds: string[]) => {
     setDayAnswers((cur) => {
       const next = mergeStableStepAnswers(cur, stepKey, optionIds);
-      saveDayAnswers(dayId, next);
+      saveDayAnswers(content, next);
       return next;
     });
   };
 
   const goNext = () => {
+    // Continuing from a revised day's Arrive screen adopts the current meaning
+    // as explicitly empty. Older sets and the legacy mirror are left alone.
+    if (pendingRevision) {
+      adoptCurrentAnswerMeaning(content);
+      setPendingRevision(false);
+    }
     const next = Math.min(closeIdx, i + 1);
     if (next === i) return;
     // Completion is recorded only by a real forward transition into Close from
@@ -316,6 +336,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onNext={goNext}
       answers={dayAnswers}
       answersLoaded={answersLoaded}
+      revisionPending={pendingRevision}
       focusSettled={focusSettled}
       onAnswer={recordStepAnswers}
       nextDay={nextDay}
@@ -355,6 +376,7 @@ function ScreenBody({
   onNext,
   answers,
   answersLoaded,
+  revisionPending,
   focusSettled,
   onAnswer,
   nextDay,
@@ -374,6 +396,8 @@ function ScreenBody({
   onNext: () => void;
   answers: string[];
   answersLoaded: boolean;
+  /** True while this day's earlier coded choices belong to an older meaning. */
+  revisionPending: boolean;
   /** True once storage, resume and URL correction have settled. */
   focusSettled: boolean;
   onAnswer: (stepKey: string, optionIds: string[]) => void;
@@ -429,7 +453,10 @@ function ScreenBody({
 
   switch (screen.kind) {
     case "arrive":
-      return shell(<ArriveScreen content={content} />, { onContinue: onNext });
+      return shell(
+        <ArriveScreen content={content} revisionPending={revisionPending} />,
+        { onContinue: onNext },
+      );
 
     case "understand":
       return shell(<UnderstandScreen content={content} />, { onContinue: onNext });
@@ -509,11 +536,35 @@ function ScreenBody({
  */
 export const ARRIVE_PURPOSE_HEADING = "Why this day matters";
 
-function ArriveScreen({ content }: { content: JourneyDayContent }) {
+/**
+ * Shown only when a day's questions were revised after someone answered them.
+ * It is part of the existing Arrive screen: no new route, screen key, progress
+ * index, answer ID or choice.
+ */
+export const ANSWER_REVISION_NOTICE =
+  "This day has been revised. Your earlier coded choices remain on this device, but they are not applied to the revised questions. Continuing starts these choices blank. You may answer again, leave them open or return home.";
+
+function ArriveScreen({
+  content,
+  revisionPending = false,
+}: {
+  content: JourneyDayContent;
+  revisionPending?: boolean;
+}) {
   return (
     <div className="space-y-5">
       <DayMotif motif={content.motif} treatment="arrival" />
       <p className="eyebrow">Arrive</p>
+      {revisionPending && (
+        <p
+          data-testid="answer-revision-notice"
+          role="note"
+          aria-live="polite"
+          className="surface-card bfa-copy text-foreground"
+        >
+          {ANSWER_REVISION_NOTICE}
+        </p>
+      )}
 
 
 

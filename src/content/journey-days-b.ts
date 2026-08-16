@@ -14,7 +14,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     descriptor: "Noticing one present-day cost · about 12 minutes",
     arrive: {
       purpose:
-        "A response can have helped you survive and still cost you something now. Honouring both truths can make room to grieve the cost and look for a safer replacement.",
+        "A response, role or arrangement may still help you cope, function, meet real responsibilities or stay safe—and may also carry a cost. Holding both possibilities can make room to acknowledge one loss and consider what support or replacement any future easing would require.",
       lead: "Seeing a cost clearly is not the same as blaming yourself—or deciding to change.",
       body: [
         "Choose one familiar response, way of coping, role, or current arrangement to hold lightly today. It may be something you noticed in Days 4 or 5, or something else. If nothing comes to mind, you can read generally or leave any question unanswered.",
@@ -212,7 +212,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
         {
           id: "prepare",
-          label: "Nothing outward — seeing what is and is not changeable was the step",
+          label:
+            "Keep this inward: consider what may or may not be changeable, with nothing outward required",
         },
       ],
     },
@@ -298,7 +299,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             support:
               "Identifying a professional, community or trusted support may help place this cost somewhere it does not have to be carried alone.",
             prepare:
-              "Seeing what is and is not changeable was the step. Clarity can coexist with unfinishedness.",
+              "You considered keeping this inward and leaving what may or may not be changeable open. No clarity, action or completed practice is being attributed to you.",
           },
           unanswered:
             "No next step was named. The question can remain open; nothing else is required today.",
@@ -310,7 +311,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     close: {
       heading: "Seen clearly, held gently",
       body: [
-        "Whether or not you named a cost, you spent some time near the question without turning it into a verdict.",
+        "Today offered the question of a possible cost without turning it into a verdict. You may have answered, kept it private, read only, or moved through without engaging it.",
         "You did not have to blame yourself, dismiss what is still real or decide what to change. When you continue, Day 7 turns toward how you hold yourself while seeing what is true.",
       ],
       carryForward:
@@ -520,7 +521,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         },
         {
           id: "prepare",
-          label: "Nothing outward — considering a less-punishing hold was the step",
+          label:
+            "Keep this inward: consider one less-punishing way of holding this, with nothing outward required",
         },
       ],
     },
@@ -560,19 +562,19 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           title: "The way of holding you considered",
           from: "need",
           lines: {
-            rest: "Rest, reduced demand or basic care was named as a real need. Whether it is available to you is a separate question, and nothing here assumes it is.",
+            rest: "You considered treating rest, reduced demand or basic care as a real need. Whether any of it is available remains open.",
             acknowledged:
-              "Acknowledging that this has genuinely been difficult was what you chose. That is an accurate thing to say, not a conclusion about anything else.",
+              "You considered acknowledging that this has genuinely been difficult without making it your identity. No acknowledgment or changed view is being claimed.",
             notalone:
-              "You chose to respect that support may matter. No person, contact or disclosure is being suggested here.",
+              "You considered respecting that support may matter. No person, contact, disclosure or support is being attributed.",
             permission:
-              "You chose to let one feeling or reaction be present without judging it. That does not require approving of the feeling or acting on it.",
+              "You considered allowing one feeling or reaction to be present without judging it. This does not say that you did so, approved of it or acted on it.",
             patience:
-              "You chose to allow more time without treating delay as failure. No pace is being set for you.",
+              "You considered allowing more time without treating delay as failure. No pace or decision is being attributed.",
             safety:
-              "You chose to respect safety, stability or practical support before pushing further. No reason for that is being assumed.",
+              "You considered respecting safety, stability or practical support before pushing further. No reason, action or changed condition is being assumed.",
             forgiveness:
-              "You chose to separate accountability from self-punishment. That excuses nothing, and no forgiveness of yourself or anyone else is required.",
+              "You considered separating accountability from self-punishment. Nothing is excused, and no forgiveness or completed shift is being attributed.",
             unsure:
               "Compassion is not clear yet. You can begin with accuracy and non-cruelty without forcing warmth or an answer.",
             none:
@@ -588,13 +590,14 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             sentence:
-              "One fair, accurate sentence, used once. Whether anything follows from it is not something this can tell you.",
-            catch: "Noticing one harsh or dismissive response without arguing with it. That is a small act of attention, with no claim about what it achieves.",
-            body: "One ordinary form of care for your body, if it is realistically available. No outcome is attached to it.",
+              "You considered using one fair, accurate sentence once. No use, belief or result is being claimed.",
+            catch:
+              "You considered noticing one harsh or dismissive response without arguing with it. No noticing or change is being claimed.",
+            body: "You considered one ordinary form of care for your body, if realistically available. No care or outcome is being attributed to you.",
             receive:
-              "Letting one fair sentence remain for a few seconds, without forcing belief in it. Belief is not the measure.",
+              "You considered letting one fair sentence remain briefly without forcing belief. No receiving or belief is being attributed to you.",
             prepare:
-              "Nothing outward. Considering a less-punishing way of holding this was the step, and it stands as one.",
+              "You considered a less-punishing way of holding this. No completed practice or changed feeling is being attributed to you.",
           },
           unanswered: "No next step was named. The day can end without one.",
         },
@@ -687,7 +690,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
             id: "community",
             label: "Support from a community, culture or tradition that does not require performing",
           },
-          { id: "god", label: "Grace or welcome from God, within the optional Christian path" },
+          {
+            id: "god",
+            label: "Grace or welcome from God, within the optional Christian path",
+            spiritualOnly: true,
+          },
           { id: "other", label: "Another already-safe source of care or goodness" },
           { id: "unclear", label: "I am not sure what source feels safe enough" },
           { id: "none", label: "Nothing feels safe or available to receive today" },
@@ -750,7 +757,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       either:
         "Either, both, or neither. Reading only is complete, and stopping at any point is complete.",
       reflection: {
-        title: "Reflection Practice — Notice, Name, Stay, Receive",
+        title:
+          "Reflection Practice — notice, name, check safety, choose an amount and receive",
         summary:
           "A brief practice for noticing the reflex around something already safe enough and receiving only an amount that preserves choice and boundaries.",
         steps: [
@@ -758,8 +766,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Notice: what is the first reaction—softening, tension, dismissal, suspicion, a sense of debt, feeling undeserving, numbness, nothing noticeable or something else? No cause is inferred.",
           "Name: say privately, ‘When something good comes near, I notice…’ ‘I do not know’ is complete.",
           "Check safety: is this source already safe enough for this amount, without pressure, debt, disclosure or expanded access? If uncertain, do not proceed; use the sentence, an impersonal source or read-only.",
-          "Stay: only if workable, let the safe word, comfort or offer remain for one brief pause before dismissing it. No breath or body focus is required.",
-          "Receive: allow only the chosen amount. This may mean reading a sentence twice, noticing comfort, privately saying ‘thank you,’ or imagining accepting only the help already offered. No real contact is required.",
+          "Choose the amount before going further: noticing or naming only; one sentence, comfort or moment for one brief pause; an inward rehearsal; or none. If the amount is unclear, stop here or use the read-only route.",
+          "Stay and receive—only if workable: let the safe word, comfort or offer remain within that amount before dismissing it. This may mean reading one sentence twice, noticing a comfort, privately rehearsing ‘Thank you,’ ‘I can accept this much,’ or ‘Not yet,’ or imagining accepting only help already offered. No real contact is required.",
           "Reorient outward. Any reaction remains information, not proof of healing or readiness.",
         ],
         notRequired:
@@ -898,7 +906,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     close: {
       heading: "Care without surrendering discernment",
       body: [
-        "You considered whether one already-safe kindness, comfort, help or grace could remain for a small amount of time. You did not have to trust, receive, contact or feel anything.",
+        "Today offered the question of whether one already-safe kindness, comfort, help or grace could remain for a small amount of time. Nothing here assumes that you trusted, received, contacted anyone or felt anything.",
         "Day 9 turns toward privately rehearsing one response that fits the route you choose.",
       ],
       carryForward: "I can receive only what is safe, true and mine to choose.",

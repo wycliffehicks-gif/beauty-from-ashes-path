@@ -2411,7 +2411,7 @@ describe("Day 10 revision", () => {
       "I can face what is true without turning myself into the enemy.",
     );
     const day8 = getFirstJourneyDay(8)!;
-    expect(day8.close.heading).toBe("Held without force");
+    expect(day8.close.heading).toBe("Care without surrendering discernment");
     const day9 = getFirstJourneyDay(9)!;
     expect(day9.title).toBe("Practise a Different Response");
     expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise");

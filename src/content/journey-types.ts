@@ -28,7 +28,16 @@ export interface Choice {
    * (for example "Nothing much registers right now").
    */
   exclusive?: boolean;
+  /**
+   * PRESENTATION METADATA ONLY. This choice is offered solely to someone who
+   * has explicitly turned Scripture and spiritual reflection on. It never
+   * changes the option's canonical id, its index in `options`, the stored token
+   * form, or anything about storage: a selection already recorded stays exactly
+   * where it is and simply becomes dormant while spiritual content is off.
+   */
+  spiritualOnly?: boolean;
 }
+
 
 export interface Question {
   /** Safe id, also the storage step key, e.g. "state". */

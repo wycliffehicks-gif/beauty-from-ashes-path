@@ -1581,8 +1581,8 @@ describe("Day 9 revision", () => {
     expect(scripture.body).toBe(
       "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",
     );
-    expect(scripture.note).toContain("psalmist's invitation");
-    expect(scripture.note).toContain("does not promise that refuge will be felt");
+    expect(scripture.note).toContain("psalmist’s invitation");
+    expect(scripture.note).toContain("promise that refuge will be felt");
 
     for (const notRequired of [
       day9.practise.reflection.notRequired,

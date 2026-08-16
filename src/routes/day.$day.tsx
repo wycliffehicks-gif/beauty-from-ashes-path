@@ -436,6 +436,9 @@ function ScreenBody({
   answers: string[];
   /** True only when preferences are hydrated AND spiritual content is on. */
   showSpiritualChoices: boolean;
+  /** True once the stored preference has actually been read on this device. */
+  prefsHydrated: boolean;
+
   answersLoaded: boolean;
 
   /** True while this day's earlier coded choices belong to an older meaning. */

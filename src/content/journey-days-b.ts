@@ -615,21 +615,21 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
 
   {
     day: 8,
-    answerMeaningVersion: "v1",
-    title: "Reconnect With What Matters",
-    theme: "One thread that matters now, met in a way that is small and safe.",
+    answerMeaningVersion: "v2",
+    title: "Let Something Good Reach You",
+    theme: "Noticing how you respond to already-safe kindness, help, compassion or grace.",
     motif: "reconnect",
     shape: "practise-mid",
-    descriptor: "One thread that matters · about 12 minutes",
+    descriptor: "Receiving one safe amount · about 12 minutes",
     arrive: {
       purpose:
         "Some people can face pain more easily than they can receive safe kindness, help, compassion or grace. Noticing your reaction can help you choose what feels safe enough to let in.",
-      lead: "Reconnection is not going back, and it never means returning to harm.",
+      lead: "Receiving is not the same as trusting everyone, owing access or lowering a needed guard.",
       body: [
-        "Reconnecting here means making a little room for one thread that matters to you now. It may be something long-standing, something newly emerging, or something not yet clear.",
-        "It does not mean restoring an earlier, untouched version of yourself. New life can be a new way of being with yourself, with others, with God, with your wounds, with your questions and with a story that is not finished. It may begin quietly — in a changed relationship, or in one small moment of contact.",
-        "It does not mean reconciling, returning to an unsafe person, place or community, proving progress, or pretending that pain is over.",
-        "Grief, illness, disability, exhaustion, caregiving, discrimination, unsafe circumstances and limited money, time or transport can all reduce what is reachable. That is a real limit on access, not a personal failure.",
+        "Some people are more familiar with bracing, helping, performing or coping than with receiving. When kindness or help appears, they may soften, tense, dismiss it, become suspicious, feel undeserving, or notice nothing.",
+        "Today uses only something already judged safe enough, an impersonal source of comfort or beauty, a fair sentence offered to yourself, or a prewritten sentence on this screen. No person has to be contacted or remembered.",
+        "The aim is not to prove trust. It is to notice the reflex, check safety, and—only if workable—allow one small amount of care to remain without immediately pushing it away.",
+        "Boundaries remain intact. You may decide that the safe amount is none.",
       ],
       settle: [
         "If it helps, take a moment before reading on. Any of these is optional, and none of them requires a particular feeling.",
@@ -639,13 +639,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       ],
     },
     understand: {
-      heading: "What “what matters” can mean",
+      heading: "Receiving care without giving up discernment",
       body: [
-        "What matters can be a value, a need, a person, a culture, a community, a faith, an interest, a creative thread, a place, an ordinary activity, or a way of being. It is not what you are told you should value, and not what other people demand of you.",
-        "A value is a chosen quality or direction — dignity, honesty, care, rest, belonging, justice, creativity, faith. It is not a task to complete, a rule imposed on you, or a test you have to pass.",
-        "A thread can be approached in a new form. It does not have to recreate what it was before, and it does not have to be available outwardly today. It can be named, remembered, held privately, or left alone.",
-        "You do not have to explain where a thread came from, or why it became distant. It can remain yours without that explanation.",
-        "Nothing here requires contact, disclosure, reconciliation, forgiveness, public action, a bodily response, hope, clarity or change.",
+        "Receiving means allowing one safe kindness, comfort, help, fair sentence or moment of grace to register. It does not mean trusting the source in every way, becoming vulnerable, accepting a debt or agreeing to future contact.",
+        "‘Already safe enough’ means safe for this small amount: no known coercion, retaliation, manipulation, required disclosure or use of your vulnerability against you. The app cannot assess a person or relationship. If uncertain, use a self-directed, impersonal or read-only route.",
+        "Pulling away may be an automatic protective response, simple preference, unfamiliarity, current context or something unclear. No history, attachment style or trauma is inferred.",
+        "A brief receiving practice may provide information about what fits. It does not create a therapeutic relationship, prove safety or promise transformation.",
       ],
       info: [
         {
@@ -653,85 +652,93 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           explanation:
             "Safe enough for this amount of contact — not safe in every way, and not permanently. Someone who respects a no or a limit, who does not require you to disclose anything, and who is not known to use your vulnerability against you. This app cannot decide whether a particular person is safe. You may know things about this person or situation that the app cannot know. If safety is uncertain, no contact is required, and another route can be chosen instead.",
         },
+        {
+          term: "What does “let it land” mean?",
+          explanation:
+            "Pause long enough to notice a safe word, gesture, comfort or offer instead of immediately dismissing it. It does not require belief, gratitude, trust, contact, obligation or a particular feeling.",
+        },
       ],
     },
     questions: [
       {
         id: "route",
         eyebrow: "Choose",
-        prompt: "What, if anything, feels worth making a little room for today?",
-        hint: "One choice for today. Nothing follows automatically from it.",
+        prompt:
+          "What source of already-safe kindness, care or grace—if any—would you be willing to consider today?",
+        hint: "One source only. If safety is uncertain, choose an impersonal, self-directed, unclear or no-contact route.",
         select: "one",
         options: [
-          {
-            id: "self",
-            label: "Something of my own — a preference or interest not reduced to duty or pain",
-          },
+          { id: "self", label: "One fair or caring sentence I can offer myself" },
           {
             id: "body",
-            label: "My body or a physical need, in whatever way is available to me",
+            label: "One ordinary comfort or form of physical care already available",
           },
-          { id: "reality", label: "One ordinary part of the present" },
-          { id: "values", label: "One chosen quality or direction that matters to me" },
+          { id: "reality", label: "One neutral or pleasant part of the present I do not have to earn" },
+          { id: "values", label: "One fair truth about dignity, worth or what matters" },
           {
             id: "creativity",
-            label: "Creativity, beauty, learning, music, words, nature — making or noticing",
+            label: "Beauty, music, words, learning or nature already within reach",
           },
           {
             id: "person",
-            label: "One person who may be safe enough for a small amount of contact",
+            label: "Kindness or help already offered by a person I judge safe enough",
           },
           {
             id: "community",
-            label: "A community, culture, tradition or place of belonging, without performing",
+            label: "Support from a community, culture or tradition that does not require performing",
           },
-          { id: "god", label: "God — within the Christian path offered here" },
-          { id: "other", label: "Something else that matters to me" },
-          { id: "unclear", label: "I am not sure what matters, or where to begin" },
-          { id: "none", label: "Nothing feels available or safe to reconnect with today" },
-          { id: "private", label: "I would rather keep the direction private" },
+          { id: "god", label: "Grace or welcome from God, within the optional Christian path" },
+          { id: "other", label: "Another already-safe source of care or goodness" },
+          { id: "unclear", label: "I am not sure what source feels safe enough" },
+          { id: "none", label: "Nothing feels safe or available to receive today" },
+          { id: "private", label: "I would rather keep the source private" },
         ],
         echo: {
           heading: "Room for what is clear — and what is not",
           byOption: {
-            self: "Something of your own is a thread that does not have to be useful to anyone. It can stay a preference or an interest without becoming a project.",
-            body: "Attention to your body or a physical need can take whatever form is available — comfort, rest, warmth, accommodation, practical care, or no action today. No sensation, movement, or improvement is expected.",
-            reality: "One ordinary part of the present is small on purpose. Noticing it is enough; nothing has to follow.",
-            values: "A chosen quality or direction can be named without being lived out today. Naming it does not commit you to anything.",
-            creativity: "Creativity, beauty, learning or nature can be met by noticing as much as by making. Contact may mean making something or simply noticing.",
-            person: "One person who may be safe enough is a possibility, not an obligation. No contact and no disclosure are required. If their safety is uncertain, no contact is required.",
-            community: "A community, culture, tradition or place can be held in mind without joining, attending or performing anything.",
-            god: "This route stays within the Christian path offered here. It does not assume prayer, certainty of belief, or any felt closeness.",
-            other: "Something else that matters to you is a complete answer. It does not have to fit a listed category to be real.",
-            unclear: "Not being sure what matters, or where to begin, is left as it is here. No direction will be guessed for you.",
-            none: "Nothing feeling available or safe today is left intact. No hidden meaning is read into it, and it is not treated as failure.",
-            private: "The direction stays with you. Nothing about which direction you hold is recorded or inferred here.",
+            self: "You chose a fair or caring sentence offered by you. It does not have to feel warm or fully believable.",
+            body: "You chose an ordinary physical comfort or form of care already available. No bodily response or improvement is expected.",
+            reality:
+              "You chose one neutral or pleasant part of the present. Noticing it does not deny pain or require gratitude.",
+            values:
+              "You chose one fair truth about dignity, worth or what matters. It may remain a possibility rather than a belief.",
+            creativity:
+              "You chose beauty, music, words, learning or nature already within reach. Receiving may mean noticing rather than doing.",
+            person:
+              "You chose kindness or help already offered by someone you judge safe enough. No contact, disclosure, expanded trust or acceptance is required.",
+            community:
+              "You chose support from a community, culture or tradition that does not require performing. Participation is not required.",
+            god: "You chose grace or welcome from God within the Christian path. No prayer, certainty or felt closeness is assumed.",
+            other:
+              "You chose another source of care or goodness. It can remain private and undefined.",
+            unclear:
+              "No source feels clearly safe enough. Nothing will be selected or interpreted for you.",
+            none: "Nothing feels safe or available to receive today. That limit is respected.",
+            private:
+              "You kept the source private. Its content and safety remain yours to judge.",
           },
           unanswered:
             "You continued without making a selection, and nothing will be chosen on your behalf. Today's screens still hold without one.",
           closing:
-            "Anything held here can be small, private, or set down. Nothing on this screen needs to be visible to anyone else.",
+            "Receiving one thing never creates a debt, opens every boundary or requires receiving more.",
         },
       },
       {
         id: "size",
         eyebrow: "Amount",
-        prompt: "How much contact with what matters is realistically available now?",
+        prompt: "What amount, if any, feels safe enough to receive today?",
         hint: "One choice, for today as it actually is.",
         select: "one",
         options: [
-          { id: "tiny", label: "Name or notice it only — nothing more" },
-          { id: "small", label: "A few private minutes, or one small moment" },
+          { id: "tiny", label: "Name or notice it only" },
+          { id: "small", label: "Let one sentence, comfort or moment remain briefly" },
           {
             id: "moderate",
-            label: "One small outward action, only if it is safe and realistic",
+            label: "Accept one small offer or form of care, only if it is already safe",
           },
-          {
-            id: "rehearse",
-            label: "Keep it inward today — remembered, imagined or symbolic",
-          },
+          { id: "rehearse", label: "Keep receiving inward or symbolic today" },
           { id: "unclear", label: "I am not sure what amount fits" },
-          { id: "none", label: "No contact with it feels available today" },
+          { id: "none", label: "No amount feels available today" },
           { id: "private", label: "I would rather keep the amount private" },
         ],
       },
@@ -743,39 +750,39 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       either:
         "Either, both, or neither. Reading only is complete, and stopping at any point is complete.",
       reflection: {
-        title: "Reflection Practice — making room for one thread",
+        title: "Reflection Practice — Notice, Name, Stay, Receive",
         summary:
-          "A step-by-step way to make a small amount of room for something that matters, without planning, scheduling or acting.",
+          "A brief practice for noticing the reflex around something already safe enough and receiving only an amount that preserves choice and boundaries.",
         steps: [
-          "Read through the steps once before doing anything. You may do them in your head, on paper, or not at all.",
-          "Let one thread be present — one you named earlier, one you are holding privately, or none in particular. If nothing comes, let the absence stay; the remaining steps still read.",
-          "If something is present, ask what quality or meaning it holds for you now — dignity, care, rest, belonging, interest, faith, beauty, honesty, or something you would put differently. You do not need to work out where it came from or why it became distant.",
-          "Notice that a thread can be met in a new form. It does not have to look like it once did, and it does not have to involve the same people, place or ability.",
-          "If some contact is available, choose one brief and accessible form: noticing something, listening to something, reading a line, remembering, saying or writing the name of it, holding an object, making one mark, or simply letting the idea stay in the room for a moment. No message, contact, arrangement or outing is needed.",
-          "Whatever happens next in your thoughts, feelings or body — including resistance, numbness, or nothing noticeable — is left uninterpreted here. None of it means anything about you.",
-          "Stop when you are ready. This practice claims no change and no progress; it was one contained amount of room, and that is all it needed to be.",
+          "Choose the source named earlier, or use this sentence: ‘Care and boundaries can coexist.’ Reading only is available.",
+          "Notice: what is the first reaction—softening, tension, dismissal, suspicion, a sense of debt, feeling undeserving, numbness, nothing noticeable or something else? No cause is inferred.",
+          "Name: say privately, ‘When something good comes near, I notice…’ ‘I do not know’ is complete.",
+          "Check safety: is this source already safe enough for this amount, without pressure, debt, disclosure or expanded access? If uncertain, do not proceed; use the sentence, an impersonal source or read-only.",
+          "Stay: only if workable, let the safe word, comfort or offer remain for one brief pause before dismissing it. No breath or body focus is required.",
+          "Receive: allow only the chosen amount. This may mean reading a sentence twice, noticing comfort, privately saying ‘thank you,’ or imagining accepting only the help already offered. No real contact is required.",
+          "Reorient outward. Any reaction remains information, not proof of healing or readiness.",
         ],
         notRequired:
-          "No contact, message, explanation, plan, visualisation, movement, touch, outing, calm or hope is required, and no feeling has to arrive. You may stop at any step.",
+          "Gentler route: Notice and Name only. Read-only route: read the sequence without trying it. No trust, gratitude, vulnerability, contact, help acceptance, spiritual feeling or change is required.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — company on an unfinished road",
+        title: "Scripture & Spiritual Reflection — grace before performance",
         summary:
-          "A Christian pathway drawn from the walk to Emmaus, offered only if you choose it, with equal room for doubt and for silence.",
+          "A Christian path from Zacchaeus’s story, where welcome comes before public change.",
         steps: [
-          "Read the verse below slowly, once or twice. Reading only is a complete way to do this.",
-          "In the wider Emmaus story, two people are walking while their questions are still unresolved. That is the part this verse describes — not a promise about what you will feel, notice or understand today.",
-          "If you wish, you may hold one thing before God: what matters to you, or what feels out of reach. You may do this in silence, or leave it unsaid.",
-          "If words fit, one brief prayer in your own words is enough. If they do not fit, silence can be the whole practice.",
-          "Doubt, anger, numbness, distance and spiritual struggle can be present here without being problems to solve or things to fix before continuing.",
-          "Close whenever you are ready, with or without anything having shifted.",
+          "Orient outward, then read the verses if you wish.",
+          "Notice that Jesus sees, names and approaches Zacchaeus before Zacchaeus proves change.",
+          "This story is not an instruction to ‘come down,’ trust a person, disclose, lower a boundary or remain in a religious setting that is harmful.",
+          "Notice your response to the idea of unearned grace—comfort, tension, suspicion, anger, distance, longing, numbness or something else.",
+          "If useful, pray: ‘Jesus, help me receive only what is loving, true and safe, without abandoning discernment.’ No feeling or answer is required.",
+          "Reorient outward. Grace is not gullibility, obligation or the absence of accountability.",
         ],
         notRequired:
           "No prayer, no certainty, no disclosure, no outward step and no felt sense of accompaniment is required. Uncertainty about God does not exclude you, and you may leave this path entirely.",
         scripture: {
-          reference: "Luke 24:15 (World English Bible)",
-          body: "While they talked and questioned together, Jesus himself came near, and went with them.",
-          note: "This describes what happens in the Emmaus story while the walkers are still talking and questioning. It is an account of that road, not a promise about what you must feel, recognise or experience today.",
+          reference: "Luke 19:5–6 (World English Bible)",
+          body: "When Jesus came to the place, he looked up and saw him, and said to him, ‘Zacchaeus, hurry and come down, for today I must stay at your house.’ He hurried, came down, and received him joyfully.",
+          note: "This describes one Gospel encounter in which welcome precedes public change. It is not a command to expose yourself, trust quickly, accept unsafe closeness or feel joyful.",
         },
       },
     },
@@ -786,18 +793,25 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       hint: "One choice if one fits. Small, reversible, and yours to change.",
       select: "one",
       options: [
-        { id: "act", label: "Make one small, safe space for something that matters" },
+        {
+          id: "act",
+          label: "Receive one small already-safe kindness, comfort or help—or offer myself one",
+        },
         {
           id: "message",
-          label: "Draft one brief message to someone safe enough — sending it is optional",
+          label: "Draft a brief acceptance or thank-you for help already offered; sending is optional",
+          note: "Only where the offer is already safe enough. Sending nothing is complete.",
         },
         {
           id: "outside",
           label:
-            "Spend a moment with a window, sound, object, memory, or another point of contact within reach",
+            "Let one accessible sound, object, view, word or piece of beauty register briefly",
         },
-        { id: "own", label: "Take a few minutes for something that is mine and not a duty" },
-        { id: "rehearse", label: "Keep it inward — naming or remembering what matters" },
+        { id: "own", label: "Give myself a few minutes of care not tied to duty or performance" },
+        {
+          id: "rehearse",
+          label: "Privately rehearse: ‘Thank you,’ ‘I can accept this much,’ or ‘Not yet’",
+        },
         { id: "unclear", label: "I am not sure what step fits" },
         { id: "none", label: "No step feels available, and I will not force one" },
         { id: "private", label: "I will keep the step private" },
@@ -805,81 +819,89 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     },
     reflection: {
       intro:
-        "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
+        "This stays with the source and amount you selected—or left open. It does not decide whether a person is safe, whether care was received or what your reaction means.",
       sections: [
         {
           id: "hearing",
-          title: "A thread\u2014or an open question",
+          title: "The source you considered",
           from: "route",
           lines: {
-            self: "You named something of your own as the thread that matters — a preference or an interest, rather than a duty.",
-            body: "You named your body, or a physical need, as the thread that matters, in whatever form is available to you.",
-            reality: "You named one ordinary part of the present as the thread that matters.",
-            values: "You named a chosen quality or direction as the thread that matters.",
-            creativity: "You named creativity, beauty, learning or nature as the thread that matters — making or noticing.",
-            person: "You named one person who may be safe enough as the thread that matters. No contact is required, and uncertain safety means no contact.",
-            community: "You named a community, culture, tradition or place of belonging as the thread that matters, with nothing to perform.",
-            god: "You named God as the thread that matters, within the Christian path offered here.",
-            other: "You named something outside the listed routes as the thread that matters. It does not need to be described here to be real.",
+            self: "You considered one fair or caring sentence from yourself. It may remain a possibility rather than something felt or believed.",
+            body: "You considered one ordinary comfort or form of physical care. Whether it is available or helpful remains open.",
+            reality:
+              "You considered one neutral or pleasant part of the present. Noticing it would not deny what is painful or require gratitude.",
+            values:
+              "You considered one fair truth about dignity, worth or what matters. It does not have to feel fully believable.",
+            creativity:
+              "You considered beauty, music, words, learning or nature as a possible source of care. Receiving could mean noticing only; no response is expected.",
+            person:
+              "You considered kindness or help from a person you judge safe enough. This app cannot assess that judgment, and no contact, acceptance or expanded trust is implied.",
+            community:
+              "You considered support from a community, culture or tradition. Participation, disclosure, belonging or freedom from pressure is not being assumed.",
+            god: "You considered grace or welcome from God within the Christian path. No prayer, certainty, trust or felt closeness is being attributed to you.",
+            other:
+              "You considered another possible source of care or goodness. It can remain private and undefined.",
             unclear:
-              "You are not sure what matters or where to begin. Uncertainty is an honest place to be; no direction has to be found today.",
-            none:
-              "Nothing felt available or safe to reconnect with today. That is not a failure, and nothing asks you to push past what is unavailable.",
+              "No source felt clearly safe enough to name. Nothing will be selected or interpreted for you.",
+            none: "You indicated that nothing feels safe or available to receive today. That limit is respected without explanation or pressure.",
             private:
-              "You kept the direction private. That boundary is respected; what matters remains yours.",
+              "You kept the possible source private. Its content, safety and meaning remain yours.",
           },
           unanswered:
-            "You left the thread unnamed. It can remain open without being chosen for you.",
+            "You left the source open. No source, reaction or readiness to receive will be assumed.",
         },
         {
           id: "care",
           title: "Your pace and amount",
           from: "size",
           lines: {
-            tiny:
-              "Naming or noticing only was the amount available today. That can be enough.",
+            tiny: "You indicated naming or noticing only as the amount that might fit. This does not establish that it occurred.",
             small:
-              "A few private minutes, or one small moment, was the amount available today.",
-            moderate: "One small outward action felt possible, if safe and realistic.",
+              "You considered letting one sentence, comfort or moment remain briefly. Nothing here says it landed or changed anything.",
+            moderate:
+              "You considered one small acceptance of care, only if already safe. No acceptance, contact or action is being attributed to you.",
             rehearse:
-              "Keeping it inward\u2014remembered, imagined, or symbolic\u2014was the amount that fit.",
-            unclear: "You are not sure what amount fits. Your pace can stay undecided.",
-            none: "No contact felt available today. That limit is respected.",
-            private: "You kept the amount private. The pace remains yours.",
+              "You considered keeping receiving inward or symbolic. No rehearsal, belief or emotional response is being assumed.",
+            unclear: "You were not sure what amount might fit. Your pace remains undecided.",
+            none: "You indicated that no amount feels available today. Nothing asks you to override that limit.",
+            private:
+              "You kept the possible amount private. No amount or action will be inferred.",
           },
           unanswered:
-            "You left the amount open. Nothing here asks you to decide it.",
+            "You left the amount open. No willingness, contact or receiving is being assumed.",
         },
         {
           id: "next",
           title: "One honest next step",
           from: "step",
           lines: {
-            act: "You considered making one small, safe space for something that matters.",
-            message: "You considered drafting one brief message to someone safe enough. Drafting without sending is the whole step if that is what happens.",
-            outside: "You considered a window, a sound, an object, a memory, or another point of contact within reach. No change in how you feel is promised.",
-            own: "You considered a few minutes for something that is yours and not a duty.",
-            rehearse: "You chose to keep it inward — naming or remembering what matters. That naming is the whole of it.",
-            unclear: "You are not sure which step fits. You can leave it undecided.",
-            none: "No step felt available today. That is a complete way to leave this day.",
-            private: "You kept the step private. It remains yours.",
+            act: "You considered receiving one small already-safe kindness, comfort or help—or offering yourself one. No act is being claimed.",
+            message:
+              "You considered drafting a brief acceptance or thank-you for help already offered. Nothing is assumed to have been written or sent.",
+            outside:
+              "You considered letting one accessible sound, object, view, word or piece of beauty register briefly. No noticing or response is being claimed.",
+            own: "You considered a few minutes of care not tied to duty or performance. Whether that time is available or used remains open.",
+            rehearse:
+              "You considered privately rehearsing ‘Thank you,’ ‘I can accept this much,’ or ‘Not yet.’ No rehearsal or future use is being attributed.",
+            unclear: "You were not sure what step might fit. Nothing will be chosen for you.",
+            none: "No step felt available or appropriate today. That is a complete way to leave the question.",
+            private:
+              "You kept the possible step private. Its content and whether anything occurred are not known.",
           },
           unanswered:
-            "You left the step open. No action or decision is required after this page.",
+            "You left the step open. No practice, action or future intention is being assumed.",
         },
-
       ],
       closing:
-        "What matters, why it became distant, and whether reconnection is possible remain yours to know\u2014or not know. This day asks for no movement toward anyone unsafe, and no reconnection is owed to anybody. If a thread matters, it can still matter even when the safest amount of contact is none.",
+        "Receiving one safe amount does not require receiving more. A protective reflex can be noticed without being judged or overridden. Care, discernment, accountability and boundaries can remain together.",
     },
     close: {
-      heading: "Held without force",
+      heading: "Care without surrendering discernment",
       body: [
-        "Reconnection is not going back, not returning to harm, and not proving progress. A thread that matters can be approached in a new form, held inwardly, kept private, or left alone when it is not available.",
-        "Day 9 turns to practising a different response, privately, with step-by-step guidance and nothing required in public.",
+        "You considered whether one already-safe kindness, comfort, help or grace could remain for a small amount of time. You did not have to trust, receive, contact or feel anything.",
+        "Day 9 turns toward privately rehearsing one response that fits the route you choose.",
       ],
-      carryForward:
-        "What matters can be met in a way that is small, safe, and mine to choose.",
+      carryForward: "I can receive only what is safe, true and mine to choose.",
     },
   },
 

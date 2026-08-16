@@ -146,6 +146,7 @@ function structuralFingerprint(): string {
     day: d.day,
     motif: d.motif,
     flowShape: d.shape,
+    hasPurpose: typeof d.arrive.purpose === "string" && d.arrive.purpose.length > 80,
     settleCount: d.arrive.settle?.length ?? 0,
     arriveBodyCount: d.arrive.body.length,
     understandBodyCount: d.understand.body.length,
@@ -201,8 +202,13 @@ describe("canonical ten-day structural fingerprint", () => {
     // selection mode, exclusivity, echo key, practice pathway, reflection
     // section, close-body count or screen order will fail this test.
     // Update ONLY with founder approval for a deliberate structural change.
+    //
+    // Updated in Pass B (daily clarity): the content shape gained a REQUIRED
+    // arrive.purpose field, hashed here as a presence flag. No screen, screen
+    // order, progress index, question/option ID, selection mode, echo branch,
+    // practice pathway, reflection section or storage version changed.
     expect(structuralFingerprint()).toBe(
-      "bd6cacf3a6ebb8b7a29860a09991617949781a178880da87f6df55f92d19d7bc",
+      "3b0c4f0ca13256980cafa6a9349ac96d82d7206ae3650fdc5370c03f1928454a",
     );
   });
 });

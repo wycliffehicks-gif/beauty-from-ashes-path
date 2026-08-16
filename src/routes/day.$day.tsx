@@ -502,6 +502,13 @@ function ScreenBody({
 
 /* ---------------------------------------------------------------- screens */
 
+/**
+ * Every Arrive screen states, in plain language, why the day exists. It is part
+ * of the existing Arrive screen: no new screen, no change to screen order or
+ * progress indices.
+ */
+export const ARRIVE_PURPOSE_HEADING = "Why this day matters";
+
 function ArriveScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">
@@ -512,6 +519,20 @@ function ArriveScreen({ content }: { content: JourneyDayContent }) {
 
       <h1 className="bfa-h1 font-serif text-foreground">{content.title}</h1>
       <p className="bfa-copy-lead text-foreground">{content.arrive.lead}</p>
+      <section
+        data-testid="arrive-purpose"
+        aria-labelledby={`arrive-purpose-${content.day}`}
+        className="surface-card space-y-2"
+      >
+        <h2
+          id={`arrive-purpose-${content.day}`}
+          className="bfa-heading bfa-h3 font-serif text-foreground"
+        >
+          {ARRIVE_PURPOSE_HEADING}
+        </h2>
+        <p className="bfa-copy text-foreground">{content.arrive.purpose}</p>
+      </section>
+
       {content.arrive.body.map((p) => (
         <p key={p} className="bfa-copy text-foreground">
           {p}
@@ -751,10 +772,20 @@ function EchoScreen({
 /**
  * When Scripture and spiritual reflection are switched off, the day offers one
  * practice, so the copy must promise exactly one — never "either" of two.
+ * The complete practice is open by default: it is the core of the day, and it
+ * remains entirely voluntary.
  */
 export const PRACTICE_SINGLE_HEADING = "A practice for today";
 export const PRACTICE_SINGLE_INTRO =
-  "You may open this practice, read without doing it, stop at any point, or continue without opening it.";
+  "The practice is open below. You may try all of it, use only one step, read without doing it, or stop at any point.";
+
+/**
+ * Spiritual preference on: both pathways stay equal, the already-open
+ * nonreligious practice is usable as it is, and nothing spiritual ever opens or
+ * plays on its own.
+ */
+export const PRACTICE_BOTH_OPEN_NOTE =
+  "The reflection practice is already open below. You may use it as it is, open the Christian path instead, use both, or continue without either. Nothing opens or plays on its own.";
 
 /**
  * Day 1 only, and only when the preference has been read and is off: one quiet,
@@ -768,7 +799,10 @@ export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
 
 function PractiseScreen({ content }: { content: JourneyDayContent }) {
   const [prefs, , prefsHydrated] = usePrefs();
-  const [open, setOpen] = useState<"reflection" | "spiritual" | null>(null);
+  // The complete nonreligious practice is visible by default. The spiritual
+  // path is never auto-opened.
+  const [reflectionOpen, setReflectionOpen] = useState(true);
+  const [spiritualOpen, setSpiritualOpen] = useState(false);
   // Nothing spiritual appears until the stored preference has actually been
   // read, so someone who chose to leave it off never briefly sees the Christian
   // panel, Scripture, prayer or companion wording. The nonreligious practice is
@@ -783,7 +817,7 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
         {showSpiritual ? content.practise.heading : PRACTICE_SINGLE_HEADING}
       </h1>
       <p className="bfa-copy text-foreground">
-        {showSpiritual ? content.practise.intro : PRACTICE_SINGLE_INTRO}
+        {showSpiritual ? PRACTICE_BOTH_OPEN_NOTE : PRACTICE_SINGLE_INTRO}
       </p>
       {showSpiritual && (
         <p className="bfa-copy text-muted-foreground">{content.practise.either}</p>
@@ -791,14 +825,14 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
       <DayMotif motif={content.motif} treatment="quiet" />
       <PracticePanel
         path={content.practise.reflection}
-        isOpen={open === "reflection"}
-        onToggle={() => setOpen(open === "reflection" ? null : "reflection")}
+        isOpen={reflectionOpen}
+        onToggle={() => setReflectionOpen((v) => !v)}
       />
       {showSpiritual && (
         <PracticePanel
           path={content.practise.spiritual}
-          isOpen={open === "spiritual"}
-          onToggle={() => setOpen(open === "spiritual" ? null : "spiritual")}
+          isOpen={spiritualOpen}
+          onToggle={() => setSpiritualOpen((v) => !v)}
         />
       )}
       {showSpiritualInvitation && (
@@ -817,9 +851,158 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
           </Link>
         </aside>
       )}
+      <PostPracticeCheck />
     </div>
   );
 }
+
+/* ------------------------------------------- optional local post-practice check */
+
+/**
+ * A compact, entirely optional check at the foot of the Practice screen.
+ *
+ * It lives in local React state for this mounted screen only. It is NEVER
+ * written to preferences, journey progress, answers, the URL, a reflection, a
+ * log, analytics, the network or any storage, and it never blocks Continue.
+ * Leaving or reloading the screen simply clears it.
+ */
+export const PRACTICE_CHECK_PROMPT =
+  "If you tried any part of a practice, what do you notice now?";
+
+export type PracticeCheckId =
+  | "clearer"
+  | "same"
+  | "stirred"
+  | "numb"
+  | "unclear"
+  | "private";
+
+export const PRACTICE_CHECK_OPTIONS: { id: PracticeCheckId; label: string }[] = [
+  { id: "clearer", label: "A little clearer" },
+  { id: "same", label: "About the same" },
+  { id: "stirred", label: "More stirred up" },
+  { id: "numb", label: "Numb or far away" },
+  { id: "unclear", label: "Unclear" },
+  { id: "private", label: "Keep this private" },
+];
+
+/** Calm containment. No breathing instruction, no diagnosis, no command. */
+export const PRACTICE_CHECK_STIRRED = {
+  heading: "Let’s slow this down",
+  steps: [
+    "Stop the exercise here. There is nothing further you need to do with it.",
+    "Keep your eyes open and let them travel around the space you are in.",
+    "Say or think where you are, and name several ordinary things you can see.",
+    "If it is comfortable, notice the support under your feet or body.",
+    "Stay here until you feel a little steadier. You do not need to continue until then.",
+  ],
+  note: "Being more stirred up does not mean you did something wrong, and it does not prove anything about healing. Contacting a safe person is one option, not something you must do.",
+};
+
+/** Outward orientation. Descriptive only: nothing here names a condition. */
+export const PRACTICE_CHECK_NUMB = {
+  heading: "Coming back to the room",
+  steps: [
+    "Keep your eyes open and stop the exercise here.",
+    "If you know them, say the date and the place you are in.",
+    "Notice one colour, one shape and one sound in the room.",
+    "There is nothing to work out or push through right now.",
+  ],
+  note: "Feeling numb or far away is not being diagnosed here. If you cannot feel oriented or safe, please seek immediate in-person help.",
+};
+
+export const PRACTICE_CHECK_PRIVATE_NOTE =
+  "Kept private. Nothing is recorded, and nothing here interprets it.";
+export const PRACTICE_CHECK_PLAIN_NOTE =
+  "Noted for this screen only. Nothing is saved, and you can continue whenever you wish.";
+
+function PostPracticeCheck() {
+  const [choice, setChoice] = useState<PracticeCheckId | null>(null);
+  const branch =
+    choice === "stirred"
+      ? PRACTICE_CHECK_STIRRED
+      : choice === "numb"
+        ? PRACTICE_CHECK_NUMB
+        : null;
+
+  return (
+    <section
+      data-testid="practice-check"
+      aria-labelledby="practice-check-prompt"
+      className="surface-card space-y-3"
+    >
+      <h2
+        id="practice-check-prompt"
+        className="bfa-heading bfa-h3 font-serif text-foreground"
+      >
+        {PRACTICE_CHECK_PROMPT}
+      </h2>
+      <p className="bfa-copy-support text-muted-foreground">
+        Entirely optional. This is not saved anywhere, and it never affects your
+        reflection.
+      </p>
+      <ul className="space-y-2">
+        {PRACTICE_CHECK_OPTIONS.map((o) => (
+          <li key={o.id}>
+            <button
+              type="button"
+              aria-pressed={choice === o.id}
+              onClick={() => setChoice(choice === o.id ? null : o.id)}
+              className="bfa-journey-choice bfa-copy min-h-[48px] w-full text-left"
+            >
+              <span aria-hidden className="bfa-journey-choice-dot" />
+              <span>{o.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {choice === "private" && (
+        <p className="bfa-copy text-foreground">{PRACTICE_CHECK_PRIVATE_NOTE}</p>
+      )}
+      {(choice === "clearer" || choice === "same" || choice === "unclear") && (
+        <p className="bfa-copy text-foreground">{PRACTICE_CHECK_PLAIN_NOTE}</p>
+      )}
+      {branch && (
+        <div
+          data-testid={`practice-check-${choice}`}
+          role="group"
+          aria-label={branch.heading}
+          className="space-y-3 rounded-xl border border-border bg-card p-4"
+        >
+          <h3 className="bfa-heading bfa-h3 font-serif text-foreground">
+            {branch.heading}
+          </h3>
+          <ol className="bfa-copy space-y-2 text-foreground">
+            {branch.steps.map((s) => (
+              <li key={s} className="flex gap-3">
+                <span aria-hidden className="text-[color:var(--gold)]">
+                  ·
+                </span>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="bfa-copy text-foreground">{branch.note}</p>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Link
+              to="/"
+              className="btn-quiet inline-flex min-h-[48px] items-center justify-center"
+            >
+              Return home
+            </Link>
+            <Link
+              to="/support"
+              className="btn-quiet inline-flex min-h-[48px] items-center justify-center"
+            >
+              Support &amp; Safety
+            </Link>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 
 
 function PracticePanel({

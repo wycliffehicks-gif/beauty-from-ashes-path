@@ -12,6 +12,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     shape: "notice-first",
     descriptor: "Noticing one present-day cost · about 12 minutes",
     arrive: {
+      purpose:
+        "A response can have helped you survive and still cost you something now. Honouring both truths can make room to grieve the cost and look for a safer replacement.",
       lead: "Seeing a cost clearly is not the same as blaming yourself—or deciding to change.",
       body: [
         "Choose one familiar response, way of coping, role, or current arrangement to hold lightly today. It may be something you noticed in Days 4 or 5, or something else. If nothing comes to mind, you can read generally or leave any question unanswered.",
@@ -323,6 +325,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Holding truth without self-attack · about 12 minutes",
     arrive: {
+      purpose:
+        "Shame can turn pain or mistakes into a verdict about who you are. Separating what happened or what you did from your worth can support honesty, responsibility and dignity together.",
       lead: "Facing what is true does not require turning yourself into the enemy.",
       body: [
         "Today is not asking you to praise yourself or pretend everything is fine. It asks how you meet a difficulty, limit, need, response or mistake once you notice it.",
@@ -613,6 +617,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     shape: "practise-mid",
     descriptor: "One thread that matters · about 12 minutes",
     arrive: {
+      purpose:
+        "Some people can face pain more easily than they can receive safe kindness, help, compassion or grace. Noticing your reaction can help you choose what feels safe enough to let in.",
       lead: "Reconnection is not going back, and it never means returning to harm.",
       body: [
         "Reconnecting here means making a little room for one thread that matters to you now. It may be something long-standing, something newly emerging, or something not yet clear.",
@@ -880,6 +886,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "A small private rehearsal · about 12 minutes",
     arrive: {
+      purpose:
+        "Insight becomes more usable when a new response is practised before it is needed. Private rehearsal can reveal what fits, what needs changing and what support would make it safer.",
       lead: "A different response can be tried privately before you decide whether it belongs in real life.",
       body: [
         "A different response might be an outward pause, delaying an answer, a brief first-person sentence, preparing a limit or a request, orienting through whichever sense is available to you, speaking to yourself less harshly, naming grief privately, or preparing something without acting on it.",
@@ -1162,6 +1170,8 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
     shape: "notice-first",
     descriptor: "Gathering the journey · about 15 minutes",
     arrive: {
+      purpose:
+        "Looking back can reveal a thread: what you noticed, what protected you, what it cost, what matters now and what step may come next. Integration does not mean everything is resolved.",
       lead: "This is the last day of the First Journey. It completes a ten-day container without claiming that your healing is complete.",
       body: [
         "You may have moved through every day or only some, mainly read, kept things private, left questions unanswered, or arrived here directly. No one path is treated here as more complete than another.",

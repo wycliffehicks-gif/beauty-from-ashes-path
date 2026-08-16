@@ -38,7 +38,7 @@ export const OPENING_SCREENS: OpeningScreen[] = [
     lead: "Some people arrive with grief, stress, shame, worry, exhaustion, numbness or unresolved hurt — and no clear way to begin.",
     points: [
       "This is a quiet place to slow down and look honestly.",
-      "When this journey speaks of feeling ‘heavy’ or ‘carrying’ something, it means emotional or spiritual strain that keeps taking energy — not physical weight unless the screen says so.",
+      "When this journey speaks of what you are ‘carrying’, it means emotional or spiritual strain that keeps taking energy — not physical weight unless the screen says so.",
       "Nothing here asks you to explain yourself to anyone.",
       "You set the pace, and you can stop at any point.",
     ],

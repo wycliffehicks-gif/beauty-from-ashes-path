@@ -12,15 +12,17 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Arriving honestly · about 10 minutes",
     arrive: {
+      purpose:
+        "Starting with one honest picture of the present can reduce the pressure to solve everything. Today helps you notice what needs attention, what you hope may become different, and what has already helped you keep going.",
       lead: "You do not have to be ready. You only have to be here.",
       body: [
-        "This is the first day of a short journey. Nothing here is timed, scored or compared, and nothing you choose is seen by another person.",
+        "This is the first day of the 10-day journey. Nothing here is timed, scored or compared, and nothing you choose is seen by another person.",
         "Today is about arriving as you actually are — tired, guarded, unsure, hopeful, or several of those at once.",
       ],
       settle: [
         "Let your eyes travel slowly around the room you are in and rest on one ordinary object.",
         "Feel where your body is supported — the chair, the floor, the bed beneath you.",
-        "Let the next out-breath be a little longer than the one before it, without forcing anything.",
+        "If breathing feels comfortable, take one easy breath in. As you breathe out, let the exhale be slightly longer. Do not force it. If breath focus is uncomfortable, keep your attention on the room.",
       ],
     },
     understand: {
@@ -46,7 +48,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         hint: "One choice. There is no better or worse answer, and you can change it later.",
         select: "one",
         options: [
-          { id: "heavy", label: "Heavy or worn down" },
+          { id: "heavy", label: "Emotionally weighed down or worn out" },
           { id: "tense", label: "Tense, braced, on alert" },
           { id: "flat", label: "Flat or far away from myself" },
           { id: "restless", label: "Restless — hard to settle" },
@@ -58,7 +60,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           heading: "What you noticed today",
           byOption: {
             heavy:
-              "You arrived feeling heavy. Heaviness can come from many things. It does not mean you are failing, and today can be small.",
+              "You arrived emotionally weighed down or worn out. That can come from many things, and it does not mean you are failing. You do not need to accomplish much today. One honest choice—or simply reading—can be enough.",
             tense:
               "You arrived tense or braced. This app cannot know why, and it will not ask you to relax on command.",
             flat:
@@ -159,7 +161,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           opening: "You arrived as you were today. The fuller reasons remain yours:",
           lines: {
             heavy:
-              "You arrived feeling heavy. That weight does not need to be explained here to be taken seriously.",
+              "You arrived emotionally weighed down or worn out. What is taking that energy does not need to be explained here to be taken seriously.",
             tense:
               "You arrived tense or braced. You did not need to become settled before beginning.",
             flat:
@@ -243,6 +245,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "notice-first",
     descriptor: "Gentle attention · about 10 minutes",
     arrive: {
+      purpose:
+        "A body sensation, an emotion, a thought and pressure can feel like one blur, yet each may need a different response. Separating them can make your next step more accurate and kinder.",
       lead: "Before anything can change, it helps to know what is actually here.",
       body: [
         "Today is quieter than it sounds. You are not asked to produce a feeling, dig anything up, or reach a conclusion.",
@@ -475,6 +479,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Finding words · about 12 minutes",
     arrive: {
+      purpose:
+        "Naming one manageable part of an experience can make it less vague and easier to respond to. Naming is not diagnosis, and it does not fix what happened.",
       lead: "Naming something is not the same as fixing it, and it is not a diagnosis.",
       body: [
         "Today you are invited to give one ordinary word to something you have been carrying.",
@@ -491,7 +497,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       label: "Listen",
       heading: "Why a word helps",
       body: [
-        "Sometimes experience arrives as a general heaviness before clear words come. A plain word can help you notice one part of it, communicate it or decide what support may be needed.",
+        "Sometimes experience arrives as undefined emotional strain before clear words come. A plain word can help you notice one part of it, communicate it or decide what support may be needed.",
         "A word is a beginning, not a full explanation. “I am carrying grief” is different from “grief is all I am.” Naming can create a little space between what you are experiencing and who you are.",
         "Some words bring clarity. Some feel incomplete. Naming may bring discomfort, relief, mixed feelings or no noticeable shift. You do not have to find the perfect word, and you may decide not to name anything today.",
       ],
@@ -617,7 +623,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Choose one broad word from today, or use “not sure”.",
           "Keep this as broad as you need. You do not have to describe what happened or include names or identifying details. You may stop or leave the sentence unfinished.",
-          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “Something I regret is…”, “I feel unseen when…” or “What feels heaviest today is…”.",
+          "Complete one sentence silently or somewhere outside this app: “I am carrying…”, “I am afraid that…”, “Something I regret is…”, “I feel unseen when…” or “What is taking most of my energy today is…”.",
           "Stop after one sentence. You do not have to add details or make the sentence explain everything.",
           "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, notice up to three neutral details around you, using any sense that works comfortably for you.",
           "Finish with: “This is real, and it is not all that is real about me.”",
@@ -775,6 +781,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Understanding one response · about 12 minutes",
     arrive: {
+      purpose:
+        "A familiar response may make more sense when you see what happens before it, what it tries to protect and what it affects now. Understanding is not excusing harm; it creates more room for choice.",
       lead:
         "A familiar response is not the whole of who you are. It may be something you learned to do when life became difficult.",
       body: [
@@ -1125,6 +1133,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Making room for mixed feelings · about 10 minutes",
     arrive: {
+      purpose:
+        "Wanting change and wanting safety can exist together. Hearing both sides can reduce self-attack and show what would make one next step more workable.",
       lead: "Wanting something to change and feeling cautious about it can both be true.",
       body: [
         "One pull may want honesty, rest, help, grief, a limit, reconnection, or some other movement.",

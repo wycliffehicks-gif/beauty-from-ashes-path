@@ -6,7 +6,7 @@
 // boundaries the revision must not cross. Days 6–10 are untouched by this pass.
 
 import { describe, it, expect } from "vitest";
-import { FIRST_JOURNEY_DAYS, getFirstJourneyDay } from "@/content/journey";
+import { FIRST_JOURNEY_DAYS, getFirstJourneyDay } from "@/content/first-journey";
 import type { JourneyDayContent } from "@/content/journey-types";
 import { buildReflection } from "@/lib/journey/reflection-engine";
 import {
@@ -14,8 +14,8 @@ import {
   resolveReflection,
 } from "@/lib/journey/reflection-restore";
 
-const days = [1, 2, 3, 4, 5].map((n) => getFirstJourneyDay(n)!);
-const day = (n: number) => getFirstJourneyDay(n)!;
+const days: JourneyDayContent[] = [1, 2, 3, 4, 5].map((n) => getFirstJourneyDay(n)!);
+const day = (n: number): JourneyDayContent => getFirstJourneyDay(n)!;
 
 function allText(d: JourneyDayContent) {
   return JSON.stringify(d);
@@ -111,7 +111,7 @@ describe("Pass C1 — retained structure for Days 1–5", () => {
   });
 
   it("keeps Days 6–10 present and untouched in shape", () => {
-    expect(FIRST_JOURNEY_DAYS.map((d) => d.day)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(FIRST_JOURNEY_DAYS.map((d: JourneyDayContent) => d.day)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 });
 

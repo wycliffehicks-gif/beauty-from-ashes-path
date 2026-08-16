@@ -98,6 +98,11 @@ export interface JourneyDayContent {
   /** Honest short descriptor for the journey home. */
   descriptor: string;
   arrive: {
+    /**
+     * Required plain-language reason this day exists, shown on Arrive under
+     * "Why this day matters" before any settling invitation. Therapeutic copy.
+     */
+    purpose: string;
     lead: string;
     body: string[];
     /** A grounded first movement — more than "take a breath". */

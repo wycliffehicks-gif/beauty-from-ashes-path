@@ -92,7 +92,7 @@ export const SPIRITUAL_TOGGLE_DESCRIPTION =
   "Off by default, and changeable any time. Turn it on to include optional Christian Scripture and prayer where a day offers them. The complete nonreligious journey remains available without it.";
 
 export const ABOUT_BEAUTY_FROM_ASHES =
-  "Beauty from Ashes is a guided psycho-spiritual reflection journey for adults who feel heavy, hidden, guarded, disconnected, numb, ashamed, overwhelmed or stuck. It is educational and reflective, and it does not promise a cure or an outcome.";
+  "Beauty from Ashes is a guided psycho-spiritual reflection journey for adults who feel emotionally weighed down, hidden, guarded, disconnected, numb, ashamed, overwhelmed or stuck. It is educational and reflective, and it does not promise a cure or an outcome.";
 
 export const ABOUT_RESURGENCE =
   "Resurgence Therapeutics is a psychotherapy practice grounded in the belief that people are worth returning to. Awaken, Rediscover, Hope is not a slogan here; it is the order in which most healing seems to happen.";

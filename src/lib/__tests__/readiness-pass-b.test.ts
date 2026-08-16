@@ -207,6 +207,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // arrive.purpose field, hashed here as a presence flag. No screen, screen
     // order, progress index, question/option ID, selection mode, echo branch,
     // practice pathway, reflection section or storage version changed.
+    console.log("FP=" + structuralFingerprint());
     expect(structuralFingerprint()).toBe(
       "3b0c4f0ca13256980cafa6a9349ac96d82d7206ae3650fdc5370c03f1928454a",
     );

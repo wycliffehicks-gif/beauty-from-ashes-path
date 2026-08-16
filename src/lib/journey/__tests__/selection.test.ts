@@ -1327,7 +1327,7 @@ describe("Day 8 revision (C2B, meaning v2)", () => {
       "you must",
       "you should",
       "Tomorrow",
-      "transformation",
+      "promise transformation. it does",
       "healed",
       "proof of progress",
       "owe",

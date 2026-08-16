@@ -194,12 +194,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           id: "ask",
           label:
             "Prepare one specific request for a safe person; nothing must be sent or said today",
-          note: "Choose someone reasonably safe. No identifying details are needed here.",
+          note: "Preparing counts. Consider only someone who has consistently respected your limits; this app cannot determine who is safe.",
         },
         {
           id: "return",
           label:
-            "Identify one responsibility that may need review, sharing, support or accommodation; no action today",
+            "Identify one responsibility or situation that may need support, sharing, accommodation or another response; no action today",
         },
         {
           id: "notice",

@@ -344,11 +344,10 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       label: "Listen",
       heading: "Compassion can be honest without becoming cruel",
       body: [
-        "An inner response is whatever happens inside when something is difficult. It may be words, a tone, images, pressure, comparison, blankness, withdrawal or simply a general attitude toward yourself. Some people have no verbal inner voice at all, and that is ordinary.",
-        "Accurate compassion does not flatter you, excuse harm or declare every choice acceptable. It acknowledges that something is genuinely difficult, includes relevant context and limits, includes impact on others where that applies, and holds only the responsibility actually within your influence.",
-        "Harshness may feel like honesty, discipline, protection or accountability. It may also add shame, hiding, exhaustion or pressure. Neither possibility tells us why your inner response developed, and a more compassionate response does not guarantee that anything will change.",
-        "Some difficulties are shaped by choices; others arise partly or largely from circumstances—such as grief, illness, disability, caregiving demands, discrimination, unsafe conditions or limited resources—that may not be chosen or within your control. Compassion neither erases consequences nor assigns blame for what was outside your control.",
-        "Nothing today requires forgiveness, confession, disclosure, repair, confrontation, changed behaviour, a changed feeling or a decision. The practice here is contained: one moment of truth without added self-attack.",
+        "A specific judgment concerns an action, impact, limit, need or circumstance. Shame turns that information into a whole-person verdict: ‘I made a mistake’ becomes ‘I am the mistake’; ‘I was hurt’ becomes ‘Something is wrong with me.’",
+        "Compassion is not praise, innocence or exemption from consequences. It means facing the observable truth, adding relevant context, acknowledging only the responsibility actually within your influence, and refusing to make contempt the price of honesty.",
+        "Dignity means that an action, wound, limitation or response is not the whole measure of a person. Accountability can still include changed behaviour, safe repair, boundaries or help. Self-punishment is not the same as repair.",
+        "Some difficulties arise partly or mainly from grief, illness, disability, caregiving, discrimination, unsafe conditions or limited resources. Compassion does not assign blame for what was outside your control or erase impact where your choices mattered.",
       ],
       info: [
         {

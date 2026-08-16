@@ -549,9 +549,9 @@ function ScreenBody({
           prefsHydrated={prefsHydrated}
           showSpiritual={showSpiritualChoices}
         />,
-        {
-        onContinue: onNext,
-      });
+        { onContinue: onNext },
+      );
+
 
 
     case "reflection":

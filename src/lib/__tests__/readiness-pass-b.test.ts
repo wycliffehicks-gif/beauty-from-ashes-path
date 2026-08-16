@@ -92,10 +92,12 @@ describe("Pass B — exact clinical safeguards", () => {
     );
   });
 
-  it("Day 8 closing owes no reconnection and asks no unsafe movement", () => {
+  it("Day 8 closing owes no further receiving and keeps boundaries intact", () => {
     const closing = day(8).reflection.closing;
-    expect(closing).toContain("no movement toward anyone unsafe");
-    expect(closing).toContain("no reconnection is owed");
+    expect(closing).toContain("does not require receiving more");
+    expect(closing).toContain(
+      "Care, discernment, accountability and boundaries can remain together",
+    );
   });
 
   it("Day 9 closing stays nonbinding and promises neither safety nor access", () => {

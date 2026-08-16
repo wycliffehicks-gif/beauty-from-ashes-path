@@ -427,7 +427,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         select: "one",
         options: [
           { id: "rest", label: "Treat rest, reduced demand or basic care as a real need—if possible" },
-          { id: "acknowledged", label: "Acknowledge that this has genuinely been difficult" },
+          {
+            id: "acknowledged",
+            label:
+              "Acknowledge that this has genuinely been difficult without turning it into my identity",
+          },
           {
             id: "notalone",
             label: "Respect that support may matter, without contacting anyone today",

@@ -792,7 +792,7 @@ function QuestionScreenShell({
       )}
       <DayMotif motif={motif} treatment="quiet" />
       <ul className="space-y-2" role="list">
-        {visibleOptions.map(({ option, idx }) => {
+        {visibleOptions.map(({ option, index: idx }) => {
           const isOn = selected.includes(idx);
 
           return (

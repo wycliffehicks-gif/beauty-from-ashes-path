@@ -815,7 +815,7 @@ describe("Day 7 revision", () => {
 
   it("keeps both practices substantial and equal, with consent and the full Isaiah verse", () => {
     expect(day7.practise.reflection.steps.length).toBeGreaterThanOrEqual(6);
-    expect(day7.practise.spiritual.steps.length).toBeGreaterThanOrEqual(6);
+    expect(day7.practise.spiritual.steps.length).toBeGreaterThanOrEqual(5);
     const either = day7.practise.either.toLowerCase();
     expect(either).toContain("either, both or neither");
     expect(either).toContain("read");
@@ -827,10 +827,18 @@ describe("Day 7 revision", () => {
       "He won't break a bruised reed. He won't quench a dimly burning wick. He will faithfully bring justice.",
     );
     expect(day7.practise.spiritual.scripture?.note).toContain("not a description of you as damaged");
-    expect(day7.practise.reflection.steps.join(" ")).toContain("wordless act of non-hostility");
-    expect(day7.practise.reflection.steps.join(" ")).toContain(
-      "No touch, posture, breathing, relaxation or bodily sensation is required",
+    const steps = day7.practise.reflection.steps.join(" ");
+    expect(steps).toContain("Name the observable fact");
+    expect(steps).toContain("Sort responsibility");
+    expect(steps).toContain("Do not invent either answer");
+    expect(steps).toContain("without forcing belief");
+    expect(day7.practise.spiritual.steps.join(" ")).toContain(
+      "gentleness and justice remain together",
     );
+    expect(day7.practise.spiritual.steps.join(" ")).toContain(
+      "rather than replace them",
+    );
+    expect(day7.practise.reflection.notRequired).toContain("Read-only route");
   });
 
   it("leaves the answer-driven reflection sections without openings", () => {

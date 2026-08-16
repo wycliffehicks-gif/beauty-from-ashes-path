@@ -328,8 +328,13 @@ describe("version-aware helpers", () => {
   });
 
   it("keeps meaningful-progress logic on the current meaning", () => {
+    // Legacy v1-only selections are pending, not active, so they alone do not
+    // count as meaningful progress under the revised Day 8.
     saveDayAnswers(day8, ["q.route:self"]);
     saveLocator({ dayId: "day-08", step: "arrive", index: 0 });
+    expect(hasMeaningfulProgress(readProgress())).toBe(false);
+
+    saveDayAnswers(day8Canonical, ["q.route:self"]);
     expect(hasMeaningfulProgress(readProgress())).toBe(true);
   });
 });

@@ -117,7 +117,6 @@ describe("Day 9 routed practice", () => {
       "q.practice",
       "e.practice",
       "q.where",
-      "e.where",
       "practise",
       "step",
       "reflection",

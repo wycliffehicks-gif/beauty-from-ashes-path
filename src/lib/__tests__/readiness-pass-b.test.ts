@@ -157,7 +157,12 @@ function structuralFingerprint(): string {
     questions: d.questions.map((q) => ({
       id: q.id,
       select: q.select,
-      options: q.options.map((o) => ({ id: o.id, exclusive: o.exclusive === true })),
+      options: q.options.map((o) => ({
+        id: o.id,
+        exclusive: o.exclusive === true,
+        spiritualOnly: o.spiritualOnly === true,
+      })),
+
       info: (q.info ?? []).map((i) => i.term),
       echo: q.echo
         ? {

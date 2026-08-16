@@ -50,7 +50,13 @@ import {
   answersSnapshot,
   resolveReflection,
 } from "@/lib/journey/reflection-restore";
+import {
+  presentationAnswers,
+  presentationOptions,
+} from "@/lib/journey/presentation-answers";
+import { resolvePractice } from "@/lib/journey/practice-router";
 import { resolveVisibleIndex } from "@/lib/journey/screen-access";
+
 import { toggleSelection } from "@/lib/journey/selection";
 import {
   mergeStableStepAnswers,
@@ -129,12 +135,18 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const navigate = useNavigate();
   const router = useRouter();
   const search = Route.useSearch();
+  // Read once for this day. Christian choices, Echoes, reflections and practice
+  // routing are all withheld until the stored preference has actually been read
+  // AND is on, so nothing Christian can flash before hydration.
+  const [prefs, , prefsHydrated] = usePrefs();
+  const showSpiritualChoices = prefsHydrated && prefs.showSpiritual;
 
   const screens = useMemo(() => screensFor(content), [content]);
   const stepKeys = useMemo(() => screens.map(keyForScreen), [screens]);
   const kinds = useMemo(() => screens.map((s) => s.kind), [screens]);
   const closeIdx = screens.length - 1;
   const dayId = dayIdFor(content.day);
+
 
   // The requested screen comes from the URL only, so server render, first client
   // render, reload and device Back all agree. An unknown key opens the day at
@@ -258,6 +270,24 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
   const focusSettled = answersLoaded && !resumePending && requested === i;
 
   /**
+   * `dayAnswers` is the RAW stored record and the only value ever merged or
+   * saved. `presentationAnswers` is a derived, storage-free view: while the
+   * spiritual preference is unhydrated or off, a token selecting a
+   * spiritualOnly choice is withheld, so it produces no option, Echo,
+   * reflection line, practice routing or stale snapshot. Turning the
+   * preference back on restores the dormant canonical selection with no
+   * storage rewrite.
+   */
+  const presentation = useMemo(
+    () =>
+      presentationAnswers(content, dayAnswers, {
+        hydrated: prefsHydrated,
+        showSpiritual: prefs.showSpiritual,
+      }),
+    [content, dayAnswers, prefsHydrated, prefs.showSpiritual],
+  );
+
+  /**
    * Reflection readiness is keyed to BOTH the reflection screen and the current
    * coded answers, so it cannot survive leaving the screen, a browser Forward,
    * or an answer change: the token simply stops matching. The reflection child
@@ -265,7 +295,8 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
    */
   const [readyToken, setReadyToken] = useState<string | null>(null);
   const currentKey = stepKeys[i];
-  const reflectionToken = `${currentKey}|${answersSnapshot(dayAnswers)}`;
+  const reflectionToken = `${currentKey}|${answersSnapshot(presentation)}`;
+
   const reflectionReady = readyToken === reflectionToken;
   const onReflectionPreparing = useCallback(() => setReadyToken(null), []);
   const onReflectionReady = useCallback((token: string) => setReadyToken(token), []);
@@ -334,7 +365,9 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       progress={{ current: i, total: screens.length }}
       onBack={i > 0 ? goPrev : undefined}
       onNext={goNext}
-      answers={dayAnswers}
+      answers={presentation}
+      showSpiritualChoices={showSpiritualChoices}
+
       answersLoaded={answersLoaded}
       revisionPending={pendingRevision}
       focusSettled={focusSettled}
@@ -375,6 +408,7 @@ function ScreenBody({
   onBack,
   onNext,
   answers,
+  showSpiritualChoices,
   answersLoaded,
   revisionPending,
   focusSettled,
@@ -394,8 +428,12 @@ function ScreenBody({
   progress: { current: number; total: number };
   onBack?: () => void;
   onNext: () => void;
+  /** Presentation answers only. Raw storage stays in the parent. */
   answers: string[];
+  /** True only when preferences are hydrated AND spiritual content is on. */
+  showSpiritualChoices: boolean;
   answersLoaded: boolean;
+
   /** True while this day's earlier coded choices belong to an older meaning. */
   revisionPending: boolean;
   /** True once storage, resume and URL correction have settled. */
@@ -473,6 +511,7 @@ function ScreenBody({
           question={question}
           stepKey={answerKeyFor(content, question.id)}
           answers={answers}
+          showSpiritualChoices={showSpiritualChoices}
           onAnswer={onAnswer}
           onNext={onNext}
           label={label}
@@ -496,7 +535,10 @@ function ScreenBody({
     }
 
     case "practise":
-      return shell(<PractiseScreen content={content} />, { onContinue: onNext });
+      return shell(<PractiseScreen content={content} answers={answers} />, {
+        onContinue: onNext,
+      });
+
 
     case "reflection":
       return shell(
@@ -678,6 +720,7 @@ function QuestionScreenShell({
   question,
   stepKey,
   answers,
+  showSpiritualChoices = false,
   onAnswer,
   onNext,
   label,
@@ -688,7 +731,15 @@ function QuestionScreenShell({
 }: {
   question: Question;
   stepKey: string;
+  /** Presentation answers: a dormant Christian selection is already withheld. */
   answers: string[];
+  /**
+   * True only when preferences are hydrated AND spiritual content is on. While
+   * false, spiritualOnly choices are not rendered at all, so nothing Christian
+   * can flash before hydration. Canonical indexes are preserved: the visible
+   * entries are filtered, never reindexed.
+   */
+  showSpiritualChoices?: boolean;
   onAnswer: (stepKey: string, optionIds: string[]) => void;
   onNext: () => void;
   label: string;
@@ -699,6 +750,11 @@ function QuestionScreenShell({
   /** Stable screen identity, so a screen change moves focus to the question. */
   focusKey?: string;
 }) {
+  const visibleOptions = presentationOptions(question, {
+    hydrated: true,
+    showSpiritual: showSpiritualChoices,
+  });
+
 
   const [selected, setSelected] = useState<number[]>(() =>
     optionIndexesForOptions(answers, stepKey, question.options),
@@ -736,8 +792,9 @@ function QuestionScreenShell({
       )}
       <DayMotif motif={motif} treatment="quiet" />
       <ul className="space-y-2" role="list">
-        {question.options.map((option, idx) => {
+        {visibleOptions.map(({ option, index: idx }) => {
           const isOn = selected.includes(idx);
+
           return (
             <li key={option.id}>
               <button
@@ -848,7 +905,14 @@ export const SPIRITUAL_INVITATION_TEXT =
   "The Reflection Practice above is complete on its own. If you would like optional Christian Scripture and prayer alongside it, you can turn that on in Settings at any time.";
 export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
 
-function PractiseScreen({ content }: { content: JourneyDayContent }) {
+function PractiseScreen({
+  content,
+  answers = [],
+}: {
+  content: JourneyDayContent;
+  /** Presentation answers only, used to resolve a routed practice. */
+  answers?: string[];
+}) {
   const [prefs, , prefsHydrated] = usePrefs();
   // The complete nonreligious practice is visible by default. The spiritual
   // path is never auto-opened.
@@ -860,6 +924,10 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
   // complete on its own and always shown.
   const showSpiritual = prefsHydrated && prefs.showSpiritual;
   const showSpiritualInvitation = content.day === 1 && prefsHydrated && !prefs.showSpiritual;
+  // A routed day shows the practice its single choice selected; everything else
+  // falls back to the day's required paths. Pure read, no storage, no state.
+  const resolved = resolvePractice(content, answers);
+
 
   return (
     <div className="space-y-5">
@@ -875,17 +943,18 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
       )}
       <DayMotif motif={content.motif} treatment="quiet" />
       <PracticePanel
-        path={content.practise.reflection}
+        path={resolved.reflection}
         isOpen={reflectionOpen}
         onToggle={() => setReflectionOpen((v) => !v)}
       />
       {showSpiritual && (
         <PracticePanel
-          path={content.practise.spiritual}
+          path={resolved.spiritual}
           isOpen={spiritualOpen}
           onToggle={() => setSpiritualOpen((v) => !v)}
         />
       )}
+
       {showSpiritualInvitation && (
         <aside
           data-testid="spiritual-invitation"

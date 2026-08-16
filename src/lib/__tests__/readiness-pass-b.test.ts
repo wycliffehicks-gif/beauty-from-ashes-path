@@ -222,8 +222,15 @@ describe("canonical ten-day structural fingerprint", () => {
     // pass silently. All ten days are "v1". No screen, screen order, progress
     // index, question/option/step ID, selection mode, exclusivity, echo branch,
     // practice pathway or reflection section changed.
+    //
+    // Updated in Pass C2C: Day 8 answer meaning is "v2", Day 9 gained one
+    // static "care" reflection section and a routed-practice map keyed by its
+    // existing q.practice option IDs, and Day 8 marks its Christian option as
+    // presentation-only. No day, screen, screen order, progress index,
+    // question/option/step ID, selection mode, exclusivity, echo branch,
+    // storage version or answer identity changed.
     expect(structuralFingerprint()).toBe(
-      "ea232f0f1314555cf9222ef3d69543d279eeded2bde01c8a5a2247536826991d",
+      "6ec61a2e627ede37d0dc3178eef0daacaa530e6cd63faa55cdc62a50d9e8ef66",
     );
   });
 });

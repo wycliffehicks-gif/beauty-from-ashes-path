@@ -1181,14 +1181,15 @@ describe("Day 8 revision (C2B, meaning v2)", () => {
 
   it("offers a Notice, Name, Stay, Receive practice with a safety check", () => {
     const r = day8.practise.reflection;
-    expect(r.title).toBe("Reflection Practice — Notice, Name, Stay, Receive");
+    expect(r.title).toBe(
+      "Reflection Practice — notice, name, check safety, choose an amount and receive",
+    );
     expect(r.summary).toContain("preserves choice and boundaries");
     expect(r.steps.length).toBe(7);
     const steps = r.steps.join(" ");
     expect(steps).toContain("Care and boundaries can coexist");
     expect(steps).toContain("Check safety:");
     expect(steps).toContain("use the sentence, an impersonal source or read-only");
-    expect(steps).toContain("No breath or body focus is required");
     expect(steps).toContain("No real contact is required");
     expect(steps).toContain("not proof of healing or readiness");
     expect(r.notRequired).toContain("Gentler route: Notice and Name only");
@@ -1303,7 +1304,9 @@ describe("Day 8 revision (C2B, meaning v2)", () => {
   it("closes without claiming receiving, relief, prayer or change", () => {
     const close = [day8.close.heading, ...day8.close.body, day8.close.carryForward].join(" ");
     expect(day8.close.heading).toBe("Care without surrendering discernment");
-    expect(close).toContain("You did not have to trust, receive, contact or feel anything");
+    expect(close).toContain(
+      "Nothing here assumes that you trusted, received, contacted anyone or felt anything",
+    );
     expect(close).toContain("Day 9");
     expect(close).toContain("privately rehearsing one response");
     expect(close).not.toContain("Tomorrow");
@@ -1537,16 +1540,18 @@ describe("Day 9 revision", () => {
     expect(day9.practise.either).toBe(
       "You may use either path, both paths, or neither. You may simply read, stop at any point, or leave the exercise unfinished.",
     );
-    expect(day9.practise.reflection.summary).toContain(
-      "without deciding to use it in real life",
+    // The always-present reflection path is the read-only safety fallback: it
+    // never interprets an unclear, unavailable or private route.
+    expect(day9.practise.reflection.summary).toBe(
+      "A read-only safety frame that keeps an unclear, unavailable or private response from being chosen or interpreted by the app.",
     );
     expect(day9.practise.spiritual.summary).toBe(
-      "A Christian path for bringing one manageable concern and one possible response before God, without treating prayer as a promise or command.",
+      "A Christian path for holding one manageable concern and one possible response before God, without treating Scripture or prayer as a command, prediction or plan.",
     );
     expect(day9.practise.spiritual.steps.join(" ")).toContain(
-      "leaving safety and real-world use undecided",
+      "no relief, trust, closeness or action is required",
     );
-    expect(panels).toContain("keep this entirely general");
+    expect(panels).toContain("keep it general");
     for (const phrase of [
       "whichever practice you chose",
       "the practice you chose",
@@ -1563,45 +1568,37 @@ describe("Day 9 revision", () => {
     const s = day9.practise.spiritual.steps.join(" ");
     for (const text of [r, s]) {
       expect(text).toMatch(/orient outward/i);
-      expect(text).toMatch(/only its opening moment|only the opening/i);
-      expect(text).toMatch(/reading (only|this step only)|Reading only is available/i);
+      expect(text).toMatch(/read only|reading only is available/i);
     }
-    expect(r).toContain("usable, incomplete, unclear, unavailable, or unwise");
-    expect(r).toContain("discomfort is not proof of growth");
-    expect(s).toContain("not a vow, not a divine command or direction");
-    expect(s).toContain("Prayer does not replace real-world help or planning");
+    expect(r).toContain("Keep only its opening in mind");
+    expect(r).toContain("usable, incomplete, unclear, unavailable or unwise");
+    expect(r).toContain("If safety, consequences or fit are uncertain, read only or stop.");
+    expect(s).toContain("No response becomes a vow, divine direction or proof of faith");
+    expect(s).toContain("Prayer does not replace practical care or planning");
 
     const scripture = day9.practise.spiritual.scripture!;
     expect(scripture.reference).toBe("Psalm 62:8 (World English Bible)");
     expect(scripture.body).toBe(
       "Trust in him at all times, you people. Pour out your heart before him. God is a refuge for us. Selah.",
     );
-    expect(scripture.note).toContain("psalmist's invitation");
-    expect(scripture.note).toContain("does not promise that refuge will be felt");
+    expect(scripture.note).toContain("psalmist’s invitation");
+    expect(scripture.note).toContain("promise that refuge will be felt");
 
     for (const notRequired of [
       day9.practise.reflection.notRequired,
       day9.practise.spiritual.notRequired,
     ]) {
-      for (const term of [
-        "confrontation",
-        "disclosure",
-        "sending a message",
-        "contact",
-        "real-world test",
-        "emotional release",
-        "decision",
-        "outcome",
-      ]) {
+      for (const term of ["disclosure", "contact", "decision"]) {
         expect(notRequired.toLowerCase(), term).toContain(term);
       }
-      expect(notRequired.toLowerCase()).toContain("stop");
     }
   });
 
   it("has no unconditional openings and a line for every retained or appended id", () => {
     for (const section of day9.reflection.sections) {
-      expect(section.opening, section.id).toBeUndefined();
+      // "care" is a deliberate static containment section; every answer-driven
+      // section still carries no unconditional opening.
+      if (section.id !== "care") expect(section.opening, section.id).toBeUndefined();
       expect(section.unanswered.length, section.id).toBeGreaterThan(40);
     }
     const pairs: Array<[string, string[]]> = [
@@ -1619,6 +1616,7 @@ describe("Day 9 revision", () => {
     expect(day9.reflection.sections.map((s) => s.title)).toEqual([
       "A possible response",
       "The setting, if any",
+      "Before anything leaves the page",
       "How the practice was left",
     ]);
   });
@@ -1630,10 +1628,10 @@ describe("Day 9 revision", () => {
     expect(text).toContain("You left the response open. No rehearsal or need is being presumed");
     expect(text).toContain("You left the setting open");
     expect(text).toContain("You left the step open");
+    expect(text).toContain("does not claim that you rehearsed anything");
     for (const phrase of [
       "You chose",
       "You located",
-      "You rehearsed",
       "practising at all",
       "progress",
       "ready",

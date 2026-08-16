@@ -28,7 +28,16 @@ export interface Choice {
    * (for example "Nothing much registers right now").
    */
   exclusive?: boolean;
+  /**
+   * PRESENTATION METADATA ONLY. This choice is offered solely to someone who
+   * has explicitly turned Scripture and spiritual reflection on. It never
+   * changes the option's canonical id, its index in `options`, the stored token
+   * form, or anything about storage: a selection already recorded stays exactly
+   * where it is and simply becomes dormant while spiritual content is off.
+   */
+  spiritualOnly?: boolean;
 }
+
 
 export interface Question {
   /** Safe id, also the storage step key, e.g. "state". */
@@ -66,6 +75,30 @@ export interface PracticePath {
     note: string;
   };
 }
+
+/**
+ * Optional routed practice for a day whose substantive nonreligious practice
+ * follows the single rehearsal the person chose.
+ *
+ * A route is resolved ONLY when exactly one recognized option is selected on
+ * `from` AND that option has a mapping. Anything else — unanswered, unknown,
+ * multiple, or a deliberately open choice such as unclear / none / private —
+ * uses the day's required `practise.reflection` fallback. Routing never adds a
+ * screen, question, answer id, token or storage field.
+ */
+export interface RoutedPractice {
+  /** Question id whose single selection may select a practice path. */
+  from: string;
+  /** Option id → nonreligious practice path. */
+  reflectionByOption: Record<string, PracticePath>;
+  /**
+   * Option id → Christian path, for a day that needs one. Days with a single
+   * shared Christian path simply omit this and keep `practise.spiritual`.
+   */
+  spiritualByOption?: Record<string, PracticePath>;
+}
+
+
 
 export type ReflectionSectionId =
   | "hearing"
@@ -145,9 +178,14 @@ export interface JourneyDayContent {
     intro: string;
     /** Makes "either or both" explicit. */
     either: string;
+    /** Required fallback, used whenever no route resolves. */
     reflection: PracticePath;
+    /** Required shared Christian path. Always opt-in. */
     spiritual: PracticePath;
+    /** Optional routed practice: one question's single choice selects a path. */
+    route?: RoutedPractice;
   };
+
   /** One Honest Step, gathered as a structured choice. */
   step: Question;
   reflection: {

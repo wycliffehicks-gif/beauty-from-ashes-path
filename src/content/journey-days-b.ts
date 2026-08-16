@@ -6,6 +6,7 @@ import type { JourneyDayContent } from "./journey-types";
 export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
   {
     day: 6,
+    answerMeaningVersion: "v1",
     title: "What It Is Costing Now",
     theme: "Present-day cost noticed without blame, forced choice or invented causes.",
     motif: "cost",
@@ -319,6 +320,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
 
   {
     day: 7,
+    answerMeaningVersion: "v1",
     title: "A More Compassionate Way to Hold It",
     theme: "Truth, context, dignity and responsibility held together without self-attack.",
     motif: "compassion",
@@ -611,6 +613,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
 
   {
     day: 8,
+    answerMeaningVersion: "v1",
     title: "Reconnect With What Matters",
     theme: "One thread that matters now, met in a way that is small and safe.",
     motif: "reconnect",
@@ -880,6 +883,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
 
   {
     day: 9,
+    answerMeaningVersion: "v1",
     title: "Practise a Different Response",
     theme: "Trying one possible response privately, with safety and choice intact.",
     motif: "practise",
@@ -1163,6 +1167,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
 
   {
     day: 10,
+    answerMeaningVersion: "v1",
     title: "Carry It Forward",
     theme:
       "Integration and a complete stopping place without manufactured progress, forced closure, or required action.",

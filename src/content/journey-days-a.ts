@@ -6,6 +6,7 @@ import type { JourneyDayContent } from "./journey-types";
 export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
   {
     day: 1,
+    answerMeaningVersion: "v1",
     title: "Begin Where You Are",
     theme: "Starting honestly, rather than starting well.",
     motif: "threshold",
@@ -245,6 +246,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
 
   {
     day: 2,
+    answerMeaningVersion: "v1",
     title: "Notice What Is Here",
     theme: "Telling sensation, feeling, thought and pressure apart.",
     motif: "attention",
@@ -498,6 +500,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
 
   {
     day: 3,
+    answerMeaningVersion: "v1",
     title: "Name What You're Carrying",
     theme: "Giving a plain word to something that has stayed wordless.",
     motif: "naming",
@@ -794,6 +797,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
 
   {
     day: 4,
+    answerMeaningVersion: "v1",
     title: "What It May Have Protected",
     theme: "Meeting one familiar response with understanding rather than contempt.",
     motif: "shelter",
@@ -1144,6 +1148,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
 
   {
     day: 5,
+    answerMeaningVersion: "v1",
     title: "The Two Pulls Within You",
     theme:
       "A pull toward movement and a pull toward caution can be present together, without a decision being required.",

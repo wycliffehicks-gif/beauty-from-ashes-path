@@ -1856,12 +1856,12 @@ describe("Day 9 revision", () => {
 
   it("leaves Day 8 and Day 10 at their canonical boundaries", () => {
     const day8b = getFirstJourneyDay(8)!;
-    expect(day8b.title).toBe("Reconnect With What Matters");
+    expect(day8b.title).toBe("Let Something Good Reach You");
     expect(day8b.motif).toBe("reconnect");
     expect(day8b.shape).toBe("practise-mid");
-    expect(day8b.close.heading).toBe("Held without force");
+    expect(day8b.close.heading).toBe("Care without surrendering discernment");
     expect(day8b.close.carryForward).toBe(
-      "What matters can be met in a way that is small, safe, and mine to choose.",
+      "I can receive only what is safe, true and mine to choose.",
     );
 
     const day10 = getFirstJourneyDay(10)!;

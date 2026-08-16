@@ -948,7 +948,13 @@ describe("Day 7 revision", () => {
   });
 });
 
-describe("Day 8 revision", () => {
+// ---------------------------------------------------------------------------
+// PASS C2B — Day 8 semantic rewrite, "Let Something Good Reach You".
+// Answer meaning version v2; every ID, option order, select mode and screen
+// key is unchanged from v1.
+// ---------------------------------------------------------------------------
+
+describe("Day 8 revision (C2B, meaning v2)", () => {
   const day8 = getFirstJourneyDay(8)!;
   const route = day8.questions.find((q) => q.id === "route")!;
   const size = day8.questions.find((q) => q.id === "size")!;
@@ -997,9 +1003,14 @@ describe("Day 8 revision", () => {
       day8.close.carryForward,
     ].join("\n");
 
-  it("preserves the canonical identity and exact nine-screen order", () => {
+  it("carries the new title, theme and descriptor at meaning version v2", () => {
     expect(day8.day).toBe(8);
-    expect(day8.title).toBe("Reconnect With What Matters");
+    expect(day8.answerMeaningVersion).toBe("v2");
+    expect(day8.title).toBe("Let Something Good Reach You");
+    expect(day8.theme).toBe(
+      "Noticing how you respond to already-safe kindness, help, compassion or grace.",
+    );
+    expect(day8.descriptor).toBe("Receiving one safe amount · about 12 minutes");
     expect(day8.motif).toBe("reconnect");
     expect(day8.shape).toBe("practise-mid");
     expect(day8.step.id).toBe("step");
@@ -1016,7 +1027,7 @@ describe("Day 8 revision", () => {
     ]);
   });
 
-  it("keeps single-select and exact positional ID order, appending only", () => {
+  it("keeps single-select and exact positional ID order, unchanged from v1", () => {
     expect(route.select).toBe("one");
     expect(size.select).toBe("one");
     expect(day8.step.select).toBe("one");
@@ -1055,162 +1066,138 @@ describe("Day 8 revision", () => {
     ]);
   });
 
-  it("defines reconnection for a newcomer and rules out going back", () => {
+  it("frames receiving without trust, debt or a lowered guard", () => {
+    expect(day8.arrive.lead).toBe(
+      "Receiving is not the same as trusting everyone, owing access or lowering a needed guard.",
+    );
     const arrive = day8.arrive.body.join(" ");
-    expect(arrive).toContain("making a little room for one thread that matters to you now");
-    expect(arrive).toContain("long-standing");
-    expect(arrive).toContain("newly emerging");
-    expect(arrive).toContain("not yet clear");
-    expect(arrive).toContain("does not mean restoring an earlier, untouched version of yourself");
-    expect(arrive).toContain("a new way of being with yourself");
-    expect(arrive).toContain("a story that is not finished");
-    expect(arrive).toContain("returning to an unsafe person, place or community");
-    expect(arrive).toContain("proving progress");
-    expect(arrive).toContain("pretending that pain is over");
-    expect(arrive).toContain("real limit on access, not a personal failure");
-    for (const factor of [
-      "Grief",
-      "illness",
-      "disability",
-      "exhaustion",
-      "caregiving",
-      "discrimination",
-      "unsafe circumstances",
-    ]) {
-      expect(arrive, factor).toContain(factor);
-    }
+    expect(arrive).toContain("bracing, helping, performing or coping");
+    expect(arrive).toContain("No person has to be contacted or remembered");
+    expect(arrive).toContain("notice the reflex, check safety");
+    expect(arrive).toContain("You may decide that the safe amount is none");
   });
 
-  it("keeps arrival optional and free of vision, breath, posture and forced-positive assumptions", () => {
+  it("keeps arrival optional and free of breath, posture and forced positivity", () => {
     const settle = (day8.arrive.settle ?? []).join(" ");
     expect(settle).toContain("optional");
     expect(settle).toContain("Reading on is a complete way to begin");
     expect(settle).toContain("whichever is available to you");
-    for (const phrase of [
-      "Look up",
-      "furthest point",
-      "eyes",
-      "breathing",
-      "breath",
-      "posture",
-      "genuinely fine",
-      "relax",
-      "picture",
-    ]) {
-      expect(settle.toLowerCase(), phrase).not.toContain(phrase.toLowerCase());
+    for (const phrase of ["breathing", "breath", "posture", "relax", "genuinely fine"]) {
+      expect(settle.toLowerCase(), phrase).not.toContain(phrase);
     }
   });
 
-  it("explains what matters, values, new form and safe enough", () => {
-    const u = [
-      day8.understand.heading,
-      ...day8.understand.body,
-      ...(day8.understand.info ?? []).flatMap((i) => [i.term, i.explanation]),
-    ].join(" ");
-    expect(u).toContain("A value is a chosen quality or direction");
-    expect(u).toContain("not a task to complete");
-    expect(u).toContain("approached in a new form");
-    expect(u).toContain("does not have to be available outwardly today");
-    expect(u).toContain("Safe enough for this amount of contact");
-    expect(u).toContain("respects a no or a limit");
-    expect(u).toContain("does not require you to disclose anything");
-    expect(u).toContain("use your vulnerability against you");
-    expect(u).toContain("If safety is uncertain, no contact is required");
-    expect(u).toContain(
-      "Nothing here requires contact, disclosure, reconciliation, forgiveness, public action, a bodily response, hope, clarity or change.",
+  it("explains receiving, safe enough and letting something land", () => {
+    expect(day8.understand.heading).toBe("Receiving care without giving up discernment");
+    const u = day8.understand.body.join(" ");
+    expect(u).toContain("allowing one safe kindness, comfort, help, fair sentence");
+    expect(u).toContain("accepting a debt or agreeing to future contact");
+    expect(u).toContain("The app cannot assess a person or relationship");
+    expect(u).toContain("No history, attachment style or trauma is inferred");
+    expect(u).toContain("does not create a therapeutic relationship");
+    const terms = (day8.understand.info ?? []).map((i) => i.term);
+    expect(terms).toContain("What does “safe enough” mean here?");
+    expect(terms).toContain("What does “let it land” mean?");
+    const land = day8.understand.info!.find((i) => i.term === "What does “let it land” mean?")!;
+    expect(land.explanation).toContain("instead of immediately dismissing it");
+    expect(land.explanation).toContain(
+      "does not require belief, gratitude, trust, contact, obligation or a particular feeling",
     );
-    expect(u).not.toContain("a professional can be that person");
-    expect(u).not.toContain("Small and real beats large and imagined");
   });
 
-  it("echoes every route option and closes branch-neutrally", () => {
+  it("asks about a source of already-safe care and echoes every option", () => {
+    expect(route.prompt).toBe(
+      "What source of already-safe kindness, care or grace—if any—would you be willing to consider today?",
+    );
+    expect(route.hint).toContain("If safety is uncertain");
+    const labels = Object.fromEntries(route.options.map((o) => [o.id, o.label]));
+    expect(labels["self"]).toBe("One fair or caring sentence I can offer myself");
+    expect(labels["person"]).toBe(
+      "Kindness or help already offered by a person I judge safe enough",
+    );
+    expect(labels["none"]).toBe("Nothing feels safe or available to receive today");
+
     const byOption = route.echo!.byOption;
-    for (const option of route.options) {
-      expect(byOption[option.id], option.id).toBeTruthy();
-    }
     expect(Object.keys(byOption).sort()).toEqual(route.options.map((o) => o.id).sort());
-    expect(byOption["person"]).toContain("No contact and no disclosure are required");
-    expect(byOption["god"]).not.toContain("in whatever form");
-    expect(byOption["god"]).toContain("does not assume prayer");
-    expect(byOption["private"]).toContain("is recorded or inferred here");
-    expect(byOption["none"]).toContain("left intact");
-    expect(byOption["unclear"]).toContain("No direction will be guessed for you");
-    expect(route.echo!.closing).not.toContain("Whatever you chose");
-    expect(route.echo!.closing).toContain("Anything held here can be small, private, or set down");
+    expect(byOption["person"]).toContain(
+      "No contact, disclosure, expanded trust or acceptance is required",
+    );
+    expect(byOption["god"]).toContain("No prayer, certainty or felt closeness is assumed");
+    expect(byOption["unclear"]).toContain("Nothing will be selected or interpreted for you");
+    expect(byOption["none"]).toContain("That limit is respected");
+    expect(route.echo!.closing).toBe(
+      "Receiving one thing never creates a debt, opens every boundary or requires receiving more.",
+    );
     expect(route.echo!.unanswered).toContain("nothing will be chosen on your behalf");
   });
 
-  it("keeps the practice screen branch-neutral for unanswered, unclear, none and private", () => {
-    const practice = [
-      day8.practise.heading,
-      day8.practise.intro,
-      day8.practise.either,
-      ...day8.practise.reflection.steps,
-      ...day8.practise.spiritual.steps,
-    ].join(" ");
-    expect(day8.practise.intro).toContain("whether or not a direction was selected");
-    expect(practice).toContain("one you are holding privately, or none in particular");
-    expect(practice).toContain("let the absence stay");
-    for (const phrase of [
-      "the direction you chose",
-      "Take the direction you chose",
-      "the direction you selected",
-    ]) {
-      expect(practice, phrase).not.toContain(phrase);
-    }
+  it("asks for an amount that may be none", () => {
+    expect(size.prompt).toBe("What amount, if any, feels safe enough to receive today?");
+    const labels = Object.fromEntries(size.options.map((o) => [o.id, o.label]));
+    expect(labels["tiny"]).toBe("Name or notice it only");
+    expect(labels["moderate"]).toBe(
+      "Accept one small offer or form of care, only if it is already safe",
+    );
+    expect(labels["none"]).toBe("No amount feels available today");
   });
 
-  it("offers equal-depth practices with either/both/neither and read-only consent", () => {
+  it("offers a Notice, Name, Stay, Receive practice with a safety check", () => {
+    const r = day8.practise.reflection;
+    expect(r.title).toBe("Reflection Practice — Notice, Name, Stay, Receive");
+    expect(r.summary).toContain("preserves choice and boundaries");
+    expect(r.steps.length).toBe(7);
+    const steps = r.steps.join(" ");
+    expect(steps).toContain("Care and boundaries can coexist");
+    expect(steps).toContain("Check safety:");
+    expect(steps).toContain("use the sentence, an impersonal source or read-only");
+    expect(steps).toContain("No breath or body focus is required");
+    expect(steps).toContain("No real contact is required");
+    expect(steps).toContain("not proof of healing or readiness");
+    expect(r.notRequired).toContain("Gentler route: Notice and Name only");
+    expect(r.notRequired).toContain("Read-only route");
     expect(day8.practise.either).toContain("Either, both, or neither");
     expect(day8.practise.either).toContain("Reading only is complete");
-    expect(day8.practise.either).toContain("stopping at any point is complete");
-    expect(day8.practise.reflection.steps.length).toBeGreaterThanOrEqual(6);
-    expect(day8.practise.spiritual.steps.length).toBeGreaterThanOrEqual(6);
-    const r = day8.practise.reflection;
-    expect(r.steps.join(" ")).toContain("what quality or meaning it holds for you now");
-    expect(r.steps.join(" ")).toContain("met in a new form");
-    expect(r.steps.join(" ")).toContain("holding an object, making one mark");
-    expect(r.steps.join(" ")).toContain("left uninterpreted here");
-    expect(r.steps.join(" ")).toContain("claims no change and no progress");
-    expect(r.notRequired).toContain("No contact, message, explanation, plan, visualisation");
   });
 
-  it("quotes Luke 24:15 in full WEB wording with a story-specific note", () => {
-    const scripture = day8.practise.spiritual.scripture!;
-    expect(scripture.reference).toBe("Luke 24:15 (World English Bible)");
-    expect(scripture.body).toBe(
-      "While they talked and questioned together, Jesus himself came near, and went with them.",
+  it("uses Zacchaeus for grace before performance without pressure to expose", () => {
+    const s = day8.practise.spiritual;
+    expect(s.title).toBe("Scripture & Spiritual Reflection — grace before performance");
+    expect(s.summary).toContain("welcome comes before public change");
+    expect(s.steps.length).toBe(6);
+    const steps = s.steps.join(" ");
+    expect(steps).toContain("before Zacchaeus proves change");
+    expect(steps).toContain("not an instruction to ‘come down,’");
+    expect(steps).toContain("without abandoning discernment");
+    expect(steps).toContain("Grace is not gullibility, obligation or the absence of accountability");
+    expect(s.scripture!.reference).toBe("Luke 19:5–6 (World English Bible)");
+    expect(s.scripture!.body).toBe(
+      "When Jesus came to the place, he looked up and saw him, and said to him, ‘Zacchaeus, hurry and come down, for today I must stay at your house.’ He hurried, came down, and received him joyfully.",
     );
-    expect(scripture.note).toContain(
-      "while the walkers are still talking and questioning",
-    );
-    expect(scripture.note).toContain("not a promise about what you must feel");
-    const spiritual = [
-      ...day8.practise.spiritual.steps,
-      day8.practise.spiritual.notRequired,
-      scripture.note,
-    ].join(" ");
-    expect(spiritual).not.toContain("reprimand");
-    expect(spiritual).toContain("Reading only is a complete way to do this");
-    expect(spiritual).toContain("silence can be the whole practice");
-    expect(spiritual).toContain("Doubt, anger, numbness, distance and spiritual struggle");
-    expect(day8.practise.spiritual.notRequired).toContain("you may leave this path entirely");
+    expect(s.scripture!.note).toContain("welcome precedes public change");
+    expect(s.scripture!.note).toContain("not a command to expose yourself");
+    expect(s.notRequired).toContain("you may leave this path entirely");
   });
 
-  it("keeps message and outside steps safe, optional and accessible", () => {
+  it("keeps the honest step optional, safe and never claiming contact", () => {
     const labels = Object.fromEntries(day8.step.options.map((o) => [o.id, o.label]));
-    expect(labels["message"]).toContain("safe enough");
-    expect(labels["message"]).toContain("sending it is optional");
-    expect(labels["outside"]).toMatch(/^Spend a moment/);
-    expect(labels["outside"]).toContain("window");
-    expect(labels["outside"]).toContain("memory");
-    expect(labels["outside"]).toContain("another point of contact within reach");
-    expect(labels["act"]).not.toContain("I identified");
-    expect(labels["rehearse"]).not.toMatch(/rehears/i);
-    expect(labels["none"]).toContain("will not force one");
+    expect(labels["act"]).toBe(
+      "Receive one small already-safe kindness, comfort or help—or offer myself one",
+    );
+    expect(labels["message"]).toContain("sending is optional");
+    expect(labels["outside"]).toContain("register briefly");
+    expect(labels["own"]).toContain("not tied to duty or performance");
+    expect(labels["rehearse"]).toContain("‘Not yet’");
+    expect(day8.step.options.find((o) => o.id === "message")!.note).toBe(
+      "Only where the offer is already safe enough. Sending nothing is complete.",
+    );
   });
 
   it("has no unconditional reflection openings and maps every option to a line", () => {
+    expect(day8.reflection.intro).toContain("It does not decide whether a person is safe");
+    expect(day8.reflection.sections.map((s) => s.id)).toEqual(["hearing", "care", "next"]);
+    expect(day8.reflection.sections.map((s) => s.from)).toEqual(["route", "size", "step"]);
+    expect(day8.reflection.sections[0]!.title).toBe("The source you considered");
+    expect(day8.reflection.sections[1]!.title).toBe("Your pace and amount");
     for (const section of day8.reflection.sections) {
       expect(section.opening, section.id).toBeUndefined();
       expect(section.unanswered.length, section.id).toBeGreaterThan(40);
@@ -1232,114 +1219,81 @@ describe("Day 8 revision", () => {
   it("invents nothing on the fully skipped reflection path", () => {
     const built = buildReflection(day8, undefined);
     const text = built.sections.flatMap((s) => s.paragraphs).join(" ");
-    expect(text).toContain("You left the thread unnamed");
+    expect(text).toContain("You left the source open");
     expect(text).toContain("You left the amount open");
     expect(text).toContain("You left the step open");
-    for (const phrase of [
-      "You chose",
-      "you learned",
-      "you moved",
-      "courage",
-      "progress",
-      "widen",
-    ]) {
+    for (const phrase of ["You chose", "you received", "progress", "courage"]) {
       expect(text.toLowerCase(), phrase).not.toContain(phrase.toLowerCase());
     }
   });
 
   it("reflects one exact answered positional path and excludes adjacent options", () => {
-    const answers = ["q.route.5", "q.size.2", "step.1"];
-    const text = buildReflection(day8, answers)
+    const text = buildReflection(day8, ["q.route.5", "q.size.2", "step.1"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain("You named one person who may be safe enough");
-    expect(text).toContain("One small outward action felt possible, if safe and realistic");
-    expect(text).toContain("drafting one brief message to someone safe enough");
-    expect(text).not.toContain("Creativity, beauty, learning or nature was selected");
-    expect(text).not.toContain("A community, culture, tradition or place of belonging was selected");
-    expect(text).not.toContain("A few private minutes, or one small moment, was selected");
-    expect(text).not.toContain("Keeping it inward — remembered");
-    expect(text).not.toContain("Making one small, safe space");
+    expect(text).toContain("You considered kindness or help from a person you judge safe enough");
+    expect(text).toContain("This app cannot assess that judgment");
+    expect(text).toContain("You considered one small acceptance of care, only if already safe");
+    expect(text).toContain("brief acceptance or thank-you for help already offered");
+    expect(text).not.toContain("You considered support from a community");
+    expect(text).not.toContain("naming or noticing only");
   });
 
-  it("keeps unclear, none and private paths accurate about local storage", () => {
+  it("keeps unclear, none and private paths free of pressure to receive", () => {
     const unclear = buildReflection(day8, ["q.route.9", "q.size.4", "step.5"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(unclear).toContain("Uncertainty is an honest place to be");
-    expect(unclear).toContain("Your pace can stay undecided");
-    expect(unclear).toContain("You can leave it undecided");
+    expect(unclear).toContain("No source felt clearly safe enough to name");
+    expect(unclear).toContain("Your pace remains undecided");
+    expect(unclear).toContain("Nothing will be chosen for you");
 
     const none = buildReflection(day8, ["q.route.10", "q.size.5", "step.6"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(none).toContain("That is not a failure");
-    expect(none).toContain("That limit is respected");
-    expect(none).toContain("That is a complete way to leave this day");
+    expect(none).toContain("That limit is respected without explanation or pressure");
+    expect(none).toContain("Nothing asks you to override that limit");
+    expect(none).toContain("That is a complete way to leave the question");
 
     const priv = buildReflection(day8, ["q.route.11", "q.size.6", "step.7"])
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(priv).toContain("You kept the direction private");
-    expect(priv).toContain("what matters remains yours");
-    expect(priv).toContain("You kept the amount private");
-    expect(priv).toContain("You kept the step private");
-    expect(priv).not.toContain("nothing was recorded");
+    expect(priv).toContain("You kept the possible source private");
+    expect(priv).toContain("You kept the possible amount private");
+    expect(priv).toContain("You kept the possible step private");
   });
 
-  it("closes truthfully and without claiming choice, action or progress", () => {
+  it("closes without claiming receiving, relief, prayer or change", () => {
     const close = [day8.close.heading, ...day8.close.body, day8.close.carryForward].join(" ");
-    expect(close).toContain("Reconnection is not going back, not returning to harm");
-    expect(close).toContain("proving progress");
-    expect(close).toContain("held inwardly, kept private, or left alone");
+    expect(day8.close.heading).toBe("Care without surrendering discernment");
+    expect(close).toContain("You did not have to trust, receive, contact or feel anything");
     expect(close).toContain("Day 9");
-    expect(close).toContain("practising a different response");
+    expect(close).toContain("privately rehearsing one response");
     expect(close).not.toContain("Tomorrow");
     expect(day8.close.carryForward).toBe(
-      "What matters can be met in a way that is small, safe, and mine to choose.",
+      "I can receive only what is safe, true and mine to choose.",
     );
-    expect(day8.reflection.closing).toContain(
-      "remain yours to know\u2014or not know",
+    expect(day8.reflection.closing).toBe(
+      "Receiving one safe amount does not require receiving more. A protective reflex can be noticed without being judged or overridden. Care, discernment, accountability and boundaries can remain together.",
     );
   });
 
-  it("removes inferential, outcome-promising, time-dependent and Day 9 overlap phrases", () => {
+  it("never claims a practice, receiving or feeling occurred, and adds no pressure", () => {
     const text = allText();
     for (const phrase of [
-      "Long difficulty tends to narrow life",
-      "Small and real beats large and imagined",
-      "Whatever you chose",
-      "You chose a direction and made it small enough",
+      "you received",
+      "you accepted",
+      "you let it land",
+      "you prayed",
+      "you felt",
+      "you reached out",
+      "you must",
+      "you should",
       "Tomorrow",
-      "postpone",
-      "most immediately felt",
-      "shuts down first",
-      "courage",
-      "restore",
-      "widen",
-      "changes the input",
-      "usually begins",
-      "not an excuse",
-      "still counts",
-      "right amount",
-      "right size",
-      "legitimate",
-      "not a lesser one",
-      "Decide when",
-      "first sentence",
-      "rehearse it instead",
-      "proof that you are good",
-      "for it to count as yours",
-      "medication",
-      "only you hold that information",
-      "right answer",
-      "Go to a window",
-      "not a lesser option",
-      "complete outcome",
-      "One thread, held as it is",
-      "This page can only reflect selections",
-      "Either counts as contact",
-      "estimated on your behalf",
+      "transformation",
+      "healed",
+      "proof of progress",
+      "owe",
+      "deserve to receive",
     ]) {
       expect(text.toLowerCase(), `unexpected phrase: ${phrase}`).not.toContain(
         phrase.toLowerCase(),
@@ -1352,6 +1306,7 @@ describe("Day 8 revision", () => {
     expect(day7.title).toBe("A More Compassionate Way to Hold It");
     expect(day7.motif).toBe("compassion");
     expect(day7.questions.map((q) => q.id)).toEqual(["tone", "need"]);
+    expect(day7.answerMeaningVersion).toBe("v1");
     expect(day7.close.carryForward).toBe(
       "I can face what is true without turning myself into the enemy.",
     );
@@ -1360,50 +1315,8 @@ describe("Day 8 revision", () => {
     expect(day9.title).toBe("Practise a Different Response");
     expect(day9.motif).toBe("practise");
     expect(day9.shape).toBe("standard");
-    expect(day9.arrive.lead).toBe(
-      "A different response can be tried privately before you decide whether it belongs in real life.",
-    );
+    expect(day9.answerMeaningVersion).toBe("v1");
     expect(day9.understand.heading).toBe("Rehearsal is a possibility, not a promise");
-  });
-  it("applies the final acceptance cleanup wording", () => {
-    expect(route.prompt).toContain("if anything");
-    expect(route.echo!.heading).toBe("Room for what is clear — and what is not");
-    expect(day8.step.prompt).toContain("if anything");
-    expect(day8.step.hint).toMatch(/^One choice if one fits/);
-
-    const echoes = route.echo!.byOption;
-    expect(echoes["body"]).not.toContain("medication");
-    expect(echoes["body"]).toContain("No sensation, movement, or improvement is expected");
-    expect(echoes["person"]).toContain("no contact is required");
-    expect(echoes["person"]).not.toContain("right answer");
-    expect(echoes["creativity"]).toContain(
-      "Contact may mean making something or simply noticing",
-    );
-    expect(echoes["creativity"]).not.toContain("counts as contact");
-
-    const note = day8.understand.info!.map((i) => i.explanation).join(" ");
-    expect(note).not.toContain("only you hold that information");
-    expect(note).toContain("This app cannot decide whether a particular person is safe");
-    expect(note).toContain("another route can be chosen instead");
-
-    const understand = day8.understand.body.join(" ");
-    expect(understand).toContain("a rule imposed on you, or a test you have to pass");
-    expect(understand).toContain("It can remain yours without that explanation");
-    expect(day8.arrive.body.join(" ")).toContain("one small moment of contact");
-
-    expect(day8.reflection.sections[0]!.title).toBe("A thread\u2014or an open question");
-    expect(day8.reflection.intro).toBe(
-      "This reflection stays close to what you chose\u2014or left open\u2014today: a thread that may matter, the amount of contact that felt available, and the freedom to leave either one open.",
-    );
-    expect(day8.close.heading).toBe("Held without force");
-
-    const skipped = buildReflection(day8, [])
-      .sections.flatMap((s) => s.paragraphs)
-      .join(" ");
-    expect(skipped).toContain("It can remain open without being chosen for you");
-    expect(skipped).toContain("Nothing here asks you to decide it");
-    expect(skipped).not.toContain("This page can only reflect selections");
-    expect(skipped).not.toContain("complete outcome");
   });
 });
 

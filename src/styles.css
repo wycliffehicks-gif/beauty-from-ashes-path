@@ -880,3 +880,142 @@
     justify-content: safe center;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   PASS A — deliberate semantic type ramp.
+
+   The body declaration alone was being overridden by per-element Tailwind size
+   utilities, so substantive copy rendered at 11.5–16px. These are intentional
+   semantic roles applied at the call site; no Tailwind utility is redefined.
+   All sizes are rem-relative, so browser zoom and user text resizing are
+   preserved.
+
+     .bfa-copy          therapeutic / narrative / instruction / question /
+                        option / practice / Scripture / personalized reflection /
+                        closing / agreement-statement copy  — 18px, 19px ≥640px
+     .bfa-copy-lead     the opening sentence of a screen                — 19/20px
+     .bfa-copy-support  supporting, explanatory, privacy, storage, safety — 16px
+     .bfa-copy-meta     eyebrows, progress and meta only                 — 14px
+     .bfa-h1 / .bfa-h2  mobile 32–40px / 24–28px headings
+   --------------------------------------------------------------------------- */
+
+@utility bfa-copy {
+  font-size: 1.125rem;
+  line-height: 1.65;
+}
+@media (min-width: 640px) {
+  .bfa-copy { font-size: 1.1875rem; }
+}
+
+@utility bfa-copy-lead {
+  font-size: 1.1875rem;
+  line-height: 1.6;
+}
+@media (min-width: 640px) {
+  .bfa-copy-lead { font-size: 1.25rem; }
+}
+
+@utility bfa-copy-support {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@utility bfa-copy-meta {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@utility bfa-h1 {
+  font-size: 2rem;
+  line-height: 1.16;
+}
+@media (min-width: 640px) {
+  .bfa-h1 { font-size: 2.5rem; }
+}
+
+@utility bfa-h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+@media (min-width: 640px) {
+  .bfa-h2 { font-size: 1.75rem; }
+}
+
+@utility bfa-h3 {
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+/* Eyebrows and the quiet progress line: never below 14px. */
+.eyebrow {
+  font-size: 0.875rem;
+}
+
+/* Control labels — about 17px, with roomier targets. */
+.btn-primary-journey,
+.btn-quiet {
+  font-size: 1.0625rem;
+  min-height: 52px;
+}
+.journey-chrome-btn {
+  min-height: 48px;
+  min-width: 48px;
+  font-size: 1.0625rem;
+}
+
+/* Choices carry substantive copy, so they follow the therapeutic minimum. */
+.bfa-journey-choice {
+  font-size: 1.125rem;
+  line-height: 1.55;
+  min-height: 60px;
+}
+.bfa-journey-choice-note {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Legal and information documents read at the therapeutic minimum too. */
+.legal-prose {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+/* Interactive boundaries must be perceivable: the champagne hairline is
+   decorative only, so real controls take the stronger control border
+   (#8E7A60 — about 3.9:1 on the card and page grounds). */
+.day-row,
+.btn-quiet {
+  border-color: var(--bfa-control-border);
+}
+.dark .day-row,
+.dark .btn-quiet {
+  border-color: var(--bfa-control-border);
+}
+
+/* Journey home day rows: "Day 1" … "Day 10" is visible, in digits. */
+.day-marker {
+  height: auto;
+  width: auto;
+  min-width: 3.6rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: var(--radius-lg);
+  grid-auto-flow: row;
+  gap: 0;
+  line-height: 1.1;
+  border-color: var(--bfa-control-border);
+}
+.day-marker-word {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.day-marker-num {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+}
+
+/* Comfortable clearance so the sticky dock never covers the last line. */
+.journey-main {
+  padding-bottom: calc(7.5rem + env(safe-area-inset-bottom));
+}

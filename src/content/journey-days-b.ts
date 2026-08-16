@@ -146,19 +146,20 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       either:
         "Choose either, both or neither. You may read without doing, stop at any point, or continue.",
       reflection: {
-        title: "Reflection Practice — what it costs and what keeps it in place",
+        title:
+          "Reflection Practice — recognize, respect, grieve and consider what would be needed instead",
         summary:
-          "A focused practice for acknowledging one possible cost, respecting what is still true, and noticing what kind of support or safer alternative may be needed.",
+          "A contained map of one possible cost, what remains useful or necessary, one loss that deserves acknowledgment, and what would have to be present before anything changed.",
         steps: [
-          "Orient outward first. Notice one neutral detail nearby, then bring to mind one possible cost or strain. If no clear cost came to mind, let that remain true. You may hold a general strain without linking it to this response, or simply keep reading.",
-          "Complete one sentence privately: 'One strain I notice is…' Keep it broad; no names, identifying details or proof are needed.",
-          "Complete a second sentence if it fits: 'What is also true is…' This may name a benefit, responsibility, limit, ongoing danger or difficult circumstance. 'I do not know' is a complete answer.",
-          "Ask three different questions: What is within my influence? What would require support, accommodation, resources, safer conditions or change around me? What is not safe or possible to change now?",
-          "If there is a loss here, you may acknowledge it once: 'I wish this had not cost me…' You do not need to intensify, relive or explain it.",
-          "If one small easing is safe and realistic, name it. If none is, naming that limit is the practice. Finish by returning your attention to one neutral detail nearby.",
+          "Orient outward to one neutral detail. Bring to mind one response, role or arrangement, or keep the exercise general.",
+          "Recognize: complete privately, ‘One strain or cost I notice is…’ No proof of cause is required.",
+          "Respect: add, ‘What this still does for me—or what makes it difficult to change—is…’ This may be safety, functioning, responsibility, belonging, limited capacity, current conditions or ‘I do not know.’",
+          "Grieve: if workable, say once, ‘I wish this had not cost me…’ Stop after one phrase. No history or emotional intensification is needed.",
+          "Consider replacement: ask, ‘If I ever relied on this even slightly less, what would need to be present instead?’ Possibilities include support, rest, safety, an accommodation, a boundary, practical resources, another response or changed conditions. ‘Nothing available now’ is valid.",
+          "Distinguish what is within your influence, what requires support or change around you, and what is not safe or possible now. Reorient outward.",
         ],
         notRequired:
-          "No confrontation, disclosure, decision, forgiveness, surrender of necessary safety or attempt to 'let go' is required. If the practice becomes too much, stop and reorient to the room or leave it here.",
+          "Gentler route: use only the cost and respect lines. Read-only route: read the four movements without applying them. No release, decision, disclosure, confrontation, forgiveness or change is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — rest without a slogan",

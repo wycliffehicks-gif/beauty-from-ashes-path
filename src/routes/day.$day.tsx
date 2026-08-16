@@ -905,7 +905,14 @@ export const SPIRITUAL_INVITATION_TEXT =
   "The Reflection Practice above is complete on its own. If you would like optional Christian Scripture and prayer alongside it, you can turn that on in Settings at any time.";
 export const SPIRITUAL_INVITATION_LINK_LABEL = "Open Settings";
 
-function PractiseScreen({ content }: { content: JourneyDayContent }) {
+function PractiseScreen({
+  content,
+  answers = [],
+}: {
+  content: JourneyDayContent;
+  /** Presentation answers only, used to resolve a routed practice. */
+  answers?: string[];
+}) {
   const [prefs, , prefsHydrated] = usePrefs();
   // The complete nonreligious practice is visible by default. The spiritual
   // path is never auto-opened.
@@ -917,6 +924,10 @@ function PractiseScreen({ content }: { content: JourneyDayContent }) {
   // complete on its own and always shown.
   const showSpiritual = prefsHydrated && prefs.showSpiritual;
   const showSpiritualInvitation = content.day === 1 && prefsHydrated && !prefs.showSpiritual;
+  // A routed day shows the practice its single choice selected; everything else
+  // falls back to the day's required paths. Pure read, no storage, no state.
+  const resolved = resolvePractice(content, answers);
+
 
   return (
     <div className="space-y-5">

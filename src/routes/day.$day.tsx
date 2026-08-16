@@ -502,6 +502,13 @@ function ScreenBody({
 
 /* ---------------------------------------------------------------- screens */
 
+/**
+ * Every Arrive screen states, in plain language, why the day exists. It is part
+ * of the existing Arrive screen: no new screen, no change to screen order or
+ * progress indices.
+ */
+export const ARRIVE_PURPOSE_HEADING = "Why this day matters";
+
 function ArriveScreen({ content }: { content: JourneyDayContent }) {
   return (
     <div className="space-y-5">

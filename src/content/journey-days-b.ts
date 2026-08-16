@@ -607,7 +607,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       body: [
         "Whether or not you named anything today, this question can remain: can what is true be held while some of the contempt, dismissal or pressure is left out?",
         "Compassion does not erase harm, consequence, grief, boundaries, limits or responsibility. It can mean accompanying yourself while you face what is yours, what is not, and what is still unclear.",
-        "Day 8 explores one small, safe reconnection with what matters, chosen by you.",
+        "Day 8 explores what can happen when already-safe kindness, help, compassion or grace comes near—and how to receive only an amount that preserves discernment and boundaries.",
       ],
       carryForward: "I can face what is true without turning myself into the enemy.",
     },

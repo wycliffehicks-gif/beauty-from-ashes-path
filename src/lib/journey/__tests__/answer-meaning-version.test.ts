@@ -155,6 +155,7 @@ describe("content stamps its answer meaning, and nothing else", () => {
       "arrive",
       "understand",
       "q.route",
+      "e.route",
       "practise",
       "q.size",
       "step",

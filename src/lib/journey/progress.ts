@@ -460,7 +460,7 @@ export function answersForDay(
   progress: JourneyProgress,
   day: JourneyDayContent,
 ): string[] {
-  return progress.answerSets[dayIdFor(day.day)]?.[day.answerMeaningVersion] ?? [];
+  return progress.answerSets?.[dayIdFor(day.day)]?.[day.answerMeaningVersion] ?? [];
 }
 
 /**
@@ -472,7 +472,7 @@ export function hasPendingAnswerMeaningRevision(
   progress: JourneyProgress,
   day: JourneyDayContent,
 ): boolean {
-  const sets = progress.answerSets[dayIdFor(day.day)];
+  const sets = progress.answerSets?.[dayIdFor(day.day)];
   if (!sets) return false;
   if (Object.prototype.hasOwnProperty.call(sets, day.answerMeaningVersion)) return false;
   return Object.entries(sets).some(
@@ -609,7 +609,7 @@ function currentAnswersForDayId(progress: JourneyProgress, dayId: string): strin
   const m = /^day-(\d{2,})$/.exec(dayId);
   const day = m ? getFirstJourneyDay(Number(m[1])) : undefined;
   if (day) return answersForDay(progress, day);
-  return progress.answers[dayId] ?? [];
+  return progress.answers?.[dayId] ?? [];
 }
 
 

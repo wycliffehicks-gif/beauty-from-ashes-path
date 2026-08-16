@@ -48,7 +48,7 @@ describe("canonical code never reads the legacy answers mirror", () => {
   it("keeps the legacy mirror readable only by store compatibility code", () => {
     const src = read("src/lib/journey/progress.ts");
     // Exactly one legacy read remains, inside the store's own fallback helper.
-    const reads = src.match(/progress\.answers\[dayId\]/g) ?? [];
+    const reads = src.match(/progress\.answers\?\.\[dayId\]/g) ?? [];
     expect(reads).toHaveLength(1);
   });
 

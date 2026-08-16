@@ -76,6 +76,30 @@ export interface PracticePath {
   };
 }
 
+/**
+ * Optional routed practice for a day whose substantive nonreligious practice
+ * follows the single rehearsal the person chose.
+ *
+ * A route is resolved ONLY when exactly one recognized option is selected on
+ * `from` AND that option has a mapping. Anything else — unanswered, unknown,
+ * multiple, or a deliberately open choice such as unclear / none / private —
+ * uses the day's required `practise.reflection` fallback. Routing never adds a
+ * screen, question, answer id, token or storage field.
+ */
+export interface RoutedPractice {
+  /** Question id whose single selection may select a practice path. */
+  from: string;
+  /** Option id → nonreligious practice path. */
+  reflectionByOption: Record<string, PracticePath>;
+  /**
+   * Option id → Christian path, for a day that needs one. Days with a single
+   * shared Christian path simply omit this and keep `practise.spiritual`.
+   */
+  spiritualByOption?: Record<string, PracticePath>;
+}
+
+
+
 export type ReflectionSectionId =
   | "hearing"
   | "underneath"

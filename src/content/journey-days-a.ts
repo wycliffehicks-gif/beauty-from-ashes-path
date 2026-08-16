@@ -12,6 +12,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Arriving honestly · about 10 minutes",
     arrive: {
+      purpose:
+        "Starting with one honest picture of the present can reduce the pressure to solve everything. Today helps you notice what needs attention, what you hope may become different, and what has already helped you keep going.",
       lead: "You do not have to be ready. You only have to be here.",
       body: [
         "This is the first day of a short journey. Nothing here is timed, scored or compared, and nothing you choose is seen by another person.",
@@ -243,6 +245,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "notice-first",
     descriptor: "Gentle attention · about 10 minutes",
     arrive: {
+      purpose:
+        "A body sensation, an emotion, a thought and pressure can feel like one blur, yet each may need a different response. Separating them can make your next step more accurate and kinder.",
       lead: "Before anything can change, it helps to know what is actually here.",
       body: [
         "Today is quieter than it sounds. You are not asked to produce a feeling, dig anything up, or reach a conclusion.",
@@ -475,6 +479,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Finding words · about 12 minutes",
     arrive: {
+      purpose:
+        "Naming one manageable part of an experience can make it less vague and easier to respond to. Naming is not diagnosis, and it does not fix what happened.",
       lead: "Naming something is not the same as fixing it, and it is not a diagnosis.",
       body: [
         "Today you are invited to give one ordinary word to something you have been carrying.",
@@ -775,6 +781,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Understanding one response · about 12 minutes",
     arrive: {
+      purpose:
+        "A familiar response may make more sense when you see what happens before it, what it tries to protect and what it affects now. Understanding is not excusing harm; it creates more room for choice.",
       lead:
         "A familiar response is not the whole of who you are. It may be something you learned to do when life became difficult.",
       body: [
@@ -1125,6 +1133,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     shape: "standard",
     descriptor: "Making room for mixed feelings · about 10 minutes",
     arrive: {
+      purpose:
+        "Wanting change and wanting safety can exist together. Hearing both sides can reduce self-attack and show what would make one next step more workable.",
       lead: "Wanting something to change and feeling cautious about it can both be true.",
       body: [
         "One pull may want honesty, rest, help, grief, a limit, reconnection, or some other movement.",

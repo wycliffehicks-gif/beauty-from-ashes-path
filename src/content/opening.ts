@@ -92,7 +92,5 @@ export const AGREEMENT_COPY = {
   adultLabel: "I confirm that I am 18 years of age or older.",
   termsLabel:
     "I have had the opportunity to review, and I agree to, the Terms of Use, Privacy Notice and Important Information.",
-  reviewNote:
-    "You are welcome to open these, and you are not required to read them to continue.",
   beginLabel: "Begin",
 } as const;

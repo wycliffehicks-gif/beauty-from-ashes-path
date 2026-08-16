@@ -461,7 +461,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What the distinction may offer",
           opening:
-            "Taken together, the body signal and the kind of load you selected are two separate pieces of information. One does not prove the cause of the other. Separating them may help you choose acknowledgment, practical care, rest, support, a limit, medical attention or no action.",
+            "A body signal and a kind of load are two separate pieces of information. One does not prove the cause of the other. When both are available, separating them may help you choose acknowledgment, practical care, rest, support, a limit, medical attention or no action.",
           unanswered:
             "No connection will be assumed. Sensation, emotion, thought and pressure can remain unclear or separate today.",
         },

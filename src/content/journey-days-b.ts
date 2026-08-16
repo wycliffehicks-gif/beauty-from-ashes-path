@@ -30,10 +30,9 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       label: "Listen",
       heading: "Something can help and cost you at the same time",
       body: [
-        "By cost, we mean present-day strain, loss or narrowing that may be connected with a way of coping, a role or a difficult arrangement—such as less energy, closeness, choice, rest, meaning or hope. Cost is not blame, and it is not always avoidable.",
-        "A response may help you function, reduce conflict, meet responsibilities or remain safer and may also add to the strain. What helped you get through before may not help in the same way now—but it may still be needed, or it may not be the main problem.",
-        "Sometimes the cost comes mainly from illness, disability, caregiving, discrimination, financial pressure, unsafe conditions, limited support or another reality you did not choose. Noticing does not create choices that are unavailable or make the situation your fault.",
-        "Nothing today asks you to confront anyone, end anything, forgive, surrender a necessary boundary or make a major decision.",
+        "A response, role or arrangement can help in one way and cost something in another. Cost means present strain or loss—less energy, closeness, choice, rest, meaning, dignity or hope. Cost is not blame, and it is not always avoidable.",
+        "Respecting what keeps something in place matters. It may support functioning, safety, belonging or responsibility, or reflect illness, disability, caregiving, discrimination, financial pressure, limited resources or a lack of safe alternatives.",
+        "Change does not happen safely through subtraction alone. If reliance on something were ever reduced, support, accommodation, safer conditions, another coping response or something life-giving may need to be present instead. Today asks only for an accurate map.",
       ],
       info: [
         {

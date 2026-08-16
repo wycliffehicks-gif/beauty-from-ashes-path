@@ -408,6 +408,7 @@ function ScreenBody({
   onBack,
   onNext,
   answers,
+  showSpiritualChoices,
   answersLoaded,
   revisionPending,
   focusSettled,
@@ -427,8 +428,12 @@ function ScreenBody({
   progress: { current: number; total: number };
   onBack?: () => void;
   onNext: () => void;
+  /** Presentation answers only. Raw storage stays in the parent. */
   answers: string[];
+  /** True only when preferences are hydrated AND spiritual content is on. */
+  showSpiritualChoices: boolean;
   answersLoaded: boolean;
+
   /** True while this day's earlier coded choices belong to an older meaning. */
   revisionPending: boolean;
   /** True once storage, resume and URL correction have settled. */

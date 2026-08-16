@@ -367,6 +367,8 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onNext={goNext}
       answers={presentation}
       showSpiritualChoices={showSpiritualChoices}
+      prefsHydrated={prefsHydrated}
+
 
       answersLoaded={answersLoaded}
       revisionPending={pendingRevision}

@@ -2003,34 +2003,32 @@ describe("Day 10 revision", () => {
       ...day10.understand.body,
       ...(day10.understand.info ?? []).flatMap((i) => [i.term, i.explanation]),
     ].join(" ");
-    expect(teach).toContain("By integration, we mean allowing pieces of experience");
-    expect(teach).toContain("not going back to an untouched earlier self");
-    expect(teach).toContain(
-      "does not mean carrying it alone, calling harm good, suppressing lament, pretending the ashes never existed",
+    expect(day10.understand.body).toHaveLength(3);
+    expect(day10.understand.body[0]).toBe(
+      "Integration means allowing pieces of experience to sit in a more workable relationship: named, grieved, supported, bounded, responded to where safe, or left open. It does not require a clear insight, feeling or result.",
+    );
+    expect(day10.understand.body[1]).toBe(
+      "New life here does not mean returning to an untouched earlier self or calling harm good. It may mean relating to the same story, loss, question or circumstance with more truth, care, support, boundaries, grief or room for hope.",
+    );
+    expect(day10.understand.body[2]).toBe(
+      "Some things may change; some may involve specific responsibility, support, accommodation, advocacy, resistance, mourning, safer conditions or time; some may remain unresolved. Illness, disability, caregiving, discrimination, financial pressure, differences in power, limited resources and other people\u2019s choices are not undone by an app. Carrying forward can also mean waiting or leaving the journey here.",
     );
     for (const constraint of [
-      "grief",
       "illness",
       "disability",
       "caregiving",
       "discrimination",
-      "unsafe conditions",
       "financial pressure",
       "power",
-      "relationships",
       "limited resources",
-      "limited support",
     ]) {
       expect(teach.toLowerCase(), `missing constraint: ${constraint}`).toContain(
         constraint.toLowerCase(),
       );
     }
-    expect(teach).toContain("It is not automatically a personal failure");
     expect(teach).toContain("The First Journey is complete here");
     const terms = (day10.understand.info ?? []).map((i) => i.term);
     expect(terms).toEqual([
-      "What does integration mean?",
-      "What does ‘carry it forward’ mean?",
       "What if nothing changed?",
       "What if I feel more unsettled?",
       "Do I have to continue after this?",
@@ -2089,34 +2087,65 @@ describe("Day 10 revision", () => {
       "Integration Practice — what to keep, what to leave open, and what may support you",
     );
     expect(spiritual.title).toBe(
-      "Scripture & Spiritual Reflection — blessing without forced closure",
+      "Scripture & Spiritual Reflection — companionship on an unfinished road",
     );
 
-    for (const path of [nonreligious, spiritual]) {
-      const text = [...path.steps, path.notRequired].join(" ").toLowerCase();
-      expect(text).toContain("unfinished");
-      expect(text).toContain("support");
-      expect(text).toContain("accommodation");
-      expect(text).toContain("advocacy");
-      expect(text).toContain("boundary");
-      expect(text).toContain("waiting");
-      expect(text).toContain("outward");
-      expect(text).toContain("reading");
-      expect(text).toContain("or any outcome");
+    const nonreligiousText = [...nonreligious.steps, nonreligious.notRequired]
+      .join(" ")
+      .toLowerCase();
+    for (const phrase of [
+      "unfinished",
+      "support",
+      "accommodation",
+      "advocacy",
+      "boundary",
+      "waiting",
+      "outward",
+      "reading",
+      "or any outcome",
+    ]) {
+      expect(nonreligiousText).toContain(phrase);
     }
     expect(nonreligious.steps[0]).toContain("No touch, posture change, breathing change");
-    expect(spiritual.scripture!.reference).toBe("Numbers 6:24–26 (World English Bible)");
+
+    // Day 10 Christian path: Emmaus companionship before recognition.
+    const spiritualText = [...spiritual.steps, spiritual.notRequired]
+      .join(" ")
+      .toLowerCase();
+    for (const phrase of [
+      "unfinished",
+      "support",
+      "accommodation",
+      "advocacy",
+      "boundary",
+      "waiting",
+      "outward",
+      "reading",
+    ]) {
+      expect(spiritualText).toContain(phrase);
+    }
+    expect(spiritual.summary).toBe(
+      "A Christian path from the road to Emmaus, where questioning and companionship are present before recognition or resolution.",
+    );
+    expect(spiritual.steps).toEqual([
+      "Orient outward in any accessible way. Reading only is available.",
+      "Read Luke 24:15 below only if you wish.",
+      "Notice that the walkers are still talking and questioning; the road is unfinished, and recognition or explanation has not yet arrived.",
+      "If useful, name one unfinished question, grief or responsibility privately or keep it general. No full story or conclusion is needed.",
+      "If prayer fits, you might pray: \u2018Jesus, meet what is unfinished with truth, care and wisdom. Give me wisdom about what is mine, what may need safe or practical support, and what can remain unfinished.\u2019 No response, answer or feeling is required.",
+      "If useful, consider practical care, support, accommodation, advocacy, a boundary, mourning, waiting or no action. Prayer does not replace practical care or planning.",
+      "Reorient outward. The verse may remain words on a page; no recognition, meaning, closure, peace or felt presence is required.",
+    ]);
+    expect(spiritual.notRequired).toBe(
+      "No prayer, profession of faith, certainty, disclosure, surrender of safety or boundaries, forgiveness, reconciliation, contact, action, spiritual experience, changed circumstances, recognition, meaning, relief, peace, closure or continuation is required. You may leave this path entirely.",
+    );
+    expect(spiritual.scripture!.reference).toBe("Luke 24:15 (World English Bible)");
     expect(spiritual.scripture!.body).toBe(
-      "Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace.",
+      "While they talked and questioned together, Jesus himself came near, and went with them.",
     );
     expect(spiritual.scripture!.note).toBe(
-      "This ancient priestly blessing from Israel’s Scriptures entrusts people to God’s keeping, grace, attentive presence, and shalom. It is not a forecast that pain, danger, illness, grief, or circumstances will change, and it should not silence lament or replace practical care.",
+      "This verse depicts Jesus joining two people amid their questions, before they recognise him or reach an explanation. It is not a promise of felt nearness, recognition, meaning, closure, peace or continuation.",
     );
-    expect(spiritual.scripture!.note).not.toContain("A blessing asks for");
-    expect(spiritual.steps.join(" ")).toContain(
-      "may be set aside without any spiritual judgment",
-    );
-    expect(spiritual.notRequired).toContain("receiving the blessing");
   });
 
   it("keeps the reflection answer-driven with complete line coverage", () => {
@@ -2186,7 +2215,7 @@ describe("Day 10 revision", () => {
       .join(" ");
     expect(text).toContain("truth and responsibility do not require self-attack");
     expect(text).toContain("You named grief, loss, or mourning");
-    expect(text).toContain("You chose one day or practice you may return to");
+    expect(text).toContain("You considered returning to one day or practice.");
     expect(text).not.toContain("a small or preparatory response");
     expect(text).not.toContain("something relational that remains unresolved");
     expect(text).not.toContain("one fair sentence");

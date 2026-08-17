@@ -41,7 +41,7 @@ import { LEGAL_BUNDLE_VERSION } from "@/lib/prefs";
 
 describe("legal bundle version", () => {
   it("is the current dated bundle, so earlier acceptances are asked again", () => {
-    expect(LEGAL_BUNDLE_VERSION).toBe("2026-08-02.2");
+    expect(LEGAL_BUNDLE_VERSION).toBe("2026-08-16.1");
     expect(
       hasCurrentAcceptance({
         onboarded: true,
@@ -51,7 +51,7 @@ describe("legal bundle version", () => {
     expect(
       hasCurrentAcceptance({
         onboarded: true,
-        legalAcceptance: { version: LEGAL_BUNDLE_VERSION, acceptedAt: "2026-08-02.2" },
+        legalAcceptance: { version: LEGAL_BUNDLE_VERSION, acceptedAt: "2026-08-16.1" },
       }),
     ).toBe(true);
   });

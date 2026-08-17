@@ -1543,26 +1543,27 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Not required: writing, saving, disclosure, contact, conversation, reconciliation, forgiveness, action, a schedule, a commitment, a daily practice, insight, emotional release, hope, relief, progress, or any outcome. If distress grows, you may stop, reorient outward, or seek support.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — blessing without forced closure",
+        title: "Scripture & Spiritual Reflection — companionship on an unfinished road",
         summary:
-          "A Christian integration practice that leaves blessing, lament, practical care and unfinishedness in the same room.",
+          "A Christian path from the road to Emmaus, where questioning and companionship are present before recognition or resolution.",
         steps: [
-          "Let your attention rest outward for a moment in whatever way is accessible to you. Reading only is available here too.",
-          "Read the blessing below if you would like to. It may feel comforting, distant, difficult, neutral, or unwelcome, and it may be set aside without any spiritual judgment.",
-          "If you wish, bring before God one idea worth keeping, your uncertainty, or nothing in particular. You may also keep everything private.",
-          "If you would like to, name one unfinished place. It may involve grief, responsibility, unsafe conditions, injustice, illness, lack of support, or something outside your influence. No reason for it needs to be assigned.",
-          "Without forcing an answer, consider whether anything calls for action, support, accommodation, advocacy, a boundary, mourning, waiting, time, or no step at all. Prayer is not a substitute for practical care.",
-          "If prayer fits, you might pray: “God of grace, hold what I cannot finish. Give me wisdom for what is mine, support for what I cannot carry alone, and freedom to leave the rest unfinished.”",
-          "The blessing may remain as words on a page rather than something felt or received. Then let your attention return outward. No relief, peace, clarity, or sense of God's presence is required.",
+          "Orient outward in any accessible way. Reading only is available.",
+          "Read Luke 24:15 below only if you wish.",
+          "Notice that the walkers are still talking and questioning; the road is unfinished, and recognition or explanation has not yet arrived.",
+          "If useful, name one unfinished question, grief or responsibility privately or keep it general. No full story or conclusion is needed.",
+          "If prayer fits, you might pray: ‘Jesus, meet what is unfinished with truth, care and wisdom. Give me wisdom about what is mine, what may need safe or practical support, and what can remain unfinished.’ No response, answer or feeling is required.",
+          "If useful, consider practical care, support, accommodation, advocacy, a boundary, mourning, waiting or no action. Prayer does not replace practical care or planning.",
+          "Reorient outward. The verse may remain words on a page; no recognition, meaning, closure, peace or felt presence is required.",
         ],
         notRequired:
-          "Not required: prayer, a profession of faith, certainty, receiving the blessing, surrendering safety or boundaries, forgiveness, reconciliation, disclosure, contact, action, spiritual experience, changed circumstances, relief, peace, closure, or any outcome.",
+          "No prayer, profession of faith, certainty, disclosure, surrender of safety or boundaries, forgiveness, reconciliation, contact, action, spiritual experience, changed circumstances, recognition, meaning, relief, peace, closure or continuation is required. You may leave this path entirely.",
         scripture: {
-          reference: "Numbers 6:24–26 (World English Bible)",
-          body: "Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace.",
-          note: "This ancient priestly blessing from Israel’s Scriptures entrusts people to God’s keeping, grace, attentive presence, and shalom. It is not a forecast that pain, danger, illness, grief, or circumstances will change, and it should not silence lament or replace practical care.",
+          reference: "Luke 24:15 (World English Bible)",
+          body: "While they talked and questioned together, Jesus himself came near, and went with them.",
+          note: "This verse depicts Jesus joining two people amid their questions, before they recognise him or reach an explanation. It is not a promise of felt nearness, recognition, meaning, closure, peace or continuation.",
         },
       },
+
     },
     step: {
       id: "step",

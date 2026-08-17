@@ -84,6 +84,20 @@ function PilotFeedbackPage() {
       </div>
 
       <div className="surface-card space-y-2">
+        <h2 className="bfa-h3 font-serif text-foreground">One question about value</h2>
+        <p className="bfa-copy-support text-foreground">
+          If you reach the end of the ten days, it would help to know two things: whether this felt
+          worth paying for, and roughly what amount would have felt fair — including “nothing”.
+        </p>
+        <p className="bfa-copy-support text-muted-foreground">
+          There is nothing to buy in this private version, and answering has no effect on your
+          access. It only helps decide whether the first four days should stay free later, and what
+          a fair one-time price for the rest would be. Please do not include payment details of any
+          kind.
+        </p>
+      </div>
+
+      <div className="surface-card space-y-2">
         <h2 className="bfa-h3 font-serif text-foreground">Response expectations</h2>
         <p className="bfa-copy-support text-muted-foreground">
           This is not a continuously monitored channel. If your feedback is sent through the Resurgence

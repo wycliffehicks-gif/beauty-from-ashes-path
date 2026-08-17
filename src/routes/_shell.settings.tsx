@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { usePrefs, resetAll } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
+import { clearEntitlement } from "@/lib/journey/entitlement";
+import { clearReminder, useReminder } from "@/lib/journey/reminder";
 import { useStorageStatus } from "@/lib/storage-status";
 import {
   ABOUT_BEAUTY_FROM_ASHES,
@@ -147,6 +149,9 @@ function SettingsPage() {
         </section>
       )}
 
+      <ReminderSection />
+
+
       {/* Privacy & Confidentiality — a short plain-language summary only. The
           complete detail stays on the Privacy Notice page. */}
       <section
@@ -241,6 +246,8 @@ function SettingsPage() {
                 data-testid="clear-journey-confirmed"
                 onClick={() => {
                   clearJourney();
+                  clearEntitlement();
+                  clearReminder();
                   resetAll();
                   navigate({ to: "/onboarding", replace: true });
                 }}
@@ -255,6 +262,86 @@ function SettingsPage() {
     </section>
   );
 }
+
+/**
+ * Opt-in gentle return. Off unless chosen, cancellable in one tap, and no
+ * streaks, counts or comparisons. The reminder is local to this device and only
+ * while the app is open — there is no server, no account and no tracking.
+ */
+function ReminderSection() {
+  const { settings, hydrated, support, enable, disable, setTime } = useReminder();
+  const [busy, setBusy] = useState(false);
+  const [refused, setRefused] = useState(false);
+
+  if (!hydrated || support === "unsupported") return null;
+
+  return (
+    <section data-testid="settings-reminder" className="rounded-xl border border-border bg-card p-5">
+      <h2 className="bfa-h2 font-serif text-foreground">A gentle reminder</h2>
+      <p className="bfa-copy-support mt-1 text-muted-foreground">
+        If it would help, this device can offer one quiet reminder at a time you choose. It is off
+        unless you turn it on, there is no streak or count, and missing it means nothing.
+      </p>
+
+      <div className="mt-4 space-y-3">
+        <div className="flex items-center gap-3">
+          <label htmlFor="reminder-time" className="bfa-copy text-foreground">
+            Time of day
+          </label>
+          <input
+            id="reminder-time"
+            data-testid="reminder-time"
+            type="time"
+            value={settings.time}
+            onChange={(e) => setTime(e.target.value)}
+            className="bfa-copy min-h-[44px] rounded-lg border border-border bg-background px-3 text-foreground"
+          />
+        </div>
+
+        {settings.enabled ? (
+          <button
+            type="button"
+            data-testid="reminder-disable"
+            onClick={() => disable()}
+            className="btn-quiet"
+          >
+            Turn the reminder off
+          </button>
+        ) : (
+          <button
+            type="button"
+            data-testid="reminder-enable"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              const ok = await enable(settings.time);
+              setRefused(!ok);
+              setBusy(false);
+            }}
+            className="btn-quiet"
+          >
+            Turn the reminder on
+          </button>
+        )}
+
+        {settings.enabled && (
+          <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-on-note">
+            The reminder is on for this device. It arrives only while this app is open in the
+            browser or installed on your home screen.
+          </p>
+        )}
+
+        {(refused || support === "denied") && (
+          <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-denied-note">
+            This browser is not allowing reminders right now. That is fine — you can open the app
+            whenever you like instead.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
 
 function SettingsLink({ to, title }: { to: string; title: string }) {
   return (

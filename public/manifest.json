@@ -1,0 +1,20 @@
+{
+  "name": "Beauty from Ashes: The First Journey",
+  "short_name": "Beauty from Ashes",
+  "description": "A gentle daily companion for walking toward hope.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F2EA",
+  "theme_color": "#F6F2EA",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en-CA",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

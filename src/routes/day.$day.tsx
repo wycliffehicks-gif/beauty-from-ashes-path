@@ -167,6 +167,11 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
    * screen and the stored reached/completed/locator values are left untouched.
    */
   const [pendingRevision, setPendingRevision] = useState(false);
+  /**
+   * The normalized progress already read for this day, kept in component memory
+   * so the optional Day 10 gathering needs no second storage read and no write.
+   */
+  const [progress, setProgress] = useState<JourneyProgress | null>(null);
   /** Proof of real movement: stored high-water screen plus this visit's own. */
   const [reached, setReached] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -222,6 +227,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     restoredForRef.current = dayId;
 
     const progress = readProgress();
+    setProgress(progress);
     setDayAnswers(answersForDay(progress, content));
     setPendingRevision(hasPendingAnswerMeaningRevision(progress, content));
     setReached(progress.reached[dayId] ?? 0);
@@ -569,6 +575,9 @@ function ScreenBody({
           onReady={onReflectionReady}
           savedReflection={savedReflection}
           onSaved={onReflectionSaved}
+          progress={progress}
+          prefsHydrated={prefsHydrated}
+          showSpiritual={showSpiritualChoices}
         />,
 
         {

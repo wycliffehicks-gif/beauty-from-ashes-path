@@ -1374,20 +1374,17 @@ function ReflectionScreen({
       >
         A reflection drawn from today
       </h1>
-      {/* When a saved response is restored, its own opening words are shown, not
-          the current day's generic intro. While preparing, the neutral current
-          intro stands in and nothing is claimed to be exact. */}
-      <p className="bfa-copy text-foreground">
-        {built ? built.intro : content.reflection.intro}
-      </p>
+      {/* The reflection is synchronous and on-device, so its own opening words —
+          restored or freshly built — are the only ones ever shown. No generic
+          stand-in copy appears and nothing is swapped after paint. */}
+      {built ? (
+        <p className="bfa-copy text-foreground">{built.intro}</p>
+      ) : null}
       <DayMotif motif={content.motif} treatment="quiet" />
 
 
-      {!built ? (
-        <p role="status" aria-live="polite" className="bfa-copy text-muted-foreground">
-          Preparing your reflection…
-        </p>
-      ) : (
+      {built ? (
+
         <div className="space-y-4">
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">

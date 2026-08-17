@@ -72,17 +72,43 @@ function JourneyHome() {
             This is a completion, not an arrival
           </h2>
           <p className="bfa-copy-support mt-2 text-muted-foreground">
-            You are welcome to revisit any day, try a practice, or save your reflections to keep
-            them somewhere safe.
+            You are welcome to revisit any day, name what has shifted, try a practice, or save your
+            reflections to keep them somewhere safe.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <Link to="/practices" className="btn-primary-journey flex-1">
+            <Link to="/shifted" className="btn-primary-journey flex-1" data-testid="shifted-link">
+              What has shifted
+            </Link>
+            <Link to="/practices" className="btn-quiet flex-1">
               Try a practice now
             </Link>
+          </div>
+          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <ExportButton progress={progress} />
+            <button
+              type="button"
+              data-testid="export-printable"
+              onClick={() => openPrintableExport(progress)}
+              className="btn-quiet flex-1"
+            >
+              Printable version
+            </button>
           </div>
         </div>
       )}
+
+      {/* One-tap way into a short practice, for days when a whole day is too
+          much. It is not a substitute for a day and does not record anything. */}
+      <div data-testid="quick-practice-card" className="rounded-xl border border-border bg-card p-5">
+        <h2 className="bfa-h3 font-serif text-foreground">If today feels like too much</h2>
+        <p className="bfa-copy-support mt-1 text-muted-foreground">
+          A short practice is here instead — two to five minutes, nothing recorded.
+        </p>
+        <Link to="/practices" className="btn-quiet mt-3 inline-flex" data-testid="quick-practice-link">
+          Take a short practice
+        </Link>
+      </div>
+
 
       {resume && resumeDay && !allComplete && (
         <div

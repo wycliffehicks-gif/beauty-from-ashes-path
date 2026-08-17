@@ -114,10 +114,17 @@ function DayFlow() {
   const { day } = Route.useParams();
   const dayNum = Number(day);
   const content = getFirstJourneyDay(dayNum);
+  // Access is read after hydration only, so the server render and the first
+  // client render agree and no boundary or day content can flash.
+  const { entitlement, hydrated: accessHydrated } = useEntitlement();
 
   if (!content) return <DayNotHere />;
+  if (accessHydrated && !isDayUnlocked(content.day, entitlement)) {
+    return <ContinueJourneyBoundary day={content.day} />;
+  }
   return <DayFlowFor key={content.day} content={content} />;
 }
+
 
 function DayNotHere() {
   return (

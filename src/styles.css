@@ -778,6 +778,48 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Per-day motif variation: thread position, continuity and temperature.
+   The three geometry-derived values are set as CSS custom properties on each
+   motif wrapper; these rules give them a subtle but visible visual effect.
+   --------------------------------------------------------------------------- */
+
+.bfa-day-motif {
+  /* The whole motif shifts horizontally so the gold thread reads as a different
+     kind of seam each day. The shift is small (±16px) so fields stay within
+     the frame and text remains untouched. */
+  transform: translateX(calc((var(--bfa-motif-thread-position, 0.5) - 0.5) * 32px));
+  transition: transform 200ms ease;
+}
+
+.bfa-day-motif path[stroke="var(--bfa-gold-line)"],
+.bfa-day-motif path[stroke="var(--bfa-champagne-line)"],
+.bfa-day-motif path[stroke="var(--bfa-ash-line)"] {
+  /* CSS custom properties applied to an SVG path only work when the value is
+     referenced; the stroke colours are fixed in the component, so this rule is
+     a fallback for future CSS-driven tints. */
+  transition: opacity 200ms ease;
+}
+
+/* The secondary gold trace takes its opacity from the day's continuity. */
+.bfa-day-motif-arrival path:nth-of-type(6) {
+  opacity: var(--bfa-motif-thread-continuity, 0.4);
+}
+
+/* The principal gold stroke is a little warmer where temperature is high. */
+.bfa-day-motif-arrival path:nth-of-type(5),
+.bfa-day-motif-closing path:nth-of-type(4),
+.bfa-day-motif-quiet path:nth-of-type(2) {
+  opacity: calc(0.55 + var(--bfa-motif-temperature, 0.8) * 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfa-day-motif {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Permanent journey choice treatment (promoted from the approved prototype).
    --------------------------------------------------------------------------- */
 

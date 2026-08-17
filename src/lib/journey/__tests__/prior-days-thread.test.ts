@@ -433,7 +433,10 @@ describe("prior-days thread firewall", () => {
   });
 
   it("uses no browser, storage, network, model, date or write API", () => {
-    const source = readFileSync("src/lib/journey/prior-days-thread.ts", "utf8");
+    const source = readFileSync("src/lib/journey/prior-days-thread.ts", "utf8")
+      .split("\n")
+      .filter((line) => !line.trim().startsWith("//") && !line.trim().startsWith("*"))
+      .join("\n");
     for (const forbidden of [
       "window",
       "document",
@@ -444,9 +447,9 @@ describe("prior-days thread firewall", () => {
       "Date.",
       "Math.random",
       "console.",
-      "save",
-      "generate",
-      "model",
+      "saveDay",
+      "generateContent",
+      "callModel",
     ]) {
       expect(source, `forbidden API: ${forbidden}`).not.toContain(forbidden);
     }

@@ -31,8 +31,11 @@ export interface Prefs {
  * note: final wording pending Ontario lawyer review before public launch.
  * Bumped to 2026-08-02.2 because Important Information changed materially
  * (crisis actions and overwhelmed-state guidance).
+ * Bumped to 2026-08-16.1 because the Privacy Policy gained the optional Day 10
+ * earlier-choices section; the wording change and this bump land together, so a
+ * previously recorded agreement is asked for again exactly once.
  */
-export const LEGAL_BUNDLE_VERSION = "2026-08-02.2";
+export const LEGAL_BUNDLE_VERSION = "2026-08-16.1";
 
 /**
  * Spiritual reflection is opt-in: the opening says it is offered only if the

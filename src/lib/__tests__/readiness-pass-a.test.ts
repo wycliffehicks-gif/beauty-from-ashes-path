@@ -264,31 +264,49 @@ describe("legal acceptance timestamps must be canonical", () => {
 
 
 describe("unfinished legacy surfaces redirect instead of holding content", () => {
-  it("sends /resources and /practice/$id to Your Journey", async () => {
-    for (const mod of [
-      "@/routes/_shell.resources",
-      "@/routes/practice.$id",
-    ]) {
-      const loaded = (await import(mod)) as {
-        Route: { options: { beforeLoad?: () => void; component?: () => unknown } };
-      };
-      const beforeLoad = loaded.Route.options.beforeLoad as undefined | (() => void);
-      expect(typeof beforeLoad).toBe("function");
-      let thrown: unknown;
-      try {
-        beforeLoad!();
-      } catch (err) {
-        thrown = err;
-      }
-      const redirectOptions = (thrown as { options?: { to?: string; replace?: boolean } })
-        ?.options;
-      expect(redirectOptions).toBeTruthy();
-      expect(redirectOptions!.to).toBe("/");
-      expect(redirectOptions!.replace).toBe(true);
-      // Nothing renders even if the redirect were somehow bypassed.
-      expect(loaded.Route.options.component?.()).toBeNull();
+  it("sends /resources to Your Journey", async () => {
+    const loaded = (await import("@/routes/_shell.resources")) as {
+      Route: { options: { beforeLoad?: () => void; component?: () => unknown } };
+    };
+    const beforeLoad = loaded.Route.options.beforeLoad as undefined | (() => void);
+    expect(typeof beforeLoad).toBe("function");
+    let thrown: unknown;
+    try {
+      beforeLoad!();
+    } catch (err) {
+      thrown = err;
     }
+    const redirectOptions = (thrown as { options?: { to?: string; replace?: boolean } })
+      ?.options;
+    expect(redirectOptions).toBeTruthy();
+    expect(redirectOptions!.to).toBe("/");
+    expect(redirectOptions!.replace).toBe(true);
+    // Nothing renders even if the redirect were somehow bypassed.
+    expect(loaded.Route.options.component?.()).toBeNull();
   });
+
+  it("sends only an unknown practice slug to Your Journey", async () => {
+    const loaded = (await import("@/routes/practice.$id")) as {
+      Route: {
+        options: { beforeLoad?: (ctx: { params: { id: string } }) => void };
+      };
+    };
+    const beforeLoad = loaded.Route.options.beforeLoad!;
+    let thrown: unknown;
+    try {
+      beforeLoad({ params: { id: "no-such-practice" } });
+    } catch (err) {
+      thrown = err;
+    }
+    const redirectOptions = (thrown as { options?: { to?: string; replace?: boolean } })
+      ?.options;
+    expect(redirectOptions).toBeTruthy();
+    expect(redirectOptions!.to).toBe("/");
+    expect(redirectOptions!.replace).toBe(true);
+    // A registered practice is allowed through.
+    expect(() => beforeLoad({ params: { id: "lament" } })).not.toThrow();
+  });
+
 
   it("exposes /practices as a real, bounded listing page", async () => {
     const { Route } = (await import("@/routes/_shell.practices")) as {

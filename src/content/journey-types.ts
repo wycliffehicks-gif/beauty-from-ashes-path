@@ -229,7 +229,13 @@ export interface JourneyDayContent {
     intro: string;
     sections: ReflectionSection[];
     closing: string;
+    /**
+     * Optional, Day-10-only: a hidden-by-default gathering of earlier coded
+     * choices. Ephemeral; never saved, fingerprinted or sent anywhere.
+     */
+    priorDaysThread?: PriorDaysThreadDefinition;
   };
+
   close: {
     heading: string;
     body: string[];

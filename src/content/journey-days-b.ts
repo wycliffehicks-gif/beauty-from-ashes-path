@@ -1683,19 +1683,20 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             support:
-              "You identified one possible kind of support, accommodation, advocacy, or practical care. Considering it does not require contact, and availability remains a real question.",
+              "You considered identifying one kind of support, accommodation, advocacy or practical care. No kind of support, contact or availability is being attributed to you.",
             conversation:
-              "You chose the possibility of preparing one sentence you might share. Nothing has to be sent or said, and this reflection cannot decide whether sharing would be safe.",
+              "You considered preparing one sentence you might share. Nothing is assumed to have been prepared, sent or said, and this reflection cannot decide whether sharing would be safe.",
             limit:
-              "You chose the possibility of naming one limit or condition. No action is required, and safety and availability remain open.",
+              "You considered naming one limit or condition. No limit, action, safety or availability is being attributed to you.",
             rest:
-              "You identified one realistic form of rest or reduced demand, if available. Whether it happens does not decide the worth of the need.",
+              "You considered one realistic form of rest or reduced demand, if available. No rest or availability is being assumed.",
             kind:
-              "You chose to keep one fair sentence available for a difficult moment, without turning it into a promise or habit.",
+              "You considered keeping one fair sentence available for a difficult moment. No sentence, practice or future use is being attributed to you.",
             revisit:
-              "You chose one day or practice you may return to. It remains available without being scheduled or owed.",
+              "You considered returning to one day or practice. Nothing is assumed to have been chosen, scheduled or owed.",
             prepare:
-              "You chose to let the journey end here with nothing outward required. That is a complete way to leave.",
+              "You considered letting the journey end here with nothing outward required. No action or feeling is being attributed.",
+
             unavailable:
               "A step may matter, but none feels safe or available now. That limit is respected; you are not being asked to override it.",
             unclear:

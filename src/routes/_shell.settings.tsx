@@ -149,6 +149,9 @@ function SettingsPage() {
         </section>
       )}
 
+      <ReminderSection />
+
+
       {/* Privacy & Confidentiality — a short plain-language summary only. The
           complete detail stays on the Privacy Notice page. */}
       <section
@@ -243,6 +246,8 @@ function SettingsPage() {
                 data-testid="clear-journey-confirmed"
                 onClick={() => {
                   clearJourney();
+                  clearEntitlement();
+                  clearReminder();
                   resetAll();
                   navigate({ to: "/onboarding", replace: true });
                 }}

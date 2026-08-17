@@ -419,6 +419,48 @@ describe("prior-days thread firewall", () => {
     }
   });
 
+  it("leaves no older-version trace for a spiritual-capable source while off or unhydrated", () => {
+    const godIndex = dayOf(8)
+      .questions.find((q) => q.id === "route")!
+      .options.findIndex((o) => o.id === "god");
+
+    for (const token of [stable(8, "route", "god"), positional(8, "route", godIndex)]) {
+      const older: JourneyProgress = {
+        ...emptyProgress,
+        answerSets: { [dayIdFor(8)]: { v1: [token] } },
+      };
+      for (const opts of [OFF, UNHYDRATED]) {
+        const view = build(older, opts);
+        const text = view.groups.map((g) => g.paragraph).join(" ");
+        expect(text).not.toContain("a possible source of already-safe care");
+        expect(text).not.toContain("older wording");
+        expect(text).not.toContain("could not be summarized safely");
+        expect(view.groups).toEqual([]);
+        expect(view.empty).toBe(thread.empty);
+      }
+      // Hydrated and on, only the neutral source-scoped notice may appear.
+      const onText = paragraphs(older, ON);
+      expect(onText).toContain(
+        "a possible source of already-safe care: earlier choices used older wording and are not summarized here",
+      );
+      expect(onText).not.toContain(labelOf(8, "route", "god"));
+    }
+  });
+
+  it("conservatively suppresses an older nonspiritual token on the same spiritual-capable source", () => {
+    const older: JourneyProgress = {
+      ...emptyProgress,
+      answerSets: { [dayIdFor(8)]: { v1: [stable(8, "route", "self")] } },
+    };
+    for (const opts of [OFF, UNHYDRATED]) {
+      const view = build(older, opts);
+      expect(view.groups).toEqual([]);
+      expect(view.empty).toBe(thread.empty);
+    }
+    expect(paragraphs(older, ON)).toContain("earlier choices used older wording");
+  });
+
+
   it("is deterministic and mutates nothing", () => {
     const progress = progressWith([
       { day: 1, tokens: [stable(1, "brought", "stuck")] },

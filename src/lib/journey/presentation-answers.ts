@@ -50,8 +50,13 @@ function decodeToken(
     return options.some((o) => o.id === candidate) ? candidate : undefined;
   }
   if (token.startsWith(`${stepKey}.`)) {
-    const n = Number(token.slice(stepKey.length + 1));
-    if (Number.isInteger(n) && n >= 0 && n < options.length) return options[n]!.id;
+    const suffix = token.slice(stepKey.length + 1);
+    // Only the canonical non-negative decimal form is a legacy position; any
+    // other suffix stays unknown and is therefore never reclassified as a
+    // spiritualOnly token.
+    if (!/^(0|[1-9]\d*)$/.test(suffix)) return undefined;
+    const n = Number(suffix);
+    if (n < options.length) return options[n]!.id;
   }
   return undefined;
 }

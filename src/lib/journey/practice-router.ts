@@ -43,8 +43,13 @@ function decodeOwnedToken(
     const candidate = token.slice(stepKey.length + 1);
     return options.some((o) => o.id === candidate) ? candidate : null;
   }
-  const n = Number(token.slice(stepKey.length + 1));
-  if (Number.isInteger(n) && n >= 0 && n < options.length) return options[n]!.id;
+  const suffix = token.slice(stepKey.length + 1);
+  // A supported legacy positional suffix must match the canonical non-negative
+  // decimal form exactly. Bare dots, signs, leading zeros, exponents, decimals,
+  // whitespace and NaN/Infinity text are never converted, so they stay unknown.
+  if (!/^(0|[1-9]\d*)$/.test(suffix)) return null;
+  const n = Number(suffix);
+  if (n < options.length) return options[n]!.id;
   return null;
 }
 

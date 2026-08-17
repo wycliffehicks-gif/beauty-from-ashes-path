@@ -80,7 +80,7 @@ function SettingsPage() {
             }`}
           >
             <span
-              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-background shadow transition-all ${
+              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-background shadow ${
                 prefs.showSpiritual ? "left-7" : "left-1"
               }`}
             />

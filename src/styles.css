@@ -1361,3 +1361,24 @@
 .bfa-safe-center {
   padding-block-end: clamp(0rem, 7vh, 4.5rem);
 }
+
+/* --- Reflow guard: very large text / 200% zoom ---------------------------
+   These queries use root-relative widths, so they engage only when the text
+   size is scaled up (WCAG 2.2 1.4.10 reflow), never at default sizes. */
+@media (max-width: 22rem) {
+  .day-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.75rem;
+  }
+  .day-row-chevron {
+    display: none;
+  }
+  .day-row-state {
+    white-space: normal;
+    max-width: 100%;
+  }
+  .bfa-visual-home-hero {
+    margin-inline: -0.5rem;
+    padding-inline: 0.5rem;
+  }
+}

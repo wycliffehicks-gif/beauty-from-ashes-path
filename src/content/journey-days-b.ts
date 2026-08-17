@@ -1354,24 +1354,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       label: "Listen",
       heading: "A journey can be complete while healing remains unfinished",
       body: [
-        "By integration, we mean allowing pieces of experience to sit in a more workable relationship with each other. That may involve remembering, grieving, reinterpreting, practising, seeking support, setting limits, receiving accommodation, resisting harm or injustice, or leaving a question open. It does not have to produce a clear feeling or result.",
-        "New life, in this series, is not going back to an untouched earlier self. It may mean relating to the same story, wounds, losses, questions, or circumstances differently—with more truth, care, support, boundaries, grief, or room for hope.",
-        "Carrying something differently does not mean carrying it alone, calling harm good, suppressing lament, pretending the ashes never existed, or claiming the old story no longer matters.",
-        "Some things may change. Some may need support, accommodation, advocacy, resistance, mourning, safer conditions, or time. Some may remain unresolved. Grief, illness, disability, caregiving, discrimination, unsafe conditions, financial pressure, differences in power, relationships, limited resources, and limited support are all real, and none of them is undone by an app or a closing screen.",
-        "Unfinishedness may reflect circumstance, constraint, loss, other people's choices, your own responsibility, or something that is simply unclear. It is not automatically a personal failure.",
-        "Carrying forward can mean keeping one sentence, knowing where to return, seeking care, allowing grief, waiting, or leaving the journey here. It does not mean carrying alone, and it does not mean taking action. Insight, action, relief, spiritual feeling, future continuation, and a next step are not required.",
+        "Integration means allowing pieces of experience to sit in a more workable relationship: named, grieved, supported, bounded, responded to where safe, or left open. It does not require a clear insight, feeling or result.",
+        "New life here does not mean returning to an untouched earlier self or calling harm good. It may mean relating to the same story, loss, question or circumstance with more truth, care, support, boundaries, grief or room for hope.",
+        "Some things may change; some may involve specific responsibility, support, accommodation, advocacy, resistance, mourning, safer conditions or time; some may remain unresolved. Illness, disability, caregiving, discrimination, financial pressure, differences in power, limited resources and other people’s choices are not undone by an app. Carrying forward can also mean waiting or leaving the journey here.",
       ],
       info: [
-        {
-          term: "What does integration mean?",
-          explanation:
-            "It means letting the pieces of an experience sit together in a more workable way—remembered, named, grieved, supported, limited, or left open. No insight, feeling, or outcome is required here.",
-        },
-        {
-          term: "What does ‘carry it forward’ mean?",
-          explanation:
-            "It can mean keeping one sentence, revising it, knowing where to return, seeking support, waiting, or leaving it here. It never means carrying it alone.",
-        },
+
         {
           term: "What if nothing changed?",
           explanation:

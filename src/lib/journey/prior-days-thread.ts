@@ -113,6 +113,14 @@ function clauseFor(
     Object.prototype.hasOwnProperty.call(sets, day.answerMeaningVersion);
 
   if (!hasCurrent) {
+    // A source question that CAN carry an optional Christian choice must not
+    // produce any notice while the spiritual path is off or unhydrated: an
+    // older stable or positional token cannot be safely proven nonspiritual.
+    const spiritualCapable = question.options.some(
+      (o) => o.spiritualOnly === true,
+    );
+    if (spiritualCapable && !(opts.hydrated && opts.showSpiritual)) return null;
+
     // Never decode an older set. Only detect whether an older set holds a token
     // owned by THIS exact source step, so an unrelated older answer cannot
     // manufacture a notice for this source.

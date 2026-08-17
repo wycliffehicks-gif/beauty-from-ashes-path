@@ -1720,7 +1720,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
         hideLabel: "Hide earlier choices",
         heading: "Earlier choices, gathered without interpretation",
         intro:
-          "These are choices made at different moments. They may or may not belong together, and they do not show that a practice was attempted or that anything changed.",
+          "These are choices made at different moments. They may or may not belong together, and they do not form a diagnosis, explanation or measure of progress. They do not show that a practice was attempted or that anything changed.",
         empty:
           "No compatible earlier choices are available to gather. Nothing will be inferred.",
         groups: [

@@ -24,7 +24,7 @@ describe("top safe areas and chrome", () => {
   it("defines both safe-top utilities and neutralizes them under the storage notice", () => {
     expect(styles).toContain("@utility bfa-top-safe {");
     expect(styles).toContain("@utility bfa-top-safe-roomy {");
-    expect(styles).toContain('env(safe-area-inset-top, 0px)');
+    expect(styles).toContain("env(safe-area-inset-top, 0px)");
     expect(styles).toContain(':has(> [data-testid="storage-notice"]) .bfa-top-safe');
     expect(styles).toContain(':has(> [data-testid="storage-notice"]) .bfa-top-safe-roomy');
   });
@@ -63,9 +63,7 @@ describe("pressed, disabled and meaningful-state treatment", () => {
   it("limits transitions and never scales or translates a control", () => {
     expect(styles).toContain("transition: background-color 140ms ease, border-color 140ms ease,");
     expect(styles).toContain(".btn-primary-journey:hover:not(:disabled)");
-    expect(styles).toContain(
-      "color-mix(in oklab, var(--primary) 78%, var(--foreground))",
-    );
+    expect(styles).toContain("color-mix(in oklab, var(--primary) 78%, var(--foreground))");
     expect(styles).toContain("color-mix(in oklab, var(--muted) 82%, transparent)");
   });
 

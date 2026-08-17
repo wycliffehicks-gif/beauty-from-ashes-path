@@ -32,7 +32,7 @@ No code changes are proposed in this document. It is an assessment plus a priori
 
 ## Business-model audit
 
-**Current state:** no monetisation surface exists. This is correct for the pilot, but it means every commercial decision is still open.
+**Current state:** no monetisation surface exists. This is correct for the pilot, but it means every commercial decision is still open. A freemium split — Days 1–3 or 4 free, then a small one-time unlock for the rest — is one viable option and would preserve the user's felt sense of value before asking for payment.
 
 **Model assessment**
 - *Subscription (Calm/Hallow model)* — mismatched. A ten-day finite journey does not justify recurring billing, and recurring billing on a healing product invites churn resentment and refund friction.

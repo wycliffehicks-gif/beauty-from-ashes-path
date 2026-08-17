@@ -1385,7 +1385,16 @@ function ReflectionScreen({
             </section>
           ))}
           <p className="bfa-copy text-muted-foreground">{built.closing}</p>
+          {content.reflection.priorDaysThread ? (
+            <PriorDaysThreadDisclosure
+              definition={content.reflection.priorDaysThread}
+              progress={progress}
+              hydrated={prefsHydrated}
+              showSpiritual={showSpiritual}
+            />
+          ) : null}
         </div>
+
       )}
     </div>
   );

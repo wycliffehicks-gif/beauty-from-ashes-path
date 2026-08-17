@@ -1361,3 +1361,36 @@
 .bfa-safe-center {
   padding-block-end: clamp(0rem, 7vh, 4.5rem);
 }
+
+/* --- Reflow guard: very large text sizes / 200% zoom ---------------------
+   Nothing here changes the default composition; it only lets the day cards
+   reflow instead of forcing horizontal scrolling (WCAG 2.2 1.4.10). */
+.day-row-state {
+  white-space: normal;
+  max-width: 100%;
+}
+.day-row {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.day-row-chevron {
+  flex: none;
+}
+/* Decorative motif layers never extend the scrollable area. */
+.bfa-visual-thread-track,
+.bfa-visual-home-hero {
+  overflow: clip;
+}
+
+/* Long words (clinical terms, phone strings) wrap rather than force the page
+   sideways when text is enlarged. */
+body :where(h1, h2, h3, h4, p, li, span, a, button) {
+  overflow-wrap: break-word;
+}
+
+/* Crisis actions stay inside the reading column at any text size. */
+.bfa-support-action {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: center;
+}

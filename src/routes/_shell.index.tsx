@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { VisualMotif } from "@/components/VisualMotifs";
+import { LandingPage } from "@/components/LandingPage";
+import { hasCurrentAcceptance } from "@/lib/agreement";
 import {
   JOURNEY_DAYS,
   JOURNEY_HOME_TITLE,
   JOURNEY_IDENTITY,
   getJourneyDayById,
 } from "@/content/journey";
+import { usePrefs } from "@/lib/prefs";
 import { useStorageStatus } from "@/lib/storage-status";
 import {
   buildReflectionExport,
@@ -18,22 +21,41 @@ import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progres
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
     meta: [
-      { title: "Your Journey — Beauty from Ashes: The First Journey" },
+      { title: "Beauty from Ashes: The First Journey — A gentle daily companion for walking toward hope" },
       {
         name: "description",
         content:
-          "Your Journey: open a day when you have a little space. No locks, no streaks, no pressure.",
+          "A 10-day private guided reflection companion. Notice what is heavy, name it with honesty, and take one honest step forward. No scores, no streaks, no pressure.",
       },
-      { property: "og:title", content: "Your Journey — Beauty from Ashes" },
+      { property: "og:title", content: "Beauty from Ashes: The First Journey" },
       {
         property: "og:description",
-        content: "Open a day when you have a little space. Every day stays revisitable.",
+        content:
+          "A 10-day private guided reflection companion. Notice what is heavy, name it with honesty, and take one honest step forward.",
       },
-      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: JourneyHome,
+  component: HomeGate,
 });
+
+function HomeGate() {
+  const [prefs, , hydrated] = usePrefs();
+  const accepted = hasCurrentAcceptance(prefs);
+
+  if (!hydrated) {
+    return (
+      <div className="container-page flex min-h-[60dvh] items-center justify-center" role="status" aria-live="polite">
+        <p className="bfa-copy-support text-muted-foreground">One moment…</p>
+      </div>
+    );
+  }
+
+  // The first impression for a new person is a public landing page. Once the
+  // legal bundle has been accepted, the same URL becomes the journey home.
+  return accepted ? <JourneyHome /> : <LandingPage />;
+}
 
 function JourneyHome() {
   const { progress, hydrated } = useJourneyProgress();
@@ -112,7 +134,6 @@ function JourneyHome() {
           Take a short practice
         </Link>
       </div>
-
 
       {resume && resumeDay && !allComplete && (
         <div

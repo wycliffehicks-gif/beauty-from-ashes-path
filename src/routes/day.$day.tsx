@@ -1218,6 +1218,66 @@ function PracticePanel({
  * changed, or the association cannot be proven, it is rebuilt on this device and
  * the saved copy is replaced. No network call, no model, no free text.
  */
+/**
+ * Optional, hidden-by-default Day 10 gathering of earlier coded choices.
+ *
+ * Ephemeral by construction: it lives in local React state only, its body is
+ * absent from the DOM until asked for, hiding unmounts it, and leaving or
+ * reloading resets it to hidden. Nothing here is saved, added to the saved
+ * reflection or its proof, or sent anywhere.
+ */
+function PriorDaysThreadDisclosure({
+  definition,
+  progress,
+  hydrated,
+  showSpiritual,
+}: {
+  definition: PriorDaysThreadDefinition;
+  progress: JourneyProgress | null;
+  hydrated: boolean;
+  showSpiritual: boolean;
+}) {
+  const [shown, setShown] = useState(false);
+  const ready = progress !== null && hydrated;
+  const view = useMemo(
+    () =>
+      shown && ready
+        ? buildPriorDaysThread(definition, progress, { hydrated, showSpiritual })
+        : null,
+    [shown, ready, definition, progress, hydrated, showSpiritual],
+  );
+
+  return (
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={() => setShown((s) => !s)}
+        aria-expanded={shown}
+        aria-controls="prior-days-thread"
+        className="bfa-copy min-h-[44px] rounded-md px-3 py-2 text-left text-muted-foreground underline underline-offset-4"
+      >
+        {shown ? definition.hideLabel : definition.showLabel}
+      </button>
+      {shown && view ? (
+        <div id="prior-days-thread" className="surface-card space-y-2">
+          <h2 className="bfa-heading bfa-h3 font-serif">{view.heading}</h2>
+          <p className="bfa-copy text-muted-foreground">{view.intro}</p>
+          {view.empty ? (
+            <p className="bfa-copy text-foreground">{view.empty}</p>
+          ) : (
+            view.groups.map((group) => (
+              <div key={group.id} className="space-y-1">
+                <h3 className="bfa-heading bfa-h4 font-serif">{group.title}</h3>
+                <p className="bfa-copy text-foreground">{group.paragraph}</p>
+              </div>
+            ))
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ReflectionScreen({
   content,
   answers,
@@ -1227,6 +1287,9 @@ function ReflectionScreen({
   onReady,
   savedReflection,
   onSaved,
+  progress,
+  prefsHydrated,
+  showSpiritual,
 }: {
   content: JourneyDayContent;
   answers: string[];
@@ -1237,7 +1300,12 @@ function ReflectionScreen({
   onReady: (token: string) => void;
   savedReflection: { text?: string; snapshot?: string };
   onSaved: (text: string, snapshot: string) => void;
+  /** Already-loaded progress, kept in memory; no extra storage read. */
+  progress: JourneyProgress | null;
+  prefsHydrated: boolean;
+  showSpiritual: boolean;
 }) {
+
   const [state, setState] = useState<{ token: string; built: BuiltReflection } | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 

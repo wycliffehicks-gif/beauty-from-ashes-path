@@ -119,22 +119,25 @@ function JourneyHome() {
                     <span className="sr-only">Day {d.day}: </span>
                     <span className="bfa-h3 block font-serif text-foreground">{d.title}</span>
 
-                    <span className="bfa-copy-support mt-1 block text-muted-foreground">
+                    <span className="bfa-copy-support day-row-theme mt-1 block text-muted-foreground">
                       {d.theme}
                     </span>
-                    <span className="bfa-copy-meta mt-1.5 block uppercase tracking-[0.12em] text-muted-foreground">
-                      {state === "complete"
-                        ? "Finished · open any time"
-                        : state === "current"
-                          ? "Where you are now"
-                          : "Open any time"}
-                      {" · "}
-                      {d.descriptor}
+                    <span className="day-row-meta mt-2 block">
+                      {state !== "upcoming" && (
+                        <span className="day-row-state" data-state={state}>
+                          {state === "complete" ? "Finished" : "Where you are now"}
+                        </span>
+                      )}
+                      <span className="bfa-copy-meta day-row-descriptor text-muted-foreground">
+                        {state === "upcoming" ? "Open any time · " : ""}
+                        {d.descriptor}
+                      </span>
                     </span>
                   </span>
-                  <span aria-hidden className="text-[color:var(--gold)]">
+                  <span aria-hidden className="day-row-chevron">
                     ›
                   </span>
+
                 </Link>
               </li>
             );

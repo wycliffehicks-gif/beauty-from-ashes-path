@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 /**
  * Owned icon set drawn from the Living Gold Thread motif.
  *
@@ -12,7 +14,7 @@
  */
 
 const STROKE = 1.5;
-const SIZE = 22;
+const SIZE = 20;
 
 interface IconProps {
   className?: string;
@@ -23,7 +25,7 @@ function IconFrame({
   className = "",
   ariaLabel,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   ariaLabel?: string;
 }) {

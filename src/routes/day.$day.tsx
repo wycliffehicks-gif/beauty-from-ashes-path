@@ -1408,8 +1408,8 @@ function ReflectionScreen({
             />
           ) : null}
         </div>
+      ) : null}
 
-      )}
     </div>
   );
 }

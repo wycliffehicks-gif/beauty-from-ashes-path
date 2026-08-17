@@ -166,6 +166,12 @@ type DayGeometry = {
   quietGold: string;
   /** One supporting contour for the quiet divider. */
   quietContour: string;
+  /** Horizontal position of the gold thread within the frame (0 = far left, 1 = far right). */
+  threadPosition: number;
+  /** How continuous the gold thread feels across the day (0.2 = broken, 0.9 = unbroken). */
+  threadContinuity: number;
+  /** Per-day warmth: 0 = cooler/ash, 1 = full warm gold. */
+  temperature: number;
 };
 
 const FIELD_VAR: Record<FieldTint, string> = {

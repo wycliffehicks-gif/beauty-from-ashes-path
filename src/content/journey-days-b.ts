@@ -1354,24 +1354,12 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       label: "Listen",
       heading: "A journey can be complete while healing remains unfinished",
       body: [
-        "By integration, we mean allowing pieces of experience to sit in a more workable relationship with each other. That may involve remembering, grieving, reinterpreting, practising, seeking support, setting limits, receiving accommodation, resisting harm or injustice, or leaving a question open. It does not have to produce a clear feeling or result.",
-        "New life, in this series, is not going back to an untouched earlier self. It may mean relating to the same story, wounds, losses, questions, or circumstances differently—with more truth, care, support, boundaries, grief, or room for hope.",
-        "Carrying something differently does not mean carrying it alone, calling harm good, suppressing lament, pretending the ashes never existed, or claiming the old story no longer matters.",
-        "Some things may change. Some may need support, accommodation, advocacy, resistance, mourning, safer conditions, or time. Some may remain unresolved. Grief, illness, disability, caregiving, discrimination, unsafe conditions, financial pressure, differences in power, relationships, limited resources, and limited support are all real, and none of them is undone by an app or a closing screen.",
-        "Unfinishedness may reflect circumstance, constraint, loss, other people's choices, your own responsibility, or something that is simply unclear. It is not automatically a personal failure.",
-        "Carrying forward can mean keeping one sentence, knowing where to return, seeking care, allowing grief, waiting, or leaving the journey here. It does not mean carrying alone, and it does not mean taking action. Insight, action, relief, spiritual feeling, future continuation, and a next step are not required.",
+        "Integration means allowing pieces of experience to sit in a more workable relationship: named, grieved, supported, bounded, responded to where safe, or left open. It does not require a clear insight, feeling or result.",
+        "New life here does not mean returning to an untouched earlier self or calling harm good. It may mean relating to the same story, loss, question or circumstance with more truth, care, support, boundaries, grief or room for hope.",
+        "Some things may change; some may involve specific responsibility, support, accommodation, advocacy, resistance, mourning, safer conditions or time; some may remain unresolved. Illness, disability, caregiving, discrimination, financial pressure, differences in power, limited resources and other people’s choices are not undone by an app. Carrying forward can also mean waiting or leaving the journey here.",
       ],
       info: [
-        {
-          term: "What does integration mean?",
-          explanation:
-            "It means letting the pieces of an experience sit together in a more workable way—remembered, named, grieved, supported, limited, or left open. No insight, feeling, or outcome is required here.",
-        },
-        {
-          term: "What does ‘carry it forward’ mean?",
-          explanation:
-            "It can mean keeping one sentence, revising it, knowing where to return, seeking support, waiting, or leaving it here. It never means carrying it alone.",
-        },
+
         {
           term: "What if nothing changed?",
           explanation:
@@ -1543,26 +1531,27 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           "Not required: writing, saving, disclosure, contact, conversation, reconciliation, forgiveness, action, a schedule, a commitment, a daily practice, insight, emotional release, hope, relief, progress, or any outcome. If distress grows, you may stop, reorient outward, or seek support.",
       },
       spiritual: {
-        title: "Scripture & Spiritual Reflection — blessing without forced closure",
+        title: "Scripture & Spiritual Reflection — companionship on an unfinished road",
         summary:
-          "A Christian integration practice that leaves blessing, lament, practical care and unfinishedness in the same room.",
+          "A Christian path from the road to Emmaus, where questioning and companionship are present before recognition or resolution.",
         steps: [
-          "Let your attention rest outward for a moment in whatever way is accessible to you. Reading only is available here too.",
-          "Read the blessing below if you would like to. It may feel comforting, distant, difficult, neutral, or unwelcome, and it may be set aside without any spiritual judgment.",
-          "If you wish, bring before God one idea worth keeping, your uncertainty, or nothing in particular. You may also keep everything private.",
-          "If you would like to, name one unfinished place. It may involve grief, responsibility, unsafe conditions, injustice, illness, lack of support, or something outside your influence. No reason for it needs to be assigned.",
-          "Without forcing an answer, consider whether anything calls for action, support, accommodation, advocacy, a boundary, mourning, waiting, time, or no step at all. Prayer is not a substitute for practical care.",
-          "If prayer fits, you might pray: “God of grace, hold what I cannot finish. Give me wisdom for what is mine, support for what I cannot carry alone, and freedom to leave the rest unfinished.”",
-          "The blessing may remain as words on a page rather than something felt or received. Then let your attention return outward. No relief, peace, clarity, or sense of God's presence is required.",
+          "Orient outward in any accessible way. Reading only is available.",
+          "Read Luke 24:15 below only if you wish.",
+          "Notice that the walkers are still talking and questioning; the road is unfinished, and recognition or explanation has not yet arrived.",
+          "If useful, name one unfinished question, grief or responsibility privately or keep it general. No full story or conclusion is needed.",
+          "If prayer fits, you might pray: ‘Jesus, meet what is unfinished with truth, care and wisdom. Give me wisdom about what is mine, what may need safe or practical support, and what can remain unfinished.’ No response, answer or feeling is required.",
+          "If useful, consider practical care, support, accommodation, advocacy, a boundary, mourning, waiting or no action. Prayer does not replace practical care or planning.",
+          "Reorient outward. The verse may remain words on a page; no recognition, meaning, closure, peace or felt presence is required.",
         ],
         notRequired:
-          "Not required: prayer, a profession of faith, certainty, receiving the blessing, surrendering safety or boundaries, forgiveness, reconciliation, disclosure, contact, action, spiritual experience, changed circumstances, relief, peace, closure, or any outcome.",
+          "No prayer, profession of faith, certainty, disclosure, surrender of safety or boundaries, forgiveness, reconciliation, contact, action, spiritual experience, changed circumstances, recognition, meaning, relief, peace, closure or continuation is required. You may leave this path entirely.",
         scripture: {
-          reference: "Numbers 6:24–26 (World English Bible)",
-          body: "Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace.",
-          note: "This ancient priestly blessing from Israel’s Scriptures entrusts people to God’s keeping, grace, attentive presence, and shalom. It is not a forecast that pain, danger, illness, grief, or circumstances will change, and it should not silence lament or replace practical care.",
+          reference: "Luke 24:15 (World English Bible)",
+          body: "While they talked and questioned together, Jesus himself came near, and went with them.",
+          note: "This verse depicts Jesus joining two people amid their questions, before they recognise him or reach an explanation. It is not a promise of felt nearness, recognition, meaning, closure, peace or continuation.",
         },
       },
+
     },
     step: {
       id: "step",
@@ -1694,19 +1683,20 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           from: "step",
           lines: {
             support:
-              "You identified one possible kind of support, accommodation, advocacy, or practical care. Considering it does not require contact, and availability remains a real question.",
+              "You considered identifying one kind of support, accommodation, advocacy or practical care. No kind of support, contact or availability is being attributed to you.",
             conversation:
-              "You chose the possibility of preparing one sentence you might share. Nothing has to be sent or said, and this reflection cannot decide whether sharing would be safe.",
+              "You considered preparing one sentence you might share. Nothing is assumed to have been prepared, sent or said, and this reflection cannot decide whether sharing would be safe.",
             limit:
-              "You chose the possibility of naming one limit or condition. No action is required, and safety and availability remain open.",
+              "You considered naming one limit or condition. No limit, action, safety or availability is being attributed to you.",
             rest:
-              "You identified one realistic form of rest or reduced demand, if available. Whether it happens does not decide the worth of the need.",
+              "You considered one realistic form of rest or reduced demand, if available. No rest or availability is being assumed.",
             kind:
-              "You chose to keep one fair sentence available for a difficult moment, without turning it into a promise or habit.",
+              "You considered keeping one fair sentence available for a difficult moment. No sentence, practice or future use is being attributed to you.",
             revisit:
-              "You chose one day or practice you may return to. It remains available without being scheduled or owed.",
+              "You considered returning to one day or practice. Nothing is assumed to have been chosen, scheduled or owed.",
             prepare:
-              "You chose to let the journey end here with nothing outward required. That is a complete way to leave.",
+              "You considered letting the journey end here with nothing outward required. No action or feeling is being attributed.",
+
             unavailable:
               "A step may matter, but none feels safe or available now. That limit is respected; you are not being asked to override it.",
             unclear:
@@ -1723,7 +1713,154 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       closing:
         "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",
 
+      // Optional, hidden-by-default Day 10 gathering. Ephemeral only: never
+      // saved, never fingerprinted, never sent anywhere.
+      priorDaysThread: {
+        showLabel: "Show earlier choices",
+        hideLabel: "Hide earlier choices",
+        heading: "Earlier choices, gathered without interpretation",
+        intro:
+          "These are choices made at different moments. They may or may not belong together, and they do not show that a practice was attempted or that anything changed.",
+        empty:
+          "No compatible earlier choices are available to gather. Nothing will be inferred.",
+        groups: [
+          {
+            id: "starting",
+            title: "Starting points and words considered",
+            template:
+              "Earlier choices included {clauses}. These selections may or may not refer to the same concern.",
+            sources: [
+              {
+                day: 1,
+                from: "brought",
+                descriptor: "what brought you",
+                privateIds: ["private"],
+              },
+              { day: 2, from: "load", descriptor: "what one day contained" },
+              {
+                day: 3,
+                from: "carrying",
+                descriptor:
+                  "a word you considered for what you might be carrying",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+            ],
+          },
+          {
+            id: "responsemap",
+            title: "A possible response map",
+            template:
+              "For one possible response map, earlier choices included {clauses}. No origin or cause follows from them.",
+            sources: [
+              {
+                day: 4,
+                from: "response",
+                descriptor: "a familiar response you selected",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+              {
+                day: 4,
+                from: "purpose",
+                descriptor: "a possible purpose you considered",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+            ],
+          },
+          {
+            id: "movement",
+            title: "Movement and caution",
+            template:
+              "Earlier choices about movement and caution included {clauses}. Neither selection decides what is wiser now.",
+            sources: [
+              {
+                day: 5,
+                from: "forward",
+                descriptor: "a possible pull toward movement",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 5,
+                from: "holdback",
+                descriptor: "a possible concern",
+                privateIds: ["private"],
+                unclearIds: ["unknown"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+          {
+            id: "cost",
+            title: "Cost, context and care",
+            template:
+              "Earlier choices about present cost and care included {clauses}. They do not decide what caused anything or what should change.",
+            sources: [
+              {
+                day: 6,
+                from: "cost",
+                descriptor: "a possible present-day cost",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 6,
+                from: "protects",
+                descriptor:
+                  "what may make change difficult or keep something in place",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+              },
+              {
+                day: 7,
+                from: "need",
+                descriptor: "a more compassionate way of holding it",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+          {
+            id: "rehearsal",
+            title: "Care and rehearsal possibilities",
+            template:
+              "Earlier choices about receiving and rehearsal included {clauses}. This does not say that anything was received or practised.",
+            sources: [
+              {
+                day: 8,
+                from: "route",
+                descriptor: "a possible source of already-safe care",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 8,
+                from: "size",
+                descriptor: "an amount you considered",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 9,
+                from: "practice",
+                descriptor: "a private rehearsal route you considered",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+        ],
+      },
     },
+
     close: {
       heading: "A complete stopping place",
       body: [

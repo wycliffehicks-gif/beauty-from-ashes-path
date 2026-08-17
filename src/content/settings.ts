@@ -66,6 +66,8 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
   "You can clear everything this app has saved here in Settings, at any time.",
   "Using this app is not the same legally protected confidential relationship as psychotherapy.",
   "This app is not monitored for emergencies and cannot respond if someone is in danger.",
+  "On Day 10, “Show earlier choices” can temporarily gather compatible current-version coded choices from earlier days on this device. The gathered wording is hidden until you ask for it, is not saved or added to your reflection, and disappears when you hide it, leave the page or reload.",
+  "That optional Day 10 gathering is assembled locally and deterministically. It is not sent to Resurgence Therapeutics, a server, artificial intelligence, analytics or any other external service.",
 ];
 
 
@@ -79,6 +81,7 @@ export const PRIVACY_SUMMARY_POINTS: string[] = [
   "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
   "You can clear or restart everything saved here at any time, from this page.",
+  "The optional Day 10 earlier-choices view is assembled only when you ask to see it. It is not saved or sent and disappears when hidden, when you leave, or when the page reloads.",
 ];
 
 export const PRIVACY_SUMMARY_LINK_LABEL = "Read the full Privacy Notice";

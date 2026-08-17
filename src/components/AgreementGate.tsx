@@ -23,6 +23,9 @@ export function AgreementGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
+    // The landing page at `/` is intentionally reachable before acceptance so
+    // a new person can learn what this is before committing. Every other path
+    // still routes to onboarding when the current agreement is not accepted.
     if (publicPath || accepted) return;
     const go = () => navigate({ to: "/onboarding", replace: true });
     if (isSplashActive()) {

@@ -122,7 +122,30 @@ function SettingsPage() {
         <SettingsLink to="/privacy" title="Privacy Notice" />
         <SettingsLink to="/terms" title="Terms of Use" />
         <SettingsLink to="/contact-support" title="Contact" />
+        <SettingsLink to="/pilot-feedback" title="Pilot feedback" />
       </nav>
+
+      {/* Install as app — only surfaced when the browser supports it. */}
+      {installSupported && (
+        <section
+          data-testid="settings-install"
+          className="rounded-xl border border-border bg-card p-5"
+        >
+          <h2 className="bfa-h2 font-serif text-foreground">Add to this device</h2>
+          <p className="bfa-copy-support mt-1 text-muted-foreground">
+            Install Beauty from Ashes to your home screen for easy access. It will work offline
+            once opened and stays private to this device.
+          </p>
+          <button
+            type="button"
+            data-testid="install-pwa"
+            onClick={() => installPrompt?.prompt()}
+            className="btn-quiet mt-4"
+          >
+            Install app
+          </button>
+        </section>
+      )}
 
       {/* Privacy & Confidentiality — a short plain-language summary only. The
           complete detail stays on the Privacy Notice page. */}

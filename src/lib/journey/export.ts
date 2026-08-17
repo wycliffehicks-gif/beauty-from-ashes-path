@@ -8,10 +8,11 @@
 //    own readability, but the exported file is still their own data.
 
 import { getFirstJourneyDay } from "@/content/first-journey";
-import { answerKeyFor } from "@/content/journey-types";
+import { dayNumberFromId } from "@/content/journey";
+import { answerKeyFor } from "@/lib/journey/reflection-engine";
 import { optionIdsFor } from "@/lib/journey/answers";
 
-import { answersForDay, dayNumberFromId, type JourneyProgress } from "./progress";
+import { answersForDay, type JourneyProgress } from "./progress";
 
 export interface ExportSummary {
   dayCount: number;

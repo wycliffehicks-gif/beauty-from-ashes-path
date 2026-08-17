@@ -47,6 +47,19 @@ function SettingsPage() {
   const [confirming, setConfirming] = useState(false);
   const { persistent, hydrated: storageHydrated } = useStorageStatus();
   const volatileStorage = storageHydrated && !persistent;
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installSupported, setInstallSupported] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+      setInstallSupported(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   return (
     <section className="space-y-6 pb-4">

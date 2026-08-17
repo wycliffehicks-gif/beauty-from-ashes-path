@@ -341,3 +341,51 @@ describe("Day 8 optional Christian choice is absent from every presentation surf
     expect(text).toContain("from God");
   });
 });
+
+describe("legacy positional suffix precision", () => {
+  const practiceKey = answerKeyFor(day9, "practice");
+  const routeKey = answerKeyFor(day8, "route");
+
+  it("routes the canonical in-range legacy position", () => {
+    expect(resolvedRouteOptionId(day9, [`${practiceKey}.0`])).toBe("grounding");
+    expect(resolvePractice(day9, [`${practiceKey}.0`]).reflection).toBe(
+      day9.practise.route!.reflectionByOption["grounding"],
+    );
+  });
+
+  it.each([".", ".-0", ".0e0", ".00", ".01", ".+0", ". 0", ".0.0", ".NaN", ".Infinity"])(
+    "fails closed for malformed suffix %s",
+    (suffix) => {
+      const answers = [`${practiceKey}${suffix}`];
+      expect(resolvedRouteOptionId(day9, answers)).toBeNull();
+      const resolved = resolvePractice(day9, answers);
+      expect(resolved.routedBy).toBeNull();
+      expect(resolved.reflection).toBe(day9.practise.reflection);
+      expect(answers).toEqual([`${practiceKey}${suffix}`]);
+    },
+  );
+
+  it("never reclassifies a malformed Day 8 route suffix as spiritualOnly", () => {
+    for (const suffix of [".", ".-0", ".0e0", ".07", ".7.0", ".+7"]) {
+      const token = `${routeKey}${suffix}`;
+      expect(isSpiritualOnlyToken(day8, token), token).toBe(false);
+      const raw = [token];
+      expect(
+        presentationAnswers(day8, raw, { hydrated: false, showSpiritual: false }),
+      ).toEqual([token]);
+      expect(raw).toEqual([token]);
+    }
+  });
+
+  it("still withholds and restores the canonical q.route.7 position", () => {
+    const raw = [`${routeKey}.7`];
+    expect(presentationAnswers(day8, raw, { hydrated: false, showSpiritual: false })).toEqual(
+      [],
+    );
+    expect(presentationAnswers(day8, raw, { hydrated: true, showSpiritual: false })).toEqual([]);
+    expect(presentationAnswers(day8, raw, { hydrated: true, showSpiritual: true })).toEqual([
+      `${routeKey}.7`,
+    ]);
+    expect(raw).toEqual([`${routeKey}.7`]);
+  });
+});

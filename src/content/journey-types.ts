@@ -98,6 +98,43 @@ export interface RoutedPractice {
   spiritualByOption?: Record<string, PracticePath>;
 }
 
+/**
+ * One earlier-day question that MAY contribute a neutral clause to the
+ * optional Day 10 gathering. Nothing is inferred: the descriptor is approved
+ * copy, and labels come from current canonical options only.
+ */
+export interface PriorDaysThreadSource {
+  /** Canonical day number (1-9). */
+  day: number;
+  /** Question id on that day. */
+  from: string;
+  /** Exact neutral descriptor shown before the clause. */
+  descriptor: string;
+  /** Option ids that mean "kept private". */
+  privateIds?: readonly string[];
+  /** Option ids that mean "left unclear". */
+  unclearIds?: readonly string[];
+  /** Option ids that mean "none / unavailable" and keep their exact label. */
+  noneIds?: readonly string[];
+}
+
+export interface PriorDaysThreadGroup {
+  /** Stable internal id; never shown. */
+  id: string;
+  title: string;
+  /** Exact template containing a single {clauses} placeholder. */
+  template: string;
+  sources: readonly PriorDaysThreadSource[];
+}
+
+export interface PriorDaysThreadDefinition {
+  showLabel: string;
+  hideLabel: string;
+  heading: string;
+  intro: string;
+  empty: string;
+  groups: readonly PriorDaysThreadGroup[];
+}
 
 
 export type ReflectionSectionId =

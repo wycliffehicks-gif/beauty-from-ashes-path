@@ -160,7 +160,7 @@ function structuralFingerprint(): string {
       options: q.options.map((o) => ({
         id: o.id,
         exclusive: o.exclusive === true,
-        spiritualOnly: o.spiritualOnly === true,
+        spiritualOnly: o.spiritualOnly ?? null,
       })),
 
       info: (q.info ?? []).map((i) => i.term),
@@ -178,7 +178,7 @@ function structuralFingerprint(): string {
       options: d.step.options.map((o) => ({
         id: o.id,
         exclusive: o.exclusive === true,
-        spiritualOnly: o.spiritualOnly === true,
+        spiritualOnly: o.spiritualOnly ?? null,
       })),
       echo: d.step.echo ? Object.keys(d.step.echo.byOption).sort() : null,
     },

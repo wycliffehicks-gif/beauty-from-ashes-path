@@ -199,6 +199,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M118 104 C 152 82, 162 54, 198 36 C 228 22, 250 28, 272 14",
     quietGold: "M96 30 C 138 16, 178 30, 218 12 C 248 -1, 268 8, 292 2",
     quietContour: "M60 34 C 108 24, 150 36, 196 26",
+    threadPosition: 0.5,
+    threadContinuity: 0.7,
+    temperature: 0.8,
   },
 
   /* Day 2 — incomplete offset rings; the thread loops once and continues. */

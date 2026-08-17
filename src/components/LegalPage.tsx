@@ -14,13 +14,13 @@ export function LegalPage({
 }: LegalPageProps) {
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="container-page py-8">
+      <div className="container-page bfa-top-safe-roomy pb-8">
         <div className="pb-4">
           <Link
             to="/"
-            className="inline-link bfa-copy-support text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            className="btn-quiet"
           >
-            ← Back
+            ← Return to Your Journey
           </Link>
         </div>
 

@@ -145,8 +145,9 @@ describe("storage notice placement after the splash", () => {
     expect(gate.match(/setNoticeSuppressed\(false\)/g)?.length).toBe(2);
     // Splash lifecycle untouched.
     expect(gate).toContain('const SESSION_KEY = "bfa_splash_shown_v1"');
-    expect(gate).toContain("reduced ? 900 : 2600");
-    expect(gate).toContain("reduced ? 0 : 420");
+    expect(gate).toContain("reduced ? 700 : 1200");
+    expect(gate).toContain("reduced ? 0 : 240");
+    expect(gate).toContain("duration-[240ms]");
     expect(gate).toContain('node.setAttribute("inert", "")');
   });
 

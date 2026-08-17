@@ -35,7 +35,7 @@ function prettyTel(tel: string) {
 }
 
 const ACTION =
-  "bfa-copy-support inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[color:var(--bfa-control-border)] bg-background px-4 py-2 font-medium text-primary underline underline-offset-4";
+  "bfa-support-action bfa-copy-support inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[color:var(--bfa-control-border)] bg-background px-4 py-2 font-medium text-primary underline underline-offset-4";
 
 /** One registry entry, with separate Call and Text actions where both exist. */
 function LineCard({ line }: { line: CrisisLine }) {
@@ -158,8 +158,8 @@ function SupportPage() {
       </p>
 
       <div className="pt-2">
-        <Link to="/" className="inline-link bfa-copy-support text-primary underline underline-offset-4">
-          ← Return to Today
+        <Link to="/" className="btn-quiet">
+          ← Return to Your Journey
         </Link>
       </div>
     </section>

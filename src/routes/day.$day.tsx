@@ -587,9 +587,6 @@ function ScreenBody({
         {
           onContinue: onNext,
           continueDisabled: !reflectionReady,
-          continueHint: reflectionReady
-            ? undefined
-            : "Your reflection is being prepared. Continue becomes available in a moment.",
         },
       );
 
@@ -1327,15 +1324,14 @@ function ReflectionScreen({
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Before paint on every mount — including browser Back and Forward — and
-  // whenever the answers change, this screen reports that it is preparing, so a
-  // stale readiness can never briefly enable Continue.
+  // whenever the answers change, this screen reports that it is preparing and
+  // then, in the same effect, builds the deterministic on-device reflection.
+  // Because everything happens before the browser paints, the reflection
+  // appears atomically: no transient copy is ever shown, and a stale readiness
+  // can never briefly enable Continue.
   useBeforePaintEffect(() => {
     setState(null);
     onPreparing();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  useEffect(() => {
     if (!answersLoaded) return;
     const dayId = dayIdFor(content.day);
     // The proof carries the snapshot format, the current approved reflection
@@ -1353,6 +1349,7 @@ function ReflectionScreen({
     // would loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, token, answersLoaded]);
+
 
 
   // Only a response built for the current answers may be shown.
@@ -1374,20 +1371,17 @@ function ReflectionScreen({
       >
         A reflection drawn from today
       </h1>
-      {/* When a saved response is restored, its own opening words are shown, not
-          the current day's generic intro. While preparing, the neutral current
-          intro stands in and nothing is claimed to be exact. */}
-      <p className="bfa-copy text-foreground">
-        {built ? built.intro : content.reflection.intro}
-      </p>
+      {/* The reflection is synchronous and on-device, so its own opening words —
+          restored or freshly built — are the only ones ever shown. No generic
+          stand-in copy appears and nothing is swapped after paint. */}
+      {built ? (
+        <p className="bfa-copy text-foreground">{built.intro}</p>
+      ) : null}
       <DayMotif motif={content.motif} treatment="quiet" />
 
 
-      {!built ? (
-        <p role="status" aria-live="polite" className="bfa-copy text-muted-foreground">
-          Preparing your reflection…
-        </p>
-      ) : (
+      {built ? (
+
         <div className="space-y-4">
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">
@@ -1411,8 +1405,8 @@ function ReflectionScreen({
             />
           ) : null}
         </div>
+      ) : null}
 
-      )}
     </div>
   );
 }

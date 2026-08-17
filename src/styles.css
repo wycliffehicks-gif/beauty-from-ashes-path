@@ -1075,3 +1075,119 @@
     opacity: var(--bfa-thread-rest-opacity, 0.5);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   FINAL PILOT VISUAL POLISH — top safe areas, pressed/disabled states, and
+   strong gold reserved for meaningful interface state. No new layout system,
+   no new palette, no motion beyond short colour/border transitions.
+   --------------------------------------------------------------------------- */
+
+@utility bfa-top-safe {
+  padding-top: max(1rem, calc(env(safe-area-inset-top, 0px) + 0.5rem));
+}
+
+@utility bfa-top-safe-roomy {
+  padding-top: max(2rem, calc(env(safe-area-inset-top, 0px) + 1rem));
+}
+
+/* The storage notice, when present, is the first thing under the notch, so it
+   carries the inset itself. */
+[data-testid="storage-notice"] {
+  padding-top: max(0.75rem, calc(env(safe-area-inset-top, 0px) + 0.25rem));
+}
+
+/* When the notice sits directly above the app, the inset is already spent, so
+   descendant safe-area utilities revert to their ordinary spacing instead of
+   doubling the notch allowance. */
+:has(> [data-testid="storage-notice"]) .bfa-top-safe {
+  padding-top: 1rem;
+}
+:has(> [data-testid="storage-notice"]) .bfa-top-safe-roomy {
+  padding-top: 2rem;
+}
+
+/* --- Pressed and disabled states ---------------------------------------- */
+
+.btn-primary-journey,
+.btn-quiet,
+.journey-chrome-btn,
+.day-row,
+.bfa-journey-choice,
+.bfa-settings-link,
+.bfa-settings-switch,
+.bfa-support-action {
+  transition: background-color 140ms ease, border-color 140ms ease,
+    box-shadow 140ms ease, color 140ms ease;
+}
+
+/* Hover is only meaningful for an enabled control. */
+@media (hover: hover) {
+  .btn-primary-journey:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+  }
+  .bfa-settings-link:hover {
+    background: color-mix(in oklab, var(--champagne) 35%, transparent);
+  }
+  .bfa-support-action:hover {
+    background: color-mix(in oklab, var(--champagne) 30%, transparent);
+  }
+}
+
+.btn-primary-journey:active:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 78%, var(--foreground));
+}
+
+.btn-quiet:active:not(:disabled),
+.journey-chrome-btn:active:not(:disabled),
+.day-row:active:not(:disabled),
+.bfa-journey-choice:active:not(:disabled),
+.bfa-settings-link:active,
+.bfa-settings-switch:active:not(:disabled),
+.bfa-support-action:active {
+  background: color-mix(in oklab, var(--muted) 82%, transparent);
+}
+
+/* Disabled reads as unavailable through ground, ink and border — never through
+   a faded, low-contrast ghost of an active control. */
+.btn-primary-journey:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  border: 1px solid var(--bfa-control-border);
+}
+
+/* Settings rows live inside an overflow-hidden card, so their focus ring is
+   drawn inward and stays fully visible. */
+.bfa-settings-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -3px;
+}
+
+/* --- Strong gold only for meaningful interface state -------------------- */
+
+@media (hover: hover) {
+  .day-row:hover {
+    border-color: var(--bfa-interactive-gold);
+  }
+}
+.day-row[data-state="current"] {
+  border-color: var(--bfa-interactive-gold);
+  box-shadow: inset 3px 0 0 0 var(--bfa-interactive-gold);
+}
+.day-row[data-state="complete"] .day-marker {
+  border-color: var(--bfa-interactive-gold);
+}
+
+/* --- Splash typography ------------------------------------------------- */
+
+.bfa-visual-splash-title {
+  text-wrap: balance;
+}
+.bfa-visual-splash-sub {
+  max-width: 32ch;
+  margin-inline: auto;
+  line-height: 1.45;
+  letter-spacing: clamp(0.12em, 0.8vw, 0.2em);
+  text-wrap: balance;
+}

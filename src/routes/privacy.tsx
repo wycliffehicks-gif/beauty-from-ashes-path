@@ -22,7 +22,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="August 2, 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="August 16, 2026">
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
@@ -115,6 +115,30 @@ function PrivacyPage() {
       </p>
 
 
+
+      <h2 className="bfa-h2 font-serif">
+        Optional Day 10 earlier-choices view
+      </h2>
+      <p>
+        On Day 10, you may choose “Show earlier choices.” Until you do, no
+        gathered view is shown. If you choose it, the app temporarily assembles
+        neutral, approved wording on this device from compatible coded choices
+        already stored under each earlier day’s current answer-meaning version.
+        Earlier-version choices are not interpreted. Any choice marked for
+        optional Christian presentation—including the Day 8 choice about
+        God—is withheld while Scripture and spiritual reflection is off or has
+        not finished loading.
+      </p>
+      <p>
+        The gathered view does not form a diagnosis, explanation or measure of
+        progress, and it does not claim that a practice was attempted or that
+        anything changed. The gathered wording itself is not saved in local
+        storage or session storage, is not added to your saved personalized
+        reflection or its coded fingerprint, and is not sent to Resurgence
+        Therapeutics, a server, artificial intelligence, analytics or any other
+        external service. It disappears when you hide it, leave the page or
+        reload.
+      </p>
 
       <h2 className="bfa-h2 font-serif">Please do not send sensitive information</h2>
       <p>

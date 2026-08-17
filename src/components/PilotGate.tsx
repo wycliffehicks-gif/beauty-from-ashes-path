@@ -113,7 +113,7 @@ function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
             onChange={(e) => setValue(e.target.value)}
             aria-invalid={error || undefined}
             aria-describedby={error ? "pilot-passcode-error" : undefined}
-            className="input-journey w-full"
+            className="bfa-copy w-full rounded-lg border border-border bg-background p-3 text-foreground"
           />
           {error && (
             <p

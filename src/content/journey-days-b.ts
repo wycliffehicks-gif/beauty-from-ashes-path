@@ -1713,7 +1713,154 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       closing:
         "Whatever you chose—or left open—does not have to prove progress, readiness, safety, or what comes next. Whatever you could name—or could not name—matters. You deserve to be met with care without having to prove that it is serious enough.",
 
+      // Optional, hidden-by-default Day 10 gathering. Ephemeral only: never
+      // saved, never fingerprinted, never sent anywhere.
+      priorDaysThread: {
+        showLabel: "Show earlier choices",
+        hideLabel: "Hide earlier choices",
+        heading: "Earlier choices, gathered without interpretation",
+        intro:
+          "These are choices made at different moments. They may or may not belong together, and they do not show that a practice was attempted or that anything changed.",
+        empty:
+          "No compatible earlier choices are available to gather. Nothing will be inferred.",
+        groups: [
+          {
+            id: "starting",
+            title: "Starting points and words considered",
+            template:
+              "Earlier choices included {clauses}. These selections may or may not refer to the same concern.",
+            sources: [
+              {
+                day: 1,
+                from: "brought",
+                descriptor: "what brought you",
+                privateIds: ["private"],
+              },
+              { day: 2, from: "load", descriptor: "what one day contained" },
+              {
+                day: 3,
+                from: "carrying",
+                descriptor:
+                  "a word you considered for what you might be carrying",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+            ],
+          },
+          {
+            id: "responsemap",
+            title: "A possible response map",
+            template:
+              "For one possible response map, earlier choices included {clauses}. No origin or cause follows from them.",
+            sources: [
+              {
+                day: 4,
+                from: "response",
+                descriptor: "a familiar response you selected",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+              {
+                day: 4,
+                from: "purpose",
+                descriptor: "a possible purpose you considered",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+              },
+            ],
+          },
+          {
+            id: "movement",
+            title: "Movement and caution",
+            template:
+              "Earlier choices about movement and caution included {clauses}. Neither selection decides what is wiser now.",
+            sources: [
+              {
+                day: 5,
+                from: "forward",
+                descriptor: "a possible pull toward movement",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 5,
+                from: "holdback",
+                descriptor: "a possible concern",
+                privateIds: ["private"],
+                unclearIds: ["unknown"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+          {
+            id: "cost",
+            title: "Cost, context and care",
+            template:
+              "Earlier choices about present cost and care included {clauses}. They do not decide what caused anything or what should change.",
+            sources: [
+              {
+                day: 6,
+                from: "cost",
+                descriptor: "a possible present-day cost",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 6,
+                from: "protects",
+                descriptor:
+                  "what may make change difficult or keep something in place",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+              },
+              {
+                day: 7,
+                from: "need",
+                descriptor: "a more compassionate way of holding it",
+                privateIds: ["private"],
+                unclearIds: ["unsure"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+          {
+            id: "rehearsal",
+            title: "Care and rehearsal possibilities",
+            template:
+              "Earlier choices about receiving and rehearsal included {clauses}. This does not say that anything was received or practised.",
+            sources: [
+              {
+                day: 8,
+                from: "route",
+                descriptor: "a possible source of already-safe care",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 8,
+                from: "size",
+                descriptor: "an amount you considered",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+              {
+                day: 9,
+                from: "practice",
+                descriptor: "a private rehearsal route you considered",
+                privateIds: ["private"],
+                unclearIds: ["unclear"],
+                noneIds: ["none"],
+              },
+            ],
+          },
+        ],
+      },
     },
+
     close: {
       heading: "A complete stopping place",
       body: [

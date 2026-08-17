@@ -17,6 +17,13 @@ import {
   SPIRITUAL_TOGGLE_TITLE,
 } from "@/content/settings";
 
+// Lightweight PWA install prompt event available in Chromium-based browsers.
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+  prompt(): Promise<void>;
+}
+
 export const Route = createFileRoute("/_shell/settings")({
   head: () => ({
     meta: [

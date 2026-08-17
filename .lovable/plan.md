@@ -21,7 +21,7 @@ No code changes are proposed in this document. It is an assessment plus a priori
 - Safety architecture and international crisis routing exceed what most wellbeing apps ship.
 
 **Functional gaps relative to comparables (UI/experience level, not content)**
-1. **No re-entry loop after Day 10.** Comparables always have a "what now" surface: revisit, repeat, continue practices. Currently the journey ends and Home has nothing that keeps a finished user oriented.
+1. **No re-entry loop after Day 10.** Comparables always have a “what now” surface: e.g., “Revisit any day,” “Try a practice now,” “Take a moment to notice what has shifted,” or “Save your reflections.” Currently the journey ends and Home has nothing that keeps a finished user oriented.
 2. **No lightweight continuity signal.** Deliberately no streaks/scores — correct. But comparables give a soft "last visited / where you are" cue. Home has resume; a finished user has no equivalent.
 3. **No reminder or return mechanism.** Every retention-successful comparable has a gentle daily nudge. A PWA-safe, opt-in, local-only reminder is the only version compatible with your privacy stance; anything push-based needs infrastructure you have deliberately avoided.
 4. **Standalone practices are under-surfaced.** They are the most reusable asset in the product and currently sit behind a nav item with no contextual entry from a finished day or from Home.

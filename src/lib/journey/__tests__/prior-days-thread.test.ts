@@ -596,3 +596,29 @@ describe("Day 10 disclosure UI contract", () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Atomic privacy disclosure
+// ---------------------------------------------------------------------------
+describe("privacy disclosure lands with the feature", () => {
+  it("dates the Privacy Policy and describes the optional gathering accurately", () => {
+    const privacy = readFileSync("src/routes/privacy.tsx", "utf8");
+    expect(privacy).toContain('lastUpdated="August 16, 2026"');
+    expect(privacy).toContain("Optional Day 10 earlier-choices view");
+    expect(privacy).toContain("Show earlier choices");
+    expect(privacy).toContain("is not saved in local");
+    expect(privacy).toContain("artificial intelligence, analytics or any other");
+    expect(privacy).toContain("disappears when you hide it, leave the page or");
+  });
+
+  it("says the same thing in the Settings privacy summary", () => {
+    const settings = readFileSync("src/content/settings.ts", "utf8");
+    expect(settings).toContain("Show earlier choices");
+    expect(settings).toContain("is not saved or added to your reflection");
+  });
+
+  it("bumps the legal bundle exactly once for this change", async () => {
+    const { LEGAL_BUNDLE_VERSION } = await import("@/lib/prefs");
+    expect(LEGAL_BUNDLE_VERSION).toBe("2026-08-16.1");
+  });
+});

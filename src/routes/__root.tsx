@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SplashGate } from "../components/SplashGate";
 import { AgreementGate } from "../components/AgreementGate";
+import { PilotGate } from "../components/PilotGate";
 import { recordRouteTransition } from "../components/JourneyScreen";
 
 /**
@@ -169,9 +170,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <SplashGate>
-        <AgreementGate>
-          <Outlet />
-        </AgreementGate>
+        <PilotGate>
+          <AgreementGate>
+            <Outlet />
+          </AgreementGate>
+        </PilotGate>
       </SplashGate>
     </QueryClientProvider>
 

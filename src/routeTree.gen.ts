@@ -21,6 +21,7 @@ import { Route as SessionWeek01RouteImport } from './routes/session.week-01'
 import { Route as PracticeIdRouteImport } from './routes/practice.$id'
 import { Route as DayDayRouteImport } from './routes/day.$day'
 import { Route as ShellSupportRouteImport } from './routes/_shell.support'
+import { Route as ShellShiftedRouteImport } from './routes/_shell.shifted'
 import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
 import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
 import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
@@ -86,6 +87,11 @@ const ShellSupportRoute = ShellSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => ShellRoute,
 } as any)
+const ShellShiftedRoute = ShellShiftedRouteImport.update({
+  id: '/shifted',
+  path: '/shifted',
+  getParentRoute: () => ShellRoute,
+} as any)
 const ShellSettingsRoute = ShellSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
+  '/shifted': typeof ShellShiftedRoute
   '/support': typeof ShellSupportRoute
   '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/practices': typeof ShellPracticesRoute
   '/resources': typeof ShellResourcesRoute
   '/settings': typeof ShellSettingsRoute
+  '/shifted': typeof ShellShiftedRoute
   '/support': typeof ShellSupportRoute
   '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/_shell/practices': typeof ShellPracticesRoute
   '/_shell/resources': typeof ShellResourcesRoute
   '/_shell/settings': typeof ShellSettingsRoute
+  '/_shell/shifted': typeof ShellShiftedRoute
   '/_shell/support': typeof ShellSupportRoute
   '/day/$day': typeof DayDayRouteWithChildren
   '/practice/$id': typeof PracticeIdRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/practices'
     | '/resources'
     | '/settings'
+    | '/shifted'
     | '/support'
     | '/day/$day'
     | '/practice/$id'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/practices'
     | '/resources'
     | '/settings'
+    | '/shifted'
     | '/support'
     | '/day/$day'
     | '/practice/$id'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/_shell/practices'
     | '/_shell/resources'
     | '/_shell/settings'
+    | '/_shell/shifted'
     | '/_shell/support'
     | '/day/$day'
     | '/practice/$id'
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellSupportRouteImport
       parentRoute: typeof ShellRoute
     }
+    '/_shell/shifted': {
+      id: '/_shell/shifted'
+      path: '/shifted'
+      fullPath: '/shifted'
+      preLoaderRoute: typeof ShellShiftedRouteImport
+      parentRoute: typeof ShellRoute
+    }
     '/_shell/settings': {
       id: '/_shell/settings'
       path: '/settings'
@@ -368,6 +387,7 @@ interface ShellRouteChildren {
   ShellPracticesRoute: typeof ShellPracticesRoute
   ShellResourcesRoute: typeof ShellResourcesRoute
   ShellSettingsRoute: typeof ShellSettingsRoute
+  ShellShiftedRoute: typeof ShellShiftedRoute
   ShellSupportRoute: typeof ShellSupportRoute
   ShellIndexRoute: typeof ShellIndexRoute
 }
@@ -377,6 +397,7 @@ const ShellRouteChildren: ShellRouteChildren = {
   ShellPracticesRoute: ShellPracticesRoute,
   ShellResourcesRoute: ShellResourcesRoute,
   ShellSettingsRoute: ShellSettingsRoute,
+  ShellShiftedRoute: ShellShiftedRoute,
   ShellSupportRoute: ShellSupportRoute,
   ShellIndexRoute: ShellIndexRoute,
 }

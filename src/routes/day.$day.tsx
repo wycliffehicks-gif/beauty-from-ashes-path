@@ -16,6 +16,8 @@ import {
 
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { DayMotif } from "@/components/VisualMotifs";
+import { ContinueJourneyBoundary } from "@/components/ContinueJourneyBoundary";
+import { isDayUnlocked, useEntitlement } from "@/lib/journey/entitlement";
 
 import { getFirstJourneyDay, FIRST_JOURNEY_FINAL_DAY } from "@/content/first-journey";
 import {

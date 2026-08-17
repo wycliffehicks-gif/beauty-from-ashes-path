@@ -1380,3 +1380,9 @@
 .bfa-visual-home-hero {
   overflow: clip;
 }
+
+/* Long words (clinical terms, phone strings) wrap rather than force the page
+   sideways when text is enlarged. */
+body :where(h1, h2, h3, h4, p, li, span, a, button) {
+  overflow-wrap: break-word;
+}

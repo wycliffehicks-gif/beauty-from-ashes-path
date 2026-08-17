@@ -145,7 +145,7 @@ export function JourneyScreen({
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-2">
+        <header className="journey-chrome grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-3">
           <Link
             to="/"
             aria-label="Home — Your Journey"
@@ -153,9 +153,10 @@ export function JourneyScreen({
           >
             <HomeIcon />
           </Link>
-          <p className="bfa-copy-meta min-w-0 truncate text-center uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="journey-chrome-label min-w-0 truncate text-center text-muted-foreground">
             {label ?? ""}
           </p>
+
           <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
             <SettingsIcon />
           </Link>

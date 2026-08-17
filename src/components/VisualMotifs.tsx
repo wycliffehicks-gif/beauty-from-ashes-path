@@ -434,6 +434,11 @@ export function DayMotif({
       data-bfa-motif={treatment}
       data-bfa-day-motif={motif}
       className={`bfa-day-motif bfa-day-motif-${treatment} ${className}`}
+      style={{
+        ["--bfa-motif-thread-position" as string]: String(g.threadPosition),
+        ["--bfa-motif-thread-continuity" as string]: String(g.threadContinuity),
+        ["--bfa-motif-temperature" as string]: String(g.temperature),
+      }}
     >
       <svg
         className="bfa-visual-svg"

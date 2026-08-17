@@ -26,6 +26,7 @@ import {
   type JourneyDayContent,
   type MotifKey,
   type PracticePath,
+  type PriorDaysThreadDefinition,
   type Question,
   type ScreenKey,
 } from "@/content/journey-types";
@@ -41,7 +42,10 @@ import {
   saveDayReflection,
   saveLocator,
   saveReached,
+  type JourneyProgress,
 } from "@/lib/journey/progress";
+import { buildPriorDaysThread } from "@/lib/journey/prior-days-thread";
+
 import {
   answerKeyFor,
   type BuiltReflection,

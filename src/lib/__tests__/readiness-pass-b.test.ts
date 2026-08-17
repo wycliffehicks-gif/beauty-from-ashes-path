@@ -256,7 +256,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // and the static care section ONLY — no stateful screen, answer ID, option
     // order, selection mode or answer meaning version changed.
     expect(structuralFingerprint()).toBe(
-      "b0272793bf75e0a4185cdd988cc2652d5cd5c29c7fc3d6c05e3ecd41827580f2",
+      "c580183b9ca71b4b05cbdd17a8f92690b27fc07e65cfa7af3a8f700b60f89434",
     );
   });
 });

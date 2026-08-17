@@ -6,8 +6,11 @@ import {
   JOURNEY_IDENTITY,
   getJourneyDayById,
 } from "@/content/journey";
-import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 import { useStorageStatus } from "@/lib/storage-status";
+import { buildReflectionExport, downloadTextFile } from "@/lib/journey/export";
+import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+
+import { useState } from "react";
 
 
 export const Route = createFileRoute("/_shell/")({

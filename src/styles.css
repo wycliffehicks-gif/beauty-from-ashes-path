@@ -1191,3 +1191,125 @@
   letter-spacing: clamp(0.12em, 0.8vw, 0.2em);
   text-wrap: balance;
 }
+
+/* ---------------------------------------------------------------------------
+   VISUAL & INTERFACE PASS — presentation only. Composition hierarchy, a single
+   vertical rhythm, honest touch targets, quiet continuity motion, and gold
+   reserved for state. No palette additions, no content or layout system change.
+   --------------------------------------------------------------------------- */
+
+/* --- One vertical rhythm ------------------------------------------------ */
+
+.journey-page :where(section) > * + * {
+  margin-block-start: var(--bfa-rhythm, 1.5rem);
+}
+
+:root {
+  --bfa-rhythm: 1.5rem;
+  --bfa-rhythm-tight: 0.75rem;
+  --bfa-rhythm-loose: 2rem;
+}
+
+/* --- Surface hierarchy: one hero surface, quieter secondary blocks ------ */
+
+.bfa-visual-home-hero-inner {
+  padding-block-end: 0.25rem;
+}
+
+.day-row {
+  padding: 1.05rem 1rem;
+  background: color-mix(in oklab, var(--card) 92%, var(--background));
+  box-shadow: none;
+}
+.day-row[data-state="upcoming"] {
+  border-color: color-mix(in oklab, var(--bfa-control-border) 70%, transparent);
+}
+
+/* --- Day card composition: title, quiet subtitle, one small state marker - */
+
+.day-row-theme {
+  line-height: 1.5;
+}
+.day-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.day-row-state {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--bfa-control-border);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--deep-navy);
+  background: transparent;
+  white-space: nowrap;
+}
+.dark .day-row-state {
+  color: var(--foreground);
+}
+.day-row-state[data-state="current"] {
+  border-color: var(--bfa-interactive-gold);
+  background: color-mix(in oklab, var(--champagne) 30%, transparent);
+}
+.day-row-descriptor {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+.day-row-chevron {
+  display: grid;
+  place-items: center;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--bfa-interactive-gold);
+}
+
+/* --- Honest touch targets ---------------------------------------------- */
+
+.day-row,
+.bfa-settings-link,
+.bfa-support-action,
+.journey-chrome-btn,
+.bfa-journey-choice {
+  min-height: 44px;
+}
+
+/* --- Quiet continuity motion ------------------------------------------- */
+
+@keyframes bfa-screen-settle {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.journey-page :where(section) {
+  animation: bfa-screen-settle 240ms ease-out both;
+}
+
+.btn-primary-journey:active:not(:disabled),
+.btn-quiet:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-page :where(section) {
+    animation: none;
+  }
+  .btn-primary-journey:active:not(:disabled),
+  .btn-quiet:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* --- Primary action: confident, not dominant ---------------------------- */
+
+.btn-primary-journey {
+  box-shadow: none;
+  font-weight: 550;
+  letter-spacing: 0.015em;
+}

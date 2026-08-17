@@ -1327,15 +1327,14 @@ function ReflectionScreen({
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Before paint on every mount — including browser Back and Forward — and
-  // whenever the answers change, this screen reports that it is preparing, so a
-  // stale readiness can never briefly enable Continue.
+  // whenever the answers change, this screen reports that it is preparing and
+  // then, in the same effect, builds the deterministic on-device reflection.
+  // Because everything happens before the browser paints, the reflection
+  // appears atomically: no transient copy is ever shown, and a stale readiness
+  // can never briefly enable Continue.
   useBeforePaintEffect(() => {
     setState(null);
     onPreparing();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  useEffect(() => {
     if (!answersLoaded) return;
     const dayId = dayIdFor(content.day);
     // The proof carries the snapshot format, the current approved reflection
@@ -1353,6 +1352,7 @@ function ReflectionScreen({
     // would loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, token, answersLoaded]);
+
 
 
   // Only a response built for the current answers may be shown.

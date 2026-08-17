@@ -171,7 +171,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
    * The normalized progress already read for this day, kept in component memory
    * so the optional Day 10 gathering needs no second storage read and no write.
    */
-  const [progress, setProgress] = useState<JourneyProgress | null>(null);
+  const [journeyProgress, setJourneyProgress] = useState<JourneyProgress | null>(null);
   /** Proof of real movement: stored high-water screen plus this visit's own. */
   const [reached, setReached] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -227,7 +227,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
     restoredForRef.current = dayId;
 
     const progress = readProgress();
-    setProgress(progress);
+    setJourneyProgress(progress);
     setDayAnswers(answersForDay(progress, content));
     setPendingRevision(hasPendingAnswerMeaningRevision(progress, content));
     setReached(progress.reached[dayId] ?? 0);
@@ -392,6 +392,7 @@ function DayFlowFor({ content }: { content: JourneyDayContent }) {
       onReflectionReady={onReflectionReady}
 
       savedReflection={savedReflection}
+      journeyProgress={journeyProgress}
       onReflectionSaved={(text, snapshot) =>
         setSavedReflection({ text, snapshot })
       }
@@ -434,6 +435,7 @@ function ScreenBody({
   onReflectionPreparing,
   onReflectionReady,
   savedReflection,
+  journeyProgress,
   onReflectionSaved,
 }: {
   content: JourneyDayContent;
@@ -463,6 +465,8 @@ function ScreenBody({
   onReflectionPreparing: () => void;
   onReflectionReady: (token: string) => void;
   savedReflection: { text?: string; snapshot?: string };
+  /** Already-loaded progress, passed down; no second storage read. */
+  journeyProgress: JourneyProgress | null;
   onReflectionSaved: (text: string, snapshot: string) => void;
 
 }) {
@@ -575,7 +579,7 @@ function ScreenBody({
           onReady={onReflectionReady}
           savedReflection={savedReflection}
           onSaved={onReflectionSaved}
-          progress={progress}
+          progress={journeyProgress}
           prefsHydrated={prefsHydrated}
           showSpiritual={showSpiritualChoices}
         />,

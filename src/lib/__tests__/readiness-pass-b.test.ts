@@ -157,7 +157,12 @@ function structuralFingerprint(): string {
     questions: d.questions.map((q) => ({
       id: q.id,
       select: q.select,
-      options: q.options.map((o) => ({ id: o.id, exclusive: o.exclusive === true })),
+      options: q.options.map((o) => ({
+        id: o.id,
+        exclusive: o.exclusive === true,
+        spiritualOnly: o.spiritualOnly === true,
+      })),
+
       info: (q.info ?? []).map((i) => i.term),
       echo: q.echo
         ? {
@@ -170,7 +175,11 @@ function structuralFingerprint(): string {
     step: {
       id: d.step.id,
       select: d.step.select,
-      options: d.step.options.map((o) => ({ id: o.id, exclusive: o.exclusive === true })),
+      options: d.step.options.map((o) => ({
+        id: o.id,
+        exclusive: o.exclusive === true,
+        spiritualOnly: o.spiritualOnly === true,
+      })),
       echo: d.step.echo ? Object.keys(d.step.echo.byOption).sort() : null,
     },
     practise: {
@@ -179,7 +188,17 @@ function structuralFingerprint(): string {
       reflectionScripture: typeof d.practise.reflection.scripture !== "undefined",
       spiritualSteps: d.practise.spiritual.steps.length,
       spiritualScripture: typeof d.practise.spiritual.scripture !== "undefined",
+      route: d.practise.route
+        ? {
+            from: d.practise.route.from,
+            reflectionByOption: Object.keys(d.practise.route.reflectionByOption),
+            spiritualByOption: d.practise.route.spiritualByOption
+              ? Object.keys(d.practise.route.spiritualByOption)
+              : null,
+          }
+        : null,
     },
+
     reflection: d.reflection.sections.map((s) => ({
       id: s.id,
       from: s.from ?? null,
@@ -229,8 +248,15 @@ describe("canonical ten-day structural fingerprint", () => {
     // presentation-only. No day, screen, screen order, progress index,
     // question/option/step ID, selection mode, exclusivity, echo branch,
     // storage version or answer identity changed.
+    //
+    // Updated in C2C final acceptance hardening: the fingerprint now also
+    // hashes presentation-only choice metadata (Choice.spiritualOnly) and Day
+    // 9's routed-practice map (route.from and its ordered option keys). The
+    // digest change reflects that presentation metadata, the Day 9 route maps
+    // and the static care section ONLY — no stateful screen, answer ID, option
+    // order, selection mode or answer meaning version changed.
     expect(structuralFingerprint()).toBe(
-      "6ec61a2e627ede37d0dc3178eef0daacaa530e6cd63faa55cdc62a50d9e8ef66",
+      "b0272793bf75e0a4185cdd988cc2652d5cd5c29c7fc3d6c05e3ecd41827580f2",
     );
   });
 });

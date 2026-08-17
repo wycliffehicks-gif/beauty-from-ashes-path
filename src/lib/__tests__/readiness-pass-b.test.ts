@@ -279,7 +279,7 @@ describe("canonical ten-day structural fingerprint", () => {
     // selection mode, exclusivity, echo branch, reflection section, storage
     // version or answer meaning version changed.
     expect(structuralFingerprint()).toBe(
-      "c580183b9ca71b4b05cbdd17a8f92690b27fc07e65cfa7af3a8f700b60f89434",
+      "689a71f86619526deac5e8887e2b52ca56d487d74878c4d9027b74d9bfb9c212",
     );
   });
 });

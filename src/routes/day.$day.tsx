@@ -587,9 +587,6 @@ function ScreenBody({
         {
           onContinue: onNext,
           continueDisabled: !reflectionReady,
-          continueHint: reflectionReady
-            ? undefined
-            : "Your reflection is being prepared. Continue becomes available in a moment.",
         },
       );
 

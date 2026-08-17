@@ -173,7 +173,7 @@ function Opening() {
           ) : (
             <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           )}
-          <p className="bfa-copy-meta min-w-0 truncate text-center uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="journey-chrome-label min-w-0 truncate text-center text-muted-foreground">
             {step + 1} of {TOTAL}
           </p>
           <Link

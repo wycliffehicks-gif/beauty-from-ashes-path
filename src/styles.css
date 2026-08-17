@@ -1375,3 +1375,8 @@
 .day-row-chevron {
   flex: none;
 }
+/* Decorative motif layers never extend the scrollable area. */
+.bfa-visual-thread-track,
+.bfa-visual-home-hero {
+  overflow: clip;
+}

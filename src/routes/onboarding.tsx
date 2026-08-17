@@ -6,6 +6,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { SupportIcon } from "@/components/Icons";
 
 /** The router's own history position, for a truthful visible Back. */
 function useHistoryIndex(): number {
@@ -182,20 +183,7 @@ function Opening() {
             aria-label="Support and safety"
             title="Support and safety"
           >
-            <svg
-              aria-hidden
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="8.5" />
-              <circle cx="12" cy="12" r="3.5" />
-              <path d="M6 6l3.6 3.6M18 6l-3.6 3.6M6 18l3.6-3.6M18 18l-3.6-3.6" />
-            </svg>
+            <SupportIcon />
           </Link>
         </header>
 

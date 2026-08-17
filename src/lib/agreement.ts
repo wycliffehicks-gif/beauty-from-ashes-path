@@ -13,6 +13,7 @@ import { LEGAL_BUNDLE_VERSION, type Prefs } from "@/lib/prefs";
  * outside this pilot and are never reachable before acceptance.
  */
 export const PUBLIC_PATHS = [
+  "/",
   "/onboarding",
   "/support",
   "/privacy",

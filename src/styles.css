@@ -614,6 +614,104 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Landing page — public front door before the agreement is accepted.
+   --------------------------------------------------------------------------- */
+
+.landing-page {
+  --bfa-reading-backdrop: rgba(251, 248, 239, 0.82);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  margin-inline: -1.25rem;
+  padding: 1.5rem 1.25rem 0.5rem;
+}
+
+.landing-hero > .bfa-visual-motif {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.landing-hero-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+  background: var(--bfa-reading-backdrop);
+}
+
+.landing-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.landing-section .bfa-h2 {
+  color: var(--color-foreground);
+}
+
+.landing-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  padding: 1.25rem;
+}
+
+.landing-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.landing-day-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.landing-day-number {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.landing-cta {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.dark .landing-page {
+  --bfa-reading-backdrop: rgba(26, 53, 94, 0.78);
+}
+
+.dark .landing-card,
+.dark .landing-day-item,
+.dark .landing-cta {
+  background-color: var(--color-card);
+  border-color: var(--color-border);
+}
+
+/* ---------------------------------------------------------------------------
    Day motifs — Arrival, quiet divider, Close. Normal document flow only; art
    never sits behind text. Fields are restrained mists, dimmer in dark mode.
    --------------------------------------------------------------------------- */
@@ -677,6 +775,48 @@
 .bfa-day-motif-closing {
   height: 96px;
   margin-inline: -0.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Per-day motif variation: thread position, continuity and temperature.
+   The three geometry-derived values are set as CSS custom properties on each
+   motif wrapper; these rules give them a subtle but visible visual effect.
+   --------------------------------------------------------------------------- */
+
+.bfa-day-motif {
+  /* The whole motif shifts horizontally so the gold thread reads as a different
+     kind of seam each day. The shift is small (±16px) so fields stay within
+     the frame and text remains untouched. */
+  transform: translateX(calc((var(--bfa-motif-thread-position, 0.5) - 0.5) * 32px));
+  transition: transform 200ms ease;
+}
+
+.bfa-day-motif path[stroke="var(--bfa-gold-line)"],
+.bfa-day-motif path[stroke="var(--bfa-champagne-line)"],
+.bfa-day-motif path[stroke="var(--bfa-ash-line)"] {
+  /* CSS custom properties applied to an SVG path only work when the value is
+     referenced; the stroke colours are fixed in the component, so this rule is
+     a fallback for future CSS-driven tints. */
+  transition: opacity 200ms ease;
+}
+
+/* The secondary gold trace takes its opacity from the day's continuity. */
+.bfa-day-motif-arrival path:nth-of-type(6) {
+  opacity: var(--bfa-motif-thread-continuity, 0.4);
+}
+
+/* The principal gold stroke is a little warmer where temperature is high. */
+.bfa-day-motif-arrival path:nth-of-type(5),
+.bfa-day-motif-closing path:nth-of-type(4),
+.bfa-day-motif-quiet path:nth-of-type(2) {
+  opacity: calc(0.55 + var(--bfa-motif-temperature, 0.8) * 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfa-day-motif {
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------

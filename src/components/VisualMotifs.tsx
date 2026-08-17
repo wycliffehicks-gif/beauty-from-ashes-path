@@ -166,6 +166,12 @@ type DayGeometry = {
   quietGold: string;
   /** One supporting contour for the quiet divider. */
   quietContour: string;
+  /** Horizontal position of the gold thread within the frame (0 = far left, 1 = far right). */
+  threadPosition: number;
+  /** How continuous the gold thread feels across the day (0.2 = broken, 0.9 = unbroken). */
+  threadContinuity: number;
+  /** Per-day warmth: 0 = cooler/ash, 1 = full warm gold. */
+  temperature: number;
 };
 
 const FIELD_VAR: Record<FieldTint, string> = {
@@ -193,6 +199,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M118 104 C 152 82, 162 54, 198 36 C 228 22, 250 28, 272 14",
     quietGold: "M96 30 C 138 16, 178 30, 218 12 C 248 -1, 268 8, 292 2",
     quietContour: "M60 34 C 108 24, 150 36, 196 26",
+    threadPosition: 0.5,
+    threadContinuity: 0.7,
+    temperature: 0.8,
   },
 
   /* Day 2 — incomplete offset rings; the thread loops once and continues. */
@@ -213,6 +222,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
       "M-8 82 C 66 74, 100 48, 140 52 C 166 55, 170 76, 152 81 C 138 85, 130 70, 144 62 C 180 44, 244 68, 302 48 C 342 34, 366 42, 398 36",
     quietGold: "M84 28 C 114 26, 124 12, 142 14 C 156 16, 156 30, 144 32 C 132 34, 130 20, 146 14 C 176 4, 232 24, 286 12",
     quietContour: "M52 22 C 92 34, 128 20, 168 30",
+    threadPosition: 0.2,
+    threadContinuity: 0.5,
+    temperature: 0.7,
   },
 
   /* Day 3 — a denser cluster on one side; the thread reaches clearer space. */
@@ -232,6 +244,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M28 96 C 70 86, 78 58, 120 50 C 170 40, 216 62, 270 46 C 316 32, 350 40, 392 30",
     quietGold: "M62 32 C 96 22, 106 8, 138 8 C 190 8, 240 26, 300 14",
     quietContour: "M40 12 C 62 20, 58 30, 84 34",
+    threadPosition: 0.3,
+    threadContinuity: 0.6,
+    temperature: 0.75,
   },
 
   /* Day 4 — a broad asymmetric canopy over open inner space. */
@@ -251,6 +266,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M-4 76 C 64 24, 176 6, 264 22 C 322 32, 356 54, 396 62",
     quietGold: "M52 34 C 108 8, 214 4, 276 18 C 310 26, 326 32, 344 34",
     quietContour: "M78 36 C 124 20, 208 18, 258 28",
+    threadPosition: 0.4,
+    threadContinuity: 0.8,
+    temperature: 0.85,
   },
 
   /* Day 5 — two currents facing different ways; one gold S travels between. */
@@ -270,6 +288,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M190 4 C 180 42, 232 58, 224 92 C 218 118, 178 124, 168 140",
     quietGold: "M156 -4 C 148 12, 200 20, 192 36 C 186 48, 158 46, 152 58",
     quietContour: "M64 16 C 100 6, 122 22, 150 14",
+    threadPosition: 0.5,
+    threadContinuity: 0.4,
+    temperature: 0.6,
   },
 
   /* Day 6 — uneven compressed contours; the thread dips and changes course. */
@@ -289,6 +310,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M-8 74 C 56 70, 100 90, 148 98 C 190 104, 218 84, 244 66 C 278 42, 328 50, 396 36",
     quietGold: "M56 12 C 96 10, 118 30, 152 34 C 184 38, 202 22, 220 8 C 244 -8, 276 0, 316 -8",
     quietContour: "M84 26 C 116 22, 138 32, 168 26",
+    threadPosition: 0.6,
+    threadContinuity: 0.3,
+    temperature: 0.55,
   },
 
   /* Day 7 — one broad holding curve around an irregular inner form. */
@@ -308,6 +332,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M34 106 C 12 58, 66 12, 152 4 C 246 -4, 322 32, 348 90",
     quietGold: "M48 36 C 32 12, 96 -6, 168 -2 C 240 2, 292 18, 330 30",
     quietContour: "M96 26 C 132 12, 196 12, 240 22",
+    threadPosition: 0.7,
+    threadContinuity: 0.9,
+    temperature: 0.95,
   },
 
   /* Day 8 — two separated islands; the thread spans one narrow interval. */
@@ -327,6 +354,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M-6 84 C 46 96, 98 96, 142 74 C 178 56, 208 56, 244 64 C 292 74, 340 60, 396 64",
     quietGold: "M40 30 C 84 34, 120 24, 152 16 C 190 6, 236 20, 300 16",
     quietContour: "M64 12 C 92 4, 122 8, 142 18",
+    threadPosition: 0.75,
+    threadContinuity: 0.7,
+    temperature: 0.8,
   },
 
   /* Day 9 — two faint rehearsal traces beside one solid gold route. */
@@ -346,6 +376,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M-8 86 C 64 64, 130 100, 200 76 C 262 54, 326 86, 398 64",
     quietGold: "M40 30 C 100 12, 156 34, 216 18 C 256 8, 288 16, 330 8",
     quietContour: "M40 14 C 100 -4, 156 18, 216 2",
+    threadPosition: 0.8,
+    threadContinuity: 0.6,
+    temperature: 0.85,
   },
 
   /* Day 10 — contours widen toward the edges; the thread leaves the frame. */
@@ -365,6 +398,9 @@ const DAY_GEOMETRY: Record<MotifKey, DayGeometry> = {
     goldClosing: "M-10 86 C 72 82, 126 54, 202 42 C 284 28, 332 18, 400 -2",
     quietGold: "M28 34 C 92 30, 148 20, 216 12 C 282 4, 320 6, 366 -2",
     quietContour: "M28 20 C 60 26, 84 24, 108 18",
+    threadPosition: 0.55,
+    threadContinuity: 0.85,
+    temperature: 0.9,
   },
 };
 
@@ -398,6 +434,11 @@ export function DayMotif({
       data-bfa-motif={treatment}
       data-bfa-day-motif={motif}
       className={`bfa-day-motif bfa-day-motif-${treatment} ${className}`}
+      style={{
+        ["--bfa-motif-thread-position" as string]: String(g.threadPosition),
+        ["--bfa-motif-thread-continuity" as string]: String(g.threadContinuity),
+        ["--bfa-motif-temperature" as string]: String(g.temperature),
+      }}
     >
       <svg
         className="bfa-visual-svg"

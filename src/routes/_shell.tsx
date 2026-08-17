@@ -18,7 +18,7 @@ function ShellLayout() {
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 pt-4 pb-2">
+        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-2">
           {isHome ? (
             <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           ) : (

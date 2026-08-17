@@ -43,9 +43,9 @@ export function SplashGate({ children }: { children: ReactNode }) {
 
     const reduced =
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-    // Slightly longer, genuinely readable dwell; a very subtle fade only.
-    const dwell = reduced ? 900 : 2600;
-    const fade = reduced ? 0 : 420;
+    // A short, synchronized dwell with a brief fade; nothing loops.
+    const dwell = reduced ? 700 : 1200;
+    const fade = reduced ? 0 : 240;
 
     beginSplash();
     setVisible(true);
@@ -90,7 +90,7 @@ export function SplashGate({ children }: { children: ReactNode }) {
         <div
           data-testid="splash-overlay"
           aria-hidden="true"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--bfa-reading-backdrop,#F6F2EA)] transition-opacity duration-500 ease-out motion-reduce:transition-none"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--bfa-reading-backdrop,#F6F2EA)] transition-opacity duration-[240ms] ease-out motion-reduce:transition-none"
           style={{ opacity: leaving ? 0 : 1 }}
         >
           <VisualMotif variant="splash" className="bfa-visual-splash-bg" />

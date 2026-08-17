@@ -145,7 +145,7 @@ export function JourneyScreen({
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 pt-4 pb-2">
+        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-2">
           <Link
             to="/"
             aria-label="Home — Your Journey"

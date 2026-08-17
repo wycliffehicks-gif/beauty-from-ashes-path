@@ -45,7 +45,7 @@ function GateHolding() {
         role="status"
         aria-live="polite"
       >
-        <p className="text-sm text-muted-foreground">One moment…</p>
+        <p className="bfa-copy-support text-muted-foreground">One moment…</p>
       </div>
     </div>
   );

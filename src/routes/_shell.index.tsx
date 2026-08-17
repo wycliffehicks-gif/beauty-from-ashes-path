@@ -63,7 +63,7 @@ function JourneyHome() {
       {resume && resumeDay && (
         <div
           data-testid="resume-card"
-          className="rounded-xl border border-[color:var(--gold)] bg-card p-5"
+          className="rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5"
         >
           <p className="eyebrow">Continue where you left off</p>
           <h2 className="bfa-h2 mt-2 font-serif text-foreground">

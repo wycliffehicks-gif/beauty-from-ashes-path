@@ -75,7 +75,7 @@ function SettingsPage() {
             aria-checked={prefs.showSpiritual}
             aria-label="Include Scripture and spiritual reflection"
             onClick={() => update({ showSpiritual: !prefs.showSpiritual })}
-            className={`relative h-12 w-[58px] shrink-0 rounded-full border border-[color:var(--bfa-control-border)] transition-colors ${
+            className={`bfa-settings-switch relative h-12 w-[58px] shrink-0 rounded-full border border-[color:var(--bfa-control-border)] ${
               prefs.showSpiritual ? "bg-primary" : "bg-secondary"
             }`}
           >
@@ -217,7 +217,7 @@ function SettingsLink({ to, title }: { to: string; title: string }) {
   return (
     <Link
       to={to}
-      className="bfa-copy flex min-h-[56px] items-center justify-between gap-3 px-5 py-3 text-foreground hover:bg-[color:var(--champagne)]/35"
+      className="bfa-settings-link bfa-copy flex min-h-[56px] items-center justify-between gap-3 px-5 py-3 text-foreground"
     >
       <span className="min-w-0 font-medium">{title}</span>
       <span aria-hidden className="text-[color:var(--gold)]">

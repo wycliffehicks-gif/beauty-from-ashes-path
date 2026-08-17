@@ -22,7 +22,7 @@ import { recordRouteTransition } from "../components/JourneyScreen";
  * manage. No user setting, no persistence, no analytics. Responds safely if the
  * system preference changes mid-session.
  */
-const THEME_SCRIPT = `(function(){try{var m=window.matchMedia("(prefers-color-scheme: dark)");var a=function(d){var r=document.documentElement;r.classList.toggle("dark",d);var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",d?"#0F1B2E":"#F6F2EA");};a(m.matches);if(m.addEventListener)m.addEventListener("change",function(e){a(e.matches);});else if(m.addListener)m.addListener(function(e){a(e.matches);});}catch(e){}})();`;
+const THEME_SCRIPT = `(function(){try{var m=window.matchMedia("(prefers-color-scheme: dark)");var a=function(d){var r=document.documentElement;r.classList.toggle("dark",d);var t=document.querySelector('meta[name="theme-color"]');if(t)t.setAttribute("content",d?"#12213D":"#F6F2EA");};a(m.matches);if(m.addEventListener)m.addEventListener("change",function(e){a(e.matches);});else if(m.addListener)m.addListener(function(e){a(e.matches);});}catch(e){}})();`;
 
 
 function NotFoundComponent() {
@@ -30,16 +30,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="max-w-md text-center">
         <p className="font-serif text-6xl text-foreground">…</p>
-        <h1 className="mt-4 font-serif text-2xl text-foreground">This page isn’t here</h1>
-        <p className="mt-3 text-sm text-muted-foreground">
+        <h1 className="bfa-h1 mt-4 font-serif text-foreground">This page isn’t here</h1>
+        <p className="bfa-copy-support mt-3 text-muted-foreground">
           The path you followed doesn’t lead anywhere just now. That’s alright — you can begin again.
         </p>
         <div className="mt-8">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
+            className="btn-primary-journey"
           >
-            Return to Today
+            Return to Your Journey
           </Link>
         </div>
       </div>
@@ -57,9 +57,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="max-w-md text-center">
-        <h1 className="font-serif text-2xl text-foreground">Something didn’t load</h1>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Take a breath. You can try again, or return home.
+        <h1 className="bfa-h1 font-serif text-foreground">Something didn’t load</h1>
+        <p className="bfa-copy-support mt-3 text-muted-foreground">
+          Take a breath. You can try again, or return to Your Journey.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
@@ -67,15 +67,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className="btn-primary-journey"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-5 py-3 text-sm font-medium text-foreground hover:bg-secondary"
+            className="btn-quiet"
           >
-            Return home
+            Return to Your Journey
           </a>
         </div>
       </div>

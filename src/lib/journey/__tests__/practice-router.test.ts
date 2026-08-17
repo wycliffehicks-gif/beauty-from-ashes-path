@@ -313,11 +313,10 @@ describe("Day 8 optional Christian choice is absent from every presentation surf
       expect(presentationOptions(route, opts).some((v) => v.option.id === "god")).toBe(false);
 
       // No Echo or reflection line.
-      const echoLine = route.echo!.byOption["god"]!;
       const text = buildReflection(day8, shown)
         .sections.flatMap((s) => s.paragraphs)
         .join(" ");
-      expect(text).not.toContain(echoLine);
+      expect(text).not.toContain("from God");
 
       // No trace in the answer snapshot or the reflection proof path.
       expect(answersSnapshot(shown)).not.toContain("god");
@@ -339,6 +338,6 @@ describe("Day 8 optional Christian choice is absent from every presentation surf
     const text = buildReflection(day8, shown)
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
-    expect(text).toContain(route.echo!.byOption["god"]!);
+    expect(text).toContain("from God");
   });
 });

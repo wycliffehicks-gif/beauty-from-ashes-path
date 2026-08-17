@@ -48,6 +48,13 @@ describe("legal bundle version", () => {
         legalAcceptance: { version: "2026-07-27", acceptedAt: "2026-07-27" },
       }),
     ).toBe(false);
+    // The immediate predecessor bundle is stale too.
+    expect(
+      hasCurrentAcceptance({
+        onboarded: true,
+        legalAcceptance: { version: "2026-08-02.2", acceptedAt: "2026-08-02.2" },
+      }),
+    ).toBe(false);
     expect(
       hasCurrentAcceptance({
         onboarded: true,

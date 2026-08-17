@@ -185,8 +185,7 @@ export function buildPrintableExport(progress: JourneyProgress): {
     margin: 1rem 0 0.25rem;
   }
   p { margin: 0 0 0.35rem; }
-  p.prompt { font-family: "IBM Plex Sans", system-ui, sans-serif; color: #4a4views; }
-  p.prompt { color: #4a443c; }
+  p.prompt { font-family: "IBM Plex Sans", system-ui, sans-serif; color: #4a443c; }
   p.choice { padding-left: 1rem; }
   p.spacer { margin: 0.5rem 0; }
   hr.rule { border: 0; border-top: 1px solid #c9a227; margin: 2rem 0 0.5rem; opacity: 0.6; }

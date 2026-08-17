@@ -84,7 +84,7 @@ There is no account system, so access is simply the URL. Recommended pilot setup
 - Landing page gets its own `head()` — title, description, og/twitter text. It is the only route that should be indexable, and only when you decide to be public.
 - Boundary move is `FREE_DAYS` plus copy in `src/components/ContinueJourneyBoundary.tsx`. No checkout code in this pass.
 - Icon and per-day motif work is CSS and `src/components/VisualMotifs.tsx` only; no content or engine files touched.
-- Protected files (`package.json`, `bun.lock`) untouched; `src/routeTree.gen.ts` regenerates only because a route is added.
+- Protected files (`package.json`, `bun.lock`, `src/routeTree.gen.ts`) untouched; `src/routeTree.gen.ts` regenerates only because a route is added.
 
 ## What I would build in this pass
 

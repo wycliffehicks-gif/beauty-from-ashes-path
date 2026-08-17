@@ -1355,3 +1355,9 @@
 .bfa-visual-home-hero .bfa-visual-motif {
   opacity: 0.95;
 }
+
+/* Centred opening screens sit slightly above true centre so the headline lands
+   in the natural reading zone instead of leaving a dead band above it. */
+.bfa-safe-center {
+  padding-block-end: clamp(0rem, 7vh, 4.5rem);
+}

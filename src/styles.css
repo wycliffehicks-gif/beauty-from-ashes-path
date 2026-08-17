@@ -1313,3 +1313,45 @@
   font-weight: 550;
   letter-spacing: 0.015em;
 }
+
+/* --- Day-flow chrome: a clearer step band, larger affordances ------------ */
+
+.journey-chrome-label {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.journey-chrome-btn {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-lg);
+  color: var(--deep-navy);
+}
+.dark .journey-chrome-btn {
+  color: var(--foreground);
+}
+.journey-chrome-btn svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+@media (hover: hover) {
+  .journey-chrome-btn:hover {
+    background: color-mix(in oklab, var(--champagne) 30%, transparent);
+  }
+}
+
+/* The step ticks read as one continuous thread rather than loose dashes. */
+[role="progressbar"] > .bfa-progress-segment {
+  height: 3px;
+  border-radius: 999px;
+}
+
+/* --- Motif presence ----------------------------------------------------- */
+
+.bfa-visual-home-hero .bfa-visual-motif {
+  opacity: 0.95;
+}

@@ -1478,7 +1478,11 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
               "Support, accommodation, advocacy, or practical care that is not yet in place",
           },
           { id: "self", label: "How I relate to myself when things are difficult" },
-          { id: "faith", label: "Questions about faith, God, meaning, or belonging" },
+          {
+            id: "faith",
+            label: "Questions about faith, God, meaning, or belonging",
+            spiritualOnly: true,
+          },
           {
             id: "rest",
             label:
@@ -1865,7 +1869,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
       heading: "A complete stopping place",
       body: [
         "You may have answered, kept things private, simply read, or left everything open. None of those paths has to prove healing, progress, readiness, or meaning.",
-        "The First Journey is complete here. A complete journey does not require a neat outcome. Grief, questions, limits, responsibilities, harm, faith struggle, illness and circumstances may remain. Unfinished is not the same as failed.",
+        "The First Journey is complete here. A complete journey does not require a neat outcome. Grief, questions, limits, responsibilities, harm, illness and circumstances may remain. Unfinished is not the same as failed.",
         "Every day remains open if returning is useful; you owe the app no repetition or continuation. If something needs care beyond an app, consider appropriate professional, medical, community, spiritual or trusted support. For immediate safety concerns, use Support & Safety.",
       ],
       carryForward:

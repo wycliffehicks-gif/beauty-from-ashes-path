@@ -91,7 +91,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           { id: "loss", label: "Something was lost, or someone was" },
           { id: "hurt", label: "A hurt or unresolved experience still affects me" },
           { id: "tired", label: "I am worn out from holding everything together" },
-          { id: "distant", label: "I feel distant — from people, from myself, from God" },
+          { id: "distant", label: "I feel distant — from people or from myself" },
           { id: "shame", label: "I feel shame or painful self-blame" },
           { id: "hope", label: "I want to feel more hope or possibility" },
           { id: "private", label: "I would rather not put it into words here" },
@@ -196,7 +196,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             loss: "You named that something was lost, or someone was.",
             hurt: "You named something that happened and has never been resolved.",
             tired: "You named being worn out from holding everything together.",
-            distant: "You named feeling distant — from people, from yourself, or from God.",
+            distant: "You named feeling distant — from people or from yourself.",
             shame: "You named carrying something you feel bad about.",
             hope: "You named wanting to hope again without knowing how.",
             private:

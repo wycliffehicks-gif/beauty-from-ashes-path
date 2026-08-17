@@ -67,6 +67,19 @@ describe("pressed, disabled and meaningful-state treatment", () => {
     expect(styles).toContain("color-mix(in oklab, var(--muted) 82%, transparent)");
   });
 
+  it("leaves no ungated primary hover selector", () => {
+    const hovers = styles.match(/\.btn-primary-journey:hover(?!:not\(:disabled\))/g);
+    expect(hovers).toBeNull();
+  });
+
+  it("never animates the spiritual switch thumb", () => {
+    const settings = read("src/routes/_shell.settings.tsx");
+    expect(settings).not.toContain("transition-all");
+    expect(settings).not.toMatch(/transition-\[(?:left|transform)/);
+    expect(settings).toContain("-translate-y-1/2");
+    expect(settings).toContain('prefs.showSpiritual ? "left-7" : "left-1"');
+  });
+
   it("keeps disabled primary controls fully opaque and clearly unavailable", () => {
     expect(styles).toMatch(
       /\.btn-primary-journey:disabled \{\s*opacity: 1;\s*cursor: not-allowed;\s*background: var\(--muted\);\s*color: var\(--muted-foreground\);\s*border: 1px solid var\(--bfa-control-border\);/,

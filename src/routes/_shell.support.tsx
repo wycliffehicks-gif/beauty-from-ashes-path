@@ -114,8 +114,8 @@ function SupportPage() {
       <div className="surface-card space-y-3">
         <h2 className="bfa-h2 font-serif text-foreground">Crisis lines in Canada</h2>
         <p className="bfa-copy-support text-muted-foreground">
-          If you are not in immediate danger but need to talk to someone, these lines are free and
-          confidential.
+          These services describe their support as free and confidential; limits may apply when
+          immediate safety is at risk.
         </p>
         <RegionBlock region={CA_REGION} />
       </div>

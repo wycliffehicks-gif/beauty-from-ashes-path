@@ -94,8 +94,9 @@ function ImportantInfoPage() {
         </p>
         <p className="bfa-copy-support text-foreground">
           If you are thinking about suicide, or are worried about someone else,
-          the 9-8-8 Suicide Crisis Helpline in Canada is free, confidential and
-          available 24/7 by phone or text.
+          the 9-8-8 Suicide Crisis Helpline in Canada is available 24/7 by phone
+          or text. The service describes its support as free and confidential;
+          limits may apply when immediate safety is at risk.
         </p>
         <div className="flex flex-wrap gap-2">
           <a

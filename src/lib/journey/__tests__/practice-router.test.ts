@@ -15,7 +15,12 @@ import {
   presentationOptions,
 } from "@/lib/journey/presentation-answers";
 import { resolvePractice, resolvedRouteOptionId } from "@/lib/journey/practice-router";
-import { buildReflection } from "@/lib/journey/reflection-engine";
+import {
+  answerKeyFor,
+  buildReflection,
+  selectedOptionIds,
+} from "@/lib/journey/reflection-engine";
+import { answersSnapshot, reflectionSnapshot } from "@/lib/journey/reflection-restore";
 
 function day(n: number): JourneyDayContent {
   const d = getFirstJourneyDay(n);
@@ -226,5 +231,114 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
       .sections.flatMap((s) => s.paragraphs)
       .join(" ");
     expect(onText).not.toBe(offText);
+  });
+});
+
+// ---------------------------------------------------------------- fail closed
+//
+// A route-owned token is recognized as belonging to the route step BEFORE it is
+// decoded, so an invalid same-question token can never be silently dropped.
+
+describe("Day 9 routed practice fails closed on corrupt route-scoped tokens", () => {
+  const practiceKey = answerKeyFor(day9, "practice");
+  const optionCount = day9.questions.find((q) => q.id === "practice")!.options.length;
+
+  it("keeps resolving every existing valid route", () => {
+    for (const id of ROUTED_IDS) {
+      expect(resolvedRouteOptionId(day9, [`${practiceKey}:${id}`]), id).toBe(id);
+    }
+  });
+
+  it("falls back for a valid token plus an unknown same-step token", () => {
+    const answers = [`${practiceKey}:grounding`, `${practiceKey}:not-a-real-option`];
+    expect(resolvedRouteOptionId(day9, answers)).toBeNull();
+    expect(resolvePractice(day9, answers).reflection).toBe(day9.practise.reflection);
+  });
+
+  it("falls back for a valid token plus an out-of-range positional token", () => {
+    const answers = [`${practiceKey}:grounding`, `${practiceKey}.${optionCount + 5}`];
+    expect(resolvedRouteOptionId(day9, answers)).toBeNull();
+    expect(resolvePractice(day9, answers).routedBy).toBeNull();
+  });
+
+  it("falls back for a duplicated valid route token", () => {
+    const answers = [`${practiceKey}:boundary`, `${practiceKey}:boundary`];
+    expect(resolvedRouteOptionId(day9, answers)).toBeNull();
+    expect(resolvePractice(day9, answers).reflection).toBe(day9.practise.reflection);
+  });
+
+  it("falls back for unknown-only and malformed route-owned tokens", () => {
+    expect(resolvedRouteOptionId(day9, [`${practiceKey}:`])).toBeNull();
+    expect(resolvedRouteOptionId(day9, [`${practiceKey}.-1`])).toBeNull();
+    expect(resolvedRouteOptionId(day9, [`${practiceKey}.x`])).toBeNull();
+  });
+
+  it("lets unrelated question and step tokens pass without blocking one clean route", () => {
+    const answers = [
+      "q.where:private",
+      `${answerKeyFor(day9, day9.step.id)}:${day9.step.options[0]!.id}`,
+      `${practiceKey}:lament`,
+      "junk",
+    ];
+    const frozen = [...answers];
+    expect(resolvedRouteOptionId(day9, answers)).toBe("lament");
+    expect(answers).toEqual(frozen);
+  });
+
+  it("locks the routed source as exactly q.practice", () => {
+    expect(day9.practise.route!.from).toBe("practice");
+    expect(practiceKey).toBe("q.practice");
+  });
+});
+
+// ------------------------------------- off / unhydrated presentation surfaces
+
+describe("Day 8 optional Christian choice is absent from every presentation surface", () => {
+  const raw = ["q.size:tiny", "q.route:god", "step.1"];
+  const route = day8.questions.find((q) => q.id === "route")!;
+
+  for (const opts of [
+    { hydrated: false, showSpiritual: true },
+    { hydrated: false, showSpiritual: false },
+    { hydrated: true, showSpiritual: false },
+  ]) {
+    const label = `hydrated=${opts.hydrated} showSpiritual=${opts.showSpiritual}`;
+
+    it(`shows no selected option, Echo line, snapshot or proof (${label})`, () => {
+      const frozen = [...raw];
+      const shown = presentationAnswers(day8, raw, opts);
+
+      // No selected option on the route question.
+      expect(selectedOptionIds(day8, "route", shown)).toEqual([]);
+      expect(presentationOptions(route, opts).some((v) => v.option.id === "god")).toBe(false);
+
+      // No Echo or reflection line.
+      const echoLine = route.echo!.byOption["god"]!;
+      const text = buildReflection(day8, shown)
+        .sections.flatMap((s) => s.paragraphs)
+        .join(" ");
+      expect(text).not.toContain(echoLine);
+
+      // No trace in the answer snapshot or the reflection proof path.
+      expect(answersSnapshot(shown)).not.toContain("god");
+      expect(reflectionSnapshot(day8, shown)).not.toContain("god");
+      expect(reflectionSnapshot(day8, shown)).not.toBe(reflectionSnapshot(day8, raw));
+
+      // Raw storage is untouched, byte for byte.
+      expect(raw).toEqual(frozen);
+    });
+  }
+
+  it("restores the choice on every surface once hydrated and on", () => {
+    const on = { hydrated: true, showSpiritual: true };
+    const shown = presentationAnswers(day8, raw, on);
+    expect(shown).toEqual(raw);
+    expect(selectedOptionIds(day8, "route", shown)).toEqual(["god"]);
+    expect(presentationOptions(route, on).some((v) => v.option.id === "god")).toBe(true);
+    expect(answersSnapshot(shown)).toContain("god");
+    const text = buildReflection(day8, shown)
+      .sections.flatMap((s) => s.paragraphs)
+      .join(" ");
+    expect(text).toContain(route.echo!.byOption["god"]!);
   });
 });

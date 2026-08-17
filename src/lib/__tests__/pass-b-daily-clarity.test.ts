@@ -245,9 +245,8 @@ describe("optional local post-practice check", () => {
 
   it("never blocks Continue: the Practice screen keeps its plain continue action", async () => {
     const src = await readSource("src/routes/day.$day.tsx");
-    expect(src).toContain(
-      "return shell(<PractiseScreen content={content} answers={answers} />, {",
-    );
+    expect(src).toContain("<PractiseScreen");
+    expect(src).toContain("{ onContinue: onNext },");
   });
 
   it("leaves the private option uninterpreted", () => {

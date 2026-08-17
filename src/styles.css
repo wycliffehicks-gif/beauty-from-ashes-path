@@ -1390,5 +1390,7 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
 /* Crisis actions stay inside the reading column at any text size. */
 .bfa-support-action {
   max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
   text-align: center;
 }

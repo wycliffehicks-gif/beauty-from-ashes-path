@@ -194,7 +194,8 @@ describe("core practice is visible by default and spiritual stays opt-in", () =>
     expect(src).toContain("isOpen={reflectionOpen}");
     expect(src).toContain("isOpen={spiritualOpen}");
     // The Christian panel is still gated behind the hydrated preference.
-    expect(src).toContain("const showSpiritual = prefsHydrated && prefs.showSpiritual;");
+    // Preferences are read once by the day flow and passed down.
+    expect(src).toContain("const showSpiritual = prefsHydrated && showSpiritualPref;");
   });
 
   it("makes both equal paths clear when spirituality is on", () => {

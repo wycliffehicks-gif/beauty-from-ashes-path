@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { VisualMotif } from "@/components/VisualMotifs";
 import {
@@ -6,9 +7,9 @@ import {
   JOURNEY_IDENTITY,
   getJourneyDayById,
 } from "@/content/journey";
-import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 import { useStorageStatus } from "@/lib/storage-status";
-
+import { buildReflectionExport, downloadTextFile } from "@/lib/journey/export";
+import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
@@ -44,6 +45,8 @@ function JourneyHome() {
   const currentId =
     resumeDay?.id ?? JOURNEY_DAYS.find((d) => !completed.has(d.id))?.id ?? null;
 
+  const allComplete = JOURNEY_DAYS.every((d) => completed.has(d.id));
+
   return (
     <section className="space-y-8 pb-6">
       <div className="bfa-visual-home-hero">
@@ -59,8 +62,29 @@ function JourneyHome() {
         </header>
       </div>
 
+      {allComplete && (
+        <div
+          data-testid="completion-card"
+          className="rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5"
+        >
+          <p className="eyebrow">You have walked through all ten days</p>
+          <h2 className="bfa-h2 mt-2 font-serif text-foreground">
+            This is a completion, not an arrival
+          </h2>
+          <p className="bfa-copy-support mt-2 text-muted-foreground">
+            You are welcome to revisit any day, try a practice, or save your reflections to keep
+            them somewhere safe.
+          </p>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <Link to="/practices" className="btn-primary-journey flex-1">
+              Try a practice now
+            </Link>
+            <ExportButton progress={progress} />
+          </div>
+        </div>
+      )}
 
-      {resume && resumeDay && (
+      {resume && resumeDay && !allComplete && (
         <div
           data-testid="resume-card"
           className="rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5"
@@ -91,58 +115,56 @@ function JourneyHome() {
       <div className="space-y-3">
         <h2 className="bfa-h2 font-serif text-foreground">The 10-Day Journey</h2>
         <div className="bfa-visual-thread-track">
-        <VisualMotif variant="thread" />
-        <ol className="space-y-3">
-
-          {JOURNEY_DAYS.map((d) => {
-            const isComplete = completed.has(d.id);
-            const state = isComplete ? "complete" : d.id === currentId ? "current" : "upcoming";
-            return (
-              <li key={d.id}>
-                <Link
-                  to="/day/$day"
-                  params={{ day: String(d.day) }}
-                  className="day-row"
-                  data-state={state}
-                  data-testid={`day-row-${d.id}`}
-                >
-                  {/* Visible "Day N" in digits, for fast scanning. It is
-                      decorative for assistive tech, which reads the row's own
-                      "Day N:" name once instead. */}
-                  <span aria-hidden className="day-marker">
-                    <span className="day-marker-word">Day</span>
-                    <span className="day-marker-num">{d.day}</span>
-                  </span>
-                  <span className="min-w-0">
-                    {/* The day number is decorative in the marker, so the row
-                        still needs a real "Day N" name for assistive tech. */}
-                    <span className="sr-only">Day {d.day}: </span>
-                    <span className="bfa-h3 block font-serif text-foreground">{d.title}</span>
-
-                    <span className="bfa-copy-support day-row-theme mt-1 block text-muted-foreground">
-                      {d.theme}
+          <VisualMotif variant="thread" />
+          <ol className="space-y-3">
+            {JOURNEY_DAYS.map((d) => {
+              const isComplete = completed.has(d.id);
+              const state = isComplete ? "complete" : d.id === currentId ? "current" : "upcoming";
+              return (
+                <li key={d.id}>
+                  <Link
+                    to="/day/$day"
+                    params={{ day: String(d.day) }}
+                    className="day-row"
+                    data-state={state}
+                    data-testid={`day-row-${d.id}`}
+                  >
+                    {/* Visible "Day N" in digits, for fast scanning. It is
+                        decorative for assistive tech, which reads the row's own
+                        "Day N:" name once instead. */}
+                    <span aria-hidden className="day-marker">
+                      <span className="day-marker-word">Day</span>
+                      <span className="day-marker-num">{d.day}</span>
                     </span>
-                    <span className="day-row-meta mt-2 block">
-                      {state !== "upcoming" && (
-                        <span className="day-row-state" data-state={state}>
-                          {state === "complete" ? "Finished" : "Where you are now"}
+                    <span className="min-w-0">
+                      {/* The day number is decorative in the marker, so the row
+                          still needs a real "Day N" name for assistive tech. */}
+                      <span className="sr-only">Day {d.day}: </span>
+                      <span className="bfa-h3 block font-serif text-foreground">{d.title}</span>
+
+                      <span className="bfa-copy-support day-row-theme mt-1 block text-muted-foreground">
+                        {d.theme}
+                      </span>
+                      <span className="day-row-meta mt-2 block">
+                        {state !== "upcoming" && (
+                          <span className="day-row-state" data-state={state}>
+                            {state === "complete" ? "Finished" : "Where you are now"}
+                          </span>
+                        )}
+                        <span className="bfa-copy-meta day-row-descriptor text-muted-foreground">
+                          {state === "upcoming" ? "Open any time · " : ""}
+                          {d.descriptor}
                         </span>
-                      )}
-                      <span className="bfa-copy-meta day-row-descriptor text-muted-foreground">
-                        {state === "upcoming" ? "Open any time · " : ""}
-                        {d.descriptor}
                       </span>
                     </span>
-                  </span>
-                  <span aria-hidden className="day-row-chevron">
-                    ›
-                  </span>
-
-                </Link>
-              </li>
-            );
-          })}
-        </ol>
+                    <span aria-hidden className="day-row-chevron">
+                      ›
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
         <p className="bfa-copy-support pt-1 text-muted-foreground">
@@ -150,5 +172,27 @@ function JourneyHome() {
         </p>
       </div>
     </section>
+  );
+}
+
+function ExportButton({ progress }: { progress: ReturnType<typeof useJourneyProgress>["progress"] }) {
+  const [done, setDone] = useState(false);
+  const hasContent = progress.completedDays.length > 0;
+
+  return (
+    <button
+      type="button"
+      disabled={!hasContent}
+      data-testid="export-reflections"
+      onClick={() => {
+        const { text, filename } = buildReflectionExport(progress);
+        downloadTextFile(text, filename);
+        setDone(true);
+        setTimeout(() => setDone(false), 2000);
+      }}
+      className="btn-quiet flex-1"
+    >
+      {done ? "Saved" : hasContent ? "Save your reflections" : "No reflections yet"}
+    </button>
   );
 }

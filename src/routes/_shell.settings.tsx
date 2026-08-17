@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { usePrefs, resetAll } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
 import { useStorageStatus } from "@/lib/storage-status";
@@ -16,6 +16,13 @@ import {
   SPIRITUAL_TOGGLE_DESCRIPTION,
   SPIRITUAL_TOGGLE_TITLE,
 } from "@/content/settings";
+
+// Lightweight PWA install prompt event available in Chromium-based browsers.
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+  prompt(): Promise<void>;
+}
 
 export const Route = createFileRoute("/_shell/settings")({
   head: () => ({
@@ -47,6 +54,19 @@ function SettingsPage() {
   const [confirming, setConfirming] = useState(false);
   const { persistent, hydrated: storageHydrated } = useStorageStatus();
   const volatileStorage = storageHydrated && !persistent;
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installSupported, setInstallSupported] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as BeforeInstallPromptEvent);
+      setInstallSupported(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   return (
     <section className="space-y-6 pb-4">
@@ -102,7 +122,30 @@ function SettingsPage() {
         <SettingsLink to="/privacy" title="Privacy Notice" />
         <SettingsLink to="/terms" title="Terms of Use" />
         <SettingsLink to="/contact-support" title="Contact" />
+        <SettingsLink to="/pilot-feedback" title="Pilot feedback" />
       </nav>
+
+      {/* Install as app — only surfaced when the browser supports it. */}
+      {installSupported && (
+        <section
+          data-testid="settings-install"
+          className="rounded-xl border border-border bg-card p-5"
+        >
+          <h2 className="bfa-h2 font-serif text-foreground">Add to this device</h2>
+          <p className="bfa-copy-support mt-1 text-muted-foreground">
+            Install Beauty from Ashes to your home screen for easy access. It will work offline
+            once opened and stays private to this device.
+          </p>
+          <button
+            type="button"
+            data-testid="install-pwa"
+            onClick={() => installPrompt?.prompt()}
+            className="btn-quiet mt-4"
+          >
+            Install app
+          </button>
+        </section>
+      )}
 
       {/* Privacy & Confidentiality — a short plain-language summary only. The
           complete detail stays on the Privacy Notice page. */}

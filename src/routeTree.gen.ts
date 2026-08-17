@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PilotFeedbackRouteImport } from './routes/pilot-feedback'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ImportantInformationRouteImport } from './routes/important-information'
 import { Route as ContactSupportRouteImport } from './routes/contact-support'
@@ -34,6 +35,11 @@ const TermsRoute = TermsRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilotFeedbackRoute = PilotFeedbackRouteImport.update({
+  id: '/pilot-feedback',
+  path: '/pilot-feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/contact-support': typeof ContactSupportRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-feedback': typeof PilotFeedbackRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/journey': typeof ShellJourneyRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/contact-support': typeof ContactSupportRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-feedback': typeof PilotFeedbackRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/journey': typeof ShellJourneyRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/contact-support': typeof ContactSupportRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-feedback': typeof PilotFeedbackRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_shell/journey': typeof ShellJourneyRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/contact-support'
     | '/important-information'
     | '/onboarding'
+    | '/pilot-feedback'
     | '/privacy'
     | '/terms'
     | '/journey'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/contact-support'
     | '/important-information'
     | '/onboarding'
+    | '/pilot-feedback'
     | '/privacy'
     | '/terms'
     | '/journey'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/contact-support'
     | '/important-information'
     | '/onboarding'
+    | '/pilot-feedback'
     | '/privacy'
     | '/terms'
     | '/_shell/journey'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   ContactSupportRoute: typeof ContactSupportRoute
   ImportantInformationRoute: typeof ImportantInformationRoute
   OnboardingRoute: typeof OnboardingRoute
+  PilotFeedbackRoute: typeof PilotFeedbackRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   DayDayRoute: typeof DayDayRouteWithChildren
@@ -240,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pilot-feedback': {
+      id: '/pilot-feedback'
+      path: '/pilot-feedback'
+      fullPath: '/pilot-feedback'
+      preLoaderRoute: typeof PilotFeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactSupportRoute: ContactSupportRoute,
   ImportantInformationRoute: ImportantInformationRoute,
   OnboardingRoute: OnboardingRoute,
+  PilotFeedbackRoute: PilotFeedbackRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   DayDayRoute: DayDayRouteWithChildren,

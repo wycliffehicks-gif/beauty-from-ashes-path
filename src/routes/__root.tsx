@@ -106,6 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.json" },
       { rel: "stylesheet", href: appCss },
       // Original mark: deep navy field with one restrained gold living thread.
       // No builder identity, no raster dependency, no remote request.
@@ -150,6 +151,20 @@ function RootComponent() {
   // SSR both leave it unchanged.
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   if (typeof document !== "undefined") recordRouteTransition(pathname);
+
+  // Register the lightweight installable shell service worker in production.
+  // Dev HMR and the dev server can conflict with a service worker, so this is
+  // gated on a production build and on navigator.serviceWorker availability.
+  useEffect(() => {
+    if (import.meta.env.DEV) return;
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker
+      .register("/sw.js", { scope: "/" })
+      .catch(() => {
+        // Service worker registration is a best-effort enhancement; failures are
+        // not surfaced to the user.
+      });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -206,6 +206,21 @@ function structuralFingerprint(): string {
       hasOpening: typeof s.opening === "string",
       hasUnanswered: typeof s.unanswered === "string",
     })),
+    // Optional Day 10 gathering: group identity, source scoping and the
+    // special-id mappings are hashed. This is PRESENTATION metadata only; it
+    // adds no screen, question, option, selection mode or stored answer.
+    priorDaysThread: d.reflection.priorDaysThread
+      ? d.reflection.priorDaysThread.groups.map((g) => ({
+          id: g.id,
+          sources: g.sources.map((src) => ({
+            day: src.day,
+            from: src.from,
+            privateIds: src.privateIds ?? null,
+            unclearIds: src.unclearIds ?? null,
+            noneIds: src.noneIds ?? null,
+          })),
+        }))
+      : null,
     closeBodyCount: d.close.body.length,
     screens: screensFor(d).map(screenKey),
   }));
@@ -255,6 +270,14 @@ describe("canonical ten-day structural fingerprint", () => {
     // digest change reflects that presentation metadata, the Day 9 route maps
     // and the static care section ONLY — no stateful screen, answer ID, option
     // order, selection mode or answer meaning version changed.
+    //
+    // Updated in Pass C2D (Day 10 gathering): the fingerprint now hashes the
+    // optional Day 10 prior-days thread group ids, ordered sources and
+    // special-id mappings, and Day 10's Understand body count changed with its
+    // approved clinical revision. No stateful identity changed: no screen,
+    // screen order, progress index, question/option/step id, option order,
+    // selection mode, exclusivity, echo branch, reflection section, storage
+    // version or answer meaning version changed.
     expect(structuralFingerprint()).toBe(
       "c580183b9ca71b4b05cbdd17a8f92690b27fc07e65cfa7af3a8f700b60f89434",
     );

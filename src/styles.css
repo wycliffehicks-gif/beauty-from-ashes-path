@@ -614,6 +614,104 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Landing page — public front door before the agreement is accepted.
+   --------------------------------------------------------------------------- */
+
+.landing-page {
+  --bfa-reading-backdrop: rgba(251, 248, 239, 0.82);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  margin-inline: -1.25rem;
+  padding: 1.5rem 1.25rem 0.5rem;
+}
+
+.landing-hero > .bfa-visual-motif {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.landing-hero-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+  background: var(--bfa-reading-backdrop);
+}
+
+.landing-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.landing-section .bfa-h2 {
+  color: var(--color-foreground);
+}
+
+.landing-card {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  padding: 1.25rem;
+}
+
+.landing-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.landing-day-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.landing-day-number {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.landing-cta {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.dark .landing-page {
+  --bfa-reading-backdrop: rgba(26, 53, 94, 0.78);
+}
+
+.dark .landing-card,
+.dark .landing-day-item,
+.dark .landing-cta {
+  background-color: var(--color-card);
+  border-color: var(--color-border);
+}
+
+/* ---------------------------------------------------------------------------
    Day motifs — Arrival, quiet divider, Close. Normal document flow only; art
    never sits behind text. Fields are restrained mists, dimmer in dark mode.
    --------------------------------------------------------------------------- */

@@ -8,7 +8,11 @@ import {
   getJourneyDayById,
 } from "@/content/journey";
 import { useStorageStatus } from "@/lib/storage-status";
-import { buildReflectionExport, downloadTextFile } from "@/lib/journey/export";
+import {
+  buildReflectionExport,
+  downloadTextFile,
+  openPrintableExport,
+} from "@/lib/journey/export";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 
 export const Route = createFileRoute("/_shell/")({

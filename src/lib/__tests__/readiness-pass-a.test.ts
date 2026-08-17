@@ -264,9 +264,8 @@ describe("legal acceptance timestamps must be canonical", () => {
 
 
 describe("unfinished legacy surfaces redirect instead of holding content", () => {
-  it("sends /practices, /resources and /practice/$id to Your Journey", async () => {
+  it("sends /resources and /practice/$id to Your Journey", async () => {
     for (const mod of [
-      "@/routes/_shell.practices",
       "@/routes/_shell.resources",
       "@/routes/practice.$id",
     ]) {
@@ -289,5 +288,14 @@ describe("unfinished legacy surfaces redirect instead of holding content", () =>
       // Nothing renders even if the redirect were somehow bypassed.
       expect(loaded.Route.options.component?.()).toBeNull();
     }
+  });
+
+  it("exposes /practices as a real, bounded listing page", async () => {
+    const { Route } = (await import("@/routes/_shell.practices")) as {
+      Route: { options: { beforeLoad?: () => void; component?: () => unknown } };
+    };
+    expect(Route.options.beforeLoad).toBeUndefined();
+    expect(Route.options.component).toBeDefined();
+    expect(Route.options.component?.()).not.toBeNull();
   });
 });

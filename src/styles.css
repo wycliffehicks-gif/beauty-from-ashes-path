@@ -173,9 +173,14 @@
     min-height: 44px;
   }
 
+  /* Inline prose links keep their text rhythm (the WCAG inline exception),
+     but gain a slightly taller invisible hit area so they are easier to tap.
+     Padding on an inline box does not change the surrounding line height. */
   a.inline-link, button.inline-link {
     min-height: 0;
+    padding-block: 0.5rem;
   }
+
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { usePrefs, resetAll } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
 import { useStorageStatus } from "@/lib/storage-status";

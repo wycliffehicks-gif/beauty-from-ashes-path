@@ -170,6 +170,14 @@ export function LandingPage() {
         </Link>
       </section>
 
+      <p className="bfa-copy-support text-muted-foreground">
+        General, non-urgent questions:{" "}
+        <a href="mailto:wycliffe.hicks@gmail.com" className="text-link">
+          wycliffe.hicks@gmail.com
+        </a>
+        . Not for crisis support, emergencies, or clinical advice.
+      </p>
+
       <LegalFooter />
     </div>
   );

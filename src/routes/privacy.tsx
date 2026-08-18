@@ -22,7 +22,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="August 16, 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="August 17, 2026">
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current

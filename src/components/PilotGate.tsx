@@ -119,7 +119,7 @@ function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
             <p
               id="pilot-passcode-error"
               role="alert"
-              className="bfa-copy-support text-destructive"
+              className="bfa-copy-support bfa-form-error text-destructive"
               data-testid="pilot-gate-error"
             >
               That code doesn’t match. Please check it and try again.

@@ -105,9 +105,8 @@ function PilotFeedbackPage() {
       <div className="surface-card space-y-2">
         <h2 className="bfa-h3 font-serif text-foreground">Response expectations</h2>
         <p className="bfa-copy-support text-muted-foreground">
-          This is not a continuously monitored channel. If your feedback is sent through the Resurgence
-          Therapeutics contact channel, it will be reviewed as part of the pilot process and you can expect a
-          response within a few business days when that channel is live.
+          This is not a continuously monitored channel. Feedback you send is reviewed as part of the
+          pilot process. No response time is promised.
         </p>
       </div>
     </LegalPage>

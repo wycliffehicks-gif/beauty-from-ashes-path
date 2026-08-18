@@ -84,7 +84,7 @@ function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
 
   return (
     <div className="journey-page">
-      <div className="container-page flex min-h-[100dvh] flex-col justify-center py-10">
+      <div className="container-page bfa-top-safe-roomy flex min-h-[100dvh] flex-col justify-start pb-10 pt-[clamp(2rem,9vh,5rem)]">
         <div className="bfa-visual-home-hero">
           <VisualMotif variant="home" />
           <div className="bfa-visual-home-hero-inner space-y-3">

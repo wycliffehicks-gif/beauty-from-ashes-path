@@ -75,6 +75,38 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Home Screen guidance */}
+      <section className="landing-section">
+        <h2 className="bfa-h2 font-serif text-foreground">
+          Add it to your Home Screen (optional)
+        </h2>
+        <div className="landing-card">
+          <p className="bfa-copy text-foreground">
+            Beauty from Ashes is a web app. You can use it in your browser, or add an icon to your
+            Home Screen for easier access. It is not downloaded from an app store.
+          </p>
+          <h3 className="bfa-h3 mt-4 font-serif text-foreground">iPhone or iPad — Safari</h3>
+          <ol className="bfa-copy-support mt-1 list-decimal space-y-1 pl-5 text-foreground">
+            <li>Open this page in Safari.</li>
+            <li>Tap the Share button.</li>
+            <li>Scroll down and tap Add to Home Screen.</li>
+            <li>If shown, turn on Open as Web App, then tap Add.</li>
+          </ol>
+          <h3 className="bfa-h3 mt-4 font-serif text-foreground">Android — Chrome</h3>
+          <ol className="bfa-copy-support mt-1 list-decimal space-y-1 pl-5 text-foreground">
+            <li>Open this page in Chrome.</li>
+            <li>Tap the three-dot More menu.</li>
+            <li>Tap Install app or Add to Home screen.</li>
+            <li>Follow the prompt to finish.</li>
+          </ol>
+          <p className="bfa-copy-support mt-3 text-muted-foreground">
+            For the smoothest experience, add it before beginning and then return using the same
+            Home Screen icon. Progress does not sync or transfer between browsers or devices. Menu
+            wording can vary by device and browser.
+          </p>
+        </div>
+      </section>
+
       {/* What this is not */}
       <section className="landing-section">
         <h2 className="bfa-h2 font-serif text-foreground">What this is not</h2>

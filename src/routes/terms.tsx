@@ -23,7 +23,7 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <LegalPage title="Terms of Use" lastUpdated="August 2, 2026">
+    <LegalPage title="Terms of Use" lastUpdated="August 17, 2026">
 
       <p>
         These terms apply to your use of Beauty from Ashes, a current version
@@ -118,6 +118,17 @@ function TermsPage() {
         These terms are governed by the laws of the Province of Ontario and
         the laws of Canada that apply there, without regard to conflict-of-laws
         rules. This statement is provided for clarity and is not legal advice.
+      </p>
+      <h2 className="bfa-h2 font-serif">Questions</h2>
+      <p>
+        For non-urgent questions about these Terms, email{" "}
+        <a
+          href="mailto:wycliffe.hicks@gmail.com"
+          className="inline-link text-primary underline underline-offset-4"
+        >
+          wycliffe.hicks@gmail.com
+        </a>
+        . This address does not provide crisis support or clinical advice.
       </p>
     </LegalPage>
   );

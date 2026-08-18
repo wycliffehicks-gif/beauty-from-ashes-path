@@ -22,7 +22,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="August 16, 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="August 17, 2026">
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
@@ -193,7 +193,18 @@ function PrivacyPage() {
 
       <h2 className="bfa-h2 font-serif">Privacy questions</h2>
       <p>
-        For privacy questions during this version, please see the{" "}
+        For questions about this Privacy Notice, email{" "}
+        <a
+          href="mailto:wycliffe.hicks@gmail.com"
+          className="inline-link text-primary underline underline-offset-4"
+        >
+          wycliffe.hicks@gmail.com
+        </a>
+        . Please do not include sensitive personal or health information;
+        ordinary email is not a secure or confidential channel.
+      </p>
+      <p>
+        See also the{" "}
         <Link
           to="/contact-support"
           className="inline-link text-primary underline underline-offset-4"
@@ -201,9 +212,7 @@ function PrivacyPage() {
           Contact &amp; Technical Support
         </Link>{" "}
         page. A named privacy contact, and a monitored channel for privacy
-        requests, must be in place before any public or paid launch. Until then
-        this remains a private candidate version, and no monitored privacy
-        channel is offered.
+        requests, must be in place before any public or paid launch.
       </p>
 
 

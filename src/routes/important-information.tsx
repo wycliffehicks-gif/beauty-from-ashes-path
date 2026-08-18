@@ -25,7 +25,7 @@ function ImportantInfoPage() {
   return (
     <LegalPage
       title="Important Information, Clinical Disclaimer &amp; Crisis Support"
-      lastUpdated="August 2, 2026"
+      lastUpdated="August 17, 2026"
     >
       <p className="bfa-copy-lead">
         <strong className="font-medium text-foreground">
@@ -58,6 +58,19 @@ function ImportantInfoPage() {
         is not an appropriate place to share confidential clinical
         disclosures. Please do not submit sensitive personal or health
         information.
+      </p>
+
+      <h2 className="bfa-h2 font-serif">Contact</h2>
+      <p>
+        For general, non-urgent questions about the app or pilot, email{" "}
+        <a
+          href="mailto:wycliffe.hicks@gmail.com"
+          className="inline-link text-primary underline underline-offset-4"
+        >
+          wycliffe.hicks@gmail.com
+        </a>
+        . This inbox is not monitored continuously and is not a crisis or
+        clinical-support service.
       </p>
 
       <h2 className="bfa-h2 font-serif">If you feel overwhelmed</h2>

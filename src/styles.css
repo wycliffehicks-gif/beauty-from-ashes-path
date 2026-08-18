@@ -82,7 +82,7 @@
   --secondary-foreground: #1A355E;
 
   --muted: #EDE4D0;
-  --muted-foreground: #5A5D63;   /* softened charcoal, AA on ivory */
+  --muted-foreground: #52565C;   /* softened charcoal, clears AA on ivory with margin */
 
   /* Deep navy accent */
   --accent: #1A355E;

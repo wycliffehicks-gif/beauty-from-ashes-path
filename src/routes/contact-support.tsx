@@ -59,17 +59,24 @@ function ContactSupportPage() {
       </div>
 
       <div className="surface-card space-y-2">
-        <h2 className="bfa-h3 font-serif text-foreground">How to reach us</h2>
+        <h2 className="bfa-h3 font-serif text-foreground">
+          General, non-urgent questions
+        </h2>
         <p className="bfa-copy-support text-foreground">
-          Customer contact and support will be provided through the Resurgence
-          Therapeutics website, <strong>ResurgenceTherapeutics.ca</strong>, when
-          its contact channel launches.
+          Email:{" "}
+          <a
+            href="mailto:wycliffe.hicks@gmail.com"
+            className="inline-link text-primary underline underline-offset-4"
+          >
+            wycliffe.hicks@gmail.com
+          </a>
         </p>
         <p className="bfa-copy-support text-muted-foreground">
-          That website contact channel is not finished yet, so this private
-          version does not currently offer a monitored telephone or email
-          channel. The domain is shown as plain text on purpose, rather than as a
-          link that would not reach anyone.
+          This inbox is not monitored continuously. It is not a crisis service
+          and cannot provide urgent or emergency support or clinical advice.
+          Please do not send journal entries or sensitive personal or health
+          information by email; ordinary email is not a secure or confidential
+          channel.
         </p>
       </div>
 

@@ -121,14 +121,14 @@ describe("crisis copy and links unchanged", () => {
     expect(important).toContain('href="sms:988"');
     expect(important).toContain("Call 988");
     expect(important).toContain("Text 988");
-    expect(important).toContain(
+    expect(important.replace(/\s+/g, " ")).toContain(
       "The service describes its support as free and confidential; limits may apply when immediate safety is at risk.",
     );
   });
 
   it("keeps the crisis caveat sentence on Support & Safety", () => {
     const support = read("src/routes/_shell.support.tsx");
-    expect(support).toContain(
+    expect(support.replace(/\s+/g, " ")).toContain(
       "These services describe their support as free and confidential; limits may apply when immediate safety is at risk.",
     );
   });

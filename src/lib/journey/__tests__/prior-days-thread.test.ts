@@ -645,7 +645,7 @@ describe("Day 10 disclosure UI contract", () => {
 describe("privacy disclosure lands with the feature", () => {
   it("dates the Privacy Policy and describes the optional gathering accurately", () => {
     const privacy = readFileSync("src/routes/privacy.tsx", "utf8");
-    expect(privacy).toContain('lastUpdated="August 16, 2026"');
+    expect(privacy).toContain('lastUpdated="August 17, 2026"');
     expect(privacy).toContain("Optional Day 10 earlier-choices view");
     expect(privacy).toContain("Show earlier choices");
     expect(privacy).toContain("is not saved in local");

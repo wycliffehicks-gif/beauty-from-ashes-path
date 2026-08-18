@@ -1539,3 +1539,61 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   overflow-wrap: anywhere;
   text-align: center;
 }
+
+/* ---------------------------------------------------------------------------
+   PRE-PILOT READABILITY PASS — presentation only. A comfortable reading
+   measure, slightly larger meta type, an unmistakable form-error marker, and a
+   quiet gold thread node on finished days.
+   --------------------------------------------------------------------------- */
+
+/* Reading measure: prose settles near 66 characters even on wide screens. */
+.bfa-copy,
+.bfa-copy-lead,
+.bfa-copy-support,
+.legal-prose p,
+.legal-prose li {
+  max-width: 66ch;
+}
+
+/* Meta and eyebrow type sits a step up from the old 14px floor. */
+.bfa-copy-meta {
+  font-size: 0.9375rem;
+}
+.eyebrow {
+  font-size: 0.9375rem;
+}
+
+/* Form errors carry a marker as well as colour, so the message never depends
+   on colour perception alone. */
+.bfa-form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.bfa-form-error::before {
+  content: "!";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A finished day is marked by a small gold thread node, not by loud type. */
+.day-row-state[data-state="complete"] {
+  gap: 0.45rem;
+}
+.day-row-state[data-state="complete"]::before {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--bfa-interactive-gold);
+}
+

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/contact-support")({
 
 function ContactSupportPage() {
   return (
-    <LegalPage title="Contact & Technical Support" lastUpdated="August 2, 2026">
+    <LegalPage title="Contact & Technical Support" lastUpdated="August 17, 2026">
       <p>
         This page is for technical problems with the app, accessibility
         concerns, factual corrections and product feedback before public

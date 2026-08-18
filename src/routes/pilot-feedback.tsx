@@ -58,13 +58,18 @@ function PilotFeedbackPage() {
       <div className="surface-card space-y-2">
         <h2 className="bfa-h3 font-serif text-foreground">How to share feedback</h2>
         <p className="bfa-copy-support text-foreground">
-          During this private pilot, feedback is gathered through the Resurgence Therapeutics contact
-          channel at <strong>ResurgenceTherapeutics.ca</strong>, when that contact channel launches.
+          <a
+            href="mailto:wycliffe.hicks@gmail.com?subject=Beauty%20from%20Ashes%20Pilot%20Feedback"
+            className="inline-link text-primary underline underline-offset-4"
+          >
+            Email pilot feedback
+          </a>{" "}
+          — wycliffe.hicks@gmail.com
         </p>
         <p className="bfa-copy-support text-muted-foreground">
-          That website contact channel is not finished yet, so this private version does not currently offer
-          a monitored telephone or email route for feedback. The domain is shown as plain text on purpose,
-          rather than as a link that would not reach anyone.
+          This inbox is not monitored continuously and is not a crisis or clinical-support service.
+          Please do not email confidential, identifying, or health information; ordinary email is not
+          a secure or confidential channel.
         </p>
       </div>
 

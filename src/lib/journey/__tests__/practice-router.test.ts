@@ -154,10 +154,15 @@ describe("optional Christian choices stay dormant while spirituality is off", ()
     ]);
     expect(godIndex).toBe(7);
     expect(route.options[godIndex]!.spiritualOnly).toBe(true);
-    // The only other spiritualOnly choice is Day 10's "faith" unfinished option.
+    // The other spiritualOnly choices are Day 9's "where" faith setting and
+    // Day 10's "faith" unfinished option.
     for (const n of [1, 2, 3, 4, 5, 6, 7, 9, 10]) {
       for (const q of [...day(n).questions, day(n).step]) {
         for (const o of q.options) {
+          if (n === 9 && q.id === "where" && o.id === "faith") {
+            expect(o.spiritualOnly).toBe(true);
+            continue;
+          }
           if (n === 10 && q.id === "unfinished" && o.id === "faith") {
             expect(o.spiritualOnly).toBe(true);
             continue;

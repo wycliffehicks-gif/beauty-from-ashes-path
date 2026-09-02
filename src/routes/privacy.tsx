@@ -41,10 +41,10 @@ function PrivacyPage() {
 
       <h2 className="bfa-h2 font-serif">What is kept on this device</h2>
       <p>
-        The app stores locally stored journey information in your own
-        browser or device storage only. Local persistence applies when browser
-        storage is available; otherwise this information may exist only in the
-        current tab and can be lost when that tab closes or reloads:
+        When browser storage is available, the app keeps the following
+        journey information in this browser on this device. If storage is
+        unavailable, this information may exist only in the current tab and
+        can be lost when that tab closes or reloads:
       </p>
       <ul className="list-disc space-y-1 pl-5">
         <li>

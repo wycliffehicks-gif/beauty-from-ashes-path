@@ -128,8 +128,8 @@ export function LandingPage() {
         <h2 className="bfa-h2 font-serif text-foreground">Privacy</h2>
         <div className="landing-card">
           <p className="bfa-copy text-foreground">
-            Your answers and reflections stay in this browser on this device. No account is needed.
-            Nothing is uploaded to the cloud. You can save or clear your own data at any time.
+            Your answers and reflections stay in this browser on this device when browser storage is available; otherwise they may exist only in the current tab and can be lost when that tab closes or reloads. No account is needed.
+            Your answers and reflections are not sent to Resurgence Therapeutics. You can save or clear your own data at any time.
           </p>
           <p className="bfa-copy-support mt-3 text-muted-foreground">
             Read the full{" "}

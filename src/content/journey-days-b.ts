@@ -1023,7 +1023,7 @@ export const DAYS_SIX_TO_TEN: JourneyDayContent[] = [
           { id: "family", label: "With family" },
           { id: "friend", label: "With a friend or partner" },
           { id: "self", label: "In how I speak to myself" },
-          { id: "faith", label: "In my faith or spiritual life" },
+          { id: "faith", label: "In my faith or spiritual life", spiritualOnly: true },
           { id: "private", label: "I would rather not specify", exclusive: true },
           { id: "other", label: "Somewhere else, not listed here" },
           { id: "unclear", label: "I am not sure", exclusive: true },

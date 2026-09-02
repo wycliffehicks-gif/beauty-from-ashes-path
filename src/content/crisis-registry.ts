@@ -49,7 +49,7 @@ export const CA_REGION: RegionResource = {
   code: "CA",
   label: "Canada",
   emergencyGuidance:
-    "If you are in immediate danger, please call 911 or go to your nearest emergency department.",
+    "If you are in immediate danger, call 911 where it is available, go to your nearest emergency department, or use your local emergency service. Emergency numbers can differ by location.",
   emergencyTel: "911",
   crisisLines: [
     {

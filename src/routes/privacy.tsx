@@ -35,14 +35,16 @@ function PrivacyPage() {
         intentionally collect your name, email address, journal entries,
         diagnosis, medical record or other personal health information through
         the app itself. The responses you select on each day are saved on this
-        device only. They are not sent to Resurgence Therapeutics, and nobody at
+        device only, when browser storage is available. They are not sent to Resurgence Therapeutics, and nobody at
         Resurgence Therapeutics receives or reads them.
       </p>
 
       <h2 className="bfa-h2 font-serif">What is kept on this device</h2>
       <p>
-        The app stores a small amount of low-sensitivity information in your own
-        browser or device storage only:
+        The app stores locally stored journey information in your own
+        browser or device storage only. Local persistence applies when browser
+        storage is available; otherwise this information may exist only in the
+        current tab and can be lost when that tab closes or reloads:
       </p>
       <ul className="list-disc space-y-1 pl-5">
         <li>

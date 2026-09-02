@@ -48,8 +48,8 @@ function ImportantInfoPage() {
 
       <h2 className="bfa-h2 font-serif">Confidentiality</h2>
       <p>
-        Using this app is not a confidential psychotherapy session. Local
-        device preferences the app stores (see the{" "}
+        Using this app is not a confidential psychotherapy session. Locally
+        stored journey information (see the{" "}
         <Link to="/privacy" className="inline-link text-primary underline underline-offset-4">
           Privacy Policy
         </Link>
@@ -99,11 +99,12 @@ function ImportantInfoPage() {
           If safety is at immediate risk
         </h2>
         <p className="bfa-copy-support text-foreground">
-          Call{" "}
+          If safety is at immediate risk, call{" "}
           <a href="tel:911" className="text-primary underline underline-offset-4">
             911
           </a>{" "}
-          or go to your nearest emergency department.
+          where it is available, use your local emergency service, or go to your
+          nearest emergency department.
         </p>
         <p className="bfa-copy-support text-foreground">
           If you are thinking about suicide, or are worried about someone else,

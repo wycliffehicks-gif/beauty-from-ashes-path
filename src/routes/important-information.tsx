@@ -48,8 +48,8 @@ function ImportantInfoPage() {
 
       <h2 className="bfa-h2 font-serif">Confidentiality</h2>
       <p>
-        Using this app is not a confidential psychotherapy session. Local
-        device preferences the app stores (see the{" "}
+        Using this app is not a confidential psychotherapy session. Locally
+        stored journey information (see the{" "}
         <Link to="/privacy" className="inline-link text-primary underline underline-offset-4">
           Privacy Policy
         </Link>

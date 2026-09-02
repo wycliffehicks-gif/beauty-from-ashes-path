@@ -57,7 +57,7 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
 
 export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
   "No Resurgence Therapeutics staff member is watching or reading your answers in real time.",
-  "Your saved place, the responses you selected, your reflections and your finished days are kept in this browser's own storage only. They are not sent to Resurgence Therapeutics and there is no account behind them.",
+  "Your saved place, the responses you selected, your reflections and your finished days are kept in this browser's own storage only, when browser storage is available; otherwise they may exist only in the current tab and can be lost when that tab closes or reloads. They are not sent to Resurgence Therapeutics and there is no account behind them.",
   "The responses you select are saved as short coded option identifiers rather than the wording of the option, and never as anything you typed.",
   "Your personalized reflection is assembled on this device, locally and deterministically, from the approved wording for that day and the options you selected. Nothing is sent anywhere to produce it.",
   "Because everything is local, your journey will not appear on another device or browser, and clearing this browser's data will remove it.",
@@ -77,7 +77,7 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
  * removed from there.
  */
 export const PRIVACY_SUMMARY_POINTS: string[] = [
-  "Everything this app saves stays in this browser, on this device only.",
+  "Everything this app saves stays in this browser, on this device only. When browser storage is unavailable, what the app holds may exist only in the current tab and can be lost when that tab closes or reloads.",
   "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
   "You can clear or restart everything saved here at any time, from this page.",

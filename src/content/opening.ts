@@ -63,7 +63,7 @@ export const OPENING_SCREENS: OpeningScreen[] = [
     lead: "Open a day when you have a little space. Most days are short; a few go deeper.",
     points: [
       "You can answer, or continue without answering.",
-      "Your place is saved on this device when browser storage is available, so you can leave and return; otherwise it may last only in the current tab.",
+      "Your place is saved on this device when browser storage is available, so you can leave and return. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads.",
       "Nothing is scored, timed or compared. There are no streaks.",
       "Scripture and spiritual reflection stay off unless you turn them on in Settings.",
     ],
@@ -86,7 +86,7 @@ export const AGREEMENT_COPY = {
   ],
   /** One calm sentence, no alarming technical language. */
   automatedProcessingSentence:
-    "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and nothing is sent anywhere.",
+    "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and your selected responses and personalized reflection are not sent to Resurgence Therapeutics.",
   safetySentence:
     "If you are ever in immediate danger, please contact local emergency services or someone nearby.",
   adultLabel: "I confirm that I am 18 years of age or older.",

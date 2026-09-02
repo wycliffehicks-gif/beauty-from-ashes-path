@@ -102,10 +102,13 @@ function PrivacyPage() {
         is transmitted in order to produce it.
       </p>
       <p>
-        Everything above stays on this device and browser. It is not sent to us,
-        it is not stored on a server, and there is no account, database or
-        analytics behind it. Because it is local, it does not move with you to
-        another device or browser.
+        When browser storage is available, the journey information above
+        stays in this browser on this device. If storage is unavailable, it
+        may exist only in the current tab and can be lost when that tab
+        closes or reloads. This journey information is not sent to
+        Resurgence Therapeutics, is not stored on its server, and is not
+        connected to an account, database or visitor analytics. Because it
+        is local, it does not move with you to another device or browser.
       </p>
       <p>
         These local items are not confidential clinical records. They are not

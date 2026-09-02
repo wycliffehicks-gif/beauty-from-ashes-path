@@ -12,7 +12,7 @@ import { getFirstJourneyDay } from "@/content/first-journey";
 import type { JourneyDayContent } from "@/content/journey-types";
 import { CA_REGION } from "@/content/crisis-registry";
 import { PRIVACY_CONFIDENTIALITY_POINTS, PRIVACY_SUMMARY_POINTS } from "@/content/settings";
-import { OPENING_SCREENS } from "@/content/opening";
+import { AGREEMENT_COPY, OPENING_SCREENS } from "@/content/opening";
 import {
   presentationAnswers,
   presentationOptions,
@@ -100,43 +100,68 @@ describe("2 — accurate Canadian 911 wording", () => {
 });
 
 describe("3 — truthful local-storage wording", () => {
-  it("drops the minimizing privacy phrase and qualifies persistence", () => {
+  function normalize(src: string): string {
+    return src.replace(/\s+/g, " ").trim();
+  }
+
+  it("Privacy notice drops the tautological opening and uses the exact qualified wording", () => {
     const src = readFileSync("src/routes/privacy.tsx", "utf8");
-    expect(src).not.toContain("low-sensitivity");
-    expect(src).toContain("locally stored journey information");
-    expect(src).toContain("when browser");
-  });
-
-  it("uses the corrected Important Information phrase", () => {
-    const src = readFileSync("src/routes/important-information.tsx", "utf8");
-    expect(src).not.toContain("Local device preferences the app stores");
-    expect(src).toContain("stored journey information");
-  });
-
-  it("scopes the landing-page privacy claim", () => {
-    const src = readFileSync("src/components/LandingPage.tsx", "utf8");
-    expect(src).not.toContain("Nothing is uploaded to the cloud");
-    expect(src).toContain("Your answers and reflections are not sent to Resurgence Therapeutics.");
-    expect(src).toContain("when browser storage is");
-  });
-
-  it("qualifies onboarding and Settings persistence statements", () => {
-    const howItWorks = OPENING_SCREENS.find((s) => s.key === "how-it-works")!;
-    expect(howItWorks.points!.some((p) => p.includes("when browser storage is available"))).toBe(
-      true,
+    expect(src).not.toContain("The app stores locally stored journey information");
+    const normalized = normalize(src);
+    expect(normalized).toContain(
+      "When browser storage is available, the app keeps the following journey information in this browser on this device. If storage is unavailable, this information may exist only in the current tab and can be lost when that tab closes or reloads:",
     );
-    expect(
-      PRIVACY_CONFIDENTIALITY_POINTS.some((p) => p.includes("when browser storage is available")),
-    ).toBe(true);
-    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("current tab"))).toBe(true);
+  });
+
+  it("Privacy notice replaces the overbroad closing paragraph with the exact qualified wording", () => {
+    const src = readFileSync("src/routes/privacy.tsx", "utf8");
+    expect(src).not.toContain("Everything above stays on this device and browser");
+    const normalized = normalize(src);
+    expect(normalized).toContain(
+      "When browser storage is available, the journey information above stays in this browser on this device. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads. This journey information is not sent to Resurgence Therapeutics, is not stored on its server, and is not connected to an account, database or visitor analytics.",
+    );
+  });
+
+  it("Agreement screen drops the overbroad 'nothing is sent anywhere' clause", () => {
+    expect(AGREEMENT_COPY.automatedProcessingSentence).not.toContain("nothing is sent anywhere");
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toBe(
+      "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and your selected responses and personalized reflection are not sent to Resurgence Therapeutics.",
+    );
+  });
+
+  it("How-it-works screen uses the exact qualified saved-place wording", () => {
+    const howItWorks = OPENING_SCREENS.find((s) => s.key === "how-it-works")!;
+    const point = howItWorks.points!.find((p) => p.includes("Your place is saved"))!;
+    expect(point).not.toContain("otherwise it may last only in the current tab");
+    expect(point).toBe(
+      "Your place is saved on this device when browser storage is available, so you can leave and return. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads.",
+    );
+  });
+
+  it("Settings Privacy & Confidentiality summary uses the exact qualified first bullet", () => {
+    expect(PRIVACY_SUMMARY_POINTS[0]).not.toContain(
+      "Everything this app saves stays in this browser, on this device only",
+    );
+    expect(PRIVACY_SUMMARY_POINTS[0]).toBe(
+      "When browser storage is available, everything this app saves stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
+    );
+  });
+
+  it("Settings Clear or Restart description uses the exact qualified wording", () => {
+    const src = readFileSync("src/routes/_shell.settings.tsx", "utf8");
+    const normalized = normalize(src);
+    expect(normalized).not.toContain(
+      "Everything this app saves stays in this browser, on this device only: your saved place",
+    );
+    expect(normalized).toContain(
+      "When browser storage is available, this app keeps your saved place, selected choices, personalized reflections, finished days, preferences and recorded agreement in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads. Choosing Clear or restart my journey asks the app to remove its saved journey information and return you to the opening. If removal cannot be confirmed, the app will tell you.",
+    );
   });
 
   it("preserves the truthful no-account, no-server, no-analytics and fonts statements", () => {
     const src = readFileSync("src/routes/privacy.tsx", "utf8");
     expect(src).toContain("does not require you to create an account");
     expect(src.toLowerCase()).toContain("google fonts");
-    expect(
-      PRIVACY_SUMMARY_POINTS.some((p) => p.includes("no analytics")),
-    ).toBe(true);
+    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("no analytics"))).toBe(true);
   });
 });

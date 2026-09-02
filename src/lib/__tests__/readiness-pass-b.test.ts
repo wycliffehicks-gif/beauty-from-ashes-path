@@ -278,8 +278,14 @@ describe("canonical ten-day structural fingerprint", () => {
     // screen order, progress index, question/option/step id, option order,
     // selection mode, exclusivity, echo branch, reflection section, storage
     // version or answer meaning version changed.
+    //
+    // Updated when Day 9's "where" faith setting gained the established
+    // presentation-only marker (Choice.spiritualOnly). Presentation metadata
+    // only: no screen, screen order, progress index, question/option/step id,
+    // option order, selection mode, exclusivity, echo branch, reflection
+    // section, storage version or answer meaning version changed.
     expect(structuralFingerprint()).toBe(
-      "11a9865e5222197bca44707192e3836d55a483300cbfe7802974101a567f6a8c",
+      "4b48dcd09601c2f9ec69ca740a7e37155b57d837c71dae7e1a16009d936f291c",
     );
   });
 });

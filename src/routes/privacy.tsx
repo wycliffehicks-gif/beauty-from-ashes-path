@@ -41,10 +41,10 @@ function PrivacyPage() {
 
       <h2 className="bfa-h2 font-serif">What is kept on this device</h2>
       <p>
-        The app stores locally stored journey information in your own
-        browser or device storage only. Local persistence applies when browser
-        storage is available; otherwise this information may exist only in the
-        current tab and can be lost when that tab closes or reloads:
+        When browser storage is available, the app keeps the following
+        journey information in this browser on this device. If storage is
+        unavailable, this information may exist only in the current tab and
+        can be lost when that tab closes or reloads:
       </p>
       <ul className="list-disc space-y-1 pl-5">
         <li>
@@ -102,10 +102,13 @@ function PrivacyPage() {
         is transmitted in order to produce it.
       </p>
       <p>
-        Everything above stays on this device and browser. It is not sent to us,
-        it is not stored on a server, and there is no account, database or
-        analytics behind it. Because it is local, it does not move with you to
-        another device or browser.
+        When browser storage is available, the journey information above
+        stays in this browser on this device. If storage is unavailable, it
+        may exist only in the current tab and can be lost when that tab
+        closes or reloads. This journey information is not sent to
+        Resurgence Therapeutics, is not stored on its server, and is not
+        connected to an account, database or visitor analytics. Because it
+        is local, it does not move with you to another device or browser.
       </p>
       <p>
         These local items are not confidential clinical records. They are not

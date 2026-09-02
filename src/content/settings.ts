@@ -77,7 +77,7 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
  * removed from there.
  */
 export const PRIVACY_SUMMARY_POINTS: string[] = [
-  "Everything this app saves stays in this browser, on this device only. When browser storage is unavailable, what the app holds may exist only in the current tab and can be lost when that tab closes or reloads.",
+  "When browser storage is available, everything this app saves stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
   "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
   "You can clear or restart everything saved here at any time, from this page.",

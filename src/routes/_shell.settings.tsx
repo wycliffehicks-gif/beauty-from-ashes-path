@@ -215,9 +215,14 @@ function SettingsPage() {
           className="bfa-copy-support mt-2 text-muted-foreground"
           data-testid="settings-storage-note"
         >
-          {volatileStorage
-            ? "Saving is unavailable in this browser right now, so what this app holds — your place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement — is available in this tab only, and may be lost when the tab closes or reloads. Clearing removes all of it and returns you to the opening."
-            : "Everything this app saves stays in this browser, on this device only: your saved place, the choices you selected, your reflections, your finished days, your preferences and your recorded agreement. Clearing removes all of it and returns you to the opening."}
+          When browser storage is available, this app keeps your saved place,
+          selected choices, personalized reflections, finished days, preferences
+          and recorded agreement in this browser on this device. If storage is
+          unavailable, information may exist only in the current tab and can be
+          lost when that tab closes or reloads. Choosing Clear or restart my
+          journey asks the app to remove its saved journey information and return
+          you to the opening. If removal cannot be confirmed, the app will tell
+          you.
         </p>
 
         {!confirming ? (

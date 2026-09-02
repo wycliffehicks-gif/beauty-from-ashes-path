@@ -93,7 +93,7 @@ function SupportPage() {
         <p className="bfa-copy text-foreground">{CA_REGION.emergencyGuidance}</p>
         {CA_REGION.emergencyTel && (
           <a href={`tel:${CA_REGION.emergencyTel}`} className={ACTION}>
-            Call {CA_REGION.emergencyTel}
+            Call 911 where available
           </a>
         )}
         <p className="bfa-copy-support text-muted-foreground">

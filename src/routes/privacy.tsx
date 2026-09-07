@@ -30,14 +30,16 @@ function PrivacyPage() {
         version of the app.
       </p>
 
-      <h2 className="bfa-h2 font-serif">What the app does not collect</h2>
+      <h2 className="bfa-h2 font-serif">Your answers and choices</h2>
       <p>
         The current app does not require you to create an account. It does not
-        intentionally collect your name, email address, journal entries,
-        diagnosis, medical record or other personal health information through
-        the app itself. The responses you select on each day are saved on this
-        device only, when browser storage is available. They are not sent to Resurgence Therapeutics, and nobody at
-        Resurgence Therapeutics receives or reads them.
+        ask for your name, email address, diagnosis or medical record in the journey.
+        Your selected answers may still reveal personal or sensitive information.
+        The app saves them in this browser when storage is available. Written
+        reflections are prepared locally. If you separately choose an AI reflection
+        when it is available, today’s selected answers and relevant journey material
+        are sent through Lovable to its AI provider, as explained below. This app
+        is not a monitored clinical service.
       </p>
 
       <h2 className="bfa-h2 font-serif">What is kept on this device</h2>
@@ -88,6 +90,7 @@ function PrivacyPage() {
           Whether you enabled the optional reminder and the time you chose.
         </li>
         <li>The date and time this saved information was last updated.</li>
+        <li>Your AI consent version and chosen reflection mode, and any accepted AI reflections saved separately for your current answers and spiritual preference.</li>
       </ul>
 
       <p>
@@ -106,7 +109,7 @@ function PrivacyPage() {
       </p>
 
       <p>
-        Your personalized reflection is assembled on this device. It is put
+        The written-reflection option is assembled on this device. It is put
         together locally and deterministically from the approved wording written
         for that day and the coded options you selected. No artificial
         intelligence, no server and no external service is involved, and nothing
@@ -116,10 +119,10 @@ function PrivacyPage() {
         When browser storage is available, the journey information above
         stays in this browser on this device. If storage is unavailable, it
         may exist only in the current tab and can be lost when that tab
-        closes or reloads. This journey information is not sent to
-        Resurgence Therapeutics, is not stored on its server, and is not
-        connected to an account, database or visitor analytics. Because it
-        is local, it does not move with you to another device or browser.
+        closes or reloads. These saved copies are not connected to an account
+        or synced to another device or browser. This local storage description
+        does not mean that a separately requested AI reflection involves no
+        external processing; that process is described below.
       </p>
       <p>
         These local items are not confidential clinical records. They are not
@@ -210,7 +213,7 @@ function PrivacyPage() {
         <li>No profiling of users.</li>
         <li>No sale of personal information.</li>
         <li>No clinical record is created about you.</li>
-        <li>No artificial-intelligence analysis of your reflections.</li>
+        <li>No AI processing of optional notes or earlier-day answers for a daily reflection.</li>
       </ul>
 
       <h2 className="bfa-h2 font-serif">External links</h2>

@@ -1354,7 +1354,6 @@ function ReflectionScreen({
       saveDayReflection(dayId, resolved.text, resolved.snapshot);
       onSaved(resolved.text, resolved.snapshot);
     }
-    onReady(token);
     // savedReflection is read once per screen entry; rebuilding on our own save
     // would loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1364,6 +1363,10 @@ function ReflectionScreen({
 
   // Only a response built for the current answers may be shown.
   const built = state && state.token === token ? state.built : null;
+  const onChosenReflectionReady = useCallback((ready: boolean) => {
+    if (ready) onReady(token);
+    else onPreparing();
+  }, [onReady, onPreparing, token]);
 
   // Once the reflection is present it is ordinary structured content, so the
   // heading takes focus rather than the whole thing being announced at once.
@@ -1381,18 +1384,22 @@ function ReflectionScreen({
       >
         A reflection drawn from today
       </h1>
-      {/* The reflection is synchronous and on-device, so its own opening words —
-          restored or freshly built — are the only ones ever shown. No generic
-          stand-in copy appears and nothing is swapped after paint. */}
-      {built ? (
-        <p className="bfa-copy text-foreground">{built.intro}</p>
-      ) : null}
       <DayMotif motif={content.motif} treatment="quiet" />
 
 
       {built ? (
 
         <div className="space-y-4">
+          <JourneyAiReflection
+            request={prefsHydrated ? {
+              day: content.day,
+              answerMeaningVersion: content.answerMeaningVersion,
+              answers,
+              spiritual: showSpiritual,
+            } : null}
+            onReadyChange={onChosenReflectionReady}
+          >
+          <p className="bfa-copy text-foreground">{built.intro}</p>
           {built.sections.map((section) => (
             <section key={section.id} className="surface-card space-y-2">
               <h2 className="bfa-heading bfa-h3 font-serif">
@@ -1406,25 +1413,13 @@ function ReflectionScreen({
             </section>
           ))}
           <p className="bfa-copy text-muted-foreground">{built.closing}</p>
+          </JourneyAiReflection>
           {content.reflection.priorDaysThread ? (
             <PriorDaysThreadDisclosure
               definition={content.reflection.priorDaysThread}
               progress={progress}
               hydrated={prefsHydrated}
               showSpiritual={showSpiritual}
-            />
-          ) : null}
-          {/* Strictly secondary and strictly opt-in. It never replaces, delays
-              or alters the authored reflection above, and it is only offered
-              once the spiritual preference is actually known. */}
-          {prefsHydrated ? (
-            <JourneyAiReflection
-              request={{
-                day: content.day,
-                answerMeaningVersion: content.answerMeaningVersion,
-                answers,
-                spiritual: showSpiritual,
-              }}
             />
           ) : null}
         </div>

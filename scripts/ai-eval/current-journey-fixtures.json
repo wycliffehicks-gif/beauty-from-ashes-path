@@ -1,0 +1,75 @@
+[
+  {
+    "day": 1,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.state:unsure", "q.brought:private"],
+    "spiritual": false
+  },
+  {
+    "day": 2,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.body:nothing", "q.load:selfpressure", "q.load:tiredness", "step:rest"],
+    "spiritual": false
+  },
+  {
+    "day": 3,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.carrying:grief",
+      "q.carrying:anger",
+      "q.shows:sleep",
+      "q.shows:patience",
+      "step:prepare"
+    ],
+    "spiritual": false
+  },
+  {
+    "day": 4,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.response:perfect", "q.doorway:criticism", "q.purpose:criticism", "step:settle"],
+    "spiritual": false
+  },
+  {
+    "day": 5,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.forward:grieve", "q.holdback:energy", "step:wait"],
+    "spiritual": false
+  },
+  {
+    "day": 6,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.cost:none", "q.protects:unclear", "step:prepare"],
+    "spiritual": false
+  },
+  {
+    "day": 7,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.tone:harsh", "q.need:forgiveness", "step:receive"],
+    "spiritual": false
+  },
+  {
+    "day": 8,
+    "answerMeaningVersion": "v2",
+    "answers": ["q.route:god", "q.size:tiny", "step:none"],
+    "spiritual": true
+  },
+  {
+    "day": 9,
+    "answerMeaningVersion": "v1",
+    "answers": ["q.practice:lament", "q.where:faith", "q.where:self", "step:none"],
+    "spiritual": true
+  },
+  {
+    "day": 10,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.different:named",
+      "q.different:nothing",
+      "q.unfinished:grief",
+      "q.unfinished:relationship",
+      "q.unfinished:faith",
+      "step:unavailable"
+    ],
+    "spiritual": false
+  }
+]

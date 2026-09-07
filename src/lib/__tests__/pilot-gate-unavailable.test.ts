@@ -69,11 +69,8 @@ describe("pilot gate: mismatch versus unavailable", () => {
     expect(source).toContain('role="alert"');
     expect(source).toContain("aria-invalid={invalid || undefined}");
     expect(source).toContain('aria-describedby={outcome ? "pilot-passcode-error" : undefined}');
-    // The unresolved status-check open policy and public routes stay exactly as they were.
-    expect(source).toContain('if (active) setStatus("open");');
-    expect(source).toContain(
-      'const ALWAYS_OPEN = ["/support", "/privacy", "/terms", "/important-information", "/contact-support"];',
-    );
+    // Access failure/retry and public-path matching are now exercised by
+    // pilot-status.test.ts. This test retains the distinct unlock-field UI.
   });
 });
 

@@ -39,9 +39,13 @@ describe("opening flow content", () => {
     expect(AGREEMENT_COPY.termsLabel).toMatch(/Terms of Use/);
     expect(AGREEMENT_COPY.termsLabel).toMatch(/Privacy Notice/);
     expect(AGREEMENT_COPY.automatedProcessingSentence).not.toMatch(
-      /algorithm|model|LLM|artificial intelligence|\bAI\b/i,
+      /algorithm|\bLLM\b/i,
     );
-    expect(AGREEMENT_COPY.automatedProcessingSentence).toMatch(/not read by a person/);
+    // The AI addition requires an honest separate processing choice; the old
+    // blanket no-AI/no-transmission wording is intentionally superseded.
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toMatch(/AI reflections, when available/);
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toMatch(/separate informed choice/);
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toMatch(/external AI service/);
     expect(AGREEMENT_COPY.isNotPoints.join(" ")).toMatch(/not monitored/i);
   });
 });
@@ -63,7 +67,8 @@ describe("settings architecture", () => {
     const all = PRIVACY_CONFIDENTIALITY_POINTS.join(" ").toLowerCase();
     expect(all).toMatch(/no .*(staff|one) .*(watch|read)/);
     expect(all).toContain("device");
-    expect(all).toMatch(/personalised|personalized/);
+    expect(all).toMatch(/written reflections/);
+    expect(all).toMatch(/separate informed choice/);
     expect(all).toMatch(/names/);
     expect(all).toMatch(/clear/);
     expect(all).toMatch(/psychotherapy/);

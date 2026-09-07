@@ -19,15 +19,12 @@
 //    withheld.
 
 import { getFirstJourneyDay } from "@/content/first-journey";
-import { dayIdFor, dayNumberFromId } from "@/content/journey";
+import { dayNumberFromId } from "@/content/journey";
 import { answerKeyFor } from "@/lib/journey/reflection-engine";
 import { optionIdsFor } from "@/lib/journey/answers";
 import { presentationAnswers } from "@/lib/journey/presentation-answers";
 import { resolveReflection } from "@/lib/journey/reflection-restore";
-import { parseJourneyRequest } from "@/lib/ai/journey-contract";
-import { prepareJourneyGeneration } from "@/lib/ai/journey-policy";
-import { composeJourneyResponseIdentity } from "@/lib/ai/journey-identity";
-import { readAiReflection } from "@/lib/ai/journey-ai-store";
+import { resolveSavedAiPresentation } from "@/lib/ai/journey-ai-store";
 
 import { answersForDay, type JourneyProgress } from "./progress";
 
@@ -56,36 +53,8 @@ interface ExportedDay {
   day: ReturnType<typeof getFirstJourneyDay>;
   answers: string[];
   reflection: string;
-  /** Present only when a saved AI reflection still matches this exact day. */
-  aiReflection: string | null;
-}
-
-/**
- * A saved AI reflection is included ONLY when it still matches the identity of
- * this day exactly as it now stands — same coded answers, same spiritual
- * preference, same authored source, policy, model and validator. Anything else
- * is omitted rather than exported under a label it no longer earns. Nothing is
- * written, and the deterministic reflection is unaffected either way.
- */
-function aiReflectionFor(
-  day: NonNullable<ReturnType<typeof getFirstJourneyDay>>,
-  codedAnswers: string[],
-  presentation: ExportPresentation,
-): string | null {
-  if (!presentation.hydrated) return null;
-  const parsed = parseJourneyRequest({
-    day: day.day,
-    answerMeaningVersion: day.answerMeaningVersion,
-    answers: codedAnswers,
-    spiritual: presentation.showSpiritual,
-  });
-  if (!parsed.ok) return null;
-  const identity = composeJourneyResponseIdentity(
-    prepareJourneyGeneration(parsed.request).identity,
-    "live-model",
-  );
-  const stored = readAiReflection(dayIdFor(day.day), identity.canonicalIdentity);
-  return stored ? stored.text : null;
+  isAi: boolean;
+  aiMissing: boolean;
 }
 
 /**
@@ -111,11 +80,16 @@ function exportedDays(
       snapshot: progress.reflectionSnapshots?.[dayId],
     });
 
+    const ai = resolveSavedAiPresentation({
+      day: day.day, answerMeaningVersion: day.answerMeaningVersion,
+      answers: codedAnswers, spiritual: presentation.showSpiritual,
+    }, presentation.hydrated);
+    const selectedAi = ai?.mode === "ai";
     out.push({
-      day,
-      answers,
-      reflection: text,
-      aiReflection: aiReflectionFor(day, codedAnswers, presentation),
+      day, answers,
+      reflection: selectedAi ? ai?.stored?.text ?? "" : text,
+      isAi: selectedAi,
+      aiMissing: selectedAi && !ai?.stored,
     });
   }
 
@@ -184,18 +158,16 @@ export function buildReflectionExport(
 
     if (entry.reflection.trim().length > 0) {
       reflectionCount += 1;
-      lines.push("Your reflection:");
+      lines.push(entry.isAi ? "Your AI reflection (written by AI from your choices that day):" : "Your reflection:");
       lines.push(entry.reflection);
       lines.push("");
     }
 
-    // Clearly labelled as AI-written and counted separately, so the export never
-    // presents it as the written reflection prepared for this day.
-    if (entry.aiReflection && entry.aiReflection.trim().length > 0) {
-      lines.push("Your AI reflection (written by AI from your choices that day):");
-      lines.push(entry.aiReflection);
+    if (entry.aiMissing) {
+      lines.push("No matching AI reflection is saved for the choices and spiritual setting shown here. Your written reflection remains available if you choose it in the app.");
       lines.push("");
     }
+
   }
 
   return {

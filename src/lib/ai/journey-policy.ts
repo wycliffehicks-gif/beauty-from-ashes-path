@@ -10,8 +10,10 @@
 // policy, its content pack, or its output schema.
 
 import type {
+  GroundedJourneyPractice,
   GroundedJourneySource,
 } from "@/lib/ai/journey-grounding";
+
 import {
   buildJourneyGrounding,
   JOURNEY_GROUNDING_VERSION,
@@ -149,19 +151,19 @@ export function prepareJourneyGeneration(
   request: JourneyRequest,
 ): PreparedJourneyGeneration {
   const grounding = buildJourneyGrounding(request);
-  const canonicalIdentity = canonicalIdentityOf(grounding);
+  const policy = buildJourneyPolicy(grounding);
   return {
     grounding,
-    policy: buildJourneyPolicy(grounding),
+    policy,
     groundedPayload: JSON.stringify(grounding),
     identity: {
-      provenance: "live-model",
       contractVersion: JOURNEY_CONTRACT_VERSION,
       groundingVersion: JOURNEY_GROUNDING_VERSION,
       policyVersion: JOURNEY_POLICY_VERSION,
       answerMeaningVersion: grounding.answerMeaningVersion,
       day: grounding.day,
-      canonicalIdentity,
+      canonicalIdentity: canonicalIdentityOf(grounding, policy),
     },
+
   };
 }

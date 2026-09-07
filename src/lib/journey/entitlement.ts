@@ -14,6 +14,8 @@
 
 import { useEffect, useState } from "react";
 
+import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+
 /** Days 1–FREE_DAYS are always available, full strength, at no cost. */
 export const FREE_DAYS = 4;
 
@@ -52,27 +54,40 @@ export function normalizeEntitlement(raw: unknown): Entitlement {
   return unlocked ? { unlocked: true, source: source ?? "pilot" } : LOCKED;
 }
 
+/**
+ * Reads through the shared app storage layer, so a value written in this tab
+ * after a refused persistent write is authoritative and a stale LOCKED value
+ * still sitting in the browser can never shadow it.
+ */
 export function readEntitlement(): Entitlement {
   if (typeof window === "undefined") return LOCKED;
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const raw = readLocal(KEY);
     return raw ? normalizeEntitlement(JSON.parse(raw)) : LOCKED;
   } catch {
     return LOCKED;
   }
 }
 
+/**
+ * Same key, same schema. When the browser refuses to persist, the shared layer
+ * keeps the value authoritatively for this tab so the rest of the journey does
+ * open now; the saving notice separately tells the person it may not last.
+ */
 function write(next: Entitlement) {
   if (typeof window === "undefined") return;
+  writeLocal(KEY, JSON.stringify(next));
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event(ENTITLEMENT_EVENT));
   } catch {
-    // Volatile storage: the boundary still opens for this visit.
+    /* ignore */
   }
-  window.dispatchEvent(new Event(ENTITLEMENT_EVENT));
 }
 
-const ENTITLEMENT_EVENT = "bfa:entitlement";
+export const ENTITLEMENT_EVENT = "bfa:entitlement";
+
+/** The single local key this concern owns, for a scoped clear elsewhere. */
+export const ENTITLEMENT_STORAGE_KEY = KEY;
 
 /** Grant access during the pilot. No payment, no network, no identifiers. */
 export function grantPilotUnlock() {
@@ -81,13 +96,14 @@ export function grantPilotUnlock() {
 
 export function clearEntitlement() {
   if (typeof window === "undefined") return;
+  removeLocal(KEY);
   try {
-    window.localStorage.removeItem(KEY);
+    window.dispatchEvent(new Event(ENTITLEMENT_EVENT));
   } catch {
-    // Nothing to clear.
+    /* ignore */
   }
-  window.dispatchEvent(new Event(ENTITLEMENT_EVENT));
 }
+
 
 /**
  * Hydration-safe read. The first client render matches the server (locked and

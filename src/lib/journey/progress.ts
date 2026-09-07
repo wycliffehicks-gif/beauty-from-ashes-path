@@ -16,7 +16,17 @@ import { getFirstJourneyDay } from "@/content/first-journey";
 import { dayIdFor } from "@/content/journey";
 import { screenKey, screensFor } from "@/content/journey-types";
 import type { AnswerMeaningVersion, JourneyDayContent } from "@/content/journey-types";
-import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+import {
+  beginClearAttempt,
+  noteClearFailure,
+  readLocal,
+  removeLocal,
+  removeLocalConfirmed,
+  writeLocal,
+} from "@/lib/storage-status";
+
+import { ENTITLEMENT_EVENT, ENTITLEMENT_STORAGE_KEY } from "./entitlement";
+import { REMINDER_EVENT, REMINDER_STORAGE_KEY } from "./reminder";
 
 import {
   MAX_MEANING_VERSIONS_PER_DAY,
@@ -637,63 +647,88 @@ function appOwnedKeys(store: {
  * Explicit, confirmed clear of every Beauty from Ashes-owned item on this
  * device and browser: preferences and legal acceptance, the journey locator,
  * stable and legacy structured selections, saved deterministic reflections,
- * completion markers, legacy weekly-session state and the launch-screen
- * session marker. Nothing else in the browser is touched.
+ * completion markers, legacy weekly-session state, the launch-screen session
+ * marker, the pilot continuation marker and the reminder choice. Nothing else in
+ * the browser is touched, and the private pilot cookie is not involved.
+ *
+ * HONESTY RULE: the outcome of THIS clear is tracked separately from the sticky
+ * saving-availability state, and confirmation is taken from the persistent
+ * stores rather than from the in-tab tombstones, which are designed to make a
+ * refused removal read as absent. If any access, enumeration, removal or
+ * confirmation step fails, the person is told plainly. Only presence or absence
+ * of app-owned keys is inspected — never their contents.
  */
 export function clearJourney() {
   if (typeof window === "undefined") return;
 
-  const discover = (store: Storage | undefined): string[] => {
-    if (!store) return [];
+  beginClearAttempt();
+
+  const discover = (store: Storage): string[] => {
     try {
       return appOwnedKeys(store);
     } catch {
-      /* enumeration may throw in a locked-down browser */
+      // Enumeration may throw in a locked-down browser. The named keys below
+      // still go, but this clear can no longer be called complete.
+      noteClearFailure();
       return [];
     }
   };
 
-  // localStorage removals go through removeLocal, so a removal the browser
-  // refuses is tombstoned and stale persistent data can never resurrect.
-  const localKeys = new Set<string>([
+  // Every key this app owns by name, so a failed enumeration can never leave
+  // the pilot continuation marker or the reminder choice behind silently.
+  const named = [
     ...APP_OWNED_LOCAL_KEYS,
     ...APP_OWNED_SESSION_KEYS,
-    ...(() => {
-      try {
-        return discover(window.localStorage);
-      } catch {
-        return [];
-      }
-    })(),
-  ]);
-  for (const k of localKeys) removeLocal(k);
+    ENTITLEMENT_STORAGE_KEY,
+    REMINDER_STORAGE_KEY,
+  ];
+
+  // localStorage removals go through the shared layer, so a removal the browser
+  // refuses is still tombstoned for this visit AND reported as unconfirmed.
+  try {
+    const store = window.localStorage;
+    const keys = new Set<string>([...named, ...discover(store)]);
+    for (const k of keys) {
+      if (!removeLocalConfirmed(k)) noteClearFailure();
+    }
+  } catch {
+    // The store itself is unreachable: nothing can be confirmed removed.
+    for (const k of named) removeLocal(k);
+    noteClearFailure();
+  }
 
   try {
     const store = window.sessionStorage;
-    const keys = new Set<string>([
-      ...APP_OWNED_SESSION_KEYS,
-      ...APP_OWNED_LOCAL_KEYS,
-      ...discover(store),
-    ]);
+    const keys = new Set<string>([...named, ...discover(store)]);
     for (const k of keys) {
       try {
         store.removeItem(k);
+        if (store.getItem(k) !== null) noteClearFailure();
       } catch {
-        /* ignore individual failures */
+        noteClearFailure();
       }
     }
   } catch {
-    /* ignore */
+    noteClearFailure();
   }
 
-
-  try {
-    window.dispatchEvent(new CustomEvent(JOURNEY_CHANGE_EVENT));
-    window.dispatchEvent(new CustomEvent("bfa-prefs-change"));
-  } catch {
-    /* ignore */
+  // Every subscriber is notified from here, so the caller never needs a second
+  // round of removals that could mask a partial failure: entitlement relocks,
+  // the reminder cancels, preferences and progress reset.
+  for (const event of [
+    JOURNEY_CHANGE_EVENT,
+    "bfa-prefs-change",
+    ENTITLEMENT_EVENT,
+    REMINDER_EVENT,
+  ]) {
+    try {
+      window.dispatchEvent(new CustomEvent(event));
+    } catch {
+      /* ignore */
+    }
   }
 }
+
 
 
 /** SSR-safe subscription hook. Every future day can autosave through this. */

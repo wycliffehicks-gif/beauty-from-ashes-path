@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { usePrefs, resetAll } from "@/lib/prefs";
+import { usePrefs } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
-import { clearEntitlement } from "@/lib/journey/entitlement";
-import { clearReminder, useReminder } from "@/lib/journey/reminder";
+import { useReminder } from "@/lib/journey/reminder";
 import { useStorageStatus } from "@/lib/storage-status";
 import {
   ABOUT_BEAUTY_FROM_ASHES,
@@ -250,16 +249,19 @@ function SettingsPage() {
                 type="button"
                 data-testid="clear-journey-confirmed"
                 onClick={() => {
+                  // One removal pass, one honest outcome. clearJourney owns every
+                  // app key (including the pilot continuation marker, the
+                  // reminder choice and preferences) and notifies every
+                  // subscriber, so a second round of removals here cannot mask a
+                  // partial failure.
                   clearJourney();
-                  clearEntitlement();
-                  clearReminder();
-                  resetAll();
                   navigate({ to: "/onboarding", replace: true });
                 }}
                 className="btn-primary-journey flex-1"
               >
                 Yes, clear it
               </button>
+
             </div>
           </div>
         )}
@@ -331,10 +333,12 @@ function ReminderSection() {
 
         {settings.enabled && (
           <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-on-note">
-            The reminder is on for this device. It arrives only while this app is open in the
-            browser or installed on your home screen.
+            The reminder is on for this device. It can only arrive while this app is still open in
+            the browser. Adding the app to your home screen does not change that: if the app is
+            closed, or the browser is closed, no reminder will arrive.
           </p>
         )}
+
 
         {(refused || support === "denied") && (
           <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-denied-note">

@@ -250,16 +250,19 @@ function SettingsPage() {
                 type="button"
                 data-testid="clear-journey-confirmed"
                 onClick={() => {
+                  // One removal pass, one honest outcome. clearJourney owns every
+                  // app key (including the pilot continuation marker, the
+                  // reminder choice and preferences) and notifies every
+                  // subscriber, so a second round of removals here cannot mask a
+                  // partial failure.
                   clearJourney();
-                  clearEntitlement();
-                  clearReminder();
-                  resetAll();
                   navigate({ to: "/onboarding", replace: true });
                 }}
                 className="btn-primary-journey flex-1"
               >
                 Yes, clear it
               </button>
+
             </div>
           </div>
         )}

@@ -244,3 +244,117 @@ describe("isolation from the participant app", () => {
 
   });
 });
+
+describe("getEvalProfile own-property guard", () => {
+  it("refuses inherited Object.prototype names and never invokes the provider", async () => {
+    let providerCalls = 0;
+    const provider: EvalProvider = {
+      kind: "mock",
+      name: "should-not-run",
+      async generate() {
+        providerCalls += 1;
+        return {
+          ok: true,
+          text: COMPLETE_TEXT,
+          requestedModel: "google/gemini-3.6-flash",
+          returnedModel: "google/gemini-3.6-flash",
+          finishReason: "stop",
+        };
+      },
+    };
+    for (const name of ["constructor", "toString", "__proto__", "hasOwnProperty"]) {
+      expect(buildEvalPayload("fx-day3-grief-sleep", name)).toEqual({
+        ok: false,
+        error: "unknown-profile",
+      });
+      const result = await runEvalFixture("fx-day3-grief-sleep", provider, {
+        profileId: name as never,
+      });
+      expect(result).toEqual({ ok: false, error: "unknown-profile" });
+    }
+    expect(providerCalls).toBe(0);
+  });
+
+  it("still resolves the two declared profiles with exact caps preserved", () => {
+    const def = buildEvalPayload("fx-day3-grief-sleep", "default");
+    const diag = buildEvalPayload("fx-day3-grief-sleep", DIAGNOSTIC_PROFILE_ID);
+    expect(def.ok).toBe(true);
+    expect(diag.ok).toBe(true);
+    if (!def.ok || !diag.ok) return;
+    expect(def.payload.maxOutputTokens).toBe(EVAL_MAX_OUTPUT_TOKENS);
+    expect(diag.payload.maxOutputTokens).toBe(4096);
+  });
+});
+
+describe("shouldStopAfter exact model identity check", () => {
+  const base = {
+    fixtureId: "fx-day3-grief-sleep" as const,
+    fixtureLabel: "FICTIONAL",
+    fictional: true as const,
+    day: 3,
+    fingerprint: "eval-g1:d3:v1:test",
+    providerName: "mock-provider",
+    providerKind: "mock" as const,
+    provenance: "mock" as const,
+    validatorVersion: "eval-v2",
+    durationMs: 10,
+    accepted: true,
+    reviewRequired: false,
+    acceptanceSummary: "",
+    manifest: {} as EvalRunRecord["manifest"],
+    status: "ai_generated" as const,
+    validationIssues: [] as string[],
+  };
+
+  it("continues when returned model matches requested exactly", () => {
+    expect(
+      shouldStopAfter({
+        ...base,
+        requestedModel: "google/gemini-3.6-flash",
+        returnedModel: "google/gemini-3.6-flash",
+      } as EvalRunRecord),
+    ).toBe(false);
+  });
+
+  it("stops on a different returned model", () => {
+    expect(
+      shouldStopAfter({
+        ...base,
+        requestedModel: "google/gemini-3.6-flash",
+        returnedModel: "openai/gpt-4o",
+      } as EvalRunRecord),
+    ).toBe(true);
+  });
+
+  it("stops on a prefix or suffix lookalike that previously passed via substring", () => {
+    for (const returnedModel of [
+      "google/gemini-3.6-flash-extra",
+      "unexpected/google/gemini-3.6-flash",
+      "google/gemini-3.6-flash-preview",
+    ]) {
+      expect(
+        shouldStopAfter({
+          ...base,
+          requestedModel: "google/gemini-3.6-flash",
+          returnedModel,
+        } as EvalRunRecord),
+      ).toBe(true);
+    }
+  });
+
+  it("treats missing returned metadata as unverified rather than inventing evidence", () => {
+    expect(
+      shouldStopAfter({
+        ...base,
+        requestedModel: "google/gemini-3.6-flash",
+      } as EvalRunRecord),
+    ).toBe(false);
+    expect(
+      shouldStopAfter({
+        ...base,
+        returnedModel: "google/gemini-3.6-flash",
+      } as EvalRunRecord),
+    ).toBe(false);
+  });
+});
+

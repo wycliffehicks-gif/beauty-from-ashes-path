@@ -190,11 +190,15 @@ function escapeHtml(value: string): string {
  * same plain-text source, so the two can never disagree, and it is rendered in
  * the person's own browser only — nothing is uploaded.
  */
-export function buildPrintableExport(progress: JourneyProgress): {
+export function buildPrintableExport(
+  progress: JourneyProgress,
+  presentationOpts?: ExportPresentation,
+): {
   html: string;
   summary: ExportSummary;
 } {
-  const { text, summary } = buildReflectionExport(progress);
+  const { text, summary } = buildReflectionExport(progress, presentationOpts);
+
 
   const body = text
     .split("\n")

@@ -98,10 +98,12 @@ function PrivacyPage() {
         An earlier weekly “deep session” feature may also have left session-only
         information in this browser: which stage of that session you were on, the
         coded option identifiers you had selected there, and an optional short
-        note limited to 400 characters. That information is session-only, stays
-        on this device, and is removed along with everything else when you clear
-        your journey.
+        note limited to 400 characters. That information is session-only and stays
+        on this device. When you clear your journey, the app asks the browser to
+        remove it along with the rest of the app’s saved information, and tells
+        you if that removal cannot be confirmed.
       </p>
+
       <p>
         Your personalized reflection is assembled on this device. It is put
         together locally and deterministically from the approved wording written

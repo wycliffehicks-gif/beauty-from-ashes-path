@@ -6,7 +6,14 @@ import {
   buildPrintableExport,
   buildReflectionExport,
 } from "@/lib/journey/export";
-import { reflectionSnapshot } from "@/lib/journey/reflection-restore";
+import {
+  answersSnapshot,
+  reflectionContentFingerprint,
+  reflectionSnapshot,
+  resolveReflection,
+  REFLECTION_ENGINE_VERSION,
+  REFLECTION_SNAPSHOT_VERSION,
+} from "@/lib/journey/reflection-restore";
 import { emptyProgress, type JourneyProgress } from "@/lib/journey/progress";
 
 const day1 = getFirstJourneyDay(1)!;
@@ -258,5 +265,76 @@ describe("export presentation and reflection consistency", () => {
     expect(escaped.html).not.toContain("<script>");
     expect(escaped.html).toContain("&amp;");
     expect(escaped.html).toContain("&lt;script&gt;");
+  });
+});
+
+describe("pre-repair snapshots can no longer restore stale engine wording", () => {
+  // A real pre-repair proof: same format marker, same day content fingerprint,
+  // same (empty) selections — but built without an engine rendering version.
+  function prePepairSnapshot(day: typeof day1, answers: string[]): string {
+    return [
+      REFLECTION_SNAPSHOT_VERSION,
+      reflectionContentFingerprint(day),
+      answersSnapshot(answers),
+    ].join(":");
+  }
+
+  it("the proof now carries an engine rendering version", () => {
+    expect(reflectionSnapshot(day3, []).startsWith(
+      `${REFLECTION_SNAPSHOT_VERSION}:${REFLECTION_ENGINE_VERSION}:`,
+    )).toBe(true);
+    expect(reflectionSnapshot(day3, [])).not.toBe(prePepairSnapshot(day3, []));
+  });
+
+  it("no-answer reflections saved by the old engine are rebuilt on Days 3, 4, 5, 6 and 9", () => {
+    for (const n of [3, 4, 5, 6, 9]) {
+      const day = getFirstJourneyDay(n)!;
+      const stale =
+        "OLD ENGINE TEXT\n\n" +
+        day.reflection.sections.map((s) => `${s.title}\n\nThe word you selected and where you notice it`).join("\n\n") +
+        "\n\n" +
+        day.reflection.closing;
+      const resolved = resolveReflection(day, [], {
+        text: stale,
+        snapshot: prePepairSnapshot(day, []),
+      });
+      expect(resolved.restored, `day ${n}`).toBe(false);
+      expect(resolved.replaceSaved, `day ${n}`).toBe(true);
+      expect(resolved.text, `day ${n}`).not.toContain("The word you selected and where you notice it");
+      expect(resolved.snapshot, `day ${n}`).toBe(reflectionSnapshot(day, []));
+    }
+  });
+
+  it("a stale pre-repair snapshot is invalidated in the text and printable exports", () => {
+    const progress = progressWith("day-03", [], {
+      text: "OLD ENGINE TEXT: The word you selected and where you notice it",
+      snapshot: prePepairSnapshot(day3, []),
+    });
+    const text = buildReflectionExport(progress, OFF);
+    const print = buildPrintableExport(progress, OFF);
+    for (const out of [text.text, print.html]) {
+      expect(out).not.toContain("OLD ENGINE TEXT");
+      expect(out).not.toContain("The word you selected and where you notice it");
+    }
+    // Stored choices and answer meanings are untouched; nothing is deleted.
+    expect(progress.answerSets["day-03"]).toEqual({ [day3.answerMeaningVersion]: [] });
+    expect(progress.reflections["day-03"]).toContain("OLD ENGINE TEXT");
+  });
+
+  it("a snapshot written by the current engine still restores unchanged", () => {
+    const answers = ["q.carrying:grief"];
+    const built = buildReflection(day3, answers);
+    const full = [
+      built.intro,
+      ...built.sections.flatMap((s) => [s.title, ...s.paragraphs]),
+      built.closing,
+    ].join("\n\n");
+    const resolved = resolveReflection(day3, answers, {
+      text: full,
+      snapshot: reflectionSnapshot(day3, answers),
+    });
+    expect(resolved.restored).toBe(true);
+    expect(resolved.replaceSaved).toBe(false);
+    expect(resolved.text).toBe(full);
   });
 });

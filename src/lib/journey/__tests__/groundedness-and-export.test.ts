@@ -209,14 +209,27 @@ describe("export presentation and reflection consistency", () => {
     const off = buildPrintableExport(progressWith("day-08", [spiritualToken]), OFF);
     expect(off.html).not.toContain(spiritualOption.label);
 
+    // A restorable saved reflection carrying markup must be escaped, not rendered.
+    const answers = ["q.brought:stuck"];
+    const built = buildReflection(day1, answers);
+    const withMarkup = [
+      built.intro,
+      ...built.sections.flatMap((s, i) => [
+        s.title,
+        ...(i === 0 ? ['<script>alert("x")</script> & more'] : []),
+        ...s.paragraphs,
+      ]),
+      built.closing,
+    ].join("\n\n");
     const escaped = buildPrintableExport(
-      progressWith("day-01", ["q.brought:stuck"], {
-        text: "<script>alert(\"x\")</script> & more",
-        snapshot: reflectionSnapshot(day1, ["q.brought:stuck"]),
+      progressWith("day-01", answers, {
+        text: withMarkup,
+        snapshot: reflectionSnapshot(day1, answers),
       }),
       OFF,
     );
     expect(escaped.html).not.toContain("<script>");
     expect(escaped.html).toContain("&amp;");
+    expect(escaped.html).toContain("&lt;script&gt;");
   });
 });

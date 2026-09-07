@@ -12,6 +12,8 @@ import {
   EVAL_MAX_OUTPUT_TOKENS,
   EVAL_TIMEOUT_MS,
   EVAL_INPUT_CHAR_CAP,
+  EVAL_VALIDATOR_VERSION,
+  classifyEvalIssues,
   type EvalProvider,
 } from "@/lib/ai/eval/harness";
 import { FIRST_JOURNEY_DAYS } from "@/content/first-journey";
@@ -227,6 +229,10 @@ describe("run statuses and output handling", () => {
     expect("status" in record && record.validationIssues).toContain(
       "output-truncated-by-token-cap",
     );
+    expect("status" in record && record.status).toBe("rejected");
+    expect("accepted" in record && record.accepted).toBe(false);
+    expect("provenance" in record && record.provenance).toBe("live");
+    expect("output" in record && record.output).toBe("A reflection that stops mid");
     expect("finishReason" in record && record.finishReason).toBe("length");
 
     const unfinished = await runEvalFixture(
@@ -359,6 +365,201 @@ describe("isolation from production", () => {
     ]) {
       const source = readFileSync(path, "utf8");
       expect(source).not.toMatch(/localStorage|sessionStorage|document\.|readProgress|window\./);
+    }
+  });
+});
+
+describe("provenance separated from quality acceptance (mock-only)", () => {
+  const complete = "Something was named today, and that may be enough for now.";
+
+  it("accepts a complete output and records live provenance", async () => {
+    const record = await runEvalFixture("fx-day3-grief-sleep", mockProvider(complete, "live"));
+    expect("status" in record && record.status).toBe("ai_generated");
+    expect("accepted" in record && record.accepted).toBe(true);
+    expect("provenance" in record && record.provenance).toBe("live");
+    expect("reviewRequired" in record && record.reviewRequired).toBe(false);
+    expect("validatorVersion" in record && record.validatorVersion).toBe(EVAL_VALIDATOR_VERSION);
+  });
+
+  it("keeps mocked provenance distinct from genuine AI", async () => {
+    const record = await runEvalFixture("fx-day3-grief-sleep", mockProvider(complete, "mock"));
+    expect("status" in record && record.status).toBe("mock");
+    expect("provenance" in record && record.provenance).toBe("mock");
+  });
+
+  it("rejects an unfinished fragment while keeping the text and metadata", async () => {
+    const record = await runEvalFixture(
+      "fx-day3-grief-sleep",
+      mockProvider("A reflection cut off before", "live"),
+    );
+    if (!("status" in record)) throw new Error("expected a record");
+    expect(record.status).toBe("rejected");
+    expect(record.accepted).toBe(false);
+    expect(record.reviewRequired).toBe(true);
+    expect(record.output).toBe("A reflection cut off before");
+    expect(record.requestedModel).toBe("mock/model");
+    expect(record.returnedModel).toBe("mock/model");
+    expect(record.validationIssues).toContain("possibly-truncated");
+  });
+
+  it("rejects a spiritual breach when authorisation is absent", async () => {
+    const record = await runEvalFixture(
+      "fx-day3-grief-sleep",
+      mockProvider("You must pray to God.", "live"),
+    );
+    if (!("status" in record)) throw new Error("expected a record");
+    expect(record.status).toBe("rejected");
+    expect(record.accepted).toBe(false);
+    expect(record.output).toBe("You must pray to God.");
+    expect(classifyEvalIssues(record.validationIssues).seriousPolicyIssue).toBe(true);
+  });
+
+  it("rejects an overreaching claim", async () => {
+    const record = await runEvalFixture(
+      "fx-day3-grief-sleep",
+      mockProvider("You will heal because of this step.", "live"),
+    );
+    if (!("status" in record)) throw new Error("expected a record");
+    expect(record.status).toBe("rejected");
+    expect(classifyEvalIssues(record.validationIssues).seriousPolicyIssue).toBe(true);
+  });
+
+  it("words the review conclusion conservatively without clinical claims", () => {
+    const flagged = classifyEvalIssues(["spiritual-language:god"]);
+    expect(flagged.accepted).toBe(false);
+    expect(flagged.reviewRequired).toBe(true);
+    expect(flagged.summary).toContain("not proof of harm");
+    const clean = classifyEvalIssues([]);
+    expect(clean.accepted).toBe(true);
+    expect(clean.summary).toContain("do not establish emotional or clinical safety");
+  });
+});
+
+describe("deadline covers complete body consumption (mocked fetch only)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const req = {
+    systemPolicy: "policy",
+    groundedSourceText: "{}",
+    userInstruction: "go",
+    maxOutputTokens: EVAL_MAX_OUTPUT_TOKENS,
+    timeoutMs: 20,
+  };
+
+  it("times out when headers arrive but the success body never settles", async () => {
+    const fetchMock = vi.fn(async () => ({
+      status: 200,
+      ok: true,
+      body: null,
+      json: () => new Promise(() => {}),
+      text: () => new Promise(() => {}),
+    }) as unknown as Response);
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await createEvalGatewayProvider("mock-key").generate(req);
+    expect(result).toEqual({ ok: false, error: "timeout" });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("times out when an error body never settles", async () => {
+    const fetchMock = vi.fn(async () => ({
+      status: 500,
+      ok: false,
+      body: null,
+      text: () => new Promise(() => {}),
+      json: () => new Promise(() => {}),
+    }) as unknown as Response);
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await createEvalGatewayProvider("mock-key").generate(req);
+    expect(result).toEqual({ ok: false, error: "timeout" });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("still reads a slow but complete body inside the deadline", async () => {
+    const fetchMock = vi.fn(async () => ({
+      status: 200,
+      ok: true,
+      body: null,
+      json: async () => {
+        await new Promise((r) => setTimeout(r, 5));
+        return { model: "m", choices: [{ message: { content: "a complete reflection." } }] };
+      },
+    }) as unknown as Response);
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await createEvalGatewayProvider("mock-key").generate({ ...req, timeoutMs: 500 });
+    expect(result.ok && result.text).toBe("a complete reflection.");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports an http error with a readable body and makes no second request", async () => {
+    const fetchMock = vi.fn(async () => ({
+      status: 429,
+      ok: false,
+      body: null,
+      text: async () => "slow down",
+    }) as unknown as Response);
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await createEvalGatewayProvider("mock-key").generate({ ...req, timeoutMs: 500 });
+    expect(!result.ok && result.error).toBe("http");
+    expect(!result.ok && result.detail).toContain("429");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("cleans up its timer on the success path", async () => {
+    vi.useFakeTimers();
+    const clearSpy = vi.spyOn(globalThis, "clearTimeout");
+    vi.stubGlobal("fetch", async () =>
+      new Response(JSON.stringify({ choices: [{ message: { content: "done." } }] }), {
+        status: 200,
+      }),
+    );
+    const promise = createEvalGatewayProvider("mock-key").generate({ ...req, timeoutMs: 1000 });
+    await vi.runAllTimersAsync();
+    const result = await promise;
+    expect(result.ok).toBe(true);
+    expect(clearSpy).toHaveBeenCalled();
+    clearSpy.mockRestore();
+    vi.useRealTimers();
+  });
+
+  it("treats malformed JSON as parse, not timeout", async () => {
+    vi.stubGlobal("fetch", async () => new Response("not json", { status: 200 }));
+    const result = await createEvalGatewayProvider("mock-key").generate({ ...req, timeoutMs: 500 });
+    expect(!result.ok && result.error).toBe("parse");
+  });
+});
+
+describe("historical evaluation artifact is annotated offline", () => {
+  it("preserves the original run and adds a labelled review annotation", () => {
+    const records = JSON.parse(
+      readFileSync("artifacts/ai-eval/results.json", "utf8"),
+    ) as Array<Record<string, unknown>>;
+    expect(records).toHaveLength(6);
+    for (const record of records) {
+      expect(record["status"]).toBe("ai_generated");
+      expect(record["validationIssues"]).toEqual([]);
+      expect(record["finishReason"]).toBeUndefined();
+      expect(typeof record["output"]).toBe("string");
+      const annotation = record["offlineRevalidation"] as {
+        label: string;
+        accepted: boolean;
+        reviewRequired: boolean;
+        issues: string[];
+        validatorVersion: string;
+        historicalValidationIssues: string[];
+        historicalFinishReasonSaved: boolean;
+        notes: string[];
+      };
+      expect(annotation.label).toContain("no model call");
+      expect(annotation.accepted).toBe(false);
+      expect(annotation.reviewRequired).toBe(true);
+      expect(annotation.issues).toContain("possibly-truncated");
+      expect(annotation.validatorVersion).toBe(EVAL_VALIDATOR_VERSION);
+      expect(annotation.historicalValidationIssues).toEqual([]);
+      expect(annotation.historicalFinishReasonSaved).toBe(false);
+      expect(annotation.notes.join(" ")).toContain("no reasoning-token breakdown");
+      expect(annotation.notes.join(" ")).toContain("engineering test limit");
     }
   });
 });

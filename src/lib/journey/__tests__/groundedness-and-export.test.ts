@@ -7,7 +7,7 @@ import {
   buildReflectionExport,
 } from "@/lib/journey/export";
 import { reflectionSnapshot } from "@/lib/journey/reflection-restore";
-import { DEFAULT_PROGRESS, type JourneyProgress } from "@/lib/journey/progress";
+import { emptyProgress, type JourneyProgress } from "@/lib/journey/progress";
 
 const day1 = getFirstJourneyDay(1)!;
 const day2 = getFirstJourneyDay(2)!;
@@ -88,7 +88,7 @@ function progressWith(
 ): JourneyProgress {
   const day = getFirstJourneyDay(Number(dayId.replace("day-", "")))!;
   return {
-    ...DEFAULT_PROGRESS,
+    ...emptyProgress,
     completedDays: [dayId],
     answerSets: { [dayId]: { [day.answerMeaningVersion]: answers } },
     reflections: reflection ? { [dayId]: reflection.text } : {},
@@ -179,7 +179,7 @@ describe("export presentation and reflection consistency", () => {
 
   it("selections stored under an older answer meaning are not relabelled", () => {
     const progress: JourneyProgress = {
-      ...DEFAULT_PROGRESS,
+      ...emptyProgress,
       completedDays: ["day-1"],
       answerSets: { "day-1": { v0: ["q.brought:stuck"] } },
       reflections: {},

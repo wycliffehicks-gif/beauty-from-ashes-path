@@ -80,9 +80,9 @@ export function reflectionContentFingerprint(day: JourneyDayContent): string {
 }
 
 /**
- * The full proof stored beside a saved reflection: snapshot format, the
- * approved reflection content for that day, and the day's coded selections.
- * Storage-safe characters only.
+ * The full proof stored beside a saved reflection: snapshot format, engine
+ * rendering version, the approved reflection content for that day, and the
+ * day's coded selections. Storage-safe characters only.
  */
 export function reflectionSnapshot(
   day: JourneyDayContent,
@@ -90,10 +90,12 @@ export function reflectionSnapshot(
 ): string {
   return [
     REFLECTION_SNAPSHOT_VERSION,
+    REFLECTION_ENGINE_VERSION,
     reflectionContentFingerprint(day),
     answersSnapshot(answerIds),
   ].join(":");
 }
+
 
 /**
  * Rebuild the structured reflection from saved plain text, so the exact words a

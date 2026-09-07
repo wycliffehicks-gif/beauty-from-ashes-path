@@ -57,13 +57,13 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
 
 export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
   "No Resurgence Therapeutics staff member is watching or reading your answers in real time.",
-  "Your saved place, the responses you selected, your reflections and your finished days are kept in this browser's own storage only, when browser storage is available; otherwise they may exist only in the current tab and can be lost when that tab closes or reloads. They are not sent to Resurgence Therapeutics and there is no account behind them.",
+  "The app saves your place, selected answers, reflections and finished days in this browser when storage is available; otherwise they may last only in the current tab. No account is needed. Choosing an AI reflection, when available, sends today’s selected answers and relevant day material to an external AI service.",
   "The responses you select are saved as short coded option identifiers rather than the wording of the option, and never as anything you typed.",
-  "Your personalized reflection is assembled on this device, locally and deterministically, from the approved wording for that day and the options you selected. Nothing is sent anywhere to produce it.",
-  "Because everything is local, your journey will not appear on another device or browser, and clearing this browser's data will remove it.",
+  "Written reflections are assembled on this device from the approved wording for that day and the options you selected. AI reflections are generated only after a separate informed choice. See the Privacy Notice for processing details and availability.",
+  "Your saved journey does not sync to another device or browser. Clearing this browser’s data removes the local copy, not any records held by an external service.",
   "Anyone with access to this device or browser profile may be able to see what is saved here, so this is not the same as a confidential record.",
   "Please avoid names and identifying details about yourself or anyone else.",
-  "You can clear everything this app has saved here in Settings, at any time.",
+  "You can ask Settings to clear this app’s saved information. The app tells you if removal cannot be confirmed.",
   "Using this app is not the same legally protected confidential relationship as psychotherapy.",
   "This app is not monitored for emergencies and cannot respond if someone is in danger.",
   "On Day 10, “Show earlier choices” can temporarily gather compatible current-version coded choices from earlier days on this device. The gathered wording is hidden until you ask for it, is not saved or added to your reflection, and disappears when you hide it, leave the page or reload.",
@@ -78,7 +78,7 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
  */
 export const PRIVACY_SUMMARY_POINTS: string[] = [
   "When browser storage is available, your saved journey information stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
-  "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
+  "No account is needed. Visitor analytics is off. Written reflections are prepared on this device. AI reflections, when available and separately chosen, send today’s selected answers and relevant material to an external service. Read the Privacy Notice before choosing AI.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
   "You can ask the app to clear or restart your saved journey information from this page. If removal cannot be confirmed, the app will tell you.",
 
@@ -109,5 +109,3 @@ export const CREATOR_SCOPE_NOTE =
 
 export const CLEAR_CONFIRM_QUESTION =
   "Clear everything this app has saved on this device? Your saved place, the choices you selected, your reflections, your finished days and your preferences will all be removed. This cannot be undone.";
-
-

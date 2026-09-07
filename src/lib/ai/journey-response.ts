@@ -19,7 +19,7 @@
 import type { GroundedJourneySource } from "@/lib/ai/journey-grounding";
 
 export const JOURNEY_OUTPUT_VERSION = "journey-o1";
-export const JOURNEY_VALIDATOR_VERSION = "journey-v2";
+export const JOURNEY_VALIDATOR_VERSION = "journey-v3";
 
 /**
  * Generous upper bound on accepted prose. It exists to bound memory and render
@@ -111,8 +111,7 @@ function isStructuralFormat(text: string): boolean {
   if (/(^|\n)\s*(```|~~~)/.test(text)) return true;
   const first = text[0];
   const last = text[text.length - 1];
-  const wrapped =
-    (first === "{" && last === "}") || (first === "[" && last === "]");
+  const wrapped = (first === "{" && last === "}") || (first === "[" && last === "]");
   if (!wrapped) return false;
   try {
     const parsed = JSON.parse(text) as unknown;
@@ -124,6 +123,43 @@ function isStructuralFormat(text: string): boolean {
 
 function matches(patterns: RegExp[], text: string): boolean {
   return patterns.some((p) => p.test(text));
+}
+
+/**
+ * Narrow exclusions for directly observed benign wording. Each exclusion only
+ * applies to its own matched phrase; another affirmative statement in the same
+ * response is still checked. These remain lexical heuristics, not a general
+ * interpretation of negation, conditionals or clinical meaning.
+ */
+function matchesAffirmative(
+  patterns: RegExp[],
+  text: string,
+  kind: "guarantee" | "diagnosis",
+): boolean {
+  for (const pattern of patterns) {
+    for (const match of text.matchAll(new RegExp(pattern.source, `${pattern.flags}g`))) {
+      const prefix = text.slice(0, match.index);
+      if (kind === "guarantee") {
+        if (
+          /\bwill\s+(?:(?:definitely|certainly)\s+)?(?:not|never)\s+(?:cure|heal|fix|resolve|remove|eliminate)\b/i.test(
+            match[0],
+          )
+        ) {
+          continue;
+        }
+        if (/^guarantee/i.test(match[0]) && /\b(?:no|not\s+(?:a|any))\s+$/i.test(prefix)) {
+          continue;
+        }
+      }
+      // Only an explicit sentence/clause-opening "If …" is excluded. A phrase
+      // such as "I wonder if you have …" does not receive this exemption.
+      if (kind === "diagnosis" && /(?:^|[.!?;\n])\s*if\s+$/i.test(prefix)) {
+        continue;
+      }
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -153,10 +189,10 @@ export function validateJourneyReflection(args: {
   if (matches(MARKUP_PATTERNS, normalised)) {
     return { ok: false, code: "output-contains-markup" };
   }
-  if (matches(GUARANTEE_PATTERNS, normalised)) {
+  if (matchesAffirmative(GUARANTEE_PATTERNS, normalised, "guarantee")) {
     return { ok: false, code: "unsupported-therapeutic-guarantee" };
   }
-  if (matches(DIAGNOSIS_PATTERNS, normalised)) {
+  if (matchesAffirmative(DIAGNOSIS_PATTERNS, normalised, "diagnosis")) {
     return { ok: false, code: "affirmative-diagnosis" };
   }
   if (!source.spiritualAuthorised && matches(DEVOTIONAL_PATTERNS, normalised)) {

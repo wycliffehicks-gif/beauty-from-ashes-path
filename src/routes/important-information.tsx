@@ -25,7 +25,7 @@ export const Route = createFileRoute("/important-information")({
 function ImportantInfoPage() {
   return (
     <LegalPage
-      title="Important Information, Clinical Disclaimer &amp; Crisis Support"
+      title="Important Information, Clinical Disclaimer & Crisis Support"
       lastUpdated="August 17, 2026"
     >
       <p className="bfa-copy-lead">

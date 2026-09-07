@@ -113,20 +113,21 @@ describe("3 — truthful local-storage wording", () => {
     );
   });
 
-  it("Privacy notice replaces the overbroad closing paragraph with the exact qualified wording", () => {
+  it("Privacy notice qualifies local saving and distinguishes separately requested external AI", () => {
     const src = readFileSync("src/routes/privacy.tsx", "utf8");
     expect(src).not.toContain("Everything above stays on this device and browser");
     const normalized = normalize(src);
     expect(normalized).toContain(
-      "When browser storage is available, the journey information above stays in this browser on this device. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads. This journey information is not sent to Resurgence Therapeutics, is not stored on its server, and is not connected to an account, database or visitor analytics.",
+      "When browser storage is available, the journey information above stays in this browser on this device. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads.",
     );
+    expect(normalized).toContain("does not mean that a separately requested AI reflection involves no external processing");
   });
 
   it("Agreement screen drops the overbroad 'nothing is sent anywhere' clause", () => {
     expect(AGREEMENT_COPY.automatedProcessingSentence).not.toContain("nothing is sent anywhere");
-    expect(AGREEMENT_COPY.automatedProcessingSentence).toBe(
-      "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and your selected responses and personalized reflection are not sent to Resurgence Therapeutics.",
-    );
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toContain("separate informed choice");
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toContain("external AI service");
+    expect(AGREEMENT_COPY.automatedProcessingSentence).toContain("Nothing typed in optional notes or from earlier days is sent");
   });
 
   it("How-it-works screen uses the exact qualified saved-place wording", () => {
@@ -158,10 +159,10 @@ describe("3 — truthful local-storage wording", () => {
     );
   });
 
-  it("preserves the truthful no-account, no-server, no-analytics and fonts statements", () => {
+  it("preserves no-account, disabled visitor analytics and the fonts disclosure", () => {
     const src = readFileSync("src/routes/privacy.tsx", "utf8");
     expect(src).toContain("does not require you to create an account");
     expect(src.toLowerCase()).toContain("google fonts");
-    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("no analytics"))).toBe(true);
+    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("Visitor analytics is off"))).toBe(true);
   });
 });

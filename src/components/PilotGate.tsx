@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { getGateStatus, unlockSite } from "@/lib/gate.functions";
@@ -9,6 +9,7 @@ import {
   type UnlockOutcome,
 } from "@/lib/gate-ui";
 import { VisualMotif } from "@/components/VisualMotifs";
+import { createPilotStatusCheck, isPublicPilotPath, type PilotStatus } from "@/lib/pilot-status";
 
 
 /**
@@ -22,35 +23,43 @@ import { VisualMotif } from "@/components/VisualMotifs";
  * Safety and legal pages stay reachable while locked, so a person who lands
  * here in distress can still find Support & Safety.
  */
-const ALWAYS_OPEN = ["/support", "/privacy", "/terms", "/important-information", "/contact-support"];
-
-type Status = "checking" | "locked" | "open";
-
 export function PilotGate({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [status, setStatus] = useState<Status>("checking");
+  const [status, setStatus] = useState<PilotStatus>("checking");
   const check = useServerFn(getGateStatus);
+  const checker = useRef<ReturnType<typeof createPilotStatusCheck> | null>(null);
 
   useEffect(() => {
-    let active = true;
-    check()
-      .then((r) => {
-        if (active) setStatus(!r.required || r.unlocked ? "open" : "locked");
-      })
-      .catch(() => {
-        // If the check cannot complete, do not strand the person behind a gate.
-        if (active) setStatus("open");
-      });
+    const current = createPilotStatusCheck(check, setStatus);
+    checker.current = current;
+    void current.retry();
     return () => {
-      active = false;
+      current.dispose();
+      if (checker.current === current) checker.current = null;
     };
   }, [check]);
 
-  const alwaysOpen = ALWAYS_OPEN.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const alwaysOpen = isPublicPilotPath(pathname);
 
   if (status === "open" || alwaysOpen) return <>{children}</>;
   if (status === "checking") return <GateHolding />;
+  if (status === "unavailable") return <GateUnavailable onRetry={() => void checker.current?.retry()} />;
   return <PasscodeScreen onUnlocked={() => setStatus("open")} />;
+}
+
+function GateUnavailable({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="journey-page">
+      <div className="container-page bfa-top-safe-roomy min-h-[100dvh] space-y-5 pb-10">
+        <h1 className="bfa-h1 font-serif">We couldn’t check access</h1>
+        <p role="status" className="bfa-copy text-muted-foreground">
+          Please check your internet connection and try again. Your saved journey has not been cleared.
+        </p>
+        <button type="button" className="btn-primary-journey" onClick={onRetry}>Try again</button>
+        <p className="bfa-copy-support"><Link to="/support" className="text-link">Support &amp; Safety</Link> is available without a code.</p>
+      </div>
+    </div>
+  );
 }
 
 function GateHolding() {

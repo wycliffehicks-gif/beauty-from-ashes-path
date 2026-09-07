@@ -86,7 +86,7 @@ export const AGREEMENT_COPY = {
   ],
   /** One calm sentence, no alarming technical language. */
   automatedProcessingSentence:
-    "Your personalized reflection is assembled on this device from the wording written for that day and the responses you select. It is put together automatically, it is not read by a person, and your selected responses and personalized reflection are not sent to Resurgence Therapeutics.",
+    "Written reflections are prepared on this device from the journey’s material and your selected answers. AI reflections, when available, require a separate informed choice and send today’s selected answers and relevant material to an external AI service. Nothing typed in optional notes or from earlier days is sent for that reflection.",
   safetySentence:
     "If you are ever in immediate danger, please contact local emergency services or someone nearby.",
   adultLabel: "I confirm that I am 18 years of age or older.",

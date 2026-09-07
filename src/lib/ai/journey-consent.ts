@@ -34,6 +34,13 @@ export function parseJourneyAiConsent(raw: unknown): JourneyConsentResult {
     return { ok: false, code: "consent-invalid" };
   }
   const r = raw as Record<string, unknown>;
+  const fields = ["envelopeVersion", "disclosureVersion", "accepted"];
+  if (
+    Object.keys(r).length !== fields.length ||
+    fields.some((field) => !Object.prototype.hasOwnProperty.call(r, field))
+  ) {
+    return { ok: false, code: "consent-invalid" };
+  }
   if (r.envelopeVersion !== JOURNEY_CONSENT_ENVELOPE_VERSION) {
     return { ok: false, code: "consent-invalid" };
   }

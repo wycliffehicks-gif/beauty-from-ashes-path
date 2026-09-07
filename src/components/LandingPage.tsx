@@ -129,7 +129,7 @@ export function LandingPage() {
         <div className="landing-card">
           <p className="bfa-copy text-foreground">
             Your answers and reflections stay in this browser on this device when browser storage is available; otherwise they may exist only in the current tab and can be lost when that tab closes or reloads. No account is needed.
-            Your answers and reflections are not sent to Resurgence Therapeutics. You can save or clear your own data at any time.
+            Written reflections are prepared on this device. AI reflections, when available, require a separate choice and send today’s selected answers and relevant journey material to an external AI service. You can export your saved information or ask Settings to clear it.
           </p>
           <p className="bfa-copy-support mt-3 text-muted-foreground">
             Read the full{" "}

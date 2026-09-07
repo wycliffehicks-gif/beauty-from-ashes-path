@@ -239,8 +239,11 @@ describe("B — the Settings privacy summary matches reality", () => {
     );
   });
 
-  test("the no-account, no-AI point is unchanged", () => {
-    expect(PRIVACY_SUMMARY_POINTS[1]).toContain("no artificial intelligence reading anything");
+  test("the AI addition discloses optional external processing instead of preserving a false no-AI promise", () => {
+    expect(PRIVACY_SUMMARY_POINTS[1]).toContain("No account is needed");
+    expect(PRIVACY_SUMMARY_POINTS[1]).toContain("when available and separately chosen");
+    expect(PRIVACY_SUMMARY_POINTS[1]).toContain("external service");
+    expect(PRIVACY_SUMMARY_POINTS[1]).not.toContain("no artificial intelligence reading anything");
   });
 });
 

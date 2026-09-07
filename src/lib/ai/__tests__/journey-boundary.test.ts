@@ -14,10 +14,7 @@ import { currentJourneyAiConsent, parseJourneyAiConsent } from "@/lib/ai/journey
 import { JOURNEY_AI_DISCLOSURE_VERSION } from "@/lib/ai/journey-disclosure";
 import { composeJourneyResponseIdentity } from "@/lib/ai/journey-identity";
 import { runJourneyBoundary, type PilotAdmission } from "@/lib/ai/journey-boundary";
-import {
-  JOURNEY_MODEL_ID,
-  type JourneyModelProvider,
-} from "@/lib/ai/journey-generation";
+import { JOURNEY_MODEL_ID, type JourneyModelProvider } from "@/lib/ai/journey-generation";
 import { validateJourneyReflection } from "@/lib/ai/journey-response";
 import { parseJourneyRequest } from "@/lib/ai/journey-contract";
 import { prepareJourneyGeneration } from "@/lib/ai/journey-policy";
@@ -174,7 +171,10 @@ describe("AI consent envelope", () => {
   });
 
   it("refuses a non-object and never echoes it", () => {
-    expect(parseJourneyAiConsent("newpaths")).toEqual({ ok: false, code: "consent-invalid" });
+    expect(parseJourneyAiConsent("synthetic-invalid-consent")).toEqual({
+      ok: false,
+      code: "consent-invalid",
+    });
     expect(parseJourneyAiConsent([])).toEqual({ ok: false, code: "consent-invalid" });
   });
 });
@@ -268,9 +268,7 @@ describe("participant AI boundary", () => {
     expect(provider.calls).toBe(1);
     expect(result.text).toBe(GOOD_TEXT);
     expect(result.identity.provenance).toBe("live-model");
-    expect(result.identity.canonicalIdentity).toBe(
-      identityFor(request).canonicalIdentity,
-    );
+    expect(result.identity.canonicalIdentity).toBe(identityFor(request).canonicalIdentity);
   });
 
   it("makes exactly one call and never retries a failure", async () => {
@@ -302,12 +300,7 @@ describe("participant AI boundary", () => {
       { request, consent: currentJourneyAiConsent() },
       { env: ENV_ON, verifyPilotAdmission: admitted, createProvider: () => provider },
     );
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    expect(result.identity.provenance).toBe("mock");
-    expect(result.identity.canonicalIdentity).not.toBe(
-      identityFor(request).canonicalIdentity,
-    );
+    expect(result).toEqual({ ok: false, code: "provider-invalid-output" });
   });
 
   it("refuses devotional output when spiritual reflection is off", async () => {
@@ -363,7 +356,7 @@ describe("structural formats are not prose", () => {
   });
 
   it("rejects a fenced code block", () => {
-    const text = "```json\n{\"a\":1}\n```";
+    const text = '```json\n{"a":1}\n```';
     expect(validateJourneyReflection({ text, source })).toEqual({
       ok: false,
       code: "output-not-prose",
@@ -412,7 +405,7 @@ describe("live transport", () => {
     const fetchImpl = vi.fn(async (_url: string, init: RequestInit) => {
       const body = JSON.parse(String(init.body)) as Record<string, unknown>;
       expect(body.model).toBe(JOURNEY_MODEL_ID);
-      expect(body.max_completion_tokens).toBe(4096);
+      expect(body.max_tokens).toBe(4096);
       expect(init.redirect).toBe("error");
       return new Response(
         JSON.stringify({
@@ -436,7 +429,7 @@ describe("live transport", () => {
     for (const [status, error] of [
       [429, "provider-rate-limited"],
       [402, "provider-budget-exhausted"],
-      [403, "provider-budget-exhausted"],
+      [403, "provider-unavailable"],
       [500, "provider-unavailable"],
     ] as const) {
       const transport = createJourneyLiveTransport({

@@ -36,9 +36,18 @@ export type JourneyBoundaryResult =
     }
   | { ok: false; code: JourneyBoundaryRefusal | JourneyGenerationFailureCode };
 
-export type PilotAdmission =
-  | { ok: true }
-  | { ok: false; reason: "not-verified" | "unavailable" };
+export type PilotAdmission = { ok: true } | { ok: false; reason: "not-verified" | "unavailable" };
+
+export type JourneyAiAvailability =
+  | { available: true }
+  | {
+      available: false;
+      code:
+        | "ai-not-activated"
+        | "ai-not-released"
+        | "pilot-not-verified"
+        | "pilot-check-unavailable";
+    };
 
 export interface JourneyBoundaryDeps {
   env: EnvLike | undefined;
@@ -55,46 +64,103 @@ export interface JourneyBoundaryInput {
   consent: unknown;
 }
 
+type AvailabilityDeps = Pick<JourneyBoundaryDeps, "env" | "verifyPilotAdmission">;
+
+function activationAvailability(env: EnvLike | undefined): JourneyAiAvailability {
+  const activation = readJourneyAiActivation(env);
+  if (!activation.activationEnabled) return { available: false, code: "ai-not-activated" };
+  if (!activation.releaseReady) return { available: false, code: "ai-not-released" };
+  return { available: true };
+}
+
+async function pilotAvailability(deps: AvailabilityDeps): Promise<JourneyAiAvailability> {
+  let raw: unknown;
+  try {
+    raw = await deps.verifyPilotAdmission();
+  } catch {
+    return { available: false, code: "pilot-check-unavailable" };
+  }
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+    return { available: false, code: "pilot-check-unavailable" };
+  }
+  const admission = raw as Record<string, unknown>;
+  if (admission.ok === true && Object.keys(admission).length === 1) {
+    return { available: true };
+  }
+  if (
+    admission.ok === false &&
+    Object.keys(admission).length === 2 &&
+    admission.reason === "not-verified"
+  ) {
+    return { available: false, code: "pilot-not-verified" };
+  }
+  return { available: false, code: "pilot-check-unavailable" };
+}
+
+/** A read-only availability check. It receives no answers and owns no provider. */
+export async function readJourneyAiAvailability(
+  deps: AvailabilityDeps,
+): Promise<JourneyAiAvailability> {
+  const activation = activationAvailability(deps.env);
+  return activation.available ? pilotAvailability(deps) : activation;
+}
+
 export async function runJourneyBoundary(
-  input: JourneyBoundaryInput,
+  input: unknown,
   deps: JourneyBoundaryDeps,
 ): Promise<JourneyBoundaryResult> {
-  const activation = readJourneyAiActivation(deps.env);
-  if (!activation.activationEnabled) return { ok: false, code: "ai-not-activated" };
-  if (!activation.releaseReady) return { ok: false, code: "ai-not-released" };
+  const activation = activationAvailability(deps.env);
+  if (!activation.available) return { ok: false, code: activation.code };
 
-  const consent = parseJourneyAiConsent(input.consent);
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    return { ok: false, code: "invalid-request" };
+  }
+  const envelope = input as Record<string, unknown>;
+  if (
+    Object.keys(envelope).length !== 2 ||
+    !Object.prototype.hasOwnProperty.call(envelope, "request") ||
+    !Object.prototype.hasOwnProperty.call(envelope, "consent")
+  ) {
+    return { ok: false, code: "invalid-request" };
+  }
+
+  const consent = parseJourneyAiConsent(envelope.consent);
   if (!consent.ok) return { ok: false, code: consent.code };
 
   // A shape check first, so an invalid day request cannot reach the gateway even
   // when everything else is in order.
-  if (!parseJourneyRequest(input.request).ok) {
+  if (!parseJourneyRequest(envelope.request).ok) {
     return { ok: false, code: "invalid-request" };
   }
 
   // The client gate and any caller-supplied "admitted" claim are NOT proof. Only
   // the server-side session check is, and any failure fails closed.
-  let admission: PilotAdmission;
-  try {
-    admission = await deps.verifyPilotAdmission();
-  } catch {
-    return { ok: false, code: "pilot-check-unavailable" };
-  }
-  if (!admission.ok) {
-    return {
-      ok: false,
-      code: admission.reason === "unavailable" ? "pilot-check-unavailable" : "pilot-not-verified",
-    };
-  }
+  const admission = await pilotAvailability(deps);
+  if (!admission.available) return { ok: false, code: admission.code };
 
-  const provider = await deps.createProvider();
+  let provider: JourneyModelProvider;
+  try {
+    provider = await deps.createProvider();
+  } catch {
+    return { ok: false, code: "provider-unavailable" };
+  }
+  if (
+    !provider ||
+    provider.provenance !== "live-model" ||
+    typeof provider.generate !== "function"
+  ) {
+    return { ok: false, code: "provider-invalid-output" };
+  }
   const result = await generateJourneyReflection({
-    rawRequest: input.request,
+    rawRequest: envelope.request,
     gates: { activationEnabled: true, consentEstablished: true, pilotAdmitted: true },
     provider,
   });
 
   if (!result.ok) return { ok: false, code: result.code };
+  if (!result.meta.acceptedAsLiveAi || result.meta.identity.provenance !== "live-model") {
+    return { ok: false, code: "provider-invalid-output" };
+  }
 
   return {
     ok: true,

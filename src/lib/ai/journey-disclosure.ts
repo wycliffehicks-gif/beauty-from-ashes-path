@@ -15,7 +15,7 @@
  * previously recorded AI choice, so consent is asked for again — exactly once,
  * and only for this AI reflection, never for unrelated terms.
  */
-export const JOURNEY_AI_DISCLOSURE_VERSION = "2026-09-07.1";
+export const JOURNEY_AI_DISCLOSURE_VERSION = "2026-09-07.2";
 
 export const JOURNEY_AI_DISCLOSURE_HEADING = "Before you choose an AI reflection";
 
@@ -24,19 +24,19 @@ export const JOURNEY_AI_DISCLOSURE_HEADING = "Before you choose an AI reflection
  * shown. Plain language, no implementation jargon.
  */
 export const JOURNEY_AI_DISCLOSURE_POINTS: readonly string[] = [
-  "If you choose it, the choices you selected today and the written material for this day are sent over the internet to Lovable’s AI service, which writes a reflection back to you.",
+  "If you choose an AI reflection, today’s selected answers and relevant journey material are sent through Lovable to its AI provider to write a reflection for you.",
   "Nothing you type in optional notes is sent, and nothing from your earlier days is sent. The reflection is written only from today.",
   "You are not asked for your name. Even so, what you select can be personal and sensitive, so please choose only if you are comfortable sending it.",
   "An AI reflection can be wrong, or can miss what matters most. It is not therapy, diagnosis or treatment, and it is never advice about medication, safety or a major decision.",
-  "The reflection you receive is saved on this device and browser only, for as long as saving is available here. Clearing this app’s information removes it.",
-  "We cannot promise what Lovable’s AI service does with what is sent, how long it keeps it, or where it is handled. Until that is confirmed in writing, please treat the AI reflection as something sent outside this device.",
+  "The app saves a copy in this browser when storage is available. Otherwise it may last only in this tab. Settings can ask your browser to remove it and will report if removal cannot be confirmed. Clearing this device does not delete records held by a service.",
+  "Provider processing and retention details are still being confirmed for this pilot. AI generation will stay unavailable until those details are resolved and the Privacy Notice is updated.",
   "You never have to use it. The written reflection prepared for this day stays available, and choosing it changes nothing about your journey.",
 ];
 
 /** Shown wherever the AI reflection is described while it is switched off. */
 export const JOURNEY_AI_UNAVAILABLE_NOTICE =
-  "The AI reflection is not switched on yet. Until it is, every day uses the written reflection prepared for it, and nothing you choose leaves this device.";
+  "AI generation is unavailable right now. Written reflections are prepared on this device from the journey’s authored material.";
 
 /** Short shared paragraph for the Privacy Notice and Important Information. */
 export const JOURNEY_AI_DISCLOSURE_SUMMARY =
-  "This app also has an optional AI reflection. It is not switched on yet. If you ever choose it, the choices you selected that day and that day’s written material are sent over the internet to Lovable’s AI service to write a reflection back to you; your notes and your earlier days are not sent. The result is saved on this device only, for as long as saving is available here. An AI reflection can be mistaken, and we cannot promise what the AI service keeps, where it is handled, or for how long. You never have to use it.";
+  "When available, AI reflections are optional and require your separate choice. Generating one sends today’s selected answers and relevant journey material through Lovable to its AI provider. Notes and earlier-day answers are not sent. Selections can be sensitive even without a name. The app saves a local copy when browser storage is available; that does not mean the service keeps no records. AI can be mistaken. Provider processing and retention details are still being confirmed, and generation remains unavailable until they are resolved and this notice is updated. Written reflections remain available on this device.";

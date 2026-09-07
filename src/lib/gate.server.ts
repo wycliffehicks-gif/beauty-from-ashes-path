@@ -26,7 +26,7 @@ export function getGateSession() {
 /**
  * Hash both sides to equal-length digests first: timingSafeEqual throws on a
  * length mismatch, and the raw length would itself leak through timing.
- * Entered codes are trimmed and compared case-insensitively so "new paths"
+ * Entered codes are trimmed and compared case-insensitively so "sample code"
  * typed on a phone keyboard still works.
  */
 export function passcodeMatches(input: string, expected: string): boolean {
@@ -35,3 +35,4 @@ export function passcodeMatches(input: string, expected: string): boolean {
   const b = createHash("sha256").update(normalize(expected), "utf8").digest();
   return timingSafeEqual(a, b);
 }
+

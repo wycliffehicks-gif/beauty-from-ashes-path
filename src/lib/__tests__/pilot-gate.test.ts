@@ -6,24 +6,25 @@ import { passcodeMatches } from "@/lib/gate.server";
 
 describe("pilot passcode", () => {
   it("accepts the exact code", () => {
-    expect(passcodeMatches("newpaths", "newpaths")).toBe(true);
+    expect(passcodeMatches("samplecode", "samplecode")).toBe(true);
   });
 
   it("forgives casing and surrounding whitespace", () => {
-    expect(passcodeMatches("  newpaths ", "newpaths")).toBe(true);
-    expect(passcodeMatches("NEWPATHS", "newpaths")).toBe(true);
-    expect(passcodeMatches("NewPaths", "newpaths")).toBe(true);
+    expect(passcodeMatches("  samplecode ", "samplecode")).toBe(true);
+    expect(passcodeMatches("SAMPLECODE", "samplecode")).toBe(true);
+    expect(passcodeMatches("SampleCode", "samplecode")).toBe(true);
   });
 
-  it("rejects an internal space, including the old two-word form", () => {
-    expect(passcodeMatches("New Paths", "newpaths")).toBe(false);
-    expect(passcodeMatches("new paths", "newpaths")).toBe(false);
-    expect(passcodeMatches("NEW   PATHS", "newpaths")).toBe(false);
+  it("rejects an internal space when the configured code has none", () => {
+    expect(passcodeMatches("Sample Code", "samplecode")).toBe(false);
+    expect(passcodeMatches("sample code", "samplecode")).toBe(false);
+    expect(passcodeMatches("SAMPLE   CODE", "samplecode")).toBe(false);
   });
 
   it("rejects anything else, including near misses and empty input", () => {
-    for (const wrong of ["", "newpath", "new-paths", "hope"]) {
-      expect(passcodeMatches(wrong, "newpaths")).toBe(false);
+    for (const wrong of ["", "samplecod", "sample-code", "hope"]) {
+      expect(passcodeMatches(wrong, "samplecode")).toBe(false);
     }
   });
 });
+

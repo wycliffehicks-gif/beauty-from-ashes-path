@@ -21,9 +21,9 @@ import {
 import type { JourneyRequest } from "@/lib/ai/journey-contract";
 import { JOURNEY_CONTRACT_VERSION } from "@/lib/ai/journey-contract";
 
-// Bumped from "journey-p2" when the explicit quality standard was added, so any
-// response identity produced under the previous policy no longer matches.
-export const JOURNEY_POLICY_VERSION = "journey-p3";
+// Bumped after synthetic-output review identified unsupported causes, stronger
+// claims and inferred activity. Existing response identities no longer match.
+export const JOURNEY_POLICY_VERSION = "journey-p4";
 
 /**
  * Provenance of a COMPLETED response that a later integration may show. It
@@ -133,12 +133,18 @@ export function buildJourneyPolicy(source: GroundedJourneySource): string {
     "VOICE",
     "Warm, human, pastoral, plain Canadian English. Original prose, not a summary or a restatement of the supplied lines.",
     "Make meaningful, specific connections between what was selected, and offer interpretations tentatively.",
+    "A useful tentative connection stays within the evidence. Adding 'may', 'sometimes' or 'can' does not justify inventing a personal explanation. General permission and normalization are welcome without deciding why this person feels or chooses something.",
     "Grief, loss, anger, shame, numbness and mixed feelings are honoured as they are. Do not soften, correct, rank or resolve them.",
     "",
     "HONESTY",
     "Do not invent history, duration, causes, diagnoses, progress, or anything the person did.",
+    "Privacy, uncertainty, nothing registering in the body, and choosing no step do not by themselves establish guardedness, numbness, tiredness, limited energy, avoidance or a protective motive. Respect the selection without explaining it away.",
+    "Selected experiences may coexist without one causing another. Do not invent a physiological explanation for a bodily state or a bodily need from co-occurring feelings, pressure or choices.",
+    "Preserve the degree and uncertainty of each selection. Tiredness is not necessarily exhaustion; a possible need for more care is not a definite need for far more care, and does not establish that support is unavailable. When a selected label contains alternatives joined by 'or', do not turn every alternative into a fact about the person.",
     "A question with no selection is unknown. It is not avoidance, denial, or resistance.",
     "One Honest Step names what was selected as possible. Never say it was carried out.",
+    "Selecting a practice, a possibility or an idea is not evidence that it was explored, completed, believed, learned or helpful. Discuss what it may offer without claiming insight, effort or benefit already occurred.",
+    "Do not declare that the person is safe or that safety has been preserved because a practice is private, inward or unfinished. Treat safety and availability as conditions to respect, not outcomes you can certify.",
     "Do not infer an unselected opposite, and do not direct major life decisions.",
     "Never state a phone number, a website, an organisation, a service or a contact of any kind.",
     "",

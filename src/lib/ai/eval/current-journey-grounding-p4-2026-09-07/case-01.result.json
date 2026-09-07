@@ -1,0 +1,46 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 1,
+  "request": {
+    "day": 1,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.state:unsure",
+      "q.brought:private"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5969,
+  "expectedIdentitySha256": "a179d3b4617ca717a166a17c67f32a18da156108ae497a15ab29d45ff59b9c17",
+  "requestSha256": "29dfc09e100ff09fa2069ab7f0b169ff837dea227fdfec02aa2e76e5a45458ff",
+  "startedAt": "2026-09-07T21:20:40.596Z",
+  "finishedAt": "2026-09-07T21:20:45.896Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "Sitting down with a space like this does not require you to have clear answers ready. When it is hard to tell how you are doing, or when you prefer not to put what brought you here into words, you are still able to begin. Pausing right where you are—without needing to name your feelings or explain your circumstances—honours your privacy and where you find yourself today.\n\nThere is no expectation here to solve anything, achieve a breakthrough, or push past your current boundaries. Arriving with uncertainty or choosing to keep your reasons to yourself are both valid ways to start. \n\nWould it feel alright to simply let today be a quiet arrival, without any need to figure out what comes next?",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1238,
+      "outputTokens": 862,
+      "reasoningTokens": 719,
+      "totalTokens": 2100
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "a179d3b4617ca717a166a17c67f32a18da156108ae497a15ab29d45ff59b9c17",
+    "usage": {
+      "inputTokens": 1238,
+      "outputTokens": 862,
+      "reasoningTokens": 719,
+      "totalTokens": 2100
+    }
+  }
+}

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/privacy")({
       {
         name: "description",
         content:
-          "How Beauty from Ashes handles information in this current version. No accounts, no cloud storage, no analytics of reflections.",
+          "How Beauty from Ashes handles information in this current version, including local saving and optional AI processing.",
       },
       { property: "og:title", content: "Privacy Policy — Beauty from Ashes" },
       {

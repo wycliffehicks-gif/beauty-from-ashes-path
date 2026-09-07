@@ -1,0 +1,43 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "updatedAt": "2026-09-07T21:21:42.960Z",
+  "model": "google/gemini-3.6-flash",
+  "maxCases": 6,
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "gatewayFetchAttemptsKnown": 6,
+  "commandFetchAttempts": 6,
+  "incompleteAttemptCount": 0,
+  "cases": [
+    {
+      "day": 1,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    },
+    {
+      "day": 2,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    },
+    {
+      "day": 3,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    },
+    {
+      "day": 5,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    },
+    {
+      "day": 9,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    },
+    {
+      "day": 10,
+      "status": "accepted",
+      "gatewayFetchAttempts": 1
+    }
+  ]
+}

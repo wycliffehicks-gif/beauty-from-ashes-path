@@ -132,6 +132,9 @@ function PrivacyPage() {
         your browser’s own settings.
       </p>
 
+      <h2 className="bfa-h2 font-serif">The optional AI reflection</h2>
+      <p>{JOURNEY_AI_DISCLOSURE_SUMMARY}</p>
+
       <h2 className="bfa-h2 font-serif">Private-pilot access cookie</h2>
       <p>
         When the private-pilot gate is enabled, the app uses a cookie called{" "}

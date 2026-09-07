@@ -19,7 +19,7 @@
 import type { GroundedJourneySource } from "@/lib/ai/journey-grounding";
 
 export const JOURNEY_OUTPUT_VERSION = "journey-o1";
-export const JOURNEY_VALIDATOR_VERSION = "journey-v1";
+export const JOURNEY_VALIDATOR_VERSION = "journey-v2";
 
 /**
  * Generous upper bound on accepted prose. It exists to bound memory and render
@@ -33,6 +33,7 @@ export type JourneyOutputRejection =
   | "output-not-text"
   | "output-too-large"
   | "output-contains-markup"
+  | "output-not-prose"
   | "unsupported-therapeutic-guarantee"
   | "affirmative-diagnosis"
   | "devotional-leakage";
@@ -100,6 +101,27 @@ const MARKUP_PATTERNS: RegExp[] = [
   /&(?:#\d{2,5}|lt|gt|amp|quot);/i,
 ];
 
+/**
+ * Narrow structural rejection: a whole JSON object or array, or a fenced code
+ * block, is not plain prose. This deliberately checks SHAPE only — it applies no
+ * minimum length, and a legitimate short paragraph that merely mentions braces
+ * or quotes still passes.
+ */
+function isStructuralFormat(text: string): boolean {
+  if (/(^|\n)\s*(```|~~~)/.test(text)) return true;
+  const first = text[0];
+  const last = text[text.length - 1];
+  const wrapped =
+    (first === "{" && last === "}") || (first === "[" && last === "]");
+  if (!wrapped) return false;
+  try {
+    const parsed = JSON.parse(text) as unknown;
+    return typeof parsed === "object" && parsed !== null;
+  } catch {
+    return false;
+  }
+}
+
 function matches(patterns: RegExp[], text: string): boolean {
   return patterns.some((p) => p.test(text));
 }
@@ -125,6 +147,9 @@ export function validateJourneyReflection(args: {
   const normalised = text.replace(/\r\n/g, "\n").trim();
   if (normalised.length === 0) return { ok: false, code: "output-empty" };
 
+  if (isStructuralFormat(normalised)) {
+    return { ok: false, code: "output-not-prose" };
+  }
   if (matches(MARKUP_PATTERNS, normalised)) {
     return { ok: false, code: "output-contains-markup" };
   }

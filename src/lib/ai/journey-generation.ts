@@ -21,7 +21,11 @@
 // deterministic checks are limited lexical heuristics, not proof of grounding or
 // clinical safety.
 
-import { LIVE_MODEL_ID } from "@/lib/ai/live-provider";
+import {
+  JOURNEY_GENERATION_VERSION,
+  JOURNEY_MODEL_ID,
+  composeJourneyResponseIdentity,
+} from "@/lib/ai/journey-identity";
 import { JOURNEY_CONTRACT_VERSION, parseJourneyRequest } from "@/lib/ai/journey-contract";
 import {
   prepareJourneyGeneration,
@@ -36,12 +40,10 @@ import {
   type JourneyReflection,
 } from "@/lib/ai/journey-response";
 
-export const JOURNEY_GENERATION_VERSION = "journey-gen1";
+export { JOURNEY_GENERATION_VERSION, JOURNEY_MODEL_ID } from "@/lib/ai/journey-identity";
 
 /* ---------------------------------------------------------------- defaults -- */
 
-/** The only model identity this core will accept. Callers cannot change it. */
-export const JOURNEY_MODEL_ID = LIVE_MODEL_ID;
 
 /** Output token ceiling, INCLUDING any reasoning tokens the model spends. */
 export const JOURNEY_MAX_OUTPUT_TOKENS = 4096;
@@ -83,6 +85,27 @@ export type JourneyProviderErrorCode =
   | "provider-rate-limited"
   | "provider-budget-exhausted"
   | "provider-invalid-output";
+
+/**
+ * The ONLY failure codes a transport may name. A provider (or a malformed
+ * envelope pretending to be one) can never put its own string into a result:
+ * anything outside this set becomes `provider-invalid-output`.
+ */
+export const JOURNEY_PROVIDER_ERROR_CODES: readonly JourneyProviderErrorCode[] = [
+  "provider-unavailable",
+  "provider-network",
+  "provider-timeout",
+  "provider-rate-limited",
+  "provider-budget-exhausted",
+  "provider-invalid-output",
+];
+
+function knownProviderError(raw: unknown): JourneyProviderErrorCode | null {
+  return typeof raw === "string" &&
+    (JOURNEY_PROVIDER_ERROR_CODES as readonly string[]).includes(raw)
+    ? (raw as JourneyProviderErrorCode)
+    : null;
+}
 
 export interface JourneyProviderUsage {
   inputTokens?: number;
@@ -146,7 +169,7 @@ export type JourneyGenerationResult =
   | {
       ok: false;
       code: JourneyGenerationFailureCode;
-      /** True when no provider call was made at all. */
+      /** True when the transport was actually invoked for this attempt. */
       providerCalled: boolean;
     };
 
@@ -213,13 +236,13 @@ export async function generateJourneyReflection(
 ): Promise<JourneyGenerationResult> {
   const { gates, provider } = args;
 
-  if (!gates.activationEnabled) {
+  if (gates.activationEnabled !== true) {
     return { ok: false, code: "generation-disabled", providerCalled: false };
   }
-  if (!gates.consentEstablished) {
+  if (gates.consentEstablished !== true) {
     return { ok: false, code: "consent-not-established", providerCalled: false };
   }
-  if (!gates.pilotAdmitted) {
+  if (gates.pilotAdmitted !== true) {
     return { ok: false, code: "pilot-admission-not-established", providerCalled: false };
   }
 
@@ -254,7 +277,12 @@ export async function generateJourneyReflection(
     return { ok: false, code: "provider-invalid-output", providerCalled: true };
   }
   if (response.ok !== true) {
-    return { ok: false, code: response.error, providerCalled: true };
+    // A failure envelope must be EXACTLY `ok: false` with a whitelisted code.
+    if ((response as { ok?: unknown }).ok !== false) {
+      return { ok: false, code: "provider-invalid-output", providerCalled: true };
+    }
+    const known = knownProviderError((response as { error?: unknown }).error);
+    return { ok: false, code: known ?? "provider-invalid-output", providerCalled: true };
   }
 
   // A complete finish status is required. A truncated or refused generation is
@@ -275,17 +303,9 @@ export async function generateJourneyReflection(
   }
 
   const usage = safeUsage(response.usage);
-  const identity: JourneyResponseIdentity = {
-    ...prepared.identity,
-    provenance: provider.provenance,
-    canonicalIdentity: [
-      prepared.identity.canonicalIdentity,
-      JOURNEY_GENERATION_VERSION,
-      JOURNEY_OUTPUT_VERSION,
-      JOURNEY_VALIDATOR_VERSION,
-      provider.provenance,
-    ].join("|"),
-  };
+  // One shared composer builds the identity, so the server boundary and the
+  // on-device store can never disagree about what an exact match is.
+  const identity = composeJourneyResponseIdentity(prepared.identity, provider.provenance);
 
   return {
     ok: true,

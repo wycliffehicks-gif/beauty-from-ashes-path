@@ -14,6 +14,7 @@ import {
   useState,
 } from "react";
 
+import { JourneyAiReflection } from "@/components/JourneyAiReflection";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { DayMotif } from "@/components/VisualMotifs";
 import { ContinueJourneyBoundary } from "@/components/ContinueJourneyBoundary";
@@ -1411,6 +1412,19 @@ function ReflectionScreen({
               progress={progress}
               hydrated={prefsHydrated}
               showSpiritual={showSpiritual}
+            />
+          ) : null}
+          {/* Strictly secondary and strictly opt-in. It never replaces, delays
+              or alters the authored reflection above, and it is only offered
+              once the spiritual preference is actually known. */}
+          {prefsHydrated ? (
+            <JourneyAiReflection
+              request={{
+                day: content.day,
+                answerMeaningVersion: content.answerMeaningVersion,
+                answers,
+                spiritual: showSpiritual,
+              }}
             />
           ) : null}
         </div>

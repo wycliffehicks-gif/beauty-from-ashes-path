@@ -52,9 +52,10 @@ export const JOURNEY_DEADLINE_MS = 45_000;
 /**
  * Finite ceiling on the outgoing prepared text (policy + grounded payload).
  *
- * Measured across all ten canonical days with every allowable selection made
- * (see the focused tests, which assert the real headroom). The largest current
- * day measures well under this bound, so no canonical source needs truncating.
+ * Measured across all ten canonical days with every allowable selection made,
+ * spiritual off and on. The largest current case is Day 10 with spiritual on at
+ * 8,868 characters, so this bound leaves roughly 2.7x headroom and no canonical
+ * source ever needs truncating. The focused tests re-measure this.
  * If a future authored change exceeds it, the request FAILS with
  * `preparation-too-large` rather than silently losing meaning.
  *

@@ -23,6 +23,22 @@ export function answersSnapshot(answerIds: readonly string[] | undefined): strin
  */
 export const REFLECTION_SNAPSHOT_VERSION = "r2";
 
+/**
+ * ENGINE RENDERING VERSION.
+ *
+ * The day content fingerprint proves the approved WORDING; it cannot prove HOW
+ * the engine assembles that wording. When engine semantics change — for example
+ * the groundedness rule that withholds a summarising opening while nothing was
+ * selected — a reflection saved under the older rule must no longer be restored
+ * even though its day content and coded selections are unchanged. Bump this
+ * marker whenever `buildReflection` changes what it emits for the same inputs.
+ * Nothing stored by the person is deleted: only the proof stops matching, so
+ * the reflection is rebuilt locally from the current approved content and the
+ * same saved choices.
+ */
+export const REFLECTION_ENGINE_VERSION = "e2";
+
+
 /** Small deterministic non-cryptographic hash (FNV-1a, 32-bit, hex). */
 function hashText(text: string): string {
   let h = 0x811c9dc5;

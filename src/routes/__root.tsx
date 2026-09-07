@@ -16,6 +16,7 @@ import { SplashGate } from "../components/SplashGate";
 import { AgreementGate } from "../components/AgreementGate";
 import { PilotGate } from "../components/PilotGate";
 import { recordRouteTransition } from "../components/JourneyScreen";
+import { ReminderScheduler } from "../lib/journey/reminder";
 
 /**
  * System dark mode, applied before the body paints so there is no light flash
@@ -172,6 +173,10 @@ function RootComponent() {
       <SplashGate>
         <PilotGate>
           <AgreementGate>
+            {/* The one reminder timer for the whole app. It renders nothing and
+                lives here, inside the existing gates, so moving between Your
+                Journey, a day and a practice never cancels or duplicates it. */}
+            <ReminderScheduler />
             <Outlet />
           </AgreementGate>
         </PilotGate>

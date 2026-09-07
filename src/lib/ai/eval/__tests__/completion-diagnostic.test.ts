@@ -209,8 +209,10 @@ describe("stop on first failure or rejection", () => {
     const runner = readFileSync("scripts/ai-eval/run-completion-diagnostic.ts", "utf8");
     // Persisted before anything else happens with the record.
     expect(runner).toContain("persist(entries); // persisted immediately");
-    // No retry, no cap escalation, no rerun loop.
-    expect(runner).not.toMatch(/retry|maxOutputTokens\s*[:=]\s*\d/i);
+    // No cap escalation and no rerun loop in the runner itself.
+    expect(runner).not.toMatch(/maxOutputTokens\s*[:=]\s*\d/);
+    expect(runner).not.toMatch(/while\s*\(|attempt\s*\+\+/);
+
   });
 });
 

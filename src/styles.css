@@ -1388,7 +1388,7 @@
   border-radius: 999px;
   border: 1px solid var(--bfa-control-border);
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.04em;
   color: var(--deep-navy);
   background: transparent;
@@ -1489,9 +1489,9 @@
   }
 }
 
-/* The step ticks read as one continuous thread rather than loose dashes. */
+/* The step ticks share the same rounded geometry; thickness is set by the
+   segment utility and its reached state, not by a single override here. */
 [role="progressbar"] > .bfa-progress-segment {
-  height: 3px;
   border-radius: 999px;
 }
 
@@ -1569,6 +1569,9 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
+}
+.dark .bfa-form-error {
+  color: #F19990;
 }
 .bfa-form-error::before {
   content: "!";

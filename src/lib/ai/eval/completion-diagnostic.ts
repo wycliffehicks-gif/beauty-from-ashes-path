@@ -37,8 +37,9 @@ export function shouldStopAfter(record: EvalRunRecord): boolean {
   if (record.validationIssues.length > 0) return true;
   if (classifyEvalIssues(record.validationIssues).seriousPolicyIssue) return true;
   if (record.requestedModel && record.returnedModel) {
-    if (!record.returnedModel.includes(record.requestedModel)) return true;
+    if (record.returnedModel !== record.requestedModel) return true;
   }
+
   return false;
 }
 

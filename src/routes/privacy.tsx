@@ -79,8 +79,16 @@ function PrivacyPage() {
           with a coded fingerprint of the selections it was built from, so the
           same words can be shown again if you return to that page.
         </li>
+        <li>
+          Whether you opened Days 5–10 during the free pilot. This is an access
+          marker, not a payment record.
+        </li>
+        <li>
+          Whether you enabled the optional reminder and the time you chose.
+        </li>
         <li>The date and time this saved information was last updated.</li>
       </ul>
+
       <p>
         The app also uses your browser’s <em>session storage</em>, which is
         cleared when you close the browser, to remember that the launch screen

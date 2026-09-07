@@ -1,0 +1,46 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 1,
+  "request": {
+    "day": 1,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.state:unsure",
+      "q.brought:private"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 4520,
+  "expectedIdentitySha256": "cb6d57a7714aaff658d39469b49f050fb09df7fd42d6f920fa049c4957bca5ba",
+  "requestSha256": "29dfc09e100ff09fa2069ab7f0b169ff837dea227fdfec02aa2e76e5a45458ff",
+  "startedAt": "2026-09-07T20:51:49.015Z",
+  "finishedAt": "2026-09-07T20:51:55.460Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It can be a quiet thing to sit down with a reflection and realize that you genuinely cannot tell how you are doing today, or that you would prefer to keep what brought you here out of words entirely. There is no need to force an answer or dig for clarity when your internal landscape feels uncertain or guarded.\n\nStarting where you are simply means accepting that fog or silence is a completely real place to begin. You do not have to explain your background, justify your presence, or figure out how to put heavy things into sentences right now. Delay or quietness is not a failure; it can simply be what you need to protect your energy today.\n\nWould it be enough for right now to let yourself pause here, exactly as you are, without needing to name or solve anything?",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 968,
+      "outputTokens": 1115,
+      "reasoningTokens": 958,
+      "totalTokens": 2083
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "cb6d57a7714aaff658d39469b49f050fb09df7fd42d6f920fa049c4957bca5ba",
+    "usage": {
+      "inputTokens": 968,
+      "outputTokens": 1115,
+      "reasoningTokens": 958,
+      "totalTokens": 2083
+    }
+  }
+}

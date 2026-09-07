@@ -1,0 +1,47 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 8,
+  "request": {
+    "day": 8,
+    "answerMeaningVersion": "v2",
+    "answers": [
+      "q.route:god",
+      "q.size:tiny",
+      "step:none"
+    ],
+    "spiritual": true
+  },
+  "preparedChars": 7291,
+  "expectedIdentitySha256": "b7215a28b7ac5d3bed7fe539ac6dd5cf413346c6f86dd24ac2f037e46a95585d",
+  "requestSha256": "8ba9dfe3144550d42b1cd42fd5e125ad94547f2a974fe306afbce8ba2ef60cd0",
+  "startedAt": "2026-09-07T20:52:46.321Z",
+  "finishedAt": "2026-09-07T20:52:54.143Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "You considered looking toward grace or welcome from God today, while keeping the boundary very clear—aiming only to name or notice it, rather than taking on anything more. It requires real discernment to let an idea register without feeling pressured to lower your guards or accept something unfamiliar. Care and protection are allowed to exist at the very same time.\n\nIn the passage from Luke, Jesus speaks a welcome to Zacchaeus before any change has been proven or earned. Considering the possibility of a grace that precedes performance might bring up comfort, quiet suspicion, distance, or perhaps very little at all. You might simply observe that offer from right where you are, without needing to change your posture, feel a specific spiritual emotion, or invite anything unsafe into your space.\n\nNaming that no next step feels available right now, and deciding not to force one, is a quiet and honest place to stand. Respecting your own limits today is more than enough.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1538,
+      "outputTokens": 1308,
+      "reasoningTokens": 1119,
+      "totalTokens": 2846
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "b7215a28b7ac5d3bed7fe539ac6dd5cf413346c6f86dd24ac2f037e46a95585d",
+    "usage": {
+      "inputTokens": 1538,
+      "outputTokens": 1308,
+      "reasoningTokens": 1119,
+      "totalTokens": 2846
+    }
+  }
+}

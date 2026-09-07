@@ -1,0 +1,47 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 7,
+  "request": {
+    "day": 7,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.tone:harsh",
+      "q.need:forgiveness",
+      "step:receive"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5544,
+  "expectedIdentitySha256": "4fc0219f22e5d87b750ee31627e45f7a55e494b761e39420a9d83074f5005237",
+  "requestSha256": "610dedc7225057ebaec4becddd0ea3c59bd5c71adb0bf0ebcc012ee94dd098e2",
+  "startedAt": "2026-09-07T20:52:39.381Z",
+  "finishedAt": "2026-09-07T20:52:46.318Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "When things go wrong or feel heavy, it can be so easy for the mind to turn inward with a sharp, harsh tone that insults or shames who you are. Living with that kind of internal attack can make an already difficult situation feel unbearable, turning every misstep or painful moment into a verdict rather than simply something to navigate.\n\nWanting to separate real accountability from self-punishment points to a very grounded way of moving through hard things. It recognizes that looking clearly at reality does not require self-contempt as the entry fee, nor does it demand that you jump straight to forgiveness. Responsibility and dignity can actually belong together.\n\nConsidering the possibility of letting one fair sentence stay present for just a few seconds—without forcing yourself to fully believe it or feel any sudden relief—offers a very contained way to practice this. Would it be enough today to give that single statement a tiny bit of quiet space, just as it is?",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1157,
+      "outputTokens": 1313,
+      "reasoningTokens": 1123,
+      "totalTokens": 2470
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "4fc0219f22e5d87b750ee31627e45f7a55e494b761e39420a9d83074f5005237",
+    "usage": {
+      "inputTokens": 1157,
+      "outputTokens": 1313,
+      "reasoningTokens": 1123,
+      "totalTokens": 2470
+    }
+  }
+}

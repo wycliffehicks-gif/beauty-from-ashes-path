@@ -1,0 +1,48 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 4,
+  "request": {
+    "day": 4,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.response:perfect",
+      "q.doorway:criticism",
+      "q.purpose:criticism",
+      "step:settle"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5126,
+  "expectedIdentitySha256": "1b7a4351cfab13d997d83972b1b61dc653d215a42887af71b7a2079fb52dcad5",
+  "requestSha256": "4f47a184c62895d3f44927e86d6e696c9e1372e7f431fe30e4bb1e3889ff5502",
+  "startedAt": "2026-09-07T20:52:17.045Z",
+  "finishedAt": "2026-09-07T20:52:23.935Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "When criticism, a mistake, or the feeling of being judged arises, leaning into an effort to get everything exactly right is a very familiar response. It makes sense that when the air feels sharp with potential judgment, the instinct to tighten control and make things flawless comes forward.\n\nThrough the lens of protection, trying to be exact may be a way of guarding against the heavy weight of shame, further critique, or the painful sense of feeling like a failure. Aiming for precision offers a kind of shield—a way to cushion against exposure—even as holding onto that standard requires a significant amount of effort.\n\nYou noted the option of taking no outward action today and letting this understanding settle. Giving yourself space to simply notice how these pieces fit together, without pushing to fix or alter anything, can be a quiet and grounding place to stay for now.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1083,
+      "outputTokens": 1255,
+      "reasoningTokens": 1085,
+      "totalTokens": 2338
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "1b7a4351cfab13d997d83972b1b61dc653d215a42887af71b7a2079fb52dcad5",
+    "usage": {
+      "inputTokens": 1083,
+      "outputTokens": 1255,
+      "reasoningTokens": 1085,
+      "totalTokens": 2338
+    }
+  }
+}

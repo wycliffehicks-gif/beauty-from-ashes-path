@@ -1,0 +1,21 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 7,
+  "request": {
+    "day": 7,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.tone:harsh",
+      "q.need:forgiveness",
+      "step:receive"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5544,
+  "expectedIdentitySha256": "4fc0219f22e5d87b750ee31627e45f7a55e494b761e39420a9d83074f5005237",
+  "requestSha256": "610dedc7225057ebaec4becddd0ea3c59bd5c71adb0bf0ebcc012ee94dd098e2",
+  "startedAt": "2026-09-07T20:52:39.381Z",
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 6,
+  "request": {
+    "day": 6,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.cost:none",
+      "q.protects:unclear",
+      "step:prepare"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5570,
+  "expectedIdentitySha256": "187efc2a5fcc2f19d9b2da4598ecc51d41f37812d037a7c9cc7a359ecd188bc9",
+  "requestSha256": "6c7193e23bc1571e124b8ebcebd48403a5598af87b32c9785711438dc2c657e5",
+  "startedAt": "2026-09-07T20:52:31.165Z",
+  "finishedAt": "2026-09-07T20:52:39.378Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It is entirely okay if no single strain or cost feels clear right now, and if the reasons a situation or role remains in place feel hard to pin down. We do not need to force a sense of loss or produce quick answers to understand where we are. Simply taking stock without needing to define or diagnose everything is a quiet, valid way to pause.\n\nAllowing yourself to keep this process internal—gently considering what might or might not be changeable in time, with no expectation to take any outward step—gives room for whatever is there to exist at its own pace. You are allowed to let things sit just as they are, without demanding immediate clarity or action.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1165,
+      "outputTokens": 954,
+      "reasoningTokens": 819,
+      "totalTokens": 2119
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "187efc2a5fcc2f19d9b2da4598ecc51d41f37812d037a7c9cc7a359ecd188bc9",
+    "usage": {
+      "inputTokens": 1165,
+      "outputTokens": 954,
+      "reasoningTokens": 819,
+      "totalTokens": 2119
+    }
+  }
+}

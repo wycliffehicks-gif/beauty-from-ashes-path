@@ -1,0 +1,48 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 2,
+  "request": {
+    "day": 2,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.body:nothing",
+      "q.load:selfpressure",
+      "q.load:tiredness",
+      "step:rest"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 4709,
+  "expectedIdentitySha256": "b8bb4f95096165d77d8c6805b8d8052c1f454eb9cb35d7fe412a5e2ffa4e46b3",
+  "requestSha256": "acb1bc87b58fad617687aeaa3f80eaa89b8fc93269f55e55064e5fc8157e8823",
+  "startedAt": "2026-09-07T20:51:55.466Z",
+  "finishedAt": "2026-09-07T20:52:03.763Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "When you look inward and find that nothing much registers in the body right now, that quietness is its own kind of information. It can happen quite naturally when a day is shaped by tiredness and the ongoing demands you place on yourself. Sometimes, under the weight of internal expectations, physical sensations simply go quiet or stay out of focus for a while.\n\nPairing self-imposed pressure with plain exhaustion can make the day feel heavy. Noticing that both are sitting there helps untangle what you are carrying, separating the sheer fatigue from the internal push to keep moving. \n\nConsidering ten honest minutes of rest names a gentle possibility, whether those minutes happen today or not. Simply acknowledging that weariness is present recognizes what you are holding, without requiring you to fix it or earn the right to pause.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1025,
+      "outputTokens": 942,
+      "reasoningTokens": 781,
+      "totalTokens": 1967
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "b8bb4f95096165d77d8c6805b8d8052c1f454eb9cb35d7fe412a5e2ffa4e46b3",
+    "usage": {
+      "inputTokens": 1025,
+      "outputTokens": 942,
+      "reasoningTokens": 781,
+      "totalTokens": 1967
+    }
+  }
+}

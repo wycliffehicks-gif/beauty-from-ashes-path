@@ -1,0 +1,49 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 3,
+  "request": {
+    "day": 3,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.carrying:grief",
+      "q.carrying:anger",
+      "q.shows:sleep",
+      "q.shows:patience",
+      "step:prepare"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 4965,
+  "expectedIdentitySha256": "8deea01f1dbe03584891118f71e7982f1aaeff694cb7307315f7a25ccf0c818a",
+  "requestSha256": "21668fcb91d3f0f32667444992a6cbb533486fc6798352af32c33f293f4312f9",
+  "startedAt": "2026-09-07T20:52:03.764Z",
+  "finishedAt": "2026-09-07T20:52:17.043Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "Giving a simple name to what is inside can be significant work, especially when what you are carrying holds more than one feeling at once. Holding both grief—the sense that something or someone has been lost or changed—and anger at a situation that feels wrong takes real energy. These feelings do not need to be smoothed over, ranked, or forced to make sense right now.\n\nIt is natural that this weight shows up in the quietest hours and the closest relationships of your day. Noticing its presence in your sleep and in the thinning of your patience with those around you simply acknowledges where the strain is landing. When an internal load is heavy, rest and everyday interactions often bear the quiet impact of that exhaustion.\n\nLooking toward a step that remains entirely internal—choosing a word, or deciding not to name anything at all—keeps the focus small and manageable. There is no requirement to explain this to anyone else, to take outward action, or to solve what feels heavy today.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1084,
+      "outputTokens": 1494,
+      "reasoningTokens": 1296,
+      "totalTokens": 2578
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "8deea01f1dbe03584891118f71e7982f1aaeff694cb7307315f7a25ccf0c818a",
+    "usage": {
+      "inputTokens": 1084,
+      "outputTokens": 1494,
+      "reasoningTokens": 1296,
+      "totalTokens": 2578
+    }
+  }
+}

@@ -163,12 +163,15 @@ describe("A — removal is only trusted when persistently confirmed", () => {
 
 const read = (p: string) => readFileSync(join(process.cwd(), p), "utf8");
 
+/** Source text with line wrapping normalised, so assertions test wording. */
+const flat = (p: string) => read(p).replace(/\s+/g, " ");
+
 describe("B — the Privacy Notice describes what is actually stored", () => {
-  const privacy = read("src/routes/privacy.tsx");
+  const privacy = flat("src/routes/privacy.tsx");
 
   test("the stored-items list names the pilot access marker and the reminder", () => {
     expect(privacy).toContain(
-      "Whether you opened Days 5–10 during the free pilot. This is an access\n          marker, not a payment record.",
+      "Whether you opened Days 5–10 during the free pilot. This is an access marker, not a payment record.",
     );
     expect(privacy).toContain("Whether you enabled the optional reminder and the time you chose.");
   });
@@ -196,7 +199,7 @@ describe("B — the Privacy Notice describes what is actually stored", () => {
   test("clearing is described as a request that may not be confirmed", () => {
     expect(privacy).not.toContain("You can remove all of it at any time");
     expect(privacy).not.toContain("is removed along with everything else when you clear");
-    expect(privacy).toContain("tells\n        you if the removal cannot be");
+    expect(privacy).toContain("tells you if the removal cannot be confirmed");
     expect(privacy).toContain("tells you if that removal cannot be confirmed");
   });
 
@@ -209,7 +212,7 @@ describe("B — the Privacy Notice describes what is actually stored", () => {
 
   test("the local, no-AI reflection description is unchanged", () => {
     expect(privacy).toContain("assembled on this device");
-    expect(privacy).toContain("No artificial\n        intelligence, no server and no external");
+    expect(privacy).toContain("No artificial intelligence, no server and no external");
   });
 });
 
@@ -236,11 +239,11 @@ describe("B — the Settings privacy summary matches reality", () => {
 });
 
 describe("C — the install paragraph no longer promises offline use", () => {
-  const settings = read("src/routes/_shell.settings.tsx");
+  const settings = flat("src/routes/_shell.settings.tsx");
 
   test("it asks for a connection during the pilot", () => {
     expect(settings).toContain(
-      "Add Beauty from Ashes to your home screen for easier access. Please use an internet\n            connection during this pilot; offline use has not been verified.",
+      "Add Beauty from Ashes to your home screen for easier access. Please use an internet connection during this pilot; offline use has not been verified.",
     );
     expect(settings).not.toContain("It will work offline");
   });

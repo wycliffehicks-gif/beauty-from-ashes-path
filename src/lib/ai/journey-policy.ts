@@ -19,17 +19,17 @@ import {
 import type { JourneyRequest } from "@/lib/ai/journey-contract";
 import { JOURNEY_CONTRACT_VERSION } from "@/lib/ai/journey-contract";
 
-export const JOURNEY_POLICY_VERSION = "journey-p1";
+export const JOURNEY_POLICY_VERSION = "journey-p2";
 
 /**
- * Provenance of a response that a later integration may show. Explicit and
- * minimal. A mock is never described as AI, and this contract does not change
- * the present authored reflection snapshot format in any way.
+ * Provenance of a COMPLETED response that a later integration may show. It
+ * describes actual output, never a prepared request: preparation alone has
+ * generated nothing, so it carries no provenance at all.
  */
 export type JourneyResponseProvenance = "authored-deterministic" | "mock" | "live-model";
 
-export interface JourneyResponseIdentity {
-  provenance: JourneyResponseProvenance;
+/** Identity of a prepared request. Deliberately has no response provenance. */
+export interface JourneyPreparationIdentity {
   contractVersion: string;
   groundingVersion: string;
   policyVersion: string;
@@ -37,10 +37,18 @@ export interface JourneyResponseIdentity {
   day: number;
   /**
    * Local metadata used to decide whether a stored response still belongs to
-   * these presentable answers. It is NOT an anonymity claim about the data and
-   * is not intended for inclusion in provider text.
+   * this exact request. It is NOT an anonymity claim about the data and is not
+   * intended for inclusion in provider text.
    */
   canonicalIdentity: string;
+}
+
+/**
+ * Identity of an actual completed response. Only a real generation path may
+ * construct one, and it must state honestly where the text came from.
+ */
+export interface JourneyResponseIdentity extends JourneyPreparationIdentity {
+  provenance: JourneyResponseProvenance;
 }
 
 export interface PreparedJourneyGeneration {
@@ -49,31 +57,62 @@ export interface PreparedJourneyGeneration {
   policy: string;
   /** Exactly the grounded material a provider would be given, as JSON. */
   groundedPayload: string;
-  identity: JourneyResponseIdentity;
+  identity: JourneyPreparationIdentity;
 }
 
 /**
- * Order-insensitive canonical view of everything that materially changes a
- * response. Reordering the same selections yields the same string; a different
- * selection, day, version, practice or spiritual preference does not.
+ * Canonical view of EVERYTHING that materially changes a response: the full
+ * outgoing grounded material — day title, theme, purpose, teaching, question
+ * wording, selected labels, practice summary, steps and any authorised
+ * Scripture — plus the actual policy text and the relevant versions.
+ *
+ * Only per-question selections are order-insensitive. Authored teaching and
+ * practice steps keep their meaningful order.
  */
-function canonicalIdentityOf(source: GroundedJourneySource): string {
+function canonicalIdentityOf(source: GroundedJourneySource, policy: string): string {
+  const practice = (p: GroundedJourneyPractice) => ({
+    title: p.title,
+    summary: p.summary,
+    steps: [...p.steps],
+    notRequired: p.notRequired,
+    scripture: p.scripture
+      ? { reference: p.scripture.reference, body: p.scripture.body, note: p.scripture.note }
+      : null,
+  });
   const canonical = {
-    day: source.day,
-    meaning: source.answerMeaningVersion,
     contract: JOURNEY_CONTRACT_VERSION,
     grounding: source.groundingVersion,
     policy: JOURNEY_POLICY_VERSION,
+    meaning: source.answerMeaningVersion,
+    day: source.day,
+    title: source.title,
+    theme: source.theme,
+    purpose: source.purpose,
+    teaching: [...source.teaching],
     spiritual: source.spiritualAuthorised,
-    practice: source.practice.title,
+    practice: practice(source.practice),
     routedBy: source.practiceRoutedBy,
-    step: source.oneHonestStep.selectedLabel,
+    spiritualPractice: source.spiritualPractice
+      ? practice(source.spiritualPractice)
+      : null,
+    step: {
+      prompt: source.oneHonestStep.prompt,
+      selectedLabel: source.oneHonestStep.selectedLabel,
+      reportedDone: source.oneHonestStep.reportedDone,
+    },
     selections: [...source.selections]
-      .map((s) => ({ q: s.questionId, labels: [...s.labels].sort() }))
+      .map((s) => ({
+        q: s.questionId,
+        prompt: s.prompt,
+        labels: [...s.labels].sort(),
+        unknown: s.unknown,
+      }))
       .sort((a, b) => (a.q < b.q ? -1 : a.q > b.q ? 1 : 0)),
+    policyText: policy,
   };
   return JSON.stringify(canonical);
 }
+
 
 export function buildJourneyPolicy(source: GroundedJourneySource): string {
   const lines: string[] = [

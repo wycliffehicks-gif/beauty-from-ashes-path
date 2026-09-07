@@ -14,6 +14,8 @@
 
 import { useEffect, useState } from "react";
 
+import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+
 /** Days 1–FREE_DAYS are always available, full strength, at no cost. */
 export const FREE_DAYS = 4;
 

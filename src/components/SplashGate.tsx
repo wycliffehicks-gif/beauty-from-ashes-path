@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { VisualMotif } from "@/components/VisualMotifs";
 import { beginSplash, endSplash } from "@/lib/splash-state";
-import { StorageNotice } from "@/lib/storage-status";
+import { ClearNotice, StorageNotice } from "@/lib/storage-status";
 
 const SESSION_KEY = "bfa_splash_shown_v1";
 
@@ -84,6 +84,8 @@ export function SplashGate({ children }: { children: ReactNode }) {
         {/* Above the app in normal flow: visible in the first viewport and
             never covering the sticky bottom navigation dock. */}
         <StorageNotice suppressed={noticeSuppressed} />
+        <ClearNotice suppressed={noticeSuppressed} />
+
         {children}
       </div>
       {visible && (

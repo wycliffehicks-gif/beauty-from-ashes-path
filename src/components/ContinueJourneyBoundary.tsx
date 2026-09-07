@@ -18,10 +18,11 @@ export function ContinueJourneyBoundary({ day }: { day: number }) {
         </div>
 
         <p className="bfa-copy text-foreground">
-          The first {FREE_DAYS} days are complete in themselves. If you stopped here, you would
-          still have noticed something, named it, and begun to understand what it may have been
-          protecting.
+          The first {FREE_DAYS} days offer space to notice what you may be carrying, put words to
+          it if you wish, and consider what a familiar response may have been protecting. You do
+          not need to have named anything or noticed a change to pause here or continue.
         </p>
+
         <p className="bfa-copy text-foreground">
           Days {FREE_DAYS + 1} to 10 continue the same arc: what it is costing now, a more
           compassionate way to hold it, letting something good reach you, practising a different

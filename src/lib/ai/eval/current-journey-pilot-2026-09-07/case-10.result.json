@@ -1,0 +1,50 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 10,
+  "request": {
+    "day": 10,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.different:named",
+      "q.different:nothing",
+      "q.unfinished:grief",
+      "q.unfinished:relationship",
+      "q.unfinished:faith",
+      "step:unavailable"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 6184,
+  "expectedIdentitySha256": "6e63b0023c9b422e13fe08ebaaa089e0e8dc601ab2c805f41579f9124735ae24",
+  "requestSha256": "b052803c7aeccce5e92065c6a527d506d72b53c9319b3c15d3c4ee93c1e6db1a",
+  "startedAt": "2026-09-07T20:53:07.117Z",
+  "finishedAt": "2026-09-07T20:53:14.223Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It is possible to find an idea worth holding—such as noticing how giving words to an experience can shift your relationship to it—without anything feeling settled or complete. Resonance and unresolved questions often exist side by side, and keeping something near does not mean the rest of your story has to fall neatly into place.\n\nThere may still be grief or loss that requires far more room and support than today affords, alongside relational matters that remain open, even where no contact or reconciliation is required. When taking a step forward might feel important in theory, but simply does not feel safe or available right now, honoring that reality is an important form of care.\n\nCarrying your story forward does not require forcing a decision or making a move before conditions feel right. Sometimes the quietest, most honest place to arrive at is simply allowing things to stay unfinished, exactly as they are.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1310,
+      "outputTokens": 1279,
+      "reasoningTokens": 1106,
+      "totalTokens": 2589
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "6e63b0023c9b422e13fe08ebaaa089e0e8dc601ab2c805f41579f9124735ae24",
+    "usage": {
+      "inputTokens": 1310,
+      "outputTokens": 1279,
+      "reasoningTokens": 1106,
+      "totalTokens": 2589
+    }
+  }
+}

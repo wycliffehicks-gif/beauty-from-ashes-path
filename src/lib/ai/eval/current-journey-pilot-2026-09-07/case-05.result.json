@@ -1,0 +1,47 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 5,
+  "request": {
+    "day": 5,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.forward:grieve",
+      "q.holdback:energy",
+      "step:wait"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 5003,
+  "expectedIdentitySha256": "00aab9cd1b995e3ba969b811b9f9e43aa309490d03ca4137d9d7a6081d1a0d42",
+  "requestSha256": "db25a862d6d43f69fa3ba6afc1e4c3092ccb7c232431f231f6a9383456251d5e",
+  "startedAt": "2026-09-07T20:52:23.936Z",
+  "finishedAt": "2026-09-07T20:52:31.161Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It is completely natural for a gentle desire to make room for grief to exist alongside the real limitations of your current energy, health, or overall capacity. Longing to attend to loss—at a pace that actually fits you—while simultaneously noticing how little bandwidth you have right now is not a contradiction. It is simply an honest reflection of how much you are carrying.\n\nRecognizing your physical and emotional limits does not mean the desire to face grief is invalid or absent. Likewise, wanting to acknowledge loss does not erase your body’s very real need to protect your remaining strength. You have noted that it might be helpful to simply choose a later time to revisit all of this, setting aside any pressure to reach a conclusion today.\n\nAllowing both the wish to make space for grief and the need to respect your current energy to sit together, without forcing a decision between them, can be a quiet way of honouring your whole self right now.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1059,
+      "outputTokens": 1269,
+      "reasoningTokens": 1079,
+      "totalTokens": 2328
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "00aab9cd1b995e3ba969b811b9f9e43aa309490d03ca4137d9d7a6081d1a0d42",
+    "usage": {
+      "inputTokens": 1059,
+      "outputTokens": 1269,
+      "reasoningTokens": 1079,
+      "totalTokens": 2328
+    }
+  }
+}

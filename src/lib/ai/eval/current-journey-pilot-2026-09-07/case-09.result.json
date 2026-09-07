@@ -1,0 +1,48 @@
+{
+  "schema": "current-journey-synthetic-evaluation-1",
+  "day": 9,
+  "request": {
+    "day": 9,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.practice:lament",
+      "q.where:faith",
+      "q.where:self",
+      "step:none"
+    ],
+    "spiritual": true
+  },
+  "preparedChars": 7155,
+  "expectedIdentitySha256": "da27da95c664d803bfb53354912665e1ac182afe43d0e6851c12ec049616b96c",
+  "requestSha256": "42025eb86534524ba05d68716a04a81581b892f781943a5729487a377d8974ab",
+  "startedAt": "2026-09-07T20:52:54.145Z",
+  "finishedAt": "2026-09-07T20:53:07.105Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It can be a quiet shift simply to consider naming grief, anger, disappointment, or longing in spaces that belong entirely to you. Exploring those feelings in your internal dialogue, or bringing them into your spiritual life, offers a way to acknowledge what is present without needing to explain it to anyone else or force a resolution.\n\nThe psalmist’s invitation in Psalm 62 to pour out your heart speaks to this kind of contained honesty. Offering even a single plain sentence about what hurts or what you long for does not require you to feel trust on command or experience an immediate sense of safety. It simply leaves room for genuine lament—whether expressed in silent words or written lines—without turning your pain into a spiritual test or a task to complete.\n\nChoosing to take no step today is a completely workable place to land. Giving yourself permission to pause right here honours your current energy and limits, leaving what you have explored as it is, with your choice and safety intact.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1532,
+      "outputTokens": 1604,
+      "reasoningTokens": 1409,
+      "totalTokens": 3136
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "da27da95c664d803bfb53354912665e1ac182afe43d0e6851c12ec049616b96c",
+    "usage": {
+      "inputTokens": 1532,
+      "outputTokens": 1604,
+      "reasoningTokens": 1409,
+      "totalTokens": 3136
+    }
+  }
+}

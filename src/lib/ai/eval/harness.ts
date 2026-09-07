@@ -171,7 +171,13 @@ export interface EvalRunRecord {
   finishReason?: string;
   durationMs: number;
   output?: string;
-  usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+  usage?: {
+    promptTokens?: number;
+    completionTokens?: number;
+    totalTokens?: number;
+    reasoningTokens?: number;
+  };
+
   error?: string;
   /** Observations about the returned text. Any issue blocks acceptance. */
   validationIssues: string[];

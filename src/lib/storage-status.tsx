@@ -102,16 +102,46 @@ export function writeLocal(key: string, value: string): boolean {
  * rest of this visit.
  */
 export function removeLocal(key: string) {
+  removeLocalConfirmed(key);
+}
+
+/**
+ * Remove an app-owned key and report whether the removal could actually be
+ * CONFIRMED in persistent storage.
+ *
+ * The tombstone above deliberately makes a refused removal read as absent for
+ * the rest of the visit, which is right for the running app but useless as
+ * proof. So confirmation is checked directly against the persistent store, not
+ * through `readLocal`: the key must be genuinely gone there. Only presence or
+ * absence is inspected — never contents.
+ */
+export function removeLocalConfirmed(key: string): boolean {
   memory.delete(key);
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") return false;
+  let store: Storage;
   try {
-    window.localStorage.removeItem(key);
+    store = window.localStorage;
+  } catch {
+    tombstones.add(key);
+    markUnavailable();
+    return false;
+  }
+  try {
+    store.removeItem(key);
     tombstones.delete(key);
   } catch {
     tombstones.add(key);
     markUnavailable();
+    return false;
+  }
+  try {
+    return store.getItem(key) === null;
+  } catch {
+    markUnavailable();
+    return false;
   }
 }
+
 
 /** Subscribe to persistence-availability changes. SSR-safe. */
 export function useStorageStatus(): { persistent: boolean; hydrated: boolean } {

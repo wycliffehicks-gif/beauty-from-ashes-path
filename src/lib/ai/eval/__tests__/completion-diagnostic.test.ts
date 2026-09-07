@@ -239,6 +239,8 @@ describe("isolation from the participant app", () => {
     expect(hits.sort()).toEqual([
       "src/lib/ai/eval/__tests__/completion-diagnostic.test.ts",
       "src/lib/ai/eval/completion-diagnostic.ts",
+      "src/lib/ai/eval/harness.ts",
     ]);
+
   });
 });

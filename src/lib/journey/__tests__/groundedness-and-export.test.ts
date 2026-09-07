@@ -64,10 +64,37 @@ describe("groundedness: unanswered days claim no activity", () => {
 
   it("Day 3 summarising opening is withheld while nothing is selected", () => {
     const p = paragraphs(day3, [], "care");
-    expect(p[0]).not.toContain("The word you selected and where you notice it");
-    const answered = paragraphs(day3, [`q.${day3.questions[0]!.id}:${day3.questions[0]!.options[0]!.id}`], "care");
-    expect(answered[0]).toContain("The word you selected and where you notice it");
+    expect(p[0]).not.toMatch(/pieces of information/i);
   });
+
+  it("Day 3 care passage presupposes no named word and no located place", () => {
+    const opening = day3.reflection.sections.find((s) => s.id === "care")!.opening!;
+    expect(opening).not.toMatch(/the word you selected/i);
+    expect(opening).not.toMatch(/together, they form/i);
+    expect(opening).toMatch(/nothing here establishes a cause/i);
+
+    // Partial, private and unsure states must all read truthfully: the passage
+    // may only offer an optional distinction, never assert a combined map.
+    const states: string[][] = [
+      ["step:prepare"],
+      ["q.carrying:private"],
+      ["q.carrying:grief"],
+      ["q.carrying:unsure", "q.shows:unclear"],
+      ["q.carrying:grief", "q.shows:body", "step:hold"],
+    ];
+    for (const answers of states) {
+      const care = paragraphs(day3, answers, "care").join(" ");
+      expect(care, answers.join(",")).not.toMatch(/the word you selected/i);
+      expect(care, answers.join(",")).not.toMatch(/where you notice it/i);
+      expect(care, answers.join(",")).not.toMatch(/modest map/i);
+      expect(care.length).toBeGreaterThan(80);
+    }
+
+    // The fully answered path still carries the useful care meaning.
+    const answered = paragraphs(day3, ["q.carrying:grief", "q.shows:body"], "care").join(" ");
+    expect(answered).toMatch(/professional attention/i);
+  });
+
 
   it("every day still produces substantive text when fully unanswered", () => {
     for (let n = 1; n <= 10; n += 1) {

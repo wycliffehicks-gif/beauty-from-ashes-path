@@ -152,7 +152,15 @@ export function createEvalGatewayProvider(apiKey: string | undefined): EvalProvi
                   ...(typeof data.usage.total_tokens === "number"
                     ? { totalTokens: data.usage.total_tokens }
                     : {}),
+                  // Numeric count only, and only when the provider returns one.
+                  // Reasoning TEXT is never requested or stored.
+                  ...(typeof data.usage.completion_tokens_details?.reasoning_tokens === "number"
+                    ? { reasoningTokens: data.usage.completion_tokens_details.reasoning_tokens }
+                    : typeof data.usage.reasoning_tokens === "number"
+                      ? { reasoningTokens: data.usage.reasoning_tokens }
+                      : {}),
                 },
+
               }
             : {}),
         };

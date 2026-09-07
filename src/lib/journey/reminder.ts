@@ -8,8 +8,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { readLocal, removeLocal, writeLocal } from "@/lib/storage-status";
+
 const KEY = "bfa.reminder.v1";
 const EVENT = "bfa:reminder";
+
+/** Exported so an explicit clear can notify subscribers and scope its removal. */
+export const REMINDER_EVENT = EVENT;
+export const REMINDER_STORAGE_KEY = KEY;
 
 /** Deliberately plain and non-urgent wording. */
 export const REMINDER_TITLE = "Beauty from Ashes";

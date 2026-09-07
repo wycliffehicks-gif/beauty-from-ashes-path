@@ -52,22 +52,40 @@ export function selectedOptionIds(
 }
 
 
+/** True when the person selected at least one option anywhere on this day. */
+function hasAnySelection(day: JourneyDayContent, answerIds: string[] | undefined): boolean {
+  const questions = [...day.questions, day.step];
+  return questions.some((q) => selectedOptionIds(day, q.id, answerIds).length > 0);
+}
+
 export function buildReflection(
   day: JourneyDayContent,
   answerIds: string[] | undefined,
 ): BuiltReflection {
+  // GROUNDEDNESS RULE: a section `opening` describes what the person selected,
+  // so it is only used when there is something to describe. With no selections
+  // for that question the section carries its `unanswered` wording alone, and a
+  // summarising section (one with no source question) uses its `unanswered`
+  // wording whenever nothing at all was selected that day.
+  const anySelection = hasAnySelection(day, answerIds);
+
   const sections: ReflectionParagraphs[] = day.reflection.sections.map((section) => {
     const paragraphs: string[] = [];
-    if (section.opening) paragraphs.push(section.opening);
 
     if (section.from && section.lines) {
       const chosen = selectedOptionIds(day, section.from, answerIds);
       const lines = chosen
         .map((id) => section.lines?.[id])
         .filter((line): line is string => Boolean(line));
-      if (lines.length > 0) paragraphs.push(...lines);
-      else paragraphs.push(section.unanswered);
-    } else if (paragraphs.length === 0) {
+      if (lines.length > 0) {
+        if (section.opening) paragraphs.push(section.opening);
+        paragraphs.push(...lines);
+      } else {
+        paragraphs.push(section.unanswered);
+      }
+    } else if (section.opening && anySelection) {
+      paragraphs.push(section.opening);
+    } else {
       paragraphs.push(section.unanswered);
     }
 

@@ -70,7 +70,7 @@ function GateHolding() {
 function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
   const unlock = useServerFn(unlockSite);
   const [value, setValue] = useState("");
-  const [outcome, setOutcome] = useState<UnlockOutcome | null>(null);
+  const [outcome, setOutcome] = useState<Exclude<UnlockOutcome, "unlocked"> | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {

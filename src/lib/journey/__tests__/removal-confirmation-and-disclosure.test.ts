@@ -73,6 +73,7 @@ const progress = await import("../progress");
 const prefs = await import("@/lib/prefs");
 const entitlement = await import("../entitlement");
 const reminder = await import("../reminder");
+const { PRIVACY_SUMMARY_POINTS } = await import("@/content/settings");
 
 function seed() {
   local.map.clear();
@@ -213,9 +214,6 @@ describe("B — the Privacy Notice describes what is actually stored", () => {
 });
 
 describe("B — the Settings privacy summary matches reality", () => {
-  const { PRIVACY_SUMMARY_POINTS } = require("@/content/settings") as {
-    PRIVACY_SUMMARY_POINTS: string[];
-  };
 
   test("the first point is about saved journey information, still qualified", () => {
     expect(PRIVACY_SUMMARY_POINTS[0]).toBe(

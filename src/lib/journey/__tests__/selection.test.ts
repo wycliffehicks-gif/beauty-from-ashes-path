@@ -1628,7 +1628,13 @@ describe("Day 9 revision", () => {
     expect(text).toContain("You left the response open. No rehearsal or need is being presumed");
     expect(text).toContain("You left the setting open");
     expect(text).toContain("You left the step open");
-    expect(text).toContain("does not claim that you rehearsed anything");
+    // With nothing selected, the summarising section uses its unanswered
+    // wording, which attributes nothing to the person at all.
+    expect(text).toContain(
+      "it remains a private possibility rather than a plan, and nothing is being attributed to you",
+    );
+    expect(text).not.toMatch(/you rehearsed/i);
+
     for (const phrase of [
       "You chose",
       "You located",

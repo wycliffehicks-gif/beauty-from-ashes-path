@@ -333,10 +333,12 @@ function ReminderSection() {
 
         {settings.enabled && (
           <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-on-note">
-            The reminder is on for this device. It arrives only while this app is open in the
-            browser or installed on your home screen.
+            The reminder is on for this device. It can only arrive while this app is still open in
+            the browser. Adding the app to your home screen does not change that: if the app is
+            closed, or the browser is closed, no reminder will arrive.
           </p>
         )}
+
 
         {(refused || support === "denied") && (
           <p className="bfa-copy-support text-muted-foreground" data-testid="reminder-denied-note">

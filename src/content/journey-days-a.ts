@@ -760,7 +760,8 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           id: "care",
           title: "What may deserve care now",
           opening:
-            "The word you selected and where you notice it do not establish a cause. Together, they form a modest map: one experience taking energy, and one or more places where acknowledgment, practical care, support, protection or professional attention may be useful.",
+            "Nothing here establishes a cause. A word for what is taking energy, and any place where it may be noticed, are pieces of information rather than an explanation. Where such a piece is available, it may point modestly toward what could deserve acknowledgment, practical care, support, protection or professional attention.",
+
           unanswered:
             "Naming may bring clarity, discomfort, relief, mixed feelings or no noticeable shift. None of these means you failed. If what you named feels too much to carry alone, one honest sentence to a safe person or professional may be wiser than working harder by yourself.",
         },

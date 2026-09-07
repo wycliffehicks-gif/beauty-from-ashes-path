@@ -6,7 +6,14 @@ import {
   buildPrintableExport,
   buildReflectionExport,
 } from "@/lib/journey/export";
-import { reflectionSnapshot } from "@/lib/journey/reflection-restore";
+import {
+  answersSnapshot,
+  reflectionContentFingerprint,
+  reflectionSnapshot,
+  resolveReflection,
+  REFLECTION_ENGINE_VERSION,
+  REFLECTION_SNAPSHOT_VERSION,
+} from "@/lib/journey/reflection-restore";
 import { emptyProgress, type JourneyProgress } from "@/lib/journey/progress";
 
 const day1 = getFirstJourneyDay(1)!;
@@ -64,10 +71,37 @@ describe("groundedness: unanswered days claim no activity", () => {
 
   it("Day 3 summarising opening is withheld while nothing is selected", () => {
     const p = paragraphs(day3, [], "care");
-    expect(p[0]).not.toContain("The word you selected and where you notice it");
-    const answered = paragraphs(day3, [`q.${day3.questions[0]!.id}:${day3.questions[0]!.options[0]!.id}`], "care");
-    expect(answered[0]).toContain("The word you selected and where you notice it");
+    expect(p[0]).not.toMatch(/pieces of information/i);
   });
+
+  it("Day 3 care passage presupposes no named word and no located place", () => {
+    const opening = day3.reflection.sections.find((s) => s.id === "care")!.opening!;
+    expect(opening).not.toMatch(/the word you selected/i);
+    expect(opening).not.toMatch(/together, they form/i);
+    expect(opening).toMatch(/nothing here establishes a cause/i);
+
+    // Partial, private and unsure states must all read truthfully: the passage
+    // may only offer an optional distinction, never assert a combined map.
+    const states: string[][] = [
+      ["step:prepare"],
+      ["q.carrying:private"],
+      ["q.carrying:grief"],
+      ["q.carrying:unsure", "q.shows:unclear"],
+      ["q.carrying:grief", "q.shows:body", "step:hold"],
+    ];
+    for (const answers of states) {
+      const care = paragraphs(day3, answers, "care").join(" ");
+      expect(care, answers.join(",")).not.toMatch(/the word you selected/i);
+      expect(care, answers.join(",")).not.toMatch(/where you notice it/i);
+      expect(care, answers.join(",")).not.toMatch(/modest map/i);
+      expect(care.length).toBeGreaterThan(80);
+    }
+
+    // The fully answered path still carries the useful care meaning.
+    const answered = paragraphs(day3, ["q.carrying:grief", "q.shows:body"], "care").join(" ");
+    expect(answered).toMatch(/professional attention/i);
+  });
+
 
   it("every day still produces substantive text when fully unanswered", () => {
     for (let n = 1; n <= 10; n += 1) {
@@ -231,5 +265,76 @@ describe("export presentation and reflection consistency", () => {
     expect(escaped.html).not.toContain("<script>");
     expect(escaped.html).toContain("&amp;");
     expect(escaped.html).toContain("&lt;script&gt;");
+  });
+});
+
+describe("pre-repair snapshots can no longer restore stale engine wording", () => {
+  // A real pre-repair proof: same format marker, same day content fingerprint,
+  // same (empty) selections — but built without an engine rendering version.
+  function prePepairSnapshot(day: typeof day1, answers: string[]): string {
+    return [
+      REFLECTION_SNAPSHOT_VERSION,
+      reflectionContentFingerprint(day),
+      answersSnapshot(answers),
+    ].join(":");
+  }
+
+  it("the proof now carries an engine rendering version", () => {
+    expect(reflectionSnapshot(day3, []).startsWith(
+      `${REFLECTION_SNAPSHOT_VERSION}:${REFLECTION_ENGINE_VERSION}:`,
+    )).toBe(true);
+    expect(reflectionSnapshot(day3, [])).not.toBe(prePepairSnapshot(day3, []));
+  });
+
+  it("no-answer reflections saved by the old engine are rebuilt on Days 3, 4, 5, 6 and 9", () => {
+    for (const n of [3, 4, 5, 6, 9]) {
+      const day = getFirstJourneyDay(n)!;
+      const stale =
+        "OLD ENGINE TEXT\n\n" +
+        day.reflection.sections.map((s) => `${s.title}\n\nThe word you selected and where you notice it`).join("\n\n") +
+        "\n\n" +
+        day.reflection.closing;
+      const resolved = resolveReflection(day, [], {
+        text: stale,
+        snapshot: prePepairSnapshot(day, []),
+      });
+      expect(resolved.restored, `day ${n}`).toBe(false);
+      expect(resolved.replaceSaved, `day ${n}`).toBe(true);
+      expect(resolved.text, `day ${n}`).not.toContain("The word you selected and where you notice it");
+      expect(resolved.snapshot, `day ${n}`).toBe(reflectionSnapshot(day, []));
+    }
+  });
+
+  it("a stale pre-repair snapshot is invalidated in the text and printable exports", () => {
+    const progress = progressWith("day-03", [], {
+      text: "OLD ENGINE TEXT: The word you selected and where you notice it",
+      snapshot: prePepairSnapshot(day3, []),
+    });
+    const text = buildReflectionExport(progress, OFF);
+    const print = buildPrintableExport(progress, OFF);
+    for (const out of [text.text, print.html]) {
+      expect(out).not.toContain("OLD ENGINE TEXT");
+      expect(out).not.toContain("The word you selected and where you notice it");
+    }
+    // Stored choices and answer meanings are untouched; nothing is deleted.
+    expect(progress.answerSets["day-03"]).toEqual({ [day3.answerMeaningVersion]: [] });
+    expect(progress.reflections["day-03"]).toContain("OLD ENGINE TEXT");
+  });
+
+  it("a snapshot written by the current engine still restores unchanged", () => {
+    const answers = ["q.carrying:grief"];
+    const built = buildReflection(day3, answers);
+    const full = [
+      built.intro,
+      ...built.sections.flatMap((s) => [s.title, ...s.paragraphs]),
+      built.closing,
+    ].join("\n\n");
+    const resolved = resolveReflection(day3, answers, {
+      text: full,
+      snapshot: reflectionSnapshot(day3, answers),
+    });
+    expect(resolved.restored).toBe(true);
+    expect(resolved.replaceSaved).toBe(false);
+    expect(resolved.text).toBe(full);
   });
 });

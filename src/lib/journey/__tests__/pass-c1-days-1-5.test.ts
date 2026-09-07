@@ -314,11 +314,13 @@ describe("Pass C1 — Day 3 exact replacements", () => {
     expect(d.practise.spiritual.scripture!.reference).toContain("Psalm 13");
   });
 
-  it("frames the care section as a modest map with no cause", () => {
+  it("frames the care section without a cause and without presuming a named map", () => {
     const care = d.reflection.sections.find((s) => s.id === "care")!;
-    expect(care.opening).toContain("do not establish a cause");
-    expect(care.opening).toContain("modest map");
+    expect(care.opening).toContain("Nothing here establishes a cause");
+    expect(care.opening).toMatch(/pieces of information rather than an explanation/);
+    expect(care.opening).not.toMatch(/modest map|the word you selected/i);
   });
+
 
   it("qualifies the 'tell' step with a safe-person note", () => {
     const note = d.step.options.find((o) => o.id === "tell")!.note!;

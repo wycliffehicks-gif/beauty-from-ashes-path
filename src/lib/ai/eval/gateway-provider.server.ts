@@ -71,7 +71,7 @@ export function createEvalGatewayProvider(apiKey: string | undefined): EvalProvi
 
       let data: {
         model?: string;
-        choices?: Array<{ message?: { content?: string } }>;
+        choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
         usage?: {
           prompt_tokens?: number;
           completion_tokens?: number;
@@ -91,6 +91,9 @@ export function createEvalGatewayProvider(apiKey: string | undefined): EvalProvi
         ok: true,
         text,
         requestedModel: LIVE_MODEL_ID,
+        ...(data.choices?.[0]?.finish_reason
+          ? { finishReason: data.choices[0].finish_reason }
+          : {}),
         ...(data.model ? { returnedModel: data.model } : {}),
         ...(data.usage
           ? {

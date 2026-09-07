@@ -88,6 +88,8 @@ export type EvalProviderResult =
       text: string;
       requestedModel: string;
       returnedModel?: string;
+      /** Provider stop reason, when reported. "length" means the cap truncated it. */
+      finishReason?: string;
       usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
     }
   | { ok: false; error: string; detail?: string };
@@ -110,6 +112,7 @@ export interface EvalRunRecord {
   providerKind: "live" | "mock";
   requestedModel?: string;
   returnedModel?: string;
+  finishReason?: string;
   durationMs: number;
   output?: string;
   usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
@@ -214,12 +217,14 @@ const OVERREACH_PHRASES = [
 /** Structural checks only. These are NOT proof of emotional safety. */
 export function validateEvalOutput(
   text: string,
-  opts: { spiritualAuthorised: boolean },
+  opts: { spiritualAuthorised: boolean; finishReason?: string },
 ): { ok: boolean; issues: string[] } {
   const issues: string[] = [];
   const trimmed = text.trim();
   if (!trimmed) return { ok: false, issues: ["empty-output"] };
   if (trimmed.length > 2600) issues.push("over-length");
+  if (opts.finishReason === "length") issues.push("output-truncated-by-token-cap");
+  else if (!/[.!?"”’)]$/.test(trimmed)) issues.push("possibly-truncated");
   if (/^```|```$/m.test(trimmed)) issues.push("code-fence");
   if (/^\s*(?:[-*•]|\d+[.)])\s+/m.test(trimmed)) issues.push("list-formatting");
   if (/^#{1,6}\s/m.test(trimmed)) issues.push("heading-formatting");
@@ -301,6 +306,7 @@ export async function runEvalFixture(
 
   const validation = validateEvalOutput(result.text, {
     spiritualAuthorised: manifest.spiritualAuthorised,
+    ...(result.finishReason ? { finishReason: result.finishReason } : {}),
   });
 
   if (!validation.ok) {
@@ -310,6 +316,7 @@ export async function runEvalFixture(
       durationMs,
       requestedModel: result.requestedModel,
       ...(result.returnedModel ? { returnedModel: result.returnedModel } : {}),
+      ...(result.finishReason ? { finishReason: result.finishReason } : {}),
       error: validation.issues.join(","),
       validationIssues: validation.issues,
       ...(result.usage ? { usage: result.usage } : {}),
@@ -322,6 +329,7 @@ export async function runEvalFixture(
     durationMs,
     requestedModel: result.requestedModel,
     ...(result.returnedModel ? { returnedModel: result.returnedModel } : {}),
+    ...(result.finishReason ? { finishReason: result.finishReason } : {}),
     output: result.text.trim(),
     validationIssues: validation.issues,
     ...(result.usage ? { usage: result.usage } : {}),

@@ -137,21 +137,36 @@ export function ReminderScheduler(): null {
   const { settings, hydrated } = useReminderState();
 
   useEffect(() => {
-    if (!hydrated || !settings.enabled) return;
-    if (notificationSupport() !== "granted") return;
-    const delay = msUntilNext(settings.time, new Date());
-    const timer = window.setTimeout(() => {
-      try {
-        new window.Notification(REMINDER_TITLE, { body: REMINDER_BODY });
-      } catch {
-        // A refused or unavailable notification is not an error worth surfacing.
-      }
-    }, delay);
-    return () => window.clearTimeout(timer);
+    if (!hydrated) return;
+    const cancel = scheduleReminder(settings);
+    return () => cancel?.();
   }, [hydrated, settings.enabled, settings.time]);
 
   return null;
 }
+
+/**
+ * The one scheduling step, kept pure enough to test directly: it either creates
+ * a SINGLE one-shot timer and returns its canceller, or declines and returns
+ * null. It never requests permission and never re-arms itself.
+ */
+export function scheduleReminder(
+  settings: ReminderSettings,
+  now: Date = new Date(),
+): (() => void) | null {
+  if (typeof window === "undefined") return null;
+  if (!settings.enabled) return null;
+  if (notificationSupport() !== "granted") return null;
+  const timer = window.setTimeout(() => {
+    try {
+      new window.Notification(REMINDER_TITLE, { body: REMINDER_BODY });
+    } catch {
+      // A refused or unavailable notification is not an error worth surfacing.
+    }
+  }, msUntilNext(settings.time, now));
+  return () => window.clearTimeout(timer);
+}
+
 
 /**
  * Controls for the Settings screen: current state plus the three actions. No

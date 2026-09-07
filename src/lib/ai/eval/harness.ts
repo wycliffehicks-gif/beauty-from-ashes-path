@@ -202,12 +202,22 @@ function serialiseGrounded(source: GroundedSource): string {
   return JSON.stringify(source, null, 2);
 }
 
-/** Build the payload for one allowlisted fixture id. Refuses anything else. */
-export function buildEvalPayload(fixtureId: unknown):
+/**
+ * Build the payload for one allowlisted fixture id. Refuses anything else.
+ * `profileId` may only name an allowlisted fixed profile; an unknown value is
+ * refused rather than defaulted, so no caller can invent limits.
+ */
+export function buildEvalPayload(fixtureId: unknown, profileId: unknown = "default"):
   | { ok: true; payload: EvalPayload; manifest: EvalPayloadManifest; fixture: EvalFixture }
-  | { ok: false; error: "unknown-fixture" | "unknown-day" | "input-cap" } {
+  | { ok: false; error: "unknown-fixture" | "unknown-day" | "input-cap" | "unknown-profile" } {
+  const profile = getEvalProfile(profileId);
+  if (!profile) return { ok: false, error: "unknown-profile" };
+
   const fixture = getEvalFixture(fixtureId);
   if (!fixture) return { ok: false, error: "unknown-fixture" };
+  if (profile.fixtures && !(profile.fixtures as readonly string[]).includes(fixture.id)) {
+    return { ok: false, error: "unknown-fixture" };
+  }
 
   const day = getEvalDay(fixture.day);
   if (!day) return { ok: false, error: "unknown-day" };
@@ -227,13 +237,13 @@ export function buildEvalPayload(fixtureId: unknown):
     systemPolicy: EVAL_SYSTEM_POLICY,
     groundedSourceText,
     userInstruction: USER_INSTRUCTION,
-    maxOutputTokens: EVAL_MAX_OUTPUT_TOKENS,
-    timeoutMs: EVAL_TIMEOUT_MS,
+    maxOutputTokens: profile.maxOutputTokens,
+    timeoutMs: profile.timeoutMs,
   };
 
   const totalChars =
     EVAL_SYSTEM_POLICY.length + groundedSourceText.length + USER_INSTRUCTION.length;
-  if (totalChars > EVAL_INPUT_CHAR_CAP) return { ok: false, error: "input-cap" };
+  if (totalChars > profile.inputCharCap) return { ok: false, error: "input-cap" };
 
   const manifest: EvalPayloadManifest = {
     fixtureId: fixture.id,
@@ -242,6 +252,9 @@ export function buildEvalPayload(fixtureId: unknown):
     day: fixture.day,
     fingerprint: source.fingerprint,
     spiritualAuthorised: source.spiritualAuthorised,
+    profileId: profile.id,
+    profileVersion: profile.version,
+    inputCharCap: profile.inputCharCap,
     systemPolicyChars: EVAL_SYSTEM_POLICY.length,
     groundedSourceChars: groundedSourceText.length,
     totalChars,
@@ -249,8 +262,8 @@ export function buildEvalPayload(fixtureId: unknown):
     presentedSelectionLabels: source.selections.flatMap((s) => s.labels),
     ...(source.stepChoice ? { stepChoice: source.stepChoice } : {}),
     spiritualPracticeIncluded: Boolean(source.spiritualPractice),
-    maxOutputTokens: EVAL_MAX_OUTPUT_TOKENS,
-    timeoutMs: EVAL_TIMEOUT_MS,
+    maxOutputTokens: profile.maxOutputTokens,
+    timeoutMs: profile.timeoutMs,
     exactOutgoingText: [EVAL_SYSTEM_POLICY, groundedSourceText, USER_INSTRUCTION].join(
       "\n\n---\n\n",
     ),
@@ -258,6 +271,7 @@ export function buildEvalPayload(fixtureId: unknown):
 
   return { ok: true, payload, manifest, fixture };
 }
+
 
 const SPIRITUAL_TERMS = [
   "god",

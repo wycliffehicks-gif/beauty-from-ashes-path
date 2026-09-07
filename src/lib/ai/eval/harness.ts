@@ -58,8 +58,10 @@ export type EvalProfileId = keyof typeof EVAL_PROFILES;
 
 export function getEvalProfile(id: unknown): (typeof EVAL_PROFILES)[EvalProfileId] | undefined {
   if (typeof id !== "string") return undefined;
+  if (!Object.prototype.hasOwnProperty.call(EVAL_PROFILES, id)) return undefined;
   return (EVAL_PROFILES as Record<string, (typeof EVAL_PROFILES)[EvalProfileId]>)[id];
 }
+
 
 
 export const EVAL_SYSTEM_POLICY = [

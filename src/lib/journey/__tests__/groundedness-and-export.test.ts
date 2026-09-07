@@ -108,7 +108,7 @@ describe("export presentation and reflection consistency", () => {
   const spiritualToken = `q.${spiritualStep.id}:${spiritualOption.id}`;
 
   it("withholds a saved spiritual-only selection while spirituality is OFF", () => {
-    const progress = progressWith("day-8", [spiritualToken]);
+    const progress = progressWith("day-08", [spiritualToken]);
     const off = buildReflectionExport(progress, OFF);
     expect(off.text).not.toContain(spiritualOption.label);
     expect(off.summary.answerCount).toBe(0);
@@ -120,11 +120,11 @@ describe("export presentation and reflection consistency", () => {
     // off -> on -> off, reload-equivalent: raw storage is untouched throughout.
     const offAgain = buildReflectionExport(progress, OFF);
     expect(offAgain.text).toBe(off.text);
-    expect(progress.answerSets["day-8"]![day8.answerMeaningVersion]).toEqual([spiritualToken]);
+    expect(progress.answerSets["day-08"]![day8.answerMeaningVersion]).toEqual([spiritualToken]);
   });
 
   it("fails closed when the preference is unknown or unhydrated", () => {
-    const progress = progressWith("day-8", [spiritualToken]);
+    const progress = progressWith("day-08", [spiritualToken]);
     expect(buildReflectionExport(progress).text).not.toContain(spiritualOption.label);
     expect(
       buildReflectionExport(progress, { hydrated: false, showSpiritual: true }).text,
@@ -132,7 +132,7 @@ describe("export presentation and reflection consistency", () => {
   });
 
   it("exported reflection text matches the current presentation, not a stale snapshot", () => {
-    const progress = progressWith("day-1", ["q.brought:stuck"], {
+    const progress = progressWith("day-01", ["q.brought:stuck"], {
       text: "OLD SAVED REFLECTION TEXT",
       snapshot: "r2:deadbeef:stale",
     });
@@ -149,7 +149,7 @@ describe("export presentation and reflection consistency", () => {
       .flatMap((s) => [s.title, ...s.paragraphs])
       .join("\n\n");
     const full = [saved.intro, savedText, saved.closing].join("\n\n");
-    const progress = progressWith("day-1", answers, {
+    const progress = progressWith("day-01", answers, {
       text: full,
       snapshot: reflectionSnapshot(day1, answers),
     });
@@ -158,19 +158,19 @@ describe("export presentation and reflection consistency", () => {
   });
 
   it("a missing snapshot or missing reflection still exports current text", () => {
-    const noSnapshot = progressWith("day-1", ["q.brought:loss"], { text: "older wording" });
+    const noSnapshot = progressWith("day-01", ["q.brought:loss"], { text: "older wording" });
     expect(buildReflectionExport(noSnapshot, OFF).text).toContain(
       "You named that something was lost",
     );
 
-    const noReflection = progressWith("day-1", ["q.brought:loss"]);
+    const noReflection = progressWith("day-01", ["q.brought:loss"]);
     const out = buildReflectionExport(noReflection, OFF);
     expect(out.summary.reflectionCount).toBe(1);
     expect(out.text).toContain("Your reflection:");
   });
 
   it("missing answers export a grounded unanswered reflection and no selections", () => {
-    const progress = progressWith("day-1", []);
+    const progress = progressWith("day-01", []);
     const out = buildReflectionExport(progress, OFF);
     expect(out.summary.answerCount).toBe(0);
     expect(out.text).not.toContain("Your selections:");
@@ -180,8 +180,8 @@ describe("export presentation and reflection consistency", () => {
   it("selections stored under an older answer meaning are not relabelled", () => {
     const progress: JourneyProgress = {
       ...emptyProgress,
-      completedDays: ["day-1"],
-      answerSets: { "day-1": { v0: ["q.brought:stuck"] } },
+      completedDays: ["day-01"],
+      answerSets: { "day-01": { v0: ["q.brought:stuck"] } },
       reflections: {},
       reflectionSnapshots: {},
     };
@@ -191,7 +191,7 @@ describe("export presentation and reflection consistency", () => {
   });
 
   it("never mutates or saves progress during export", () => {
-    const progress = progressWith("day-8", [spiritualToken]);
+    const progress = progressWith("day-08", [spiritualToken]);
     const before = JSON.stringify(progress);
     buildReflectionExport(progress, OFF);
     buildPrintableExport(progress, ON);
@@ -199,18 +199,18 @@ describe("export presentation and reflection consistency", () => {
   });
 
   it("printable output agrees with the text export and escapes markup", () => {
-    const progress = progressWith("day-1", ["q.brought:stuck"]);
+    const progress = progressWith("day-01", ["q.brought:stuck"]);
     const text = buildReflectionExport(progress, OFF);
     const print = buildPrintableExport(progress, OFF);
     expect(print.summary).toEqual(text.summary);
     expect(print.html).toContain("You named feeling stuck");
     expect(print.html).not.toContain("<script");
 
-    const off = buildPrintableExport(progressWith("day-8", [spiritualToken]), OFF);
+    const off = buildPrintableExport(progressWith("day-08", [spiritualToken]), OFF);
     expect(off.html).not.toContain(spiritualOption.label);
 
     const escaped = buildPrintableExport(
-      progressWith("day-1", ["q.brought:stuck"], {
+      progressWith("day-01", ["q.brought:stuck"], {
         text: "<script>alert(\"x\")</script> & more",
         snapshot: reflectionSnapshot(day1, ["q.brought:stuck"]),
       }),

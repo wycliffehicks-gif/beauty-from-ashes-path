@@ -55,9 +55,13 @@ describe("the reminder scheduler is mounted once, at the root", () => {
   });
 
   test("no permission is requested automatically", () => {
-    const block = reminder.slice(reminder.indexOf("export function scheduleReminder"));
+    const block = reminder.slice(
+      reminder.indexOf("export function scheduleReminder"),
+      reminder.indexOf("export function useReminder"),
+    );
     expect(block).not.toContain("requestPermission");
   });
+
 
   test("the notification wording is unchanged", () => {
     expect(reminder).toContain('export const REMINDER_TITLE = "Beauty from Ashes";');

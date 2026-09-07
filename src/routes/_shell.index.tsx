@@ -15,6 +15,7 @@ import {
   buildReflectionExport,
   downloadTextFile,
   openPrintableExport,
+  type ExportPresentation,
 } from "@/lib/journey/export";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
 
@@ -59,6 +60,13 @@ function HomeGate() {
 
 function JourneyHome() {
   const { progress, hydrated } = useJourneyProgress();
+  // Exports must show exactly what the screens would present right now, so the
+  // hydrated spiritual preference is passed explicitly and fails closed.
+  const [prefs, , prefsHydrated] = usePrefs();
+  const exportPresentation = {
+    hydrated: prefsHydrated,
+    showSpiritual: prefs.showSpiritual,
+  };
   const { persistent, hydrated: storageHydrated } = useStorageStatus();
 
   const completed = new Set(progress.completedDays);
@@ -110,11 +118,11 @@ function JourneyHome() {
             </Link>
           </div>
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-            <ExportButton progress={progress} />
+            <ExportButton progress={progress} presentation={exportPresentation} />
             <button
               type="button"
               data-testid="export-printable"
-              onClick={() => openPrintableExport(progress)}
+              onClick={() => openPrintableExport(progress, exportPresentation)}
               className="btn-quiet flex-1"
             >
               Printable version
@@ -226,7 +234,13 @@ function JourneyHome() {
   );
 }
 
-function ExportButton({ progress }: { progress: ReturnType<typeof useJourneyProgress>["progress"] }) {
+function ExportButton({
+  progress,
+  presentation,
+}: {
+  progress: ReturnType<typeof useJourneyProgress>["progress"];
+  presentation: ExportPresentation;
+}) {
   const [done, setDone] = useState(false);
   const hasContent = progress.completedDays.length > 0;
 
@@ -236,7 +250,7 @@ function ExportButton({ progress }: { progress: ReturnType<typeof useJourneyProg
       disabled={!hasContent}
       data-testid="export-reflections"
       onClick={() => {
-        const { text, filename } = buildReflectionExport(progress);
+        const { text, filename } = buildReflectionExport(progress, presentation);
         downloadTextFile(text, filename);
         setDone(true);
         setTimeout(() => setDone(false), 2000);

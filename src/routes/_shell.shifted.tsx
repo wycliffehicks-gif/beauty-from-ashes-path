@@ -6,6 +6,7 @@ import {
   openPrintableExport,
 } from "@/lib/journey/export";
 import { useJourneyProgress } from "@/lib/journey/progress";
+import { usePrefs } from "@/lib/prefs";
 
 export const Route = createFileRoute("/_shell/shifted")({
   head: () => ({
@@ -36,6 +37,10 @@ const PROMPTS = [
 
 function ShiftedPage() {
   const { progress } = useJourneyProgress();
+  // Same preference-aware presentation as the reflection screens; unknown
+  // preference fails closed.
+  const [prefs, , prefsHydrated] = usePrefs();
+  const exportPresentation = { hydrated: prefsHydrated, showSpiritual: prefs.showSpiritual };
   // Deliberately unpersisted. This screen is a place to think, not another
   // record to keep. Nothing typed here is saved, exported or sent anywhere.
   const [notes, setNotes] = useState<Record<number, string>>({});
@@ -92,7 +97,7 @@ function ShiftedPage() {
             type="button"
             data-testid="shifted-export-text"
             onClick={() => {
-              const { text, filename } = buildReflectionExport(progress);
+              const { text, filename } = buildReflectionExport(progress, exportPresentation);
               downloadTextFile(text, filename);
             }}
             className="btn-quiet flex-1"
@@ -102,7 +107,7 @@ function ShiftedPage() {
           <button
             type="button"
             data-testid="shifted-export-print"
-            onClick={() => openPrintableExport(progress)}
+            onClick={() => openPrintableExport(progress, exportPresentation)}
             className="btn-quiet flex-1"
           >
             Printable version

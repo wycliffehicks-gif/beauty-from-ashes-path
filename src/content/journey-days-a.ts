@@ -194,11 +194,11 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           lines: {
             stuck: "You named feeling stuck and not being able to see the way out.",
             loss: "You named that something was lost, or someone was.",
-            hurt: "You named something that happened and has never been resolved.",
+            hurt: "You named a hurt or unresolved experience that still affects you.",
             tired: "You named being worn out from holding everything together.",
             distant: "You named feeling distant — from people or from yourself.",
             shame: "You named carrying something you feel bad about.",
-            hope: "You named wanting to hope again without knowing how.",
+            hope: "You named wanting to feel more hope or possibility.",
             private:
               "You kept what brought you here private today. That boundary is respected; you still belong fully in this journey.",
           },
@@ -436,7 +436,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
               "Nothing much registered right now, and you do not need to decide what that means.",
           },
           unanswered:
-            "Nothing was selected today, and nothing was needed. Attention was given, and that is the substance of this day.",
+            "Nothing was selected today, and nothing was needed. A body signal can stay unnamed, and this day still counts.",
         },
         {
           id: "underneath",
@@ -481,7 +481,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             prepare: "Noticing was the step. That is a complete answer.",
           },
           unanswered:
-            "Nothing was chosen, and nothing is owed. The attention you gave today already happened.",
+            "Nothing was chosen, and nothing is owed. The day can end here without one.",
         },
       ],
       closing:
@@ -490,7 +490,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
     close: {
       heading: "Enough noticing for one day",
       body: [
-        "You looked at what was here without needing to fix it — whether you selected something or continued without selections. Either way, you gave this some attention.",
+        "Nothing here needed to be fixed, whether you selected something or continued without selections. Either way, this day asked nothing more of you.",
         "The next day gives words to some of it — gently, and without requiring anything you do not want to name. You can go on when you are ready, or stop here.",
       ],
       carryForward:

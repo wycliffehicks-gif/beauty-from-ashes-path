@@ -6,11 +6,24 @@
 //  - The export does NOT include free-text notes or any sessionStorage content.
 //  - Coded selections are mapped back to their canonical labels for the person's
 //    own readability, but the exported file is still their own data.
+//
+// PRESENTATION RULES
+//  - The export shows exactly what the app would present right now: optional
+//    Christian choices are withheld unless the spiritual preference is
+//    hydrated AND on, using the same `presentationAnswers` filter as the
+//    screens. Raw saved selections are never rewritten or deleted.
+//  - Reflection text is resolved with the same proven `resolveReflection`
+//    resolver the reflection screen uses, so a stale saved snapshot can never
+//    export old wording beside current choices. Nothing is saved back.
+//  - An unknown (unhydrated) preference fails closed: spiritual-only content is
+//    withheld.
 
 import { getFirstJourneyDay } from "@/content/first-journey";
 import { dayNumberFromId } from "@/content/journey";
 import { answerKeyFor } from "@/lib/journey/reflection-engine";
 import { optionIdsFor } from "@/lib/journey/answers";
+import { presentationAnswers } from "@/lib/journey/presentation-answers";
+import { resolveReflection } from "@/lib/journey/reflection-restore";
 
 import { answersForDay, type JourneyProgress } from "./progress";
 
@@ -20,36 +33,70 @@ export interface ExportSummary {
   answerCount: number;
 }
 
-function countSelections(
+/** How the export may present optional Christian content right now. */
+export interface ExportPresentation {
+  hydrated: boolean;
+  showSpiritual: boolean;
+}
+
+/** Fail closed: without a proven preference, spiritual-only content is withheld. */
+function normalizePresentation(opts?: ExportPresentation): ExportPresentation {
+  if (!opts) return { hydrated: false, showSpiritual: false };
+  return {
+    hydrated: opts.hydrated === true,
+    showSpiritual: opts.showSpiritual === true,
+  };
+}
+
+interface ExportedDay {
+  day: ReturnType<typeof getFirstJourneyDay>;
+  answers: string[];
+  reflection: string;
+}
+
+/**
+ * The presentable state of every finished day, read only. Progress is never
+ * mutated or saved here, and a day that was never completed is never rebuilt.
+ */
+function exportedDays(
   progress: JourneyProgress,
-): { answerCount: number; reflectionCount: number } {
-  let answerCount = 0;
-  let reflectionCount = 0;
+  presentation: ExportPresentation,
+): NonNullable<ExportedDay>[] {
+  const out: NonNullable<ExportedDay>[] = [];
 
   for (const dayId of progress.completedDays) {
     const dayNum = dayNumberFromId(dayId);
     if (!dayNum) continue;
     const day = getFirstJourneyDay(dayNum);
     if (!day) continue;
-    const answers = answersForDay(progress, day);
-    const allQuestions = [...day.questions, day.step];
-    for (const question of allQuestions) {
-      const key = answerKeyFor(day, question.id);
-      answerCount += optionIdsFor(answers, key, question.options).length;
-    }
-    if (progress.reflections[dayId]) reflectionCount += 1;
+
+    const answers = presentationAnswers(day, answersForDay(progress, day), presentation);
+    const { text } = resolveReflection(day, answers, {
+      text: progress.reflections[dayId],
+      snapshot: progress.reflectionSnapshots?.[dayId],
+    });
+
+    out.push({ day, answers, reflection: text });
   }
 
-  return { answerCount, reflectionCount };
+  return out;
 }
 
-export function buildReflectionExport(progress: JourneyProgress): {
+export function buildReflectionExport(
+  progress: JourneyProgress,
+  presentationOpts?: ExportPresentation,
+): {
   text: string;
   filename: string;
   summary: ExportSummary;
 } {
+  const presentation = normalizePresentation(presentationOpts);
   const date = new Date().toISOString().split("T")[0];
-  const { answerCount, reflectionCount } = countSelections(progress);
+  const days = exportedDays(progress, presentation);
+
+  let answerCount = 0;
+  let reflectionCount = 0;
+
   const lines: string[] = [
     "Beauty from Ashes: The First Journey — Reflections Export",
     `Exported: ${date}`,
@@ -65,13 +112,9 @@ export function buildReflectionExport(progress: JourneyProgress): {
     "",
   ];
 
-  for (const dayId of progress.completedDays) {
-    const dayNum = dayNumberFromId(dayId);
-    if (!dayNum) continue;
-    const day = getFirstJourneyDay(dayNum);
-    if (!day) continue;
-    const answers = answersForDay(progress, day);
-    const reflection = progress.reflections[dayId];
+  for (const entry of days) {
+    const day = entry.day!;
+    const answers = entry.answers;
 
     lines.push("---");
     lines.push(`Day ${day.day} · ${day.title}`);
@@ -89,6 +132,7 @@ export function buildReflectionExport(progress: JourneyProgress): {
       for (const question of answeredQuestions) {
         const key = answerKeyFor(day, question.id);
         const ids = optionIdsFor(answers, key, question.options);
+        answerCount += ids.length;
         lines.push(`- ${question.prompt}`);
         for (const id of ids) {
           const label = question.options.find((o) => o.id === id)?.label;
@@ -98,9 +142,10 @@ export function buildReflectionExport(progress: JourneyProgress): {
       lines.push("");
     }
 
-    if (reflection) {
+    if (entry.reflection.trim().length > 0) {
+      reflectionCount += 1;
       lines.push("Your reflection:");
-      lines.push(reflection);
+      lines.push(entry.reflection);
       lines.push("");
     }
   }
@@ -109,12 +154,13 @@ export function buildReflectionExport(progress: JourneyProgress): {
     text: lines.join("\n"),
     filename: `beauty-from-ashes-reflections-${date}.txt`,
     summary: {
-      dayCount: progress.completedDays.length,
+      dayCount: days.length,
       reflectionCount,
       answerCount,
     },
   };
 }
+
 
 export function downloadTextFile(text: string, filename: string) {
   if (typeof window === "undefined") return;
@@ -144,11 +190,15 @@ function escapeHtml(value: string): string {
  * same plain-text source, so the two can never disagree, and it is rendered in
  * the person's own browser only — nothing is uploaded.
  */
-export function buildPrintableExport(progress: JourneyProgress): {
+export function buildPrintableExport(
+  progress: JourneyProgress,
+  presentationOpts?: ExportPresentation,
+): {
   html: string;
   summary: ExportSummary;
 } {
-  const { text, summary } = buildReflectionExport(progress);
+  const { text, summary } = buildReflectionExport(progress, presentationOpts);
+
 
   const body = text
     .split("\n")
@@ -201,9 +251,13 @@ ${body}
 }
 
 /** Open the printable version in a new tab and offer the browser print dialog. */
-export function openPrintableExport(progress: JourneyProgress): boolean {
+export function openPrintableExport(
+  progress: JourneyProgress,
+  presentationOpts?: ExportPresentation,
+): boolean {
   if (typeof window === "undefined") return false;
-  const { html } = buildPrintableExport(progress);
+  const { html } = buildPrintableExport(progress, presentationOpts);
+
   const win = window.open("", "_blank");
   if (!win) return false;
   win.document.open();

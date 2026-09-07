@@ -233,14 +233,24 @@ describe("Pass C1 — Day 2 exact replacements", () => {
     );
   });
 
-  it("renders the static care section whether or not anything was answered", () => {
-    for (const answers of [[], ["q.body:0", "q.load:1"]]) {
+  it("renders the static care section, grounded in whether anything was answered", () => {
+    // Fully unanswered: the summarising opening must NOT be asserted, because
+    // no selection exists to describe.
+    const none = buildReflection(d, []);
+    const careNone = none.sections.find((s) => s.id === "care")!;
+    expect(careNone.paragraphs[0]).toBe(
+      "No connection will be assumed. Sensation, emotion, thought and pressure can remain unclear or separate today.",
+    );
+
+    // Genuine current stable IDs, partially and fully answered.
+    for (const answers of [["q.body:chest"], ["q.body:chest", "q.load:feeling"]]) {
       const built = buildReflection(d, answers);
       const care = built.sections.find((s) => s.id === "care")!;
       expect(care.paragraphs[0]).toContain("two separate pieces of information");
       expect(care.paragraphs[0]).not.toMatch(/you selected/i);
     }
   });
+
 
 
   it("refines the step labels and notes without changing their IDs", () => {

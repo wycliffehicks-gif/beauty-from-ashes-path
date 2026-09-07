@@ -143,7 +143,7 @@ describe("3 — truthful local-storage wording", () => {
       "Everything this app saves stays in this browser, on this device only",
     );
     expect(PRIVACY_SUMMARY_POINTS[0]).toBe(
-      "When browser storage is available, everything this app saves stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
+      "When browser storage is available, your saved journey information stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
     );
   });
 

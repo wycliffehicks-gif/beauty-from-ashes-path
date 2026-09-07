@@ -22,7 +22,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="August 17, 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="September 7, 2026">
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
@@ -79,8 +79,16 @@ function PrivacyPage() {
           with a coded fingerprint of the selections it was built from, so the
           same words can be shown again if you return to that page.
         </li>
+        <li>
+          Whether you opened Days 5–10 during the free pilot. This is an access
+          marker, not a payment record.
+        </li>
+        <li>
+          Whether you enabled the optional reminder and the time you chose.
+        </li>
         <li>The date and time this saved information was last updated.</li>
       </ul>
+
       <p>
         The app also uses your browser’s <em>session storage</em>, which is
         cleared when you close the browser, to remember that the launch screen
@@ -90,10 +98,12 @@ function PrivacyPage() {
         An earlier weekly “deep session” feature may also have left session-only
         information in this browser: which stage of that session you were on, the
         coded option identifiers you had selected there, and an optional short
-        note limited to 400 characters. That information is session-only, stays
-        on this device, and is removed along with everything else when you clear
-        your journey.
+        note limited to 400 characters. That information is session-only and stays
+        on this device. When you clear your journey, the app asks the browser to
+        remove it along with the rest of the app’s saved information, and tells
+        you if that removal cannot be confirmed.
       </p>
+
       <p>
         Your personalized reflection is assembled on this device. It is put
         together locally and deterministically from the approved wording written
@@ -115,9 +125,28 @@ function PrivacyPage() {
         protected in the way that psychotherapy or medical records are. Anyone
         with access to your device or browser profile may be able to see them,
         and we cannot promise confidentiality for information held in your own
-        browser. You can remove all of it at any time with “Clear or restart my
-        journey” in Settings, or by clearing this browser’s data for the app.
+        browser. At any time you can ask the app to remove this saved journey
+        information with “Clear or restart my journey” in Settings. The app asks
+        your browser to remove it and tells you if the removal cannot be
+        confirmed. You can also clear this browser’s data for the app through
+        your browser’s own settings.
       </p>
+
+      <h2 className="bfa-h2 font-serif">Private-pilot access cookie</h2>
+      <p>
+        When the private-pilot gate is enabled, the app uses a cookie called{" "}
+        <code>bfa-pilot-gate</code> to remember your access status for up to 30
+        days. Your browser sends this cookie to the app’s server with requests.
+        It does not contain your selected journey answers or personalised
+        reflections and is separate from a user account.
+      </p>
+      <p>
+        “Clear or restart my journey” clears journey information, not this access
+        cookie. You can remove the cookie through your browser’s settings for
+        this app. You may then need to enter the pilot access code again.
+      </p>
+
+
 
 
 

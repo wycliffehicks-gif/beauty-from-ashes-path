@@ -134,9 +134,10 @@ function SettingsPage() {
         >
           <h2 className="bfa-h2 font-serif text-foreground">Add to this device</h2>
           <p className="bfa-copy-support mt-1 text-muted-foreground">
-            Install Beauty from Ashes to your home screen for easy access. It will work offline
-            once opened and stays private to this device.
+            Add Beauty from Ashes to your home screen for easier access. Please use an internet
+            connection during this pilot; offline use has not been verified.
           </p>
+
           <button
             type="button"
             data-testid="install-pwa"

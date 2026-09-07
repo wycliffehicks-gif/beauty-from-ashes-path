@@ -109,11 +109,13 @@ export function removeLocal(key: string) {
  * Remove an app-owned key and report whether the removal could actually be
  * CONFIRMED in persistent storage.
  *
- * The tombstone above deliberately makes a refused removal read as absent for
- * the rest of the visit, which is right for the running app but useless as
- * proof. So confirmation is checked directly against the persistent store, not
- * through `readLocal`: the key must be genuinely gone there. Only presence or
- * absence is inspected — never contents.
+ * Confirmation is checked directly against the persistent store, never through
+ * `readLocal`, and the key is tombstoned FIRST so that a removal which returns
+ * quietly without doing anything — or a confirmation read that throws — can
+ * still never let the old value be read again in this tab. Only a persistent
+ * read that genuinely returns null lifts the tombstone. Only presence or
+ * absence is inspected — never contents. A later genuinely successful write to
+ * the same key clears the tombstone in `writeLocal`.
  */
 export function removeLocalConfirmed(key: string): boolean {
   memory.delete(key);
@@ -126,21 +128,27 @@ export function removeLocalConfirmed(key: string): boolean {
     markUnavailable();
     return false;
   }
+  // Provisional until proven: the app must not show this value again either way.
+  tombstones.add(key);
   try {
     store.removeItem(key);
-    tombstones.delete(key);
   } catch {
-    tombstones.add(key);
     markUnavailable();
     return false;
   }
   try {
-    return store.getItem(key) === null;
+    if (store.getItem(key) === null) {
+      tombstones.delete(key);
+      return true;
+    }
   } catch {
     markUnavailable();
     return false;
   }
+  markUnavailable();
+  return false;
 }
+
 
 
 /** Subscribe to persistence-availability changes. SSR-safe. */

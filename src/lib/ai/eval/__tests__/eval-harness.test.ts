@@ -315,12 +315,8 @@ describe("live gateway provider (mocked fetch)", () => {
 
 describe("isolation from production", () => {
   it("is not imported by any route, client module, or server function", () => {
-    const files = ["src/routes", "src/components", "src/lib"];
-    void files;
-    const grep = (pattern: string) => pattern;
-    void grep;
-    // Static check: the harness modules are referenced only by their own tests
-    // and the engineering runner script.
+    // The harness modules are referenced only by their own tests and by the
+    // engineering runner script, which lives outside src/.
     const runner = readFileSync("scripts/ai-eval/run-eval.ts", "utf8");
     expect(runner).toContain("@/lib/ai/eval/harness");
   });

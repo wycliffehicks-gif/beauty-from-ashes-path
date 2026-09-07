@@ -55,32 +55,38 @@ export function msUntilNext(time: string, now: Date): number {
 export function readReminder(): ReminderSettings {
   if (typeof window === "undefined") return REMINDER_OFF;
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const raw = readLocal(KEY);
     return raw ? normalizeReminder(JSON.parse(raw)) : REMINDER_OFF;
   } catch {
     return REMINDER_OFF;
   }
 }
 
+/**
+ * Same key, same schema, through the shared storage layer: if the browser
+ * refuses to persist the choice, turning the reminder on or off still takes
+ * effect for this tab rather than silently reverting.
+ */
 export function saveReminder(next: ReminderSettings) {
   if (typeof window === "undefined") return;
+  writeLocal(KEY, JSON.stringify(normalizeReminder(next)));
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(normalizeReminder(next)));
+    window.dispatchEvent(new Event(EVENT));
   } catch {
-    // Volatile storage: the choice simply does not persist.
+    /* ignore */
   }
-  window.dispatchEvent(new Event(EVENT));
 }
 
 export function clearReminder() {
   if (typeof window === "undefined") return;
+  removeLocal(KEY);
   try {
-    window.localStorage.removeItem(KEY);
+    window.dispatchEvent(new Event(EVENT));
   } catch {
-    // Nothing to clear.
+    /* ignore */
   }
-  window.dispatchEvent(new Event(EVENT));
 }
+
 
 export type NotificationSupport = "unsupported" | "default" | "granted" | "denied";
 

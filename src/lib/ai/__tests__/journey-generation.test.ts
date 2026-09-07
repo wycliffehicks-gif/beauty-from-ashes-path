@@ -610,7 +610,7 @@ describe("deterministic checks (limited lexical heuristics only)", () => {
 
 describe("identity is tied to preparation, policy and output versions", () => {
   it("the policy version is the current one, not the retired journey-p2", () => {
-    expect(JOURNEY_POLICY_VERSION).toBe("journey-p3");
+    expect(JOURNEY_POLICY_VERSION).toBe("journey-p4");
   });
 
   it("materially different selections give different identities", () => {

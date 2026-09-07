@@ -17,7 +17,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         "Starting with one honest picture of the present can reduce the pressure to solve everything. Today helps you notice what needs attention, what you hope may become different, and what has already helped you keep going.",
       lead: "You do not have to be ready. You only have to be here.",
       body: [
-        "This is the first day of the 10-day journey. Nothing here is timed, scored or compared, and nothing you choose is seen by another person.",
+        "This is the first day of the 10-day journey. Nothing here is timed, scored or compared. You choose what to answer and can leave any question unanswered.",
         "Today is about arriving as you actually are — tired, guarded, unsure, hopeful, or several of those at once.",
       ],
       settle: [

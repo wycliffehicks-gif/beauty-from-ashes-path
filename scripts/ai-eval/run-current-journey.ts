@@ -1,10 +1,12 @@
 // OWNER-ONLY synthetic evaluation. Never import this from an app route or endpoint.
 // No participant activation flags are read or changed. Only this explicit command
-// can read the existing gateway key. Exactly ten fixed cases, no paid retries.
+// can read the existing gateway key. Fixed ten-case and six-case profiles, no paid retries.
 //
 // bun scripts/ai-eval/run-current-journey.ts --plan     (no key reads or calls)
 // bun scripts/ai-eval/run-current-journey.ts --case 1  (one selected attempt)
 // bun scripts/ai-eval/run-current-journey.ts --all     (remaining cases in order)
+// bun scripts/ai-eval/run-current-journey.ts --grounding-plan  (zero-call p4 plan)
+// bun scripts/ai-eval/run-current-journey.ts --grounding-check (fixed six cases)
 
 import { createHash, randomUUID } from "node:crypto";
 import {
@@ -18,7 +20,7 @@ import {
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseJourneyRequest } from "@/lib/ai/journey-contract";
-import { prepareJourneyGeneration } from "@/lib/ai/journey-policy";
+import { prepareJourneyGeneration, JOURNEY_POLICY_VERSION } from "@/lib/ai/journey-policy";
 import { composeJourneyResponseIdentity } from "@/lib/ai/journey-identity";
 import {
   generateJourneyReflection,
@@ -33,8 +35,19 @@ import { createJourneyLiveTransport } from "@/lib/ai/journey-transport.server";
 
 const scriptPath = fileURLToPath(import.meta.url);
 const here = dirname(scriptPath);
-const outputDir = resolve(here, "../../src/lib/ai/eval/current-journey-pilot-2026-09-07");
-const schema = "current-journey-synthetic-evaluation-1";
+interface EvaluationProfile { outputDir: string; schema: string; days: readonly number[] }
+const initialProfile: EvaluationProfile = {
+  outputDir: resolve(here, "../../src/lib/ai/eval/current-journey-pilot-2026-09-07"),
+  schema: "current-journey-synthetic-evaluation-1",
+  days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+};
+// A second fixed profile preserves the original ten observations byte-for-byte.
+// No caller-selected directory, model, limits, fixtures or retry option exists.
+const groundingProfile: EvaluationProfile = {
+  outputDir: resolve(here, "../../src/lib/ai/eval/current-journey-grounding-p4-2026-09-07"),
+  schema: "current-journey-grounding-p4-evaluation-1",
+  days: [1, 2, 3, 5, 9, 10],
+};
 const maxCases = 10;
 const sha = (value: string) => createHash("sha256").update(value).digest("hex");
 class EvaluationStop extends Error {}
@@ -75,12 +88,13 @@ function fixtures() {
 type Fixture = ReturnType<typeof fixtures>[number];
 type CaseStatus = "not-attempted" | "started-unfinished" | "accepted" | "rejected";
 type State = { day: number; status: CaseStatus; gatewayFetchAttempts: number };
-const casePath = (day: number, suffix: string) =>
-  join(outputDir, `case-${String(day).padStart(2, "0")}.${suffix}.json`);
+const casePath = (profile: EvaluationProfile, day: number, suffix: string) =>
+  join(profile.outputDir, `case-${String(day).padStart(2, "0")}.${suffix}.json`);
 
-function stateFor(fixture: Fixture): State {
-  const startedPath = casePath(fixture.day, "started");
-  const resultPath = casePath(fixture.day, "result");
+function stateFor(fixture: Fixture, profile: EvaluationProfile): State {
+  const { schema } = profile;
+  const startedPath = casePath(profile, fixture.day, "started");
+  const resultPath = casePath(profile, fixture.day, "result");
   if (!existsSync(startedPath)) {
     if (existsSync(resultPath)) stop("result-without-reservation");
     return { day: fixture.day, status: "not-attempted", gatewayFetchAttempts: 0 };
@@ -127,14 +141,23 @@ function safeMetadata(raw: unknown): string | undefined {
 }
 
 export async function runCurrentJourneyEvaluation(args: string[]) {
-  const planOnly = args.length === 1 && args[0] === "--plan";
-  const all = args.length === 1 && args[0] === "--all";
+  const groundingPlan = args.length === 1 && args[0] === "--grounding-plan";
+  const groundingCheck = args.length === 1 && args[0] === "--grounding-check";
+  const grounding = groundingPlan || groundingCheck;
+  const planOnly = (args.length === 1 && args[0] === "--plan") || groundingPlan;
+  const all = (args.length === 1 && args[0] === "--all") || groundingCheck;
   const selected =
     args.length === 2 && args[0] === "--case" && /^(?:[1-9]|10)$/.test(args[1] ?? "")
       ? Number(args[1])
       : undefined;
-  if (!planOnly && !all && selected === undefined) stop("use-only-plan-case-1-to-10-or-all");
-  const cases = fixtures();
+  if (!planOnly && !all && selected === undefined) stop("use-only-fixed-plan-case-all-or-grounding-flags");
+  if (grounding && JOURNEY_POLICY_VERSION !== "journey-p4") stop("grounding-check-requires-policy-p4");
+  const profile = grounding ? groundingProfile : initialProfile;
+  const { outputDir, schema } = profile;
+  const maxCases = profile.days.length;
+  const cases = fixtures().filter(fixture => profile.days.includes(fixture.day));
+  if (cases.length !== maxCases) stop("invalid-profile-fixture-count");
+  const readState = (fixture: Fixture) => stateFor(fixture, profile);
   if (planOnly) {
     console.log(
       JSON.stringify(
@@ -191,22 +214,22 @@ export async function runCurrentJourneyEvaluation(args: string[]) {
   };
 
   try {
-    let states = cases.map(stateFor);
+    let states = cases.map(readState);
     persistManifest(states);
     if (
       states.some((state) => state.status === "rejected" || state.status === "started-unfinished")
     ) {
       stop("prior-failed-or-unfinished-case-no-automatic-retry");
     }
-    if (selected !== undefined && states[selected - 1]?.status !== "not-attempted")
+    if (selected !== undefined && states.find(state => state.day === selected)?.status !== "not-attempted")
       stop("selected-case-already-attempted");
     for (const fixture of cases) {
       if (selected !== undefined && fixture.day !== selected) continue;
-      if (states[fixture.day - 1]!.status === "accepted") continue;
+      if (states.find(state => state.day === fixture.day)!.status === "accepted") continue;
       const startedAt = new Date().toISOString();
       // Immutable reservation is written BEFORE any possible dispatch. A crash
       // leaves an unfinished marker, so a repeated command cannot charge again.
-      writeNew(casePath(fixture.day, "started"), {
+      writeNew(casePath(profile, fixture.day, "started"), {
         schema,
         ...fixture,
         startedAt,
@@ -214,7 +237,7 @@ export async function runCurrentJourneyEvaluation(args: string[]) {
         maxOutputTokens: JOURNEY_MAX_OUTPUT_TOKENS,
         deadlineMs: JOURNEY_DEADLINE_MS,
       });
-      states = cases.map(stateFor);
+      states = cases.map(readState);
       persistManifest(states);
       let caseFetchAttempts = 0;
       let candidate: Record<string, unknown> | undefined;
@@ -254,7 +277,7 @@ export async function runCurrentJourneyEvaluation(args: string[]) {
         provider,
       });
       const accepted = result.ok && result.meta.acceptedAsLiveAi && caseFetchAttempts === 1;
-      writeNew(casePath(fixture.day, "result"), {
+      writeNew(casePath(profile, fixture.day, "result"), {
         schema,
         ...fixture,
         startedAt,
@@ -274,11 +297,11 @@ export async function runCurrentJourneyEvaluation(args: string[]) {
             }
           : { ok: false, code: result.code, providerCalled: result.providerCalled },
       });
-      states = cases.map(stateFor);
+      states = cases.map(readState);
       persistManifest(states);
       if (!accepted) break;
     }
-    const summary = persistManifest(cases.map(stateFor));
+    const summary = persistManifest(cases.map(readState));
     console.log(
       JSON.stringify(
         {

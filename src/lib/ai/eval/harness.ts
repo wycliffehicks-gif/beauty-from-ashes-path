@@ -379,9 +379,10 @@ export function classifyEvalIssues(issues: string[]): {
 export async function runEvalFixture(
   fixtureId: unknown,
   provider: EvalProvider,
-  opts: { dryRun?: boolean } = {},
+  opts: { dryRun?: boolean; profileId?: EvalProfileId } = {},
 ): Promise<EvalRunRecord | { ok: false; error: string }> {
-  const built = buildEvalPayload(fixtureId);
+  const built = buildEvalPayload(fixtureId, opts.profileId ?? "default");
+
   if (!built.ok) return { ok: false, error: built.error };
 
   const { payload, manifest, fixture } = built;

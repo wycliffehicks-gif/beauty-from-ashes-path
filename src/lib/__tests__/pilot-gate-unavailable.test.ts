@@ -83,12 +83,13 @@ describe("Day 4 boundary claims nothing the person may not have done", () => {
       "src/components/ContinueJourneyBoundary.tsx",
       "utf8",
     );
-    expect(source).toContain("days offer space to notice what you may be carrying");
-    expect(source).toContain(
+    const flat = source.replace(/\s+/g, " ");
+    expect(flat).toContain("days offer space to notice what you may be carrying");
+    expect(flat).toContain(
       "You do not need to have named anything or noticed a change to pause here or continue.",
     );
-    expect(source).not.toContain("are complete in themselves");
-    expect(source).not.toContain("you would\n          still have noticed something");
+    expect(flat).not.toContain("are complete in themselves");
+    expect(flat).not.toContain("still have noticed something");
     // Unchanged: no-payment wording, access marker and navigation.
     expect(source).toContain("There is nothing to pay and nothing to enter.");
     expect(source).toContain('data-testid="boundary-continue"');

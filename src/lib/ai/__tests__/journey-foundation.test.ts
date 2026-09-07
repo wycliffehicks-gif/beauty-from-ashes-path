@@ -254,12 +254,15 @@ describe("spiritual preference across days 8, 9 and 10", () => {
       const spiritualChoice = [...day.questions, day.step].flatMap((q) =>
         q.options.filter((o) => o.spiritualOnly).map((o) => ({ q, o })),
       )[0];
-      const answers = [
-        ...fictionalAnswers(day),
-        ...(spiritualChoice
-          ? [stableAnswerId(answerKeyFor(day, spiritualChoice.q.id), spiritualChoice.o.id)]
-          : []),
-      ];
+      let answers = fictionalAnswers(day);
+      if (spiritualChoice) {
+        const key = answerKeyFor(day, spiritualChoice.q.id);
+        // A single-select question can hold only the spiritual choice.
+        if (spiritualChoice.q.select === "one") {
+          answers = answers.filter((t) => !t.startsWith(`${key}:`));
+        }
+        answers = [...answers, stableAnswerId(key, spiritualChoice.o.id)];
+      }
       const frozen = [...answers];
 
       for (const spiritual of [false, true, false]) {

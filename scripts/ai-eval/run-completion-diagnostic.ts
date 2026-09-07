@@ -10,81 +10,23 @@
 //   bun scripts/ai-eval/run-completion-diagnostic.ts
 
 import { mkdirSync, writeFileSync } from "node:fs";
-import type { EvalFixtureId } from "@/lib/ai/eval/fixtures";
-import {
-  buildEvalPayload,
-  runEvalFixture,
-  classifyEvalIssues,
-  EVAL_PROFILES,
-  type EvalProvider,
-  type EvalRunRecord,
-} from "@/lib/ai/eval/harness";
+import { buildEvalPayload, runEvalFixture, type EvalProvider } from "@/lib/ai/eval/harness";
 import { createEvalGatewayProvider } from "@/lib/ai/eval/gateway-provider.server";
-
-/** Fixed output directory. Never the legacy artefact paths. */
-export const DIAGNOSTIC_OUT_DIR = "artifacts/ai-eval/completion-diagnostic-v1";
-export const DIAGNOSTIC_PROFILE_ID = "completion-diagnostic-v1" as const;
-
-const PROFILE = EVAL_PROFILES[DIAGNOSTIC_PROFILE_ID];
-const FIXTURE_ORDER = PROFILE.fixtures as readonly EvalFixtureId[];
-
-export interface DiagnosticEntry {
-  fixtureId: EvalFixtureId;
-  attempted: boolean;
-  /** Set only when the fixture was never attempted (batch already stopped). */
-  notAttemptedReason?: string;
-  reasoningTokens?: number;
-  reasoningTokensStatus: "returned" | "unavailable" | "n/a";
-  wordCount?: number;
-  record?: EvalRunRecord;
-}
-
-function wordCount(text: string): number {
-  return text.trim().split(/\s+/).filter(Boolean).length;
-}
-
-/** True when this attempt must stop the whole diagnostic immediately. */
-export function shouldStopAfter(record: EvalRunRecord): boolean {
-  if (record.status === "failure" || record.status === "rejected") return true;
-  if (record.validationIssues.length > 0) return true;
-  if (classifyEvalIssues(record.validationIssues).seriousPolicyIssue) return true;
-  if (record.requestedModel && record.returnedModel) {
-    if (!record.returnedModel.includes(record.requestedModel)) return true;
-  }
-  return false;
-}
-
-export function summariseEntry(record: EvalRunRecord): DiagnosticEntry {
-  const reasoning = record.usage?.reasoningTokens;
-  return {
-    fixtureId: record.fixtureId,
-    attempted: true,
-    ...(typeof reasoning === "number" ? { reasoningTokens: reasoning } : {}),
-    reasoningTokensStatus: typeof reasoning === "number" ? "returned" : "unavailable",
-    ...(record.output ? { wordCount: wordCount(record.output) } : {}),
-    record,
-  };
-}
+import {
+  DIAGNOSTIC_FIXTURE_ORDER,
+  DIAGNOSTIC_OUT_DIR,
+  DIAGNOSTIC_PROFILE,
+  DIAGNOSTIC_PROFILE_ID,
+  diagnosticEnvelope,
+  shouldStopAfter,
+  summariseEntry,
+  type DiagnosticEntry,
+} from "@/lib/ai/eval/completion-diagnostic";
 
 function persist(entries: DiagnosticEntry[]) {
   writeFileSync(
     `${DIAGNOSTIC_OUT_DIR}/results.json`,
-    JSON.stringify(
-      {
-        profileId: PROFILE.id,
-        profileVersion: PROFILE.version,
-        caps: {
-          maxOutputTokens: PROFILE.maxOutputTokens,
-          maxCalls: PROFILE.maxCalls,
-          inputCharCap: PROFILE.inputCharCap,
-          timeoutMs: PROFILE.timeoutMs,
-        },
-        fixtureOrder: FIXTURE_ORDER,
-        entries,
-      },
-      null,
-      2,
-    ),
+    JSON.stringify(diagnosticEnvelope(entries), null, 2),
   );
 }
 
@@ -100,7 +42,7 @@ async function main() {
   mkdirSync(DIAGNOSTIC_OUT_DIR, { recursive: true });
 
   // Manifest inspection first, always.
-  const manifests = FIXTURE_ORDER.map((id) => {
+  const manifests = DIAGNOSTIC_FIXTURE_ORDER.map((id) => {
     const built = buildEvalPayload(id, DIAGNOSTIC_PROFILE_ID);
     if (!built.ok) throw new Error(`payload build failed for ${id}: ${built.error}`);
     return built.manifest;
@@ -131,7 +73,7 @@ async function main() {
   const entries: DiagnosticEntry[] = [];
   let stopped = false;
 
-  for (const id of FIXTURE_ORDER) {
+  for (const id of DIAGNOSTIC_FIXTURE_ORDER) {
     if (stopped) {
       entries.push({
         fixtureId: id,
@@ -142,7 +84,7 @@ async function main() {
       persist(entries);
       continue;
     }
-    if (entries.filter((e) => e.attempted).length >= PROFILE.maxCalls) break;
+    if (entries.filter((e) => e.attempted).length >= DIAGNOSTIC_PROFILE.maxCalls) break;
 
     const record = await runEvalFixture(id, provider, { profileId: DIAGNOSTIC_PROFILE_ID });
     if (!("status" in record)) {

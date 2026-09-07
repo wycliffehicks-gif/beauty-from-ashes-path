@@ -23,23 +23,21 @@ import { resolvePractice } from "@/lib/journey/practice-router";
 import { selectedOptionIds } from "@/lib/journey/reflection-engine";
 import type { JourneyRequest } from "@/lib/ai/journey-contract";
 
-export const JOURNEY_GROUNDING_VERSION = "journey-g1";
-
-const PRIVATE_IDS = new Set(["private", "prefer-not-to-say", "rather-not-say"]);
-const UNCLEAR_IDS = new Set(["unsure", "unclear", "unknown", "not-sure"]);
-const NONE_IDS = new Set(["none", "nothing", "unavailable", "no-one"]);
+export const JOURNEY_GROUNDING_VERSION = "journey-g2";
 
 export interface GroundedJourneySelection {
   questionId: string;
   prompt: string;
-  /** Labels of selections that may be presented right now. */
+  /**
+   * Labels of selections that may be presented right now, exactly as authored.
+   * No further categorisation is inferred: "nothing settled" and "something
+   * named" can honestly coexist, and only the authored wording carries meaning.
+   */
   labels: string[];
-  keptPrivate: boolean;
-  markedUnclear: boolean;
-  reportedNone: boolean;
   /** Nothing presentable was selected. This means UNKNOWN, not avoidance. */
   unknown: boolean;
 }
+
 
 export interface GroundedJourneyPractice {
   title: string;
@@ -116,12 +114,10 @@ export function buildJourneyGrounding(request: JourneyRequest): GroundedJourneyS
       questionId: question.id,
       prompt: question.prompt,
       labels: labelsFor(question, ids),
-      keptPrivate: ids.some((id) => PRIVATE_IDS.has(id)),
-      markedUnclear: ids.some((id) => UNCLEAR_IDS.has(id)),
-      reportedNone: ids.some((id) => NONE_IDS.has(id)),
       unknown: ids.length === 0,
     };
   });
+
 
   const stepIds = selectedOptionIds(day, day.step.id, presentable);
   const stepLabel = labelsFor(day.step, stepIds)[0] ?? null;

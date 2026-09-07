@@ -97,11 +97,7 @@ describe("contract rejects invalid input without mutating anything", () => {
   it("rejects unexpected fields, including free text and identifiers", () => {
     for (const field of ["freeText", "email", "history", "storage"]) {
       const raw = { ...requestFor(day, [], false), [field]: "anything" };
-      expect(parseJourneyRequest(raw)).toEqual({
-        ok: false,
-        error: "unexpected-field",
-        detail: field,
-      });
+      expect(parseJourneyRequest(raw)).toEqual({ ok: false, error: "unexpected-field" });
     }
   });
 
@@ -313,7 +309,8 @@ describe("deterministic preparation identity", () => {
     expect(a.policy).not.toContain(a.identity.canonicalIdentity);
     expect(a.groundedPayload).not.toContain(a.identity.canonicalIdentity);
     expect(a.identity.policyVersion.length).toBeGreaterThan(0);
-    expect(a.identity.provenance).toBe("live-model");
+    // A prepared request has generated nothing, so it carries no provenance.
+    expect("provenance" in a.identity).toBe(false);
   });
 
   it("changes for a materially different selection and for the spiritual preference", () => {
@@ -383,5 +380,209 @@ describe("no runtime, environment or network access", () => {
         expect(text.includes(banned), `${file} must not reference ${banned}`).toBe(false);
       }
     }
+  });
+});
+
+describe("errors never echo untrusted caller input", () => {
+  const day = FIRST_JOURNEY_DAYS[0]!;
+  const ALLOWED = ["day", "answerMeaningVersion", "answers", "spiritual"];
+
+  function detailsOf(raw: unknown): string[] {
+    const result = parseJourneyRequest(raw);
+    expect(result.ok).toBe(false);
+    if (result.ok) return [];
+    return result.detail === undefined ? [] : [result.detail];
+  }
+
+  it("omits adversarial private-looking field names", () => {
+    const secrets = [
+      "fictional-secret-note",
+      "email:jane.fictional@example.com",
+      "__proto__",
+      "<script>alert(1)</script>",
+    ];
+    for (const field of secrets) {
+      const raw = { ...requestFor(day, [], false), [field]: "FICTIONAL private text" };
+      expect(detailsOf(raw)).toEqual([]);
+      expect(JSON.stringify(parseJourneyRequest(raw))).not.toContain(field);
+    }
+  });
+
+  it("omits supplied answer-meaning versions, tokens and counts", () => {
+    const key = answerKeyFor(day, day.questions[0]!.id);
+    const probes: Array<[unknown, string]> = [
+      [{ day: day.day, answerMeaningVersion: "FICTIONAL-v-secret", answers: [], spiritual: false }, "FICTIONAL-v-secret"],
+      [requestFor(day, ["fictional-token-secret"], false), "fictional-token-secret"],
+      [requestFor(day, [`${key}:fictional-secret-option`], false), "fictional-secret-option"],
+      [
+        requestFor(
+          day,
+          Array.from({ length: MAX_JOURNEY_ANSWER_TOKENS + 1 }, (_, i) => `${key}:f-${i}`),
+          false,
+        ),
+        String(MAX_JOURNEY_ANSWER_TOKENS + 1),
+      ],
+      [{ day: 4321, answerMeaningVersion: "x", answers: [], spiritual: false }, "4321"],
+    ];
+    for (const [raw, secret] of probes) {
+      expect(JSON.stringify(parseJourneyRequest(raw))).not.toContain(secret);
+    }
+  });
+
+  it("still validates strictly and any detail is a fixed internal identifier", () => {
+    const internal = new Set<string>([
+      ...ALLOWED,
+      ...FIRST_JOURNEY_DAYS.flatMap((d) => [
+        ...[...d.questions, d.step].map((q) => answerKeyFor(d, q.id)),
+        ...[...d.questions, d.step].flatMap((q) => q.options.map((o) => o.id)),
+      ]),
+    ]);
+    const probes: unknown[] = [
+      { day: day.day, answers: [], spiritual: false },
+      { ...requestFor(day, [], false), surprise: 1 },
+      requestFor(day, ["garbage"], false),
+    ];
+    for (const raw of probes) {
+      for (const detail of detailsOf(raw)) expect(internal.has(detail)).toBe(true);
+    }
+  });
+});
+
+describe("grounding does not over-infer meaning from option ids", () => {
+  const day10 = FIRST_JOURNEY_DAYS.find((d) => d.day === 10)!;
+
+  it("keeps Day 10 coexisting selections honest, with no invented flags", () => {
+    const question = day10.questions.find((q) =>
+      q.select === "many" && q.options.length > 1,
+    )!;
+    const key = answerKeyFor(day10, question.id);
+    const chosen = question.options.filter((o) => !o.exclusive && !o.spiritualOnly).slice(0, 2);
+    const request = parseOrThrow(
+      requestFor(day10, chosen.map((o) => stableAnswerId(key, o.id)), false),
+    );
+    const grounded = buildJourneyGrounding(request);
+    const selection = grounded.selections.find((s) => s.questionId === question.id)!;
+    for (const option of chosen) expect(selection.labels).toContain(option.label);
+    expect(selection.unknown).toBe(false);
+    expect(Object.keys(selection).sort()).toEqual(["labels", "prompt", "questionId", "unknown"]);
+  });
+
+  it("marks unknown only when nothing presentable was selected", () => {
+    const grounded = buildJourneyGrounding(parseOrThrow(requestFor(day10, [], false)));
+    expect(grounded.selections.every((s) => s.unknown && s.labels.length === 0)).toBe(true);
+  });
+
+  it("carries privacy and uncertainty through authored labels alone", () => {
+    for (const day of FIRST_JOURNEY_DAYS) {
+      for (const question of day.questions) {
+        for (const option of question.options) {
+          if (!OPEN_IDS.includes(option.id) || option.spiritualOnly) continue;
+          const token = stableAnswerId(answerKeyFor(day, question.id), option.id);
+          const grounded = buildJourneyGrounding(
+            parseOrThrow(requestFor(day, [token], false)),
+          );
+          const selection = grounded.selections.find((s) => s.questionId === question.id)!;
+          expect(selection.labels).toEqual([option.label]);
+          expect(selection.unknown).toBe(false);
+        }
+      }
+    }
+  });
+});
+
+describe("preparation identity covers the whole outgoing meaning", () => {
+  const day = FIRST_JOURNEY_DAYS.find((d) => d.day === 3)!;
+
+  /**
+   * The contract resolves the day from canonical content, so a FICTIONAL edited
+   * copy is supplied to preparation directly, leaving canonical content intact.
+   */
+  function identityFor(source: JourneyDayContent, spiritual = false): string {
+    const parsed = parseOrThrow(requestFor(day, fictionalAnswers(source), spiritual));
+    return prepareJourneyGeneration({ ...parsed, day: source }).identity.canonicalIdentity;
+  }
+
+  /** A FICTIONAL edited copy of a real day; canonical content is never mutated. */
+  function edited(mutate: (copy: JourneyDayContent) => JourneyDayContent): JourneyDayContent {
+    return mutate(structuredClone(day) as JourneyDayContent);
+  }
+
+  const variants: Array<[string, JourneyDayContent]> = [
+    ["teaching", edited((d) => {
+      d.understand.body = [...d.understand.body, "FICTIONAL added teaching line."];
+      return d;
+    })],
+    ["teaching order", edited((d) => {
+      d.understand.body = [...d.understand.body].reverse();
+      return d;
+    })],
+    ["purpose", edited((d) => {
+      d.arrive.purpose = "FICTIONAL purpose.";
+      return d;
+    })],
+    ["title", edited((d) => {
+      d.title = "FICTIONAL title";
+      return d;
+    })],
+    ["theme", edited((d) => {
+      d.theme = "FICTIONAL theme";
+      return d;
+    })],
+    ["question wording", edited((d) => {
+      d.questions[0]!.prompt = "FICTIONAL prompt wording?";
+      return d;
+    })],
+    ["practice summary", edited((d) => {
+      d.practise.reflection.summary = "FICTIONAL practice summary.";
+      return d;
+    })],
+    ["practice step order", edited((d) => {
+      d.practise.reflection.steps = [...d.practise.reflection.steps].reverse();
+      return d;
+    })],
+  ];
+
+  it("invalidates identity when supplied source material changes", () => {
+    const base = identityFor(day);
+    for (const [label, variant] of variants) {
+      expect(identityFor(variant), label).not.toBe(base);
+    }
+  });
+
+  it("invalidates identity when an authorised Scripture changes", () => {
+    const spiritualDay = FIRST_JOURNEY_DAYS.find((d) => d.practise.spiritual.scripture)!;
+    const parsed = parseOrThrow(
+      requestFor(spiritualDay, fictionalAnswers(spiritualDay), true),
+    );
+    const base = prepareJourneyGeneration(parsed).identity.canonicalIdentity;
+    const copy = structuredClone(spiritualDay) as JourneyDayContent;
+    copy.practise.spiritual.scripture!.body = "FICTIONAL passage text.";
+    const changed = prepareJourneyGeneration({ ...parsed, day: copy }).identity
+      .canonicalIdentity;
+    expect(changed).not.toBe(base);
+  });
+
+  it("invalidates identity when the actual policy text differs", () => {
+    const off = prepareJourneyGeneration(
+      parseOrThrow(requestFor(day, fictionalAnswers(day), false)),
+    );
+    expect(off.identity.canonicalIdentity).toContain("Scripture and spiritual reflection are OFF");
+    expect(off.identity.canonicalIdentity).not.toBe(identityFor(day, true));
+  });
+
+  it("keeps order-only answer permutations equivalent", () => {
+    const multi = FIRST_JOURNEY_DAYS.flatMap((d) => d.questions.map((q) => ({ d, q }))).find(
+      ({ q }) =>
+        q.select === "many" &&
+        q.options.filter((o) => !o.exclusive && !o.spiritualOnly).length > 1,
+    )!;
+    const key = answerKeyFor(multi.d, multi.q.id);
+    const [a, b] = multi.q.options.filter((o) => !o.exclusive && !o.spiritualOnly);
+    const forward = [stableAnswerId(key, a!.id), stableAnswerId(key, b!.id)];
+    const one = prepareJourneyGeneration(parseOrThrow(requestFor(multi.d, forward, false)));
+    const two = prepareJourneyGeneration(
+      parseOrThrow(requestFor(multi.d, [...forward].reverse(), false)),
+    );
+    expect(two.identity.canonicalIdentity).toBe(one.identity.canonicalIdentity);
   });
 });

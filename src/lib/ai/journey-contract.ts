@@ -52,9 +52,15 @@ export type JourneyContractErrorCode =
 export interface JourneyContractFailure {
   ok: false;
   error: JourneyContractErrorCode;
-  /** Non-sensitive detail: a step key, field name or option id only. */
+  /**
+   * Fixed internal identifiers only: a canonical field name from
+   * ALLOWED_FIELDS, a canonical step key, or a canonical option id. Untrusted
+   * caller input — arbitrary field names, supplied versions, tokens, counts —
+   * is never echoed back.
+   */
   detail?: string;
 }
+
 
 export interface JourneyStepSelection {
   questionId: string;
@@ -124,7 +130,7 @@ export function parseJourneyRequest(raw: unknown): JourneyContractResult {
 
   for (const key of Object.keys(input)) {
     if (!(ALLOWED_FIELDS as readonly string[]).includes(key)) {
-      return fail("unexpected-field", key);
+      return fail("unexpected-field");
     }
   }
   for (const key of ALLOWED_FIELDS) {
@@ -142,13 +148,13 @@ export function parseJourneyRequest(raw: unknown): JourneyContractResult {
     return fail("unknown-day");
   }
   const day = getFirstJourneyDay(input.day);
-  if (!day) return fail("unknown-day", String(input.day));
+  if (!day) return fail("unknown-day");
 
   if (typeof input.answerMeaningVersion !== "string") {
     return fail("outdated-answer-meaning");
   }
   if (input.answerMeaningVersion !== day.answerMeaningVersion) {
-    return fail("outdated-answer-meaning", input.answerMeaningVersion);
+    return fail("outdated-answer-meaning");
   }
 
   if (
@@ -159,7 +165,7 @@ export function parseJourneyRequest(raw: unknown): JourneyContractResult {
   }
   const answers = input.answers as string[];
   if (answers.length > MAX_JOURNEY_ANSWER_TOKENS) {
-    return fail("too-many-tokens", String(answers.length));
+    return fail("too-many-tokens");
   }
 
   const steps = stepsOf(day);
@@ -167,19 +173,19 @@ export function parseJourneyRequest(raw: unknown): JourneyContractResult {
   const seen = new Set<string>();
 
   for (const token of answers) {
-    if (seen.has(token)) return fail("duplicate-token", token);
+    if (seen.has(token)) return fail("duplicate-token");
     seen.add(token);
 
     const owner = steps.find(
       (s) => token.startsWith(`${s.stepKey}:`) || token.startsWith(`${s.stepKey}.`),
     );
-    if (!owner) return fail("malformed-token", token);
+    if (!owner) return fail("malformed-token");
 
     const optionId = decodeToken(token, owner.stepKey, owner.question.options);
-    if (!optionId) return fail("unknown-token", token);
+    if (!optionId) return fail("unknown-token");
 
     const list = byStep.get(owner.stepKey) ?? [];
-    if (list.includes(optionId)) return fail("duplicate-token", token);
+    if (list.includes(optionId)) return fail("duplicate-token");
     list.push(optionId);
     byStep.set(owner.stepKey, list);
   }

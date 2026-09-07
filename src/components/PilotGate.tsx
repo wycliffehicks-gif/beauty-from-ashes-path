@@ -2,7 +2,14 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { getGateStatus, unlockSite } from "@/lib/gate.functions";
+import {
+  classifyUnlockAttempt,
+  marksFieldInvalid,
+  UNLOCK_MESSAGES,
+  type UnlockOutcome,
+} from "@/lib/gate-ui";
 import { VisualMotif } from "@/components/VisualMotifs";
+
 
 /**
  * The private-pilot passcode gate.
@@ -63,24 +70,21 @@ function GateHolding() {
 function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
   const unlock = useServerFn(unlockSite);
   const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
+  const [outcome, setOutcome] = useState<Exclude<UnlockOutcome, "unlocked"> | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
     setBusy(true);
-    setError(false);
-    try {
-      const { ok } = await unlock({ data: { passcode: value } });
-      if (ok) onUnlocked();
-      else setError(true);
-    } catch {
-      setError(true);
-    } finally {
-      setBusy(false);
-    }
+    setOutcome(null);
+    const result = await classifyUnlockAttempt(() => unlock({ data: { passcode: value } }));
+    setBusy(false);
+    if (result === "unlocked") onUnlocked();
+    else setOutcome(result);
   }
+
+  const invalid = marksFieldInvalid(outcome);
 
   return (
     <div className="journey-page">
@@ -111,24 +115,25 @@ function PasscodeScreen({ onUnlocked }: { onUnlocked: () => void }) {
             spellCheck={false}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            aria-invalid={error || undefined}
-            aria-describedby={error ? "pilot-passcode-error" : undefined}
+            aria-invalid={invalid || undefined}
+            aria-describedby={outcome ? "pilot-passcode-error" : undefined}
             className="bfa-copy w-full rounded-lg border border-border bg-background p-3 text-foreground"
           />
-          {error && (
+          {outcome && (
             <p
               id="pilot-passcode-error"
               role="alert"
               className="bfa-copy-support bfa-form-error text-destructive"
-              data-testid="pilot-gate-error"
+              data-testid={outcome === "mismatch" ? "pilot-gate-error" : "pilot-gate-unavailable"}
             >
-              That code doesn’t match. Please check it and try again.
+              {UNLOCK_MESSAGES[outcome]}
             </p>
           )}
           <button type="submit" className="btn-primary-journey w-full" disabled={busy}>
             {busy ? "Checking…" : "Continue"}
           </button>
         </form>
+
 
         <p className="bfa-copy-support mt-8 text-muted-foreground">
           If something in your life feels urgent right now, help is available without a code —{" "}

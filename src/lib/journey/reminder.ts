@@ -97,10 +97,11 @@ export function notificationSupport(): NotificationSupport {
 }
 
 /**
- * Reminder state plus a single local timer. The timer only exists while the app
- * is open; nothing is queued on a server and nothing survives a closed browser.
+ * Live reminder state, shared by every subscriber. Deliberately holds NO timer:
+ * scheduling belongs to the single persistent scheduler below, so a screen that
+ * merely displays or edits the setting can never own, duplicate or cancel it.
  */
-export function useReminder() {
+function useReminderState() {
   const [settings, setSettings] = useState<ReminderSettings>(REMINDER_OFF);
   const [hydrated, setHydrated] = useState(false);
   const [support, setSupport] = useState<NotificationSupport>("unsupported");
@@ -118,6 +119,23 @@ export function useReminder() {
     };
   }, []);
 
+  return { settings, hydrated, support, setSupport };
+}
+
+/**
+ * The ONE reminder timer for the whole app, mounted once at the root so it
+ * survives moving between Your Journey, a day, a practice and Settings. It
+ * renders nothing.
+ *
+ * Behaviour is unchanged and deliberately modest: a single one-shot local
+ * notification at the chosen time, only while the app is open, with no
+ * recurrence, no server, no push token and no permission request of its own.
+ * The timer is replaced or cancelled whenever the setting changes, the reminder
+ * is turned off, the data is cleared, or this component unmounts.
+ */
+export function ReminderScheduler(): null {
+  const { settings, hydrated } = useReminderState();
+
   useEffect(() => {
     if (!hydrated || !settings.enabled) return;
     if (notificationSupport() !== "granted") return;
@@ -131,6 +149,18 @@ export function useReminder() {
     }, delay);
     return () => window.clearTimeout(timer);
   }, [hydrated, settings.enabled, settings.time]);
+
+  return null;
+}
+
+/**
+ * Controls for the Settings screen: current state plus the three actions. No
+ * timer is created here, so opening or leaving Settings cannot start a second
+ * reminder or cancel the running one.
+ */
+export function useReminder() {
+  const { settings, hydrated, support, setSupport } = useReminderState();
+
 
   const enable = useCallback(async (time: string) => {
     if (typeof window === "undefined" || !("Notification" in window)) return false;

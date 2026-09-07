@@ -139,7 +139,14 @@ export type EvalProviderResult =
       returnedModel?: string;
       /** Provider stop reason, when reported. "length" means the cap truncated it. */
       finishReason?: string;
-      usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+      usage?: {
+        promptTokens?: number;
+        completionTokens?: number;
+        totalTokens?: number;
+        /** Kept ONLY when the provider actually returns a numeric count. */
+        reasoningTokens?: number;
+      };
+
     }
   | { ok: false; error: string; detail?: string };
 

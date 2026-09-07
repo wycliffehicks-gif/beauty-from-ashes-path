@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { usePrefs, resetAll } from "@/lib/prefs";
+import { usePrefs } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
-import { clearEntitlement } from "@/lib/journey/entitlement";
-import { clearReminder, useReminder } from "@/lib/journey/reminder";
+import { useReminder } from "@/lib/journey/reminder";
 import { useStorageStatus } from "@/lib/storage-status";
 import {
   ABOUT_BEAUTY_FROM_ASHES,

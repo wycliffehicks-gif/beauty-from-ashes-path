@@ -187,3 +187,92 @@ export function StorageNotice({ suppressed = false }: { suppressed?: boolean } =
     </div>
   );
 }
+
+
+// ---------------------------------------------------------------------------
+// Outcome of the MOST RECENT explicit clear.
+//
+// This is deliberately separate from the sticky saving-availability state
+// above. "Saving is unavailable" is a property of the visit; "this clear could
+// not be confirmed" is a property of one action the person just took, and the
+// app promises to tell them when it happens. Only presence/absence and
+// success/failure are tracked — never any stored contents.
+// ---------------------------------------------------------------------------
+
+export const CLEAR_STATUS_EVENT = "bfa-clear-status";
+
+/** Exact wording approved for an unconfirmed removal. */
+export const CLEAR_UNCONFIRMED_NOTICE =
+  "Some saved app information could not be confirmed as removed. It may still remain in this browser. To remove it, use your browser’s settings to clear this app’s site data.";
+
+let clearUnconfirmed = false;
+
+function dispatchClearStatus() {
+  if (typeof window === "undefined") return;
+  try {
+    window.dispatchEvent(new CustomEvent(CLEAR_STATUS_EVENT));
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Start a fresh clear attempt. Any previous outcome is no longer relevant. */
+export function beginClearAttempt() {
+  clearUnconfirmed = false;
+  dispatchClearStatus();
+}
+
+/** Record that some part of this clear could not be confirmed as removed. */
+export function noteClearFailure() {
+  if (clearUnconfirmed) return;
+  clearUnconfirmed = true;
+  dispatchClearStatus();
+}
+
+/** True when the most recent clear could not be fully confirmed. */
+export function isClearUnconfirmed(): boolean {
+  return clearUnconfirmed;
+}
+
+/** Test-only reset of the clear-outcome state. */
+export function resetClearStatusForTests() {
+  clearUnconfirmed = false;
+}
+
+/** Subscribe to the outcome of the most recent clear. SSR-safe. */
+export function useClearStatus(): { unconfirmed: boolean; hydrated: boolean } {
+  const [unconfirmed, setUnconfirmed] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setUnconfirmed(isClearUnconfirmed());
+    sync();
+    setHydrated(true);
+    window.addEventListener(CLEAR_STATUS_EVENT, sync);
+    return () => window.removeEventListener(CLEAR_STATUS_EVENT, sync);
+  }, []);
+
+  return { unconfirmed, hydrated };
+}
+
+/**
+ * The same calm notice markup and styles as above, used only to tell the truth
+ * about a clear that could not be confirmed. It lives above the app in normal
+ * flow, so it survives the navigation to the opening and stays visible there.
+ */
+export function ClearNotice({ suppressed = false }: { suppressed?: boolean } = {}) {
+  const { unconfirmed, hydrated } = useClearStatus();
+  if (suppressed || !hydrated || !unconfirmed) return null;
+  return (
+    <div
+      data-testid="clear-notice"
+      role="status"
+      aria-live="polite"
+      className="border-b border-border bg-card px-4 py-3"
+    >
+      <p className="bfa-copy-support container-page text-center text-foreground">
+        {CLEAR_UNCONFIRMED_NOTICE}
+      </p>
+    </div>
+  );
+}

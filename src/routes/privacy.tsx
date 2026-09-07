@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { JOURNEY_AI_DISCLOSURE_SUMMARY } from "@/lib/ai/journey-disclosure";
 import { LegalPage } from "@/components/LegalPage";
 
 export const Route = createFileRoute("/privacy")({
@@ -131,6 +132,9 @@ function PrivacyPage() {
         confirmed. You can also clear this browser’s data for the app through
         your browser’s own settings.
       </p>
+
+      <h2 className="bfa-h2 font-serif">The optional AI reflection</h2>
+      <p>{JOURNEY_AI_DISCLOSURE_SUMMARY}</p>
 
       <h2 className="bfa-h2 font-serif">Private-pilot access cookie</h2>
       <p>

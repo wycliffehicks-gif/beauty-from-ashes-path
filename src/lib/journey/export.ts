@@ -19,11 +19,15 @@
 //    withheld.
 
 import { getFirstJourneyDay } from "@/content/first-journey";
-import { dayNumberFromId } from "@/content/journey";
+import { dayIdFor, dayNumberFromId } from "@/content/journey";
 import { answerKeyFor } from "@/lib/journey/reflection-engine";
 import { optionIdsFor } from "@/lib/journey/answers";
 import { presentationAnswers } from "@/lib/journey/presentation-answers";
 import { resolveReflection } from "@/lib/journey/reflection-restore";
+import { parseJourneyRequest } from "@/lib/ai/journey-contract";
+import { prepareJourneyGeneration } from "@/lib/ai/journey-policy";
+import { composeJourneyResponseIdentity } from "@/lib/ai/journey-identity";
+import { readAiReflection } from "@/lib/ai/journey-ai-store";
 
 import { answersForDay, type JourneyProgress } from "./progress";
 
@@ -52,6 +56,36 @@ interface ExportedDay {
   day: ReturnType<typeof getFirstJourneyDay>;
   answers: string[];
   reflection: string;
+  /** Present only when a saved AI reflection still matches this exact day. */
+  aiReflection: string | null;
+}
+
+/**
+ * A saved AI reflection is included ONLY when it still matches the identity of
+ * this day exactly as it now stands — same coded answers, same spiritual
+ * preference, same authored source, policy, model and validator. Anything else
+ * is omitted rather than exported under a label it no longer earns. Nothing is
+ * written, and the deterministic reflection is unaffected either way.
+ */
+function aiReflectionFor(
+  day: NonNullable<ReturnType<typeof getFirstJourneyDay>>,
+  codedAnswers: string[],
+  presentation: ExportPresentation,
+): string | null {
+  if (!presentation.hydrated) return null;
+  const parsed = parseJourneyRequest({
+    day: day.day,
+    answerMeaningVersion: day.answerMeaningVersion,
+    answers: codedAnswers,
+    spiritual: presentation.showSpiritual,
+  });
+  if (!parsed.ok) return null;
+  const identity = composeJourneyResponseIdentity(
+    prepareJourneyGeneration(parsed.request).identity,
+    "live-model",
+  );
+  const stored = readAiReflection(dayIdFor(day.day), identity.canonicalIdentity);
+  return stored ? stored.text : null;
 }
 
 /**
@@ -70,13 +104,19 @@ function exportedDays(
     const day = getFirstJourneyDay(dayNum);
     if (!day) continue;
 
-    const answers = presentationAnswers(day, answersForDay(progress, day), presentation);
+    const codedAnswers = answersForDay(progress, day);
+    const answers = presentationAnswers(day, codedAnswers, presentation);
     const { text } = resolveReflection(day, answers, {
       text: progress.reflections[dayId],
       snapshot: progress.reflectionSnapshots?.[dayId],
     });
 
-    out.push({ day, answers, reflection: text });
+    out.push({
+      day,
+      answers,
+      reflection: text,
+      aiReflection: aiReflectionFor(day, codedAnswers, presentation),
+    });
   }
 
   return out;
@@ -148,6 +188,14 @@ export function buildReflectionExport(
       lines.push(entry.reflection);
       lines.push("");
     }
+
+    // Clearly labelled as AI-written and counted separately, so the export never
+    // presents it as the written reflection prepared for this day.
+    if (entry.aiReflection && entry.aiReflection.trim().length > 0) {
+      lines.push("Your AI reflection (written by AI from your choices that day):");
+      lines.push(entry.aiReflection);
+      lines.push("");
+    }
   }
 
   return {
@@ -206,7 +254,7 @@ export function buildPrintableExport(
       if (line === "---") return '<hr class="rule" />';
       if (line.trim() === "") return '<p class="spacer"></p>';
       if (/^Day \d+ · /.test(line)) return `<h2>${escapeHtml(line)}</h2>`;
-      if (/^(Your selections:|Your reflection:)$/.test(line))
+      if (/^(Your selections:|Your reflection:|Your AI reflection \(written by AI from your choices that day\):)$/.test(line))
         return `<h3>${escapeHtml(line.replace(":", ""))}</h3>`;
       if (line.startsWith("  • ")) return `<p class="choice">${escapeHtml(line.trim())}</p>`;
       if (line.startsWith("- ")) return `<p class="prompt">${escapeHtml(line.slice(2))}</p>`;

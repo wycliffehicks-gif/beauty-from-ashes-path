@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { JOURNEY_AI_DISCLOSURE_SUMMARY } from "@/lib/ai/journey-disclosure";
 import { LegalPage } from "@/components/LegalPage";
 
 export const Route = createFileRoute("/important-information")({
@@ -86,6 +87,9 @@ function ImportantInfoPage() {
         </Link>{" "}
         for crisis lines and other kinds of help.
       </p>
+
+      <h2 className="bfa-h2 font-serif">The optional AI reflection</h2>
+      <p>{JOURNEY_AI_DISCLOSURE_SUMMARY}</p>
 
       <h2 className="bfa-h2 font-serif">This app may complement therapy</h2>
       <p>

@@ -27,6 +27,11 @@ import {
 
 import { ENTITLEMENT_EVENT, ENTITLEMENT_STORAGE_KEY } from "./entitlement";
 import { REMINDER_EVENT, REMINDER_STORAGE_KEY } from "./reminder";
+import {
+  JOURNEY_AI_CONSENT_KEY,
+  JOURNEY_AI_EVENT,
+  JOURNEY_AI_STORAGE_KEY,
+} from "@/lib/ai/journey-ai-store";
 
 import {
   MAX_MEANING_VERSIONS_PER_DAY,
@@ -681,6 +686,10 @@ export function clearJourney() {
     ...APP_OWNED_SESSION_KEYS,
     ENTITLEMENT_STORAGE_KEY,
     REMINDER_STORAGE_KEY,
+    // Saved AI reflections and the recorded AI choice are named too, so a
+    // failed enumeration cannot silently leave either behind.
+    JOURNEY_AI_STORAGE_KEY,
+    JOURNEY_AI_CONSENT_KEY,
   ];
 
   // localStorage removals go through the shared layer, so a removal the browser
@@ -720,6 +729,7 @@ export function clearJourney() {
     "bfa-prefs-change",
     ENTITLEMENT_EVENT,
     REMINDER_EVENT,
+    JOURNEY_AI_EVENT,
   ]) {
     try {
       window.dispatchEvent(new CustomEvent(event));

@@ -21,7 +21,9 @@ import {
 import type { JourneyRequest } from "@/lib/ai/journey-contract";
 import { JOURNEY_CONTRACT_VERSION } from "@/lib/ai/journey-contract";
 
-export const JOURNEY_POLICY_VERSION = "journey-p2";
+// Bumped from "journey-p2" when the explicit quality standard was added, so any
+// response identity produced under the previous policy no longer matches.
+export const JOURNEY_POLICY_VERSION = "journey-p3";
 
 /**
  * Provenance of a COMPLETED response that a later integration may show. It

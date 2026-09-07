@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { JOURNEY_AI_DISCLOSURE_SUMMARY } from "@/lib/ai/journey-disclosure";
 import { LegalPage } from "@/components/LegalPage";
 
 export const Route = createFileRoute("/important-information")({

@@ -52,9 +52,15 @@ export type JourneyContractErrorCode =
 export interface JourneyContractFailure {
   ok: false;
   error: JourneyContractErrorCode;
-  /** Non-sensitive detail: a step key, field name or option id only. */
+  /**
+   * Fixed internal identifiers only: a canonical field name from
+   * ALLOWED_FIELDS, a canonical step key, or a canonical option id. Untrusted
+   * caller input — arbitrary field names, supplied versions, tokens, counts —
+   * is never echoed back.
+   */
   detail?: string;
 }
+
 
 export interface JourneyStepSelection {
   questionId: string;

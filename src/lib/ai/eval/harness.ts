@@ -109,7 +109,11 @@ export interface EvalPayloadManifest {
   day: number;
   fingerprint: string;
   spiritualAuthorised: boolean;
+  profileId: string;
+  profileVersion: string;
+  inputCharCap: number;
   systemPolicyChars: number;
+
   groundedSourceChars: number;
   totalChars: number;
   /** Exact top-level grounded keys included in the outgoing body. */

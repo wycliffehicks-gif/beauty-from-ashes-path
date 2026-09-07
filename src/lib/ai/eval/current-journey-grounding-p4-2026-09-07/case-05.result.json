@@ -1,0 +1,47 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 5,
+  "request": {
+    "day": 5,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.forward:grieve",
+      "q.holdback:energy",
+      "step:wait"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 6452,
+  "expectedIdentitySha256": "ef0639ac1080a0e53400149ca5c0d5b9cefbc0ae4670ffa7ae1c6640952d4e4f",
+  "requestSha256": "db25a862d6d43f69fa3ba6afc1e4c3092ccb7c232431f231f6a9383456251d5e",
+  "startedAt": "2026-09-07T21:21:08.015Z",
+  "finishedAt": "2026-09-07T21:21:14.154Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It is completely understandable for a quiet desire to make room for grief—at your own pace—to exist alongside real concerns about your energy, health, or capacity. Reaching toward what needs attention while also listening to your limits does not mean you are divided against yourself; it simply honours both what you care about and what you can carry right now.\n\nChoosing to revisit these pulls at a later time, without forcing any immediate decisions, may offer a helpful way to protect your well-being. Giving yourself permission to pause lets your longing for movement and your need for caution sit together quietly, without requiring anything to be resolved today. \n\nSometimes, simply letting both realities be true without rushing to fix them is the most supportive stance you can take for yourself.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1329,
+      "outputTokens": 1127,
+      "reasoningTokens": 975,
+      "totalTokens": 2456
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "ef0639ac1080a0e53400149ca5c0d5b9cefbc0ae4670ffa7ae1c6640952d4e4f",
+    "usage": {
+      "inputTokens": 1329,
+      "outputTokens": 1127,
+      "reasoningTokens": 975,
+      "totalTokens": 2456
+    }
+  }
+}

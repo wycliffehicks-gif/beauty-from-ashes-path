@@ -1,0 +1,48 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 9,
+  "request": {
+    "day": 9,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.practice:lament",
+      "q.where:faith",
+      "q.where:self",
+      "step:none"
+    ],
+    "spiritual": true
+  },
+  "preparedChars": 8604,
+  "expectedIdentitySha256": "654df51eb67cafc943974750b4429d4f5497adef742a245dec6e56999e2cfc73",
+  "requestSha256": "42025eb86534524ba05d68716a04a81581b892f781943a5729487a377d8974ab",
+  "startedAt": "2026-09-07T21:21:14.155Z",
+  "finishedAt": "2026-09-07T21:21:29.053Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "It can be a significant thing to consider naming grief, anger, disappointment, or longing, even if only in private. Thinking about how those words might sound in how you speak to yourself, or within your spiritual life, keeps the focus on what is honest rather than what is tidy. Making room for one plain phrase internally allows hard feelings to exist without needing to explain them or rush to fix them.\n\nIn the spirit of Psalm 62:8, which invites people to pour out their hearts, there is permission to bring raw truth into spiritual spaces. That ancient invitation does not require you to feel a sudden sense of ease or to force a state of trust. It simply offers a space where disappointment or longing can be brought as they are, without any expectation that you must tidy them up.\n\nConcluding that no step feels right today is a complete and valid response. You do not need to push yourself into a practice, a prayer, or an action to make this time useful. Pausing right here honours your current capacity and keeps your choices entirely your own.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1802,
+      "outputTokens": 1724,
+      "reasoningTokens": 1510,
+      "totalTokens": 3526
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "654df51eb67cafc943974750b4429d4f5497adef742a245dec6e56999e2cfc73",
+    "usage": {
+      "inputTokens": 1802,
+      "outputTokens": 1724,
+      "reasoningTokens": 1510,
+      "totalTokens": 3526
+    }
+  }
+}

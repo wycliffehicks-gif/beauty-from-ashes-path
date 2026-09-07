@@ -1,0 +1,50 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 10,
+  "request": {
+    "day": 10,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.different:named",
+      "q.different:nothing",
+      "q.unfinished:grief",
+      "q.unfinished:relationship",
+      "q.unfinished:faith",
+      "step:unavailable"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 7633,
+  "expectedIdentitySha256": "8e01dc5d634fe67599de290ae92c245f11e7b5ae5cc91ad34a065014cfe31658",
+  "requestSha256": "b052803c7aeccce5e92065c6a527d506d72b53c9319b3c15d3c4ee93c1e6db1a",
+  "startedAt": "2026-09-07T21:21:29.054Z",
+  "finishedAt": "2026-09-07T21:21:42.958Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "There can be a quiet shift in simply finding words for an experience, allowing language to slightly alter how you relate to what has happened. At the same time, holding an idea that resonates does not mean everything falls neatly into place. It is entirely valid for things to remain unsettled and incomplete as you reach this stopping point.\n\nGrief and loss often need far more time and room than a structured companion can provide, and relational ties can remain open without any requirement for contact or reconciliation. Recognizing that a next step might carry weight, while also honouring that no step feels safe or accessible right now, is an important boundary to respect. \n\nThe integration practice is simply an invitation to notice what feels worth keeping near and what can be left unfinished. You are allowed to carry forward only what is workable today, leaving the rest open without needing to force a resolution.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1580,
+      "outputTokens": 1746,
+      "reasoningTokens": 1573,
+      "totalTokens": 3326
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "8e01dc5d634fe67599de290ae92c245f11e7b5ae5cc91ad34a065014cfe31658",
+    "usage": {
+      "inputTokens": 1580,
+      "outputTokens": 1746,
+      "reasoningTokens": 1573,
+      "totalTokens": 3326
+    }
+  }
+}

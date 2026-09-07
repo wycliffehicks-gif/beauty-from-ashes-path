@@ -1,0 +1,22 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 9,
+  "request": {
+    "day": 9,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.practice:lament",
+      "q.where:faith",
+      "q.where:self",
+      "step:none"
+    ],
+    "spiritual": true
+  },
+  "preparedChars": 8604,
+  "expectedIdentitySha256": "654df51eb67cafc943974750b4429d4f5497adef742a245dec6e56999e2cfc73",
+  "requestSha256": "42025eb86534524ba05d68716a04a81581b892f781943a5729487a377d8974ab",
+  "startedAt": "2026-09-07T21:21:14.155Z",
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000
+}

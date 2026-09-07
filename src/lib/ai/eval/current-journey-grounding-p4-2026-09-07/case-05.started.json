@@ -1,0 +1,21 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 5,
+  "request": {
+    "day": 5,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.forward:grieve",
+      "q.holdback:energy",
+      "step:wait"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 6452,
+  "expectedIdentitySha256": "ef0639ac1080a0e53400149ca5c0d5b9cefbc0ae4670ffa7ae1c6640952d4e4f",
+  "requestSha256": "db25a862d6d43f69fa3ba6afc1e4c3092ccb7c232431f231f6a9383456251d5e",
+  "startedAt": "2026-09-07T21:21:08.015Z",
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "current-journey-grounding-p4-evaluation-1",
+  "day": 3,
+  "request": {
+    "day": 3,
+    "answerMeaningVersion": "v1",
+    "answers": [
+      "q.carrying:grief",
+      "q.carrying:anger",
+      "q.shows:sleep",
+      "q.shows:patience",
+      "step:prepare"
+    ],
+    "spiritual": false
+  },
+  "preparedChars": 6414,
+  "expectedIdentitySha256": "ddac34c0daf947ffb13e4afd40ab1ea6126a32448e5fcfa1b0fec0683c65c1ec",
+  "requestSha256": "21668fcb91d3f0f32667444992a6cbb533486fc6798352af32c33f293f4312f9",
+  "startedAt": "2026-09-07T21:20:54.221Z",
+  "finishedAt": "2026-09-07T21:21:08.014Z",
+  "status": "accepted",
+  "gatewayFetchAttempts": 1,
+  "modelRequested": "google/gemini-3.6-flash",
+  "maxOutputTokens": 4096,
+  "deadlineMs": 45000,
+  "candidate": {
+    "text": "When you begin to put plain language to what you are carrying, it can hold both the quiet weight of grief—where something or someone has been lost or changed—and the edge of anger, that sense that something is not right. These experiences rarely remain abstract; they can disrupt the rhythm of your sleep, making it difficult to fall asleep, stay asleep, or wake rested, and they can wear down the patience you hold for the people nearest to you.\n\nGiving a name to these parts of your experience is not a fix, nor does it mean grief or anger is all that you are. Sometimes placing a plain word next to an internal strain simply allows you to see one piece of it a little more clearly, offering a small amount of space between yourself and what you are feeling.\n\nChoosing an internal step today—letting the act of finding a word, or choosing not to, be the step itself—honours your own boundaries without requiring anything outward. There is no need to expand these words into a fuller story or push for any resolution before you are ready.",
+    "candidateTextOmitted": false,
+    "returnedModel": "google/gemini-3.6-flash",
+    "finishReason": "stop",
+    "usage": {
+      "inputTokens": 1354,
+      "outputTokens": 1697,
+      "reasoningTokens": 1481,
+      "totalTokens": 3051
+    }
+  },
+  "verdict": {
+    "ok": true,
+    "acceptedAsLiveAi": true,
+    "actualIdentitySha256": "ddac34c0daf947ffb13e4afd40ab1ea6126a32448e5fcfa1b0fec0683c65c1ec",
+    "usage": {
+      "inputTokens": 1354,
+      "outputTokens": 1697,
+      "reasoningTokens": 1481,
+      "totalTokens": 3051
+    }
+  }
+}

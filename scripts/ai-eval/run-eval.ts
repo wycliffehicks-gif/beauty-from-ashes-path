@@ -16,6 +16,7 @@ import {
   buildEvalPayload,
   runEvalFixture,
   EVAL_MAX_CALLS_PER_BATCH,
+  classifyEvalIssues,
   type EvalProvider,
 } from "@/lib/ai/eval/harness";
 import { createEvalGatewayProvider } from "@/lib/ai/eval/gateway-provider.server";
@@ -84,8 +85,16 @@ async function main() {
         `\n=== ${record.fixtureId} [${record.status}] ${record.durationMs}ms model=${record.returnedModel ?? record.requestedModel ?? "n/a"} usage=${JSON.stringify(record.usage ?? {})}`,
       );
       console.log(record.output ?? `error: ${record.error}`);
-      if (record.status === "failure") {
-        console.log("Stopping the batch after a failure.");
+      if (record.status === "rejected") {
+        console.log(`REJECTED (review required): ${record.acceptanceSummary}`);
+      }
+      const seriousPolicyIssue = classifyEvalIssues(record.validationIssues).seriousPolicyIssue;
+      if (record.status === "failure" || seriousPolicyIssue) {
+        console.log(
+          seriousPolicyIssue
+            ? "Stopping the batch after a serious safety/policy flag. No retry."
+            : "Stopping the batch after a failure. No retry.",
+        );
         break;
       }
     } else {

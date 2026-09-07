@@ -15,6 +15,9 @@ import {
 
 export const EVAL_HARNESS_VERSION = "eval-h1";
 
+/** Bumped when acceptance/validation semantics change. */
+export const EVAL_VALIDATOR_VERSION = "eval-v2";
+
 /** Hard caps. Never silently relaxed if a provider rejects them. */
 export const EVAL_INPUT_CHAR_CAP = 9000;
 export const EVAL_MAX_OUTPUT_TOKENS = 1200;
@@ -38,7 +41,15 @@ export const EVAL_SYSTEM_POLICY = [
   "Return plain prose only: no markdown, no headings, no lists, no code fences. Aim for 120 to 240 words.",
 ].join("\n");
 
-export type EvalStatus = "prepared" | "mock" | "ai_generated" | "failure";
+/**
+ * Generation provenance and quality acceptance are separate.
+ * "ai_generated" / "mock" mean a complete, accepted reflection.
+ * "rejected" means real generated text that is NOT acceptable as a finished
+ * reflection and needs human review. "failure" means no usable text at all.
+ */
+export type EvalStatus = "prepared" | "mock" | "ai_generated" | "rejected" | "failure";
+
+export type EvalProvenance = "live" | "mock" | "none";
 
 export interface EvalPayload {
   fixtureId: EvalFixtureId;
@@ -117,8 +128,17 @@ export interface EvalRunRecord {
   output?: string;
   usage?: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
   error?: string;
-  /** Non-fatal observations about the returned text. */
+  /** Observations about the returned text. Any issue blocks acceptance. */
   validationIssues: string[];
+  /** Where the text came from, independent of whether it was acceptable. */
+  provenance: EvalProvenance;
+  /** True only for complete text with no validation issues. */
+  accepted: boolean;
+  /** True when a human must read the retained output before any conclusion. */
+  reviewRequired: boolean;
+  /** Conservative, non-clinical explanation of the acceptance decision. */
+  acceptanceSummary: string;
+  validatorVersion: string;
   manifest: EvalPayloadManifest;
 }
 
@@ -245,6 +265,44 @@ export function validateEvalOutput(
   return { ok: !fatal, issues };
 }
 
+/** Issue prefixes that indicate a policy or spiritual-boundary breach. */
+const POLICY_ISSUE_PREFIXES = ["spiritual-language:", "overreach:"];
+
+/**
+ * Acceptance is deliberately conservative and structural only. These checks do
+ * NOT establish clinical safety, and a flagged phrase is not necessarily
+ * harmful — it means a human must read the retained output.
+ */
+export function classifyEvalIssues(issues: string[]): {
+  accepted: boolean;
+  reviewRequired: boolean;
+  seriousPolicyIssue: boolean;
+  summary: string;
+} {
+  const policy = issues.filter((i) => POLICY_ISSUE_PREFIXES.some((p) => i.startsWith(p)));
+  const seriousPolicyIssue = policy.length > 0;
+  if (issues.length === 0) {
+    return {
+      accepted: true,
+      reviewRequired: false,
+      seriousPolicyIssue: false,
+      summary:
+        "No structural issues detected. Structural checks do not establish emotional or clinical safety; a human reviewer still reads the text.",
+    };
+  }
+  return {
+    accepted: false,
+    reviewRequired: true,
+    seriousPolicyIssue,
+    summary:
+      (seriousPolicyIssue
+        ? "Not acceptable as a finished reflection: a possible policy or spiritual-boundary breach was flagged. "
+        : "Not acceptable as a finished reflection: the text appears incomplete or malformed. ") +
+      "Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: " +
+      issues.join(", "),
+  };
+}
+
 /**
  * Run one fixture through an injected provider. Exactly one call is attempted;
  * there are no retries. A mock provider can never produce `ai_generated`.
@@ -266,11 +324,22 @@ export async function runEvalFixture(
     fingerprint: payload.fingerprint,
     providerName: provider.name,
     providerKind: provider.kind,
+    provenance: provider.kind === "live" ? ("live" as const) : ("mock" as const),
+    validatorVersion: EVAL_VALIDATOR_VERSION,
     manifest,
   };
 
   if (opts.dryRun) {
-    return { ...base, status: "prepared", durationMs: 0, validationIssues: [] };
+    return {
+      ...base,
+      status: "prepared",
+      provenance: "none",
+      durationMs: 0,
+      validationIssues: [],
+      accepted: false,
+      reviewRequired: false,
+      acceptanceSummary: "Payload prepared only. No text was generated.",
+    };
   }
 
   const started = Date.now();
@@ -290,6 +359,9 @@ export async function runEvalFixture(
       durationMs: Date.now() - started,
       error: error instanceof Error ? error.name : "provider-threw",
       validationIssues: [],
+      accepted: false,
+      reviewRequired: false,
+      acceptanceSummary: "The provider threw before returning any text.",
     };
   }
   const durationMs = Date.now() - started;
@@ -301,6 +373,9 @@ export async function runEvalFixture(
       durationMs,
       error: result.detail ? `${result.error}:${result.detail}` : result.error,
       validationIssues: [],
+      accepted: false,
+      reviewRequired: false,
+      acceptanceSummary: "No usable text was returned.",
     };
   }
 
@@ -309,29 +384,46 @@ export async function runEvalFixture(
     ...(result.finishReason ? { finishReason: result.finishReason } : {}),
   });
 
-  if (!validation.ok) {
-    return {
-      ...base,
-      status: "failure",
-      durationMs,
-      requestedModel: result.requestedModel,
-      ...(result.returnedModel ? { returnedModel: result.returnedModel } : {}),
-      ...(result.finishReason ? { finishReason: result.finishReason } : {}),
-      error: validation.issues.join(","),
-      validationIssues: validation.issues,
-      ...(result.usage ? { usage: result.usage } : {}),
-    };
-  }
+  const classified = classifyEvalIssues(validation.issues);
 
-  return {
+  // Metadata is identical whatever the acceptance decision: the raw fictional
+  // output and the model/usage/timing facts are always retained for review.
+  const common = {
     ...base,
-    status: provider.kind === "live" ? "ai_generated" : "mock",
     durationMs,
     requestedModel: result.requestedModel,
     ...(result.returnedModel ? { returnedModel: result.returnedModel } : {}),
     ...(result.finishReason ? { finishReason: result.finishReason } : {}),
     output: result.text.trim(),
     validationIssues: validation.issues,
+    accepted: classified.accepted,
+    reviewRequired: classified.reviewRequired,
+    acceptanceSummary: classified.summary,
     ...(result.usage ? { usage: result.usage } : {}),
+  };
+
+  if (!validation.ok) {
+    return {
+      ...common,
+      status: "failure",
+      error: validation.issues.join(","),
+      accepted: false,
+      reviewRequired: true,
+      acceptanceSummary:
+        "No usable reflection text: " + validation.issues.join(", "),
+    };
+  }
+
+  if (!classified.accepted) {
+    return {
+      ...common,
+      status: "rejected",
+      error: validation.issues.join(","),
+    };
+  }
+
+  return {
+    ...common,
+    status: provider.kind === "live" ? "ai_generated" : "mock",
   };
 }

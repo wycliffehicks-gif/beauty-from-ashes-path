@@ -51,6 +51,28 @@
       "promptTokens": 1146,
       "completionTokens": 1196,
       "totalTokens": 2342
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 38,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   },
   {
@@ -105,6 +127,28 @@
       "promptTokens": 1145,
       "completionTokens": 1196,
       "totalTokens": 2341
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 36,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   },
   {
@@ -157,6 +201,28 @@
       "promptTokens": 1119,
       "completionTokens": 1195,
       "totalTokens": 2314
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 38,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   },
   {
@@ -211,6 +277,28 @@
       "promptTokens": 1155,
       "completionTokens": 1196,
       "totalTokens": 2351
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 41,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   },
   {
@@ -266,6 +354,28 @@
       "promptTokens": 1792,
       "completionTokens": 1196,
       "totalTokens": 2988
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 38,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   },
   {
@@ -319,6 +429,28 @@
       "promptTokens": 1347,
       "completionTokens": 1196,
       "totalTokens": 2543
+    },
+    "offlineRevalidation": {
+      "label": "OFFLINE revalidation of the historical run — no model call, no regeneration, no network request.",
+      "validatorVersion": "eval-v2",
+      "historicalRecordPreserved": true,
+      "historicalStatus": "ai_generated",
+      "historicalValidationIssues": [],
+      "historicalFinishReasonSaved": false,
+      "accepted": false,
+      "reviewRequired": true,
+      "issues": [
+        "possibly-truncated"
+      ],
+      "outputWordCount": 42,
+      "summary": "Not acceptable as a finished reflection: the text appears incomplete or malformed. Flags are conservative signals, not proof of harm or of clinical safety. Review the retained output. Issues: possibly-truncated",
+      "notes": [
+        "This record was produced BEFORE post-run truncation detection existed, so its original validationIssues array is empty and no finish_reason was saved. It was never originally validated against the current checks.",
+        "The saved output is a short unfinished fragment and is NOT acceptable as a finished reflection.",
+        "It is reasonable to infer the 1200-token engineering output cap contributed to the incompleteness, but the saved usage has no reasoning-token breakdown and no finish_reason, so no exact internal-thinking allocation is directly verified here.",
+        "The 1200-token cap was an engineering test limit for this bounded harness, not a founder refusal or a consent boundary.",
+        "Structural flags do not establish emotional or clinical safety, and a flagged phrase is not necessarily harmful; a human reviewer reads the retained fictional output."
+      ]
     }
   }
 ]

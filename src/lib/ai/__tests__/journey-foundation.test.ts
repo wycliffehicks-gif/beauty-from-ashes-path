@@ -493,10 +493,13 @@ describe("grounding does not over-infer meaning from option ids", () => {
 describe("preparation identity covers the whole outgoing meaning", () => {
   const day = FIRST_JOURNEY_DAYS.find((d) => d.day === 3)!;
 
+  /**
+   * The contract resolves the day from canonical content, so a FICTIONAL edited
+   * copy is supplied to preparation directly, leaving canonical content intact.
+   */
   function identityFor(source: JourneyDayContent, spiritual = false): string {
-    return prepareJourneyGeneration(
-      parseOrThrow(requestFor(source, fictionalAnswers(source), spiritual)),
-    ).identity.canonicalIdentity;
+    const parsed = parseOrThrow(requestFor(day, fictionalAnswers(source), spiritual));
+    return prepareJourneyGeneration({ ...parsed, day: source }).identity.canonicalIdentity;
   }
 
   /** A FICTIONAL edited copy of a real day; canonical content is never mutated. */
@@ -548,14 +551,14 @@ describe("preparation identity covers the whole outgoing meaning", () => {
 
   it("invalidates identity when an authorised Scripture changes", () => {
     const spiritualDay = FIRST_JOURNEY_DAYS.find((d) => d.practise.spiritual.scripture)!;
-    const base = prepareJourneyGeneration(
-      parseOrThrow(requestFor(spiritualDay, fictionalAnswers(spiritualDay), true)),
-    ).identity.canonicalIdentity;
+    const parsed = parseOrThrow(
+      requestFor(spiritualDay, fictionalAnswers(spiritualDay), true),
+    );
+    const base = prepareJourneyGeneration(parsed).identity.canonicalIdentity;
     const copy = structuredClone(spiritualDay) as JourneyDayContent;
     copy.practise.spiritual.scripture!.body = "FICTIONAL passage text.";
-    const changed = prepareJourneyGeneration(
-      parseOrThrow(requestFor(copy, fictionalAnswers(copy), true)),
-    ).identity.canonicalIdentity;
+    const changed = prepareJourneyGeneration({ ...parsed, day: copy }).identity
+      .canonicalIdentity;
     expect(changed).not.toBe(base);
   });
 

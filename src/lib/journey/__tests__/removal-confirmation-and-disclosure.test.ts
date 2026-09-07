@@ -84,7 +84,12 @@ function seed() {
   storage.resetClearStatusForTests();
   local.map.set(
     "bfa.v1",
-    JSON.stringify({ agreementVersion: "2026-08-16.1", spiritualContent: true }),
+    JSON.stringify({
+      onboarded: true,
+      showSpiritual: true,
+      visitedDays: [1, 2],
+      legalAcceptance: { version: "2026-08-16.1", acceptedAt: "2026-09-01T00:00:00.000Z" },
+    }),
   );
   local.map.set(
     "bfa.journey.v1",
@@ -99,7 +104,8 @@ function expectNothingOldIsVisible() {
   expect(storage.readLocal("bfa.v1")).toBeNull();
   const p = progress.readProgress();
   expect(p.completedDays ?? []).toEqual([]);
-  expect(prefs.readPrefs().agreementVersion ?? null).toBeNull();
+  expect(prefs.readPrefs().legalAcceptance ?? null).toBeNull();
+  expect(prefs.readPrefs().showSpiritual).toBe(false);
   expect(entitlement.readEntitlement()).toEqual(entitlement.LOCKED);
   expect(reminder.readReminder().enabled).toBe(false);
 }

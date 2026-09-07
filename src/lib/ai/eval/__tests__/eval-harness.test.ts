@@ -210,6 +210,35 @@ describe("run statuses and output handling", () => {
     expect("status" in fenced && fenced.validationIssues.length).toBeGreaterThan(0);
   });
 
+  it("flags truncation reported by the provider and unfinished prose", async () => {
+    const truncating: EvalProvider = {
+      kind: "live",
+      name: "mock-truncating-provider",
+      async generate() {
+        return {
+          ok: true,
+          text: "A reflection that stops mid",
+          requestedModel: "mock/model",
+          finishReason: "length",
+        };
+      },
+    };
+    const record = await runEvalFixture("fx-day3-grief-sleep", truncating);
+    expect("status" in record && record.validationIssues).toContain(
+      "output-truncated-by-token-cap",
+    );
+    expect("finishReason" in record && record.finishReason).toBe("length");
+
+    const unfinished = await runEvalFixture(
+      "fx-day3-grief-sleep",
+      mockProvider("A reflection that stops mid", "live"),
+    );
+    expect("status" in unfinished && unfinished.validationIssues).toContain("possibly-truncated");
+    expect(validateEvalOutput("A complete sentence.", { spiritualAuthorised: false }).issues).toEqual(
+      [],
+    );
+  });
+
   it("records a provider error as failure and attempts no retry", async () => {
     let calls = 0;
     const provider: EvalProvider = {

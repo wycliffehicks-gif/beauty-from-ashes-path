@@ -77,10 +77,11 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
  * removed from there.
  */
 export const PRIVACY_SUMMARY_POINTS: string[] = [
-  "When browser storage is available, everything this app saves stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
+  "When browser storage is available, your saved journey information stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
   "There is no account, no database, no analytics, and no artificial intelligence reading anything you choose or write.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
-  "You can clear or restart everything saved here at any time, from this page.",
+  "You can ask the app to clear or restart your saved journey information from this page. If removal cannot be confirmed, the app will tell you.",
+
   "The optional Day 10 earlier-choices view is assembled only when you ask to see it. It is not saved or sent and disappears when hidden, when you leave, or when the page reloads.",
 ];
 

@@ -251,9 +251,13 @@ ${body}
 }
 
 /** Open the printable version in a new tab and offer the browser print dialog. */
-export function openPrintableExport(progress: JourneyProgress): boolean {
+export function openPrintableExport(
+  progress: JourneyProgress,
+  presentationOpts?: ExportPresentation,
+): boolean {
   if (typeof window === "undefined") return false;
-  const { html } = buildPrintableExport(progress);
+  const { html } = buildPrintableExport(progress, presentationOpts);
+
   const win = window.open("", "_blank");
   if (!win) return false;
   win.document.open();

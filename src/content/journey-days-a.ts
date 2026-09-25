@@ -536,7 +536,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             "A diagnosis is a clinical judgement made by a qualified professional after proper assessment. Naming is simply you choosing an everyday word for your own experience. This app does not assess, diagnose, label or classify you.",
         },
         {
-          term: "What does “hurt that still affects me” mean?",
+          term: "What does ‘hurt that still affects me’ mean?",
           explanation:
             "Pain from something past or ongoing that still affects you. This does not mean you have failed to move on, and it does not point to one hidden cause.",
         },
@@ -607,7 +607,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       {
         id: "shows",
         eyebrow: "Locate",
-        prompt: "Where, if anywhere, do you notice its presence or effects in life right now?",
+        prompt: "In what parts of life, if any, does this word feel relevant right now?",
         hint: "Choose any that fit. Noticing it in more than one place does not mean those experiences share the same cause.",
         select: "many",
         options: [
@@ -645,11 +645,11 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "A private sentence that names one part of what you are carrying. No full story is required.",
         steps: [
           "Choose one broad word from today, use ‘not sure,’ or keep the word private.",
-          "Choose a form that feels workable: think one sentence, write it outside the app, speak it privately, use it in prayer, or prepare it for a safe person later. Nothing has to be shared today.",
-          "Complete one stem: ‘I am carrying…’, ‘I am afraid…’, ‘What hurts is…’, ‘I feel unseen when…’ or ‘What is taking most of my energy is…’.",
+          "Keep this as broad as you need. You do not have to describe what happened or include names or identifying details. You may stop or leave the sentence unfinished.",
+          "Complete one sentence silently or somewhere outside this app: ‘I am carrying…’, ‘I am afraid that…’, ‘Something I regret is…’, ‘I feel unseen when…’ or ‘What feels heaviest today is…’.",
           "Stop after one sentence. Do not add details unless you freely choose to do so somewhere appropriate.",
           "If workable, ask: ‘What might I need after naming this—space, comfort, rest, practical help, witness, protection, or no clear response yet?’",
-          "Reorient to ordinary details around you and let the sentence rest.",
+          "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, notice up to three neutral details around you, using any sense that works comfortably for you.",
         ],
         notRequired:
           "Gentler route: choose a word without making a sentence. Read-only route: read the stems and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
@@ -689,7 +689,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         {
           id: "tell",
           label: "Share one honest sentence with someone I reasonably trust to respond with care",
-          note: "Only with someone who has consistently respected your limits and can respond without pressure, retaliation or misuse of what you share. Preparing the sentence counts.",
+          note: "Only if doing so feels safe.",
         },
         { id: "kind", label: "Say to myself, “This is real, and it is not all of me”" },
         {

@@ -720,9 +720,10 @@ redesign, no routing/storage/AI change, no publication.
   Honest Sentence gained a breadth/no-identifying-details boundary, revised
   sentence stems (“Something I regret is…”, “What feels heaviest today is…”) and an
   any-sense outward alternative; One Honest Step `hold` and `tell` labels, note and
-  reflection lines revised; Christian-path `notRequired` allows remaining with
-  question, anger, doubt or silence; skipped/no-outward-step reflection line
-  rewritten.
+  reflection lines revised; Christian-path `notRequired` explicitly allows
+  remaining with the question, anger, doubt or silence without resolving lament or
+  moving toward praise; skipped/no-outward-step reflection line rewritten and the
+  close heading set to “One honest beginning”.
 - **Tests**: Day 3 coverage added to `src/lib/journey/__tests__/selection.test.ts`,
   including `unsure` exclusivity in both directions, absence of “Unresolved hurt”,
   Locate wording, practice wording and the new close heading.

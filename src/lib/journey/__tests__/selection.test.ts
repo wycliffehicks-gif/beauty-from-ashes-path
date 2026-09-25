@@ -165,7 +165,9 @@ describe("Day 3 wording refinement", () => {
     const idsList = carrying.options.map((o) => o.id);
     const unsure = idsList.indexOf("unsure");
     const grief = idsList.indexOf("grief");
-    expect(toggleSelection(carrying, [grief], unsure)).toEqual([unsure]);
+    const fear = idsList.indexOf("fear");
+    expect(carrying.options[unsure]?.exclusive).toBe(true);
+    expect(toggleSelection(carrying, [grief, fear], unsure)).toEqual([unsure]);
     expect(toggleSelection(carrying, [unsure], grief)).toEqual([grief]);
   });
 
@@ -175,24 +177,45 @@ describe("Day 3 wording refinement", () => {
     expect(carrying.options.find((o) => o.id === "hurt")!.label).toBe(
       "Hurt that still affects me — something painful still matters",
     );
+    expect(day3.understand.info?.find((n) => n.term.includes("hurt"))).toEqual({
+      term: "What does ‘hurt that still affects me’ mean?",
+      explanation:
+        "Pain from something past or ongoing that still affects you. This does not mean you have failed to move on, and it does not point to one hidden cause.",
+    });
+    expect(carrying.echo?.byOption.hurt).toBe(
+      "You chose hurt that still affects you as part of what you are carrying. You do not need to tell the whole story or decide what to do with it here.",
+    );
+    expect(day3.reflection.sections.find((s) => s.id === "hearing")?.lines?.hurt).toBe(
+      "You chose hurt that still affects you. You do not need to tell the whole story or decide what to do with it today.",
+    );
   });
 
   it("uses the revised Locate prompt and non-shared-cause hint", () => {
-    expect(shows.prompt).toContain("notice its presence or effects");
-    expect(shows.hint).toContain("does not mean those experiences share the same cause");
+    expect(shows.prompt).toBe(
+      "In what parts of life, if any, does this word feel relevant right now?",
+    );
+    expect(shows.hint).toBe(
+      "Choose any that fit. Noticing it in more than one place does not mean those experiences share the same cause.",
+    );
+    expect(day3.reflection.sections.find((s) => s.id === "underneath")?.title).toBe(
+      "What you noticed alongside it",
+    );
   });
 
   it("includes the refined One Honest Sentence wording", () => {
     const steps = day3.practise.reflection.steps.join(" ");
-    expect(steps).toContain("What hurts is");
-    expect(steps).toContain("What is taking most of my energy is");
-    expect(steps).toContain("Nothing has to be shared today");
-    expect(steps).toContain("Reorient to ordinary details");
+    expect(steps).toContain("Something I regret is");
+    expect(steps).toContain("What feels heaviest today is");
+    expect(steps).toContain("identifying details");
+    expect(steps).toContain("using any sense");
   });
 
   it("uses the revised hold step and close heading", () => {
     expect(day3.step.options.find((o) => o.id === "hold")!.label).toContain(
       "without trying to solve it",
+    );
+    expect(day3.step.options.find((o) => o.id === "tell")!.note).toBe(
+      "Only if doing so feels safe.",
     );
     expect(day3.close.heading).toBe("One honest beginning");
   });

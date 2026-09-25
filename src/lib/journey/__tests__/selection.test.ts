@@ -125,7 +125,7 @@ describe("Day 3 revision", () => {
 
   it("uses the One Honest Sentence practice with an outward alternative", () => {
     expect(day3.practise.reflection.title).toContain("One Honest Sentence");
-    expect(day3.practise.reflection.steps.join(" ")).toContain("Reorient to ordinary details");
+    expect(day3.practise.reflection.steps.join(" ")).toContain("up to three neutral details");
     expect(day3.practise.reflection.steps.join(" ")).not.toMatch(/Let it go/);
   });
 
@@ -214,9 +214,8 @@ describe("Day 3 wording refinement", () => {
     expect(day3.step.options.find((o) => o.id === "hold")!.label).toContain(
       "without trying to solve it",
     );
-    expect(day3.step.options.find((o) => o.id === "tell")!.note).toBe(
-      "Only if doing so feels safe.",
-    );
+    const tell = day3.step.options.find((o) => o.id === "tell");
+    expect(tell?.note).toBe("Only if doing so feels safe.");
     expect(day3.close.heading).toBe("One honest beginning");
   });
 });

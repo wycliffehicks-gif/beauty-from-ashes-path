@@ -161,29 +161,31 @@ function Opening() {
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-1">
+        <header className="grid grid-cols-2 items-center gap-2 bfa-top-safe pb-1 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
           {step > 0 ? (
             <button
               type="button"
               onClick={goBack}
-              className="journey-chrome-btn"
+              className="journey-chrome-btn journey-chrome-btn-labelled col-start-1 row-start-1 justify-self-start"
               aria-label="Back"
             >
-              ←
+              <span aria-hidden className="shrink-0">←</span>
+              <span className="min-w-0 [overflow-wrap:anywhere]">Back</span>
             </button>
           ) : (
             <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           )}
-          <p className="journey-chrome-label min-w-0 truncate text-center text-muted-foreground">
+          <p className="journey-chrome-label col-span-2 row-start-2 min-w-0 text-center text-muted-foreground sm:col-span-1 sm:col-start-2 sm:row-start-1">
             {step + 1} of {TOTAL}
           </p>
           <Link
             to="/support"
-            className="journey-chrome-btn"
+            className="journey-chrome-btn journey-chrome-btn-labelled col-start-2 row-start-1 justify-self-end sm:col-start-3"
             aria-label="Support and safety"
             title="Support and safety"
           >
-            <SupportIcon />
+            <span aria-hidden className="shrink-0"><SupportIcon /></span>
+            <span className="min-w-0 [overflow-wrap:anywhere]">Support</span>
           </Link>
         </header>
 

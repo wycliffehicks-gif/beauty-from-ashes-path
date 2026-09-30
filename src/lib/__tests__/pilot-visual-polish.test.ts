@@ -43,6 +43,39 @@ describe("top safe areas and chrome", () => {
     expect(root).toContain('{ name: "theme-color", content: "#F6F2EA" }');
     expect(root).toContain("viewport-fit=cover");
   });
+
+  it("shows labelled controls and reflows narrow day and onboarding headers", () => {
+    expect(journeyScreen).toContain(">Home</span>");
+    expect(journeyScreen).toContain(">Settings</span>");
+    expect(onboarding).toContain(">Back</span>");
+    expect(onboarding).toContain(">Support</span>");
+    for (const src of [journeyScreen, onboarding]) {
+      expect(src).toContain("grid-cols-2");
+      expect(src).toContain("col-span-2 row-start-2");
+      expect(src).not.toContain("truncate text-center");
+    }
+    expect(shell).toContain("grid grid-cols-2");
+    expect(styles).toContain(".journey-chrome-btn-labelled {");
+    expect(styles).toContain("gap: 0.375rem;");
+    expect(styles).toContain("flex-wrap: wrap;");
+  });
+});
+
+describe("optional answers and stage progress", () => {
+  it("keeps Continue ordinary and the optional helper visible", () => {
+    expect(day).toContain('continueLabel="Continue"');
+    expect(day).toContain('continueHint="Answering is optional."');
+    expect(day).not.toContain("Continue without answering");
+  });
+
+  it("pairs the visible zero-based stage conversion with accessible value text", () => {
+    expect(journeyScreen).toContain(
+      "aria-valuetext={`Stage ${progress.current + 1} of ${progress.total}`}",
+    );
+    expect(journeyScreen).toContain("Stage {progress.current + 1} of {progress.total}");
+    expect(journeyScreen).toContain("aria-valuenow={progress.current + 1}");
+    expect(journeyScreen).toContain('aria-hidden="true"');
+  });
 });
 
 describe("truthful return controls", () => {

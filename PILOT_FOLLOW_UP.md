@@ -22,3 +22,5 @@
 - Regroup or add subheadings to onboarding only if participants find the first two screens too demanding.
 
 Preserve the current content and Quiet Contour / Living Gold Thread identity. Do not add pressured streaks or expand features during this pilot follow-up.
+
+Visual readiness is separate from clinical, privacy, and technical launch readiness.

@@ -19,17 +19,26 @@ function ShellLayout() {
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-2">
+        <header className="grid grid-cols-2 items-center gap-2 bfa-top-safe pb-2">
           {isHome ? (
             <span aria-hidden className="min-h-[44px] min-w-[44px]" />
           ) : (
-            <Link to="/" aria-label="Home — Your Journey" className="journey-chrome-btn">
-              <JourneyIcon />
+            <Link
+              to="/"
+              aria-label="Home — Your Journey"
+              className="journey-chrome-btn journey-chrome-btn-labelled justify-self-start"
+            >
+              <span aria-hidden className="shrink-0"><JourneyIcon /></span>
+              <span className="min-w-0 [overflow-wrap:anywhere]">Home</span>
             </Link>
           )}
-          <span aria-hidden />
-          <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
-            <SettingsIcon />
+          <Link
+            to="/settings"
+            aria-label="Settings"
+            className="journey-chrome-btn journey-chrome-btn-labelled justify-self-end"
+          >
+            <span aria-hidden className="shrink-0"><SettingsIcon /></span>
+            <span className="min-w-0 [overflow-wrap:anywhere]">Settings</span>
           </Link>
 
         </header>

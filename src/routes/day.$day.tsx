@@ -871,7 +871,8 @@ function QuestionScreenShell({
       onBack={onBack}
       backLabel="← Back"
       onContinue={onNext}
-      continueLabel={selected.length > 0 ? "Continue" : "Continue without answering"}
+      continueLabel="Continue"
+      continueHint="Answering is optional."
       focusKey={focusKey}
     >
       {body}

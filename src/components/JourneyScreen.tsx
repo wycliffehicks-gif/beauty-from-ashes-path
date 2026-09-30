@@ -145,40 +145,52 @@ export function JourneyScreen({
   return (
     <div className="journey-page">
       <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="journey-chrome grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 bfa-top-safe pb-3">
+        <header className="journey-chrome grid grid-cols-2 items-center gap-2 bfa-top-safe pb-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
           <Link
             to="/"
             aria-label="Home — Your Journey"
-            className="journey-chrome-btn"
+            className="journey-chrome-btn journey-chrome-btn-labelled col-start-1 row-start-1 justify-self-start"
           >
-            <JourneyIcon />
+            <span aria-hidden className="shrink-0"><JourneyIcon /></span>
+            <span className="min-w-0 [overflow-wrap:anywhere]">Home</span>
           </Link>
-          <p className="journey-chrome-label min-w-0 truncate text-center text-muted-foreground">
+          <p className="journey-chrome-label col-span-2 row-start-2 min-w-0 text-center text-muted-foreground sm:col-span-1 sm:col-start-2 sm:row-start-1">
             {label ?? ""}
           </p>
 
-          <Link to="/settings" aria-label="Settings" className="journey-chrome-btn">
-            <SettingsIcon />
+          <Link
+            to="/settings"
+            aria-label="Settings"
+            className="journey-chrome-btn journey-chrome-btn-labelled col-start-2 row-start-1 justify-self-end sm:col-start-3"
+          >
+            <span aria-hidden className="shrink-0"><SettingsIcon /></span>
+            <span className="min-w-0 [overflow-wrap:anywhere]">Settings</span>
           </Link>
 
         </header>
 
         {progress && progress.total > 1 && (
           <div
-            className="mb-5 flex gap-1"
+            className="mb-5"
             role="progressbar"
             aria-valuemin={1}
             aria-valuemax={progress.total}
             aria-valuenow={progress.current + 1}
+            aria-valuetext={`Stage ${progress.current + 1} of ${progress.total}`}
             aria-label="Progress through this day"
           >
-            {Array.from({ length: progress.total }).map((_, idx) => (
-              <span
-                key={idx}
-                data-state={idx <= progress.current ? "reached" : "unreached"}
-                className="bfa-progress-segment"
-              />
-            ))}
+            <p className="bfa-copy-meta mb-2 text-muted-foreground">
+              Stage {progress.current + 1} of {progress.total}
+            </p>
+            <div className="flex gap-1" aria-hidden="true">
+              {Array.from({ length: progress.total }).map((_, idx) => (
+                <span
+                  key={idx}
+                  data-state={idx <= progress.current ? "reached" : "unreached"}
+                  className="bfa-progress-segment"
+                />
+              ))}
+            </div>
           </div>
         )}
 

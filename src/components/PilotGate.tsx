@@ -56,7 +56,7 @@ function GateUnavailable({ onRetry }: { onRetry: () => void }) {
           Please check your internet connection and try again. Your saved journey has not been cleared.
         </p>
         <button type="button" className="btn-primary-journey" onClick={onRetry}>Try again</button>
-        <p className="bfa-copy-support"><Link to="/support" className="text-link">Support &amp; Safety</Link> is available without a code.</p>
+        <p className="bfa-copy-support"><Link to="/support" className="text-link">Support &amp; Safety</Link> is available.</p>
       </div>
     </div>
   );

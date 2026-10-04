@@ -1,12 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 
 export const getGateStatus = createServerFn({ method: "GET" }).handler(async () => {
-  const { getGateSession } = await import("./gate.server");
-  const expected = process.env["SITE_PASSWORD"];
-  // With no code configured the pilot gate is simply off.
-  if (!expected) return { required: false as const, unlocked: true };
-  const session = await getGateSession();
-  return { required: true as const, unlocked: Boolean(session.data.unlocked) };
+  // The shared visitor access-code gate is turned off: the preview opens
+  // without asking for a code. The unlock/lock functions and the configured
+  // secret are preserved so the gate can be re-enabled later.
+  return { required: false as const, unlocked: true };
 });
 
 export const unlockSite = createServerFn({ method: "POST" })

@@ -14,7 +14,12 @@ import type { JourneyBoundaryResult } from "@/lib/ai/journey-boundary";
 
 export type JourneyAiStatus = "idle" | "ready" | "generating" | "shown" | "failed";
 export interface JourneyAiRequestInput { day: number; answerMeaningVersion: string; answers: string[]; spiritual: boolean }
-interface Attempt { promise: Promise<JourneyBoundaryResult>; invalidated: boolean }
+interface Attempt { promise: Promise<JourneyBoundaryResult>; invalidated: boolean; deadlineAt: number }
+export const JOURNEY_AVAILABILITY_WAIT_MS = 10_000;
+// Longer than the current 45-second server transport deadline. A client timeout
+// does not prove that a server request stopped or that no cost was incurred.
+export const JOURNEY_GENERATION_WAIT_MS = 60_000;
+const CLIENT_WAIT_EXPIRED = Symbol("client-wait-expired");
 const pending = new Map<string, Attempt>();
 const boundTargets = new WeakSet<object>();
 function invalidates(event: Event): boolean {
@@ -49,6 +54,7 @@ export function journeyAiFailureMessage(code: string): string {
     case "consent-invalid": case "consent-version-stale": case "consent-not-accepted": return "Please read the current AI explanation and choose whether to send today's selections.";
     case "provider-rate-limited": return "The AI service is busy right now. You can try again in a little while.";
     case "provider-budget-exhausted": return "The AI reflection is unavailable at the moment. You can keep a saved reflection or choose the written reflection.";
+    case "request-status-unknown": return "This request is taking longer than expected. We cannot confirm whether it finished. You can choose the written reflection while it settles.";
     case "provider-timeout": case "provider-network": case "provider-unavailable": return "We could not reach the AI service. Please check your connection and try again.";
     default: return "The AI reflection could not be completed this time. You can try again or choose the written reflection.";
   }
@@ -82,10 +88,15 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
   useEffect(() => {
     let active = true;
     setAvailability({ available: false, loading: true });
+    const timer = setTimeout(() => {
+      if (!active) return;
+      active = false;
+      setAvailability({ available: false, loading: false });
+    }, JOURNEY_AVAILABILITY_WAIT_MS);
     Promise.resolve().then(() => checkAvailability()).then(result => {
-      if (active) setAvailability({ available: result?.available === true, loading: false });
-    }).catch(() => { if (active) setAvailability({ available: false, loading: false }); });
-    return () => { active = false; };
+      if (active) { active = false; clearTimeout(timer); setAvailability({ available: result?.available === true, loading: false }); }
+    }).catch(() => { if (active) { active = false; clearTimeout(timer); setAvailability({ available: false, loading: false }); } });
+    return () => { active = false; clearTimeout(timer); };
   }, [checkAvailability]);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -121,9 +132,13 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
     latestMode.current = "ai";
     const ownEpoch = epoch.current;
     let attempt = pending.get(requestKey);
-    if (attempt?.invalidated) return; // an abandoned paid call must settle first
+    if (attempt?.invalidated) {
+      // An abandoned or timed-out paid call must settle before another begins.
+      setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+      return;
+    }
     if (!attempt) {
-      attempt = { invalidated: false, promise: Promise.resolve().then(() => {
+      attempt = { invalidated: false, deadlineAt: Date.now() + JOURNEY_GENERATION_WAIT_MS, promise: Promise.resolve().then(() => {
         if (!aiConsentAccepted() || pending.get(requestKey)?.invalidated) return { ok: false, code: "consent-not-accepted" } as JourneyBoundaryResult;
         return callServer({ data: { request: stableInput, consent: currentJourneyAiConsent() } });
       }) as Promise<JourneyBoundaryResult> };
@@ -132,10 +147,39 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
       void attempt.promise.finally(() => { if (pending.get(requestKey) === owned) pending.delete(requestKey); }).catch(() => {});
     }
     setView({ key: requestKey, status: "generating" });
-    let result: JourneyBoundaryResult;
-    try { result = await attempt.promise; }
-    catch { if (alive.current && epoch.current === ownEpoch && latestKey.current === requestKey && !attempt.invalidated) setView({ key: requestKey, status: "failed", failureCode: "provider-network" }); return; }
-    if (!alive.current || epoch.current !== ownEpoch || latestKey.current !== requestKey || latestMode.current !== "ai" || attempt.invalidated || !aiConsentAccepted()) return;
+    let result: JourneyBoundaryResult | typeof CLIENT_WAIT_EXPIRED;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      result = await Promise.race([
+        attempt.promise,
+        new Promise<typeof CLIENT_WAIT_EXPIRED>(resolve => {
+          // A remount joins the original deadline rather than starting a fresh
+          // waiting window for the same underlying request.
+          timer = setTimeout(() => resolve(CLIENT_WAIT_EXPIRED), Math.max(0, attempt.deadlineAt - Date.now()));
+        }),
+      ]);
+    }
+    catch {
+      if (alive.current && epoch.current === ownEpoch && latestKey.current === requestKey && latestMode.current === "ai" && aiConsentAccepted()) {
+        setView({ key: requestKey, status: "failed", failureCode: attempt.invalidated ? "request-status-unknown" : "provider-network" });
+      }
+      return;
+    }
+    finally { if (timer !== undefined) clearTimeout(timer); }
+    if (result === CLIENT_WAIT_EXPIRED) {
+      // Keep the registry entry until the underlying promise settles. Releasing
+      // it here could allow a second billable request while the first still runs.
+      attempt.invalidated = true;
+      if (alive.current && epoch.current === ownEpoch && latestKey.current === requestKey && latestMode.current === "ai") {
+        setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+      }
+      return;
+    }
+    if (!alive.current || epoch.current !== ownEpoch || latestKey.current !== requestKey || latestMode.current !== "ai" || !aiConsentAccepted()) return;
+    if (attempt.invalidated) {
+      setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+      return;
+    }
     if (!result || result.ok !== true) { setView({ key: requestKey, status: "failed", failureCode: result && "code" in result ? result.code : "provider-invalid-output" }); return; }
     if (result.identity?.canonicalIdentity !== requestKey || result.identity.provenance !== "live-model") { setView({ key: requestKey, status: "failed", failureCode: "response-model-mismatch" }); return; }
     saveAiReflection({ dayId: current.dayId, text: result.text, identity: result.identity, source: current.source });

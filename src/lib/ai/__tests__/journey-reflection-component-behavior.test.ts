@@ -100,4 +100,26 @@ describe("actual JourneyAiReflection component with mocked controller states", (
     expect(html).toContain("Read what an AI reflection involves");
     expect(harness.h.generate).not.toHaveBeenCalled();
   });
+  it("disables repeated generation while busy and keeps an explicit written-reflection exit", () => {
+    harness.h.accepted = true;
+    Object.assign(harness.h.ai, { status: "generating", ready: false });
+    const { tree, html } = render();
+    const generate = nodes(tree).find(node => node.type === "button" && renderToStaticMarkup(node).includes("Writing your reflection")) as ReactElement<{ disabled?: boolean }>;
+    expect(generate.props.disabled).toBe(true);
+    expect(html).not.toContain("UNIQUE AUTHORED REFLECTION");
+    click("Use the written reflection");
+    expect(harness.h.setMode).toHaveBeenCalledWith("authored");
+    expect(harness.h.generate).not.toHaveBeenCalled();
+  });
+  it("shows a recoverable error and only retries when Generate is explicitly chosen", () => {
+    harness.h.accepted = true;
+    Object.assign(harness.h.ai, { status: "failed", ready: false, failureMessage: "We could not reach the AI service. Please check your connection and try again." });
+    const { html } = render();
+    expect(html).toContain("We could not reach the AI service");
+    expect(html).not.toContain("UNIQUE AUTHORED REFLECTION");
+    expect(ready).toHaveBeenLastCalledWith(false);
+    expect(harness.h.generate).not.toHaveBeenCalled();
+    click("Generate my reflection");
+    expect(harness.h.generate).toHaveBeenCalledTimes(1);
+  });
 });

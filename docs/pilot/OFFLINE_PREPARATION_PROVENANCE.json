@@ -1,0 +1,48 @@
+{
+  "status": "Offline preparation; candidate policy not installed; no live model calls; no deployment",
+  "checkpoint": "2026-10-04 UTC / continuation of 3 October Toronto handoff",
+  "remoteMainVerified": "32ccf008e95856340f47f70a079c7acd80dfb30f",
+  "recoveredLocalCommit": "470c81997baf9c2b0db32a4073945a2a6193b8a2",
+  "recoveredOnCurrentBaseCommit": "473ef23",
+  "workingBranch": "prepare/offline-ai-2026-10-04",
+  "sourceAuthority": "Later explicit Carl corrections govern. Foundation v0.7 remains DRAFT. Eight samples revision3 provisionally accepted working wording, unchanged.",
+  "candidateProvenanceNote": "Candidate v1 includes a historical reference to response-guide working version1; current supplied guide is working version3. Candidate file and hash preserved unchanged.",
+  "fixtureSourceNote": "Fixtures record b6dd780; its content files match current main32ccf00. Hash assertions revalidated without regenerating expectations.",
+  "sourceFiles": [
+    {
+      "file": "BFA_New_Chat_Handoff_2026-10-03.txt",
+      "bytes": 21254,
+      "sha256": "19ea047452434e95d282e35eef5deeb86c87b54244bc3fa5e1e12782071db243"
+    },
+    {
+      "file": "SRT_Working_Summary_and_Response_01_2026-10-02_DRAFT.txt",
+      "bytes": 153090,
+      "sha256": "0611587e4b8ad76c7a2846cd456bf7024694e1c794d14350a9f3f8d81b6cc2e3"
+    },
+    {
+      "file": "BFA_Eight_Sample_Responses_Revised_2026-10-03.txt",
+      "bytes": 12024,
+      "sha256": "d196f999551b5bbde0284ed3f7ace57dae13ac4e923a9c1a4869b3d02f5b8f25"
+    },
+    {
+      "file": "BFA_SRT_Response_Guide_and_Test_Plan_2026-10-03.txt",
+      "bytes": 21313,
+      "sha256": "e8087f8f281f9b59c3de09a777c4da31ac706d2ebe2a2f4e3e4ec211d3a1d985"
+    },
+    {
+      "file": "BFA_Audit_Status_and_Next_Actions_2026-10-03.txt",
+      "bytes": 14845,
+      "sha256": "0111346f5cc76a0716bf5182d68c83e4f0eb494297e5a9450e7321d7cfd2af85"
+    },
+    {
+      "file": "BFA_November_30_Launch_Work_Plan_2026-10-03.txt",
+      "bytes": 13280,
+      "sha256": "76143bac27943c53e1992d0a8ec3b7d69232a1613980ce2f04e343b9ef3329d9"
+    },
+    {
+      "file": "BFA_Pilot_Participant_Pack_2026-10-03_DRAFT.txt",
+      "bytes": 9401,
+      "sha256": "3c10279920d5edc76bae7c2be085b7711baa5f83c99a468069851fb65b126464"
+    }
+  ]
+}

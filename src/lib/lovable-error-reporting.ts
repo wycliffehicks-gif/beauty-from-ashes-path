@@ -23,35 +23,23 @@ declare global {
   }
 }
 
-export function reportLovableError(error: unknown, context: Record<string, unknown> = {}) {
+export function reportLovableError(_error: unknown, _context: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
-  window.__lovableEvents?.captureException?.(
-    error,
-    {
-      source: "react_error_boundary",
-      route: window.location.pathname,
-      ...context,
-    },
-    {
-      mechanism: "react_error_boundary",
-      handled: false,
-      severity: "error",
-    },
-  );
-  // Prod React does not rethrow boundary-caught errors to window.onerror, so the
-  // editor's telemetry never sees them. Forward to lovable.js's reporting hook,
-  // which is present only inside the editor preview.
-  // Loaders and server fns commonly throw a raw Response; String(it) is the
-  // opaque "[object Response]", so pull out the status and URL instead.
-  const message =
-    error instanceof Response
-      ? `Response ${error.status}${error.url ? ` at ${error.url}` : ""}`
-      : error instanceof Error
-        ? error.message
-        : String(error);
-  window.__lovableReportRuntimeError?.({
-    message,
-    stack: error instanceof Error ? error.stack : undefined,
-    filename: window.location.pathname,
-  });
+  // Preserve a diagnostic signal without sending the exception, cause, stack,
+  // caller context, URL or route. Installed platform hooks may have independent
+  // collection; their configuration still needs a deployed canary check.
+  try {
+    window.__lovableEvents?.captureException?.(
+      "BFA:client-boundary",
+      { source: "react_error_boundary", code: "client-boundary" },
+      { mechanism: "react_error_boundary", handled: false, severity: "error" },
+    );
+  } catch {
+    // A reporter failure must not recursively expose its own raw exception.
+  }
+  try {
+    window.__lovableReportRuntimeError?.({ message: "BFA:client-boundary" });
+  } catch {
+    // Diagnostic forwarding is best effort, never a new application failure.
+  }
 }

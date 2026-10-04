@@ -18,6 +18,7 @@ import {
   type ExportPresentation,
 } from "@/lib/journey/export";
 import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 export const Route = createFileRoute("/_shell/")({
   head: () => ({
@@ -60,6 +61,7 @@ function HomeGate() {
 
 function JourneyHome() {
   const { progress, hydrated } = useJourneyProgress();
+  const contentRef = usePageFocus({ screenKey: "home:journey", ready: hydrated });
   // Exports must show exactly what the screens would present right now, so the
   // hydrated spiritual preference is passed explicitly and fails closed.
   const [prefs, , prefsHydrated] = usePrefs();
@@ -82,7 +84,7 @@ function JourneyHome() {
   const allComplete = JOURNEY_DAYS.every((d) => completed.has(d.id));
 
   return (
-    <section className="space-y-8 pb-6">
+    <section ref={contentRef} className="space-y-8 pb-6">
       <div className="bfa-visual-home-hero">
         <VisualMotif variant="home" />
         <header className="bfa-visual-home-hero-inner space-y-3">

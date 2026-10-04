@@ -1,6 +1,7 @@
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { getPractice } from "@/content/practices";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 /**
  * A single practice from the standalone registry (src/content/practices.ts).
@@ -34,6 +35,7 @@ export const Route = createFileRoute("/practice/$id")({
 
 function PracticePage() {
   const { id } = Route.useParams();
+  const contentRef = usePageFocus({ screenKey: `practice:${id}` });
   const practice = getPractice(id);
   if (!practice) return null;
 
@@ -49,7 +51,7 @@ function PracticePage() {
           </Link>
         </header>
 
-        <main className="flex-1 pb-10">
+        <main ref={contentRef} className="flex-1 pb-10">
           <section className="space-y-8 pb-6" data-testid={`practice-${practice.id}`}>
             <header className="space-y-2">
               <h1 className="bfa-heading bfa-h1 font-serif">{practice.title}</h1>

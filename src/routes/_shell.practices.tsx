@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { PRACTICES } from "@/content/practices";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 export const Route = createFileRoute("/_shell/practices")({
   head: () => ({
@@ -23,8 +24,9 @@ export const Route = createFileRoute("/_shell/practices")({
 });
 
 function PracticesPage() {
+  const contentRef = usePageFocus({ screenKey: "page:practices" });
   return (
-    <section className="space-y-8 pb-6">
+    <section ref={contentRef} className="space-y-8 pb-6">
       <header className="space-y-2">
         <h1 className="bfa-heading bfa-h1 font-serif">Practices</h1>
         <p className="bfa-copy-support text-muted-foreground">

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 interface LegalPageProps {
   title: string;
@@ -12,6 +13,7 @@ export function LegalPage({
   lastUpdated = "July 24, 2026",
   children,
 }: LegalPageProps) {
+  const contentRef = usePageFocus({ screenKey: `legal:${title}` });
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
       <div className="container-page bfa-top-safe-roomy pb-8">
@@ -26,7 +28,7 @@ export function LegalPage({
 
         {/* Exactly one main landmark for this page: the legal document itself,
             heading included. Nothing else on the route renders a main. */}
-        <main>
+        <main ref={contentRef}>
           <header className="space-y-2 pb-6">
             <p className="eyebrow">Resurgence Therapeutics</p>
             <h1 className="bfa-h1 font-serif text-foreground">

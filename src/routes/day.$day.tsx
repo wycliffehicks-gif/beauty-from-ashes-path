@@ -822,44 +822,50 @@ function QuestionScreenShell({
   const body = (
     <div className="space-y-5">
       <p className="eyebrow">{question.eyebrow}</p>
-      <h1 className="bfa-h1 font-serif text-foreground">
+      <h1 id="journey-question-prompt" className="bfa-h1 font-serif text-foreground">
         {question.prompt}
       </h1>
       {question.hint && (
-        <p className="bfa-copy text-muted-foreground">{question.hint}</p>
+        <p id="journey-question-hint" className="bfa-copy text-muted-foreground">{question.hint}</p>
       )}
       <DayMotif motif={motif} treatment="quiet" />
-      <ul className="space-y-2" role="list">
-        {visibleOptions.map(({ option, index: idx }) => {
-          const isOn = selected.includes(idx);
+      <div
+        role="group"
+        aria-labelledby="journey-question-prompt"
+        aria-describedby={question.hint ? "journey-question-hint" : undefined}
+      >
+        <ul className="space-y-2" role="list">
+          {visibleOptions.map(({ option, index: idx }) => {
+            const isOn = selected.includes(idx);
 
-          return (
-            <li key={option.id}>
-              <button
-                type="button"
-                aria-pressed={isOn}
-                onClick={() => toggle(idx)}
-                className="bfa-journey-choice"
-              >
-                <span
-                  aria-hidden
-                  className="bfa-journey-choice-dot"
-                />
-                <span className="min-w-0">
-                  <span className="block">{option.label}</span>
-                  {option.note && (
-                    <span
-                      className="bfa-journey-choice-note"
-                    >
-                      {option.note}
-                    </span>
-                  )}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li key={option.id}>
+                <button
+                  type="button"
+                  aria-pressed={isOn}
+                  onClick={() => toggle(idx)}
+                  className="bfa-journey-choice"
+                >
+                  <span
+                    aria-hidden
+                    className="bfa-journey-choice-dot"
+                  />
+                  <span className="min-w-0">
+                    <span className="block">{option.label}</span>
+                    {option.note && (
+                      <span
+                        className="bfa-journey-choice-note"
+                      >
+                        {option.note}
+                      </span>
+                    )}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <InfoNotes notes={question.info} />
     </div>
   );

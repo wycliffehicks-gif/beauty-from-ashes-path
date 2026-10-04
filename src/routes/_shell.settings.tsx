@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { usePrefs } from "@/lib/prefs";
 import { clearJourney } from "@/lib/journey/progress";
 import { useReminder } from "@/lib/journey/reminder";
 import { useStorageStatus } from "@/lib/storage-status";
+import { usePageFocus } from "@/lib/use-page-focus";
 import {
   ABOUT_BEAUTY_FROM_ASHES,
   ABOUT_RESURGENCE,
@@ -50,13 +51,23 @@ function sectionTitle(id: string) {
 }
 
 function SettingsPage() {
+  const contentRef = usePageFocus({ screenKey: "page:settings" });
   const [prefs, update] = usePrefs();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
+  const clearTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const keepJourneyRef = useRef<HTMLButtonElement | null>(null);
+  const wasConfirming = useRef(false);
   const { persistent, hydrated: storageHydrated } = useStorageStatus();
   const volatileStorage = storageHydrated && !persistent;
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [installSupported, setInstallSupported] = useState(false);
+
+  useEffect(() => {
+    if (confirming) keepJourneyRef.current?.focus();
+    else if (wasConfirming.current) clearTriggerRef.current?.focus();
+    wasConfirming.current = confirming;
+  }, [confirming]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -70,7 +81,7 @@ function SettingsPage() {
   }, []);
 
   return (
-    <section className="space-y-6 pb-4">
+    <section ref={contentRef} className="space-y-6 pb-4">
       <header className="space-y-2">
         <h1 className="bfa-heading bfa-h1 font-serif">Settings</h1>
         <p className="bfa-copy-support text-muted-foreground">Small choices, changeable any time.</p>
@@ -229,18 +240,30 @@ function SettingsPage() {
           <button
             type="button"
             data-testid="clear-journey"
+            ref={clearTriggerRef}
             onClick={() => setConfirming(true)}
             className="btn-quiet mt-4"
           >
             Clear or restart my journey
           </button>
         ) : (
-          <div className="mt-4 space-y-3" data-testid="clear-journey-confirm">
-            <p className="bfa-copy text-foreground">{CLEAR_CONFIRM_QUESTION}</p>
+          <div
+            className="mt-4 space-y-3"
+            data-testid="clear-journey-confirm"
+            role="group"
+            aria-labelledby="clear-journey-question"
+            onKeyDown={(event) => {
+              if (event.key !== "Escape") return;
+              event.preventDefault();
+              setConfirming(false);
+            }}
+          >
+            <p id="clear-journey-question" className="bfa-copy text-foreground">{CLEAR_CONFIRM_QUESTION}</p>
             <div className="flex flex-col gap-2 sm:flex-row">
               <button
                 type="button"
                 data-testid="clear-journey-cancel"
+                ref={keepJourneyRef}
                 onClick={() => setConfirming(false)}
                 className="btn-quiet flex-1"
               >

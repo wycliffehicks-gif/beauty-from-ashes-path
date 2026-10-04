@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { JOURNEY_DAYS } from "@/content/journey";
 import { VisualMotif } from "@/components/VisualMotifs";
 import { LegalFooter } from "@/components/LegalFooter";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 export function LandingPage() {
+  const contentRef = usePageFocus<HTMLDivElement>({ screenKey: "home:landing" });
   return (
-    <div className="landing-page">
+    <div ref={contentRef} className="landing-page">
       {/* Quiet hero */}
       <section className="landing-hero">
         <VisualMotif variant="home" />

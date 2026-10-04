@@ -9,48 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PilotFeedbackRouteImport } from './routes/pilot-feedback'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as ImportantInformationRouteImport } from './routes/important-information'
-import { Route as ContactSupportRouteImport } from './routes/contact-support'
 import { Route as ShellRouteImport } from './routes/_shell'
+import { Route as ContactSupportRouteImport } from './routes/contact-support'
+import { Route as ImportantInformationRouteImport } from './routes/important-information'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PilotFeedbackRouteImport } from './routes/pilot-feedback'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ShellIndexRouteImport } from './routes/_shell.index'
-import { Route as SessionWeek01RouteImport } from './routes/session.week-01'
-import { Route as PracticeIdRouteImport } from './routes/practice.$id'
-import { Route as DayDayRouteImport } from './routes/day.$day'
-import { Route as ShellSupportRouteImport } from './routes/_shell.support'
-import { Route as ShellShiftedRouteImport } from './routes/_shell.shifted'
-import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
-import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
-import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
 import { Route as ShellJourneyRouteImport } from './routes/_shell.journey'
+import { Route as ShellPracticesRouteImport } from './routes/_shell.practices'
+import { Route as ShellResourcesRouteImport } from './routes/_shell.resources'
+import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
+import { Route as ShellShiftedRouteImport } from './routes/_shell.shifted'
+import { Route as ShellSupportRouteImport } from './routes/_shell.support'
+import { Route as DayDayRouteImport } from './routes/day.$day'
+import { Route as PracticeIdRouteImport } from './routes/practice.$id'
+import { Route as SessionWeek01RouteImport } from './routes/session.week-01'
 import { Route as DayDayReflectionRouteImport } from './routes/day.$day.reflection'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PilotFeedbackRoute = PilotFeedbackRouteImport.update({
-  id: '/pilot-feedback',
-  path: '/pilot-feedback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImportantInformationRoute = ImportantInformationRouteImport.update({
-  id: '/important-information',
-  path: '/important-information',
+const ShellRoute = ShellRouteImport.update({
+  id: '/_shell',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactSupportRoute = ContactSupportRouteImport.update({
@@ -58,8 +37,29 @@ const ContactSupportRoute = ContactSupportRouteImport.update({
   path: '/contact-support',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShellRoute = ShellRouteImport.update({
-  id: '/_shell',
+const ImportantInformationRoute = ImportantInformationRouteImport.update({
+  id: '/important-information',
+  path: '/important-information',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilotFeedbackRoute = PilotFeedbackRouteImport.update({
+  id: '/pilot-feedback',
+  path: '/pilot-feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShellIndexRoute = ShellIndexRouteImport.update({
@@ -67,39 +67,9 @@ const ShellIndexRoute = ShellIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ShellRoute,
 } as any)
-const SessionWeek01Route = SessionWeek01RouteImport.update({
-  id: '/session/week-01',
-  path: '/session/week-01',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PracticeIdRoute = PracticeIdRouteImport.update({
-  id: '/practice/$id',
-  path: '/practice/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DayDayRoute = DayDayRouteImport.update({
-  id: '/day/$day',
-  path: '/day/$day',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShellSupportRoute = ShellSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => ShellRoute,
-} as any)
-const ShellShiftedRoute = ShellShiftedRouteImport.update({
-  id: '/shifted',
-  path: '/shifted',
-  getParentRoute: () => ShellRoute,
-} as any)
-const ShellSettingsRoute = ShellSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ShellRoute,
-} as any)
-const ShellResourcesRoute = ShellResourcesRouteImport.update({
-  id: '/resources',
-  path: '/resources',
+const ShellJourneyRoute = ShellJourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
   getParentRoute: () => ShellRoute,
 } as any)
 const ShellPracticesRoute = ShellPracticesRouteImport.update({
@@ -107,10 +77,40 @@ const ShellPracticesRoute = ShellPracticesRouteImport.update({
   path: '/practices',
   getParentRoute: () => ShellRoute,
 } as any)
-const ShellJourneyRoute = ShellJourneyRouteImport.update({
-  id: '/journey',
-  path: '/journey',
+const ShellResourcesRoute = ShellResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => ShellRoute,
+} as any)
+const ShellSettingsRoute = ShellSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellShiftedRoute = ShellShiftedRouteImport.update({
+  id: '/shifted',
+  path: '/shifted',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellSupportRoute = ShellSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => ShellRoute,
+} as any)
+const DayDayRoute = DayDayRouteImport.update({
+  id: '/day/$day',
+  path: '/day/$day',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeIdRoute = PracticeIdRouteImport.update({
+  id: '/practice/$id',
+  path: '/practice/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionWeek01Route = SessionWeek01RouteImport.update({
+  id: '/session/week-01',
+  path: '/session/week-01',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DayDayReflectionRoute = DayDayReflectionRouteImport.update({
   id: '/reflection',
@@ -253,39 +253,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pilot-feedback': {
-      id: '/pilot-feedback'
-      path: '/pilot-feedback'
-      fullPath: '/pilot-feedback'
-      preLoaderRoute: typeof PilotFeedbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/important-information': {
-      id: '/important-information'
-      path: '/important-information'
-      fullPath: '/important-information'
-      preLoaderRoute: typeof ImportantInformationRouteImport
+    '/_shell': {
+      id: '/_shell'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ShellRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact-support': {
@@ -295,11 +267,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_shell': {
-      id: '/_shell'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ShellRouteImport
+    '/important-information': {
+      id: '/important-information'
+      path: '/important-information'
+      fullPath: '/important-information'
+      preLoaderRoute: typeof ImportantInformationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pilot-feedback': {
+      id: '/pilot-feedback'
+      path: '/pilot-feedback'
+      fullPath: '/pilot-feedback'
+      preLoaderRoute: typeof PilotFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_shell/': {
@@ -309,53 +309,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellIndexRouteImport
       parentRoute: typeof ShellRoute
     }
-    '/session/week-01': {
-      id: '/session/week-01'
-      path: '/session/week-01'
-      fullPath: '/session/week-01'
-      preLoaderRoute: typeof SessionWeek01RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/practice/$id': {
-      id: '/practice/$id'
-      path: '/practice/$id'
-      fullPath: '/practice/$id'
-      preLoaderRoute: typeof PracticeIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/day/$day': {
-      id: '/day/$day'
-      path: '/day/$day'
-      fullPath: '/day/$day'
-      preLoaderRoute: typeof DayDayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_shell/support': {
-      id: '/_shell/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof ShellSupportRouteImport
-      parentRoute: typeof ShellRoute
-    }
-    '/_shell/shifted': {
-      id: '/_shell/shifted'
-      path: '/shifted'
-      fullPath: '/shifted'
-      preLoaderRoute: typeof ShellShiftedRouteImport
-      parentRoute: typeof ShellRoute
-    }
-    '/_shell/settings': {
-      id: '/_shell/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ShellSettingsRouteImport
-      parentRoute: typeof ShellRoute
-    }
-    '/_shell/resources': {
-      id: '/_shell/resources'
-      path: '/resources'
-      fullPath: '/resources'
-      preLoaderRoute: typeof ShellResourcesRouteImport
+    '/_shell/journey': {
+      id: '/_shell/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof ShellJourneyRouteImport
       parentRoute: typeof ShellRoute
     }
     '/_shell/practices': {
@@ -365,12 +323,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellPracticesRouteImport
       parentRoute: typeof ShellRoute
     }
-    '/_shell/journey': {
-      id: '/_shell/journey'
-      path: '/journey'
-      fullPath: '/journey'
-      preLoaderRoute: typeof ShellJourneyRouteImport
+    '/_shell/resources': {
+      id: '/_shell/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ShellResourcesRouteImport
       parentRoute: typeof ShellRoute
+    }
+    '/_shell/settings': {
+      id: '/_shell/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ShellSettingsRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/shifted': {
+      id: '/_shell/shifted'
+      path: '/shifted'
+      fullPath: '/shifted'
+      preLoaderRoute: typeof ShellShiftedRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/support': {
+      id: '/_shell/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof ShellSupportRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/day/$day': {
+      id: '/day/$day'
+      path: '/day/$day'
+      fullPath: '/day/$day'
+      preLoaderRoute: typeof DayDayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice/$id': {
+      id: '/practice/$id'
+      path: '/practice/$id'
+      fullPath: '/practice/$id'
+      preLoaderRoute: typeof PracticeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session/week-01': {
+      id: '/session/week-01'
+      path: '/session/week-01'
+      fullPath: '/session/week-01'
+      preLoaderRoute: typeof SessionWeek01RouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/day/$day/reflection': {
       id: '/day/$day/reflection'

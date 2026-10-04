@@ -165,7 +165,7 @@ describe("actual controller with controlled hooks and deferred server", () => {
     expect(h.state.generate).not.toHaveBeenCalled();
   });
 
-  it("shows timeout failure, retries only on explicit request, and restores the successful saved text", async () => {
+  it("holds a reported timeout across repeated clicks, mode changes and remounts", async () => {
     recordAiConsent(true);
     const request = input();
     h.state.generate.mockResolvedValueOnce({ ok: false, code: "provider-timeout" })
@@ -173,7 +173,7 @@ describe("actual controller with controlled hooks and deferred server", () => {
     await (await mounted(request)).generate();
     let ui = render(request);
     expect(ui.status).toBe("failed");
-    expect(ui.failureMessage).toContain("check your connection");
+    expect(ui.failureMessage).toContain("cannot confirm");
     expect(ui.mode).toBe("ai");
     expect(ui.ready).toBe(false);
     expect(ui.text).toBeNull();
@@ -181,19 +181,20 @@ describe("actual controller with controlled hooks and deferred server", () => {
     await ticks(); render(request);
     expect(h.state.generate).toHaveBeenCalledTimes(1);
     await ui.generate();
-    ui = render(request);
-    expect(ui.status).toBe("shown");
-    expect(ui.ready).toBe(true);
-    expect(ui.failureMessage).toBeNull();
-    expect(ui.text).toContain("leave this reflection unfinished");
+    ui.setMode("authored");
+    expect(render(request).ready).toBe(true);
+    render(request).setMode("ai");
+    expect(render(request).canGenerate).toBe(false);
     unmount();
     ui = await mounted(request);
-    expect(ui.text).toContain("leave this reflection unfinished");
+    expect(ui.status).toBe("failed");
+    expect(ui.text).toBeNull();
+    expect(ui.failure?.recovery).toBe("none");
     await ui.generate();
-    expect(h.state.generate).toHaveBeenCalledTimes(2);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
   });
 
-  it("turns a rejected server call into a generic failure and allows a deliberate retry", async () => {
+  it("holds a rejected server call as uncertain and never exposes exception details", async () => {
     recordAiConsent(true);
     const request = input();
     h.state.generate.mockRejectedValueOnce(new Error("PRIVATE SIMULATED ERROR DETAIL"))
@@ -201,29 +202,153 @@ describe("actual controller with controlled hooks and deferred server", () => {
     await (await mounted(request)).generate();
     const failed = render(request);
     expect(failed.status).toBe("failed");
-    expect(failed.failureMessage).toContain("check your connection");
+    expect(failed.failureMessage).toContain("cannot confirm");
     expect(failed.failureMessage).not.toContain("PRIVATE");
     expect(failed.text).toBeNull();
     await failed.generate();
+    expect(render(request).status).toBe("failed");
+    expect(render(request).canGenerate).toBe(false);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("rechecks a pre-provider access refusal without sending answers or automatically generating", async () => {
+    recordAiConsent(true); const request = input();
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "pilot-not-verified" }).mockResolvedValueOnce(success(request));
+    await (await mounted(request)).generate();
+    expect(render(request).failure?.recovery).toBe("check-availability");
+    unmount();
+    let ui = await mounted(request);
+    expect(ui.canGenerate).toBe(false); // A normal mount's check cannot erase the hold.
+    const checks = h.state.availability.mock.calls.length;
+    ui.recheckAvailability(); render(request); await ticks(); ui = render(request);
+    expect(h.state.availability).toHaveBeenCalledTimes(checks + 1);
+    expect(h.state.availability.mock.calls.every(args => args.length === 0)).toBe(true);
+    expect(ui.failure).toBeNull(); expect(ui.canGenerate).toBe(true);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+    await ui.generate();
     expect(render(request).status).toBe("shown");
     expect(h.state.generate).toHaveBeenCalledTimes(2);
   });
 
-  it("does not save a late response after the reflection screen unmounts", async () => {
+  it("keeps a chosen authored reflection ready while an answer-free availability recheck runs", async () => {
+    const request = input(), check = deferred<{ available: true }>();
+    h.state.availability.mockResolvedValueOnce({ available: false, code: "pilot-check-unavailable" }).mockReturnValueOnce(check.promise);
+    let ui = await mounted(request);
+    expect(ui.availabilityFailure?.recovery).toBe("check-availability");
+    ui.setMode("authored"); ui = render(request); ui.recheckAvailability();
+    ui = render(request); await ticks();
+    expect(ui.availabilityLoading).toBe(true); expect(ui.ready).toBe(true); expect(ui.canGenerate).toBe(false);
+    check.resolve({ available: true }); await ticks(); ui = render(request);
+    expect(ui.mode).toBe("authored"); expect(ui.ready).toBe(true); expect(ui.availabilityFailure).toBeNull();
+    expect(h.state.generate).not.toHaveBeenCalled();
+  });
+
+  it("only clears a consent refusal after current consent exists, with no automatic generation", async () => {
+    recordAiConsent(true); const request = input();
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "consent-version-stale" });
+    await (await mounted(request)).generate();
+    expect(render(request).failure?.recovery).toBe("review-consent");
+    recordAiConsent(false); render(request).clearConsentFailure();
+    expect(render(request).canGenerate).toBe(false);
+    expect(render(request).failure?.recovery).toBe("review-consent");
+    recordAiConsent(true); render(request).clearConsentFailure();
+    expect(render(request).failure).toBeNull(); expect(render(request).canGenerate).toBe(true);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("a successful availability check cannot erase a usage hold or alter saved journey data", async () => {
+    recordAiConsent(true); const request = input(), other = input(2, true);
+    save(other, "Prayer may be left unfinished.");
+    const progress = JSON.stringify({ ...emptyProgress, completedDays: ["day-02"] });
+    const prefs = JSON.stringify({ onboarded: true, showSpiritual: true, visitedDays: [1, 2] });
+    disk.set("bfa.journey.v1", progress); disk.set("bfa.v1", prefs);
+    const otherResponse = readAiReflection("day-02", identity(other).canonicalIdentity);
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "usage-control-unavailable" });
+    await (await mounted(request)).generate();
+    const checks = h.state.availability.mock.calls.length;
+    render(request).recheckAvailability(); render(request); await ticks();
+    expect(h.state.availability).toHaveBeenCalledTimes(checks);
+    unmount(); h.state.availability.mockRejectedValueOnce(new Error("FICTIONAL_ACCESS_OUTAGE"));
+    let ui = await mounted(request);
+    expect(ui.availabilityFailure?.recovery).toBe("check-availability");
+    ui.recheckAvailability(); render(request); await ticks(); ui = render(request);
+    expect(ui.available).toBe(true); expect(ui.failure?.recovery).toBe("none");
+    expect(ui.canGenerate).toBe(false); await ui.generate();
+    ui.setMode("authored"); expect(render(request).ready).toBe(true);
+    expect(disk.get("bfa.journey.v1")).toBe(progress); expect(disk.get("bfa.v1")).toBe(prefs);
+    expect(readAiReflection("day-02", identity(other).canonicalIdentity)).toEqual(otherResponse);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("normalizes unknown refusal details and holds them without writing new browser data", async () => {
+    recordAiConsent(true); const request = input();
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "FICTIONAL_PRIVATE_REFUSAL" });
+    await (await mounted(request)).generate();
+    const ui = render(request);
+    expect(ui.failure?.recovery).toBe("none"); expect(ui.canGenerate).toBe(false);
+    expect(JSON.stringify(ui.failure)).not.toContain("PRIVATE");
+    expect([...disk.values()].join(" ")).not.toContain("PRIVATE");
+    await ui.generate(); expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("explicit AI-store clearing removes local warning history without automatically generating", async () => {
+    recordAiConsent(true); const request = input();
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "usage-participant-total-limit" });
+    await (await mounted(request)).generate();
+    expect(render(request).canGenerate).toBe(false);
+    clearAllAiReflections();
+    expect(render(request).failure).toBeNull(); expect(render(request).canGenerate).toBe(true);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+    // Clearing this UX warning says nothing about the future server-side allowance.
+  });
+
+  it("a matching saved reflection takes priority over a reported failure without regeneration", async () => {
+    recordAiConsent(true); const request = input();
+    h.state.generate.mockResolvedValueOnce({ ok: false, code: "usage-attempt-already-reserved" });
+    await (await mounted(request)).generate();
+    expect(render(request).canGenerate).toBe(false);
+    save(request, "This is the matching reflection already saved in this browser.");
+    const ui = render(request);
+    expect(ui.status).toBe("shown"); expect(ui.failure).toBeNull(); expect(ui.ready).toBe(true);
+    expect(ui.text).toContain("matching reflection"); await ui.generate();
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(["success", "refusal", "rejection"])("holds late %s after leaving without saving or permitting another dispatch", async outcome => {
     recordAiConsent(true);
-    const request = input(), d = deferred<ReturnType<typeof success>>();
+    const request = input(), d = deferred<ReturnType<typeof success> | { ok: false; code: "provider-timeout" }>();
     h.state.generate.mockReturnValue(d.promise);
     const running = (await mounted(request)).generate();
     await ticks();
     expect(render(request).status).toBe("generating");
     unmount();
-    d.resolve(success(request)); await running;
+    if (outcome === "success") d.resolve(success(request));
+    else if (outcome === "refusal") d.resolve({ ok: false, code: "provider-timeout" });
+    else d.reject(new Error("FICTIONAL_PRIVATE_LATE_ERROR"));
+    await running;
     expect(readAiReflection("day-01", identity(request).canonicalIdentity)).toBeNull();
-    expect((await mounted(request)).status).toBe("ready");
+    const ui = await mounted(request);
+    expect(ui.status).toBe("failed"); expect(ui.canGenerate).toBe(false);
+    expect(ui.failure?.recovery).toBe("none");
+    expect(ui.failureMessage).not.toContain("PRIVATE");
+    await ui.generate();
     expect(h.state.generate).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps the written choice after interruption and does not start a replacement call until the abandoned one settles", async () => {
+  it("a late refusal after explicit clearing cannot recreate cleared warning history", async () => {
+    recordAiConsent(true); const request = input();
+    const d = deferred<{ ok: false; code: "provider-timeout" }>();
+    h.state.generate.mockReturnValue(d.promise);
+    const running = (await mounted(request)).generate(); await ticks(); unmount();
+    clearAllAiReflections();
+    d.resolve({ ok: false, code: "provider-timeout" }); await running;
+    const ui = await mounted(request);
+    expect(ui.failure).toBeNull(); expect(ui.canGenerate).toBe(true);
+    expect(readAiReflection("day-01", identity(request).canonicalIdentity)).toBeNull();
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the written choice and holds a reported interrupted request after it settles", async () => {
     recordAiConsent(true);
     const request = input(), d = deferred<ReturnType<typeof success>>();
     h.state.generate.mockReturnValueOnce(d.promise).mockResolvedValueOnce(success(request));
@@ -245,8 +370,9 @@ describe("actual controller with controlled hooks and deferred server", () => {
     expect(readAiReflection("day-01", identity(request).canonicalIdentity)).toBeNull();
     render(request).setMode("ai");
     await render(request).generate();
-    expect(render(request).status).toBe("shown");
-    expect(h.state.generate).toHaveBeenCalledTimes(2);
+    expect(render(request).status).toBe("failed");
+    expect(render(request).canGenerate).toBe(false);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
   });
 
   it("rejects a mismatched response identity without saving or silently using authored text", async () => {
@@ -259,6 +385,9 @@ describe("actual controller with controlled hooks and deferred server", () => {
     expect(ui.mode).toBe("ai");
     expect(ui.text).toBeNull();
     expect(ui.ready).toBe(false);
+    expect(ui.failureMessage).toContain("usable AI reflection could not be provided");
+    expect(ui.failureMessage).not.toContain("taking longer");
+    expect(ui.canGenerate).toBe(false);
     expect(readAiReflection("day-01", identity(request).canonicalIdentity)).toBeNull();
   });
 
@@ -319,8 +448,9 @@ describe("actual controller with controlled hooks and deferred server", () => {
     expect(render(request).mode).toBe("authored");
     render(request).setMode("ai");
     await render(request).generate();
-    expect(render(request).status).toBe("shown");
-    expect(h.state.generate).toHaveBeenCalledTimes(2);
+    expect(render(request).status).toBe("failed");
+    expect(render(request).canGenerate).toBe(false);
+    expect(h.state.generate).toHaveBeenCalledTimes(1);
   });
 
   it.each(["success", "rejection"])("shares the original deadline across a remount and stays settled after late %s", async outcome => {

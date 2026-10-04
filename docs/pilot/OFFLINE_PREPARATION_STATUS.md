@@ -118,3 +118,22 @@ Applied the 13-file follow-up diff exactly onto `e1ef132`; no rejected hunks. Th
 The generated output stayed in `/tmp` and was not committed. `src/routeTree.gen.ts` was restored from `e1ef132` after the build.
 
 Browser limits: a fresh isolated Chromium context on the development preview opened Home and onboarding with no access-code screen and no page errors. `__root.tsx` registers `/sw.js` only outside development, so the development preview registered no service worker. Real worker registration, old-cache cleanup, uncached requests and the offline fallback are covered only by the 34 worker tests and are **unverified in a browser**. The workspace flag check does not establish saved production settings. The project stays unpublished and participant AI stays off.
+
+## Browser verification of `public/sw.js` (2026-10-04, from `ff86efaa`)
+
+The earlier attribution above stands: before this pass, worker behaviour was covered only by the 34 worker tests.
+
+**Local production app: not run.** No production build output existed (`dist/` absent). One bounded `vite preview --port 4179` attempt started but returned HTTP 500 for `/` and `/sw.js` (`Cannot find module dist/server/server.js`). The full build was deliberately not rerun, because only this note changed. The server was stopped.
+
+**Synthetic browser harness, not production app or hosting verification.** A temporary local Python server on `127.0.0.1:4181` served the unchanged `public/sw.js` bytes (sha256 `0fae2eb3dcca5456d3d0d04835f5549b017d79f387540aacc49f3b0f4797433a`) plus only fictional fixture routes: a generic home page and `/journey`, a manifest, a favicon, one hashed asset, `/api/dynamic` and an AI-like `/_serverFn/generate`, which was never a real RPC. A fresh isolated headless Chromium context gave these results:
+
+- The seeded `bfa-shell-v1` cache was removed after activation, and the seeded `unrelated-cache` was preserved.
+- The page was controlled by `/sw.js`. The `bfa-shell-v2` cache held only `/`, `/manifest.json` and `/favicon.svg`.
+- Online, two root navigations returned changed fixture homes (v3, then v4), so the network was checked first.
+- After a dynamic GET, an AI-like POST and GET, a query-bearing asset, a query-bearing API request and a `/?q=1` navigation, no new entries appeared in any cache.
+- With the server refusing connections, `/` returned the cached v4 shell. The `/journey` deep link was redirected to `/` and showed the cached shell.
+- After the fixture root switched to `Cache-Control: no-store`, the online root entry was removed from `bfa-shell-v2`. An offline `/` then returned the built-in 503 "You are offline" page instead of retained private HTML.
+
+Playwright `set_offline` did not stop the worker's localhost fetches in a first run, so offline was simulated by having the server drop connections. Fixtures, logs and screenshots stayed in `/tmp` and were not committed.
+
+Still unverified: real hosted production, the actual app build registering the worker, and physical iPhone and Android devices. The project stays unpublished and participant AI stays off.

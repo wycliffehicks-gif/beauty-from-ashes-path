@@ -178,7 +178,11 @@ deletion from the application wrapper.
 
 Local verification used Node 24.19.0 and Bun 1.3.3 with a clean install from
 the committed lockfile. Earlier Lovable builds used the normal managed
-configuration; the Node checks below were run separately outside Lovable.
+configuration; the Node build and HTTP checks below were run separately outside
+Lovable. A later Chromium pass ran that exact prebuilt package in Lovable's
+browser environment on installed Node 22.22.0; no managed-build markers were
+changed. See the [built-app browser record](../pilot/PRODUCTION_BROWSER_CHECK_2026-10-04.md)
+for the source revision, archive hash and focused phone-readability repairs.
 
 | Item | Current evidence |
 | --- | --- |
@@ -187,7 +191,7 @@ configuration; the Node checks below were run separately outside Lovable.
 | Frozen install and `build:cloud` | `bun install --frozen-lockfile`: exit 0, 476 packages. `bun run build:cloud`: exit 0. `.output/nitro.json` confirms `node-server`, `server/index.mjs`, and `public`. |
 | Existing regression checks | `tsc --noEmit`: exit 0. `vitest run`: 1,265 tests in 68 files passed. |
 | `check:cloud` and `smoke:cloud` | `check:cloud` passed. Final loopback smoke passed: 5 HTML routes, 8 discovered hashed assets, service-worker JavaScript and root-scope manifest. Actual compiled availability and generation RPCs both returned `ai-not-activated`; child global-fetch attempts were 0, with the guard installed throughout. Only fictional fixture input was submitted. |
-| Actual production browser | Not completed: Playwright is installed but Chromium is absent. One authorised installation attempt returned an unusable ZIP archive; automatic retries were stopped. Hydration, real worker lifecycle and physical phones are not verified by the HTTP smoke. |
+| Actual production browser | Completed locally for the exact portable package in Chromium after the original local Chromium-download attempt failed. Normal and enlarged-text layout, tested choices, reload/resume, real worker activation/root control and the observed cache exclusions passed. This is not hosted production, physical-device or screen-reader verification. See the linked browser record. |
 | Docker image build/run | Unverified. Docker is absent in this execution environment; Lovable has not verified a container build. |
 | Hosted production, provider adapter and AI | Not performed by this preparation. No AWS/Azure adapter is installed, no cloud deployment is made and no model is invoked. |
 

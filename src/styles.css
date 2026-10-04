@@ -1542,6 +1542,11 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   overflow-wrap: break-word;
 }
 
+/* Expandable term headings also wrap long words when enlarged text needs it. */
+.journey-main details > summary {
+  overflow-wrap: anywhere;
+}
+
 /* Crisis actions stay inside the reading column at any text size. */
 .bfa-support-action {
   max-width: 100%;

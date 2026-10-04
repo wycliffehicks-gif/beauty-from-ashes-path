@@ -23,7 +23,7 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="September 7, 2026">
+    <LegalPage title="Privacy Policy" lastUpdated="October 4, 2026">
       <p>
         Beauty from Ashes is provided by Resurgence Therapeutics. This policy
         explains, in plain language, how information is handled by the current
@@ -36,9 +36,11 @@ function PrivacyPage() {
         ask for your name, email address, diagnosis or medical record in the journey.
         Your selected answers may still reveal personal or sensitive information.
         The app saves them in this browser when storage is available. Written
-        reflections are prepared locally. If you separately choose an AI reflection
-        when it is available, today’s selected answers and relevant journey material
-        are sent through Lovable to its AI provider, as explained below. This app
+        reflections are prepared locally. AI generation is unavailable right now.
+        The app’s disabled AI connection is set up to send today’s selected answers,
+        your Scripture and spiritual-reflection preference, and relevant journey
+        material through Lovable to its AI provider after your separate choice,
+        as explained below. This app
         is not a monitored clinical service.
       </p>
 
@@ -94,9 +96,12 @@ function PrivacyPage() {
       </ul>
 
       <p>
-        The app also uses your browser’s <em>session storage</em>, which is
-        cleared when you close the browser, to remember that the launch screen
-        has already been shown so it does not repeat.
+        The app also uses your browser’s <em>session storage</em> to remember that
+        the launch screen has already been shown so it does not repeat. This
+        storage belongs to the browser session. A browser may restore it when
+        restoring a tab or session, so closing the browser does not guarantee
+        removal. “Clear or restart my journey” asks the browser to remove the
+        app’s session information and reports if removal cannot be confirmed.
       </p>
       <p>
         An earlier weekly “deep session” feature may also have left session-only

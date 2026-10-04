@@ -209,10 +209,10 @@ describe("B — the Privacy Notice describes what is actually stored", () => {
     expect(privacy).toContain("tells you if that removal cannot be confirmed");
   });
 
-  test("the shown date is updated without touching the legal acceptance version", () => {
-    expect(privacy).toContain('lastUpdated="September 7, 2026"');
+  test("the corrected notice date and legal acceptance version are updated together", () => {
+    expect(privacy).toContain('lastUpdated="October 4, 2026"');
     expect(read("src/lib/prefs.ts")).toContain(
-      'export const LEGAL_BUNDLE_VERSION = "2026-08-16.1";',
+      'export const LEGAL_BUNDLE_VERSION = "2026-10-04.1";',
     );
   });
 
@@ -232,7 +232,7 @@ describe("B — the Settings privacy summary matches reality", () => {
 
   test("clearing is a request, with an honest failure promise", () => {
     expect(PRIVACY_SUMMARY_POINTS).toContain(
-      "You can ask the app to clear or restart your saved journey information from this page. If removal cannot be confirmed, the app will tell you.",
+      "You can ask the app to clear or restart your saved journey information in this browser from this page. This does not remove downloaded, printed or shared copies or records held by an external service. If removal cannot be confirmed, the app will tell you.",
     );
     expect(PRIVACY_SUMMARY_POINTS.join(" ")).not.toContain(
       "clear or restart everything saved here",
@@ -252,7 +252,7 @@ describe("C — the install paragraph no longer promises offline use", () => {
 
   test("it asks for a connection during the pilot", () => {
     expect(settings).toContain(
-      "Add Beauty from Ashes to your home screen for easier access. Please use an internet connection during this pilot; offline use has not been verified.",
+      "Add Beauty from Ashes to your home screen for easier access. Please stay online during this pilot: opening the journey requires an internet connection for an access check. Adding the app to your home screen does not make it fully usable offline.",
     );
     expect(settings).not.toContain("It will work offline");
   });

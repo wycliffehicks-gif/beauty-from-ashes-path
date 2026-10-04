@@ -145,8 +145,9 @@ function SettingsPage() {
         >
           <h2 className="bfa-h2 font-serif text-foreground">Add to this device</h2>
           <p className="bfa-copy-support mt-1 text-muted-foreground">
-            Add Beauty from Ashes to your home screen for easier access. Please use an internet
-            connection during this pilot; offline use has not been verified.
+            Add Beauty from Ashes to your home screen for easier access. Please stay online during
+            this pilot: opening the journey requires an internet connection for an access check.
+            Adding the app to your home screen does not make it fully usable offline.
           </p>
 
           <button
@@ -231,9 +232,11 @@ function SettingsPage() {
           and recorded agreement in this browser on this device. If storage is
           unavailable, information may exist only in the current tab and can be
           lost when that tab closes or reloads. Choosing Clear or restart my
-          journey asks the app to remove its saved journey information and return
-          you to the opening. If removal cannot be confirmed, the app will tell
-          you.
+          journey asks the app to remove its saved journey information from this
+          browser and return you to the opening. It does not remove downloaded,
+          printed or shared copies, notes kept outside the app, or records held
+          by an external service. If removal cannot be confirmed, the app will
+          tell you.
         </p>
 
         {!confirming ? (

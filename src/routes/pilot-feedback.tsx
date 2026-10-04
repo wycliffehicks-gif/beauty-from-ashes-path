@@ -24,7 +24,7 @@ export const Route = createFileRoute("/pilot-feedback")({
 
 function PilotFeedbackPage() {
   return (
-    <LegalPage title="Pilot Feedback" lastUpdated="August 17, 2026">
+    <LegalPage title="Pilot Feedback" lastUpdated="October 4, 2026">
       <p>
         This page is for feedback on the private pilot of <strong>Beauty from Ashes: The First Journey</strong>
         — things that felt confusing, missing, helpful, or hard to use.
@@ -96,9 +96,8 @@ function PilotFeedbackPage() {
         </p>
         <p className="bfa-copy-support text-muted-foreground">
           There is nothing to buy in this private version, and answering has no effect on your
-          access. It only helps decide whether the first four days should stay free later, and what
-          a fair one-time price for the rest would be. Please do not include payment details of any
-          kind.
+          access. It helps us consider a future offer and what a fair one-time price might be.
+          Please do not include payment details of any kind.
         </p>
       </div>
 

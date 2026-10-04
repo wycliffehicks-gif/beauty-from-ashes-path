@@ -4,6 +4,8 @@
 // request is refused.
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   JOURNEY_AI_ACTIVATION_ENV,
@@ -28,6 +30,9 @@ import {
   saveAiReflection,
 } from "@/lib/ai/journey-ai-store";
 import { getFirstJourneyDay } from "@/content/first-journey";
+import { hasCurrentAcceptance } from "@/lib/agreement";
+import { LEGAL_BUNDLE_VERSION, readPrefs, usePrefs, type Prefs } from "@/lib/prefs";
+import { emptyProgress, JOURNEY_STORAGE_KEY } from "@/lib/journey/progress";
 
 /* A local fake browser. No jsdom, no real storage, no events leave this file. */
 class FakeStorage {
@@ -537,5 +542,66 @@ describe("AI response store", () => {
     );
     expect(aiConsentAccepted()).toBe(false);
     expect(JOURNEY_AI_DISCLOSURE_VERSION.length).toBeGreaterThan(0);
+  });
+
+  it("retains predecessor AI bytes without reviving its response when consent is renewed", () => {
+    const identity = identityFor(dayRequest(2));
+    saveAiReflection({ dayId: "day-2", text: GOOD_TEXT, identity });
+    const stored = JSON.parse(fakeLocal.getItem("bfa.ai.journey.v1")!);
+    stored.byDay["day-02"].off.disclosureVersion = "2026-09-07.2";
+    const priorResponse = JSON.stringify(stored);
+    const priorConsent = JSON.stringify({
+      accepted: true, disclosureVersion: "2026-09-07.2", recordedAt: "2026-09-07T12:00:00.000Z",
+    });
+    fakeLocal.setItem("bfa.ai.journey.v1", priorResponse);
+    fakeLocal.setItem("bfa.ai.consent.v1", priorConsent);
+
+    expect(aiConsentAccepted()).toBe(false);
+    expect(readAiReflection("day-2", identity.canonicalIdentity)).toBeNull();
+    expect(fakeLocal.getItem("bfa.ai.consent.v1")).toBe(priorConsent);
+    expect(fakeLocal.getItem("bfa.ai.journey.v1")).toBe(priorResponse);
+
+    expect(recordAiConsent(true)).toBe(true);
+    expect(aiConsentAccepted()).toBe(true);
+    expect(readAiReflection("day-2", identity.canonicalIdentity)).toBeNull();
+    expect(fakeLocal.getItem("bfa.ai.journey.v1")).toBe(priorResponse);
+  });
+
+  it("renews predecessor legal acceptance while preserving spiritual preference and journey bytes", () => {
+    const priorPrefs = JSON.stringify({
+      onboarded: true, showSpiritual: true, visitedDays: [1, 2],
+      legalAcceptance: { version: "2026-08-16.1", acceptedAt: "2026-08-16T12:00:00.000Z" },
+    });
+    const priorProgress = JSON.stringify({
+      ...emptyProgress,
+      locator: { dayId: "day-02", step: "arrive", index: 0 },
+      completedDays: ["day-01"],
+    });
+    fakeLocal.setItem("bfa.v1", priorPrefs);
+    fakeLocal.setItem(JOURNEY_STORAGE_KEY, priorProgress);
+
+    expect(hasCurrentAcceptance(readPrefs())).toBe(false);
+    expect(readPrefs().showSpiritual).toBe(true);
+    expect(fakeLocal.getItem("bfa.v1")).toBe(priorPrefs);
+    expect(fakeLocal.getItem(JOURNEY_STORAGE_KEY)).toBe(priorProgress);
+
+    // Obtain the real preference updater without introducing a browser harness.
+    // The opening flow submits this same patch; the updater merges stored prefs.
+    let update: ((patch: Partial<Prefs>) => void) | undefined;
+    function PreferenceProbe() {
+      const [, updatePrefs] = usePrefs();
+      update = updatePrefs;
+      return null;
+    }
+    renderToStaticMarkup(createElement(PreferenceProbe));
+    update!({
+      onboarded: true,
+      legalAcceptance: { version: LEGAL_BUNDLE_VERSION, acceptedAt: "2026-10-04T12:00:00.000Z" },
+    });
+
+    expect(hasCurrentAcceptance(readPrefs())).toBe(true);
+    expect(readPrefs().showSpiritual).toBe(true);
+    expect(readPrefs().visitedDays).toEqual([1, 2]);
+    expect(fakeLocal.getItem(JOURNEY_STORAGE_KEY)).toBe(priorProgress);
   });
 });

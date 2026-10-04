@@ -23,7 +23,7 @@ export const Route = createFileRoute("/contact-support")({
 
 function ContactSupportPage() {
   return (
-    <LegalPage title="Contact & Technical Support" lastUpdated="August 17, 2026">
+    <LegalPage title="Contact & Technical Support" lastUpdated="October 4, 2026">
       <p>
         This page is for technical problems with the app, accessibility
         concerns, factual corrections and product feedback before public
@@ -92,8 +92,12 @@ function ContactSupportPage() {
         <li>Browser (for example, Safari, Chrome, Firefox) and version if known.</li>
         <li>Which screen or page you were on.</li>
         <li>What happened, and what you expected instead.</li>
-        <li>Whether refreshing the page changed anything.</li>
+        <li>If you already tried refreshing the page, whether it changed anything.</li>
       </ul>
+      <p className="bfa-copy-support text-muted-foreground">
+        You do not need to refresh before contacting us. Refreshing can lose unsaved notes and,
+        when browser storage is unavailable, journey information held only in the current tab.
+      </p>
       <p className="bfa-copy-support text-muted-foreground">
         Please leave out any personal, identifying or health information — it
         is not needed to reproduce a technical issue.

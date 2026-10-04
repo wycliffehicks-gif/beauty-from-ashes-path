@@ -302,3 +302,27 @@ Physical phones, actual screen-reader interaction, the container image and the
 eventual deployed host remain separate checks. The stay-online instruction,
 source-authority distinctions and future AI-release gates are preserved.
 Participant AI remains off and the project remains unpublished.
+
+
+## Participant information preparation — 4 October 2026, Toronto
+
+The existing invitation/instructions/feedback pack is reconciled with current
+source, with a separate future-AI explanation and explicit unresolved fields.
+Factual app help/privacy wording now clarifies online access, spiritual preference
+in a future AI request, storage/removal limits, readable-export limitations and
+support. No ten-day teaching or candidate SRT policy was changed. See the
+[review record](PARTICIPANT_INFORMATION_REVIEW_2026-10-04.md) for source mapping,
+notice-version consequences and remaining requirements.
+
+Legal acknowledgement and AI disclosure are versioned `2026-10-04.1` together
+with the changed wording. Renewed acknowledgement preserves saved progress and
+spiritual preference. Old AI consent and cached-response versions are stale;
+raw saved information is not deleted and no regeneration is enabled.
+
+Carl’s standing correction is explicit: keep Lovable and GitHub equally updated
+for every repository change, and verify the complete remote tree before claiming
+sync. Local verification passed 1,363 tests in 72 files, TypeScript, the portable
+Node build and compiled AI-off HTTP smoke. The launch plan records Lovable’s
+normal build and independently checked sync. Participant AI stays off; the project remains unpublished. No reflection-model calls,
+cloud provisioning, new purchases, invitations or participant messages are part
+of this preparation. Final provider details and substantive review remain open.

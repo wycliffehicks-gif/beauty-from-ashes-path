@@ -44,7 +44,6 @@ export { JOURNEY_GENERATION_VERSION, JOURNEY_MODEL_ID } from "@/lib/ai/journey-i
 
 /* ---------------------------------------------------------------- defaults -- */
 
-
 /** Output token ceiling, INCLUDING any reasoning tokens the model spends. */
 export const JOURNEY_MAX_OUTPUT_TOKENS = 4096;
 
@@ -196,6 +195,21 @@ function preparedSize(prepared: PreparedJourneyGeneration): number {
   return prepared.policy.length + prepared.groundedPayload.length;
 }
 
+/** Shared preflight: no provider, reservation, or asynchronous work occurs here. */
+export function prepareJourneyReflection(
+  rawRequest: unknown,
+):
+  | { ok: true; prepared: PreparedJourneyGeneration }
+  | { ok: false; code: "invalid-request" | "preparation-too-large" } {
+  const parsed = parseJourneyRequest(rawRequest);
+  if (!parsed.ok) return { ok: false, code: "invalid-request" };
+  const prepared = prepareJourneyGeneration(parsed.request);
+  if (preparedSize(prepared) > JOURNEY_MAX_PREPARED_CHARS) {
+    return { ok: false, code: "preparation-too-large" };
+  }
+  return { ok: true, prepared };
+}
+
 /** Only finite, non-negative, bounded integers survive. Never invents cost. */
 function safeUsage(raw: unknown): JourneyProviderUsage | undefined {
   if (typeof raw !== "object" || raw === null) return undefined;
@@ -246,17 +260,20 @@ export async function generateJourneyReflection(
     return { ok: false, code: "pilot-admission-not-established", providerCalled: false };
   }
 
-  const parsed = parseJourneyRequest(args.rawRequest);
-  if (!parsed.ok) {
-    return { ok: false, code: "invalid-request", providerCalled: false };
-  }
+  const preparation = prepareJourneyReflection(args.rawRequest);
+  if (!preparation.ok) return { ...preparation, providerCalled: false };
+  return generatePreparedJourneyReflection(preparation.prepared, provider);
+}
 
-  const prepared = prepareJourneyGeneration(parsed.request);
-  if (preparedSize(prepared) > JOURNEY_MAX_PREPARED_CHARS) {
-    // Fail rather than truncate: a shortened source would change meaning.
-    return { ok: false, code: "preparation-too-large", providerCalled: false };
-  }
-
+/**
+ * Dispatch an already validated/prepared request exactly once. This is a pure
+ * internal building block, not an admission boundary. Its caller must establish
+ * gates and (where required) commit a reservation before supplying a provider.
+ */
+export async function generatePreparedJourneyReflection(
+  prepared: PreparedJourneyGeneration,
+  provider: JourneyModelProvider,
+): Promise<JourneyGenerationResult> {
   const providerRequest: JourneyProviderRequest = {
     systemPolicy: prepared.policy,
     groundedPayload: prepared.groundedPayload,

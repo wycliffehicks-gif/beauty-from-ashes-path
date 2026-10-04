@@ -6,6 +6,11 @@ Local preparation dated 4 October 2026. Participant AI remains disabled by defau
 
 `src/lib/ai/journey-usage-reservation.ts` contains a dormant provider-neutral accounting decision and a transactional storage interface. It is not imported by the participant endpoint or used by the app. There is no production storage adapter. It is ready for fictional tests and later integration after admission identity, a permitted provider, its verified maximum charge and a small approved budget are settled.
 
+The later [reserved-request rehearsal](RESERVED_REQUEST_REHEARSAL.md) joins this
+decision to shared request validation and prepared generation in a separate
+dormant entry point. That rehearsal's evidence and limits are recorded there;
+it does not install identity, attempt issuance, a database or live enforcement.
+
 Application-owned server and browser error paths now emit fixed diagnostic codes. `safe-error-reporting.ts` drops arbitrary exception messages, causes, stacks, routes, URLs and caller context. `server.ts` explicitly initializes sanitisation before importing the server framework, so the package's `sideEffects: false` setting cannot discard a side-effect-only import. The former process-wide raw “last error” cache was removed. The root error component uses the same bounded code helper. The existing journey generation/boundary/transport already discard exception text and return whitelisted failure codes; those policies and contracts remain unchanged.
 
 On the server, `console.error` preserves only an exact two-argument `BFA_EVENT` plus allowlisted-code message. Other `console.error` arguments and all `console.warn` arguments are **dropped**, including third-party framework diagnostics, and replaced by a generic category. This sacrifices raw debugging detail intentionally; it is not intelligent redaction. Browser forwarding passes only a fixed code to existing optional hooks and catches reporter failures. No settings were changed in hosting or provider accounts.

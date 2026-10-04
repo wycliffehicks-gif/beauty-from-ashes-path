@@ -12,6 +12,7 @@ import { parseJourneyRequest } from "@/lib/ai/journey-contract";
 import {
   generateJourneyReflection,
   type JourneyGenerationFailureCode,
+  type JourneyGenerationResult,
   type JourneyModelProvider,
 } from "@/lib/ai/journey-generation";
 import type { JourneyResponseIdentity } from "@/lib/ai/journey-policy";
@@ -66,6 +67,18 @@ export interface JourneyBoundaryInput {
 
 type AvailabilityDeps = Pick<JourneyBoundaryDeps, "env" | "verifyPilotAdmission">;
 
+/** Detached four-field snapshot; no caller object survives an asynchronous gate. */
+export interface JourneyBoundaryRequest {
+  readonly day: number;
+  readonly answerMeaningVersion: string;
+  readonly answers: readonly string[];
+  readonly spiritual: boolean;
+}
+
+type BoundaryPreflight =
+  | { ok: true; request: JourneyBoundaryRequest }
+  | { ok: false; code: JourneyBoundaryRefusal };
+
 function activationAvailability(env: EnvLike | undefined): JourneyAiAvailability {
   const activation = readJourneyAiActivation(env);
   if (!activation.activationEnabled) return { available: false, code: "ai-not-activated" };
@@ -105,10 +118,10 @@ export async function readJourneyAiAvailability(
   return activation.available ? pilotAvailability(deps) : activation;
 }
 
-export async function runJourneyBoundary(
+export async function preflightJourneyBoundary(
   input: unknown,
-  deps: JourneyBoundaryDeps,
-): Promise<JourneyBoundaryResult> {
+  deps: AvailabilityDeps,
+): Promise<BoundaryPreflight> {
   const activation = activationAvailability(deps.env);
   if (!activation.available) return { ok: false, code: activation.code };
 
@@ -129,18 +142,32 @@ export async function runJourneyBoundary(
 
   // A shape check first, so an invalid day request cannot reach the gateway even
   // when everything else is in order.
-  if (!parseJourneyRequest(envelope.request).ok) {
+  const parsed = parseJourneyRequest(envelope.request);
+  if (!parsed.ok) {
     return { ok: false, code: "invalid-request" };
   }
+  const request = Object.freeze({
+    day: parsed.request.day.day,
+    answerMeaningVersion: parsed.request.answerMeaningVersion,
+    answers: Object.freeze([...parsed.request.answers]),
+    spiritual: parsed.request.spiritual,
+  });
 
   // The client gate and any caller-supplied "admitted" claim are NOT proof. Only
   // the server-side session check is, and any failure fails closed.
   const admission = await pilotAvailability(deps);
   if (!admission.available) return { ok: false, code: admission.code };
+  return { ok: true, request };
+}
 
+/** Shared lazy factory and response boundary; callers establish all gates first. */
+export async function dispatchJourneyBoundary(
+  createProvider: JourneyBoundaryDeps["createProvider"],
+  generate: (provider: JourneyModelProvider) => Promise<JourneyGenerationResult>,
+): Promise<JourneyBoundaryResult> {
   let provider: JourneyModelProvider;
   try {
-    provider = await deps.createProvider();
+    provider = await createProvider();
   } catch {
     return { ok: false, code: "provider-unavailable" };
   }
@@ -151,11 +178,7 @@ export async function runJourneyBoundary(
   ) {
     return { ok: false, code: "provider-invalid-output" };
   }
-  const result = await generateJourneyReflection({
-    rawRequest: envelope.request,
-    gates: { activationEnabled: true, consentEstablished: true, pilotAdmitted: true },
-    provider,
-  });
+  const result = await generate(provider);
 
   if (!result.ok) return { ok: false, code: result.code };
   if (!result.meta.acceptedAsLiveAi || result.meta.identity.provenance !== "live-model") {
@@ -169,4 +192,19 @@ export async function runJourneyBoundary(
     identity: result.meta.identity,
     ...(result.meta.usage ? { usage: { ...result.meta.usage } as Record<string, number> } : {}),
   };
+}
+
+export async function runJourneyBoundary(
+  input: unknown,
+  deps: JourneyBoundaryDeps,
+): Promise<JourneyBoundaryResult> {
+  const checked = await preflightJourneyBoundary(input, deps);
+  if (!checked.ok) return checked;
+  return dispatchJourneyBoundary(deps.createProvider, (provider) =>
+    generateJourneyReflection({
+      rawRequest: checked.request,
+      gates: { activationEnabled: true, consentEstablished: true, pilotAdmitted: true },
+      provider,
+    }),
+  );
 }

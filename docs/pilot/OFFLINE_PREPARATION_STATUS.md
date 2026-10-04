@@ -160,3 +160,40 @@ lifecycle and physical phones remain separate checks. No cloud resources,
 model calls, purchases, participant messages or publication were performed.
 The AWS/Azure adapter, durable usage integration, approved disclosure and
 actual model-quality review remain required before participant AI.
+
+## Built-app browser checks and readability repairs — 4 October 2026
+
+The earlier production-browser gaps above are historical. Chromium now
+exercised both the normal built app in a local Cloudflare simulator and the
+exact portable Node package. See
+[`PRODUCTION_BROWSER_CHECK_2026-10-04.md`](PRODUCTION_BROWSER_CHECK_2026-10-04.md)
+for measured results and limits.
+
+Two reproduced enlarged-text defects were repaired: a Day 2 practice list
+overflowing sideways, and a very tall sticky navigation bar splitting
+Continue across lines. The list reflow rule now applies at every width. A
+scoped container query places full-width navigation after the reading area
+when text is large relative to available space. Ordinary text retains the
+existing sticky layout. One obsolete “without a code” phrase was removed
+from the connection-error support sentence; access logic and authored content
+were preserved.
+
+The final application revision independently fetched from GitHub main is
+`bf2fa23f9e939f7a4c8e166db7a5946a9db3c10e`. The prebuilt Node package matches
+that source. At 320/360/393/430px with 32px root text, the tested navigation
+was full-width, in document flow, one-line and free of horizontal overflow.
+Normal 320/393/768/1280px layouts retained sticky two-column navigation.
+Tested fictional selections survived reload/resume, and the actual app's
+worker activated and controlled the page without observed dynamic/query
+requests entering its cache. TypeScript, all 1,265 tests and the normal
+production build passed.
+
+A warmed shell still requires the network for the entry check; offline
+loading showed the connection/access message while preserving saved choices.
+Keep the existing stay-online pilot instruction. Do not broaden worker
+caching or promise a fully offline journey based on this pass.
+
+The container image, real cloud host, physical Android/iPhone and screen-reader
+checks remain open. Participant AI stays off; the project is unpublished.
+No paid model calls, new purchases, cloud provisioning or participant messages
+were made. All source-authority and future AI-release requirements above remain.

@@ -262,3 +262,43 @@ new purchase or participant message was made.
 TypeScript passed, and the focused four-suite run passed 129 tests (included
 in the full-suite total). GitHub/Lovable sync and build evidence are recorded
 in the updated launch handoff.
+
+## Keyboard and focus repairs — 4 October 2026, Toronto
+
+A built-app keyboard audit reproduced controls fully hidden by the ordinary
+sticky dock, lost focus when opening/cancelling the inline clear confirmation,
+lost focus on returning Home, and question choices without a labelled group.
+The repaired source preserves authored text, optional toggle selections,
+saved progress, code-free entry and the existing normal/enlarged-text layouts.
+See [the keyboard/focus record](KEYBOARD_FOCUS_CHECK_2026-10-04.md) for precise
+scope, before/after evidence and verification limits.
+
+Local verification passed **1,361 tests in 72 files**, installed TypeScript,
+independent source review and the portable Node build. Sixteen new lifecycle
+and measured-geometry cases are included in that total. Controlled test
+geometry does not substitute for the separate built-app browser retest.
+
+That retest now passed every stage of all ten days at normal desktop and
+320px widths on the exact Node package, including Tab and Shift+Tab targets
+clearing the dock. Page/onboarding navigation, clear-confirmation cancellation,
+native time-control focus, toggle selection/deselection, saved progress and
+Scripture preference checks passed. No page errors or Generate controls were
+reported; external requests were blocked. Lovable also passed the same full
+suite, TypeScript and its normal build. GitHub `939c5d3` was independently
+fetched and its complete tree matched the reviewed local source.
+
+The browser pass additionally identified a pre-existing long expandable
+heading that overflowed at enlarged text on Day 4. The linked record separates
+its narrow CSS follow-up from the completed keyboard-source verification.
+The rebuilt Node package and normal Lovable build passed. A bounded browser
+check confirmed Day 4 at 320px/root 32px now has zero horizontal overflow with
+the disclosure closed or open, while Day 2's enlarged layout and Day 1's
+keyboard clearance remain intact. No repeat full suite was needed for the
+single scoped wrapping rule. Final application GitHub revision
+`5ada000f690be3c0b13b0fc7c3f54f0dc1c1cce1` was independently fetched and its
+complete tree matched the reviewed local source.
+
+Physical phones, actual screen-reader interaction, the container image and the
+eventual deployed host remain separate checks. The stay-online instruction,
+source-authority distinctions and future AI-release gates are preserved.
+Participant AI remains off and the project remains unpublished.

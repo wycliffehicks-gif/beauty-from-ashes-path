@@ -19,6 +19,15 @@ The temporary Wrangler log was no longer available in the final pass, so the
 two filenames could not be recovered. The later Node check below uses the
 portable package directly and does not depend on that simulator.
 
+A subsequent keyboard audit at `982b515` reproduced the simulator warnings
+and identified `server/_ssr/prefs-CU763jGF.mjs` and `server/_runtime.mjs` as
+the skipped imports. This is later attribution, not recovery of the original
+log. That audit also reproduced keyboard targets hidden beneath the ordinary
+sticky dock; the reachability checks in this earlier pass did not establish
+keyboard-focus clearance. See the later
+[keyboard/focus record](KEYBOARD_FOCUS_CHECK_2026-10-04.md) for its repair and
+separate production retest.
+
 ## Observed before the focused repair
 
 - Home, onboarding, Days 1–2, Settings and Practices loaded without fatal page

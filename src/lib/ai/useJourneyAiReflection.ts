@@ -11,10 +11,11 @@ import {
 } from "@/lib/ai/journey-ai-store";
 import { CLEAR_STATUS_EVENT, removeLocalConfirmed } from "@/lib/storage-status";
 import type { JourneyBoundaryResult } from "@/lib/ai/journey-boundary";
+import { getJourneyAiFailure, normalizeJourneyAiFailure, type JourneyAiFailureCode } from "@/lib/ai/journey-ai-feedback";
 
 export type JourneyAiStatus = "idle" | "ready" | "generating" | "shown" | "failed";
 export interface JourneyAiRequestInput { day: number; answerMeaningVersion: string; answers: string[]; spiritual: boolean }
-interface Attempt { promise: Promise<JourneyBoundaryResult>; invalidated: boolean; deadlineAt: number }
+interface Attempt { promise: Promise<JourneyBoundaryResult>; invalidated: boolean; cleared: boolean; provisionalSuccess?: boolean; deadlineAt: number }
 export const JOURNEY_AVAILABILITY_WAIT_MS = 10_000;
 // Longer than the current 45-second server transport deadline. A client timeout
 // does not prove that a server request stopped or that no cost was incurred.
@@ -22,6 +23,24 @@ export const JOURNEY_GENERATION_WAIT_MS = 60_000;
 const CLIENT_WAIT_EXPIRED = Symbol("client-wait-expired");
 const pending = new Map<string, Attempt>();
 const boundTargets = new WeakSet<object>();
+// Refusals and unsettled presentation outcomes survive mode changes/remounts in
+// this window. This is only a UX hold: reload/clear is not durable accounting or
+// permission to redispatch.
+const failuresByWindow = new WeakMap<object, Map<string, JourneyAiFailureCode>>();
+function windowFailures() {
+  if (typeof window === "undefined") return null;
+  let failures = failuresByWindow.get(window);
+  if (!failures) { failures = new Map(); failuresByWindow.set(window, failures); }
+  return failures;
+}
+function clearsFailureHistory(event: Event): boolean {
+  if (event.type === CLEAR_STATUS_EVENT) return true;
+  if (event.type === "storage") {
+    const e = event as StorageEvent;
+    return e.newValue === null && (e.key === null || e.key === JOURNEY_AI_STORAGE_KEY);
+  }
+  return (event as CustomEvent<{ kind?: string }>).detail?.kind === "clear";
+}
 function invalidates(event: Event): boolean {
   if (event.type === "storage") {
     const e = event as StorageEvent;
@@ -41,6 +60,10 @@ function bindInvalidation() {
   if (typeof window === "undefined" || boundTargets.has(window)) return;
   boundTargets.add(window);
   const change = (event: Event) => {
+    if (clearsFailureHistory(event)) {
+      for (const attempt of pending.values()) attempt.cleared = true;
+      windowFailures()?.clear();
+    }
     if (invalidates(event)) for (const attempt of pending.values()) attempt.invalidated = true;
   };
   window.addEventListener(JOURNEY_AI_EVENT, change);
@@ -48,22 +71,16 @@ function bindInvalidation() {
   window.addEventListener("storage", change);
 }
 export function journeyAiFailureMessage(code: string): string {
-  switch (code) {
-    case "ai-not-activated": case "ai-not-released": return "The AI reflection is not switched on yet. Your saved reflection remains available, or you can choose the written reflection.";
-    case "pilot-not-verified": case "pilot-check-unavailable": return "We could not confirm your access just now. Please try again when your connection is available.";
-    case "consent-invalid": case "consent-version-stale": case "consent-not-accepted": return "Please read the current AI explanation and choose whether to send today's selections.";
-    case "provider-rate-limited": return "The AI service is busy right now. You can try again in a little while.";
-    case "provider-budget-exhausted": return "The AI reflection is unavailable at the moment. You can keep a saved reflection or choose the written reflection.";
-    case "request-status-unknown": return "This request is taking longer than expected. We cannot confirm whether it finished. You can choose the written reflection while it settles.";
-    case "provider-timeout": case "provider-network": case "provider-unavailable": return "We could not reach the AI service. Please check your connection and try again.";
-    default: return "The AI reflection could not be completed this time. You can try again or choose the written reflection.";
-  }
+  return getJourneyAiFailure(code).message;
 }
 interface View { key: string; status: JourneyAiStatus; failureCode?: string }
 export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
   const callServer = useServerFn(generateJourneyAiReflection);
   const checkAvailability = useServerFn(getJourneyAiAvailability);
-  const [availability, setAvailability] = useState({ available: false, loading: true });
+  const [availability, setAvailability] = useState<{
+    available: boolean; loading: boolean; checked: boolean; failureCode?: JourneyAiFailureCode;
+  }>({ available: false, loading: true, checked: false });
+  const [availabilityCheck, setAvailabilityCheck] = useState(0);
   const [, bump] = useState(0);
   const [view, setView] = useState<View | null>(null);
   const alive = useRef(false), epoch = useRef(0);
@@ -71,6 +88,14 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
   const key = presentation?.identity.canonicalIdentity ?? "";
   const mode: JourneyReflectionMode = presentation?.explicitMode ?? (presentation?.stored ? "ai" : availability.available && presentation ? "ai" : "authored");
   const latestKey = useRef(key), latestMode = useRef(mode);
+  const failureHistory = windowFailures();
+  const reportFailure = useCallback((requestKey: string, code: unknown, replaceOwnProvisional = false) => {
+    const previous = failureHistory?.get(requestKey);
+    const normalized = replaceOwnProvisional && previous === "request-status-unknown"
+      ? normalizeJourneyAiFailure(code) : previous ?? normalizeJourneyAiFailure(code);
+    failureHistory?.set(requestKey, normalized);
+    setView({ key: requestKey, status: "failed", failureCode: normalized });
+  }, [failureHistory]);
   // Synchronous identity guard: old text is never exposed for a new render,
   // including the render before useEffect cleanup on spiritual-mode changes.
   if (latestKey.current !== key || latestMode.current !== mode) {
@@ -87,17 +112,34 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
   }, []);
   useEffect(() => {
     let active = true;
-    setAvailability({ available: false, loading: true });
+    const checkedKey = latestKey.current;
+    setAvailability(previous => ({ ...previous, loading: true }));
+    const fail = () => setAvailability({ available: false, loading: false, checked: true, failureCode: "availability-check-unavailable" });
     const timer = setTimeout(() => {
       if (!active) return;
       active = false;
-      setAvailability({ available: false, loading: false });
+      fail();
     }, JOURNEY_AVAILABILITY_WAIT_MS);
     Promise.resolve().then(() => checkAvailability()).then(result => {
-      if (active) { active = false; clearTimeout(timer); setAvailability({ available: result?.available === true, loading: false }); }
-    }).catch(() => { if (active) { active = false; clearTimeout(timer); setAvailability({ available: false, loading: false }); } });
+      if (!active) return;
+      active = false; clearTimeout(timer);
+      if (result?.available === true) {
+        // Only an explicit check can clear an access refusal. A remount or a
+        // successful check must never erase a usage/provider/uncertain hold.
+        const held = failureHistory?.get(checkedKey);
+        if (availabilityCheck > 0 && held && getJourneyAiFailure(held).recovery === "check-availability") {
+          failureHistory?.delete(checkedKey);
+          setView(previous => previous?.key === checkedKey ? null : previous);
+        }
+        setAvailability({ available: true, loading: false, checked: true });
+      } else {
+        const code = result && "code" in result && ["ai-not-activated", "ai-not-released", "pilot-not-verified", "pilot-check-unavailable"].includes(result.code)
+          ? normalizeJourneyAiFailure(result.code) : "availability-check-unavailable";
+        setAvailability({ available: false, loading: false, checked: true, failureCode: code });
+      }
+    }).catch(() => { if (active) { active = false; clearTimeout(timer); fail(); } });
     return () => { active = false; clearTimeout(timer); };
-  }, [checkAvailability]);
+  }, [checkAvailability, availabilityCheck, failureHistory]);
   useEffect(() => {
     if (typeof window === "undefined") return;
     const change = (event: Event) => {
@@ -123,27 +165,43 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
   }, [stableInput]);
   const generate = useCallback(async () => {
     const current = resolveSavedAiPresentation(stableInput);
-    if (!current || !stableInput || !availability.available) return;
+    if (!current || !stableInput || !availability.available || availability.loading) return;
     const requestKey = current.identity.canonicalIdentity;
-    if (!aiConsentAccepted()) { setView({ key: requestKey, status: "failed", failureCode: "consent-not-accepted" }); return; }
     // Restoration never regenerates an existing matching accepted response.
     if (current.stored) { saveAiMode(current.dayId, stableInput.spiritual, "ai"); bump(n => n + 1); return; }
+    const held = failureHistory?.get(requestKey);
+    if (held) { reportFailure(requestKey, held); return; }
+    if (!aiConsentAccepted()) { reportFailure(requestKey, "consent-not-accepted"); return; }
     if (current.mode !== "ai") saveAiMode(current.dayId, stableInput.spiritual, "ai");
     latestMode.current = "ai";
     const ownEpoch = epoch.current;
     let attempt = pending.get(requestKey);
     if (attempt?.invalidated) {
-      // An abandoned or timed-out paid call must settle before another begins.
-      setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+      // An abandoned or timed-out call cannot be replaced. Reporting uncertainty
+      // keeps a separate same-window hold even after the pending call settles.
+      reportFailure(requestKey, "request-status-unknown");
       return;
     }
     if (!attempt) {
-      attempt = { invalidated: false, deadlineAt: Date.now() + JOURNEY_GENERATION_WAIT_MS, promise: Promise.resolve().then(() => {
+      attempt = { invalidated: false, cleared: false, deadlineAt: Date.now() + JOURNEY_GENERATION_WAIT_MS, promise: Promise.resolve().then(() => {
         if (!aiConsentAccepted() || pending.get(requestKey)?.invalidated) return { ok: false, code: "consent-not-accepted" } as JourneyBoundaryResult;
         return callServer({ data: { request: stableInput, consent: currentJourneyAiConsent() } });
       }) as Promise<JourneyBoundaryResult> };
       pending.set(requestKey, attempt);
       const owned = attempt;
+      // Retain only bounded outcome codes independently of mounted views. A
+      // successful result stays held until an active guarded consumer accepts it;
+      // leaving the screen cannot turn discarded output into a fresh dispatch.
+      const retainOutcome = (code: unknown, provisionalSuccess = false) => {
+        if (!owned.cleared && !failureHistory?.has(requestKey)) {
+          failureHistory?.set(requestKey, normalizeJourneyAiFailure(code));
+          owned.provisionalSuccess = provisionalSuccess;
+        }
+      };
+      void attempt.promise.then(result => {
+        retainOutcome(result?.ok === true ? "request-status-unknown"
+          : typeof result === "object" && result !== null && "code" in result ? result.code : "provider-invalid-output", result?.ok === true);
+      }, () => retainOutcome("request-status-unknown"));
       void attempt.promise.finally(() => { if (pending.get(requestKey) === owned) pending.delete(requestKey); }).catch(() => {});
     }
     setView({ key: requestKey, status: "generating" });
@@ -161,7 +219,7 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
     }
     catch {
       if (alive.current && epoch.current === ownEpoch && latestKey.current === requestKey && latestMode.current === "ai" && aiConsentAccepted()) {
-        setView({ key: requestKey, status: "failed", failureCode: attempt.invalidated ? "request-status-unknown" : "provider-network" });
+        reportFailure(requestKey, "request-status-unknown");
       }
       return;
     }
@@ -171,22 +229,26 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
       // it here could allow a second billable request while the first still runs.
       attempt.invalidated = true;
       if (alive.current && epoch.current === ownEpoch && latestKey.current === requestKey && latestMode.current === "ai") {
-        setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+        reportFailure(requestKey, "request-status-unknown");
       }
       return;
     }
     if (!alive.current || epoch.current !== ownEpoch || latestKey.current !== requestKey || latestMode.current !== "ai" || !aiConsentAccepted()) return;
     if (attempt.invalidated) {
-      setView({ key: requestKey, status: "failed", failureCode: "request-status-unknown" });
+      reportFailure(requestKey, "request-status-unknown");
       return;
     }
-    if (!result || result.ok !== true) { setView({ key: requestKey, status: "failed", failureCode: result && "code" in result ? result.code : "provider-invalid-output" }); return; }
-    if (result.identity?.canonicalIdentity !== requestKey || result.identity.provenance !== "live-model") { setView({ key: requestKey, status: "failed", failureCode: "response-model-mismatch" }); return; }
+    if (!result || result.ok !== true) { reportFailure(requestKey, typeof result === "object" && result !== null && "code" in result ? result.code : "provider-invalid-output"); return; }
+    if (result.identity?.canonicalIdentity !== requestKey || result.identity.provenance !== "live-model") { reportFailure(requestKey, "response-model-mismatch", attempt.provisionalSuccess); return; }
     saveAiReflection({ dayId: current.dayId, text: result.text, identity: result.identity, source: current.source });
     const saved = resolveSavedAiPresentation(stableInput)?.stored;
-    setView(saved ? { key: requestKey, status: "shown" } : { key: requestKey, status: "failed", failureCode: "provider-invalid-output" });
+    if (saved) {
+      if (attempt.provisionalSuccess && !attempt.cleared && failureHistory?.get(requestKey) === "request-status-unknown") failureHistory.delete(requestKey);
+      setView({ key: requestKey, status: "shown" });
+    }
+    else reportFailure(requestKey, "provider-invalid-output", attempt.provisionalSuccess);
     bump(n => n + 1);
-  }, [callServer, stableInput, availability.available]);
+  }, [callServer, stableInput, availability.available, availability.loading, failureHistory, reportFailure]);
   const discard = useCallback(() => {
     const current = resolveSavedAiPresentation(stableInput);
     if (!current || !stableInput) return;
@@ -195,14 +257,32 @@ export function useJourneyAiReflection(input: JourneyAiRequestInput | null) {
     setView(null);
     bump(n => n + 1);
   }, [stableInput]);
+  const recheckAvailability = useCallback(() => {
+    const held = failureHistory?.get(latestKey.current);
+    const recovery = held ? getJourneyAiFailure(held).recovery : undefined;
+    const availabilityRecovery = availability.failureCode ? getJourneyAiFailure(availability.failureCode).recovery : undefined;
+    if (availability.loading || (recovery !== "check-availability" && availabilityRecovery !== "check-availability")) return;
+    setAvailabilityCheck(check => check + 1);
+  }, [availability.loading, availability.failureCode, failureHistory]);
+  const clearConsentFailure = useCallback(() => {
+    const currentKey = latestKey.current, held = failureHistory?.get(currentKey);
+    if (!aiConsentAccepted() || !held || getJourneyAiFailure(held).recovery !== "review-consent") return;
+    failureHistory?.delete(currentKey);
+    setView(previous => previous?.key === currentKey ? null : previous);
+    bump(n => n + 1);
+  }, [failureHistory]);
   const stored = mode === "ai" ? presentation?.stored : null;
   const activeView = view?.key === key ? view : null;
-  const status: JourneyAiStatus = stored ? "shown" : mode !== "ai" ? "idle" : activeView?.status ?? "ready";
+  const heldCode = failureHistory?.get(key) ?? activeView?.failureCode;
+  const failure = !stored && heldCode ? getJourneyAiFailure(heldCode) : null;
+  const status: JourneyAiStatus = stored ? "shown" : mode !== "ai" ? "idle" : failure ? "failed" : activeView?.status ?? "ready";
   return {
     available: availability.available, availabilityLoading: availability.loading, loading: availability.loading,
     mode, setMode, status, hasSavedReflection: !!presentation?.stored, text: stored?.text ?? null, paragraphs: stored?.paragraphs ?? [],
-    ready: !availability.loading && (mode === "authored" || !!stored),
-    failureMessage: activeView?.failureCode ? journeyAiFailureMessage(activeView.failureCode) : null,
-    generate, discard,
+    ready: (!availability.loading || availability.checked) && (mode === "authored" || !!stored),
+    failure, failureMessage: failure?.message ?? null,
+    availabilityFailure: availability.failureCode ? getJourneyAiFailure(availability.failureCode) : null,
+    canGenerate: !!presentation && availability.available && !availability.loading && !presentation.stored && !failure && status !== "generating" && aiConsentAccepted(),
+    generate, discard, recheckAvailability, clearConsentFailure,
   };
 }

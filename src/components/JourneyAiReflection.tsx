@@ -44,21 +44,41 @@ export function JourneyAiReflection({ request, children, onReadyChange }: {
     if (ai.mode === "ai" && ai.status === "shown" && ai.text) resultHeading.current?.focus();
   }, [ai.mode, ai.status, ai.text]);
 
-  if (!hydrated || !request || ai.availabilityLoading) {
+  if (!hydrated || !request) {
     return <p role="status" className="bfa-copy text-muted-foreground">Preparing your reflection choices…</p>;
   }
 
   const busy = ai.status === "generating";
   const hasAi = ai.status === "shown" && !!ai.text;
+  const failure = ai.failure ?? ai.availabilityFailure;
+  const needsConsent = failure?.recovery === "review-consent" || (!failure && ai.available && !consented);
+  const availabilityCheck = (
+    <button
+      type="button"
+      className="btn-quiet"
+      onClick={() => ai.recheckAvailability()}
+      disabled={ai.availabilityLoading || busy}
+    >
+      {ai.availabilityLoading ? "Checking AI availability…" : "Check AI availability"}
+    </button>
+  );
   return (
     <div className="space-y-4">
       {ai.mode === "authored" ? (
         <>
           <p className="bfa-copy-support text-muted-foreground">Written reflection, drawn from the journey’s authored material.</p>
           {children}
-          {ai.available || ai.hasSavedReflection ? (
+          {ai.hasSavedReflection || (ai.available && !ai.availabilityLoading && !ai.availabilityFailure) ? (
             <button type="button" className="btn-quiet" onClick={() => ai.setMode("ai")}>Choose an AI reflection</button>
-          ) : <p className="bfa-copy-support text-muted-foreground">{JOURNEY_AI_UNAVAILABLE_NOTICE}</p>}
+          ) : null}
+          {ai.availabilityFailure ? (
+            <>
+              <p role="status" className="bfa-copy-support text-muted-foreground">{ai.availabilityFailure.message}</p>
+              {ai.availabilityFailure.recovery === "check-availability" ? availabilityCheck : null}
+            </>
+          ) : ai.availabilityLoading ? (
+            <p role="status" className="bfa-copy-support text-muted-foreground">Checking AI availability…</p>
+          ) : !ai.available ? <p className="bfa-copy-support text-muted-foreground">{JOURNEY_AI_UNAVAILABLE_NOTICE}</p> : null}
         </>
       ) : (
         <section className="surface-card space-y-3" aria-labelledby="bfa-ai-heading">
@@ -68,9 +88,9 @@ export function JourneyAiReflection({ request, children, onReadyChange }: {
               {ai.paragraphs.map((paragraph, index) => <p key={index} className="bfa-copy text-foreground">{paragraph}</p>)}
               <p className="bfa-copy-support text-muted-foreground">Written by AI from today’s choices. It can be mistaken; keep what fits and leave what does not.</p>
             </>
-          ) : !ai.available ? (
-            <p role="status" className="bfa-copy text-muted-foreground">AI generation is unavailable right now. You can pause here or choose the written reflection.</p>
-          ) : !consented ? (
+          ) : ai.availabilityLoading ? (
+            <p role="status" className="bfa-copy text-muted-foreground">Preparing your reflection choices…</p>
+          ) : needsConsent ? (
             <div className="space-y-3">
               <p className="bfa-copy text-muted-foreground">A reflection can be written from today’s choices and journey material. Please read what that involves before choosing.</p>
               {showDisclosure ? (
@@ -79,21 +99,26 @@ export function JourneyAiReflection({ request, children, onReadyChange }: {
                   {JOURNEY_AI_DISCLOSURE_POINTS.map((point) => <p key={point} className="bfa-copy text-muted-foreground">{point}</p>)}
                   <button type="button" className="btn-primary-journey" onClick={() => {
                     recordAiConsent(true);
-                    setConsented(aiConsentAccepted());
+                    const accepted = aiConsentAccepted();
+                    setConsented(accepted);
+                    if (accepted) ai.clearConsentFailure();
                   }}>I’ve read this — allow AI reflections</button>
                 </>
               ) : <button type="button" className="btn-quiet" onClick={() => setShowDisclosure(true)}>Read what an AI reflection involves</button>}
             </div>
-          ) : (
+          ) : ai.canGenerate || busy ? (
             <>
-              <p className="bfa-copy text-muted-foreground">Only today’s selected answers and relevant journey material will be sent when you choose to generate.</p>
-              <button type="button" className="btn-primary-journey" onClick={() => void ai.generate()} disabled={busy}>
+              <p className="bfa-copy text-muted-foreground">Only today’s selected answers, your Scripture and spiritual-reflection preference, and relevant journey material will be sent when you choose to generate.</p>
+              <button type="button" className="btn-primary-journey" onClick={() => void ai.generate()} disabled={busy || !ai.canGenerate}>
                 {busy ? "Writing your reflection…" : "Generate my reflection"}
               </button>
             </>
-          )}
+          ) : !failure ? (
+            <p role="status" className="bfa-copy text-muted-foreground">AI generation is unavailable right now. You can pause here or choose the written reflection.</p>
+          ) : null}
           <p aria-live="polite" className="sr-only">{busy ? "Writing your reflection." : ""}</p>
-          {ai.failureMessage ? <p role="status" className="bfa-copy text-muted-foreground">{ai.failureMessage}</p> : null}
+          {!hasAi && failure ? <p role="status" className="bfa-copy text-muted-foreground">{failure.message}</p> : null}
+          {!hasAi && failure?.recovery === "check-availability" ? availabilityCheck : null}
           <button type="button" className="btn-quiet" onClick={() => ai.setMode("authored")}>Use the written reflection</button>
         </section>
       )}

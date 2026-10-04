@@ -350,3 +350,27 @@ The new 14 checks and full regression passed: **1,377 tests in 73 files**;
 installed TypeScript passed. Independent review found no remaining blocker.
 Participant AI stays off and the app stays unpublished. Lovable build and
 independently matched GitHub source are recorded in the launch plan.
+
+
+## Participant refusal and recovery preparation — 4 October 2026, Toronto
+
+The reflection screen now distinguishes access checks, consent, participant
+and shared allowances, uncertain requests and unavailable/rejected output.
+Only permitted access failures offer an answer-free availability recheck;
+consent recovery requires explicit acknowledgement. Neither action generates
+a reflection. Provider, usage and uncertain failures offer the written choice
+without a misleading invitation to retry. Matching saved text takes priority.
+
+Same-window request holds survive mode changes and screen remounts, including
+an outcome arriving after the participant leaves. Explicit clearing prevents
+late warnings or content returning. These are in-memory interface protections,
+not durable spending controls. The current server route, activation gates and
+dormant session/store/provider integrations are unchanged. The pre-generation
+sentence now names the spiritual preference already covered by the disclosure.
+
+See [the refusal and recovery record](REFUSAL_AND_RETRY_PREPARATION_2026-10-04.md)
+for message/action policy, preservation evidence and precise limits. Final local
+verification passed **1,401 tests in 74 files**, TypeScript and independent
+review. The 56 focused checks are part of that total. AI remains off; the app
+remains unpublished. The launch plan records normal Lovable build verification
+and independent complete-tree comparison with GitHub.

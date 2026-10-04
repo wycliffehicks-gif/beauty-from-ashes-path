@@ -51,19 +51,19 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     id: "clear-or-restart",
     title: "Clear or Restart My Journey",
-    summary: "Remove what is saved on this device and begin again.",
+    summary: "Remove this app’s saved journey information from this browser and begin again.",
   },
 ];
 
 export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
   "No Resurgence Therapeutics staff member is watching or reading your answers in real time.",
-  "The app saves your place, selected answers, reflections and finished days in this browser when storage is available; otherwise they may last only in the current tab. No account is needed. Choosing an AI reflection, when available, sends today’s selected answers and relevant day material to an external AI service.",
+  "The app saves your place, selected answers, reflections and finished days in this browser when storage is available; otherwise they may last only in the current tab. No account is needed. Choosing an AI reflection, when available, sends today’s selected answers, your Scripture and spiritual-reflection preference, and relevant day material to an external AI service.",
   "The responses you select are saved as short coded option identifiers rather than the wording of the option, and never as anything you typed.",
   "Written reflections are assembled on this device from the approved wording for that day and the options you selected. AI reflections are generated only after a separate informed choice. See the Privacy Notice for processing details and availability.",
   "Your saved journey does not sync to another device or browser. Clearing this browser’s data removes the local copy, not any records held by an external service.",
   "Anyone with access to this device or browser profile may be able to see what is saved here, so this is not the same as a confidential record.",
   "Please avoid names and identifying details about yourself or anyone else.",
-  "You can ask Settings to clear this app’s saved information. The app tells you if removal cannot be confirmed.",
+  "You can ask Settings to clear this app’s saved journey information in this browser. Downloaded, printed or shared copies and any records held by an external service are separate. The app tells you if removal cannot be confirmed.",
   "Using this app is not the same legally protected confidential relationship as psychotherapy.",
   "This app is not monitored for emergencies and cannot respond if someone is in danger.",
   "On Day 10, “Show earlier choices” can temporarily gather compatible current-version coded choices from earlier days on this device. The gathered wording is hidden until you ask for it, is not saved or added to your reflection, and disappears when you hide it, leave the page or reload.",
@@ -78,9 +78,9 @@ export const PRIVACY_CONFIDENTIALITY_POINTS: string[] = [
  */
 export const PRIVACY_SUMMARY_POINTS: string[] = [
   "When browser storage is available, your saved journey information stays in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads.",
-  "No account is needed. Visitor analytics is off. Written reflections are prepared on this device. AI reflections, when available and separately chosen, send today’s selected answers and relevant material to an external service. Read the Privacy Notice before choosing AI.",
+  "No account is needed. Written reflections are prepared on this device. AI reflections, when available and separately chosen, send today’s selected answers, your Scripture and spiritual-reflection preference, and relevant material to an external service. Read the Privacy Notice for details about AI and the technical information processed when the app is delivered to your browser.",
   "Anyone who can use this device or browser profile may be able to see what is saved here, so it is not a confidential record.",
-  "You can ask the app to clear or restart your saved journey information from this page. If removal cannot be confirmed, the app will tell you.",
+  "You can ask the app to clear or restart your saved journey information in this browser from this page. This does not remove downloaded, printed or shared copies or records held by an external service. If removal cannot be confirmed, the app will tell you.",
 
   "The optional Day 10 earlier-choices view is assembled only when you ask to see it. It is not saved or sent and disappears when hidden, when you leave, or when the page reloads.",
 ];
@@ -108,4 +108,4 @@ export const CREATOR_SCOPE_NOTE =
   "This educational resource is informed by psychotherapy and spiritual-care experience, but using it does not create a therapist-client, pastoral-care or other professional relationship.";
 
 export const CLEAR_CONFIRM_QUESTION =
-  "Clear everything this app has saved on this device? Your saved place, the choices you selected, your reflections, your finished days and your preferences will all be removed. This cannot be undone.";
+  "Clear this app’s saved journey information in this browser? This includes your saved place, selected choices, reflections, finished days, preferences and recorded agreement. Clearing cannot be undone. Downloaded, printed or shared copies are separate.";

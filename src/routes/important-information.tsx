@@ -26,7 +26,7 @@ function ImportantInfoPage() {
   return (
     <LegalPage
       title="Important Information, Clinical Disclaimer & Crisis Support"
-      lastUpdated="August 17, 2026"
+      lastUpdated="October 4, 2026"
     >
       <p className="bfa-copy-lead">
         <strong className="font-medium text-foreground">

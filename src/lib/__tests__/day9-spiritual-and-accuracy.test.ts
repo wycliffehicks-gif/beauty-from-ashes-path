@@ -155,14 +155,15 @@ describe("3 — truthful local-storage wording", () => {
       "Everything this app saves stays in this browser, on this device only: your saved place",
     );
     expect(normalized).toContain(
-      "When browser storage is available, this app keeps your saved place, selected choices, personalized reflections, finished days, preferences and recorded agreement in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads. Choosing Clear or restart my journey asks the app to remove its saved journey information and return you to the opening. If removal cannot be confirmed, the app will tell you.",
+      "When browser storage is available, this app keeps your saved place, selected choices, personalized reflections, finished days, preferences and recorded agreement in this browser on this device. If storage is unavailable, information may exist only in the current tab and can be lost when that tab closes or reloads. Choosing Clear or restart my journey asks the app to remove its saved journey information from this browser and return you to the opening. It does not remove downloaded, printed or shared copies, notes kept outside the app, or records held by an external service. If removal cannot be confirmed, the app will tell you.",
     );
   });
 
-  it("preserves no-account, disabled visitor analytics and the fonts disclosure", () => {
+  it("preserves no-account and fonts disclosure without an unsupported analytics promise", () => {
     const src = readFileSync("src/routes/privacy.tsx", "utf8");
     expect(src).toContain("does not require you to create an account");
     expect(src.toLowerCase()).toContain("google fonts");
-    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("Visitor analytics is off"))).toBe(true);
+    expect(PRIVACY_SUMMARY_POINTS.some((p) => p.includes("Visitor analytics is off"))).toBe(false);
+    expect(PRIVACY_SUMMARY_POINTS.join(" ")).toContain("technical information");
   });
 });

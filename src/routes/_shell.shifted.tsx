@@ -90,9 +90,10 @@ function ShiftedPage() {
       <div className="surface-card space-y-3">
         <h2 className="bfa-h3 font-serif text-foreground">Keep your reflections</h2>
         <p className="bfa-copy-support text-muted-foreground">
-          Your finished days, the choices you selected and the reflections you were given can be
-          saved as a plain-text file or as a printable page. Both are created in this browser and
-          are not sent anywhere.
+          The choices and reflections shown for your finished days can be saved as a plain-text
+          file or as a printable page. Notes typed on this screen are not included. Both copies
+          are created in this browser; the app does not upload them. Any printing or sharing you
+          choose is separate. These are readable copies and cannot restore progress in the app.
         </p>
         <div className="flex flex-col gap-2 sm:flex-row">
           <button

@@ -645,7 +645,7 @@ describe("Day 10 disclosure UI contract", () => {
 describe("privacy disclosure lands with the feature", () => {
   it("dates the Privacy Policy and describes the optional gathering accurately", () => {
     const privacy = readFileSync("src/routes/privacy.tsx", "utf8");
-    expect(privacy).toContain('lastUpdated="September 7, 2026"');
+    expect(privacy).toContain('lastUpdated="October 4, 2026"');
     expect(privacy).toContain("Optional Day 10 earlier-choices view");
     expect(privacy).toContain("Show earlier choices");
     expect(privacy).toContain("is not saved in local");
@@ -659,8 +659,8 @@ describe("privacy disclosure lands with the feature", () => {
     expect(settings).toContain("is not saved or added to your reflection");
   });
 
-  it("bumps the legal bundle exactly once for this change", async () => {
+  it("retains a current legal bundle after the earlier-choices disclosure", async () => {
     const { LEGAL_BUNDLE_VERSION } = await import("@/lib/prefs");
-    expect(LEGAL_BUNDLE_VERSION).toBe("2026-08-16.1");
+    expect(LEGAL_BUNDLE_VERSION).toBe("2026-10-04.1");
   });
 });

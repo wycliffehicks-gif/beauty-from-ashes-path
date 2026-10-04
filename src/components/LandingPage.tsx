@@ -131,7 +131,7 @@ export function LandingPage() {
         <div className="landing-card">
           <p className="bfa-copy text-foreground">
             Your answers and reflections stay in this browser on this device when browser storage is available; otherwise they may exist only in the current tab and can be lost when that tab closes or reloads. No account is needed.
-            Written reflections are prepared on this device. AI reflections, when available, require a separate choice and send today’s selected answers and relevant journey material to an external AI service. You can export your saved information or ask Settings to clear it.
+            Written reflections are prepared on this device. AI reflections, when available, require a separate choice and send today’s selected answers, your Scripture and spiritual-reflection preference, and relevant journey material to an external AI service. After finishing all ten days, you can save a readable copy of your finished-day choices and reflections from Your Journey. This copy cannot restore progress in the app. Settings can ask this browser to clear the app’s saved journey information.
           </p>
           <p className="bfa-copy-support mt-3 text-muted-foreground">
             Read the full{" "}

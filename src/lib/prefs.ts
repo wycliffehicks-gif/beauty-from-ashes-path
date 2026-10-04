@@ -34,8 +34,11 @@ export interface Prefs {
  * Bumped to 2026-08-16.1 because the Privacy Policy gained the optional Day 10
  * earlier-choices section; the wording change and this bump land together, so a
  * previously recorded agreement is asked for again exactly once.
+ * Bumped to 2026-10-04.1 to clarify the disabled AI connection, the spiritual
+ * preference included in an AI request, and session-storage removal limits.
+ * This changes acknowledgement only; saved journey information is preserved.
  */
-export const LEGAL_BUNDLE_VERSION = "2026-08-16.1";
+export const LEGAL_BUNDLE_VERSION = "2026-10-04.1";
 
 /**
  * Spiritual reflection is opt-in: the opening says it is offered only if the

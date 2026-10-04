@@ -1,39 +1,11 @@
-# Permanent ten-day visual rollout plan
+# Approved six-file wording maintenance
 
 ## Scope
-- Change only the five approved presentation files:
-  - `src/components/VisualMotifs.tsx`
-  - `src/styles.css`
-  - `src/components/SplashGate.tsx`
-  - `src/routes/_shell.index.tsx`
-  - `src/routes/day.$day.tsx`
-- Keep all journey content, therapeutic wording, storage, navigation, AI, privacy, route behavior, dependencies, settings and publication state unchanged.
-- Keep the pilot light-theme only.
+- Apply the owner-provided changes only to the two canonical journey content files and four focused regression test files.
+- Preserve all IDs, state, faith controls, styling, package versions, lockfile, runtime settings, access-code removal, disabled participant AI, and unpublished status.
 
-## Implementation
-1. Replace prototype visual naming with permanent semantic naming.
-2. Rework `VisualMotifs` into a shared inline-SVG grammar for the ten existing motif keys, with decorative SVGs hidden from assistive tech.
-3. Update shared Day screen presentation only:
-   - arrival motif header for every day;
-   - quieter teaching, question, echo, practice, reflection and close surfaces;
-   - accessible choice states with preserved selection logic and labels;
-   - balanced close actions without celebration styling.
-4. Update Journey Home presentation only:
-   - continuous gold thread through marker centres;
-   - opaque row faces and markers;
-   - natural theme wrapping;
-   - slightly larger/readable state line.
-5. Update Splash presentation only:
-   - remove remote logo/image dependency;
-   - use typographic Resurgence line and secondary phrase;
-   - keep session-only timing with shorter motion and reduced-motion handling;
-   - make the underlying app inert while splash is visible.
-
-## Verification
-- Run focused/full tests available in the project, TypeScript check, and production build.
-- Verify the final diff contains only the five approved files.
-- Programmatically confirm protected content files are unchanged.
-- Use browser checks for splash, Journey Home, representative day flows, motifs, responsive sizes, keyboard/focus, reduced motion, and absence of console/page errors where feasible.
-
-## Route tree note
-The request asks to restore `src/routeTree.gen.ts` from a historical base after build. I will first inspect whether this file differs in the current workspace. I will not edit generator/config files.
+## Validation
+- Run the relevant content, reflection, readiness, and selection tests, then the normal TypeScript check and preview build.
+- If the preview is reachable, inspect fresh phone-sized sessions at 320, 360, and 393 pixels, including a short viewport and enlarged text, covering Day 2, long practice content, sticky navigation, and Settings reminders.
+- Make no layout change unless a defect is visibly reproduced; otherwise report the exact unverified limitation.
+- Confirm generated routing and dependencies remain unchanged, commit the bounded result once, and stop.

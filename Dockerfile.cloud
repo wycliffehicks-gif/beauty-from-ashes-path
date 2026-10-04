@@ -1,0 +1,28 @@
+# Preparation only: no deploy, credentials, provider calls, or AI activation.
+# Pin image digests after the first verified container build, before release.
+FROM oven/bun:1.3.3 AS bun
+FROM node:24-bookworm-slim AS build
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+WORKDIR /app
+COPY package.json bun.lock bunfig.toml ./
+RUN bun install --frozen-lockfile
+COPY tsconfig.json vite.config.cloud.ts ./
+COPY src ./src
+COPY public ./public
+RUN bun run build:cloud
+
+FROM node:24-bookworm-slim AS runtime
+ENV NODE_ENV=production \
+    HOST=0.0.0.0 \
+    PORT=3000 \
+    JOURNEY_AI_ENABLED=false \
+    JOURNEY_AI_RELEASE_READY=false \
+    LIVE_AI_ENABLED=false
+WORKDIR /app
+COPY --from=build --chown=node:node /app/.output ./.output
+COPY --chown=node:node scripts/deployment/start-cloud.mjs ./scripts/deployment/start-cloud.mjs
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD node -e "fetch('http://127.0.0.1:'+(process.env.NITRO_PORT||process.env.PORT||3000)+'/',{signal:AbortSignal.timeout(4000),redirect:'error'}).then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))"
+CMD ["node", "scripts/deployment/start-cloud.mjs"]

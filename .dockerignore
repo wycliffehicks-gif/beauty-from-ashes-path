@@ -1,0 +1,25 @@
+# Allow only what the cloud build consumes. No credentials, Git metadata,
+# dependencies, participant uploads, evaluation results, or local build output.
+**
+!package.json
+!bun.lock
+!bunfig.toml
+!tsconfig.json
+!vite.config.cloud.ts
+!src/
+!src/**
+!public/
+!public/**
+!scripts/
+!scripts/deployment/
+!scripts/deployment/start-cloud.mjs
+!Dockerfile.cloud
+!.dockerignore
+**/.env*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/.npmrc
+**/*.log
+src/lib/ai/eval/current-journey-*/

@@ -10,7 +10,12 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:cloud": "vite build --config vite.config.cloud.ts",
+    "start:cloud": "node scripts/deployment/start-cloud.mjs",
+    "check:cloud": "node scripts/deployment/start-cloud.mjs --check",
+    "test:cloud": "node --test scripts/deployment/start-cloud.test.mjs",
+    "smoke:cloud": "node scripts/deployment/smoke-cloud.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

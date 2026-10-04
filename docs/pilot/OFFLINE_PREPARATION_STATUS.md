@@ -137,3 +137,26 @@ The earlier attribution above stands: before this pass, worker behaviour was cov
 Playwright `set_offline` did not stop the worker's localhost fetches in a first run, so offline was simulated by having the server drop connections. Fixtures, logs and screenshots stayed in `/tmp` and were not committed.
 
 Still unverified: real hosted production, the actual app build registering the worker, and physical iPhone and Android devices. The project stays unpublished and participant AI stays off.
+
+## Portable hosting package — 4 October 2026
+
+A separate Node cloud build and AI-off launcher are now prepared; the normal
+Lovable build, application source, authored content and lockfile are unchanged.
+See [`CLOUD_PREPARATION.md`](../deployment/CLOUD_PREPARATION.md) for commands,
+environment inventory, transfer/rollback sequence and remaining gates.
+
+A clean Bun 1.3.3 frozen install succeeded. Node 24.19.0 built Nitro's
+`node-server` output successfully. TypeScript passed and all 1,265 existing
+tests in 68 files passed. Seven launcher tests passed. The built local server
+passed checks for five HTML routes, eight hashed assets, the manifest and
+service-worker file. Both compiled Journey AI HTTP functions returned the
+exact disabled refusal, with zero child global-fetch attempts under a blocking
+fetch canary. This is not a claim about every networking API or hosted logs.
+
+The Docker recipe is prepared but its image build/run remains unverified
+because Docker is unavailable. An attempted local Chromium installation
+returned an unusable archive; actual production-browser hydration/worker
+lifecycle and physical phones remain separate checks. No cloud resources,
+model calls, purchases, participant messages or publication were performed.
+The AWS/Azure adapter, durable usage integration, approved disclosure and
+actual model-quality review remain required before participant AI.

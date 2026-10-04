@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 import {
   CA_REGION,
@@ -78,8 +79,9 @@ function RegionBlock({ region }: { region: RegionResource }) {
 }
 
 function SupportPage() {
+  const contentRef = usePageFocus({ screenKey: "page:support" });
   return (
-    <section className="space-y-6 py-6">
+    <section ref={contentRef} className="space-y-6 py-6">
       <header className="space-y-2">
         <h1 className="bfa-h1 font-serif text-foreground">Support &amp; Safety</h1>
         <p className="bfa-copy text-muted-foreground">

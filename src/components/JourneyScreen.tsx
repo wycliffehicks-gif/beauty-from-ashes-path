@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, type ReactNode } from "react";
 import { JourneyIcon, SettingsIcon } from "@/components/Icons";
+import { keepFocusAboveDock } from "@/lib/focus-dock-clearance";
 
 /**
  * Client-only transition tracking for screen-reader announcement.
@@ -194,7 +195,7 @@ export function JourneyScreen({
           </div>
         )}
 
-        <main ref={mainRef} className="journey-main flex-1 outline-none">
+        <main ref={mainRef} onFocusCapture={keepFocusAboveDock} className="journey-main flex-1 outline-none">
           {children}
         </main>
 

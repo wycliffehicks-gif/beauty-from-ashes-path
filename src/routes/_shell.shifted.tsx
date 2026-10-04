@@ -7,6 +7,7 @@ import {
 } from "@/lib/journey/export";
 import { useJourneyProgress } from "@/lib/journey/progress";
 import { usePrefs } from "@/lib/prefs";
+import { usePageFocus } from "@/lib/use-page-focus";
 
 export const Route = createFileRoute("/_shell/shifted")({
   head: () => ({
@@ -36,6 +37,7 @@ const PROMPTS = [
 ];
 
 function ShiftedPage() {
+  const contentRef = usePageFocus({ screenKey: "page:shifted" });
   const { progress } = useJourneyProgress();
   // Same preference-aware presentation as the reflection screens; unknown
   // preference fails closed.
@@ -46,7 +48,7 @@ function ShiftedPage() {
   const [notes, setNotes] = useState<Record<number, string>>({});
 
   return (
-    <section className="space-y-8 pb-6">
+    <section ref={contentRef} className="space-y-8 pb-6">
       <header className="space-y-2">
         <h1 className="bfa-heading bfa-h1 font-serif">What has shifted</h1>
         <p className="bfa-copy-support text-muted-foreground">

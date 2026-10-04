@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { SupportIcon } from "@/components/Icons";
+import { usePageFocus } from "@/lib/use-page-focus";
+import { keepFocusAboveDock } from "@/lib/focus-dock-clearance";
 
 /** The router's own history position, for a truthful visible Back. */
 function useHistoryIndex(): number {
@@ -141,21 +143,12 @@ function Opening() {
     router.history.go(-depth);
   };
 
-  // A step change here is not a document load, so focus is moved to the new
-  // heading and the new screen is announced. The first screen of a visit is
-  // left alone, so an ordinary load never steals focus from the document top.
-  const mainRef = useRef<HTMLElement | null>(null);
-  const focusedStep = useRef<number | null>(null);
-  useEffect(() => {
-    const previous = focusedStep.current;
-    focusedStep.current = step;
-    if (previous === null || previous === step) return;
-    const node = mainRef.current;
-    if (!node) return;
-    const target = (node.querySelector("h1") ?? node) as HTMLElement;
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus();
-  }, [step]);
+  // Announce client entry and each opening step, but never the temporary
+  // historical screens collapsed after acceptance. A direct load stays quiet.
+  const mainRef = usePageFocus({
+    screenKey: `opening:${step}`,
+    ready: !acceptStarted.current,
+  });
 
 
   return (
@@ -189,7 +182,7 @@ function Opening() {
           </Link>
         </header>
 
-        <main ref={mainRef} className="bfa-safe-center journey-main flex-1 py-2 outline-none">
+        <main ref={mainRef} onFocusCapture={keepFocusAboveDock} className="bfa-safe-center journey-main flex-1 py-2 outline-none">
           {isAgreement ? (
             <AgreementScreen
               adultConfirmed={adultConfirmed}

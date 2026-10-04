@@ -2,7 +2,11 @@
 // fail-closed dormant AI, completed-day revisit resume, closing containment,
 // the Day 1 spiritual invitation, and hidden legacy surfaces.
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// This suite inspects route content without mounting React. The page focus
+// hook's router/effect lifecycle is exercised in page-focus-lifecycle.test.ts.
+vi.mock("@/lib/use-page-focus", () => ({ usePageFocus: () => ({ current: null }) }));
 
 import { sanitizePrefs, PREF_DEFAULTS } from "@/lib/prefs";
 import { hasMeaningfulProgress, type JourneyProgress } from "@/lib/journey/progress";

@@ -1,5 +1,11 @@
 # Permanent ten-day visual rollout plan
 
+> Historical completed visual plan. Its five-file scope applied to that rollout,
+> not to later work. Carl subsequently authorised the offline AI preparation and
+> app fixes recorded in `docs/pilot/OFFLINE_PREPARATION_STATUS.md`, including use
+> of existing Lovable credits and GitHub sync. Preserve this plan as history;
+> participant AI remains off and the project remains unpublished.
+
 ## Scope
 - Change only the five approved presentation files:
   - `src/components/VisualMotifs.tsx`

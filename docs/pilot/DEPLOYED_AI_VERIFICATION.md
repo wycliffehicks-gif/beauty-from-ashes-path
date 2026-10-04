@@ -4,6 +4,11 @@ Prepared 4 October 2026 UTC. This is a technical execution record template, not
 evidence of deployment, provider approval, privacy compliance or pilot readiness.
 No step below authorises paid calls, provisioning, activation or recruitment.
 
+The preparation was subsequently applied to the unpublished Lovable preview and
+GitHub `e1ef13285b0b75783811573c672c277d779139ff`; see
+`OFFLINE_PREPARATION_STATUS.md`. This does not complete the live-provider checks
+in this document. The baseline entries below record the original preparation.
+
 ## Preserved baseline
 
 - Remote `main` was fetched at `32ccf008e95856340f47f70a079c7acd80dfb30f`.

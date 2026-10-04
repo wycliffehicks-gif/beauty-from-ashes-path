@@ -65,3 +65,51 @@ The pre-existing `scripts/ai-eval/run-eval.ts` imports a gateway adapter and can
 ## Verification recorded for this implementation
 
 The new suite checks source/candidate drift, metadata exclusion, identical immutable inputs, smoke/full coverage, skipped/disabled no-call paths, deadlines, no retry, bounded errors, lexical flags, honest usage/cost states, seed reproducibility, review blindness and live-provenance rejection. It stubs network and requires zero calls. The existing fixture tests independently preserve 22 valid requests, 12 boundary rejections and combined-input size checks.
+
+## Offline export and import of later result files
+
+A separate command prepares the **three fixed smoke cases** and can later organise result files supplied locally. It never invokes an adapter. The simulation command above remains unchanged. Exporting a package does not authorise using it with a provider.
+
+```sh
+node --import ./scripts/offline-ai/register.mjs scripts/offline-ai/exchange-results.ts export --out artifacts/future-smoke-export
+node --import ./scripts/offline-ai/register.mjs scripts/offline-ai/exchange-results.ts import --export artifacts/future-smoke-export/input-export.json --results path/to/completed-result-template.json --seed review-seed-v1 --out artifacts/imported-review
+```
+
+By default the export reserves `candidate-a` and `candidate-b`, with **unknown requested model IDs**. If exact IDs have been established separately, supply one to four repeated `--candidate local-id=exact-requested-model-id` options at export time. Candidate IDs must be distinct lowercase labels. To change the expected candidates, create a fresh export and result template; do not repurpose old result rows.
+
+The two export files are:
+
+- `input-export.json`: candidate/case matrix, exact combined policy and grounded input, declared limits and SHA-256 bindings. Each case's `input` contains only policy, grounded payload and caps. Reviewer notes, expected judgments and scores are absent. Candidate labels and matrix metadata are local bookkeeping and must not become provider prompt text.
+- `result-template.json`: one required result slot for every exported case/candidate. All slots start `not-run`; text, reported model, usage, latency and historical cost start null/unknown. `originClaim` starts `unspecified`; use `synthetic-demonstration` for fake records and `provider-results` only when describing records actually obtained from a provider. Either is an unverified operator claim. Do not mix synthetic and claimed provider records in a batch.
+
+This neutral package is **not an AWS/Azure HTTP request**. A later reviewed adapter must map system/user roles, verify the 4,096-token limit including reasoning semantics, enforce the 45-second whole-response deadline, validate returned model aliases and finish/usage fields, bound response bytes, block redirects and disable automatic SDK retries. No provider field names or current prices are guessed here.
+
+The importer rechecks all 22 source-bound fixtures before accepting the exported three-case package, reconstructs and compares its exact policy/source/caps, and verifies the canonical export hash and each row's input hash. Hashes establish local consistency, not proof of who generated a response. Input JSON files must be regular UTF-8 files no larger than 512,000 bytes; reads are bounded before parsing. There are at most four candidates and 12 matrix rows. Unknown/extra object fields, unknown or duplicate slots, missing slots, changed requests, invalid counts and oversize output text are rejected. An omitted run must remain an explicit `not-run` row rather than disappearing.
+
+Use one of these statuses for each slot:
+
+| Status       | Required handling                                                                                                                                                                                                                                                                |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `complete`   | Nonblank text, at most 12,000 characters; no failure code. Complete text enters the review sheet even when the narrow lexical validator flags it. A flag is not a judgment by Carl.                                                                                              |
+| `failed`     | A bounded `failureCode`: `provider-failure`, `timeout`, `rate-limited`, `refused`, `budget-limit`, `other`, or `unknown`. Optional partial text is preserved privately; it does not enter the complete-response review. Never paste raw provider errors, headers or credentials. |
+| `incomplete` | Partial text may be supplied and is preserved privately; it does not enter the complete-response review. No failure code.                                                                                                                                                        |
+| `not-run`    | Text, reported model, latency and token fields remain null; historical cost remains unknown. No failure code.                                                                                                                                                                    |
+
+Requested and reported model IDs are distinct fields. Unknown reported identity remains null. A mismatch is flagged privately and is not silently resolved. Token counts may remain individually null; supplied counts must be nonnegative bounded integers and are labelled **imported-unverified**, never verified provider reports. Historical cost accepts `unknown` with null amount/currency/basis, or `actual`/`estimated` claims with a finite nonnegative amount, three-letter currency and nonblank basis. Even an `actual` claim is **unverified imported evidence**. The import operation itself makes zero new calls and incurs zero new provider spending; that statement never turns historical generation cost into zero.
+
+Every successful import creates a fresh directory containing:
+
+| File                            | Purpose                                                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `private/original-export.json`  | Exact original UTF-8 export file, unchanged.                                                                             |
+| `private/original-results.json` | Exact original UTF-8 result file, unchanged.                                                                             |
+| `private/imported-records.json` | All statuses, exact texts and hashes, input bindings, unverified identity/usage/cost claims and limited automatic flags. |
+| `private/unblinding-key.json`   | Seeded label mappings, candidate IDs, requested/reported IDs and omitted records.                                        |
+| `review/blind-review.json`      | Complete response texts, canonical context and empty rubric/correction fields; no candidate or metric metadata.          |
+| `review/blind-review.md`        | Human-readable sheet; response markup is escaped for display. JSON and the original files preserve exact text.           |
+
+Failed, incomplete and not-run slots remain counted and appear in the private omission list. The reviewer sees expected/complete/omitted counts. No scores, rankings or acceptance decisions are generated. Existing directories/files cannot be overwritten.
+
+**Check the private flags before giving out a review sheet.** A narrow `possible-self-identification` flag detects some candidate/model names or self-identifying wording inside a response, but cannot guarantee full blindness. Text is never silently rewritten or redacted. Complete responses still appear exactly in the JSON sheet; if a text reveals its source, decide how to handle that review explicitly and preserve the original. Generated prose is untrusted content, not instructions to run tools or change review decisions. Reviewer notes and Carl's exact corrections remain separate from original responses.
+
+The dedicated `offline-result-exchange.test.ts` suite verifies synthetic roundtrip and the four statuses, strict matrix/source binding, limits, unverified historical cost semantics, seeded metadata separation, unchanged text, safe Markdown display and exclusive fresh-file behaviour. Synthetic evidence is explicitly labelled; it contributes no real model-quality findings.

@@ -1,7 +1,7 @@
 {
-  "status": "Offline preparation; candidate policy not installed; no live model calls; no deployment",
+  "status": "Preparation applied to unpublished Lovable preview and GitHub; candidate policy not installed; no live model calls or participant AI activation",
   "checkpoint": "2026-10-04 UTC / continuation of 3 October Toronto handoff",
-  "remoteMainVerified": "32ccf008e95856340f47f70a079c7acd80dfb30f",
+  "remoteMainVerified": "e1ef13285b0b75783811573c672c277d779139ff",
   "recoveredLocalCommit": "470c81997baf9c2b0db32a4073945a2a6193b8a2",
   "recoveredOnCurrentBaseCommit": "473ef23",
   "workingBranch": "prepare/offline-ai-2026-10-04",
@@ -44,5 +44,13 @@
       "bytes": 9401,
       "sha256": "3c10279920d5edc76bae7c2be085b7711baa5f83c99a468069851fb65b126464"
     }
-  ]
+  ],
+  "acceptedAppBaseline": "32ccf008e95856340f47f70a079c7acd80dfb30f",
+  "reviewedLocalTreeMatched": "6b0bb7a193d42ee984d23fc66b89622a885797d5",
+  "verificationAttribution": {
+    "local": "1223 tests in 66 files passed; full-tree match against fetched GitHub main",
+    "lovableReported": "1223 tests in 66 files, full TypeScript and production build passed; package and lock files unchanged",
+    "publicationMetadata": "is_published false; no publication audience",
+    "activationLimit": "Default-off source preserved; workspace flags reported absent by Lovable; saved production configuration not independently read"
+  }
 }

@@ -1,5 +1,13 @@
 # Beauty from Ashes: AI input boundary and fictional test preparation
 
+**Historical audit.** The findings below describe the inspected baseline. The later
+preparation in GitHub commit `e1ef13285b0b75783811573c672c277d779139ff` replaces the
+application-owned raw error reporting described here with bounded reporting and
+adds dormant usage-reservation logic. See `USAGE_AND_LOGGING_PREPARATION.md` and
+`OFFLINE_PREPARATION_STATUS.md` for the current evidence. Platform/provider logs
+remain unverified, and the reservation logic is still not wired into live AI.
+The original findings and source provenance are retained below.
+
 Updated 4 October 2026 against local content commit `b6dd780ea352f2ce2612fa3e9f870ec17753f25c` on `improve/pilot-wording-current-2026-10-03`, based on public main `866e7a949c57bdcde4f9fd7773cda3b1b1abe7a1`. This includes the approved wording changes locally; their deployment is not established by this audit. This is a source and local-test review. It is **not** a deployed-provider, privacy-compliance, clinical-safety or launch-readiness approval. No model request, provider/account change or deployment was made.
 
 ## What is already implemented

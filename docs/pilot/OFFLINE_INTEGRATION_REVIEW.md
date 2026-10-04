@@ -1,5 +1,14 @@
 # Offline integration review — 4 October 2026 UTC
 
+**Later verification:** Lovable applied this reviewed preparation and synced it
+to GitHub `e1ef13285b0b75783811573c672c277d779139ff`. The fetched commit's complete
+tree matched local reviewed commit `6b0bb7a193d42ee984d23fc66b89622a885797d5`.
+Lovable reports 1,223 tests in 66 files passing, a clean full TypeScript check,
+and successful client/server/deployment builds with unchanged dependency files.
+This supersedes the local missing-package/build limitation below; those local
+observations remain as historical evidence. See `OFFLINE_PREPARATION_STATUS.md`
+for attribution and the remaining release work.
+
 Status: local preparation and simulated regression evidence. No live model output, participant use, deployment, provider change, or AI activation is established by these checks. The authored content, Carl's corrections, instructions and participant disclosure were not changed in this review.
 
 ## Scope and evidence

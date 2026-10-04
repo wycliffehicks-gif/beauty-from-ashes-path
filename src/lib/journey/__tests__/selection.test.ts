@@ -205,7 +205,7 @@ describe("Day 3 wording refinement", () => {
   it("includes the refined One Honest Sentence wording", () => {
     const steps = day3.practise.reflection.steps.join(" ");
     expect(steps).toContain("Something I regret is");
-    expect(steps).toContain("What feels heaviest today is");
+    expect(steps).toContain("What feels most difficult emotionally today is");
     expect(steps).toContain("identifying details");
     expect(steps).toContain("using any sense");
   });
@@ -215,7 +215,9 @@ describe("Day 3 wording refinement", () => {
       "without trying to solve it",
     );
     const tell = day3.step.options.find((o) => o.id === "tell");
-    expect(tell?.note).toBe("Only if doing so feels safe.");
+    expect(tell?.note).toBe(
+      "Only with someone who has respected your limits and handled personal information without pressure or using it against you. Preparing the sentence without sharing it also counts.",
+    );
     expect(day3.close.heading).toBe("One honest beginning");
   });
 });

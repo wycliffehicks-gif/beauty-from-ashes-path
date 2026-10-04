@@ -284,8 +284,14 @@ describe("canonical ten-day structural fingerprint", () => {
     // only: no screen, screen order, progress index, question/option/step id,
     // option order, selection mode, exclusivity, echo branch, reflection
     // section, storage version or answer meaning version changed.
+    //
+    // Restored from the founder-approved 2026-09-25 reconciliation (8898621):
+    // the existing Day 3 info heading uses curly single rather than double
+    // quotes around "hurt that still affects me". understandInfo hashes that
+    // complete heading, so this punctuation-only edit changes the digest.
+    // The current sentence-instruction edits preserve every structural input.
     expect(structuralFingerprint()).toBe(
-      "4b48dcd09601c2f9ec69ca740a7e37155b57d837c71dae7e1a16009d936f291c",
+      "f7f3aadea6aaf27d28cefabce8a77bf4edf03eb4bfb3c1463bec52def6704db1",
     );
   });
 });

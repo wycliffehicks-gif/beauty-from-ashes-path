@@ -156,7 +156,7 @@ describe("Pass C1 — Day 1 exact replacements", () => {
     expect(steps[4]).toContain("Name one resource that has helped you reach today");
     expect(steps[5]).toContain("I can begin here without solving this today");
     expect(d.practise.reflection.notRequired).toBe(
-      "Gentler route: choose only one sentence stem. Read-only route: read the stems without answering. No writing, disclosure, decision or action is required.",
+      "Gentler route: choose only one sentence opening. Read-only route: read the openings without answering. No writing, disclosure, decision or action is required.",
     );
   });
 
@@ -291,18 +291,25 @@ describe("Pass C1 — Day 3 exact replacements", () => {
 
   it("uses the revised Locate prompt", () => {
     expect(d.questions[1]!.prompt).toBe(
-      "Where, if anywhere, do you notice its presence or effects in life right now?",
+      "In what parts of life, if any, does this word feel relevant right now?",
+    );
+    expect(d.questions[1]!.hint).toContain(
+      "does not mean those experiences share the same cause",
     );
   });
 
   it("offers workable forms and stops after one sentence", () => {
     const steps = d.practise.reflection.steps;
     expect(steps).toHaveLength(6);
-    expect(steps[1]).toContain("Nothing has to be shared today.");
+    expect(steps[1]).toContain("You do not have to describe what happened");
+    expect(steps[1]).toContain("names or identifying details");
+    expect(steps[1]).toContain("You may stop or leave the sentence unfinished.");
     expect(steps[3]).toContain("Do not add details unless you freely choose");
-    expect(steps[5]).toContain("Reorient to ordinary details");
+    expect(steps[5]).toContain("If body attention feels comfortable");
+    expect(steps[5]).toContain("If not, notice up to three neutral details around you");
+    expect(steps[5]).toContain("using any sense that works comfortably for you");
     expect(d.practise.reflection.notRequired).toBe(
-      "Gentler route: choose a word without making a sentence. Read-only route: read the stems and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
+      "Gentler route: choose a word without making a sentence. Read-only route: read the openings and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
     );
   });
 
@@ -324,8 +331,9 @@ describe("Pass C1 — Day 3 exact replacements", () => {
 
   it("qualifies the 'tell' step with a safe-person note", () => {
     const note = d.step.options.find((o) => o.id === "tell")!.note!;
-    expect(note).toContain("without pressure, retaliation or misuse");
-    expect(note).toContain("Preparing the sentence counts.");
+    expect(note).toContain("has respected your limits");
+    expect(note).toContain("without pressure or using it against you");
+    expect(note).toContain("Preparing the sentence without sharing it also counts.");
   });
 });
 
@@ -349,7 +357,7 @@ describe("Pass C1 — Day 4 exact replacements", () => {
     expect(steps).toHaveLength(6);
     expect(steps[2]).toContain("I do not know what keeps this going.");
     expect(steps[3]).toContain("A present cost does not prove the response is unnecessary.");
-    expect(d.practise.reflection.notRequired).toContain("Gentler route: complete only");
+    expect(d.practise.reflection.notRequired).toContain("Gentler route: use only");
     expect(d.practise.reflection.notRequired).toContain("Read-only route");
   });
 

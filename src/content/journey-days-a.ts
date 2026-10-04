@@ -111,13 +111,13 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Begin outwardly. Notice three neutral things around you—objects, colours, shapes or sounds.",
           "Choose one broad area from what brought you here. No event, person or history needs to be named.",
-          "Privately complete: ‘Right now, this part of life feels…’ One plain phrase is enough.",
-          "If it feels workable, add: ‘What I wish could be a little different is…’ ‘I do not know yet’ is a complete ending.",
+          "You could write on paper, in a notebook or in a note on your phone: ‘Right now, this part of life feels…’ Then finish that sentence in your own words. You can instead say the opening and finish it privately aloud, or consider it silently. One plain phrase is enough.",
+          "If it feels workable, write or say: ‘What I wish could be a little different is…’ Then finish that sentence in your own words. ‘I do not know yet’ is a complete ending.",
           "Name one resource that has helped you reach today—a quality in you, a person, a practice, faith, practical help or simple necessity.",
           "Finish with: ‘I can begin here without solving this today,’ and return your attention to the room.",
         ],
         notRequired:
-          "Gentler route: choose only one sentence stem. Read-only route: read the stems without answering. No writing, disclosure, decision or action is required.",
+          "Gentler route: choose only one sentence opening. Read-only route: read the openings without answering. No writing, disclosure, decision or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — an honest opening",
@@ -126,7 +126,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Orient to the room, then read the words once if you wish.",
           "Notice that the speaker begins from being known, not from proving worthiness.",
-          "If useful, offer one honest sentence about where you are and one sentence about what you hope may become different.",
+          "If useful, write down or privately say one honest sentence about where you are and one sentence about what you hope may become different. You can also offer them silently.",
           "You may ask for enough light, strength, support or wisdom for one next step. No answer or outcome is promised.",
           "End in silence or return your attention to the room.",
         ],
@@ -365,7 +365,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "Choose a route. Outward attention and inward attention are equally complete.",
           "Outward route: notice three neutral things by colour, shape, sound or position. Name them silently.",
           "Inward route, only if workable: notice one point of support or one body sensation. Describe it without assigning a cause.",
-          "Privately sort one thing you noticed: ‘A body signal is…’, ‘A feeling is…’, ‘A thought is…’, ‘A pressure is…’ or ‘Tiredness is…’. ‘Nothing clear’ also works.",
+          "To sort one thing you noticed, choose an opening: ‘A body signal is…’, ‘A feeling is…’, ‘A thought is…’, ‘A pressure is…’ or ‘Tiredness is…’. Write it on paper, in a notebook or in a note on your phone, then finish it in your own words. You can instead say it privately aloud or consider it silently. ‘Nothing clear’ also works.",
           "Ask: ‘What kind of response might fit this moment—acknowledgment, practical action, rest, support, a limit, medical attention, or no action?’",
           "Reorient to the room. No response has to be chosen or completed today.",
         ],
@@ -436,7 +436,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
               "Nothing much registered right now, and you do not need to decide what that means.",
           },
           unanswered:
-            "Nothing was selected today, and nothing was needed. A body signal can stay unnamed, and this day still counts.",
+            "You did not select a body sensation today. Nothing was required. A body signal can stay unnamed, and this day still counts.",
         },
         {
           id: "underneath",
@@ -481,7 +481,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
             prepare: "Noticing was the step. That is a complete answer.",
           },
           unanswered:
-            "Nothing was chosen, and nothing is owed. The day can end here without one.",
+            "No next step was chosen, and nothing is owed. The day can end here without one.",
         },
       ],
       closing:
@@ -646,13 +646,13 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Choose one broad word from today, use ‘not sure,’ or keep the word private.",
           "Keep this as broad as you need. You do not have to describe what happened or include names or identifying details. You may stop or leave the sentence unfinished.",
-          "Complete one sentence silently or somewhere outside this app: ‘I am carrying…’, ‘I am afraid that…’, ‘Something I regret is…’, ‘I feel unseen when…’ or ‘What feels heaviest today is…’.",
+          "Choose one opening: ‘I am carrying…’, ‘I am afraid that…’, ‘Something I regret is…’, ‘I feel unseen when…’ or ‘What feels most difficult emotionally today is…’. Write it on paper, in a notebook or in a note on your phone outside this app, then finish it in your own words. You can instead say it privately aloud or consider it silently.",
           "Stop after one sentence. Do not add details unless you freely choose to do so somewhere appropriate.",
           "If workable, ask: ‘What might I need after naming this—space, comfort, rest, practical help, witness, protection, or no clear response yet?’",
           "If body attention feels comfortable, notice whether anything shifts, tightens or stays the same. If not, notice up to three neutral details around you, using any sense that works comfortably for you.",
         ],
         notRequired:
-          "Gentler route: choose a word without making a sentence. Read-only route: read the stems and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
+          "Gentler route: choose a word without making a sentence. Read-only route: read the openings and leave them unanswered. No fuller story, body focus, disclosure, insight, relief or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — honest lament",
@@ -661,7 +661,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         steps: [
           "Read the lament and notice that pain and unanswered questions are allowed to remain present.",
           "If you wish, choose one line: ‘God, this is what hurts…’, ‘This is what I have lost…’, ‘This is what I do not understand…’ or ‘This is what I need…’.",
-          "Complete only that line. It may also remain unfinished.",
+          "Write that opening on paper, in a notebook or in a note on your phone, or say it privately aloud. Then finish only that sentence in your own words. You may also consider it silently or leave it unfinished.",
           "Stop, sit in silence or reorient to the room. Resolution, praise and certainty are not required.",
         ],
         notRequired:
@@ -689,7 +689,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
         {
           id: "tell",
           label: "Share one honest sentence with someone I reasonably trust to respond with care",
-          note: "Only if doing so feels safe.",
+          note: "Only with someone who has respected your limits and handled personal information without pressure or using it against you. Preparing the sentence without sharing it also counts.",
         },
         { id: "kind", label: "Say to myself, “This is real, and it is not all of me”" },
         {
@@ -969,14 +969,14 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "A current-context map of what happens, what the response may do, and what it may cost—without requiring an origin story or change.",
         steps: [
           "Orient outward and notice two neutral details. No body attention is required.",
-          "Complete privately: ‘When ______ happens, I sometimes ______.’",
-          "If the protection lens fits, add: ‘In that moment, this may be trying to prevent, preserve or provide ______.’ If it does not fit, say: ‘I do not know what keeps this going.’",
+          "You could write on paper, in a notebook or in a note on your phone: ‘When ______ happens, I sometimes ______.’ Replace each blank with your own words. You can instead say the sentence privately aloud, filling the gaps as you go, or consider it silently.",
+          "If the protection lens fits, write or say: ‘In that moment, this may be trying to prevent, preserve or provide ______.’ Fill the blank with your own words. If it does not fit, say: ‘I do not know what keeps this going.’",
           "Ask both: ‘How might this help in the short term?’ and ‘What might it cost now?’ A present cost does not prove the response is unnecessary.",
           "Reflect back: ‘This response may make sense in context. Understanding it does not excuse every effect or decide whether, when or how I should change.’",
           "Reorient to the room and leave any part unfinished.",
         ],
         notRequired:
-          "Gentler route: complete only ‘When…, I tend to…’. Read-only route: read the map without applying it. No past event, trauma label, parts language, body focus, surrender or change decision is required.",
+          "Gentler route: use only ‘When…, I tend to…’, adding your own words after each opening. Read-only route: read the map without applying it. No past event, trauma label, parts language, body focus, surrender or change decision is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — loved before readiness",
@@ -1283,18 +1283,18 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
       reflection: {
         title: "Reflection Practice — let both pulls speak",
         summary:
-          "A private sentence-stem practice for hearing a longing and a concern without forcing a decision.",
+          "A private practice using sentence openings to hear a longing and a concern without forcing a decision.",
         steps: [
           "Begin outwardly by noticing one or two neutral details around you.",
-          "Privately complete: ‘One side of me hopes for…’ or ‘One side of me wants…’. It may remain unfinished.",
-          "Complete: ‘Another concern wants me to take seriously…’ ‘I do not know’ is a valid ending.",
-          "Reflect back: ‘I hear the hope for ______. I hear the concern about ______.’ If only one is present, name only that one.",
+          "Choose an opening: ‘One side of me hopes for…’ or ‘One side of me wants…’. Write it on paper, in a notebook or in a note on your phone, then finish it in your own words. You can instead say it privately aloud or consider it silently. It may remain unfinished.",
+          "Write or say: ‘Another concern wants me to take seriously…’ Then finish that sentence in your own words. ‘I do not know’ is a valid ending.",
+          "Reflect back by writing or saying: ‘I hear the hope for ______. I hear the concern about ______.’ Fill each blank with your own words. If only one is present, name only that one.",
           "If workable, remain with the sentence or sentences for one brief pause—without debating, solving or choosing.",
           "Ask: ‘What might make listening or one future step more workable—time, information, support, rest, safety, a boundary, or something else?’",
           "Finish with: ‘I do not have to settle this today,’ and reorient outward.",
         ],
         notRequired:
-          "Gentler route: name only one pull. Read-only route: read the stems without answering. No two distinct parts, origin story, decision, resolution or action is required.",
+          "Gentler route: name only one pull. Read-only route: read the openings without answering. No two distinct parts, origin story, decision, resolution or action is required.",
       },
       spiritual: {
         title: "Scripture & Spiritual Reflection — two truths in one honest prayer",
@@ -1304,7 +1304,7 @@ export const DAYS_ONE_TO_FIVE: JourneyDayContent[] = [
           "Orient outward, then read the sentence if you wish.",
           "Notice that belief and uncertainty are held together in one honest prayer.",
           "Caution is not being equated with unbelief, and faith does not require overriding safety, limits or present reality.",
-          "If useful, pray: ‘Part of me longs for ______. Another part is concerned about ______. Give me truth, mercy, wisdom and an honest pace.’",
+          "If useful, write this prayer on paper, in a notebook or in a note on your phone, or say it privately: ‘Part of me longs for ______. Another part is concerned about ______. Give me truth, mercy, wisdom and an honest pace.’ Fill each blank with your own words. You may also pray silently.",
           "End in silence or reorient outward. No answer or action is required.",
         ],
         notRequired:

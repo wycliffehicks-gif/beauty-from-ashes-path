@@ -69,6 +69,19 @@ describe("groundedness: unanswered days claim no activity", () => {
     expect(p[1]).toContain("tightness, fullness or hollowness in your chest");
   });
 
+  it("Day 2 skipping body sensations does not erase a selected kind of load", () => {
+    const built = buildReflection(day2, ["q.load:flat"]);
+    const hearing = built.sections.find((s) => s.id === "hearing")!.paragraphs.join(" ");
+    const load = built.sections.find((s) => s.id === "underneath")!.paragraphs.join(" ");
+    const next = built.sections.find((s) => s.id === "next")!.paragraphs.join(" ");
+
+    expect(hearing).toContain("You did not select a body sensation today");
+    expect(load).toContain("You identified flatness or very little registering");
+    expect(next).toContain("No next step was chosen");
+    const text = built.sections.flatMap((s) => s.paragraphs).join("\n");
+    expect(text).not.toMatch(/Nothing was (selected today|chosen)/);
+  });
+
   it("Day 3 summarising opening is withheld while nothing is selected", () => {
     const p = paragraphs(day3, [], "care");
     expect(p[0]).not.toMatch(/pieces of information/i);

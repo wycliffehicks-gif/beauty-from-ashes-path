@@ -101,3 +101,20 @@ The preparation removes repeatable engineering work from that later process;
 it does not mean a cloud reply alone makes participant activation ready. No
 cloud resource, subscription, purchase, publication or participant message is
 part of this work.
+
+## Lovable follow-up verification (4 October 2026)
+
+Applied the 13-file follow-up diff exactly onto `e1ef132`; no rejected hunks. This note is the only addition to that diff.
+
+| Check | Command | Exit |
+| --- | --- | --- |
+| Full tests | `bunx vitest run` (68 files, 1265 tests passed) | 0 |
+| TypeScript | `./node_modules/.bin/tsc --noEmit` | 0 |
+| Build | `bun run build` | 0 |
+| AI flags (derived booleans only) | `node` script: JOURNEY_AI_ENABLED, JOURNEY_AI_RELEASE_READY, LIVE_AI_ENABLED all present=false, enabled=false | 0 |
+| Offline export | `exchange-results.ts export` to a fresh `/tmp` folder, 6 slots, zero provider calls | 0 |
+| Synthetic import | `originClaim: synthetic-demonstration`; 2 complete, 1 failed, 1 incomplete, 2 not-run; originals byte-identical; all 6 historical costs `unknown` | 0 |
+
+The generated output stayed in `/tmp` and was not committed. `src/routeTree.gen.ts` was restored from `e1ef132` after the build.
+
+Browser limits: a fresh isolated Chromium context on the development preview opened Home and onboarding with no access-code screen and no page errors. No source file registers `/sw.js`, so the browser registered no service worker. Real worker registration, old-cache cleanup, uncached requests and the offline fallback are covered only by the 34 worker tests and are **unverified in a browser**. The workspace flag check does not establish saved production settings. The project stays unpublished and participant AI stays off.

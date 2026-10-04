@@ -1558,6 +1558,30 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   overflow-wrap: anywhere;
 }
 
+/* Query the available reading width against the current root text size.
+   With enlarged type, full-width controls stay after the content instead of
+   becoming a tall sticky bar that covers the reading area. */
+.journey-shell {
+  container-type: inline-size;
+  container-name: bfa-journey;
+}
+
+@container bfa-journey (max-width: 16rem) {
+  .journey-main {
+    padding-bottom: 1.5rem;
+  }
+  .journey-dock {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .journey-dock > p {
+    grid-column: 1 / -1;
+  }
+  .journey-dock > span[aria-hidden] {
+    display: none;
+  }
+}
+
 /* At narrow phone widths with substantially enlarged text, keep the labelled
    day controls and sticky navigation inside their existing columns. */
 @media (max-width: 24rem) {
@@ -1633,4 +1657,3 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   border-radius: 999px;
   background: var(--bfa-interactive-gold);
 }
-

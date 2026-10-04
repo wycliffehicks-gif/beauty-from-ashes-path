@@ -144,7 +144,7 @@ export function JourneyScreen({
 
   return (
     <div className="journey-page">
-      <div className="container-page flex min-h-[100dvh] flex-col">
+      <div className="container-page journey-shell flex min-h-[100dvh] flex-col">
         <header className="journey-chrome grid grid-cols-2 items-center gap-2 bfa-top-safe pb-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
           <Link
             to="/"

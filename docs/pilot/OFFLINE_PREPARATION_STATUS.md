@@ -226,3 +226,39 @@ fingerprint implementation, a durable transactional store, verified pricing
 and live endpoint/client integration remain required. The test store is not
 durable, and a trusted port is not an implementation of those obligations.
 Participant AI remains off and the app remains unpublished.
+
+## Participant approval and stable attempts — 4 October 2026, Toronto
+
+The earlier request-flow checkpoint is extended by a separate dormant
+`runApprovedJourneyBoundary`. It consumes a trusted verified principal,
+checks an existing approved roster, creates keyed bindings and finds or creates
+a stable server attempt for the logical selection request. Equivalent option
+aliases and reordered selections retain that attempt. Exact prepared content,
+model limits, pricing and budget settings are bound separately; configuration
+drift cannot silently allocate a new attempt.
+
+Approval and expiry are checked again in the same transaction that reserves
+usage. The combined store must retain roster, attempt and usage state together.
+It must supply fresh authoritative time on transaction retries and commit before
+returning success. There is no missing-state initialization or automatic refund.
+See [the preparation record](PARTICIPANT_ATTEMPT_PREPARATION.md) for the precise
+integration obligations and verification evidence.
+
+This prepares the decision and binding code; it does not install an
+authentication service, browser session, durable database or live participant
+endpoint. The test identity adapter and serialized memory store use fictional
+participants only. Ordinary entry, authored content, approved corrections,
+candidate SRT policy, disclosure, mobile fixes and cloud configuration remain
+unchanged. Participant AI remains off and the app remains unpublished.
+
+The 45 new fictional cases and complete regression passed: **1,345 tests in
+70 files**. Independent review found no remaining blocker after adding atomic
+reservation markers and two-way attempt/usage consistency checks. Neither
+single-sided record loss can create a fresh dispatch; coherent historical
+rollback still requires a safe durable-store recovery procedure. Counts include
+the new cases and are not additive. No reflection-model call, cloud resource,
+new purchase or participant message was made.
+
+TypeScript passed, and the focused four-suite run passed 129 tests (included
+in the full-suite total). GitHub/Lovable sync and build evidence are recorded
+in the updated launch handoff.

@@ -48,6 +48,12 @@ connection is an explicit implementation/release step.
 
 ## What the rehearsal does not supply
 
+This list records the boundary of the original rehearsal. A later
+[participant and attempt preparation](PARTICIPANT_ATTEMPT_PREPARATION.md) adds
+dormant keyed binding, roster decisions and server-issued stable attempts.
+The actual authentication adapter, durable database and live route integration
+remain outstanding.
+
 - A real verified participant identity or participant access/recovery flow.
   The existing shared signed pilot session is not a per-person identity.
 - A server-issued attempt lifecycle or trustworthy keyed request fingerprint.

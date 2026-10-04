@@ -11,6 +11,10 @@ decision to shared request validation and prepared generation in a separate
 dormant entry point. That rehearsal's evidence and limits are recorded there;
 it does not install identity, attempt issuance, a database or live enforcement.
 
+The subsequent [participant and attempt preparation](PARTICIPANT_ATTEMPT_PREPARATION.md)
+adds dormant roster checks, keyed binding and stable server attempts. Real
+authentication, durable storage and live endpoint integration remain required.
+
 Application-owned server and browser error paths now emit fixed diagnostic codes. `safe-error-reporting.ts` drops arbitrary exception messages, causes, stacks, routes, URLs and caller context. `server.ts` explicitly initializes sanitisation before importing the server framework, so the package's `sideEffects: false` setting cannot discard a side-effect-only import. The former process-wide raw “last error” cache was removed. The root error component uses the same bounded code helper. The existing journey generation/boundary/transport already discard exception text and return whitelisted failure codes; those policies and contracts remain unchanged.
 
 On the server, `console.error` preserves only an exact two-argument `BFA_EVENT` plus allowlisted-code message. Other `console.error` arguments and all `console.warn` arguments are **dropped**, including third-party framework diagnostics, and replaced by a generic category. This sacrifices raw debugging detail intentionally; it is not intelligent redaction. Browser forwarding passes only a fixed code to existing optional hooks and catches reporter failures. No settings were changed in hosting or provider accounts.

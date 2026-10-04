@@ -326,3 +326,27 @@ Node build and compiled AI-off HTTP smoke. The launch plan records Lovable’s
 normal build and independently checked sync. Participant AI stays off; the project remains unpublished. No reflection-model calls,
 cloud provisioning, new purchases, invitations or participant messages are part
 of this preparation. Final provider details and substantive review remain open.
+
+
+## Session and durable-store acceptance preparation — 4 October 2026, Toronto
+
+The next integration contract is now concrete in
+[Session and store adapter acceptance](SESSION_AND_STORE_ADAPTER_CONTRACT.md).
+It records the minimal persistent accounting state, request-bound session
+verification, transaction/deadline obligations and recovery that cannot quietly
+restore spent allowance. Current session-check versus roster-check timing is
+explicit; no additional login/cancellation capability is claimed.
+
+A reusable store scenario runner exercises separately opened adapters,
+commit-before-success, reopen retention, failed writes, lost acknowledgements,
+retry time/state freshness and pilot isolation. Its reference driver is clearly
+SIMULATED memory. Deliberately broken drivers test that important assertions can
+fail. The same scenarios must later run against the chosen real store, followed
+by real process/host, authentication, route and recovery checks.
+
+Existing business logic, participant routes, content, notice versions and build
+configuration remain unchanged. No production adapter or provider is installed.
+The new 14 checks and full regression passed: **1,377 tests in 73 files**;
+installed TypeScript passed. Independent review found no remaining blocker.
+Participant AI stays off and the app stays unpublished. Lovable build and
+independently matched GitHub source are recorded in the launch plan.

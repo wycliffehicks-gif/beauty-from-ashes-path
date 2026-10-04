@@ -197,3 +197,32 @@ The container image, real cloud host, physical Android/iPhone and screen-reader
 checks remain open. Participant AI stays off; the project is unpublished.
 No paid model calls, new purchases, cloud provisioning or participant messages
 were made. All source-authority and future AI-release requirements above remain.
+
+## Reserved request-flow rehearsal — 4 October 2026, Toronto
+
+The previously separate usage decision is now joined to shared boundary and
+generation code in a dormant `runReservedJourneyBoundary` entry point. It
+validates and snapshots the current request, prepares its exact payload,
+checks a trusted accounting binding, reserves allowance, then constructs and
+dispatches a provider at most once. The actual participant endpoint retains
+its existing entry point; this is not live limiter installation or activation.
+
+The [rehearsal record](RESERVED_REQUEST_REHEARSAL.md) describes the API,
+verification and remaining obligations. Thirty-five new simulated cases cover
+concurrent duplicate attempts, shared caps, mutation barriers, rejected
+bindings, factory/provider failures, timeout, lost commit acknowledgement and
+transaction callback replay. Reservations remain consumed after uncertainty.
+The focused run passed 171 tests; the full suite passed 1,300 tests in 69 files.
+TypeScript and the portable Node production build passed. These counts overlap.
+
+No real provider, model charge or participant data was used. No content,
+candidate policy, disclosure, app entry flow, activation configuration or
+dependency change was made. The existing shared checks were extracted for
+reuse, and request data is now copied before asynchronous admission checks.
+Independent review found no concrete blocker.
+
+Verified participant identity, server-issued attempt/retry lifecycle, keyed
+fingerprint implementation, a durable transactional store, verified pricing
+and live endpoint/client integration remain required. The test store is not
+durable, and a trusted port is not an implementation of those obligations.
+Participant AI remains off and the app remains unpublished.

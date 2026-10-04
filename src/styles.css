@@ -1550,6 +1550,22 @@ body :where(h1, h2, h3, h4, p, li, span, a, button) {
   text-align: center;
 }
 
+/* At narrow phone widths with substantially enlarged text, keep the labelled
+   day controls and sticky navigation inside their existing columns. */
+@media (max-width: 24rem) {
+  .journey-chrome-btn-labelled {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+  }
+  .journey-dock > .btn-primary-journey,
+  .journey-dock > .btn-quiet {
+    min-width: 0;
+    padding-inline: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    PRE-PILOT READABILITY PASS — presentation only. A comfortable reading
    measure, slightly larger meta type, an unmistakable form-error marker, and a

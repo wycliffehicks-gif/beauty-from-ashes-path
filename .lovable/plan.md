@@ -1,45 +1,25 @@
-# Permanent ten-day visual rollout plan
+# Diagnostic result and proposed next step: fictional-data OpenAI smoke test
 
-> Historical completed visual plan. Its five-file scope applied to that rollout,
-> not to later work. Carl subsequently authorised the offline AI preparation and
-> app fixes recorded in `docs/pilot/OFFLINE_PREPARATION_STATUS.md`, including use
-> of existing Lovable credits and GitHub sync. Preserve this plan as history;
-> participant AI remains off and the project remains unpublished.
+## Diagnostic findings (read-only, no changes made)
 
-## Scope
-- Change only the five approved presentation files:
-  - `src/components/VisualMotifs.tsx`
-  - `src/styles.css`
-  - `src/components/SplashGate.tsx`
-  - `src/routes/_shell.index.tsx`
-  - `src/routes/day.$day.tsx`
-- Keep all journey content, therapeutic wording, storage, navigation, AI, privacy, route behavior, dependencies, settings and publication state unchanged.
-- Keep the pilot light-theme only.
+- **Repository state:** HEAD is `0e44e9526899f65524c9393d9f2e32b8cf115400` ("Work in progress" — the normal autosave/sync commit). Working tree is clean.
+- **OPENAI_API_KEY:** not configured in this workspace (boolean: present=false). Configured secrets are only LOVABLE_API_KEY (managed), SESSION_SECRET and SITE_PASSWORD.
+- **Participant AI switches:** JOURNEY_AI_ENABLED, JOURNEY_AI_RELEASE_READY and LIVE_AI_ENABLED are all present=false, enabled=false. Participant AI remains off; the app remains unpublished.
+- **Existing fictional smoke cases:** `scripts/offline-ai/run-comparison.ts` runs the three prepared fictional cases entirely offline — it hard-blocks `fetch` and throws if any network call is attempted. It cannot be reused for a live provider call without breaking its offline-only invariant, so it stays untouched.
+- **Reusable pieces:** the eval harness (`src/lib/ai/eval/harness.ts`, `fixtures.ts`) already defines allowlisted fictional fixtures, a call cap, dry-run mode and a provider interface. Only its provider (`gateway-provider.server.ts`) points at the Lovable AI Gateway; a sibling direct-OpenAI provider is the natural minimal addition.
 
-## Implementation
-1. Replace prototype visual naming with permanent semantic naming.
-2. Rework `VisualMotifs` into a shared inline-SVG grammar for the ten existing motif keys, with decorative SVGs hidden from assistive tech.
-3. Update shared Day screen presentation only:
-   - arrival motif header for every day;
-   - quieter teaching, question, echo, practice, reflection and close surfaces;
-   - accessible choice states with preserved selection logic and labels;
-   - balanced close actions without celebration styling.
-4. Update Journey Home presentation only:
-   - continuous gold thread through marker centres;
-   - opaque row faces and markers;
-   - natural theme wrapping;
-   - slightly larger/readable state line.
-5. Update Splash presentation only:
-   - remove remote logo/image dependency;
-   - use typographic Resurgence line and secondary phrase;
-   - keep session-only timing with shorter motion and reduced-motion handling;
-   - make the underlying app inert while splash is visible.
+## Simplest supported secure way to add the key
 
-## Verification
-- Run focused/full tests available in the project, TypeScript check, and production build.
-- Verify the final diff contains only the five approved files.
-- Programmatically confirm protected content files are unchanged.
-- Use browser checks for splash, Journey Home, representative day flows, motifs, responsive sizes, keyboard/focus, reduced motion, and absence of console/page errors where feasible.
+Carl adds OPENAI_API_KEY himself in Project Settings → Secrets. It then reaches server-side code as an environment variable; the value is never printed, copied or shown in chat.
 
-## Route tree note
-The request asks to restore `src/routeTree.gen.ts` from a historical base after build. I will first inspect whether this file differs in the current workspace. I will not edit generator/config files.
+## Proposed next step (only on approval)
+
+1. Carl adds OPENAI_API_KEY in Project Settings → Secrets (no value in chat).
+2. Add one new server-only file, e.g. `src/lib/ai/eval/openai-provider.server.ts`, implementing the existing `EvalProvider` interface against `https://api.openai.com/v1/chat/completions` with the same deadline/bounded-body/no-retry discipline as the existing gateway provider. No AWS, no Lovable AI Gateway fallback.
+3. Add one new runner, e.g. `scripts/ai-eval/run-openai-smoke.ts`, that reuses the existing allowlisted fictional fixtures and call cap, reads the key from the server environment, and writes artifacts outside `public/`. The offline-only runner and all app source stay unchanged.
+4. Run the three fictional smoke cases once; report pass/fail and token usage counts only.
+5. Participant AI stays off, the app stays unpublished, no reflection-model routes are wired, nothing is purchased beyond the per-call OpenAI usage Carl authorized.
+
+## Constraints kept
+
+No edits in this diagnostic; no credentials in chat; no changes to the offline runner, ten-day content, server wiring, candidate policy, dependencies or build config; no publication.

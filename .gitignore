@@ -30,3 +30,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Private fictional OpenAI evaluation evidence and its one-batch attempt marker.
+artifacts/direct-openai-smoke/

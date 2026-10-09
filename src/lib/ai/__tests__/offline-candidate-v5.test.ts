@@ -6,13 +6,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadBoundPack, sha256 } from "../../../../scripts/offline-ai/comparison";
 import { loadBoundPackV2 } from "../../../../scripts/offline-ai/candidate-v2";
 import { loadBoundPackV3 } from "../../../../scripts/offline-ai/candidate-v3";
+import { loadBoundPackV4 } from "../../../../scripts/offline-ai/candidate-v4";
 import {
-  applyEvaluationRestraintV4,
-  bindCandidateV4,
-  loadBoundPackV4,
-  CANDIDATE_V4_POLICY_VERSION,
-  CANDIDATE_V4_INSTRUCTION_SHA256,
-} from "../../../../scripts/offline-ai/candidate-v4";
+  applyEvaluationRestraintV5,
+  bindCandidateV5,
+  loadBoundPackV5,
+  CANDIDATE_V5_POLICY_VERSION,
+  CANDIDATE_V5_INSTRUCTION_SHA256,
+} from "../../../../scripts/offline-ai/candidate-v5";
 import {
   createInputExport,
   createResultTemplate,
@@ -22,7 +23,7 @@ import { JOURNEY_MAX_PREPARED_CHARS } from "@/lib/ai/journey-generation";
 
 const fixtureText = readFileSync("docs/pilot/fictional-ai-fixtures.v1.json", "utf8");
 const v1Text = readFileSync("docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v1.txt", "utf8");
-const v4Text = readFileSync("docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v4.txt", "utf8");
+const v5Text = readFileSync("docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v5.txt", "utf8");
 const network = vi.fn(() => {
   throw new Error("Candidate preparation must remain offline");
 });
@@ -37,19 +38,20 @@ afterEach(() => {
   expect(calls).toBe(0);
 });
 
-describe("Carl's v4 concrete-reflection correction stays offline", () => {
-  it("retains source-bound cases and payloads while applying only the complete v4 candidate", () => {
+describe("Carl's v5 change-and-why and writing follow-through correction stays offline", () => {
+  it("retains source-bound cases and payloads while applying only the complete v5 candidate", () => {
     const before = loadBoundPack();
     const snapshot = JSON.stringify(before);
     const v2Snapshot = JSON.stringify(loadBoundPackV2());
     const v3Snapshot = JSON.stringify(loadBoundPackV3());
-    const revised = loadBoundPackV4();
-    const candidate = v4Text
+    const v4Snapshot = JSON.stringify(loadBoundPackV4());
+    const revised = loadBoundPackV5();
+    const candidate = v5Text
       .match(/BEGIN CANDIDATE INSTRUCTIONS\n([\s\S]*?)\nEND CANDIDATE INSTRUCTIONS/)![1]
       .trim();
-    expect(revised.manifest.policyVersion).toBe(CANDIDATE_V4_POLICY_VERSION);
-    expect(revised.manifest.candidateInstructionSha256).toBe(CANDIDATE_V4_INSTRUCTION_SHA256);
-    expect(revised.manifest.candidateFileSha256).toBe(sha256(v4Text));
+    expect(revised.manifest.policyVersion).toBe(CANDIDATE_V5_POLICY_VERSION);
+    expect(revised.manifest.candidateInstructionSha256).toBe(CANDIDATE_V5_INSTRUCTION_SHA256);
+    expect(revised.manifest.candidateFileSha256).toBe(sha256(v5Text));
     expect(revised.manifest.fixtureFileSha256).toBe(before.manifest.fixtureFileSha256);
     expect(revised.manifest.sourceCommit).toBe(before.manifest.sourceCommit);
     expect(revised.manifest.invalidProbes).toEqual(before.manifest.invalidProbes);
@@ -61,7 +63,7 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
       expect(item.prepared).toEqual(original.prepared);
       expect(item.request).toEqual({
         ...original.request,
-        systemPolicy: `${applyEvaluationRestraintV4(original.prepared.policy)}\n\n${candidate}`,
+        systemPolicy: `${applyEvaluationRestraintV5(original.prepared.policy)}\n\n${candidate}`,
       });
       expect(Object.isFrozen(item.request)).toBe(true);
       expect(item.request.systemPolicy).not.toContain("Never both, and neither is required.");
@@ -82,44 +84,45 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
     expect(JSON.stringify(loadBoundPack())).toBe(snapshot);
     expect(JSON.stringify(loadBoundPackV2())).toBe(v2Snapshot);
     expect(JSON.stringify(loadBoundPackV3())).toBe(v3Snapshot);
+    expect(JSON.stringify(loadBoundPackV4())).toBe(v4Snapshot);
   });
 
   it("rejects source, instruction and original-restraint drift", () => {
     const sourceDrift = JSON.parse(fixtureText);
     sourceDrift.validCases[0].baseline.groundedPayloadSha256 = "changed";
-    expect(() => bindCandidateV4(JSON.stringify(sourceDrift), v1Text, v4Text)).toThrow(
+    expect(() => bindCandidateV5(JSON.stringify(sourceDrift), v1Text, v5Text)).toThrow(
       "fixture-source-mismatch",
     );
     expect(() =>
-      bindCandidateV4(
+      bindCandidateV5(
         fixtureText,
         v1Text.replace("BEGIN CANDIDATE INSTRUCTIONS", "MISSING"),
-        v4Text,
+        v5Text,
       ),
     ).toThrow("candidate-markers-invalid");
     expect(() =>
-      bindCandidateV4(
+      bindCandidateV5(
         fixtureText,
         v1Text,
-        v4Text.replace("END CANDIDATE INSTRUCTIONS", "changed\nEND CANDIDATE INSTRUCTIONS"),
+        v5Text.replace("END CANDIDATE INSTRUCTIONS", "changed\nEND CANDIDATE INSTRUCTIONS"),
       ),
-    ).toThrow("candidate-v4-hash-mismatch");
-    expect(() => bindCandidateV4(fixtureText, v1Text, `${v4Text}\n${v4Text}`)).toThrow(
-      "candidate-v4-markers-invalid",
+    ).toThrow("candidate-v5-hash-mismatch");
+    expect(() => bindCandidateV5(fixtureText, v1Text, `${v5Text}\n${v5Text}`)).toThrow(
+      "candidate-v5-markers-invalid",
     );
     const policy = loadBoundPack().cases[0].prepared.policy;
     const restraint = policy.split("\n").find((line) => line.startsWith("Include AT MOST ONE"))!;
-    expect(() => applyEvaluationRestraintV4(policy.replace(restraint, "Changed"))).toThrow(
-      "candidate-v4-restraint-drift",
+    expect(() => applyEvaluationRestraintV5(policy.replace(restraint, "Changed"))).toThrow(
+      "candidate-v5-restraint-drift",
     );
-    expect(() => applyEvaluationRestraintV4(`${policy}\n${restraint}`)).toThrow(
-      "candidate-v4-restraint-drift",
+    expect(() => applyEvaluationRestraintV5(`${policy}\n${restraint}`)).toThrow(
+      "candidate-v5-restraint-drift",
     );
   });
 
   it("records review-only file provenance without adding it to model input", () => {
-    const original = loadBoundPackV4();
-    const changed = bindCandidateV4(fixtureText, v1Text, `${v4Text}\nREVIEW_ONLY_CANARY`);
+    const original = loadBoundPackV5();
+    const changed = bindCandidateV5(fixtureText, v1Text, `${v5Text}\nREVIEW_ONLY_CANARY`);
     expect(changed.cases.map((item) => item.request)).toEqual(
       original.cases.map((item) => item.request),
     );
@@ -129,8 +132,14 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
     );
   });
 
-  it("keeps v1, v2, v3 and v4 exports and result identities separate", () => {
-    const packs = [loadBoundPack(), loadBoundPackV2(), loadBoundPackV3(), loadBoundPackV4()];
+  it("keeps v1, v2, v3, v4 and v5 exports and result identities separate", () => {
+    const packs = [
+      loadBoundPack(),
+      loadBoundPackV2(),
+      loadBoundPackV3(),
+      loadBoundPackV4(),
+      loadBoundPackV5(),
+    ];
     const exports = packs.map((pack) => createInputExport(pack));
     const results = exports.map((exported) => JSON.stringify(createResultTemplate(exported)));
     for (let a = 0; a < packs.length; a++) {
@@ -152,8 +161,8 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
     }
   });
 
-  it("runs the offline CLI with explicit v4 while preserving v1 default and no-call templates", () => {
-    const root = mkdtempSync(join(tmpdir(), "bfa-v4-cli-"));
+  it("runs the offline CLI with explicit v5 while preserving v1 default and no-call templates", () => {
+    const root = mkdtempSync(join(tmpdir(), "bfa-v5-cli-"));
     const cli = (...args: string[]) =>
       execFileSync(
         process.execPath,
@@ -168,19 +177,19 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
     const readJson = (path: string) => JSON.parse(readFileSync(path, "utf8"));
     try {
       const v1 = join(root, "v1");
-      const v4 = join(root, "v4");
+      const v5 = join(root, "v5");
       expect(() => cli("export", "--policy", "v6", "--out", join(root, "invalid"))).toThrow(
         /Policy must be v1, v2, v3, v4 or v5/,
       );
       expect(cli("export", "--out", v1)).toContain("Zero provider calls");
-      expect(cli("export", "--policy", "v4", "--out", v4)).toContain("Zero provider calls");
+      expect(cli("export", "--policy", "v5", "--out", v5)).toContain("Zero provider calls");
       expect(readJson(join(v1, "input-export.json")).policyVersion).toBe(
         "journey-p4+srt-candidate-v1",
       );
-      expect(readJson(join(v4, "input-export.json")).policyVersion).toBe(
-        CANDIDATE_V4_POLICY_VERSION,
+      expect(readJson(join(v5, "input-export.json")).policyVersion).toBe(
+        CANDIDATE_V5_POLICY_VERSION,
       );
-      const template = readJson(join(v4, "result-template.json"));
+      const template = readJson(join(v5, "result-template.json"));
       expect(
         template.results.every(
           (result: { status: string; text: unknown; requestedModelId: unknown }) =>
@@ -189,14 +198,14 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
       ).toBe(true);
       const imported = [
         "--export",
-        join(v4, "input-export.json"),
+        join(v5, "input-export.json"),
         "--results",
-        join(v4, "result-template.json"),
+        join(v5, "result-template.json"),
       ];
       expect(() => cli("import", "--out", join(root, "wrong-version"), ...imported)).toThrow(
         /export-source-or-hash-drift/,
       );
-      expect(cli("import", "--policy", "v4", "--out", join(root, "review"), ...imported)).toContain(
+      expect(cli("import", "--policy", "v5", "--out", join(root, "review"), ...imported)).toContain(
         "0 complete texts",
       );
       expect(() =>
@@ -219,6 +228,18 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
 
   it("preserves the exact prior instructions, builders, live runners and participant policies", () => {
     const historicalFiles: Record<string, string> = {
+      "docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v4.txt":
+        "616020813b68962a65e17ebf3943816e8c89b6aa5b1367e72669869da4e7e57d",
+      "docs/pilot/SRT_CANDIDATE_V4_PREPARATION.md":
+        "442868f1f1ac4ca86c0632fed9af08446e5081d8e4b467b14198c128eac4c64c",
+      "scripts/offline-ai/candidate-v4.ts":
+        "185b4cf59c0ce195eddf47fcddcd9080920063e258a925a47b42ed408bb7e1e3",
+      "scripts/direct-openai-smoke/run-v4.ts":
+        "6a9c4372511c3f029a8401c26b09a82a48e4d97b5372d1eb3b47599dabfa8136",
+      "scripts/direct-openai-smoke/v4-preflight.ts":
+        "3c7de08146bc181a2b3ab506776c5341b9a79024ba2cd6b5498ac4cb73e4041f",
+      "scripts/offline-ai/result-exchange.ts":
+        "3e2f72dbf7f4a37453a86fe710bf85393dc900e8c9b697c0da1cdf32c35a6d13",
       "docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v3.txt":
         "f57f08420aa4f6792beec79b25349bfc069611ca7a437c3f1a1a40a303ca9c1e",
       "scripts/offline-ai/candidate-v3.ts":
@@ -253,5 +274,32 @@ describe("Carl's v4 concrete-reflection correction stays offline", () => {
     for (const [path, expected] of Object.entries(historicalFiles)) {
       expect(sha256(readFileSync(path, "utf8")), path).toBe(expected);
     }
+  });
+
+  it("carries Carl's two v5 corrections into the model-visible candidate block", () => {
+    const block = v5Text
+      .match(/BEGIN CANDIDATE INSTRUCTIONS\n([\s\S]*?)\nEND CANDIDATE INSTRUCTIONS/)![1]
+      .replace(/\s+/g, " ");
+    for (const phrase of [
+      "imagine one change they would wish for in their life right now",
+      "why that change would matter to them",
+      "Do not default to sensory orientation",
+      "Privacy and uncertainty do not imply distress or dysregulation",
+      "not a rejection of somatic approaches",
+      "do not add an observable-sign, action or follow-up task",
+      "An observable sign of change fits only after a direction is actually known",
+      "an explicit sentence opening",
+      "Read it back slowly",
+      "Regret does not establish wrongdoing or culpability",
+      "without reusing regret wording",
+      'avoid mechanical framing such as "You selected writing"',
+      "An explicit request for no exercise or no questions takes precedence",
+      "Do not suggest telling, sharing, contacting or talking with another person",
+    ])
+      expect(block, phrase).toContain(phrase);
+    expect(block).not.toContain("supported preferred direction");
+    expect(block).not.toMatch(/Dr\.? Fung/);
+    const sizes = loadBoundPackV5().manifest.cases.map((c) => c.preparedCharacters);
+    expect(Math.max(...sizes)).toBeLessThanOrEqual(JOURNEY_MAX_PREPARED_CHARS);
   });
 });

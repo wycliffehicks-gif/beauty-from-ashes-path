@@ -1,5 +1,13 @@
 # Direct OpenAI fictional smoke test
 
+**8 October 2026 update:** The funded private batch returned three fictional
+`gpt-6-luna` responses using v1. Carl's subsequent corrections are prepared as
+[candidate v2](SRT_CANDIDATE_V2_PREPARATION.md), which has not yet been tested with
+a model. This historical runner remains bound to v1; do not rerun it expecting
+the revised instructions. Preserve both earlier attempts and their private
+evidence. Participant AI remains off. Earlier preparation notes below are retained
+as history, not a current statement that the first test has never run.
+
 Prepared 7 October 2026. This is a separate developer command for Carl's requested
 Lovable + OpenAI trial. It uses the current three fictional Day 1 smoke cases and
 the already prepared `journey-p4+srt-candidate-v1` instructions. The SRT candidate

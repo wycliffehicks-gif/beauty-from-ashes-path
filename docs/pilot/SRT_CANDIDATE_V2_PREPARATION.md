@@ -59,10 +59,12 @@ node --import ./scripts/offline-ai/register.mjs scripts/offline-ai/exchange-resu
 
 The CLI still defaults to v1 for existing evidence. `--policy v2` must be explicit
 for both export and import. The unchanged direct OpenAI smoke runner still uses
-v1 and is not a way to test v2. Before another paid test, bind the reviewed v2
-export into a bounded live runner with a distinct attempt ledger, reconcile all
-earlier attempts and confirm the exact cases, model and spending scope. Do not
-delete or bypass an earlier attempt marker.
+v1 and is not a way to test v2. Carl's requested next comparison now has a
+[separate bounded v2 command](DIRECT_OPENAI_V2_FICTIONAL_TEST.md), preserving the
+old command and records. It uses the same three cases and model, carries the
+earlier reservations against the original allowance, and requires prior-attempt
+reconciliation plus a distinct fixed guard. Do not delete or bypass an earlier
+attempt marker. Later broader comparisons still need their own bounded scope.
 
 ## Next review
 

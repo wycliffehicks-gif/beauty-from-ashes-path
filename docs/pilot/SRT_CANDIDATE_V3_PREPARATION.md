@@ -77,10 +77,11 @@ Importing the untouched template demonstrates evidence compatibility only; it
 does not create model responses. The CLI still defaults to v1, and explicit
 `--policy v2` remains compatible. Both v3 operations require `--policy v3`.
 
-There is no live v3 runner in this change. No earlier live command is repurposed,
-no attempt guard is removed, and no prior budget reservation is reset. A later
-fictional test must reconcile all earlier attempts and spending within a bounded
-scope before dispatch. The model must receive the complete selected instruction
+The initial preparation did not include a live runner. Carl's 9 October request
+to run the next test now has a [separate bounded v3 command](DIRECT_OPENAI_V3_FICTIONAL_TEST.md).
+No earlier live command is repurposed, no attempt guard is removed, and no prior
+budget reservation is reset. The command reconciles all three earlier batches
+against the original allowance before dispatch. The model must receive the complete selected instruction
 block and current-day material with each request; it does not rely on having
 remembered a one-time lesson. No automatic paid reminders are introduced.
 

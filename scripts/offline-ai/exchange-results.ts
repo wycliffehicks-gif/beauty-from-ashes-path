@@ -48,7 +48,7 @@ if (
 )
   throw new Error("Supply --out; import also needs --export and --results.");
 const policy = options.get("--policy") ?? "v1";
-if (policy !== "v1" && policy !== "v2" && policy !== "v3" && policy !== "v4" && policy !== "v5")
+if (!["v1", "v2", "v3", "v4", "v5"].includes(policy))
   throw new Error("Policy must be v1, v2, v3, v4 or v5.");
 globalThis.fetch = async () => {
   throw new Error("offline-network-disabled");
@@ -58,11 +58,11 @@ const bound =
     ? loadBoundPackV5()
     : policy === "v4"
       ? loadBoundPackV4()
-    : policy === "v3"
-      ? loadBoundPackV3()
-      : policy === "v2"
-        ? loadBoundPackV2()
-        : loadBoundPack();
+      : policy === "v3"
+        ? loadBoundPackV3()
+        : policy === "v2"
+          ? loadBoundPackV2()
+          : loadBoundPack();
 if (command === "export") {
   const exported = createInputExport(bound, candidates.length ? candidates : undefined);
   const root = freshDirectory(options.get("--out")!);

@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadBoundPack, sha256 } from "../../../../scripts/offline-ai/comparison";
 import { loadBoundPackV2 } from "../../../../scripts/offline-ai/candidate-v2";
 import { loadBoundPackV3 } from "../../../../scripts/offline-ai/candidate-v3";
+import { loadBoundPackV4 } from "../../../../scripts/offline-ai/candidate-v4";
 import {
   applyEvaluationRestraintV5,
   bindCandidateV5,
@@ -37,12 +38,13 @@ afterEach(() => {
   expect(calls).toBe(0);
 });
 
-describe("Carl's v5 concrete-reflection correction stays offline", () => {
+describe("Carl's v5 change-and-why and writing follow-through correction stays offline", () => {
   it("retains source-bound cases and payloads while applying only the complete v5 candidate", () => {
     const before = loadBoundPack();
     const snapshot = JSON.stringify(before);
     const v2Snapshot = JSON.stringify(loadBoundPackV2());
     const v3Snapshot = JSON.stringify(loadBoundPackV3());
+    const v4Snapshot = JSON.stringify(loadBoundPackV4());
     const revised = loadBoundPackV5();
     const candidate = v5Text
       .match(/BEGIN CANDIDATE INSTRUCTIONS\n([\s\S]*?)\nEND CANDIDATE INSTRUCTIONS/)![1]
@@ -82,6 +84,7 @@ describe("Carl's v5 concrete-reflection correction stays offline", () => {
     expect(JSON.stringify(loadBoundPack())).toBe(snapshot);
     expect(JSON.stringify(loadBoundPackV2())).toBe(v2Snapshot);
     expect(JSON.stringify(loadBoundPackV3())).toBe(v3Snapshot);
+    expect(JSON.stringify(loadBoundPackV4())).toBe(v4Snapshot);
   });
 
   it("rejects source, instruction and original-restraint drift", () => {
@@ -129,8 +132,8 @@ describe("Carl's v5 concrete-reflection correction stays offline", () => {
     );
   });
 
-  it("keeps v1, v2, v3 and v5 exports and result identities separate", () => {
-    const packs = [loadBoundPack(), loadBoundPackV2(), loadBoundPackV3(), loadBoundPackV5()];
+  it("keeps v1, v2, v3, v4 and v5 exports and result identities separate", () => {
+    const packs = [loadBoundPack(), loadBoundPackV2(), loadBoundPackV3(), loadBoundPackV4(), loadBoundPackV5()];
     const exports = packs.map((pack) => createInputExport(pack));
     const results = exports.map((exported) => JSON.stringify(createResultTemplate(exported)));
     for (let a = 0; a < packs.length; a++) {
@@ -170,7 +173,7 @@ describe("Carl's v5 concrete-reflection correction stays offline", () => {
       const v1 = join(root, "v1");
       const v5 = join(root, "v5");
       expect(() => cli("export", "--policy", "v6", "--out", join(root, "invalid"))).toThrow(
-        /Policy must be v1, v2, v3, v5 or v5/,
+        /Policy must be v1, v2, v3, v4 or v5/,
       );
       expect(cli("export", "--out", v1)).toContain("Zero provider calls");
       expect(cli("export", "--policy", "v5", "--out", v5)).toContain("Zero provider calls");

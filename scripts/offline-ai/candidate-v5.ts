@@ -6,7 +6,7 @@ import { JOURNEY_MAX_PREPARED_CHARS } from "../../src/lib/ai/journey-generation"
 export const CANDIDATE_V5_POLICY_VERSION = "journey-p4-eval-expression-v5+srt-candidate-v5";
 // Pinned to the reviewed instruction block, not to prose outside the markers.
 export const CANDIDATE_V5_INSTRUCTION_SHA256 =
-  "c18f3891d4dc51985d5daf52018a98b0ce0a420e5174c8c49a7605bd6acfd6f3";
+  "609acc855581b88df39911dda50fcb8446737575d48e43cc1f406dfb0e01779f";
 
 const ORIGINAL_RESTRAINT =
   "Include AT MOST ONE optional, proportionate question OR one possible next step. Never both, and neither is required.";

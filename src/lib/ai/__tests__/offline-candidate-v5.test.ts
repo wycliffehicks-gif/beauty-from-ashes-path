@@ -133,7 +133,13 @@ describe("Carl's v5 change-and-why and writing follow-through correction stays o
   });
 
   it("keeps v1, v2, v3, v4 and v5 exports and result identities separate", () => {
-    const packs = [loadBoundPack(), loadBoundPackV2(), loadBoundPackV3(), loadBoundPackV4(), loadBoundPackV5()];
+    const packs = [
+      loadBoundPack(),
+      loadBoundPackV2(),
+      loadBoundPackV3(),
+      loadBoundPackV4(),
+      loadBoundPackV5(),
+    ];
     const exports = packs.map((pack) => createInputExport(pack));
     const results = exports.map((exported) => JSON.stringify(createResultTemplate(exported)));
     for (let a = 0; a < packs.length; a++) {
@@ -222,6 +228,18 @@ describe("Carl's v5 change-and-why and writing follow-through correction stays o
 
   it("preserves the exact prior instructions, builders, live runners and participant policies", () => {
     const historicalFiles: Record<string, string> = {
+      "docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v4.txt":
+        "616020813b68962a65e17ebf3943816e8c89b6aa5b1367e72669869da4e7e57d",
+      "docs/pilot/SRT_CANDIDATE_V4_PREPARATION.md":
+        "442868f1f1ac4ca86c0632fed9af08446e5081d8e4b467b14198c128eac4c64c",
+      "scripts/offline-ai/candidate-v4.ts":
+        "185b4cf59c0ce195eddf47fcddcd9080920063e258a925a47b42ed408bb7e1e3",
+      "scripts/direct-openai-smoke/run-v4.ts":
+        "6a9c4372511c3f029a8401c26b09a82a48e4d97b5372d1eb3b47599dabfa8136",
+      "scripts/direct-openai-smoke/v4-preflight.ts":
+        "3c7de08146bc181a2b3ab506776c5341b9a79024ba2cd6b5498ac4cb73e4041f",
+      "scripts/offline-ai/result-exchange.ts":
+        "3e2f72dbf7f4a37453a86fe710bf85393dc900e8c9b697c0da1cdf32c35a6d13",
       "docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v3.txt":
         "f57f08420aa4f6792beec79b25349bfc069611ca7a437c3f1a1a40a303ca9c1e",
       "scripts/offline-ai/candidate-v3.ts":
@@ -256,5 +274,32 @@ describe("Carl's v5 change-and-why and writing follow-through correction stays o
     for (const [path, expected] of Object.entries(historicalFiles)) {
       expect(sha256(readFileSync(path, "utf8")), path).toBe(expected);
     }
+  });
+
+  it("carries Carl's two v5 corrections into the model-visible candidate block", () => {
+    const block = v5Text
+      .match(/BEGIN CANDIDATE INSTRUCTIONS\n([\s\S]*?)\nEND CANDIDATE INSTRUCTIONS/)![1]
+      .replace(/\s+/g, " ");
+    for (const phrase of [
+      "imagine one change they would wish for in their life right now",
+      "why that change would matter to them",
+      "Do not default to sensory orientation",
+      "Privacy and uncertainty do not imply distress or dysregulation",
+      "not a rejection of somatic approaches",
+      "do not add an observable-sign, action or follow-up task",
+      "An observable sign of change fits only after a direction is actually known",
+      "an explicit sentence opening",
+      "Read it back slowly",
+      "Regret does not establish wrongdoing or culpability",
+      "without reusing regret wording",
+      'avoid mechanical framing such as "You selected writing"',
+      "An explicit request for no exercise or no questions takes precedence",
+      "Do not suggest telling, sharing, contacting or talking with another person",
+    ])
+      expect(block, phrase).toContain(phrase);
+    expect(block).not.toContain("supported preferred direction");
+    expect(block).not.toMatch(/Dr\.? Fung/);
+    const sizes = loadBoundPackV5().manifest.cases.map((c) => c.preparedCharacters);
+    expect(Math.max(...sizes)).toBeLessThanOrEqual(JOURNEY_MAX_PREPARED_CHARS);
   });
 });

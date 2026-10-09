@@ -62,7 +62,7 @@ export const OPENING_SCREENS: OpeningScreen[] = [
     title: "One day at a time, in your own time",
     lead: "Open a day when you have a little space. Most days are short; a few go deeper.",
     points: [
-      "You can answer, or continue without answering.",
+      "You can answer, leave a sentence unfinished, or continue without answering.",
       "Your place is saved on this device when browser storage is available, so you can leave and return. If storage is unavailable, it may exist only in the current tab and can be lost when that tab closes or reloads.",
       "Nothing is scored, timed or compared. There are no streaks.",
       "Scripture and spiritual reflection stay off unless you turn them on in Settings.",

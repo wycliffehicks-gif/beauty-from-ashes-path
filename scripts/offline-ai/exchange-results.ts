@@ -1,6 +1,7 @@
 /** Node 24: node --import ./scripts/offline-ai/register.mjs scripts/offline-ai/exchange-results.ts ... */
 import { mkdirSync } from "node:fs";
 import { loadBoundPack } from "./comparison";
+import { loadBoundPackV2 } from "./candidate-v2";
 import {
   createInputExport,
   createResultTemplate,
@@ -29,9 +30,10 @@ for (let i = 0; i < args.length; i += 2) {
       requestedModelId: value.slice(split + 1),
     });
   } else if (
-    (command === "export" ? ["--out"] : ["--out", "--export", "--results", "--seed"]).includes(
-      flag,
-    ) &&
+    (command === "export"
+      ? ["--out", "--policy"]
+      : ["--out", "--export", "--results", "--seed", "--policy"]
+    ).includes(flag) &&
     !options.has(flag)
   )
     options.set(flag, value);
@@ -42,10 +44,12 @@ if (
   (command === "import" && (!options.get("--export") || !options.get("--results")))
 )
   throw new Error("Supply --out; import also needs --export and --results.");
+const policy = options.get("--policy") ?? "v1";
+if (policy !== "v1" && policy !== "v2") throw new Error("Policy must be v1 or v2.");
 globalThis.fetch = async () => {
   throw new Error("offline-network-disabled");
 };
-const bound = loadBoundPack();
+const bound = policy === "v2" ? loadBoundPackV2() : loadBoundPack();
 if (command === "export") {
   const exported = createInputExport(bound, candidates.length ? candidates : undefined);
   const root = freshDirectory(options.get("--out")!);

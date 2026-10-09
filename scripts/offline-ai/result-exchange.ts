@@ -2,7 +2,6 @@
 import { isDeepStrictEqual } from "node:util";
 import {
   type BoundPack,
-  COMBINED_POLICY_VERSION,
   SMOKE_IDS,
   sha256,
   DIMENSIONS,
@@ -109,7 +108,7 @@ export function createInputExport(
     kind: "fictional-smoke-input-export",
     authorisation:
       "Preparation only; no permission for calls, spending or app activation is conveyed.",
-    policyVersion: COMBINED_POLICY_VERSION,
+    policyVersion: bound.manifest.policyVersion,
     source: {
       commit: bound.manifest.sourceCommit,
       fixtureFileSha256: bound.manifest.fixtureFileSha256,

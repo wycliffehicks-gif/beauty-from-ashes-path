@@ -2,6 +2,7 @@
 import { mkdirSync } from "node:fs";
 import { loadBoundPack } from "./comparison";
 import { loadBoundPackV2 } from "./candidate-v2";
+import { loadBoundPackV3 } from "./candidate-v3";
 import {
   createInputExport,
   createResultTemplate,
@@ -45,11 +46,13 @@ if (
 )
   throw new Error("Supply --out; import also needs --export and --results.");
 const policy = options.get("--policy") ?? "v1";
-if (policy !== "v1" && policy !== "v2") throw new Error("Policy must be v1 or v2.");
+if (policy !== "v1" && policy !== "v2" && policy !== "v3")
+  throw new Error("Policy must be v1, v2 or v3.");
 globalThis.fetch = async () => {
   throw new Error("offline-network-disabled");
 };
-const bound = policy === "v2" ? loadBoundPackV2() : loadBoundPack();
+const bound =
+  policy === "v3" ? loadBoundPackV3() : policy === "v2" ? loadBoundPackV2() : loadBoundPack();
 if (command === "export") {
   const exported = createInputExport(bound, candidates.length ? candidates : undefined);
   const root = freshDirectory(options.get("--out")!);

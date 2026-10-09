@@ -10,7 +10,7 @@ texts and their review remain unchanged evidence.
 When Day 1 (Begin Where You Are) selections are uncertain, sparse or private, the
 candidate may give ONE private, future-facing invitation: imagine one change the
 person would wish for in their life right now, and consider why that change would
-matter to them. Carl's illustration, which is not a universal script: "Imagine you
+matter to them. Assistant-written illustration of the approach Carl approved, not a universal script: "Imagine you
 could change one thing in your life right now. What would you want to be
 different, and why would that change matter to you?"
 
@@ -33,16 +33,16 @@ different, and why would that change matter to you?"
 Every writing invitation offers an explicit sentence opening plus ONE connected
 after-writing exploration. For regret the linked focus is: reread what was
 written, notice what they wish had been different, and consider what that shows
-about what mattered to them and why. Carl's illustration, not a mandatory script:
+about what mattered to them and why. Assistant-written illustration of the approach Carl approved, not a mandatory script:
 "You could write, 'Something I regret is...' and finish the sentence in your own
 words. Read it back slowly. What do you wish had been different, and what does
 that tell you about what mattered to you?"
 
 This is one coherent reflection, not a question-mark count. Regret does not
 establish wrongdoing or culpability; the candidate must not require repair,
-forgiveness, confession or action, or supply what mattered. Other themes adapt
-the same movement from the person's words to what matters, without reusing regret
-wording. A selected writing step is introduced naturally, not with mechanical
+forgiveness, confession or action, or supply what mattered. Other themes use one
+linked exploration of meaning, context or personally chosen direction as the day
+supports, without repeating regret wording. A selected writing step is introduced naturally, not with mechanical
 framing such as "You selected writing".
 
 ## Preserved corrections
@@ -56,6 +56,15 @@ contributing voice; no booklet material or new doctrine is injected. To stay
 within the unchanged 24,000-character preparation ceiling, some repeated v4
 wording about opt-out reminders, quiet reflection, practice stacking, memory and
 proportion was condensed without changing its meaning.
+
+## Independent review corrections
+
+Final review restored each practice's notRequired constraints to the
+respect-for-choice guidance, added safeguards against assuming today is worse or
+routinely moving the person into the past, named one self-chosen hoped-for change
+as a possible concrete anchor, and kept writing follow-through varied (meaning,
+context or chosen direction) rather than a single fixed movement. Both quoted
+examples are assistant-written illustrations, not Carl's wording or scripts.
 
 ## Version and source preservation
 
@@ -79,6 +88,20 @@ The default export has `requestedModelId:null` and a template of `not-run` rows.
 It makes zero provider calls. The CLI still defaults to v1, with v2, v3 and v4
 retained; v5 requires `--policy v5`.
 
+## Final verification
+
+- Six focused test files passed 46/46 and TypeScript passed, independently.
+- After the final review fixes, the seven v5 tests passed again.
+- Maximum prepared size 23,773 of 24,000 characters; 22 cases and 12 rejection
+  probes unchanged.
+- Actual zero-call CLI export/import produced six `not-run` records and zero
+  response texts; a two-case trusted export/import produced two `not-run` records.
+- Instruction-block SHA256 `cb58209c5d93ded7ad155a84a8bcc8f1dab95bc20df268922fd5f0a6198e81d1`;
+  full instruction-file SHA256 `d243c4950d8a657276f1a249db319318ef78a22731f26b077028237a46cd1f65`.
+- Earlier automatically committed zero-call v5 templates contained no generated
+  model text or credentials and are absent from the final tree; history is
+  preserved. `artifacts/offline-ai/` is now git-ignored to prevent recurrence.
+
 ## Proposed next test (not run, no runner created)
 
 A future bounded test could use the same two source cases, `d1-private-uncertain-off`
@@ -93,3 +116,12 @@ leaving USD 0.001265500. That is too little for a conservative two-case
 reservation. Reservations are never reclaimed or reset. Any paid test needs
 Carl's explicit approval of an allowance and a full reconciliation of all five
 batches. This preparation is not approval for a paid test.
+
+Prospective estimate only: `d1-private-uncertain-off` 21,102 UTF-8 bytes reserves
+USD 0.004813750; `d3-regret-off` 21,506 bytes reserves USD 0.004864250; total
+USD 0.009678000. Basis: retained conservative rates checked 9 October (input plus
+1,024 overhead at USD 0.125 per million; 4,096 output tokens at USD 0.50 per
+million). With USD 0.048734500 carried, the proposed cumulative would be
+USD 0.058412500. An additional USD 0.01 would raise the allowance to USD 0.06;
+this is a PROPOSAL only, not an approved or changed cap. No call has been made,
+no runner exists, and a full five-batch reconciliation remains necessary.

@@ -90,9 +90,19 @@ export function createInputExport(
     { candidateId: "candidate-a", requestedModelId: null },
     { candidateId: "candidate-b", requestedModelId: null },
   ],
+  caseIds: readonly string[] = SMOKE_IDS,
 ) {
   const candidates = parseCandidates(rawCandidates);
-  const cases = SMOKE_IDS.map((id) => {
+  // Caller-selected source subset; never infer trusted IDs from an imported export.
+  if (
+    !Array.isArray(caseIds) ||
+    caseIds.length < 1 ||
+    caseIds.length > 22 ||
+    caseIds.some((id) => typeof id !== "string" || !bound.cases.some((c) => c.fixture.id === id)) ||
+    new Set(caseIds).size !== caseIds.length
+  )
+    fail("case-subset");
+  const cases = caseIds.map((id) => {
     const item = bound.cases.find((c) => c.fixture.id === id);
     if (!item) return fail("missing-smoke-case");
     return {
@@ -167,7 +177,12 @@ export interface ImportedRecord {
   };
   automaticFlags: string[];
 }
-export function importResults(bound: BoundPack, exportRaw: string, resultsRaw: string) {
+export function importResults(
+  bound: BoundPack,
+  exportRaw: string,
+  resultsRaw: string,
+  caseIds: readonly string[] = SMOKE_IDS,
+) {
   const exportValue = parseExchangeJson(exportRaw);
   const exportObject = object(
     exportValue,
@@ -183,7 +198,7 @@ export function importResults(bound: BoundPack, exportRaw: string, resultsRaw: s
     ],
     "export-shape",
   );
-  const exported = createInputExport(bound, exportObject.candidates);
+  const exported = createInputExport(bound, exportObject.candidates, caseIds);
   if (!isDeepStrictEqual(exportValue, exported)) fail("export-source-or-hash-drift");
   const envelope = object(
     parseExchangeJson(resultsRaw),

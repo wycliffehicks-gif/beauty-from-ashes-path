@@ -33,3 +33,6 @@ dist-ssr
 
 # Private fictional OpenAI evaluation evidence and its one-batch attempt marker.
 artifacts/direct-openai-smoke/
+
+# Offline comparison exports and imported review material.
+artifacts/offline-ai/

@@ -456,7 +456,8 @@ describe("P3a honest failures", () => {
     const { svc, say } = await make({ maxHistoryEvents: 2 });
     svc.ensureThread("t", false);
     await say("t", "one");
-    const r = await say("t", "two");
+    expect((await say("t", "two")).outcome!.ok).toBe(true); // history = 2 events
+    const r = await say("t", "three"); // history = 4 > 2
     expect(r.outcome).toMatchObject({ ok: false, code: "context-limit" });
   });
 

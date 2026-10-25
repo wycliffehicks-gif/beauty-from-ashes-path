@@ -160,6 +160,10 @@ export type Database = {
         Returns: boolean
       }
       bfa_p3b_create: { Args: { p_owner: string }; Returns: string }
+      bfa_p3b_fence: {
+        Args: { p_action: string; p_owner: string; p_thread: string }
+        Returns: number
+      }
       bfa_p3b_finish: {
         Args: {
           p_owner: string

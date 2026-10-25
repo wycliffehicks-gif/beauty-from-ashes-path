@@ -378,6 +378,37 @@ describe("conversation preview store", () => {
     expect(store.activeThread()!.id).not.toBe(firstId);
   });
 
+  it("save-and-switch is refused while an unsent draft exists; everything is preserved", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("saved turn");
+    store.sendDraft();
+    flush();
+    store.saveActiveThread("Kept");
+    store.setDraft("unsent draft");
+    const firstId = store.activeThread()!.id;
+    store.requestSwitch({ kind: "new" });
+    // The controller refuses BEFORE any save/switch mutation.
+    const result = store.resolveSwitchDecision("save");
+    expect(result).toEqual({ ok: false, reason: "unsent-draft" });
+    expect(store.activeThread()!.id).toBe(firstId);
+    expect(store.getSnapshot().pendingSwitch).toEqual({ kind: "new" });
+    expect(store.getSnapshot().draft).toBe("unsent draft");
+    const kept = store.getSnapshot().threads.find((t) => t.id === firstId)!;
+    expect(kept.savedSnapshot?.title).toBe("Kept");
+    expect(kept.messages).toHaveLength(2);
+    // Cancel preserves the exact draft.
+    store.resolveSwitchDecision("cancel");
+    expect(store.getSnapshot().draft).toBe("unsent draft");
+    // Discard explicitly drops the draft and completes the switch.
+    store.requestSwitch({ kind: "new" });
+    expect(store.resolveSwitchDecision("discard").ok).toBe(true);
+    expect(store.activeThread()!.id).not.toBe(firstId);
+    expect(store.getSnapshot().draft).toBe("");
+    // A clean switch with no draft still succeeds freely.
+    expect(store.requestSwitch({ kind: "new" }).ok).toBe(true);
+  });
+
   it("finish without saving a new thread removes it; a saved thread keeps its snapshot", () => {
     const { store, flush } = harness;
     // New unsaved thread: finish-discard removes it entirely.

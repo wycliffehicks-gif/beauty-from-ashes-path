@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShellRouteImport } from './routes/_shell'
 import { Route as ContactSupportRouteImport } from './routes/contact-support'
+import { Route as ConversationPreviewRouteImport } from './routes/conversation-preview'
 import { Route as ImportantInformationRouteImport } from './routes/important-information'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PilotFeedbackRouteImport } from './routes/pilot-feedback'
@@ -35,6 +36,11 @@ const ShellRoute = ShellRouteImport.update({
 const ContactSupportRoute = ContactSupportRouteImport.update({
   id: '/contact-support',
   path: '/contact-support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversationPreviewRoute = ConversationPreviewRouteImport.update({
+  id: '/conversation-preview',
+  path: '/conversation-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImportantInformationRoute = ImportantInformationRouteImport.update({
@@ -121,6 +127,7 @@ const DayDayReflectionRoute = DayDayReflectionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ShellIndexRoute
   '/contact-support': typeof ContactSupportRoute
+  '/conversation-preview': typeof ConversationPreviewRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
   '/pilot-feedback': typeof PilotFeedbackRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/contact-support': typeof ContactSupportRoute
+  '/conversation-preview': typeof ConversationPreviewRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
   '/pilot-feedback': typeof PilotFeedbackRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_shell': typeof ShellRouteWithChildren
   '/contact-support': typeof ContactSupportRoute
+  '/conversation-preview': typeof ConversationPreviewRoute
   '/important-information': typeof ImportantInformationRoute
   '/onboarding': typeof OnboardingRoute
   '/pilot-feedback': typeof PilotFeedbackRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/contact-support'
+    | '/conversation-preview'
     | '/important-information'
     | '/onboarding'
     | '/pilot-feedback'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/contact-support'
+    | '/conversation-preview'
     | '/important-information'
     | '/onboarding'
     | '/pilot-feedback'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_shell'
     | '/contact-support'
+    | '/conversation-preview'
     | '/important-information'
     | '/onboarding'
     | '/pilot-feedback'
@@ -241,6 +253,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ShellRoute: typeof ShellRouteWithChildren
   ContactSupportRoute: typeof ContactSupportRoute
+  ConversationPreviewRoute: typeof ConversationPreviewRoute
   ImportantInformationRoute: typeof ImportantInformationRoute
   OnboardingRoute: typeof OnboardingRoute
   PilotFeedbackRoute: typeof PilotFeedbackRoute
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/contact-support'
       fullPath: '/contact-support'
       preLoaderRoute: typeof ContactSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversation-preview': {
+      id: '/conversation-preview'
+      path: '/conversation-preview'
+      fullPath: '/conversation-preview'
+      preLoaderRoute: typeof ConversationPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/important-information': {
@@ -418,6 +438,7 @@ const DayDayRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   ShellRoute: ShellRouteWithChildren,
   ContactSupportRoute: ContactSupportRoute,
+  ConversationPreviewRoute: ConversationPreviewRoute,
   ImportantInformationRoute: ImportantInformationRoute,
   OnboardingRoute: OnboardingRoute,
   PilotFeedbackRoute: PilotFeedbackRoute,

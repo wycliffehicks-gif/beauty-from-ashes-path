@@ -246,7 +246,7 @@ function SavedRow({ store, thread }: { store: Store; thread: PreviewThread }) {
             setRenaming(false);
           }}
         >
-          <label className="sr-only" htmlFor={`rename-${thread.id}>Rename conversation</label>
+          <label className="sr-only" htmlFor={`rename-${thread.id}`}>Rename conversation</label>
           <input
             id={`rename-${thread.id}`}
             value={title}

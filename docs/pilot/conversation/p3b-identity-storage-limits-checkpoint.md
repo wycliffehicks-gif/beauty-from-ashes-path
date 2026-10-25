@@ -29,6 +29,20 @@ Focused local regression file: `__tests__/p3b-seal.test.ts`. The synthetic local
 
 No Auth JWT/session creation, auth configuration change, database command, provider-network call or v5 rerun occurred. Participant AI/real voice remain OFF, project unpublished; authenticated O01–O08 acceptance remains blocked by the unchanged supported fictional-session limitation. Only parser, focused tests, roadmap and checkpoint changed in this follow-up.
 
+### Narrow async UI follow-up — 23:39 UTC
+
+Baseline supplied and verified locally: `1fab8de14ba5110bed8f37c0e6f0243e92c4d67f`. Changes only address the four requested console defects:
+- A navigation-intent ticket is separate from operation/identity fencing. Cancel/Escape, auth change, clear and unmount invalidate queued navigation; an already-confirmed save may finish without switching or clearing the typed draft.
+- Same-thread reopen after confirmed Save/Discard uses that returned operational revision. Other-thread targets retain their captured optimistic revision; no concurrency check was removed or metadata refreshed speculatively.
+- Save/discard failure remains visible as `role=alert` inside the destination dialog, preserving destination and draft, with Cancel accessible and no automatic retry or success claim.
+- Initial New/reopen responses that disagree with the latest separate Christian-content setting perform at most one explicit preference operation under the same response/identity fence. Another toggle or failure shows a deliberate confirmation action, keeps Send disabled, and never loops, flips the setting or accepts a stale response.
+
+`python3 scripts/p3b/check-ui.py` → **18 deterministic actual-component scenarios passed**, using a test-only temporary bundle at `/tmp/browser/p3b-async-ui/harness.js`. All transport is intercepted locally/blocked; operation/Auth/prefs are doubles, with no SDK sessions, JWTs, enrollment or real calls. These are **not signed-in O01–O08 acceptance**. Covers Cancel/Escape, Save/Discard same-/other-thread revision, modal failure, initial New/reopen preference reconciliation, rapid second toggle, explicit preference failure/confirmation, clear/account-change during save/preference and before initial response. Screenshots inspected: `dialog-failure.png`, `preference-failure.png` in that temporary directory. The harness intentionally omits app CSS and does not establish visual/device acceptance. Evidence `/tmp/p3b-ui-after.log`.
+
+Same retained harness against the unchanged baseline via `P3B_UI_SOURCE=/tmp/browser/p3b-async-ui/baseline.tsx python3 scripts/p3b/check-ui.py` failed the first Cancel case because an unwanted captured create occurred; evidence `/tmp/p3b-ui-before.log`. No baseline source or external diagnostic was weakened. `bunx vitest run src/lib/ai/conversation` → **15 files / 272 passed**, 23:38:36 UTC: all previous 268 including authority/parser tests plus 4 focused navigation/revision cases. Evidence `/tmp/p3b-ui-tests.log`. Automatic full TypeScript/client/server build diagnostic **build OK 23:38:59 UTC**; no manual build/typecheck run.
+
+Changed files: `StagingConsole.tsx`, `staging/lifecycle.ts`, `__tests__/p3b-ui-intent.test.ts`, test-only `scripts/p3b/{check-ui.py,ui-harness.cjs,ui-mocks.ts}`, `AGENTS.md`, roadmap and checkpoint. No dependencies, routes, server adapter, seal/key, migrations, auth configuration, account records or provider transport changed. No Auth/session attempts, database/provider calls, v5 replay or P4. Exact remaining setup gate is unchanged: supported fictional test-user/session provisioning is unavailable; closing signup alone does not provide sessions, and the denied alternate action is not retried. Prior provider/anonymous OFF and zero-admitted state were not re-queried or mutated here. Participant AI/real voice OFF and unpublished remain preserved; no optional product decision is pending.
+
 ## Transactions, migrations and retention
 
 Existing 0000–0003 retained. Forward migrations applied:
@@ -79,7 +93,7 @@ Changed application files: `StagingConsole.tsx`, `service/{service,grant-issuer}
 
 No paid app model/voice calls; no fresh v5 allowance. Cloud/platform/editor usage not measured as task invoice. Historical observed balance change **89.50→86.80 (2.70 credits)** is only the initial preparation observation, not this continuation cost.
 
-Normal Lovable autosave only. Latest inspected local code SHA before this document: `02a47b57bfd3bdb72d71c5109b7f0542fac03eac`; final document autosave may advance it. Hosted `lovable build status --json` still reports synchronized **baseline d4a274b**, not new changes: final hosted build/GitHub sync **not independently verified**. Do not mislabel baseline in_sync as current sync.
+Normal Lovable autosave only. Async UI follow-up started from user-confirmed synchronized `1fab8de14ba5110bed8f37c0e6f0243e92c4d67f`; latest inspected local code SHA before this document: `2eef53bb5586cd82b2998c0fe1a492c1d8b33010`. Final document autosave may advance it; the final inspected local SHA is reported in chat. Remote GitHub synchronization of new changes is **not independently verified**; no stateful git commands or history rewrites were used. Earlier hosted status reporting baseline d4a274b is historical, not current sync proof.
 
 Rollback: disable admission first (already zero admitted); retain ledger/tombstones/uncertain holds, key, migrations and evidence. Revert UI/adapter forward only if needed. No destructive reset/drop/history rewrite, key invalidation or v5 replay.
 

@@ -287,8 +287,13 @@ export class GrantIssuer {
   }
 
   /** Internal server persistence only; never accept this projection from client JSON. */
-  exportAuthority() {
-    return structuredClone({ issued: [...this.issued.values()], revoked: [...this.revoked], counter: this.counter });
+  exportAuthority(threadId?: string) {
+    const issued = [...this.issued.values()].filter(g => threadId === undefined || g.threadId === threadId);
+    const selectedIds = new Set(issued.map(g => g.grantId));
+    const revoked = [...this.revoked].filter(id => threadId === undefined || selectedIds.has(id));
+    // Keep the issuer high-water counter: omitted threads must not cause ID reuse.
+    // Filtering is a detached projection, never a mutation of live issuer records.
+    return structuredClone({ issued, revoked, counter: this.counter });
   }
 
   restoreAuthority(state: ReturnType<GrantIssuer["exportAuthority"]>): void {

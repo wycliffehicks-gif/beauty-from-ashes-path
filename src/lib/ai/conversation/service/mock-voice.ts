@@ -1,42 +1,52 @@
 // Conversation P3a — MOCK voice lifecycle (O10–O13 application evidence).
 //
 // No browser media, speech, WebRTC or audio API is used or referenced. This
-// is a deterministic state machine with explicit session identities and a
-// segment ledger, so tests can prove event ORDERING and state truthfulness.
-// It cannot prove real capture shutdown, playback, or billing termination.
+// is a deterministic state machine with explicit session identities, thread
+// ownership, an output generation and a segment ledger, so tests can prove
+// event ORDERING and state truthfulness. It cannot prove real capture
+// shutdown, playback, or billing termination.
+//
+// Every answer/fragment/transcript carries an ORIGIN captured when the work
+// began (session ID + output generation + thread). Stale origins are
+// rejected before anything is recorded or played; Resume creates a new
+// session and never reauthorizes old work. Rejected input text is never
+// retained.
 
-export type VoiceSessionState =
-  | "idle"
-  | "active"
-  | "pausing"
-  | "paused"
-  | "pause-failed";
+export type VoiceSessionState = "idle" | "active" | "pausing" | "paused" | "pause-failed";
 
 export type SegmentState = "generated" | "queued" | "played" | "cancelled";
+
+export interface VoiceOrigin {
+  readonly sessionId: string | null;
+  readonly outputGeneration: number;
+  readonly threadId: string | null;
+}
 
 export interface VoiceSegment {
   readonly id: string;
   readonly sessionId: string;
+  readonly threadId: string;
   readonly turnId: string;
   readonly text: string;
   readonly devotional: boolean;
   state: SegmentState;
 }
 
-export type FragmentState = "provisional" | "obsolete" | "final" | "rejected";
+export type FragmentState = "provisional" | "obsolete" | "final";
 
 export interface TranscriptFragment {
   readonly id: string;
-  readonly sessionId: string | null;
+  readonly sessionId: string;
+  readonly threadId: string;
   readonly text: string;
   state: FragmentState;
-  readonly reason?: string;
 }
 
 export interface VoiceLogEntry {
   readonly seq: number;
   readonly type: string;
   readonly sessionId: string | null;
+  /** IDs/reasons only — never user or reply text. */
   readonly detail?: string;
 }
 
@@ -45,10 +55,13 @@ export const PRIVATE_PRACTICE_FIXTURE =
 
 export class MockVoiceLifecycle {
   sessionId: string | null = null;
+  threadId: string | null = null;
   state: VoiceSessionState = "idle";
   capture: "open" | "closed" = "closed";
   transport: "open" | "closed" = "closed";
   muted = false;
+  /** Bumped by Stop answer, preference off, pause and end. */
+  outputGeneration = 0;
   readonly segments: VoiceSegment[] = [];
   readonly fragments: TranscriptFragment[] = [];
   readonly log: VoiceLogEntry[] = [];
@@ -68,14 +81,32 @@ export class MockVoiceLifecycle {
     return `${this.prefix}-${kind}-${this.counter}`;
   }
 
+  /** Origin to capture when work (a turn, a listening interval) begins. */
+  origin(): VoiceOrigin {
+    return { sessionId: this.sessionId, outputGeneration: this.outputGeneration, threadId: this.threadId };
+  }
+
+  private originCurrent(o: VoiceOrigin): boolean {
+    return (
+      this.state === "active" &&
+      o.sessionId !== null &&
+      o.sessionId === this.sessionId &&
+      o.threadId === this.threadId &&
+      o.outputGeneration === this.outputGeneration
+    );
+  }
+
   /** Deliberate start/resume: ALWAYS a new session identity. */
-  start(): string {
+  start(threadId: string): string {
+    if (this.state !== "idle") this.end("restart");
     this.sessionId = this.id("session");
+    this.threadId = threadId;
     this.state = "active";
     this.capture = "open";
     this.transport = "open";
     this.muted = false;
-    this.record("session-start");
+    this.outputGeneration += 1;
+    this.record("session-start", threadId);
     return this.sessionId;
   }
 
@@ -86,64 +117,68 @@ export class MockVoiceLifecycle {
     this.record(muted ? "mute" : "unmute");
   }
 
-  addFragment(text: string): TranscriptFragment {
-    let state: FragmentState = "provisional";
-    let reason: string | undefined;
-    if (this.state !== "active") {
-      state = "rejected";
-      reason = `session-${this.state}`;
-    } else if (this.muted) {
-      state = "rejected";
-      reason = "muted";
+  private inputAllowed(o: VoiceOrigin): string | null {
+    if (this.state !== "active") return `session-${this.state}`;
+    if (o.sessionId !== this.sessionId || o.threadId !== this.threadId) return "stale-session";
+    if (this.muted || this.capture !== "open") return "capture-suppressed";
+    return null;
+  }
+
+  /** Provisional fragment. Rejected input is logged WITHOUT its text. */
+  addFragment(text: string, o: VoiceOrigin): boolean {
+    const why = this.inputAllowed(o);
+    if (why) {
+      this.record("fragment-rejected", why);
+      return false;
     }
-    const f: TranscriptFragment = { id: this.id("frag"), sessionId: this.sessionId, text, state, reason };
-    this.fragments.push(f);
-    this.record(state === "rejected" ? "fragment-rejected" : "fragment-provisional", reason);
-    return f;
+    this.fragments.push({ id: this.id("frag"), sessionId: this.sessionId!, threadId: this.threadId!, text, state: "provisional" });
+    this.record("fragment-provisional");
+    return true;
   }
 
   /** Final corrected transcript: provisional fragments become obsolete. */
-  finalizeTranscript(text: string): string | null {
-    if (this.state !== "active") {
-      this.record("final-rejected", `session-${this.state}`);
+  finalizeTranscript(text: string, o: VoiceOrigin): string | null {
+    const why = this.inputAllowed(o);
+    if (why) {
+      this.record("final-rejected", why);
       return null;
     }
     for (const f of this.fragments) {
       if (f.sessionId === this.sessionId && f.state === "provisional") f.state = "obsolete";
     }
-    this.fragments.push({ id: this.id("frag"), sessionId: this.sessionId, text, state: "final" });
+    this.fragments.push({ id: this.id("frag"), sessionId: this.sessionId!, threadId: this.threadId!, text, state: "final" });
     this.record("transcript-final");
     return text;
   }
 
-  /** A generated answer is split into queued segments for the session. */
-  queueAnswer(turnId: string, texts: readonly string[], devotional: boolean) {
-    if (this.state !== "active" || !this.sessionId) {
-      this.record("queue-rejected", `session-${this.state}`);
-      return;
+  /** Queue an ACCEPTED, COMMITTED answer for its exact turn and origin. */
+  queueAnswer(turnId: string, texts: readonly string[], devotional: boolean, o: VoiceOrigin): boolean {
+    if (!this.originCurrent(o)) {
+      this.record("queue-rejected-stale", turnId);
+      return false;
     }
     for (const text of texts) {
       const seg: VoiceSegment = {
         id: this.id("seg"),
-        sessionId: this.sessionId,
+        sessionId: this.sessionId!,
+        threadId: this.threadId!,
         turnId,
         text,
         devotional,
         state: "generated",
       };
       this.segments.push(seg);
-      this.record("segment-generated", seg.id);
+      this.record("segment-generated", `${seg.id}:${turnId}`);
       seg.state = "queued";
       this.record("segment-queued", seg.id);
     }
+    return true;
   }
 
-  /** Only an explicitly played segment counts as heard. */
+  /** Only an explicitly played segment of the CURRENT session counts as heard. */
   playNext(): VoiceSegment | null {
     if (this.state !== "active") return null;
-    const seg = this.segments.find(
-      (s) => s.state === "queued" && s.sessionId === this.sessionId,
-    );
+    const seg = this.segments.find((s) => s.state === "queued" && s.sessionId === this.sessionId);
     if (!seg) return null;
     seg.state = "played";
     this.record("segment-played", seg.id);
@@ -154,32 +189,30 @@ export class MockVoiceLifecycle {
     return this.segments.some((s) => s.state === "queued");
   }
 
-  private cancelQueued(filter: (s: VoiceSegment) => boolean, why: string) {
+  private cancelQueued(why: string) {
+    this.outputGeneration += 1;
     for (const s of this.segments) {
-      if (s.state === "queued" && filter(s)) {
+      if (s.state === "queued" || s.state === "generated") {
         s.state = "cancelled";
         this.record("segment-cancelled", `${s.id}:${why}`);
       }
     }
   }
 
-  /** Stop answer cancels queued output; the session stays. */
+  /** Stop answer cancels queued output and invalidates in-flight answers. */
   stopAnswer() {
-    this.cancelQueued(() => true, "stop");
+    this.cancelQueued("stop");
   }
 
   /** Preference off: stop pending output before any further delivery. */
   preferenceOff() {
-    this.cancelQueued(() => true, "preference-off");
+    this.cancelQueued("preference-off");
   }
 
-  /**
-   * Pause: invalidate queued output, request mock shutdown. Not complete
-   * until confirmShutdown(token) is called with the current token.
-   */
+  /** Pause: invalidate output, request mock shutdown (not yet complete). */
   requestPause(): number {
     if (this.state !== "active" && this.state !== "pause-failed") return this.shutdownToken;
-    this.cancelQueued(() => true, "pause");
+    this.cancelQueued("pause");
     this.state = "pausing";
     this.shutdownToken += 1;
     this.record("shutdown-requested");
@@ -200,7 +233,7 @@ export class MockVoiceLifecycle {
 
   failShutdown(token: number): boolean {
     if (token !== this.shutdownToken || this.state !== "pausing") return false;
-    // Capture/transport state is UNKNOWN; we report it as still open.
+    // Capture/transport state is UNKNOWN; reported as still open.
     this.state = "pause-failed";
     this.record("shutdown-failed");
     return true;
@@ -226,21 +259,47 @@ export class MockVoiceLifecycle {
     };
   }
 
-  /** Full reset (delete/clear/finish): every queued segment cancelled. */
+  /** End the session (finish/delete/clear/switch/preference-off). */
   end(reason: string) {
-    this.cancelQueued(() => true, reason);
+    if (this.state === "idle" && this.sessionId === null) return;
+    this.cancelQueued(reason);
+    const ended = this.sessionId;
+    // Fragments are input of this session: provisional/obsolete ones are
+    // never context and are dropped on end.
+    for (let i = this.fragments.length - 1; i >= 0; i -= 1) {
+      if (this.fragments[i].sessionId === ended && this.fragments[i].state !== "final") this.fragments.splice(i, 1);
+    }
     this.capture = "closed";
     this.transport = "closed";
     this.state = "idle";
+    this.muted = false;
     this.record("session-ended", reason);
     this.sessionId = null;
+    this.threadId = null;
     this.shutdownToken += 1;
   }
 
-  /** Remove every segment for turns of a deleted thread. */
+  /** Remove every segment/fragment owned by a thread (delete/clear). */
+  purgeThread(threadId: string) {
+    if (this.threadId === threadId) this.end("purge");
+    for (let i = this.segments.length - 1; i >= 0; i -= 1) {
+      if (this.segments[i].threadId === threadId) this.segments.splice(i, 1);
+    }
+    for (let i = this.fragments.length - 1; i >= 0; i -= 1) {
+      if (this.fragments[i].threadId === threadId) this.fragments.splice(i, 1);
+    }
+  }
+
+  /** Remove segments for discarded turns. */
   purgeTurns(turnIds: ReadonlySet<string>) {
     for (let i = this.segments.length - 1; i >= 0; i -= 1) {
       if (turnIds.has(this.segments[i].turnId)) this.segments.splice(i, 1);
     }
+  }
+
+  purgeAll() {
+    this.end("clear");
+    this.segments.length = 0;
+    this.fragments.length = 0;
   }
 }

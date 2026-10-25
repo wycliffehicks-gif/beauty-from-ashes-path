@@ -111,17 +111,19 @@ describe("conversation context assembly", () => {
     );
     expect(found).toEqual([]);
     // The context type has no field that could carry them at all.
-    expect(Object.keys(result.context).sort()).toEqual([
-      "contractVersion",
-      "context" in result.context ? "never" : "exclusionsNote",
-      "excerpts",
-      "message",
-      "policyIdentity",
-      "sources",
-      "spiritual",
-      "threadId",
-      "turnId",
-    ].filter((k) => k !== "never").sort());
+    expect(Object.keys(result.context).sort()).toEqual(
+      [
+        "contractVersion",
+        "exclusionsNote",
+        "excerpts",
+        "message",
+        "policyIdentity",
+        "sources",
+        "spiritual",
+        "threadId",
+        "turnId",
+      ].sort(),
+    );
   });
 
   it("rejects cross-owner injection even with a chosen thread id", async () => {

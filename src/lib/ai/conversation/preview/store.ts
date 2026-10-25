@@ -328,7 +328,12 @@ export class ConversationPreviewStore {
    */
   requestSwitch(next: { kind: "new" } | { kind: "open"; threadId: string }): StoreResult {
     const active = this.activeThread();
-    if (active && this.saveStatus(active) !== "saved") {
+    // Only a thread with actual content (messages or unsent draft) guards
+    // switching; a brand-new empty thread is replaced freely.
+    const hasContent =
+      active !== null &&
+      (active.messages.length > 0 || this.activeDraft().trim().length > 0);
+    if (active && hasContent && this.saveStatus(active) !== "saved") {
       this.state = { ...this.state, pendingSwitch: next };
       this.emit();
       return { ok: false, reason: "needs-decision" };

@@ -443,3 +443,102 @@ describe("sync hash", () => {
     }
   });
 });
+
+describe("E. voice UI follow-up: practice offer, interrupt, transcript choice", () => {
+  it("private practice offer is current only for the same confirmed-paused session", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    h.store.pauseVoice();
+    h.flush();
+    expect(h.store.getSnapshot().voice).toBe("paused");
+    const offered = h.service.voice.sessionId;
+    expect(h.store.isPrivatePracticeOfferCurrent(offered)).toBe(true);
+    // Resume: new session, capture reopens — the old offer is stale.
+    h.store.resumeVoice();
+    h.flush();
+    expect(h.store.isPrivatePracticeOfferCurrent(offered)).toBe(false);
+    expect(h.store.isPrivatePracticeOfferCurrent(h.service.voice.sessionId)).toBe(false);
+    // Finish: session ended entirely.
+    h.store.finishTalking();
+    expect(h.store.isPrivatePracticeOfferCurrent(offered)).toBe(false);
+  });
+
+  it("offer is never current when shutdown failed or capture is open", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    const listeningSession = h.service.voice.sessionId;
+    expect(h.store.isPrivatePracticeOfferCurrent(listeningSession)).toBe(false);
+    h.store.setSimulateShutdownFailure(true);
+    h.store.pauseVoice();
+    h.flush();
+    expect(h.store.getSnapshot().voice).toBe("pause-failed");
+    expect(h.store.isPrivatePracticeOfferCurrent(h.service.voice.sessionId)).toBe(false);
+  });
+
+  it("Interrupt reply while Speaking cancels queued output and keeps the session listening", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    await h.send("hello");
+    expect(h.store.getSnapshot().voice).toBe("speaking");
+    expect(h.service.voice.hasQueued()).toBe(true);
+    const session = h.service.voice.sessionId;
+    h.store.stopResponse();
+    expect(h.store.getSnapshot().voice).toBe("listening");
+    expect(h.service.voice.hasQueued()).toBe(false);
+    expect(h.service.voice.sessionId).toBe(session);
+    expect(h.service.voice.capture).toBe("open");
+    expect(h.service.voice.segments.every((s) => s.state !== "queued")).toBe(true);
+  });
+
+  it("a finalized transcript never overwrites typed text; Cancel preserves it exactly", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    h.store.setDraft("my typed draft");
+    h.store.finalizeTranscript("I am not angry with her; I am tired.");
+    expect(h.store.activeDraft()).toBe("my typed draft");
+    expect(h.store.getSnapshot().pendingTranscript).toBe("I am not angry with her; I am tired.");
+    expect(h.store.resolveTranscriptChoice("cancel").ok).toBe(true);
+    expect(h.store.activeDraft()).toBe("my typed draft");
+    expect(h.store.getSnapshot().pendingTranscript).toBeNull();
+    expect(h.dispatched).toHaveLength(0);
+  });
+
+  it("Append and Replace are explicit; an empty composer takes the transcript directly", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    h.store.finalizeTranscript("first transcript");
+    expect(h.store.activeDraft()).toBe("first transcript");
+    expect(h.store.getSnapshot().pendingTranscript).toBeNull();
+    h.store.finalizeTranscript("second transcript");
+    expect(h.store.getSnapshot().pendingTranscript).toBe("second transcript");
+    expect(h.store.resolveTranscriptChoice("append").ok).toBe(true);
+    expect(h.store.activeDraft()).toBe("first transcript\nsecond transcript");
+    h.store.finalizeTranscript("third");
+    expect(h.store.resolveTranscriptChoice("replace").ok).toBe(true);
+    expect(h.store.activeDraft()).toBe("third");
+    expect(h.dispatched).toHaveLength(0);
+  });
+
+  it("a pending transcript choice is dropped on thread switch", async () => {
+    const h = await harness();
+    h.store.createThread();
+    h.store.startTalking();
+    h.flush();
+    h.store.setDraft("typed");
+    h.store.finalizeTranscript("spoken final");
+    expect(h.store.getSnapshot().pendingTranscript).toBe("spoken final");
+    const r = h.store.requestSwitch({ kind: "new" });
+    if (!r.ok) h.store.resolveSwitchDecision("discard");
+    expect(h.store.getSnapshot().pendingTranscript).toBeNull();
+  });
+});

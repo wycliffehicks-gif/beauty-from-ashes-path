@@ -14,3 +14,4 @@ export class ResponseFence {
   current(ticket: number) { return this.generation === ticket; }
 }
 export function draftAfterSend(current: string, sent: string) { return current === sent ? '' : current; }
+export function requiresSwitchChoice(saved: boolean, draft: string, pending: boolean) { return !saved || draft.length > 0 || pending; }

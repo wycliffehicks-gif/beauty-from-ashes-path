@@ -10,7 +10,7 @@ import { runStagingOperation } from '@/lib/ai/conversation/staging/staging.funct
 import type { StagingInput } from '@/lib/ai/conversation/staging/input';
 import type { ActiveThread, SavedThread } from '@/lib/ai/conversation/staging/adapter.server';
 import { FICTIONAL_NOTE, previewSelection, confirmSelection } from '@/lib/ai/conversation/staging/excerpt';
-import { ResponseFence, draftAfterSend } from '@/lib/ai/conversation/staging/lifecycle';
+import { ResponseFence, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
 
 type Destination = { action: 'create' } | { action: 'reopen'; target: SavedThread };
 export function StagingConsole() {
@@ -99,7 +99,7 @@ export function StagingConsole() {
   }
 
   function switchTo(next: Destination) {
-    if (stateRef.current && (!stateRef.current.saved || message.length > 0 || busy)) { setDestination(next); return; }
+    if (stateRef.current && requiresSwitchChoice(stateRef.current.saved, message, busy)) { setDestination(next); return; }
     void act(next.action, next.action === 'reopen' ? { thread: next.target.thread, revision: next.target.revision, token: undefined } : {});
   }
   // Existing nonpersonal app preference is explicit, never silently enabled.

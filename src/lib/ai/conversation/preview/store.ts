@@ -125,6 +125,9 @@ export interface PreviewState {
   readonly sharePreview: ConversationTeachingRecord | null;
   /** A switch request waiting on a Save/Discard/Cancel decision. */
   readonly pendingSwitch: { readonly kind: "new" } | { readonly kind: "open"; readonly threadId: string } | null;
+  /** A finalized transcript held back because the composer has typed text;
+   *  awaits an explicit Replace/Append/Cancel choice. Never auto-sent. */
+  readonly pendingTranscript: string | null;
   /** Review controls (explicitly not participant controls). */
   readonly simulateSendFailure: boolean;
   readonly simulateSaveFailure: boolean;
@@ -144,6 +147,7 @@ const EMPTY_STATE: PreviewState = Object.freeze({
   voiceMuted: false,
   sharePreview: null,
   pendingSwitch: null,
+  pendingTranscript: null,
   simulateSendFailure: false,
   simulateSaveFailure: false,
   simulatePreferenceFailure: false,

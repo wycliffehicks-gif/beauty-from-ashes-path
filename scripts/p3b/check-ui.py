@@ -50,7 +50,7 @@ async def main():
             if cancel == 'Escape': await page.keyboard.press('Escape')
             else: await dialog.get_by_role('button', name='Cancel', exact=True).click()
             await resolve(active(revision=1, saved=True))
-            await page.wait_for_function('!window.p3bHarness.pending().length')
+            await page.wait_for_function('document.querySelector("[role=status]")?.textContent !== "Working…" || window.p3bHarness.calls.length > 2')
             assert [c['action'] for c in await calls()] == ['create','save']
             assert await page.get_by_label('Fictional message', exact=True).input_value() == 'KEEP_DRAFT'
         print('PASS Cancel and Escape invalidate captured navigation (2)')
@@ -148,8 +148,20 @@ async def main():
                 assert await page.get_by_role('button',name='New conversation',exact=True).is_enabled()
                 assert len(await calls())==2
         print('PASS Clear/account changes suppress pending save/preference responses (4)')
+        for transition in ['clear','auth']:
+            await reset()
+            await page.get_by_role('button',name='New conversation',exact=True).click()
+            await pending('create')
+            await page.get_by_role('switch',name='Christian content',exact=True).click()
+            await page.evaluate('window.p3bHarness.clear()' if transition=='clear' else 'window.p3bHarness.auth("fictional-ui-b")')
+            await resolve(active())
+            await page.wait_for_function('!window.p3bHarness.pending().length')
+            assert await page.get_by_label('Fictional message',exact=True).count()==0
+            assert len(await calls())==1
+            assert await page.get_by_role('switch',name='Christian content',exact=True).is_checked()
+        print('PASS Clear/account change before initial response suppresses reconciliation (2)')
         assert not errors, errors
-        print('16 deterministic component scenarios passed; real Auth acceptance BLOCKED; zero network transport')
+        print('18 deterministic component scenarios passed; real Auth acceptance BLOCKED; zero network transport')
         await browser.close()
 
 asyncio.run(main())

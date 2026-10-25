@@ -139,6 +139,13 @@ microphone or database is involved anywhere in this package.
   Cancel restores the exact draft; a clean saved thread switches without a
   dialog; share dialog Escape shares nothing; voice simulator states render.
   Screenshots reviewed.
+- Playwright switch-flow correction checks (Chromium, 390px): failed
+  switch-save keeps the dialog open with a visible `role="alert"` error and
+  the active thread unchanged; Cancel closes and preserves; with an unsent
+  draft, Save & continue is disabled with the truthful explanation, Cancel
+  preserves the exact draft, Discard & continue switches and clears it; a
+  clean switch with no draft completes without a dialog. Screenshots
+  reviewed.
 
 ## NOT verified here (required later)
 

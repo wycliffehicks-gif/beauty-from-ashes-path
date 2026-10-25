@@ -11,6 +11,7 @@
 - [x] Verify the approved baseline and connect required Cloud infrastructure.
 - [ ] Establish staging-only verified identity (profile-data decision required before auth code).
 - [ ] Implement owned deliberate snapshots/deletion and non-content atomic admission ledger.
+- [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
 - [ ] Connect the existing service authority without enabling participant/model/voice access.
 - [ ] Verify O01–O08 against real fictional staging accounts and database concurrency.
-- [ ] Record exact checkpoint evidence, limits and rollback; retain all prior work.
+- [x] Record partial checkpoint evidence, limits and rollback; retain all prior work.

@@ -12,3 +12,4 @@
 ## Architecture rules
 
 - Conversation provider requests are built only by `src/lib/ai/conversation/service/` through the P1 `assembleConversationContext` boundary; the preview store is a UI projection that routes confirmed lifecycle changes to the service. Why: one authority for context, grants and cancellation.
+- P3b durable preparation uses only `bfa_p3b_*` tables; browser privileges remain revoked until a verified staging adapter is implemented, and the admission reducer is never a substitute for transactional database claims. Why: preserve fail-closed isolation and distinguish pure rules from real identity/concurrency evidence.

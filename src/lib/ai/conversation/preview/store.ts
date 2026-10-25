@@ -1062,8 +1062,59 @@ export class ConversationPreviewStore {
       voice && this.state.voice === "listening" && !this.state.voiceMuted
         ? voice.finalizeTranscript(text, voice.origin())
         : (voice?.finalizeTranscript(text, { sessionId: null, outputGeneration: -1, threadId: null }) ?? null);
-    if (final) this.setDraft(final);
-    else this.emit();
+    if (!final) {
+      this.emit();
+      return;
+    }
+    // Never destroy typed text: a non-empty draft holds the transcript back
+    // for an explicit Replace/Append/Cancel choice. Cancel/reject preserves
+    // the draft exactly and the transcript is never sent or made context.
+    if (this.activeDraft().trim().length > 0) {
+      this.state = { ...this.state, pendingTranscript: final };
+      this.emit();
+      return;
+    }
+    this.setDraft(final);
+  }
+
+  /**
+   * Resolve a held-back finalized transcript. Replace/Append are explicit;
+   * Cancel preserves the typed draft exactly. The transcript is never sent
+   * by any of these choices and creates no context or grants.
+   */
+  resolveTranscriptChoice(choice: "replace" | "append" | "cancel"): StoreResult {
+    const pending = this.state.pendingTranscript;
+    if (pending === null) return { ok: false, reason: "no-thread" };
+    this.state = { ...this.state, pendingTranscript: null };
+    if (choice === "replace") {
+      this.setDraft(pending);
+      return OK;
+    }
+    if (choice === "append") {
+      const existing = this.activeDraft().replace(/\s+$/, "");
+      this.setDraft(existing.length > 0 ? `${existing}\n${pending}` : pending);
+      return OK;
+    }
+    this.emit();
+    return OK;
+  }
+
+  /**
+   * A private spoken practice invitation is current ONLY for the same mock
+   * session that is still confirmed paused (capture and transport closed).
+   * Resume, disconnect, switch, delete, clear or a failed shutdown all make
+   * a previously shown invitation stale.
+   */
+  isPrivatePracticeOfferCurrent(sessionId: string | null): boolean {
+    const voice = this.service?.voice;
+    return (
+      !!voice &&
+      this.state.voice === "paused" &&
+      voice.sessionId !== null &&
+      voice.sessionId === sessionId &&
+      voice.capture === "closed" &&
+      voice.transport === "closed"
+    );
   }
 
   /** Developer fixture: mark earlier history missing (gap is reported). */

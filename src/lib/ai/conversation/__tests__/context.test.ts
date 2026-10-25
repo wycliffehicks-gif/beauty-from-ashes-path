@@ -630,7 +630,7 @@ describe("conversation context assembly", () => {
       request: validRequest({
         selectedExcerpts: [
           {
-            previewId: "alias-key",
+            previewId: "bfa-preview-alias",
             sourceKey: "private-note",
             excerptSha256: preview.textSha256,
             previewedAtIso: preview.previewedAtIso,
@@ -640,7 +640,7 @@ describe("conversation context assembly", () => {
       principal: principal(),
       serverContext: serverContext(),
       registry: await getRegistry(),
-      previewStore: new Map([["alias-key", preview]]),
+      previewStore: new Map([["bfa-preview-alias", preview]]),
       currentSourceRevisions: REVISIONS,
       nowIso: NOW,
     });

@@ -20,7 +20,11 @@ import { CONVERSATION_CONTRACT_VERSION } from "../contract";
 import { assembleConversationContext } from "../context";
 import { buildTeachingSourceRecords } from "../content/index";
 import type { SpiritualRestriction } from "../grants";
-import { CONVERSATION_POLICY_BLOCK_SHA256, CONVERSATION_POLICY_IDENTITY } from "../policy";
+import {
+  CONVERSATION_POLICY_BLOCK,
+  CONVERSATION_POLICY_BLOCK_SHA256,
+  CONVERSATION_POLICY_IDENTITY,
+} from "../policy";
 import {
   createSourceRegistry,
   resolveRegistrySource,
@@ -37,7 +41,8 @@ import {
   type ProviderEffectiveItem,
   type ProviderHistoryEntry,
 } from "./mock-provider";
-import { MockVoiceLifecycle } from "./mock-voice";
+import { MockVoiceLifecycle, type VoiceOrigin } from "./mock-voice";
+import { sha256HexSync } from "./sha256-sync";
 import { resolveFixtureCase, type FixtureCase } from "./semantic-fixtures";
 
 export const PREVIEW_FIXTURE_OWNER_ID = "developer-preview-fixture-owner";
@@ -179,6 +184,42 @@ function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
 }
 
+/** Detached, deeply frozen copy (provider requests cannot be mutated). */
+export function deepFreezeDetached<T>(v: T): T {
+  const copy = structuredClone(v);
+  const freeze = (o: unknown) => {
+    if (o && typeof o === "object" && !Object.isFrozen(o)) {
+      Object.freeze(o);
+      for (const k of Object.keys(o)) freeze((o as Record<string, unknown>)[k]);
+    } else if (o && typeof o === "object") {
+      for (const k of Object.keys(o)) freeze((o as Record<string, unknown>)[k]);
+    }
+  };
+  freeze(copy);
+  return copy;
+}
+
+/**
+ * Immutable admission ticket: captured when a user event is admitted and
+ * checked before dispatch and after every asynchronous stage.
+ */
+interface AdmissionTicket {
+  readonly epoch: number;
+  readonly record: ThreadRecord;
+  readonly userEvent: ThreadEvent;
+  readonly fixture: FixtureCase | null;
+  readonly generation: number;
+  readonly preferenceRevision: number;
+  readonly restrictionRevision: number;
+  readonly voiceOrigin: VoiceOrigin | null;
+}
+
+/** Two-phase UI commit: accept() validates without publishing; apply() publishes. */
+export interface TurnCommit {
+  accept(): boolean;
+  apply(outcome: TurnOutcome): void;
+}
+
 // ---------------------------------------------------------------------------
 
 export class ConversationService {
@@ -198,6 +239,7 @@ export class ConversationService {
   private readonly stageHook?: ConversationServiceOptions["stageHook"];
   private readonly registryPromise: Promise<SourceRegistry | null>;
   private registry: SourceRegistry | null = null;
+  private readonly tickets = new Map<string, AdmissionTicket>();
 
   constructor(options: ConversationServiceOptions = {}) {
     this.provider = options.provider ?? createMockProvider({ delayMs: 350 });
@@ -273,7 +315,10 @@ export class ConversationService {
     this.cancelThread(storeId, "preference-change");
     record.preferenceOn = on;
     record.preferenceRevision += 1;
-    if (!on) this.voice.preferenceOff();
+    if (!on) {
+      this.voice.preferenceOff();
+      if (this.voice.threadId === record.threadId) this.voice.end("preference-off");
+    }
     this.log("preference-confirmed", record.threadId, undefined, on ? "on" : "off");
   }
 
@@ -284,6 +329,8 @@ export class ConversationService {
       return false;
     }
     this.cancelThread(storeId, "open");
+    // Reopening never carries a live voice session across threads.
+    if (this.voice.state !== "idle") this.voice.end("switch");
     this.log("thread-opened", record.threadId);
     return true;
   }
@@ -323,7 +370,9 @@ export class ConversationService {
       record.grantByTurn = new Map();
     }
     record.restrictionRevision += 1;
+    if (this.voice.threadId === record.threadId) this.voice.end("discard");
     this.voice.purgeTurns(discardedTurns);
+    for (const t of discardedTurns) this.tickets.delete(t);
     this.log("thread-discarded", record.threadId);
   }
 
@@ -333,7 +382,9 @@ export class ConversationService {
     if (!record) return;
     this.cancelThread(storeId, "delete");
     const turns = new Set(record.events.map((e) => e.turnId).filter((t): t is string => t !== null));
+    this.voice.purgeThread(record.threadId);
     this.voice.purgeTurns(turns);
+    for (const t of turns) this.tickets.delete(t);
     this.issuer.purgeThread(record.threadId);
     this.threads.delete(storeId);
     this.log("thread-deleted", record.threadId);
@@ -344,8 +395,8 @@ export class ConversationService {
     this.threads.clear();
     this.epoch += 1;
     this.issuer = new GrantIssuer(`e${this.epoch}`);
-    this.voice.end("clear");
-    this.voice.purgeTurns(new Set(this.voice.segments.map((s) => s.turnId)));
+    this.voice.purgeAll();
+    this.tickets.clear();
     this.log("clear-all", null);
   }
 
@@ -357,18 +408,54 @@ export class ConversationService {
 
   // --- events -----------------------------------------------------------------
 
-  admitUserMessage(storeId: string, messageId: string, text: string): string {
+  /**
+   * Admit a submitted user message. Synchronously records the event, its
+   * hash and its fixture-derived meaning (report/intention/correction/
+   * restriction) so that meaning persists even if the reply later fails or
+   * is stopped. Captures an immutable admission ticket.
+   */
+  admitUserMessage(
+    storeId: string,
+    messageId: string,
+    text: string,
+    voiceOrigin: VoiceOrigin | null = null,
+  ): string {
     const record = this.threads.get(storeId)!;
     const turnId = `bfa-turn-e${this.epoch}-${this.nextId("t")}`;
-    record.events.push({
+    const event: ThreadEvent = {
       eventId: this.nextId("evt"),
       messageId,
       turnId,
       role: "user",
       text,
-      textSha256: null,
+      textSha256: sha256HexSync(text),
       status: "delivered",
-    });
+    };
+    record.events.push(event);
+    const fixture = resolveFixtureCase(text);
+    const before = record.restrictions.length;
+    const next = new Set(record.restrictions);
+    for (const d of fixture?.derivations ?? []) {
+      if (d.kind === "restriction") for (const r of d.add) next.add(r);
+    }
+    record.derived = this.deriveForTurn(record, fixture, event, event.textSha256!);
+    if (next.size !== before) {
+      record.restrictions = [...next];
+      record.restrictionRevision += 1;
+    }
+    this.tickets.set(
+      turnId,
+      Object.freeze({
+        epoch: this.epoch,
+        record,
+        userEvent: event,
+        fixture,
+        generation: record.generation,
+        preferenceRevision: record.preferenceRevision,
+        restrictionRevision: record.restrictionRevision,
+        voiceOrigin: voiceOrigin ? Object.freeze({ ...voiceOrigin }) : null,
+      }),
+    );
     this.log("user-message-admitted", record.threadId, turnId);
     return turnId;
   }
@@ -419,18 +506,15 @@ export class ConversationService {
   async runTurn(
     storeId: string,
     turnId: string,
-    commit: (outcome: TurnOutcome) => boolean,
+    commit: TurnCommit,
   ): Promise<"committed" | "stale" | "refused-by-ui"> {
+    const ticket = this.tickets.get(turnId);
     const record = this.threads.get(storeId);
-    if (!record) return "stale";
-    const ticket = {
-      epoch: this.epoch,
-      record,
-      generation: record.generation,
-      preferenceRevision: record.preferenceRevision,
-      restrictionRevision: record.restrictionRevision,
-    };
-    const userEvent = record.events.find((e) => e.turnId === turnId && e.role === "user");
+    if (!record || !ticket || ticket.record !== record) {
+      this.log("stale-work-dropped", record?.threadId ?? null, turnId, "no-ticket");
+      return "stale";
+    }
+    const userEvent: ThreadEvent | undefined = ticket.userEvent;
     const current = () =>
       ticket.epoch === this.epoch &&
       this.threads.get(storeId) === ticket.record &&
@@ -457,25 +541,29 @@ export class ConversationService {
         revokeUncommitted();
         return stale("commit");
       }
-      return commit(outcome) ? "committed" : "refused-by-ui";
+      if (!commit.accept()) {
+        revokeUncommitted();
+        return "refused-by-ui";
+      }
+      this.tickets.delete(turnId);
+      commit.apply(outcome);
+      return "committed";
     };
 
-    if (!userEvent) return stale("no-user-event");
+    // Stop/switch/preference change between admission and dispatch: no run.
+    if (!current()) return stale("before-start");
     const registry = await this.registryPromise;
     if (!(await stageCheck("registry-ready"))) return stale("registry-ready");
     if (!registry) return finish({ ok: false, code: "registry-unavailable", message: failureMessage("registry-unavailable") });
 
-    const messageSha = await sha256Hex(userEvent.text);
+    const messageSha = userEvent.textSha256!;
     if (!(await stageCheck("message-hashed"))) return stale("message-hashed");
 
-    const fixture: FixtureCase | null = resolveFixtureCase(userEvent.text);
+    const fixture: FixtureCase | null = ticket.fixture;
     if (!(await stageCheck("fixture-resolved"))) return stale("fixture-resolved");
 
-    // Tentative restrictions for THIS reply (committed only at commit).
+    // Restrictions were applied at admission; this reply uses current ones.
     const newRestrictions = new Set(record.restrictions);
-    for (const d of fixture?.derivations ?? []) {
-      if (d.kind === "restriction") for (const r of d.add) newRestrictions.add(r);
-    }
     const tentativeRestrictions = [...newRestrictions];
 
     // --- grant issuance (service-owned) ------------------------------------
@@ -507,7 +595,14 @@ export class ConversationService {
       const prevTurn = this.previousAnsweredUserTurn(record, userEvent);
       const parentId = prevTurn ? record.grantByTurn.get(prevTurn) : undefined;
       if (parentId) {
-        const r = await this.issuer.issueFollowUp(binding, parentId, prevTurn, registry, this.allowTestSources);
+        const r = await this.issuer.issueFollowUp(
+          binding,
+          parentId,
+          prevTurn,
+          fixture.grantFollowUp,
+          registry,
+          this.allowTestSources,
+        );
         if (r.ok) {
           grant = r.grant;
           parent = this.issuer.get(parentId) ?? null;
@@ -608,10 +703,8 @@ export class ConversationService {
       return finish({ ok: false, code: "context-limit", message: failureMessage("context-limit") });
     }
 
-    // Tentative derived view (current turn's corrections apply to this reply).
-    const tentative = this.deriveForTurn(record, fixture, userEvent, messageSha);
-    const effective: ProviderEffectiveItem[] = tentative.effectiveAfter
-      .filter((d) => d.kind !== "active-restriction")
+    const effective: ProviderEffectiveItem[] = record.derived
+      .filter((d) => d.status === "effective" && d.kind !== "active-restriction")
       .map((d) => ({
         itemId: d.itemId,
         kind: d.kind as ProviderEffectiveItem["kind"],
@@ -619,13 +712,14 @@ export class ConversationService {
         sourceEventId: d.sourceEventId,
       }));
 
-    const request: MockProviderRequest = Object.freeze({
+    const request: MockProviderRequest = deepFreezeDetached({
       requestId: this.nextId("req"),
       policyIdentity: CONVERSATION_POLICY_IDENTITY,
       policySha256: CONVERSATION_POLICY_BLOCK_SHA256,
+      policyBody: CONVERSATION_POLICY_BLOCK,
       context: assembled.context,
-      history: Object.freeze(history),
-      effective: Object.freeze(effective),
+      history,
+      effective,
       historyComplete: !record.historyGap,
       revisions: { preference: record.preferenceRevision, restrictions: record.restrictionRevision },
       fixture: {
@@ -691,62 +785,82 @@ export class ConversationService {
       return stale("before-commit");
     }
 
-    // --- single commit point -------------------------------------------------
-    const accepted = commit({
+    // --- prepare everything (no awaits after this point) ----------------------
+    const outcome: TurnOutcome = {
       ok: true,
       turnId,
       text: response.text,
       sourceCards: [...new Set(response.sourceIds)].map((id) => admitted.get(id)!),
-    });
-    if (!accepted) {
-      revokeUncommitted();
-      return "refused-by-ui";
-    }
+    };
     const assistantEvent: ThreadEvent = {
       eventId: this.nextId("evt"),
       messageId: `assistant-of-${userEvent.messageId}`,
       turnId,
       role: "assistant",
       text: response.text,
-      textSha256: null,
+      textSha256: sha256HexSync(response.text),
       status: "delivered",
     };
-    record.events.push(assistantEvent);
-    record.derived = tentative.derivedAfter;
-    if (tentativeRestrictions.length !== record.restrictions.length) {
-      record.restrictions = tentativeRestrictions;
-      record.restrictionRevision += 1;
-    }
-    if (grant) record.grantByTurn.set(turnId, grant.grantId);
-    // AI interpretation only from the fixture the service itself selected.
-    if (
+    const interpretation: DerivedItem | null =
       response.interpretation &&
       fixture?.mockInterpretation &&
       response.interpretation.tag === fixture.mockInterpretation.tag
-    ) {
-      record.derived.push({
-        itemId: this.nextId("item"),
-        kind: "ai-interpretation",
-        tag: fixture.mockInterpretation.tag,
-        text: fixture.mockInterpretation.text,
-        sourceEventId: assistantEvent.eventId,
-        evidenceSha256: await sha256Hex(fixture.mockInterpretation.text),
-        origin: "mock-provider-fixture",
-        fixtureCaseId: fixture.id,
-        supersedesItemId: null,
-        status: "effective",
-        supersededByItemId: null,
-      });
+        ? {
+            itemId: this.nextId("item"),
+            kind: "ai-interpretation",
+            tag: fixture.mockInterpretation.tag,
+            text: fixture.mockInterpretation.text,
+            sourceEventId: assistantEvent.eventId,
+            evidenceSha256: sha256HexSync(fixture.mockInterpretation.text),
+            origin: "mock-provider-fixture",
+            fixtureCaseId: fixture.id,
+            supersedesItemId: null,
+            status: "effective",
+            supersededByItemId: null,
+          }
+        : null;
+
+    // --- single synchronous commit: validate, commit service, then publish ---
+    if (!current()) {
+      revokeUncommitted();
+      return stale("commit");
+    }
+    if (!commit.accept()) {
+      revokeUncommitted();
+      return "refused-by-ui";
+    }
+    record.events.push(assistantEvent);
+    if (interpretation) record.derived.push(interpretation);
+    if (grant) record.grantByTurn.set(turnId, grant.grantId);
+    this.tickets.delete(turnId);
+    if (ticket.voiceOrigin) {
+      this.queueVoiceAnswer(storeId, turnId, response.text, record.preferenceOn, ticket.voiceOrigin);
     }
     this.log("turn-committed", record.threadId, turnId, request.requestId);
+    commit.apply(outcome);
     return "committed";
   }
 
   /** Called by the UI when a voice answer is spoken: queue segments. */
-  queueVoiceAnswer(storeId: string, turnId: string, text: string, devotional: boolean): void {
-    if (!this.threads.has(storeId)) return;
+  /** Queue an accepted, committed answer for its exact turn and voice origin. */
+  queueVoiceAnswer(
+    storeId: string,
+    turnId: string,
+    text: string,
+    devotional: boolean,
+    origin: VoiceOrigin,
+  ): boolean {
+    const record = this.threads.get(storeId);
+    if (!record || origin.threadId !== record.threadId) return false;
     const segments = text.match(/[^.!?]+[.!?]?/g)?.map((s) => s.trim()).filter(Boolean) ?? [text];
-    this.voice.queueAnswer(turnId, segments, devotional);
+    return this.voice.queueAnswer(turnId, segments, devotional, origin);
+  }
+
+  /** Start a mock voice session owned by this thread (new identity each time). */
+  startVoice(storeId: string): string | null {
+    const record = this.threads.get(storeId);
+    if (!record) return null;
+    return this.voice.start(record.threadId);
   }
 
   private previousAnsweredUserTurn(record: ThreadRecord, current: ThreadEvent): string | null {
@@ -763,7 +877,7 @@ export class ConversationService {
     fixture: FixtureCase | null,
     userEvent: ThreadEvent,
     sha: string,
-  ): { derivedAfter: DerivedItem[]; effectiveAfter: DerivedItem[] } {
+  ): DerivedItem[] {
     const derived = clone(record.derived);
     for (const d of fixture?.derivations ?? []) {
       const base = {
@@ -795,7 +909,7 @@ export class ConversationService {
         derived.push({ ...base, kind: d.kind, tag: d.tag, text: d.text, supersedesItemId: null, status: "effective" });
       }
     }
-    return { derivedAfter: derived, effectiveAfter: derived.filter((d) => d.status === "effective") };
+    return derived;
   }
 
   // --- inspection ------------------------------------------------------------------

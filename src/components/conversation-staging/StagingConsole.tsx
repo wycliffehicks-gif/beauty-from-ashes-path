@@ -10,7 +10,7 @@ import { runStagingOperation } from '@/lib/ai/conversation/staging/staging.funct
 import type { StagingInput } from '@/lib/ai/conversation/staging/input';
 import type { ActiveThread, SavedThread } from '@/lib/ai/conversation/staging/adapter.server';
 import { FICTIONAL_NOTE, previewSelection, confirmSelection } from '@/lib/ai/conversation/staging/excerpt';
-import { ResponseFence, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
+import { ResponseFence, NavigationIntent, selectedReopenRevision, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
 
 type Destination = { action: 'create' } | { action: 'reopen'; target: SavedThread };
 export function StagingConsole() {
@@ -26,6 +26,9 @@ export function StagingConsole() {
   const [listStatus, setListStatus] = useState('');
   const [confirm, setConfirm] = useState<'discard'|'delete'|null>(null);
   const [destination, setDestination] = useState<Destination | null>(null);
+  const [destinationError, setDestinationError] = useState('');
+  const navigation = useRef(new NavigationIntent());
+  const [preferenceError, setPreferenceError] = useState('');
   const [selection, setSelection] = useState<ReturnType<typeof previewSelection> | null>(null);
   const [range, setRange] = useState({ start: 0, end: 0 });
   const [recovery, setRecovery] = useState(false);
@@ -36,10 +39,10 @@ export function StagingConsole() {
 
   useEffect(() => {
     const clear = () => {
-      fence.current.clear(); listFence.current.clear(); stateRef.current = null;
+      fence.current.clear(); listFence.current.clear(); navigation.current.clear(); stateRef.current = null;
       setState(null); setMessage(''); setStatus(''); setBusy(false); setListBusy(false);
       setSavedList([]); setListStatus(''); setConfirm(null); setDestination(null); setSelection(null);
-      setRange({ start: 0, end: 0 }); setRecovery(false);
+      setRange({ start: 0, end: 0 }); setRecovery(false); setDestinationError(''); setPreferenceError('');
     };
     window.addEventListener('bfa-app-clear', clear);
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -47,7 +50,7 @@ export function StagingConsole() {
       if (event === 'SIGNED_OUT' || (subject.current !== undefined && next !== subject.current)) clear();
       subject.current = next;
     });
-    return () => { fence.current.clear(); listFence.current.clear(); stateRef.current = null;
+    return () => { fence.current.clear(); listFence.current.clear(); navigation.current.clear(); stateRef.current = null;
       window.removeEventListener('bfa-app-clear', clear); data.subscription.unsubscribe(); };
   }, []);
 
@@ -65,40 +68,71 @@ export function StagingConsole() {
     finally { if (listFence.current.current(ticket)) setListBusy(false); }
   }
 
-  async function act(action: StagingInput['action'], extras: Partial<StagingInput> = {}, nextDestination?: Destination) {
+  function cancelNavigation() { navigation.current.clear(); setDestination(null); setDestinationError(''); }
+
+  async function act(action: StagingInput['action'], extras: Partial<StagingInput> = {}, intent?: { ticket: number; destination: Destination }) {
     const ticket = fence.current.next(); const active = stateRef.current; const sent = message;
-    setBusy(true); setStatus(''); setSelection(null);
+    setBusy(true); setStatus(''); setSelection(null); setPreferenceError('');
+    if (intent) setDestinationError('');
     try {
       const before = await supabase.auth.getUser();
       if (!before.data.user) throw new Error();
       if (!fence.current.current(ticket)) return;
-      const next = await run({ data: { action,
+      let next = await run({ data: { action,
         ...(active && action !== 'create' && { thread: active.thread, revision: active.revision, token: active.token }),
         preferenceOn: readPrefs().showSpiritual,
         ...(action === 'append' && { message: sent, requestId: crypto.randomUUID() }), ...extras } });
       const after = await supabase.auth.getUser();
       if (!fence.current.current(ticket) || before.data.user.id !== after.data.user?.id) return;
       if (next.kind === 'list') throw new Error();
+      // Initial New/reopen can finish after the separate setting changed with no active thread.
+      // One explicit reconciliation only; another change/failure offers a deliberate retry.
+      let preferenceFailure = '';
+      if (next.kind === 'active' && next.inspection?.preferenceOn !== readPrefs().showSpiritual && action !== 'preference') {
+        const confirmed = next;
+        try {
+          const currentIdentity = await supabase.auth.getUser();
+          if (!fence.current.current(ticket) || before.data.user.id !== currentIdentity.data.user?.id) return;
+          const reconciled = await run({ data: { action: 'preference', thread: confirmed.thread, revision: confirmed.revision, token: confirmed.token, preferenceOn: readPrefs().showSpiritual } });
+          const reconciledIdentity = await supabase.auth.getUser();
+          if (!fence.current.current(ticket) || before.data.user.id !== reconciledIdentity.data.user?.id) return;
+          if (reconciled.kind !== 'active') throw new Error();
+          next = reconciled;
+        } catch {
+          if (!fence.current.current(ticket)) return;
+          const currentIdentity = await supabase.auth.getUser();
+          if (!fence.current.current(ticket) || before.data.user.id !== currentIdentity.data.user?.id) return;
+          preferenceFailure = 'Preference update unavailable or stale. Nothing was retried. Confirm the current setting before sending.';
+        }
+      }
+      if (next.kind === 'active' && next.inspection?.preferenceOn !== readPrefs().showSpiritual) {
+        preferenceFailure ||= 'The setting changed while loading. Confirm the current setting before sending.';
+      }
+      setPreferenceError(preferenceFailure);
       setActive(next.kind === 'active' ? next : null);
       setStatus(next.kind === 'active' ? (next.saved ? 'Saved' : 'Unsaved changes') : next.kind === 'stopped' ? 'Stopped. Unsaved changes were not recovered. Reopen only a confirmed saved snapshot.' : (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.'));
       if (action === 'append') setMessage(current => draftAfterSend(current, sent));
-      if (['discard','reopen','delete','create'].includes(action)) setMessage('');
+      if (!intent && ['discard','reopen','delete','create'].includes(action)) setMessage('');
       setConfirm(null); setRecovery(next.kind === 'stopped');
-      if (nextDestination) {
-        setDestination(null);
+      if (intent && navigation.current.current(intent.ticket) && !preferenceFailure) {
+        const nextDestination = intent.destination;
+        cancelNavigation();
         await act(nextDestination.action, nextDestination.action === 'reopen' ? {
-          thread: nextDestination.target.thread, revision: nextDestination.target.revision, token: undefined,
+          thread: nextDestination.target.thread, revision: selectedReopenRevision(nextDestination.target, next), token: undefined,
         } : {});
       }
     } catch {
       if (fence.current.current(ticket)) {
         setStatus('Unavailable or stale. Unsaved changes may not be recoverable. Nothing was retried.');
         setRecovery(true); setConfirm(null);
+        if (action === 'preference') setPreferenceError('Preference update unavailable or stale. Nothing was retried. Confirm the current setting before sending.');
+        if (intent && navigation.current.current(intent.ticket)) setDestinationError('Save or discard unavailable or stale. Navigation did not continue. Your typed draft is not saved. Nothing was retried.');
       }
     } finally { if (fence.current.current(ticket)) setBusy(false); }
   }
 
   function switchTo(next: Destination) {
+    navigation.current.next(); setDestinationError('');
     if (stateRef.current && requiresSwitchChoice(stateRef.current.saved, message, busy)) { setDestination(next); return; }
     void act(next.action, next.action === 'reopen' ? { thread: next.target.thread, revision: next.target.revision, token: undefined } : {});
   }
@@ -126,10 +160,14 @@ export function StagingConsole() {
       </>}
     </div>
     <p role="status" aria-live="polite" className="my-4 text-sm">{busy ? 'Working…' : status}</p>
+    {preferenceError && <section className="mb-6 border-y border-border py-4">
+      <p role="alert">{preferenceError}</p>
+      <Button variant="outline" className="mt-3" disabled={busy || !state} onClick={() => act('preference', { preferenceOn: readPrefs().showSpiritual })}>Confirm current Christian content setting</Button>
+    </section>}
     {recovery && <section className="mb-6 border-y border-border py-4">
       <p>Only the last confirmed saved conversation can be reopened. Unsaved changes are not claimed recovered.</p>
       <Button variant="outline" className="mt-3" disabled={listBusy} onClick={refreshList}>Refresh saved conversations</Button>
-      <Button variant="outline" className="mt-3 ml-2" onClick={() => { fence.current.clear(); setBusy(false); setActive(null); setMessage(''); setRecovery(false); setDestination(null); setSelection(null); }}>Leave unavailable conversation</Button>
+      <Button variant="outline" className="mt-3 ml-2" onClick={() => { fence.current.clear(); cancelNavigation(); setBusy(false); setActive(null); setMessage(''); setRecovery(false); setPreferenceError(''); setSelection(null); }}>Leave unavailable conversation</Button>
     </section>}
     <section className="my-6 border-y border-border py-4" aria-labelledby="saved-heading">
       <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="saved-heading" className="font-serif text-xl">Saved conversations</h2>
@@ -144,7 +182,7 @@ export function StagingConsole() {
       <ol className="space-y-4">{state.inspection.events.map(e => <li key={e.eventId} className="border-b border-border pb-4 break-words"><span className="text-sm text-muted-foreground">{e.sharedExcerpt ? 'Shared exact excerpt · untrusted user data' : e.role}</span><p className="whitespace-pre-wrap">{e.text}</p></li>)}</ol>
       <label className="mt-6 block" htmlFor="staging-message">Fictional message</label>
       <Textarea id="staging-message" value={message} onChange={e => setMessage(e.target.value)} maxLength={4000} className="mt-2"/>
-      <Button className="mt-3" disabled={busy || recovery || !message.trim() || state.inspection.preferenceOn !== prefs.showSpiritual} onClick={() => act('append')}>Send fictional message</Button>
+      <Button className="mt-3" disabled={busy || recovery || !!preferenceError || !message.trim() || state.inspection.preferenceOn !== prefs.showSpiritual} onClick={() => act('append')}>Send fictional message</Button>
       <section className="mt-6 border-y border-border py-4">
         <label htmlFor="fictional-note" className="font-serif text-xl">Fictional source material</label>
         <Textarea id="fictional-note" readOnly value={FICTIONAL_NOTE} className="mt-3 min-h-36" onSelect={e => setRange({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd })}/>
@@ -155,8 +193,10 @@ export function StagingConsole() {
     <Dialog open={confirm !== null} onOpenChange={open => { if (!open) setConfirm(null); }}><DialogContent><DialogTitle>{confirm === 'delete' ? 'Delete this conversation?' : 'Discard unsaved changes?'}</DialogTitle><DialogDescription>{confirm === 'delete' ? 'Saved content will be removed. Usage evidence is retained.' : 'Return to the saved snapshot, or remove this never-saved conversation.'}</DialogDescription>
       <div className="flex flex-wrap gap-2"><Button onClick={() => confirm && act(confirm)}>Confirm {confirm}</Button><Button variant="outline" onClick={() => setConfirm(null)}>Cancel</Button></div>
     </DialogContent></Dialog>
-    <Dialog open={destination !== null} onOpenChange={open => { if (!open) setDestination(null); }}><DialogContent><DialogTitle>Unsaved conversation</DialogTitle><DialogDescription>Save the submitted conversation, discard it, or stay here. A typed unsent draft is not saved.</DialogDescription>
-      <div className="flex flex-wrap gap-2"><Button disabled={busy || recovery} onClick={() => destination && act('save', {}, destination)}>Save and continue</Button><Button disabled={busy} variant="outline" onClick={() => destination && act('discard', {}, destination)}>Discard and continue</Button><Button variant="outline" onClick={() => setDestination(null)}>Cancel</Button></div>
+    <Dialog open={destination !== null} onOpenChange={open => { if (!open) cancelNavigation(); }}><DialogContent><DialogTitle>Unsaved conversation</DialogTitle><DialogDescription>Save the submitted conversation, discard it, or stay here. A typed unsent draft is not saved.</DialogDescription>
+      {destinationError && <p role="alert">{destinationError}</p>}
+      {preferenceError && <p role="alert">{preferenceError}</p>}
+      <div className="flex flex-wrap gap-2"><Button disabled={busy || recovery} onClick={() => destination && act('save', {}, { destination, ticket: navigation.current.next() })}>Save and continue</Button><Button disabled={busy} variant="outline" onClick={() => destination && act('discard', {}, { destination, ticket: navigation.current.next() })}>Discard and continue</Button><Button variant="outline" onClick={cancelNavigation}>Cancel</Button></div>
     </DialogContent></Dialog>
     <Dialog open={selection !== null} onOpenChange={open => { if (!open) setSelection(null); }}><DialogContent><DialogTitle>Share only this excerpt?</DialogTitle><DialogDescription>Fictional selection · untrusted user data</DialogDescription>
       <p className="whitespace-pre-wrap break-words">{selection?.exactText}</p><div className="flex flex-wrap gap-2"><Button onClick={() => {

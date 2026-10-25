@@ -15,3 +15,9 @@ export class ResponseFence {
 }
 export function draftAfterSend(current: string, sent: string) { return current === sent ? '' : current; }
 export function requiresSwitchChoice(saved: boolean, draft: string, pending: boolean) { return !saved || draft.length > 0 || pending; }
+/** A cancelled dialog must not navigate when an already-confirmed save completes. */
+export class NavigationIntent extends ResponseFence {}
+/** Only a confirmed mutation of this same target replaces its captured list revision. */
+export function selectedReopenRevision(target: { thread: string; revision: number }, confirmed: { thread: string; revision: number }) {
+  return target.thread === confirmed.thread ? confirmed.revision : target.revision;
+}

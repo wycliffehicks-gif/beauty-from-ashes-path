@@ -853,7 +853,12 @@ function VoiceFixtureControls({
           Offer private spoken practice
         </Button>
       </div>
-      {practice ? <p className="mt-2 text-sm text-foreground" role="status">{practice}</p> : null}
+      {practice &&
+      (practice.sessionId === null || store.isPrivatePracticeOfferCurrent(practice.sessionId)) ? (
+        <p className="mt-2 text-sm text-foreground" role="status">
+          {practice.text}
+        </p>
+      ) : null}
       <p className="mt-2 text-xs text-muted-foreground">
         Mock session {voice.sessionId ?? "none"} · capture {voice.capture} · transport {voice.transport} ·
         segments: {voice.segments.map((s) => s.state).join(", ") || "none"} · fragments:{" "}

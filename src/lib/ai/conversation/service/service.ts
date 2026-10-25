@@ -239,6 +239,10 @@ export class ConversationService {
   private readonly registryPromise: Promise<SourceRegistry | null>;
   private registry: SourceRegistry | null = null;
   private readonly tickets = new Map<string, AdmissionTicket>();
+  /** At-most-once claim: a turn is claimed synchronously before the first
+   *  await of its run and the claim is never released. A consumed ticket can
+   *  never dispatch again, even if the ticket record still exists. */
+  private readonly claimedTurns = new Set<string>();
 
   constructor(options: ConversationServiceOptions = {}) {
     this.provider = options.provider ?? createMockProvider({ delayMs: 350 });
@@ -890,16 +894,18 @@ export class ConversationService {
       if (d.kind === "restriction") {
         derived.push({ ...base, kind: "active-restriction", tag: d.add.join(","), text: d.add.join(", "), supersedesItemId: null, status: "effective" });
       } else if (d.kind === "user-correction") {
-        const target = derived.find((x) => x.tag === d.supersedesTag && x.status === "effective");
+        // Supersede EVERY equivalent active claim, not just the first: a
+        // repeated report corrected once must leave no stale effective fact.
+        const targets = derived.filter((x) => x.tag === d.supersedesTag && x.status === "effective");
         const item: DerivedItem = {
           ...base,
           kind: "user-correction",
           tag: d.tag,
           text: d.text,
-          supersedesItemId: target ? target.itemId : null,
-          status: target ? "effective" : "unanchored",
+          supersedesItemId: targets.length > 0 ? targets[0].itemId : null,
+          status: targets.length > 0 ? "effective" : "unanchored",
         };
-        if (target) {
+        for (const target of targets) {
           target.status = "superseded";
           target.supersededByItemId = item.itemId;
         }

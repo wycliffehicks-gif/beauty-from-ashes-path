@@ -542,3 +542,77 @@ describe("E. voice UI follow-up: practice offer, interrupt, transcript choice", 
     expect(h.store.getSnapshot().pendingTranscript).toBeNull();
   });
 });
+
+// Independent review diagnostics (exact commit 61b243a7), adapted as
+// regressions with repository import paths only.
+describe("F. service invariants (independent diagnostics)", () => {
+  async function serviceHarness() {
+    const requests: MockProviderRequest[] = [];
+    const service = new ConversationService({
+      provider: createMockProvider({ delayMs: 0, onDispatch: (r) => requests.push(r) }),
+    });
+    await service.ready();
+    service.ensureThread("review-thread", false);
+    let counter = 0;
+    const say = async (text: string) => {
+      const turn = service.admitUserMessage("review-thread", `review-message-${(counter += 1)}`, text);
+      let outcome: TurnOutcome | undefined;
+      await service.runTurn("review-thread", turn, {
+        accept: () => true,
+        apply: (value) => {
+          outcome = value;
+        },
+      });
+      return outcome;
+    };
+    return { service, requests, say };
+  }
+
+  it("claims one admitted turn once even if runTurn is invoked concurrently", async () => {
+    const { service, requests } = await serviceHarness();
+    const turn = service.admitUserMessage("review-thread", "one-message", "A fictional review message.");
+    const committed: TurnOutcome[] = [];
+    const commit = {
+      accept: () => true,
+      apply: (outcome: TurnOutcome) => committed.push(outcome),
+    };
+    const results = await Promise.all([
+      service.runTurn("review-thread", turn, commit),
+      service.runTurn("review-thread", turn, commit),
+    ]);
+    const assistants = service.inspect("review-thread")!.events.filter((e) => e.role === "assistant");
+    expect({
+      dispatches: requests.length,
+      commits: committed.length,
+      assistants: assistants.length,
+      successfulRuns: results.filter((r) => r === "committed").length,
+    }).toEqual({ dispatches: 1, commits: 1, assistants: 1, successfulRuns: 1 });
+  });
+
+  it("a consumed ticket can never dispatch again, even after commit", async () => {
+    const { service, requests } = await serviceHarness();
+    const turn = service.admitUserMessage("review-thread", "one-message", "A fictional review message.");
+    const commit = { accept: () => true, apply: () => {} };
+    expect(await service.runTurn("review-thread", turn, commit)).toBe("committed");
+    expect(await service.runTurn("review-thread", turn, commit)).toBe("stale");
+    expect(requests).toHaveLength(1);
+    expect(service.trace.some((t) => t.detail === "ticket-consumed" || t.detail === "no-ticket")).toBe(true);
+  });
+
+  it("repeated report corrected once leaves no stale contradictory effective fact", async () => {
+    const { service, requests, say } = await serviceHarness();
+    await say("I was angry when I came home yesterday.");
+    await say("I was angry when I came home yesterday.");
+    await say("Let me correct that: I was exhausted, not angry. I wasn't upset with anyone.");
+    const recall = await say("What have I told you about yesterday?");
+    const effective = service.inspect("review-thread")!.derived.filter((d) => d.status === "effective");
+    expect({
+      staleEffectiveTags: effective.filter((d) => d.tag === "report-anger").map((d) => d.tag),
+      staleProviderFacts: requests
+        .at(-1)!
+        .effective.filter((d) => d.text === "Was angry when came home yesterday.")
+        .map((d) => d.text),
+      staleRecalledFact: recall?.ok ? recall.text.includes("Was angry when came home yesterday.") : null,
+    }).toEqual({ staleEffectiveTags: [], staleProviderFacts: [], staleRecalledFact: false });
+  });
+});

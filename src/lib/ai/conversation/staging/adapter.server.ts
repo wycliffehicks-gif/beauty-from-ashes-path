@@ -5,7 +5,7 @@ import { ConversationService } from '../service/service';
 import { createMockProvider } from '../service/mock-provider';
 import { resolveRegistrySource } from '../sources';
 import { sha256HexSync } from '../service/sha256-sync';
-import { seal, unseal } from './seal.server';
+import { seal, unseal, fingerprint as keyedFingerprint } from './seal.server';
 import { stagingInput, type StagingInput } from './input';
 
 /** No server content cache, provider API, microphone or account enrollment. */
@@ -63,7 +63,7 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
     requestId = input.requestId;
     const mode = input.action === 'voice' ? 'voice' : 'text';
     // Keyed opaque ciphertext fingerprint: no dictionary-hash of a private message is stored.
-    const fingerprint = sha256HexSync(`${input.token}:${requestId}:${mode}:${input.message}`);
+    const fingerprint = await keyedFingerprint(`${input.token}:${requestId}:${mode}:${input.message}`);
     const args = { p_owner: owner, p_thread: thread, p_revision: revision, p_request: requestId, p_mode: mode, p_fingerprint: fingerprint };
     const reserve = await supabaseAdmin.rpc('bfa_p3b_reserve', args);
     if (reserve.error) throw new Error('Unavailable');

@@ -23,7 +23,7 @@ The service checks a ticket after every async stage: registry-ready, message-has
 
 ## Evidence (application/mock only)
 
-Commands: `bunx vitest run src/lib/ai/conversation` → 7 files, **188 tests passed**. That is the 98 prior tests (12 contract, 8 grants, 29 context, 15 sources, 34 preview-store), all unchanged, plus 78 in `p3a-service.test.ts` and 12 in `p3a-store-integration.test.ts`.
+Commands: `bunx vitest run src/lib/ai/conversation` → 7 files, **188 tests passed**. That is the 98 prior tests (12 contract, 8 grants, 29 context, 15 sources, 34 preview-store), all unchanged, plus 79 in `p3a-service.test.ts` and 11 in `p3a-store-integration.test.ts`.
 
 Covered as partial application evidence (not catalog passes):
 - **O02:** A1 / new / A2 / reopen-A1 canaries; microphone off on reopen.

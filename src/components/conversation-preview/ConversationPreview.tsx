@@ -331,6 +331,29 @@ function ThreadScreen({
     );
   };
 
+  const attemptSwitchSave = (event: { preventDefault(): void }) => {
+    const result = store.resolveSwitchDecision("save");
+    if (result.ok) {
+      setSwitchError(null);
+      return;
+    }
+    // Keep the dialog open on failure (AlertDialogAction closes by default);
+    // the pending target, active thread and draft are all preserved.
+    event.preventDefault();
+    setSwitchError(
+      result.reason === "unsent-draft"
+        ? "Send or clear your unsent draft before saving and switching, or choose Discard & continue."
+        : result.reason === "response-pending"
+          ? "A response is still being generated. Stop it or wait, then save."
+          : "Not saved (simulated failure). Nothing changed; you are still here.",
+    );
+  };
+
+  const cancelSwitch = () => {
+    store.resolveSwitchDecision("cancel");
+    setSwitchError(null);
+  };
+
   return (
     <section aria-labelledby="preview-thread-heading" className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">

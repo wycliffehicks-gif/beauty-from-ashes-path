@@ -3,23 +3,29 @@ Uses the platform database connection only for deterministic lock coordination.
 No message bodies, provider calls or auth configuration mutations.
 """
 import os, uuid, datetime, concurrent.futures, time, json
-import psycopg
+import psycopg, requests
 
 URL = os.environ['SUPABASE_DB_URL']
+U=os.environ['SUPABASE_URL']; K=os.environ['SUPABASE_SERVICE_ROLE_KEY']
+H={'apikey':K,'Content-Type':'application/json','Prefer':'return=representation'}
+if not K.startswith('sb_'): H['Authorization']='Bearer '+K
+def api(method,path,data=None):
+    r=requests.request(method,U+'/rest/v1/'+path,headers=H,json=data,timeout=15)
+    r.raise_for_status();return r.json() if r.content else None
 owner = str(uuid.uuid4())
 checks = []
 def connection(): return psycopg.connect(URL, autocommit=True)
 def call(name, args):
-    with connection() as c:
-        return c.execute('select public.bfa_p3b_'+name+'('+','.join(['%s']*len(args))+')', args).fetchone()[0]
+    names={'create':['p_owner'],'reserve':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
+      'claim':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
+      'transition':['p_owner','p_thread','p_revision','p_action','p_snapshot'],'settle':['p_owner','p_request','p_receipt','p_charged']}
+    return api('POST','rpc/bfa_p3b_'+name,dict(zip(names[name],args)))
 def denied(name,args):
     try: call(name,args)
-    except psycopg.Error: return
+    except requests.HTTPError: return
     raise AssertionError('Invalid arguments accepted')
-
-with connection() as setup:
-    setup.execute('insert into public.bfa_p3b_staging_accounts(user_id,admitted,expires_at) values(%s,true,clock_timestamp()+interval \'10 minutes\')',[owner])
-    setup.execute("insert into public.bfa_p3b_allowances(owner_id,mode,remaining_units) values(%s,'text',20),(%s,'voice',20)",[owner,owner])
+api('POST','bfa_p3b_staging_accounts',{'user_id':owner,'admitted':True,'expires_at':(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=10)).isoformat()})
+api('POST','bfa_p3b_allowances',[{'owner_id':owner,'mode':mode,'remaining_units':20} for mode in ['text','voice']])
 try:
     t=call('create',[owner]); request=str(uuid.uuid4())
     base=[owner,t,0,request,'text','a'*64]
@@ -32,18 +38,16 @@ try:
     denied('create',[None]);denied('reserve',[owner,t,-1,request,'text','a'*64])
     denied('reserve',[owner,t,0,request,'invalid','a'*64]);denied('reserve',[owner,t,0,request,'text','not-a-hash'])
     denied('transition',[owner,t,0,'save',None]);denied('transition',[owner,t,0,'advance','"unexpected"'])
-    with connection() as c:
-        assert c.execute('select count(*) from public.bfa_p3b_admissions where owner_id=%s',[owner]).fetchone()[0]==0
-        assert c.execute('select sum(remaining_units) from public.bfa_p3b_allowances where owner_id=%s',[owner]).fetchone()[0]==40
+    assert api('GET','bfa_p3b_admissions?owner_id=eq.'+owner)==[]
+    assert sum(r['remaining_units'] for r in api('GET','bfa_p3b_allowances?owner_id=eq.'+owner))==40
     checks.append('null/invalid arguments denied before any mutation (24 probes)')
 
-    # Block thread, expire while guard waits. Transaction-start now() would pass.
-    with connection() as c: c.execute("update public.bfa_p3b_staging_accounts set expires_at=clock_timestamp()+interval '1 second' where user_id=%s",[owner])
-    locker=connection();locker.execute('begin');locker.execute('select id from public.bfa_p3b_threads where id=%s for update',[t])
-    with concurrent.futures.ThreadPoolExecutor() as pool:
-        future=pool.submit(denied,'transition',[owner,t,0,'advance',None]);time.sleep(1.3);locker.execute('commit');future.result(timeout=10)
-    locker.close();checks.append('actual expiry after thread-lock wait denied')
-    with connection() as c: c.execute("update public.bfa_p3b_staging_accounts set expires_at=clock_timestamp()+interval '10 minutes' where user_id=%s",[owner])
+    # Sandbox SQL role cannot execute service RPCs or hold protected locks.
+    # Do not widen grants for a test. Expired service-record denial is still real.
+    api('PATCH','bfa_p3b_staging_accounts?user_id=eq.'+owner,{'expires_at':datetime.datetime.now(datetime.timezone.utc).isoformat()})
+    denied('transition',[owner,t,0,'advance',None])
+    checks.append('expired allowlist service RPC denied; deterministic lock-wait test BLOCKED by sandbox SQL grants')
+    api('PATCH','bfa_p3b_staging_accounts?user_id=eq.'+owner,{'expires_at':(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=10)).isoformat()})
 
     # Four pending admissions, both modes, two claimed; settle races delete.
     pending=[]
@@ -57,13 +61,11 @@ try:
         futures.append(pool.submit(call,'transition',[owner,t,0,'delete',None]))
         results=[f.result(timeout=15) for f in futures]
     assert all(r is True for r in results[:2])
-    with connection() as c:
-        rows=c.execute('select state from public.bfa_p3b_admissions where owner_id=%s',[owner]).fetchall()
-        assert sorted(r[0] for r in rows)==['cancelled-before-dispatch','cancelled-before-dispatch','settled','settled']
-        assert c.execute('select sum(remaining_units) from public.bfa_p3b_allowances where owner_id=%s',[owner]).fetchone()[0]==40
-        assert c.execute('select deleted_at is not null from public.bfa_p3b_threads where id=%s',[t]).fetchone()[0]
+    rows=api('GET','bfa_p3b_admissions?owner_id=eq.'+owner)
+    assert sorted(r['state'] for r in rows)==['cancelled-before-dispatch','cancelled-before-dispatch','settled','settled']
+    assert sum(r['remaining_units'] for r in api('GET','bfa_p3b_allowances?owner_id=eq.'+owner))==40
+    assert api('GET','bfa_p3b_threads?id=eq.'+t)[0]['deleted_at']
     checks.append('multi-pending text/voice settle-delete terminates, exactly-once balance, tombstone')
     print(json.dumps({'kind':'actual database, NOT authenticated sessions','passed':checks},indent=2))
 finally:
-    with connection() as c:
-        c.execute('update public.bfa_p3b_staging_accounts set admitted=false,expires_at=clock_timestamp() where user_id=%s',[owner])
+    api('PATCH','bfa_p3b_staging_accounts?user_id=eq.'+owner,{'admitted':False,'expires_at':datetime.datetime.now(datetime.timezone.utc).isoformat()})

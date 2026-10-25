@@ -12,10 +12,51 @@
 import type { ServerGrant } from "../contract";
 import { resolveRegistrySource, sha256Hex, type SourceRegistry } from "../sources";
 
+/** Complete pinned contract provenance of a source at grant issue time. */
 export interface PinnedSource {
   readonly sourceKey: string;
+  readonly kind: string;
+  readonly title: string;
   readonly textSha256: string;
   readonly sourceCommit: string;
+  /** Canonical JSON of origin (reference/translation/file/day...). */
+  readonly originJson: string;
+  readonly reviewStatus: string;
+  readonly spiritualClassification: string;
+  readonly limitationsJson: string;
+  readonly testOnly: boolean;
+}
+
+function canonical(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  if (value && typeof value === "object") {
+    const o = value as Record<string, unknown>;
+    return `{${Object.keys(o)
+      .filter((k) => o[k] !== undefined)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonical(o[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value ?? null);
+}
+
+async function pinFromExcerpt(ex: import("../sources").SourceExcerpt): Promise<PinnedSource> {
+  return Object.freeze({
+    sourceKey: ex.sourceKey,
+    kind: ex.kind,
+    title: ex.title,
+    textSha256: await sha256Hex(ex.exactText),
+    sourceCommit: ex.sourceCommit,
+    originJson: canonical(ex.origin),
+    reviewStatus: ex.reviewStatus,
+    spiritualClassification: ex.spiritualClassification,
+    limitationsJson: canonical(ex.limitations),
+    testOnly: ex.testOnly,
+  });
+}
+
+function pinsEqual(a: PinnedSource, b: PinnedSource): boolean {
+  return canonical(a) === canonical(b);
 }
 
 export interface IssuedGrant {
@@ -46,7 +87,8 @@ export type GrantFailure =
   | "sources-changed"
   | "source-hash-changed"
   | "parent-not-immediate"
-  | "revision-mismatch";
+  | "revision-mismatch"
+  | "follow-up-kind-mismatch";
 
 export interface GrantBinding {
   readonly ownerId: string;
@@ -76,11 +118,7 @@ export class GrantIssuer {
     for (const key of sourceKeys) {
       const r = resolveRegistrySource(registry, key, allowTestSources);
       if (!r.ok) return null;
-      sources.push({
-        sourceKey: key,
-        textSha256: await sha256Hex(r.value.excerpt.exactText),
-        sourceCommit: r.value.excerpt.sourceCommit,
-      });
+      sources.push(await pinFromExcerpt(r.value.excerpt));
     }
     this.counter += 1;
     const grantId = `bfa-grant-${this.idPrefix}-${this.counter}`;
@@ -103,6 +141,7 @@ export class GrantIssuer {
     binding: GrantBinding,
     parentGrantId: string,
     immediatePreviousTurnId: string | null,
+    requiredKind: "prayer" | "passage",
     registry: SourceRegistry,
     allowTestSources: boolean,
   ): Promise<{ ok: true; grant: IssuedGrant } | { ok: false; failure: GrantFailure }> {
@@ -115,6 +154,14 @@ export class GrantIssuer {
     if (parent.threadId !== binding.threadId) return { ok: false, failure: "thread-mismatch" };
     if (parent.turnId !== immediatePreviousTurnId) {
       return { ok: false, failure: "parent-not-immediate" };
+    }
+    if (parent.kind !== requiredKind) return { ok: false, failure: "follow-up-kind-mismatch" };
+    // An older permission never survives a preference/restriction change.
+    if (
+      parent.preferenceRevision !== binding.preferenceRevision ||
+      parent.restrictionRevision !== binding.restrictionRevision
+    ) {
+      return { ok: false, failure: "revision-mismatch" };
     }
     const pinned = await this.verifyPinnedSources(parent, registry, allowTestSources);
     if (pinned) return { ok: false, failure: pinned };
@@ -141,12 +188,9 @@ export class GrantIssuer {
     for (const pin of grant.sources) {
       const r = resolveRegistrySource(registry, pin.sourceKey, allowTestSources);
       if (!r.ok) return "sources-changed";
-      if (
-        (await sha256Hex(r.value.excerpt.exactText)) !== pin.textSha256 ||
-        r.value.excerpt.sourceCommit !== pin.sourceCommit
-      ) {
-        return "source-hash-changed";
-      }
+      const now = await pinFromExcerpt(r.value.excerpt);
+      if (now.textSha256 !== pin.textSha256) return "source-hash-changed";
+      if (!pinsEqual(now, pin)) return "sources-changed";
     }
     return null;
   }
@@ -192,11 +236,17 @@ export class GrantIssuer {
       if (!parent) return { ok: false, failure: "orphan-or-forged" };
       if (this.revoked.has(parent.grantId)) return { ok: false, failure: "revoked" };
       if (parent.kind !== node.kind) return { ok: false, failure: "kind-changed" };
+      if (
+        parent.preferenceRevision !== node.preferenceRevision ||
+        parent.restrictionRevision !== node.restrictionRevision
+      ) {
+        return { ok: false, failure: "revision-mismatch" };
+      }
       if (parent.threadId !== node.threadId || parent.ownerId !== node.ownerId) {
         return { ok: false, failure: "thread-mismatch" };
       }
-      const a = parent.sources.map((s) => `${s.sourceKey}:${s.textSha256}`).sort().join("|");
-      const b = node.sources.map((s) => `${s.sourceKey}:${s.textSha256}`).sort().join("|");
+      const a = parent.sources.map((s) => canonical(s)).sort().join("|");
+      const b = node.sources.map((s) => canonical(s)).sort().join("|");
       if (a !== b) return { ok: false, failure: "sources-changed" };
       node = parent;
     }

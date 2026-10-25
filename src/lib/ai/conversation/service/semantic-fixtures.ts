@@ -31,8 +31,11 @@ export interface FixtureCase {
   readonly derivations: readonly FixtureDerivation[];
   /** Explicit scoped request (only from an unambiguous fixture sentence). */
   readonly grantRequest: "prayer" | "passage" | null;
-  /** Fixture-defined direct follow-up to the immediately previous grant. */
-  readonly grantFollowUp: boolean;
+  /**
+   * Fixture-defined direct follow-up to the immediately previous grant, with
+   * the REQUIRED parent kind. A prayer revision never inherits a passage.
+   */
+  readonly grantFollowUp: "prayer" | "passage" | null;
   /** The mock provider adds this tentative AI interpretation to its reply. */
   readonly mockInterpretation: { readonly tag: string; readonly text: string } | null;
   /** Mock provider should recount the effective thread context. */
@@ -43,7 +46,7 @@ export interface FixtureCase {
 const none = {
   derivations: [],
   grantRequest: null,
-  grantFollowUp: false,
+  grantFollowUp: null,
   mockInterpretation: null,
   recallRequest: false,
 } as const;
@@ -149,8 +152,8 @@ export const SEMANTIC_FIXTURE_CASES: readonly FixtureCase[] = [
     ...none,
     id: "C10-revision",
     text: "Could you make that prayer simpler?",
-    grantFollowUp: true,
-    note: "Fixture-defined direct follow-up.",
+    grantFollowUp: "prayer",
+    note: "Fixture-defined direct follow-up; requires a prayer parent.",
   },
   {
     ...none,
@@ -164,6 +167,13 @@ export const SEMANTIC_FIXTURE_CASES: readonly FixtureCase[] = [
     text: "Please quote Psalm 34:18 exactly and tell me which translation you're using.",
     grantRequest: "passage",
     note: "Explicit passage request; exact text only if a verified fixture is admitted.",
+  },
+  {
+    ...none,
+    id: "C11-passage-follow-up",
+    text: "Could you show that same passage again?",
+    grantFollowUp: "passage",
+    note: "Fixture-defined direct follow-up; requires a passage parent and pins its exact source.",
   },
   {
     ...none,

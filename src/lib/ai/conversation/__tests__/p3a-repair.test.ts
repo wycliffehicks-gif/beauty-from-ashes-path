@@ -20,7 +20,7 @@ import {
   type MockProviderOptions,
   type MockProviderRequest,
 } from "../service/mock-provider";
-import { ConversationService } from "../service/service";
+import { ConversationService, type TurnOutcome } from "../service/service";
 import { sha256HexSync } from "../service/sha256-sync";
 import { ConversationPreviewStore } from "../preview/store";
 

@@ -28,6 +28,8 @@ export interface MockProviderRequest {
   readonly requestId: string;
   readonly policyIdentity: string;
   readonly policySha256: string;
+  /** The exact approved candidate policy body bytes. */
+  readonly policyBody: string;
   readonly context: AssembledConversationContext;
   readonly history: readonly ProviderHistoryEntry[];
   readonly effective: readonly ProviderEffectiveItem[];
@@ -142,20 +144,38 @@ export function createMockProvider(options: MockProviderOptions = {}): MockProvi
   const schedule = options.schedule ?? ((fn, ms) => setTimeout(fn, ms));
   return {
     generate(request, signal) {
+      // A pre-aborted request settles immediately and is never dispatched.
+      if (signal.aborted && !options.ignoreAbort) return Promise.reject(new Error("aborted"));
       options.onDispatch?.(request);
       return new Promise((resolve, reject) => {
+        let settled = false;
+        const settle = (fn: () => void) => {
+          if (settled) return;
+          settled = true;
+          signal.removeEventListener("abort", onAbort);
+          fn();
+        };
         const onAbort = () => {
-          if (!options.ignoreAbort) reject(new Error("aborted"));
+          if (!options.ignoreAbort) settle(() => reject(new Error("aborted")));
         };
         signal.addEventListener("abort", onAbort, { once: true });
         schedule(() => {
-          signal.removeEventListener("abort", onAbort);
-          if (signal.aborted && !options.ignoreAbort) return;
-          if (options.failWith) {
-            reject(new Error(options.failWith));
+          if (settled) return;
+          if (signal.aborted && !options.ignoreAbort) {
+            settle(() => reject(new Error("aborted")));
             return;
           }
-          resolve((options.respond ?? deterministicMockReply)(request));
+          if (options.failWith) {
+            const code = options.failWith;
+            settle(() => reject(new Error(code)));
+            return;
+          }
+          try {
+            const value = (options.respond ?? deterministicMockReply)(request);
+            settle(() => resolve(value));
+          } catch (err) {
+            settle(() => reject(err instanceof Error ? err : new Error(String(err))));
+          }
         }, options.delayMs ?? 0);
       });
     },

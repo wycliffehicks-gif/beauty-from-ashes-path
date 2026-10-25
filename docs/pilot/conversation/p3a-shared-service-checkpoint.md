@@ -51,8 +51,22 @@ There were no page errors and no external requests. This was not screen-reader o
 - Memory only; all of it is lost on refresh.
 - No public endpoint, real model, summarizer, audio, billing or provider evidence.
 - The Scripture fixture stays harness-only and is not in the preview menus.
-- A stopped turn keeps its submitted user message as unclassified text with no derived items.
+- A stopped or failed turn keeps its submitted user message and its fixture-derived meaning; it gets no assistant event.
 - The store transcript is a UI projection kept in step with the service at each confirmed change; the integration test checks they agree after discard.
+
+## Repair pass (review of `e7d23e5b…`)
+
+Fixed, each with a regression in `__tests__/p3a-repair.test.ts` (real async store + service, deferred provider gates, `service.ready()`):
+
+- **Admission ticket.** `admitUserMessage` captures an immutable ticket (epoch, thread record, generation, preference/restriction revisions, voice origin). `runTurn` checks it before starting and after every stage; the store also re-checks its job before the scheduled run. Send → Stop → flush makes zero provider calls.
+- **Meaning at admission.** Reports, intentions, corrections and restrictions of a submitted message are recorded synchronously at admission (synchronous SHA-256, cross-checked against Web Crypto), so they persist when the reply fails or is stopped. Never-sent and Not-sent text contributes nothing. AI interpretations still enter only on commit.
+- **Two-phase commit.** `accept()` validates without publishing; the service then appends its events/derived items/grants and queues voice for the exact turn; only then does `apply()` publish to the UI. A synchronous subscriber Save captures identical state.
+- **Voice ownership.** Answers, fragments and transcripts carry an origin (session, output generation, thread). Stale origins (after Pause/Resume, Stop, preference off) are rejected before recording or playing; muted and paused input is refused; rejected text is never retained. Delete/discard/clear purge every segment/fragment; open, new-thread switch, delete and preference off end the service voice session in step with the UI.
+- **Grants/sources.** Follow-ups require a fixture-declared parent kind (prayer revision cannot inherit a Psalm 34:18 passage grant; a separate passage follow-up fixture demonstrates pinning) and identical parent/ancestor revisions. Pinned sources keep full contract provenance (kind, title, origin incl. reference/translation, review status, spiritual classification, limitations, test-only, hash, commit) and any drift is refused.
+- **Request.** Carries the exact 4,043-byte approved policy body plus identity/hash, as a detached, deeply frozen copy. P1 assembler and admitted source-card lookup unchanged.
+- **Mock provider.** Pre-aborted requests reject immediately without dispatch; throwing responders reject; exactly one terminal outcome.
+
+Run: `bunx vitest run src/lib/ai/conversation` → **8 files, 214 passed** (98 prior P0–P2 tests unchanged; 81 `p3a-service`, 11 `p3a-store-integration`, 24 `p3a-repair`). The older external 13-case P2 harness did not inject the service and is historical fallback-path evidence only.
 
 ## Rollback
 

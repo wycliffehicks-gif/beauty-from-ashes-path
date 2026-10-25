@@ -101,7 +101,7 @@ function StartScreen({
   state: PreviewState;
   store: ConversationPreviewStore;
 }) {
-  const progress = useJourneyProgress();
+  const { progress } = useJourneyProgress();
   const locator = hasMeaningfulProgress(progress) ? progress.locator : null;
   const resumeDay = locator ? getJourneyDayById(locator.dayId) : null;
   const saved = state.threads.filter((t) => t.savedSnapshot !== null);

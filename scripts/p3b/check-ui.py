@@ -30,7 +30,7 @@ async def main():
             await page.goto('http://localhost:8080/__p3b_local_ui_test')
             await page.get_by_role('button', name='New conversation', exact=True).wait_for()
         async def pending(action):
-            await page.wait_for_function('(a) => window.p3bHarness.pending()[0]?.action === a', action)
+            await page.wait_for_function('(a) => window.p3bHarness.pending()[0]?.action === a', arg=action)
         async def resolve(value):
             await page.evaluate('(v) => window.p3bHarness.resolve(v)', value)
         async def new():

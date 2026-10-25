@@ -105,38 +105,6 @@ export async function sha256Hex(text: string): Promise<string> {
     .join("");
 }
 
-/**
- * The one verified Scripture fixture (test catalog, verified 2026-10-17).
- * TEST-ONLY: it is not a production Bible source, and it must never be mixed
- * with other WEB editions or paraphrases in an exact-quote record. Its hash
- * verifies these exact bytes; its biblical attribution rests on the recorded
- * eBible.org provenance, not on the hash.
- */
-export const WEB_CLASSIC_PSA034_018_TEST_FIXTURE: ConversationSourceRecord =
-  Object.freeze({
-    sourceKey: "WEB-CLASSIC-PSA034-018-20261017",
-    kind: "verified-scripture-test-excerpt",
-    title: "Psalm 34:18",
-    exactText:
-      "Yahweh is near to those who have a broken heart, and saves those who have a crushed spirit.",
-    textSha256:
-      "90de249bb42fe65090a1b552003bc552fc378556dba75f4c5be6a914a450d4bc",
-    origin: Object.freeze({
-      file: "https://ebible.org/eng-web/PSA034.htm",
-      reference: "Psalm 34:18",
-      translation: "World English Bible Classic",
-    }),
-    sourceCommit: "bbfe39181fbc4d0848931981df06d7835aec66a7",
-    reviewStatus: "verified-test-fixture-only",
-    spiritualClassification: "christian-scripture",
-    limitations: Object.freeze([
-      "Test fixture only; not a production Bible source or full Bible ingestion.",
-      "Classic WEB wording only; never mix with updated WEB or paraphrase editions.",
-      "Verification covers this verse and edition identity only.",
-    ]),
-    testOnly: true,
-  });
-
 function deepFreeze<T>(value: T): T {
   if (value && typeof value === "object" && !Object.isFrozen(value)) {
     for (const key of Object.keys(value)) {
@@ -146,6 +114,38 @@ function deepFreeze<T>(value: T): T {
   }
   return value;
 }
+
+/**
+ * The one verified Scripture fixture (test catalog, verified 2026-10-17).
+ * TEST-ONLY: it is not a production Bible source, and it must never be mixed
+ * with other WEB editions or paraphrases in an exact-quote record. Its hash
+ * verifies these exact bytes; its biblical attribution rests on the recorded
+ * eBible.org provenance, not on the hash.
+ */
+export const WEB_CLASSIC_PSA034_018_TEST_FIXTURE: ConversationSourceRecord =
+  deepFreeze({
+    sourceKey: "WEB-CLASSIC-PSA034-018-20261017",
+    kind: "verified-scripture-test-excerpt" as const,
+    title: "Psalm 34:18",
+    exactText:
+      "Yahweh is near to those who have a broken heart, and saves those who have a crushed spirit.",
+    textSha256:
+      "90de249bb42fe65090a1b552003bc552fc378556dba75f4c5be6a914a450d4bc",
+    origin: {
+      file: "https://ebible.org/eng-web/PSA034.htm",
+      reference: "Psalm 34:18",
+      translation: "World English Bible Classic",
+    },
+    sourceCommit: "bbfe39181fbc4d0848931981df06d7835aec66a7",
+    reviewStatus: "verified-test-fixture-only" as const,
+    spiritualClassification: "christian-scripture" as const,
+    limitations: [
+      "Test fixture only; not a production Bible source or full Bible ingestion.",
+      "Classic WEB wording only; never mix with updated WEB or paraphrase editions.",
+      "Verification covers this verse and edition identity only.",
+    ],
+    testOnly: true as const,
+  });
 
 /**
  * Validated, immutable registry. The record map is encapsulated behind

@@ -40,6 +40,8 @@ export interface MockProviderRequest {
     readonly caseId: string | null;
     readonly recallRequest: boolean;
     readonly mockInterpretation: { readonly tag: string; readonly text: string } | null;
+    /** Kind of the service-issued scoped grant bound to this turn, if any. */
+    readonly grantKind: "prayer" | "passage" | null;
   };
 }
 
@@ -80,18 +82,24 @@ export function deterministicMockReply(request: MockProviderRequest): MockProvid
     if (intentions.length) {
       parts.push(`You mentioned an intention, not something done: ${intentions.map((i) => i.text).join(" ")}`);
     }
-  } else if (ctx.spiritual.prayerPermitted && ctx.spiritual.reason.startsWith("scoped-grant")) {
+  } else if (request.fixture.grantKind === "prayer") {
     parts.push(
-      ctx.spiritual.reason === "scoped-grant-direct-follow-up"
-        ? "[Fictional simpler prayer placeholder for the requested revision.]"
-        : "[Fictional short prayer placeholder for the requested reply only.]",
+      !ctx.spiritual.prayerPermitted
+        ? "Respecting your current boundary, there is no prayer in this reply."
+        : ctx.spiritual.reason === "scoped-grant-direct-follow-up"
+          ? "[Fictional simpler prayer placeholder for the requested revision.]"
+          : "[Fictional short prayer placeholder for the requested reply only.]",
     );
-  } else if (ctx.spiritual.reason.startsWith("scoped-grant") && ctx.spiritual.scripturePermitted) {
+  } else if (request.fixture.grantKind === "passage") {
     const scripture = ctx.sources.find(
       (s) => s.excerpt.spiritualClassification === "christian-scripture",
     );
-    if (scripture) {
-      parts.push(`Exact supplied text: "${scripture.excerpt.exactText}"`);
+    if (!ctx.spiritual.scripturePermitted) {
+      parts.push("Respecting your current boundary, there is no Scripture in this reply.");
+    } else if (scripture) {
+      parts.push(
+        `Exact supplied text (${scripture.card.reference ?? ""}, ${scripture.card.translation ?? ""}): "${scripture.excerpt.exactText}"`,
+      );
       sourceIds = [scripture.excerpt.sourceKey];
     } else {
       parts.push("I can't verify the exact wording of that passage in this preview, so I won't quote it.");

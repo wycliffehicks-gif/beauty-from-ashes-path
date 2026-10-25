@@ -16,7 +16,7 @@
 // fixture table, not understanding. Storage is memory-only and disappears on
 // refresh. No public endpoint exists. Nothing here proves model quality.
 
-import { CONVERSATION_CONTRACT_VERSION, type ConversationErrorCode } from "../contract";
+import { CONVERSATION_CONTRACT_VERSION } from "../contract";
 import { assembleConversationContext } from "../context";
 import { buildTeachingSourceRecords } from "../content/index";
 import type { SpiritualRestriction } from "../grants";
@@ -833,9 +833,6 @@ export class ConversationService {
   threadIdFor(storeId: string): string | null {
     return this.threads.get(storeId)?.threadId ?? null;
   }
-
-  // Exposed for tests asserting the recorded error vocabulary.
-  static readonly contextErrorExample: ConversationErrorCode = "grant-not-bound";
 }
 
 export type ContextInspection = NonNullable<ReturnType<ConversationService["inspect"]>>;

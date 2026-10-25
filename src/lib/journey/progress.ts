@@ -387,6 +387,13 @@ function seedPreV4AnswerSets(p: JourneyProgress): Record<string, Record<string, 
 
 export const JOURNEY_CHANGE_EVENT = "bfa-journey-change";
 
+/**
+ * Dispatched by clearJourney() alongside the other notifications so purely
+ * in-memory surfaces (the developer conversation preview) can also reset and
+ * cancel pending work. Carries no data; storage clearing behavior is unchanged.
+ */
+export const APP_CLEAR_EVENT = "bfa-app-clear";
+
 export function readProgress(): JourneyProgress {
   if (typeof window === "undefined") return emptyProgress;
   try {

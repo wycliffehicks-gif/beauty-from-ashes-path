@@ -388,7 +388,7 @@ export class ConversationPreviewStore {
       this.service?.voice.end("switch");
       this.state = { ...this.state, voice: "off", voiceMuted: false };
       this.createThread();
-      this.state = { ...this.state, pendingSwitch: null };
+      this.state = { ...this.state, pendingSwitch: null, pendingTranscript: null };
       this.emit();
       return OK;
     }
@@ -409,6 +409,7 @@ export class ConversationPreviewStore {
       draft: "",
       draftThreadId: target.id,
       pendingSwitch: null,
+      pendingTranscript: null,
     };
     this.emit();
     return OK;

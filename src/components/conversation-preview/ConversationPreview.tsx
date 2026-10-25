@@ -495,7 +495,7 @@ function ThreadScreen({
       <AlertDialog
         open={state.pendingSwitch !== null}
         onOpenChange={(open) => {
-          if (!open) store.resolveSwitchDecision("cancel");
+          if (!open) cancelSwitch();
         }}
       >
         <AlertDialogContent>
@@ -503,20 +503,34 @@ function ThreadScreen({
             <AlertDialogTitle>Leave this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
               {hasUnsentDraft
-                ? "You have unsent text and possibly unsaved changes. "
+                ? "You have unsent text and possibly unsaved changes. Unsent text cannot be saved — send or clear it first, discard it, or cancel and stay. "
                 : "You have unsaved changes. "}
-              Save them (simulated), discard them, or cancel and stay.
+              {hasUnsentDraft
+                ? "Discard & continue discards the unsent text and unsaved changes."
+                : "Save them (simulated), discard them, or cancel and stay."}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {hasUnsentDraft ? (
+            <p className="text-sm text-muted-foreground">
+              Send or clear your unsent draft before saving and switching, or
+              choose Discard &amp; continue.
+            </p>
+          ) : null}
+          {switchError ? (
+            <p role="alert" className="text-sm text-destructive">
+              {switchError}
+            </p>
+          ) : null}
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => store.resolveSwitchDecision("cancel")}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelSwitch}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => store.resolveSwitchDecision("discard")}>
-              Discard & continue
+              Discard &amp; continue
             </AlertDialogAction>
-            <AlertDialogAction onClick={() => store.resolveSwitchDecision("save")} disabled={pending}>
-              Save & continue (simulated)
+            <AlertDialogAction
+              onClick={attemptSwitchSave}
+              disabled={pending || hasUnsentDraft}
+            >
+              Save &amp; continue (simulated)
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

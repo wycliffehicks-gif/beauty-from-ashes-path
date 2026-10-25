@@ -285,6 +285,22 @@ export class GrantIssuer {
   isRevoked(grantId: string): boolean {
     return this.revoked.has(grantId);
   }
+
+  /** Internal server persistence only; never accept this projection from client JSON. */
+  exportAuthority() {
+    return structuredClone({ issued: [...this.issued.values()], revoked: [...this.revoked], counter: this.counter });
+  }
+
+  restoreAuthority(state: ReturnType<GrantIssuer["exportAuthority"]>): void {
+    this.issued.clear();
+    this.revoked.clear();
+    this.counter = state.counter;
+    for (const grant of state.issued) {
+      const copy = structuredClone(grant);
+      this.issued.set(copy.grantId, Object.freeze({ ...copy, sources: Object.freeze(copy.sources.map(s => Object.freeze(s))) }));
+    }
+    for (const id of state.revoked) this.revoked.add(id);
+  }
 }
 
 /** Project an issued grant onto the P1 ServerGrant contract. */

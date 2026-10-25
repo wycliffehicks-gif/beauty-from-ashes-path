@@ -154,6 +154,8 @@ export type TurnStage =
   | "before-commit";
 
 export interface ConversationServiceOptions {
+  /** Server adapter only: derived from revalidated auth, never client owner input. */
+  readonly verifiedOwnerId?: string;
   readonly provider?: MockProvider;
   readonly registryRecords?: () => Promise<readonly unknown[]>;
   readonly allowTestSources?: boolean;
@@ -222,7 +224,7 @@ export interface TurnCommit {
 // ---------------------------------------------------------------------------
 
 export class ConversationService {
-  readonly ownerId = PREVIEW_FIXTURE_OWNER_ID;
+  readonly ownerId: string;
   readonly voice = new MockVoiceLifecycle();
   readonly trace: TraceEntry[] = [];
   private readonly threads = new Map<string, ThreadRecord>();
@@ -245,6 +247,7 @@ export class ConversationService {
   private readonly claimedTurns = new Set<string>();
 
   constructor(options: ConversationServiceOptions = {}) {
+    this.ownerId = options.verifiedOwnerId ?? PREVIEW_FIXTURE_OWNER_ID;
     this.provider = options.provider ?? createMockProvider({ delayMs: 350 });
     this.allowTestSources = options.allowTestSources === true;
     this.passageSourceKeys = options.passageSourceKeys ?? [];
@@ -262,6 +265,37 @@ export class ConversationService {
 
   ready(): Promise<SourceRegistry | null> {
     return this.registryPromise;
+  }
+
+  /** Detached authority for server sealing; tickets/controllers/voice are never restored. */
+  exportAuthority(storeId: string) {
+    const record = this.threads.get(storeId);
+    if (!record) throw new Error("Unavailable");
+    const { controllers: _controllers, grantByTurn, ...plain } = record;
+    return structuredClone({ version: 1 as const, record: { ...plain, grantByTurn: [...grantByTurn] },
+      issuer: this.issuer.exportAuthority(), epoch: this.epoch, counter: this.counter });
+  }
+
+  /** Only a server-authenticated sealed snapshot may reach this internal hook. */
+  restoreAuthority(state: ReturnType<ConversationService["exportAuthority"]>, storeId: string): void {
+    if (state.version !== 1 || state.record.ownerId !== this.ownerId || state.record.storeId !== storeId ||
+      state.record.threadId !== `bfa-thread-${storeId}`) throw new Error("Unavailable");
+    const events = new Map(state.record.events.map(e => [e.eventId, e]));
+    for (const item of state.record.derived) {
+      if (!events.has(item.sourceEventId)) throw new Error("Unavailable");
+    }
+    for (const grant of state.issuer.issued) {
+      const event = events.get(grant.messageEventId);
+      if (grant.ownerId !== this.ownerId || grant.threadId !== state.record.threadId ||
+        event?.textSha256 !== grant.messageSha256) throw new Error("Unavailable");
+    }
+    this.clearAll();
+    this.epoch = state.epoch;
+    this.counter = state.counter;
+    this.issuer = new GrantIssuer(`e${this.epoch}`);
+    this.issuer.restoreAuthority(state.issuer);
+    const copy = structuredClone(state.record);
+    this.threads.set(storeId, { ...copy, grantByTurn: new Map(copy.grantByTurn), controllers: new Set() });
   }
 
   private nextId(prefix: string) {

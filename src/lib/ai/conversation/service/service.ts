@@ -274,7 +274,7 @@ export class ConversationService {
     if (!record) throw new Error("Unavailable");
     const { controllers: _controllers, grantByTurn, ...plain } = record;
     return structuredClone({ version: 1 as const, record: { ...plain, grantByTurn: [...grantByTurn] },
-      issuer: this.issuer.exportAuthority(), epoch: this.epoch, counter: this.counter });
+      issuer: this.issuer.exportAuthority(record.threadId), epoch: this.epoch, counter: this.counter });
   }
 
   /** Only a server-authenticated sealed snapshot may reach this internal hook. */

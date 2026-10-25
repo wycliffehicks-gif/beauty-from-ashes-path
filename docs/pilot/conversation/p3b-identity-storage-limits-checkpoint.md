@@ -8,6 +8,12 @@ Identity-only was the implementation default within Carl's approved P3b scope, n
 
 Service authority alone exports/restores provenance, facts/corrections/restrictions/grant lineage. Provider requests pass through P1 `assembleConversationContext` with the unchanged approved policy. Mock provider only; voice admission is testable without microphone or audio/session APIs.
 
+### Narrow reusable authority follow-up — 23:30 UTC
+
+Confirmed multi-thread export defect reproduced: exported issuer contained both threads' issued/revoked grants. `exportAuthority(thread)` now projects only that thread's issued grants and associated revocations, retaining the issuer high-water counter to prevent ID reuse. Export does not remove other live threads/grants; restore still detaches and freezes grants/source arrays. No auth, database, provider-network or v5 commands ran for this follow-up.
+
+Independent diagnostic adapted to project imports and null-safe assertions: `__tests__/p3b-thread-authority.test.ts`. Before fix: **1 passed, 2 failed** (cross-thread issued/revoked projection). After fix: `bunx vitest run src/lib/ai/conversation` → **13 files, 262 passed**, 23:30:41 UTC (all previous 259 plus 3). Includes both requested cases and additional revoked-lineage/live-thread/counter-preservation coverage. Evidence: `/tmp/p3b-thread-before.log`, `/tmp/p3b-thread-after.log`. Earlier database/browser checks below were not rerun and remain distinct historical evidence. Authenticated O01–O08 remains blocked, not accepted.
+
 - Exact synthetic excerpt selection supports preview/confirm/cancel/revision/hash drift checks. Only server-resolved selected bytes are recorded, with preview/revision/hash provenance; P1 marks them **untrusted user data**, never registry/system instructions. No journal/weekly/other-day/hidden10 store imports. Cancelling preview sends nothing. Shared excerpts are thread-scoped service events, not cross-thread memory.
 - Saved list returns only owned nondeleted saved thread ID/current revision/save time, capped at 100; list metadata never enters context. Deliberate reopen restores the chosen sealed saved snapshot, restrictions/corrections, current separate app preference and microphone OFF.
 - Existing `showSpiritual` preference stays separate, defaults OFF and changes explicitly. Changes fence work and update the same service authority; failed changes block Send until resolved, not silently authorize prior preference.
@@ -61,7 +67,7 @@ Latest public settings read: **disable_signup=false; anonymous=false; every prov
 
 ## Changed files, costs, synchronization and rollback
 
-Changed application files: `StagingConsole.tsx`, `service/service.ts`, `staging/{adapter.server,input,excerpt,lifecycle}.ts`; tests `p3b-repair.test.ts`, `p3b-boundary.test.ts`; `scripts/p3b/check-locks.py`; migrations 0004/0005 plus tool-generated snapshots/journal/types; `AGENTS.md`, roadmap and this checkpoint. No private/journey/v5 files changed.
+Changed application files: `StagingConsole.tsx`, `service/{service,grant-issuer}.ts`, `staging/{adapter.server,input,excerpt,lifecycle}.ts`; tests `p3b-repair.test.ts`, `p3b-boundary.test.ts`, `p3b-thread-authority.test.ts`; `scripts/p3b/check-locks.py`; migrations 0004/0005 plus tool-generated snapshots/journal/types; `AGENTS.md`, roadmap and this checkpoint. No private/journey/v5 files changed.
 
 No paid app model/voice calls; no fresh v5 allowance. Cloud/platform/editor usage not measured as task invoice. Historical observed balance change **89.50→86.80 (2.70 credits)** is only the initial preparation observation, not this continuation cost.
 

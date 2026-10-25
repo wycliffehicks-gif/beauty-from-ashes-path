@@ -147,6 +147,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bfa_p3b_assert_staging: { Args: { p_owner: string }; Returns: undefined }
       bfa_p3b_claim: {
         Args: {
           p_fingerprint: string

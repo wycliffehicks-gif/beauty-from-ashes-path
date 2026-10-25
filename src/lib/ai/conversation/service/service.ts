@@ -28,7 +28,6 @@ import {
 import {
   createSourceRegistry,
   resolveRegistrySource,
-  sha256Hex,
   type SourceCard,
   type SourceRegistry,
 } from "../sources";

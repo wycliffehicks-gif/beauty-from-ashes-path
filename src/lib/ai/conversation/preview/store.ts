@@ -376,6 +376,13 @@ export class ConversationPreviewStore {
 
   private performSwitch(next: { kind: "new" } | { kind: "open"; threadId: string }): StoreResult {
     if (next.kind === "new") {
+      // The old thread's voice session never continues into a new thread.
+      const prev = this.activeThread();
+      if (prev) this.cancelPendingJobs(prev.id, false);
+      this.invalidateVoiceTimers();
+      this.voiceShutdownToken += 1;
+      this.service?.voice.end("switch");
+      this.state = { ...this.state, voice: "off", voiceMuted: false };
       this.createThread();
       this.state = { ...this.state, pendingSwitch: null };
       this.emit();
@@ -521,12 +528,20 @@ export class ConversationPreviewStore {
     const spiritualOn = thread.spiritualOn;
     if (this.service) {
       const service = this.service;
-      const turnId = service.admitUserMessage(thread.id, personMessage.id, text);
+      const voiceOrigin =
+        service.voice.state === "active" &&
+        (this.state.voice === "speaking" || this.state.voice === "listening")
+          ? service.voice.origin()
+          : null;
+      const turnId = service.admitUserMessage(thread.id, personMessage.id, text, voiceOrigin);
       this.schedule(() => {
-        if (epoch !== this.epoch) return;
-        void service.runTurn(thread.id, turnId, (outcome) =>
-          this.commitServiceOutcome(jobId, outcome),
-        );
+        // Immutable job identity: Stop/switch/clear before the scheduled run
+        // means the turn is never started (the service ticket also rejects).
+        if (!this.jobCurrent(jobId, epoch)) return;
+        void service.runTurn(thread.id, turnId, {
+          accept: () => this.jobCurrent(jobId, epoch),
+          apply: (outcome) => this.applyServiceOutcome(jobId, outcome),
+        });
       }, 0);
       return;
     }
@@ -543,11 +558,21 @@ export class ConversationPreviewStore {
    * false when the UI job is no longer current, so the service commits
    * nothing either.
    */
-  private commitServiceOutcome(jobId: string, outcome: TurnOutcome): boolean {
+  private jobCurrent(jobId: string, epoch: number): boolean {
     const job = this.pendingJobs.get(jobId);
-    if (!job || job.epoch !== this.epoch) return false;
+    if (!job || job.epoch !== this.epoch || epoch !== this.epoch) return false;
     const thread = this.state.threads.find((t) => t.id === job.threadId);
-    if (!thread || thread.generation !== job.generation) return false;
+    return !!thread && thread.generation === job.generation;
+  }
+
+  /**
+   * Publish phase of the two-phase commit. The service has ALREADY appended
+   * its events/derived items/grants (and queued voice for the exact turn)
+   * before this runs, so any subscriber that saves sees identical state.
+   */
+  private applyServiceOutcome(jobId: string, outcome: TurnOutcome): void {
+    const job = this.pendingJobs.get(jobId);
+    if (!job) return;
     this.pendingJobs.delete(jobId);
     this.updateThread(job.threadId, (t) => ({
       ...t,
@@ -559,17 +584,13 @@ export class ConversationPreviewStore {
           : m,
       ),
     }));
-    if (outcome.ok && (this.state.voice === "speaking" || this.state.voice === "listening")) {
-      this.service?.queueVoiceAnswer(job.threadId, outcome.turnId, outcome.text, thread.spiritualOn);
+    if (this.state.voice === "speaking" || this.state.voice === "listening") {
       this.state = {
         ...this.state,
-        voice: this.service?.voice.hasQueued() ? "speaking" : "listening",
+        voice: outcome.ok && this.service?.voice.hasQueued() ? "speaking" : "listening",
       };
-    } else if (this.state.voice === "speaking") {
-      this.state = { ...this.state, voice: "listening" };
     }
     this.emit();
-    return true;
   }
 
   /** Developer fixture control: mark the next queued mock segment played. */
@@ -751,7 +772,10 @@ export class ConversationPreviewStore {
     this.invalidateVoiceTimers();
     const wasActive = this.state.activeThreadId === threadId;
     if (this.service) {
-      if (wasActive) this.service.voice.end("delete");
+      if (wasActive) {
+        this.voiceShutdownToken += 1;
+        this.service.voice.end("delete");
+      }
       this.service.deleteThread(threadId);
     }
     this.state = {
@@ -907,7 +931,8 @@ export class ConversationPreviewStore {
       // preference-off) must never advance a newer session.
       if (session !== this.voiceSession || epoch !== this.epoch) return;
       if (this.state.voice === "connecting") {
-        this.service?.voice.start(); // always a NEW mock session identity
+        const t = this.activeThread();
+        if (t) this.service?.startVoice(t.id); // always a NEW mock session identity
         this.state = { ...this.state, voice: "listening" };
         this.emit();
       }
@@ -1017,13 +1042,19 @@ export class ConversationPreviewStore {
 
   /** Developer fixture: feed a provisional transcript fragment. */
   feedProvisionalFragment(text: string) {
-    this.service?.voice.addFragment(text);
+    const voice = this.service?.voice;
+    if (voice && this.state.voice === "listening") voice.addFragment(text, voice.origin());
+    else voice?.addFragment(text, { sessionId: null, outputGeneration: -1, threadId: null });
     this.emit();
   }
 
   /** Final corrected transcript enters the composer (never auto-sent). */
   finalizeTranscript(text: string) {
-    const final = this.service?.voice.finalizeTranscript(text);
+    const voice = this.service?.voice;
+    const final =
+      voice && this.state.voice === "listening" && !this.state.voiceMuted
+        ? voice.finalizeTranscript(text, voice.origin())
+        : (voice?.finalizeTranscript(text, { sessionId: null, outputGeneration: -1, threadId: null }) ?? null);
     if (final) this.setDraft(final);
     else this.emit();
   }

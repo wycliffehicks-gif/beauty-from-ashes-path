@@ -117,6 +117,7 @@ export type Database = {
           owner_id: string
           revision: number
           saved_at: string | null
+          saved_revision: number | null
           saved_snapshot: Json | null
         }
         Insert: {
@@ -126,6 +127,7 @@ export type Database = {
           owner_id: string
           revision?: number
           saved_at?: string | null
+          saved_revision?: number | null
           saved_snapshot?: Json | null
         }
         Update: {
@@ -135,6 +137,7 @@ export type Database = {
           owner_id?: string
           revision?: number
           saved_at?: string | null
+          saved_revision?: number | null
           saved_snapshot?: Json | null
         }
         Relationships: []
@@ -144,7 +147,77 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      bfa_p3b_claim: {
+        Args: {
+          p_fingerprint: string
+          p_mode: string
+          p_owner: string
+          p_request: string
+          p_revision: number
+          p_thread: string
+        }
+        Returns: boolean
+      }
+      bfa_p3b_create: { Args: { p_owner: string }; Returns: string }
+      bfa_p3b_finish: {
+        Args: {
+          p_owner: string
+          p_request: string
+          p_revision: number
+          p_thread: string
+        }
+        Returns: number
+      }
+      bfa_p3b_guard: {
+        Args: { p_owner: string; p_thread: string }
+        Returns: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          owner_id: string
+          revision: number
+          saved_at: string | null
+          saved_revision: number | null
+          saved_snapshot: Json | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "bfa_p3b_threads"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      bfa_p3b_is_staging: { Args: never; Returns: boolean }
+      bfa_p3b_reserve: {
+        Args: {
+          p_fingerprint: string
+          p_mode: string
+          p_owner: string
+          p_request: string
+          p_revision: number
+          p_thread: string
+        }
+        Returns: Json
+      }
+      bfa_p3b_settle: {
+        Args: {
+          p_charged: number
+          p_owner: string
+          p_receipt: string
+          p_request: string
+        }
+        Returns: boolean
+      }
+      bfa_p3b_transition: {
+        Args: {
+          p_action: string
+          p_owner: string
+          p_revision: number
+          p_snapshot?: Json
+          p_thread: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

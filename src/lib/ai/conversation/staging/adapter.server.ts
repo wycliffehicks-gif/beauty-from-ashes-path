@@ -45,8 +45,8 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
     await identity(owner);
     return { kind: 'active', thread: r.data, revision: 0, token, saved: false, inspection: service.inspect(r.data), microphone: 'off' };
   }
-  const thread = input.thread;
-  if (!thread) throw new Error('Unavailable');
+  if (!input.thread) throw new Error('Unavailable');
+  const thread: string = input.thread;
   const found = await client.from('bfa_p3b_threads').select('id,revision,saved_revision,saved_snapshot,deleted_at').eq('id',thread).eq('owner_id',owner).maybeSingle();
   if (found.error || !found.data || found.data.deleted_at) throw new Error('Unavailable');
   const row = found.data;
@@ -120,6 +120,7 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
     revision = finish.data;
   } else if (input.action === 'source') {
     const registry = await service.ready();
+    if (!registry) throw new Error('Unavailable');
     const source = resolveRegistrySource(registry, input.sourceKey, false);
     if (!source.ok || source.value.excerpt.kind !== 'journey-day-teaching' || sha256HexSync(source.value.excerpt.exactText) !== input.sourceHash) throw new Error('Refresh source preview');
     service.recordSharedTeaching(thread, crypto.randomUUID(), source.value.excerpt.sourceKey, source.value.excerpt.exactText);

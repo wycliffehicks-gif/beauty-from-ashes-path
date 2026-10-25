@@ -53,7 +53,55 @@ export function ConversationPreview() {
       ) : (
         <StartScreen state={state} store={store} />
       )}
+      {state.hydrated ? <TranscriptDialog state={state} store={store} /> : null}
     </main>
+  );
+}
+
+/**
+ * A finalized simulated transcript arrived while the composer held typed
+ * text. Nothing is merged silently and nothing is sent: the person chooses
+ * Replace, Append or Keep (cancel), and cancel preserves the draft exactly.
+ */
+function TranscriptDialog({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  const pending = state.pendingTranscript;
+  return (
+    <AlertDialog
+      open={pending !== null}
+      onOpenChange={(open) => {
+        if (!open) store.resolveTranscriptChoice("cancel");
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Use the finalized transcript?</AlertDialogTitle>
+          <AlertDialogDescription>
+            You already have typed text in the composer. The transcript is never sent automatically — choose what to
+            do with it.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        {pending !== null ? (
+          <p className="rounded-md border border-border bg-muted p-3 text-sm text-foreground">{pending}</p>
+        ) : null}
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => store.resolveTranscriptChoice("cancel")}>
+            Keep my typed text
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={() => store.resolveTranscriptChoice("append")}>
+            Append to my text
+          </AlertDialogAction>
+          <AlertDialogAction onClick={() => store.resolveTranscriptChoice("replace")}>
+            Replace my text
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

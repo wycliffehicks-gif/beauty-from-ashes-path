@@ -23,11 +23,13 @@ import {
   type ConversationTeachingRecord,
 } from "../content/teaching";
 import { fictionalReply } from "./fake-service";
+import type { SourceCard } from "../sources";
+import type { ConversationService, TurnOutcome } from "../service/service";
 
 // ---------------------------------------------------------------------------
 // Types
 
-export type PreviewMessageStatus = "sent" | "not-sent" | "generating" | "stopped";
+export type PreviewMessageStatus = "sent" | "not-sent" | "generating" | "stopped" | "not-answered";
 
 /** An immutable snapshot of the exact shared teaching bytes. */
 export interface SharedTeachingSnapshot {
@@ -45,6 +47,8 @@ export interface PreviewMessage {
   readonly status: PreviewMessageStatus;
   /** Present only on messages that deliberately shared exact teaching. */
   readonly sharedTeaching?: SharedTeachingSnapshot;
+  /** Registry-built source cards admitted for this reply (P3a service). */
+  readonly sourceCards?: readonly SourceCard[];
 }
 
 interface ThreadSnapshot {
@@ -75,7 +79,11 @@ export type VoiceSimState =
   | "listening"
   | "speaking"
   | "paused"
-  | "disconnected";
+  | "disconnected"
+  /** P3a service only: shutdown requested, not yet confirmed. */
+  | "pausing"
+  /** P3a service only: mock shutdown failed; capture state not confirmed off. */
+  | "pause-failed";
 
 export type SaveStatus = "not-saved" | "saved" | "unsaved-changes";
 
@@ -87,7 +95,8 @@ export type StoreFailureReason =
   | "save-failed"
   | "unsent-draft"
   | "needs-decision"
-  | "unknown-thread";
+  | "unknown-thread"
+  | "preference-failed";
 
 export type StoreResult =
   | { readonly ok: true }
@@ -113,6 +122,9 @@ export interface PreviewState {
   /** Review controls (explicitly not participant controls). */
   readonly simulateSendFailure: boolean;
   readonly simulateSaveFailure: boolean;
+  /** P3a review controls. */
+  readonly simulatePreferenceFailure: boolean;
+  readonly simulateShutdownFailure: boolean;
 }
 
 const EMPTY_STATE: PreviewState = Object.freeze({
@@ -128,6 +140,8 @@ const EMPTY_STATE: PreviewState = Object.freeze({
   pendingSwitch: null,
   simulateSendFailure: false,
   simulateSaveFailure: false,
+  simulatePreferenceFailure: false,
+  simulateShutdownFailure: false,
 });
 
 /** Stable frozen server snapshot — never carries personal state. */
@@ -148,6 +162,10 @@ export interface PreviewStoreOptions {
   readonly readSpiritualPreference?: () => boolean;
   /** Injectable clock for deterministic tests. */
   readonly nowIso?: () => string;
+  /** P3a: shared conversation service (tests inject one directly). */
+  readonly service?: ConversationService;
+  /** P3a: created lazily in the browser only (never during SSR). */
+  readonly createService?: () => ConversationService;
 }
 
 interface PendingJob {
@@ -174,6 +192,10 @@ export class ConversationPreviewStore {
   private readonly readSpiritualPreference: () => boolean;
   private readonly nowIso: () => string;
   private clearListener: (() => void) | null = null;
+  /** P3a shared service; null means the P2 fake-service path (rollback). */
+  service: ConversationService | null;
+  private readonly createService?: () => ConversationService;
+  private voiceShutdownToken = 0;
 
   constructor(options: PreviewStoreOptions = {}) {
     this.schedule =
@@ -181,6 +203,8 @@ export class ConversationPreviewStore {
     this.readSpiritualPreference =
       options.readSpiritualPreference ?? (() => readPrefs().showSpiritual);
     this.nowIso = options.nowIso ?? (() => new Date().toISOString());
+    this.service = options.service ?? null;
+    this.createService = options.createService;
   }
 
   // --- subscription -------------------------------------------------------
@@ -212,6 +236,7 @@ export class ConversationPreviewStore {
       // (The imported value seeds each NEW thread; see createThread.)
     };
     this.importedSpiritualOn = this.readSpiritualPreference();
+    if (!this.service && this.createService) this.service = this.createService();
     if (!this.clearListener) {
       const onClear = () => this.handleAppClear();
       window.addEventListener(APP_CLEAR_EVENT, onClear);
@@ -281,6 +306,7 @@ export class ConversationPreviewStore {
       }
     }
     this.updateThread(threadId, (t) => ({ ...t, generation: t.generation + 1 }));
+    this.service?.cancelThread(threadId, "store-cancel");
   }
 
   /** Invalidate any pending simulated voice connection timer. */
@@ -309,6 +335,7 @@ export class ConversationPreviewStore {
       spiritualOn: this.importedSpiritualOn,
       generation: 0,
     };
+    this.service?.ensureThread(thread.id, thread.spiritualOn);
     this.state = {
       ...this.state,
       threads: [...this.state.threads, thread],
@@ -353,6 +380,10 @@ export class ConversationPreviewStore {
     // Reopening never starts a microphone: voice resets to off, timers die.
     this.cancelPendingJobs(target.id, false);
     this.invalidateVoiceTimers();
+    if (this.service) {
+      this.service.voice.end("switch");
+      this.service.openThread(target.id);
+    }
     this.state = {
       ...this.state,
       activeThreadId: target.id,
@@ -430,6 +461,7 @@ export class ConversationPreviewStore {
         text,
         status: "not-sent",
       };
+      this.service?.recordNotSent(thread.id, failed.id, text);
       this.updateThread(thread.id, (t) => ({
         ...t,
         messages: [...t.messages, failed],
@@ -481,12 +513,68 @@ export class ConversationPreviewStore {
       assistantMessageId: assistantMessage.id,
     });
     const spiritualOn = thread.spiritualOn;
+    if (this.service) {
+      const service = this.service;
+      const turnId = service.admitUserMessage(thread.id, personMessage.id, text);
+      this.schedule(() => {
+        if (epoch !== this.epoch) return;
+        void service.runTurn(thread.id, turnId, (outcome) =>
+          this.commitServiceOutcome(jobId, outcome),
+        );
+      }, 0);
+      return;
+    }
     this.schedule(() => {
       // Explicit identity validation: a callback from before a clear-all (or
       // any cancelled/superseded job) can never write into the store.
       if (epoch !== this.epoch) return;
       this.completeJob(jobId, fictionalReply({ message: text, spiritualOn }));
     }, 400);
+  }
+
+  /**
+   * P3a single commit point (called synchronously by the service). Returns
+   * false when the UI job is no longer current, so the service commits
+   * nothing either.
+   */
+  private commitServiceOutcome(jobId: string, outcome: TurnOutcome): boolean {
+    const job = this.pendingJobs.get(jobId);
+    if (!job || job.epoch !== this.epoch) return false;
+    const thread = this.state.threads.find((t) => t.id === job.threadId);
+    if (!thread || thread.generation !== job.generation) return false;
+    this.pendingJobs.delete(jobId);
+    this.updateThread(job.threadId, (t) => ({
+      ...t,
+      messages: t.messages.map((m) =>
+        m.id === job.assistantMessageId
+          ? outcome.ok
+            ? { ...m, text: outcome.text, status: "sent" as const, sourceCards: outcome.sourceCards }
+            : { ...m, text: outcome.message, status: "not-answered" as const }
+          : m,
+      ),
+    }));
+    if (outcome.ok && (this.state.voice === "speaking" || this.state.voice === "listening")) {
+      this.service?.queueVoiceAnswer(job.threadId, outcome.text, thread.spiritualOn);
+      this.state = {
+        ...this.state,
+        voice: this.service?.voice.hasQueued() ? "speaking" : "listening",
+      };
+    } else if (this.state.voice === "speaking") {
+      this.state = { ...this.state, voice: "listening" };
+    }
+    this.emit();
+    return true;
+  }
+
+  /** Developer fixture control: mark the next queued mock segment played. */
+  playNextVoiceSegment() {
+    const voice = this.service?.voice;
+    if (!voice) return;
+    voice.playNext();
+    if (this.state.voice === "speaking" && !voice.hasQueued()) {
+      this.state = { ...this.state, voice: "listening" };
+    }
+    this.emit();
   }
 
   private completeJob(jobId: string, reply: string) {
@@ -515,6 +603,7 @@ export class ConversationPreviewStore {
     const thread = this.activeThread();
     if (!thread) return;
     this.cancelPendingJobs(thread.id, true);
+    this.service?.voice.stopAnswer();
     if (this.state.voice === "speaking") {
       this.state = { ...this.state, voice: "listening" };
     }
@@ -535,6 +624,7 @@ export class ConversationPreviewStore {
     if (!message || message.status !== "not-sent") return { ok: false, reason: "empty-message" };
     // Remove the failed marker and resend its own text through the normal
     // path — without touching the composer's current (possibly newer) draft.
+    this.service?.markRetried(thread.id, messageId);
     this.updateThread(thread.id, (t) => ({
       ...t,
       messages: t.messages.filter((m) => m.id !== messageId),
@@ -546,6 +636,7 @@ export class ConversationPreviewStore {
         text: message.text,
         status: "not-sent",
       };
+      this.service?.recordNotSent(thread.id, failed.id, message.text);
       this.updateThread(thread.id, (t) => ({
         ...t,
         messages: [...t.messages, failed],
@@ -588,6 +679,7 @@ export class ConversationPreviewStore {
       savedSnapshot: snapshot,
       dirty: false,
     }));
+    this.service?.saveThread(thread.id);
     this.emit();
     return OK;
   }
@@ -597,6 +689,7 @@ export class ConversationPreviewStore {
     const thread = this.activeThread();
     if (!thread || !thread.savedSnapshot) return;
     const snapshot = thread.savedSnapshot;
+    this.service?.discardThread(thread.id);
     this.updateThread(thread.id, (t) => ({
       ...t,
       title: snapshot.title,
@@ -651,6 +744,10 @@ export class ConversationPreviewStore {
     this.cancelPendingJobs(threadId, false);
     this.invalidateVoiceTimers();
     const wasActive = this.state.activeThreadId === threadId;
+    if (this.service) {
+      if (wasActive) this.service.voice.end("delete");
+      this.service.deleteThread(threadId);
+    }
     this.state = {
       ...this.state,
       threads: this.state.threads.filter((t) => t.id !== threadId),
@@ -694,6 +791,7 @@ export class ConversationPreviewStore {
     }
     this.cancelPendingJobs(thread.id, false);
     this.invalidateVoiceTimers();
+    this.service?.voice.end("finish-conversation");
     this.state = {
       ...this.state,
       activeThreadId: null,
@@ -713,9 +811,18 @@ export class ConversationPreviewStore {
    * OFF cancels any pending simulated generation AND ends any simulated
    * voice session (its timers are invalidated) before the next turn.
    */
-  setPreviewSpiritual(on: boolean) {
+  setPreviewSpiritual(on: boolean): StoreResult {
     const thread = this.activeThread();
-    if (!thread) return;
+    if (!thread) return { ok: false, reason: "no-thread" };
+    if (this.service && this.state.simulatePreferenceFailure) {
+      // Failed update: the preference is UNCHANGED (truthful), but pending
+      // output that may contradict the requested change is stopped.
+      this.cancelPendingJobs(thread.id, true);
+      this.service.voice.preferenceOff();
+      if (this.state.voice === "speaking") this.state = { ...this.state, voice: "listening" };
+      this.emit();
+      return { ok: false, reason: "preference-failed" };
+    }
     if (!on) {
       this.cancelPendingJobs(thread.id, true);
       if (this.state.voice !== "off") {
@@ -724,7 +831,9 @@ export class ConversationPreviewStore {
       }
     }
     this.updateThread(thread.id, (t) => ({ ...t, spiritualOn: on }));
+    this.service?.setPreference(thread.id, on);
     this.emit();
+    return OK;
   }
 
   // --- exact teaching sharing ----------------------------------------------------
@@ -762,6 +871,7 @@ export class ConversationPreviewStore {
       status: "sent",
       sharedTeaching: snapshot,
     };
+    this.service?.recordSharedTeaching(thread.id, message.id, record.key, message.text);
     this.updateThread(thread.id, (t) => ({
       ...t,
       messages: [...t.messages, message],
@@ -791,6 +901,7 @@ export class ConversationPreviewStore {
       // preference-off) must never advance a newer session.
       if (session !== this.voiceSession || epoch !== this.epoch) return;
       if (this.state.voice === "connecting") {
+        this.service?.voice.start(); // always a NEW mock session identity
         this.state = { ...this.state, voice: "listening" };
         this.emit();
       }
@@ -804,7 +915,33 @@ export class ConversationPreviewStore {
    */
   pauseVoice() {
     if (this.state.voice === "off" || this.state.voice === "paused") return;
+    if (this.state.voice === "pausing") return;
     this.invalidateVoiceTimers();
+    if (this.service) {
+      const thread = this.activeThread();
+      if (thread) this.cancelPendingJobs(thread.id, true);
+      const voice = this.service.voice;
+      if (voice.state === "idle") {
+        // Still connecting: no mock session was opened; nothing to shut down.
+        this.state = { ...this.state, voice: "paused" };
+        this.emit();
+        return;
+      }
+      const token = voice.requestPause();
+      const epoch = this.epoch;
+      this.voiceShutdownToken = token;
+      this.state = { ...this.state, voice: "pausing" };
+      this.emit();
+      const fail = this.state.simulateShutdownFailure;
+      this.schedule(() => {
+        if (epoch !== this.epoch || token !== this.voiceShutdownToken) return;
+        const done = fail ? voice.failShutdown(token) : voice.confirmShutdown(token);
+        if (!done || this.state.voice !== "pausing") return;
+        this.state = { ...this.state, voice: fail ? "pause-failed" : "paused" };
+        this.emit();
+      }, 200);
+      return;
+    }
     if (this.state.voice === "listening" || this.state.voice === "speaking") {
       const thread = this.activeThread();
       if (thread) this.cancelPendingJobs(thread.id, true);
@@ -816,12 +953,14 @@ export class ConversationPreviewStore {
   /** Resume is always an explicit action; never automatic. */
   resumeVoice() {
     if (this.state.voice !== "paused" && this.state.voice !== "disconnected") return;
+    if (this.service && this.state.voice === "paused") this.service.voice.end("resume-new-session");
     this.beginVoiceSession();
   }
 
   /** Mute is distinct from pause: the simulated connection stays open. */
   setVoiceMuted(muted: boolean) {
     if (this.state.voice === "off" || this.state.voice === "paused") return;
+    this.service?.voice.setMuted(muted);
     this.state = { ...this.state, voiceMuted: muted };
     this.emit();
   }
@@ -832,6 +971,7 @@ export class ConversationPreviewStore {
     this.invalidateVoiceTimers();
     const thread = this.activeThread();
     if (thread) this.cancelPendingJobs(thread.id, true);
+    this.service?.voice.end("disconnected");
     this.state = { ...this.state, voice: "disconnected", voiceMuted: false };
     this.emit();
   }
@@ -840,6 +980,8 @@ export class ConversationPreviewStore {
   finishTalking() {
     if (this.state.voice === "off") return;
     this.invalidateVoiceTimers();
+    this.voiceShutdownToken += 1;
+    this.service?.voice.end("finish-talking");
     this.state = { ...this.state, voice: "off", voiceMuted: false };
     this.emit();
   }
@@ -848,6 +990,42 @@ export class ConversationPreviewStore {
 
   setSimulateSendFailure(on: boolean) {
     this.state = { ...this.state, simulateSendFailure: on };
+    this.emit();
+  }
+
+  setSimulatePreferenceFailure(on: boolean) {
+    this.state = { ...this.state, simulatePreferenceFailure: on };
+    this.emit();
+  }
+
+  setSimulateShutdownFailure(on: boolean) {
+    this.state = { ...this.state, simulateShutdownFailure: on };
+    this.emit();
+  }
+
+  /** Developer fixture: a network-recovered event never resumes voice. */
+  simulateNetworkRecovered() {
+    this.service?.voice.networkRecovered();
+    this.emit();
+  }
+
+  /** Developer fixture: feed a provisional transcript fragment. */
+  feedProvisionalFragment(text: string) {
+    this.service?.voice.addFragment(text);
+    this.emit();
+  }
+
+  /** Final corrected transcript enters the composer (never auto-sent). */
+  finalizeTranscript(text: string) {
+    const final = this.service?.voice.finalizeTranscript(text);
+    if (final) this.setDraft(final);
+    else this.emit();
+  }
+
+  /** Developer fixture: mark earlier history missing (gap is reported). */
+  simulateHistoryGap() {
+    const t = this.activeThread();
+    if (t) this.service?.simulateHistoryGap(t.id);
     this.emit();
   }
 
@@ -869,6 +1047,8 @@ export class ConversationPreviewStore {
     this.epoch += 1;
     this.invalidateVoiceTimers();
     this.importedSpiritualOn = false;
+    this.voiceShutdownToken += 1;
+    this.service?.clearAll();
     this.state = { ...EMPTY_STATE, hydrated: true };
     this.emit();
   }
@@ -880,7 +1060,11 @@ export class ConversationPreviewStore {
 let browserStore: ConversationPreviewStore | null = null;
 
 function getBrowserStore(): ConversationPreviewStore {
-  if (!browserStore) browserStore = new ConversationPreviewStore();
+  if (!browserStore) {
+    browserStore = new ConversationPreviewStore({
+      createService: () => new ServiceCtor(),
+    });
+  }
   return browserStore;
 }
 

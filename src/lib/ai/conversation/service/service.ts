@@ -62,6 +62,7 @@ export interface ThreadEvent {
   readonly textSha256: string | null;
   status: EventStatus;
   readonly sourceKey?: string;
+  readonly sharedExcerpt?: { readonly previewId: string; readonly previewedAtIso: string; readonly sourceRevision: string };
 }
 
 export type DerivedKind =
@@ -542,6 +543,16 @@ export class ConversationService {
     this.log("teaching-shared", record.threadId, undefined, sourceKey);
   }
 
+  /** Server-confirmed exact selection only; never registry/system authority. */
+  recordSharedExcerpt(storeId: string, messageId: string, exactText: string, sourceRevision: string, previewedAtIso: string): void {
+    const record = this.threads.get(storeId);
+    if (!record) throw new Error('Unavailable');
+    const eventId = this.nextId('evt');
+    record.events.push({ eventId, messageId, turnId: null, role: 'shared-source', text: exactText,
+      textSha256: sha256HexSync(exactText), status: 'delivered', sourceKey: 'private-note',
+      sharedExcerpt: { previewId: `bfa-preview-${eventId}`, previewedAtIso, sourceRevision } });
+  }
+
   // --- turn pipeline ------------------------------------------------------------
 
   /**
@@ -681,7 +692,7 @@ export class ConversationService {
     }
 
     // --- shared sources: pinned bytes must equal registry bytes --------------
-    const shared = record.events.filter((e) => e.role === "shared-source" && e.status === "delivered");
+    const shared = record.events.filter((e) => e.role === "shared-source" && e.status === "delivered" && !e.sharedExcerpt);
     for (const s of shared) {
       const r = resolveRegistrySource(registry, s.sourceKey, this.allowTestSources);
       if (!r.ok || r.value.excerpt.exactText !== s.text) {
@@ -690,6 +701,21 @@ export class ConversationService {
       }
     }
 
+    const excerpts = record.events.filter(e => e.sharedExcerpt && e.status === 'delivered');
+    const previewStore = new Map<string, unknown>();
+    const selectedExcerpts = excerpts.map(e => {
+      const meta = e.sharedExcerpt;
+      if (!meta || !e.textSha256) throw new Error('Unavailable');
+      previewStore.set(meta.previewId, { previewId: meta.previewId, ownerId: record.ownerId,
+        threadId: record.threadId, turnId, sourceKey: 'private-note', exactText: e.text,
+        textSha256: e.textSha256, sourceRevision: meta.sourceRevision, previewedAtIso: meta.previewedAtIso,
+        expiresAtIso: null });
+      return { previewId: meta.previewId, sourceKey: 'private-note' as const,
+        excerptSha256: e.textSha256, previewedAtIso: meta.previewedAtIso };
+    });
+    // Confirmed events retain their immutable revision; no whole-note access.
+    const revisions = new Set(excerpts.map(e => e.sharedExcerpt?.sourceRevision));
+    if (revisions.size > 1) return finish({ ok: false, code: 'stale-excerpt-preview', message: failureMessage('stale-excerpt-preview') });
     // --- P1 boundary: client turn + server-owned context ---------------------
     const assembled = await assembleConversationContext({
       request: {
@@ -697,7 +723,7 @@ export class ConversationService {
         turnId,
         threadId: record.threadId,
         message: userEvent.text,
-        selectedExcerpts: [],
+        selectedExcerpts,
       },
       principal: {
         principalId: record.ownerId,
@@ -715,10 +741,10 @@ export class ConversationService {
         preferenceSource: "server",
       },
       registry,
-      previewStore: new Map(),
-      currentSourceRevisions: new Map(),
+      previewStore,
+      currentSourceRevisions: new Map(excerpts.map(e => ['private-note', e.sharedExcerpt?.sourceRevision ?? ''])),
       serverGrant: grant ? toServerGrant(grant, parent) : null,
-      selectedTeachingKeys: [...new Set(shared.map((s) => s.sourceKey!))],
+      selectedTeachingKeys: [...new Set(shared.flatMap(s => s.sourceKey ? [s.sourceKey] : []))],
       allowTestSources: this.allowTestSources,
     });
     if (!(await stageCheck("context-assembled"))) {

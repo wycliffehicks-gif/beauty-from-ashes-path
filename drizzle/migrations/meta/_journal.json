@@ -29,6 +29,20 @@
       "when": 1792969806698,
       "tag": "0003_p3b_no_automatic_transaction_retry",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792970547406,
+      "tag": "0004_p3b_lock_expiry_argument_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792970802888,
+      "tag": "0005_p3b_explicit_pending_work_fence",
+      "breakpoints": true
     }
   ]
 }

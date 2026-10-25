@@ -560,7 +560,7 @@ export class ConversationPreviewStore {
       ),
     }));
     if (outcome.ok && (this.state.voice === "speaking" || this.state.voice === "listening")) {
-      this.service?.queueVoiceAnswer(job.threadId, outcome.text, thread.spiritualOn);
+      this.service?.queueVoiceAnswer(job.threadId, outcome.turnId, outcome.text, thread.spiritualOn);
       this.state = {
         ...this.state,
         voice: this.service?.voice.hasQueued() ? "speaking" : "listening",

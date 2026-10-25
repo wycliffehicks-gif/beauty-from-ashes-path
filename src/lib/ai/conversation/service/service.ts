@@ -133,6 +133,7 @@ export interface TraceEntry {
 export type TurnOutcome =
   | {
       readonly ok: true;
+      readonly turnId: string;
       readonly text: string;
       readonly sourceCards: readonly SourceCard[];
     }
@@ -693,6 +694,7 @@ export class ConversationService {
     // --- single commit point -------------------------------------------------
     const accepted = commit({
       ok: true,
+      turnId,
       text: response.text,
       sourceCards: [...new Set(response.sourceIds)].map((id) => admitted.get(id)!),
     });
@@ -741,12 +743,10 @@ export class ConversationService {
   }
 
   /** Called by the UI when a voice answer is spoken: queue segments. */
-  queueVoiceAnswer(storeId: string, text: string, devotional: boolean): void {
-    const record = this.threads.get(storeId);
-    const last = record?.events.filter((e) => e.role === "assistant").at(-1);
-    if (!last?.turnId) return;
+  queueVoiceAnswer(storeId: string, turnId: string, text: string, devotional: boolean): void {
+    if (!this.threads.has(storeId)) return;
     const segments = text.match(/[^.!?]+[.!?]?/g)?.map((s) => s.trim()).filter(Boolean) ?? [text];
-    this.voice.queueAnswer(last.turnId, segments, devotional);
+    this.voice.queueAnswer(turnId, segments, devotional);
   }
 
   private previousAnsweredUserTurn(record: ThreadRecord, current: ThreadEvent): string | null {

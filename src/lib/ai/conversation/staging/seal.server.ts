@@ -1,7 +1,12 @@
 import { ConversationService } from '../service/service';
 export type Authority = ReturnType<ConversationService['exportAuthority']>;
 export interface Envelope { owner: string; thread: string; revision: number; expires: number; authority: Authority }
-function bytes(s: string) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+function bytes(s: string) {
+  if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(s) || !s) throw new Error();
+  const decoded = Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  if (base64(decoded) !== s) throw new Error();
+  return decoded;
+}
 function base64(b: Uint8Array) { return btoa(Array.from(b, c => String.fromCharCode(c)).join('')); }
 async function key() {
   const secret = process.env['BFA_P3B_STATE_SECRET'];
@@ -23,9 +28,14 @@ export async function fingerprint(value: string): Promise<string> {
 export async function unseal(token: string, owner: string, thread: string, revision: number, saved = false): Promise<Envelope> {
   try {
     if (token.length > 350000) throw new Error();
-    const [iv, data] = token.split('.');
+    const segments = token.split('.');
+    if (segments.length !== 2) throw new Error();
+    const [iv, data] = segments;
     if (!iv || !data) throw new Error();
-    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes(iv) }, await key(), bytes(data));
+    const decodedIv = bytes(iv);
+    const ciphertext = bytes(data);
+    if (decodedIv.length !== 12 || ciphertext.length < 16) throw new Error();
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: decodedIv }, await key(), ciphertext);
     const value = JSON.parse(new TextDecoder().decode(plain)) as Envelope;
     if (value.owner !== owner || value.thread !== thread || value.revision !== revision || (!saved && value.expires <= Date.now())) throw new Error();
     return value;

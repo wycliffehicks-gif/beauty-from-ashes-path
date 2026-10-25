@@ -1063,7 +1063,7 @@ function ContextInspector({
             <ul className="list-disc pl-5">
               {ins.derived.map((d) => (
                 <li key={d.itemId}>
-                  [{d.kind}] {d.text} — {d.status}
+                  {d.itemId} [{d.kind}] {d.text} — {d.status}
                   {d.supersedesItemId ? ` · supersedes ${d.supersedesItemId}` : ""}
                   {d.supersededByItemId ? ` · superseded by ${d.supersededByItemId}` : ""} · from {d.sourceEventId} (
                   {d.origin}, {d.fixtureCaseId}, evidence {d.evidenceSha256.slice(0, 10)}…)

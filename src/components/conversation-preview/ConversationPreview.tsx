@@ -286,6 +286,7 @@ function ThreadScreen({
   const [finishOpen, setFinishOpen] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [switchError, setSwitchError] = useState<string | null>(null);
   const [browsing, setBrowsing] = useState(false);
   if (!thread) return null;
 

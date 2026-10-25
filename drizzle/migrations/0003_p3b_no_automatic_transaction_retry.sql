@@ -1,0 +1,2 @@
+-- Optimistic conflicts are application failures, not serialization-retry signals.
+DO $$ DECLARE f record; BEGIN FOR f IN SELECT p.oid FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN ('bfa_p3b_transition','bfa_p3b_reserve','bfa_p3b_finish') LOOP EXECUTE replace(pg_get_functiondef(f.oid), '40001', 'P0001'); END LOOP; END $$;

@@ -1,9 +1,12 @@
 // Conversation v1 — allowed-context assembly.
 //
 // The single place a provider-bound context could be built. It enforces, in
-// order: contract validity, verified principal and thread ownership, server /
-// client thread agreement, exact excerpt-preview binding, scoped spiritual
-// grants, and registry-resolved sources only.
+// order: contract validity; verified principal bound to the exact authorized
+// thread; principal ↔ owner ↔ server-thread ↔ request-thread agreement;
+// server-owned grant binding (owner, thread, exact current turn, kind,
+// permitted sources, validated follow-up lineage); exact excerpt-preview
+// binding with async hash verification; and registry-resolved, spiritually
+// permitted sources only.
 //
 // STRUCTURAL EXCLUSIONS (O03): the assembled context type has no field that
 // can carry other threads, private journals, weekly notes, undisclosed
@@ -14,34 +17,33 @@
 // TRUST LIMITS (documented, not hidden): P1 uses fictional trusted fixtures.
 // A caller choosing a thread ID never proves ownership — ownership comes from
 // the server-supplied TrustedPrincipal. Real authenticated wiring (session
-// verification, preview-store persistence, turn-linkage validation) is P3b.
+// verification, preview-store persistence, grant issuance, turn-linkage
+// validation) is P3a/P3b; the binding CONTRACT is enforced here now.
 
 import {
   validateClientTurnRequest,
+  validateExcerptPreviewRecord,
   validateServerContext,
+  validateServerGrant,
   validateTrustedPrincipal,
+  CONVERSATION_MAX_SOURCES_PER_TURN,
   type ClientTurnRequest,
   type ConversationErrorCode,
-  type SelectedExcerptReference,
   type ServerContext,
+  type ServerGrant,
   type TrustedPrincipal,
 } from "./contract";
 import { resolveSpiritualAccess, type SpiritualAccess } from "./grants";
 import {
-  resolveSourceCard,
-  type SourceCard,
+  resolveRegistrySource,
+  sha256Hex,
+  type ResolvedSource,
   type SourceRegistry,
 } from "./sources";
 import { CONVERSATION_POLICY_IDENTITY } from "./policy";
 
 export const EXCLUDED_CONTEXT_NOTE =
   "Other threads, private journals, weekly notes, undisclosed prior-day answers, hidden Day 10 material, progress-derived profiles, provider credentials and unrelated files are structurally excluded: the assembled context has no field that can carry them.";
-
-/** Server-owned record of an exact excerpt preview shown to the person. */
-export interface ExcerptPreviewRecord {
-  readonly excerptSha256: string;
-  readonly previewedAtIso: string;
-}
 
 export interface AssembleConversationContextInput {
   /** Raw client payload (untrusted). */
@@ -52,15 +54,36 @@ export interface AssembleConversationContextInput {
   readonly serverContext: unknown;
   readonly registry: SourceRegistry;
   /**
-   * Server-owned preview records keyed by previewId. An excerpt reference
-   * must match a record exactly; a changed underlying note invalidates the
-   * preview rather than widening to adjacent text.
+   * Server-owned preview records keyed by previewId (fixtures at P1). Each
+   * record is schema-validated and its text re-hashed; the client reference
+   * may only select the exact previously shown bytes.
    */
-  readonly previewStore: ReadonlyMap<string, ExcerptPreviewRecord>;
+  readonly previewStore: ReadonlyMap<string, unknown>;
+  /**
+   * Server-owned current revision per excerpt source key. A preview made
+   * against an older revision is stale and refused.
+   */
+  readonly currentSourceRevisions: ReadonlyMap<string, string>;
+  /** Server-owned grant for this turn, or null. Never client-supplied. */
+  readonly serverGrant?: unknown;
   /** Teaching source keys the SERVER selected for this turn. */
   readonly selectedTeachingKeys?: readonly string[];
   /** Test harnesses only: permits test-only source fixtures. */
   readonly allowTestSources?: boolean;
+  /** Current time (ISO) for preview expiry checks. */
+  readonly nowIso?: string;
+}
+
+/** An assembled excerpt: only the validated selected bytes plus permitted
+ * provenance, explicitly classed as untrusted user data. */
+export interface AssembledExcerpt {
+  readonly previewId: string;
+  readonly sourceKey: "private-note";
+  readonly exactText: string;
+  readonly textSha256: string;
+  readonly previewedAtIso: string;
+  readonly sourceRevision: string;
+  readonly dataClass: "untrusted-user-data";
 }
 
 export interface AssembledConversationContext {
@@ -69,9 +92,11 @@ export interface AssembledConversationContext {
   readonly threadId: string;
   readonly turnId: string;
   readonly message: string;
-  readonly excerpts: readonly SelectedExcerptReference[];
+  readonly excerpts: readonly AssembledExcerpt[];
   readonly spiritual: SpiritualAccess;
-  readonly sources: readonly SourceCard[];
+  /** ALL current restrictions, preserved verbatim. */
+  readonly restrictions: readonly ServerContext["restrictions"][number][];
+  readonly sources: readonly ResolvedSource[];
   readonly exclusionsNote: string;
 }
 
@@ -79,9 +104,9 @@ export type AssembleConversationContextResult =
   | { readonly ok: true; readonly context: AssembledConversationContext }
   | { readonly ok: false; readonly code: ConversationErrorCode };
 
-export function assembleConversationContext(
+export async function assembleConversationContext(
   input: AssembleConversationContextInput,
-): AssembleConversationContextResult {
+): Promise<AssembleConversationContextResult> {
   const requestResult = validateClientTurnRequest(input.request);
   if (!requestResult.ok) return requestResult;
   const request = requestResult.value;
@@ -92,6 +117,9 @@ export function assembleConversationContext(
   if (principal.principalId !== principal.threadOwnerId) {
     return { ok: false, code: "owner-mismatch" };
   }
+  if (principal.authorizedThreadId !== request.threadId) {
+    return { ok: false, code: "unauthorized-thread" };
+  }
 
   const serverResult = validateServerContext(input.serverContext);
   if (!serverResult.ok) return serverResult;
@@ -99,54 +127,163 @@ export function assembleConversationContext(
   if (serverContext.threadId !== request.threadId) {
     return { ok: false, code: "thread-mismatch" };
   }
+  if (serverContext.ownerId !== principal.principalId) {
+    return { ok: false, code: "owner-mismatch" };
+  }
 
-  // Exact preview binding: every referenced excerpt must match a server-owned
-  // preview record byte-for-byte (by hash). No preview record, a hash change,
-  // or a missing store entry refuses the turn rather than widening context.
-  for (const excerpt of request.selectedExcerpts) {
-    const preview = input.previewStore.get(excerpt.previewId);
-    if (!preview || preview.excerptSha256 !== excerpt.excerptSha256) {
-      return { ok: false, code: "stale-excerpt-preview" };
+  // --- Server-owned grant binding --------------------------------------
+  let grant: ServerGrant | null = null;
+  if (input.serverGrant !== null && input.serverGrant !== undefined) {
+    const grantResult = validateServerGrant(input.serverGrant);
+    if (!grantResult.ok) return grantResult;
+    grant = grantResult.value;
+    if (
+      grant.ownerId !== principal.principalId ||
+      grant.threadId !== request.threadId ||
+      grant.turnId !== request.turnId
+    ) {
+      // Replayed in a new/unrelated turn, cross-owner, or cross-thread.
+      return { ok: false, code: "grant-not-bound" };
     }
   }
-
-  // A direct follow-up inherits a scoped grant only when the server re-attached
-  // the original grant to this turn. P1 cannot validate the turn linkage
-  // itself; that is P3b wiring, documented in the baseline/change map.
-  if (
-    request.spiritualFollowUpOfTurnId !== null &&
-    request.spiritualRequestGrant === null
-  ) {
-    return { ok: false, code: "follow-up-without-grant" };
-  }
+  const isDirectFollowUp = grant !== null && grant.followUpOfTurnId !== null;
 
   const spiritual = resolveSpiritualAccess({
     preferenceOn: serverContext.spiritualPreferenceOn,
     restrictions: serverContext.restrictions,
-    grant: request.spiritualRequestGrant,
-    isDirectFollowUp: request.spiritualFollowUpOfTurnId !== null,
+    grant: grant ? { kind: grant.kind } : null,
+    isDirectFollowUp,
   });
 
-  const allowTestSources = input.allowTestSources === true;
-  const sources: SourceCard[] = [];
+  // --- Exact excerpt-preview binding ------------------------------------
+  const seenPreviews = new Set<string>();
+  const excerpts: AssembledExcerpt[] = [];
+  for (const reference of request.selectedExcerpts) {
+    if (seenPreviews.has(reference.previewId)) {
+      return { ok: false, code: "duplicate-excerpt" };
+    }
+    seenPreviews.add(reference.previewId);
 
-  if (request.spiritualRequestGrant?.sourceId !== undefined) {
-    const card = resolveSourceCard(
-      input.registry,
-      request.spiritualRequestGrant.sourceId,
-      allowTestSources,
-    );
-    if (!card.ok) return card;
-    sources.push(card.value);
+    const rawPreview = input.previewStore.get(reference.previewId);
+    const previewResult = validateExcerptPreviewRecord(rawPreview);
+    if (!previewResult.ok) return previewResult;
+    const preview = previewResult.value;
+
+    if (
+      preview.ownerId !== principal.principalId ||
+      preview.threadId !== request.threadId ||
+      preview.turnId !== request.turnId
+    ) {
+      return { ok: false, code: "stale-excerpt-preview" };
+    }
+    // Re-hash the server-held text rather than trusting any declared hash.
+    if ((await sha256Hex(preview.exactText)) !== preview.textSha256) {
+      return { ok: false, code: "stale-excerpt-preview" };
+    }
+    if (
+      reference.excerptSha256 !== preview.textSha256 ||
+      reference.previewedAtIso !== preview.previewedAtIso
+    ) {
+      return { ok: false, code: "stale-excerpt-preview" };
+    }
+    const currentRevision = input.currentSourceRevisions.get(preview.sourceKey);
+    if (currentRevision === undefined || currentRevision !== preview.sourceRevision) {
+      return { ok: false, code: "stale-excerpt-preview" };
+    }
+    if (
+      preview.expiresAtIso !== null &&
+      input.nowIso !== undefined &&
+      input.nowIso > preview.expiresAtIso
+    ) {
+      return { ok: false, code: "stale-excerpt-preview" };
+    }
+
+    excerpts.push({
+      previewId: preview.previewId,
+      sourceKey: preview.sourceKey,
+      exactText: preview.exactText,
+      textSha256: preview.textSha256,
+      previewedAtIso: preview.previewedAtIso,
+      sourceRevision: preview.sourceRevision,
+      dataClass: "untrusted-user-data",
+    });
   }
 
+  // --- Sources: registry-resolved, permission-gated, bounded, deduped ---
+  const allowTestSources = input.allowTestSources === true;
+  const restrictions = new Set(serverContext.restrictions);
+  const sources: ResolvedSource[] = [];
+  const seenSources = new Set<string>();
+
+  const admit = (sourceId: string): ConversationErrorCode | null => {
+    if (seenSources.has(sourceId)) return null; // dedupe
+    const resolved = resolveRegistrySource(input.registry, sourceId, allowTestSources);
+    if (!resolved.ok) return resolved.code;
+    const { excerpt } = resolved.value;
+
+    if (excerpt.reviewStatus === "provisional-review-pending") {
+      return "pending-review-source";
+    }
+    // No-Bible constrains actual sources, not only booleans.
+    if (
+      restrictions.has("no-bible") &&
+      excerpt.spiritualClassification === "christian-scripture"
+    ) {
+      return "source-not-permitted";
+    }
+    // Christian-classified material requires resolved spiritual permission.
+    if (
+      excerpt.spiritualClassification !== "nonreligious-teaching" &&
+      !spiritual.devotionalContentPermitted
+    ) {
+      return "source-not-permitted";
+    }
+    if (sources.length >= CONVERSATION_MAX_SOURCES_PER_TURN) {
+      return "source-not-permitted";
+    }
+    seenSources.add(sourceId);
+    sources.push(resolved.value);
+    return null;
+  };
+
+  // Grant-named sources must be compatible with the grant kind.
+  for (const sourceId of grant?.sourceIds ?? []) {
+    const resolved = resolveRegistrySource(input.registry, sourceId, allowTestSources);
+    if (!resolved.ok) return { ok: false, code: resolved.code };
+    const { excerpt } = resolved.value;
+    if (grant!.kind === "passage") {
+      if (
+        excerpt.kind !== "verified-scripture-test-excerpt" ||
+        excerpt.spiritualClassification !== "christian-scripture"
+      ) {
+        // A passage grant naming teaching (e.g. BFA-D01) fails.
+        return { ok: false, code: "source-not-permitted" };
+      }
+      if (!spiritual.scripturePermitted) {
+        return { ok: false, code: "source-not-permitted" };
+      }
+    } else {
+      // A prayer grant cannot smuggle the Scripture fixture.
+      if (excerpt.spiritualClassification === "christian-scripture") {
+        return { ok: false, code: "source-not-permitted" };
+      }
+      if (!spiritual.prayerPermitted) {
+        return { ok: false, code: "source-not-permitted" };
+      }
+    }
+    const code = admit(sourceId);
+    if (code) return { ok: false, code };
+  }
+
+  // Server-selected teaching: kind/classification compatibility enforced.
   for (const key of input.selectedTeachingKeys ?? []) {
-    const card = resolveSourceCard(input.registry, key, allowTestSources);
-    if (!card.ok) return card;
-    if (card.value.kind !== "journey-day-teaching") {
+    const resolved = resolveRegistrySource(input.registry, key, allowTestSources);
+    if (!resolved.ok) return { ok: false, code: resolved.code };
+    if (resolved.value.excerpt.kind !== "journey-day-teaching") {
       return { ok: false, code: "unknown-source-id" };
     }
-    sources.push(card.value);
+    const code = admit(key);
+    if (code) return { ok: false, code };
   }
 
   return {
@@ -157,8 +294,9 @@ export function assembleConversationContext(
       threadId: request.threadId,
       turnId: request.turnId,
       message: request.message,
-      excerpts: request.selectedExcerpts,
+      excerpts,
       spiritual,
+      restrictions: [...serverContext.restrictions],
       sources,
       exclusionsNote: EXCLUDED_CONTEXT_NOTE,
     },

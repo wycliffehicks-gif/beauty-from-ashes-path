@@ -351,11 +351,14 @@ describe("conversation preview store", () => {
     const { readFileSync } = await import("node:fs");
     const { join } = await import("node:path");
     for (const file of ["store.ts", "fake-service.ts"]) {
-      const text = readFileSync(
-        join(__dirname, "..", "preview", file),
-        "utf8",
-      );
-      expect(text).not.toMatch(/mediaDevices|getUserMedia|SpeechRecognition|speechSynthesis|RTCPeerConnection|MediaRecorder/);
+      const raw = readFileSync(join(__dirname, "..", "preview", file), "utf8");
+      // Strip comments so the scan checks CODE, not the boundary notes.
+      const code = raw
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .split("\n")
+        .filter((line) => !line.trimStart().startsWith("//"))
+        .join("\n");
+      expect(code).not.toMatch(/mediaDevices|getUserMedia|SpeechRecognition|speechSynthesis|RTCPeerConnection|MediaRecorder/);
     }
   });
 });

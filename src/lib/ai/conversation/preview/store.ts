@@ -510,7 +510,7 @@ export class ConversationPreviewStore {
     if (!thread) return { ok: false };
     if (decision === "keep") return { ok: true };
     if (decision === "save") {
-      if (!this.saveActiveThread()) return { ok: false }; // failed save: stay
+      if (!this.saveActiveThread().ok) return { ok: false }; // failed save: stay
     } else if (thread.savedSnapshot) {
       this.discardActiveChanges();
     } else {

@@ -797,6 +797,11 @@ function VoicePanel({
         <Button type="button" size="sm" variant="outline" onClick={() => store.finishTalking()}>
           Finish talking
         </Button>
+        {state.voice === "speaking" ? (
+          <Button type="button" size="sm" variant="outline" onClick={() => store.stopResponse()}>
+            Interrupt reply (stop speaking)
+          </Button>
+        ) : null}
       </div>
       {store.service ? <VoiceFixtureControls state={state} store={store} /> : null}
     </div>

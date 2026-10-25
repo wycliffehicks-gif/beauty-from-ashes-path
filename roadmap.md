@@ -8,7 +8,7 @@
 - [x] Keep the project private and unpublished; preserve content, state, identity, and runtime settings.
 
 ## P3b — isolated fictional staging
-- [ ] Repair reusable per-thread authority export and run independent round-trip/grant-lineage regressions.
+- [x] Repair reusable per-thread authority export; independent round-trip/revoked-lineage regressions pass (262 conversation tests).
 - [x] Verify the approved baseline and connect required Cloud infrastructure.
 - [x] Implement staging-only verified identity; identity-only default within approved scope, no profiles (real-session evidence blocked).
 - [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (authenticated acceptance still blocked).

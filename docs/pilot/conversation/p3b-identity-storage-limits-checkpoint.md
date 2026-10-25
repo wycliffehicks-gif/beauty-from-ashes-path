@@ -21,6 +21,14 @@ Independent diagnostic adapted to project imports and null-safe assertions: `__t
 - Auth identity transitions and clear-all invalidate response/list tickets and clear personal content/token/draft/modals/selections/loading immediately. Server Auth/RLS remain authority. New draft typed during Send is preserved. Failed/lost responses offer last-confirmed saved recovery or leaving active state; no claimed unsaved recovery or auto retry.
 - Stop/Delete remain available during Send. The explicit service-only fence locks current owned revision then cancels/deletes, avoiding stale browser-token races. Save/restore/admission retain optimistic concurrency. If an old token cannot represent current content, Stop returns a stopped/recovery state without claiming content restoration. Delete failure remains failure.
 
+### Narrow sealed-token parser follow-up — 23:32 UTC
+
+Reproduced noncanonical malformed-token acceptance: appending `.unexpected` to a valid sealed envelope succeeded because the parser ignored extra segments. This was a parser defect, **not an AES-GCM authentication break**. `staging/seal.server.ts` now requires exactly two nonempty canonical standard-base64 segments, rejects invalid encoding/noncanonical pad bits, checks the decoded IV is exactly 12 bytes and ciphertext contains at least the 16-byte authentication tag, then lets AES-GCM authenticate ciphertext. Every failure remains the same generic `Unavailable` response. The existing 350000-character cap and valid active/saved envelope behavior are unchanged.
+
+Focused local regression file: `__tests__/p3b-seal.test.ts`. The synthetic local state secret is randomly generated per test, never printed, and restored afterward. `bunx vitest run src/lib/ai/conversation/__tests__/p3b-seal.test.ts` before repair → **4 passed, 2 failed** (appended/extra-segment acceptance), evidence `/tmp/p3b-seal-before.log`. After repair, `bunx vitest run src/lib/ai/conversation` → **14 files, 268 passed**, 23:32:28 UTC, evidence `/tmp/p3b-seal-after.log`. All previous 262 cases remain passing plus 6 focused checks covering active/saved round trips, expiry, extra/empty segments, encoding, IV length, truncated/tampered ciphertext, owner/thread/revision mismatch and size cap. Automatic build diagnostic: **build OK 23:32:24 UTC**. External diagnostic was not modified or weakened; it was unavailable to rerun directly.
+
+No Auth JWT/session creation, auth configuration change, database command, provider-network call or v5 rerun occurred. Participant AI/real voice remain OFF, project unpublished; authenticated O01–O08 acceptance remains blocked by the unchanged supported fictional-session limitation. Only parser, focused tests, roadmap and checkpoint changed in this follow-up.
+
 ## Transactions, migrations and retention
 
 Existing 0000–0003 retained. Forward migrations applied:

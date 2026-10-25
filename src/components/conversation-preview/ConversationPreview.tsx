@@ -815,7 +815,7 @@ function VoiceFixtureControls({
   state: PreviewState;
   store: ConversationPreviewStore;
 }) {
-  const [practice, setPractice] = useState<string | null>(null);
+  const [practice, setPractice] = useState<{ text: string; sessionId: string | null } | null>(null);
   const voice = store.service!.voice;
   return (
     <div className="mt-3 rounded-md border border-dashed border-border p-2">
@@ -842,8 +842,11 @@ function VoiceFixtureControls({
           onClick={() =>
             setPractice(
               voice.privatePracticeAvailable()
-                ? PRIVATE_PRACTICE_FIXTURE
-                : "Blocked: the private spoken practice is only offered after Pause has a confirmed mock shutdown.",
+                ? { text: PRIVATE_PRACTICE_FIXTURE, sessionId: voice.sessionId }
+                : {
+                    text: "Blocked: the private spoken practice is only offered after Pause has a confirmed mock shutdown.",
+                    sessionId: null,
+                  },
             )
           }
         >

@@ -15,6 +15,13 @@
       "when": 1792969337532,
       "tag": "0001_p3b_revoke_inherited_browser_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792969578711,
+      "tag": "0002_p3b_transactional_staging_boundary",
+      "breakpoints": true
     }
   ]
 }

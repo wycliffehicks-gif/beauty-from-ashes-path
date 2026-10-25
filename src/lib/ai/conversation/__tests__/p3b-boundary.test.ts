@@ -43,8 +43,8 @@ describe('P3b server adapter boundary doubles — NOT real Auth evidence', () =>
     fixtures.row={id:thread,revision:6,saved_revision:2,saved_snapshot:snapshot,deleted_at:null};
     fixtures.rpc.mockResolvedValue({data:7,error:null});
     // Final read changes to the committed revision, retaining original saved revision.
-    const c=client();const original=c.from.bind(c);let reads=0;
-    c.from=((...args: Parameters<typeof c.from>) => { const q=original(...args);if(++reads>1) fixtures.row={...fixtures.row as object,revision:7};return q; }) as typeof c.from;
+    const c=client();let reads=0;
+    c.from=(() => { if(++reads>1) fixtures.row={...fixtures.row as object,revision:7};return query(()=>fixtures.row); }) as unknown as typeof c.from;
     const result=await stagingOperation({action:'reopen',thread,revision:6,preferenceOn:false},c);
     expect(result.kind).toBe('active'); if(result.kind!=='active') throw new Error();
     expect(result.saved).toBe(true);expect(result.microphone).toBe('off');expect(result.revision).toBe(7);

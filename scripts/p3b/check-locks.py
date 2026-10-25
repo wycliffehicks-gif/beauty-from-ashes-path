@@ -1,11 +1,10 @@
 """Actual database/service-record tests; never creates Auth users or sessions.
-Uses the platform database connection only for deterministic lock coordination.
-No message bodies, provider calls or auth configuration mutations.
+Uses service REST only. Deterministic protected-lock coordination is unavailable
+to sandbox_exec and is explicitly not claimed. No message bodies/provider calls.
 """
 import os, uuid, datetime, concurrent.futures, time, json
-import psycopg, requests
+import requests
 
-URL = os.environ['SUPABASE_DB_URL']
 U=os.environ['SUPABASE_URL']; K=os.environ['SUPABASE_SERVICE_ROLE_KEY']
 H={'apikey':K,'Content-Type':'application/json','Prefer':'return=representation'}
 if not K.startswith('sb_'): H['Authorization']='Bearer '+K
@@ -14,7 +13,6 @@ def api(method,path,data=None):
     r.raise_for_status();return r.json() if r.content else None
 owner = str(uuid.uuid4())
 checks = []
-def connection(): return psycopg.connect(URL, autocommit=True)
 def call(name, args):
     names={'create':['p_owner'],'reserve':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
       'claim':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
@@ -40,7 +38,7 @@ try:
     denied('transition',[owner,t,0,'save',None]);denied('transition',[owner,t,0,'advance','"unexpected"'])
     assert api('GET','bfa_p3b_admissions?owner_id=eq.'+owner)==[]
     assert sum(r['remaining_units'] for r in api('GET','bfa_p3b_allowances?owner_id=eq.'+owner))==40
-    checks.append('null/invalid arguments denied before any mutation (24 probes)')
+    checks.append('null/invalid arguments denied before any mutation (26 probes)')
 
     # Sandbox SQL role cannot execute service RPCs or hold protected locks.
     # Do not widen grants for a test. Expired service-record denial is still real.

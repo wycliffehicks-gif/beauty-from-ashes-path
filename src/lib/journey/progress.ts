@@ -737,6 +737,7 @@ export function clearJourney() {
     ENTITLEMENT_EVENT,
     REMINDER_EVENT,
     JOURNEY_AI_EVENT,
+    APP_CLEAR_EVENT,
   ]) {
     try {
       window.dispatchEvent(new CustomEvent(event));

@@ -517,8 +517,16 @@ export class ConversationService {
       this.log("stale-work-dropped", record?.threadId ?? null, turnId, "no-ticket");
       return "stale";
     }
+    // Synchronous at-most-once claim, BEFORE any await: a second concurrent
+    // (or later) runTurn for the same admission can never dispatch or commit.
+    if (this.claimedTurns.has(turnId)) {
+      this.log("stale-work-dropped", record.threadId, turnId, "ticket-consumed");
+      return "stale";
+    }
+    this.claimedTurns.add(turnId);
     const userEvent: ThreadEvent | undefined = ticket.userEvent;
     const current = () =>
+      this.claimedTurns.has(turnId) &&
       ticket.epoch === this.epoch &&
       this.threads.get(storeId) === ticket.record &&
       record.generation === ticket.generation &&

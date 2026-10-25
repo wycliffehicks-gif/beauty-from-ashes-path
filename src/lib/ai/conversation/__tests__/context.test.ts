@@ -622,4 +622,113 @@ describe("conversation context assembly", () => {
     });
     expect(result).toEqual({ ok: false, code: "source-not-permitted" });
   });
+
+  it("rejects a map-key alias whose stored record has a different previewId", async () => {
+    const preview = await makePreview("selected");
+    // Stored under an alias key; the record's own previewId differs.
+    const result = await assembleConversationContext({
+      request: validRequest({
+        selectedExcerpts: [
+          {
+            previewId: "bfa-preview-alias",
+            sourceKey: "private-note",
+            excerptSha256: preview.textSha256,
+            previewedAtIso: preview.previewedAtIso,
+          },
+        ],
+      }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([["bfa-preview-alias", preview]]),
+      currentSourceRevisions: REVISIONS,
+      nowIso: NOW,
+    });
+    expect(result).toEqual({ ok: false, code: "preview-id-mismatch" });
+  });
+
+  it("requires a valid clock when a preview has an expiry", async () => {
+    const preview = await makePreview("selected", {
+      expiresAtIso: "2026-10-25T12:00:00.000Z",
+    });
+    const base = {
+      request: validRequest({ selectedExcerpts: [await excerptRefFor(preview)] }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([[preview.previewId, preview]]),
+      currentSourceRevisions: REVISIONS,
+    };
+    // Clock absent: expiry cannot be bypassed by omission.
+    const noClock = await assembleConversationContext(base);
+    expect(noClock).toEqual({ ok: false, code: "invalid-timestamp" });
+    // Clock present but unparseable.
+    const badClock = await assembleConversationContext({
+      ...base,
+      nowIso: "not-a-date",
+    });
+    expect(badClock).toEqual({ ok: false, code: "invalid-timestamp" });
+  });
+
+  it("rejects an unparseable expiry timestamp", async () => {
+    const preview = await makePreview("selected", { expiresAtIso: "garbage" });
+    const result = await assembleConversationContext({
+      request: validRequest({ selectedExcerpts: [await excerptRefFor(preview)] }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([[preview.previewId, preview]]),
+      currentSourceRevisions: REVISIONS,
+      nowIso: NOW,
+    });
+    expect(result).toEqual({ ok: false, code: "invalid-timestamp" });
+  });
+
+  it("treats expiry exactly at now as expired (boundary equality)", async () => {
+    const preview = await makePreview("selected", { expiresAtIso: NOW });
+    const result = await assembleConversationContext({
+      request: validRequest({ selectedExcerpts: [await excerptRefFor(preview)] }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([[preview.previewId, preview]]),
+      currentSourceRevisions: REVISIONS,
+      nowIso: NOW,
+    });
+    expect(result).toEqual({ ok: false, code: "stale-excerpt-preview" });
+  });
+
+  it("compares expiry by epoch time, not lexical order (timezone offset)", async () => {
+    // 13:00+02:00 is 11:00Z — before now (12:00Z), so expired even though the
+    // string "2026-10-25T13:00:00+02:00" sorts after "2026-10-25T12:00:00.000Z".
+    const preview = await makePreview("selected", {
+      expiresAtIso: "2026-10-25T13:00:00+02:00",
+    });
+    const result = await assembleConversationContext({
+      request: validRequest({ selectedExcerpts: [await excerptRefFor(preview)] }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([[preview.previewId, preview]]),
+      currentSourceRevisions: REVISIONS,
+      nowIso: "2026-10-25T12:00:00.000Z",
+    });
+    expect(result).toEqual({ ok: false, code: "stale-excerpt-preview" });
+  });
+
+  it("admits a preview whose expiry is genuinely in the future", async () => {
+    const preview = await makePreview("selected", {
+      expiresAtIso: "2026-10-25T13:00:00.000Z",
+    });
+    const result = await assembleConversationContext({
+      request: validRequest({ selectedExcerpts: [await excerptRefFor(preview)] }),
+      principal: principal(),
+      serverContext: serverContext(),
+      registry: await getRegistry(),
+      previewStore: new Map([[preview.previewId, preview]]),
+      currentSourceRevisions: REVISIONS,
+      nowIso: NOW,
+    });
+    expect(result.ok).toBe(true);
+  });
 });

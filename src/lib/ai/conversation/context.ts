@@ -169,6 +169,11 @@ export async function assembleConversationContext(
     if (!previewResult.ok) return previewResult;
     const preview = previewResult.value;
 
+    // The stored record's own ID must equal the referenced ID — a map key
+    // alias cannot stand in for the record's identity.
+    if (preview.previewId !== reference.previewId) {
+      return { ok: false, code: "preview-id-mismatch" };
+    }
     if (
       preview.ownerId !== principal.principalId ||
       preview.threadId !== request.threadId ||
@@ -190,12 +195,25 @@ export async function assembleConversationContext(
     if (currentRevision === undefined || currentRevision !== preview.sourceRevision) {
       return { ok: false, code: "stale-excerpt-preview" };
     }
-    if (
-      preview.expiresAtIso !== null &&
-      input.nowIso !== undefined &&
-      input.nowIso > preview.expiresAtIso
-    ) {
-      return { ok: false, code: "stale-excerpt-preview" };
+    // Expiry is enforced by epoch comparison, never lexical string order.
+    // A non-null expiry requires a valid clock: if nowIso is absent or
+    // unparseable, the preview cannot be admitted. Expiry at or before now
+    // is rejected (boundary equality is expired).
+    if (preview.expiresAtIso !== null) {
+      const expiresAtMs = Date.parse(preview.expiresAtIso);
+      if (!Number.isFinite(expiresAtMs)) {
+        return { ok: false, code: "invalid-timestamp" };
+      }
+      if (input.nowIso === undefined) {
+        return { ok: false, code: "invalid-timestamp" };
+      }
+      const nowMs = Date.parse(input.nowIso);
+      if (!Number.isFinite(nowMs)) {
+        return { ok: false, code: "invalid-timestamp" };
+      }
+      if (expiresAtMs <= nowMs) {
+        return { ok: false, code: "stale-excerpt-preview" };
+      }
     }
 
     excerpts.push({

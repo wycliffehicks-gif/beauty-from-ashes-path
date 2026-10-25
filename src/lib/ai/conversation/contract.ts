@@ -39,6 +39,8 @@ export const CONVERSATION_ERROR_CODES = [
   "thread-mismatch",
   "duplicate-excerpt",
   "stale-excerpt-preview",
+  "preview-id-mismatch",
+  "invalid-timestamp",
   "grant-not-bound",
   "missing-source-id",
   "unknown-source-id",

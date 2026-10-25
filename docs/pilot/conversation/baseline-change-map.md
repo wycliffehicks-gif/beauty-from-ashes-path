@@ -21,14 +21,14 @@
 | `src/lib/ai/conversation/content/teaching.ts` | Generated: ten day-teaching records (Understand heading + body only), extracted byte-exact from `journey-days-a/b.ts`. |
 | `src/lib/ai/conversation/content/index.ts` | Builds teaching source records from the generated records at snapshot commit `4b218c45d021b4b9b3ee99f271d15e775db3576c`. |
 | `src/lib/ai/conversation/index.ts` | Namespace barrel. Nothing outside the namespace imports it. |
-| `src/lib/ai/conversation/__tests__/{contract,grants,sources,context}.test.ts` | 58 focused tests. |
+| `src/lib/ai/conversation/__tests__/{contract,grants,sources,context}.test.ts` | 64 focused tests. |
 | `docs/pilot/conversation/candidate-policy-block.txt` | The exact guide §9 body (Markdown quote prefixes stripped, one trailing LF; 4,043 bytes). |
 | `docs/pilot/conversation/v5-observations-change-note.md` | Carl's two v5 wording observations, parked as reviewer observations for later policy refinement. |
 | `docs/pilot/conversation/baseline-change-map.md` | This file. |
 
 ## Post-repair behavior (independent-review defects fixed)
 
-1. **Grant authority is server-owned.** The client request schema has no grant or follow-up fields; supplying them fails as `unknown-field`. Grants are validated server fixtures bound to owner, authorized thread, exact current turn, kind and permitted source ids. Replay in a new/unrelated turn, cross-owner and cross-thread grants fail with `grant-not-bound`. Direct follow-ups require a fresh server-issued grant for the current turn with validated lineage (`followUpOfTurnId`).
+1. **Grant authority is server-owned.** The client request schema has no grant or follow-up fields; supplying them fails as `unknown-field`. Grants are validated server fixtures bound to owner, authorized thread, exact current turn, kind and permitted source ids. Replay in a new/unrelated turn, cross-owner and cross-thread grants fail with `grant-not-bound`. Direct follow-ups require a fresh server-issued grant for the current turn. **Honest limit:** original grant-kind/source lineage and semantic direct-follow-up issuance are still trusted server assertions — P1 fixtures accept the server-supplied `followUpOfTurnId` linkage without an original-grant record to check it against. Proving that lineage is a P3a obligation; nothing in P1 demonstrates it.
 2. **Ownership is tied to the exact thread.** `TrustedPrincipal` carries `authorizedThreadId`; `ServerContext` carries `ownerId`. Recombination of a valid principal with another thread's state fails (`owner-mismatch` / `unauthorized-thread` / `thread-mismatch`).
 3. **All current restrictions survive assembly.** `no-advice` / `no-questions` / `no-exercises` / `no-bible` / `no-prayer` are carried verbatim into the assembled context, alongside faith-on or a scoped grant. `no-bible` also blocks Scripture SOURCES, not only the permission boolean.
 4. **Excerpt previews are fully bound.** Server preview records carry exact text, hash, owner/thread/turn, timestamps, optional expiry and source revision. Assembly re-hashes the server-held text (never trusts declared hashes), rejects changed timestamps, changed underlying revisions with the original client ref unchanged, expired previews, duplicates and malformed records. Assembled excerpts carry only the validated bytes plus permitted provenance, classed `untrusted-user-data`.
@@ -60,7 +60,7 @@ No test claims mocked fixtures prove model behavior. No full O03/O04/C08–C12 p
 
 ## Checks actually run (post-repair)
 
-- `bunx vitest run src/lib/ai/conversation` — 58/58 passed (contract 17, grants 8, sources 15, context 18→23 after repair additions).
+- `bunx vitest run src/lib/ai/conversation` — 64/64 passed (contract 12, grants 8, sources 15, context 29 after the P2-turn binding/expiry corrections: stored-preview ID equality, epoch-based expiry with required valid clock, boundary equality and timezone-offset cases).
 - `bunx vitest run src/lib/ai/__tests__/journey-boundary.test.ts src/content/__tests__` — 76/76 passed.
 - Automatic build: OK. An earlier automatic typecheck flagged a zod v3 API mismatch (`z.core.$ZodIssue`); corrected to `z.ZodIssue` and re-verified by the passing suites and subsequent automatic build. No manual tsc/build command was run.
 

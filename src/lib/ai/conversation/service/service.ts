@@ -493,7 +493,12 @@ export class ConversationService {
       grant = await this.issuer.issueOriginal(
         binding,
         fixture.grantRequest,
-        fixture.grantRequest === "passage" && this.allowTestSources ? this.passageSourceKeys : [],
+        // Scripture is never pinned while a current no-bible restriction holds.
+        fixture.grantRequest === "passage" &&
+          this.allowTestSources &&
+          !newRestrictions.has("no-bible")
+          ? this.passageSourceKeys
+          : [],
         registry,
         this.allowTestSources,
       );

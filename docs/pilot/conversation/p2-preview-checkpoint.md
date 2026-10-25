@@ -15,7 +15,7 @@ microphone or database is involved anywhere in this package.
 | Browser-only in-memory store/controller | `src/lib/ai/conversation/preview/store.ts` |
 | Deterministic fictional reply adapter | `src/lib/ai/conversation/preview/fake-service.ts` |
 | Clear-all signal (one allowed addition) | `APP_CLEAR_EVENT` in `src/lib/journey/progress.ts` |
-| Store/controller tests (20) | `src/lib/ai/conversation/__tests__/preview-store.test.ts` |
+| Store/controller tests (34) | `src/lib/ai/conversation/__tests__/preview-store.test.ts` |
 
 ## Honest limits — what this preview is NOT
 

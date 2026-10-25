@@ -1,4 +1,5 @@
-// Conversation preview — S1–S8 screens with a deterministic fake service.
+// Conversation preview — S1–S8 screens. P3a: replies come from the shared
+// conversation service with a MOCK provider (still fictional, not AI).
 //
 // DEVELOPER PREVIEW ONLY. Fictional responses, session-only simulated
 // saving, no AI or microphone connection. Unlinked from participant
@@ -24,6 +25,8 @@ import {
   useJourneyProgress,
 } from "@/lib/journey/progress";
 import { CONVERSATION_TEACHING_RECORDS } from "@/lib/ai/conversation/content/teaching";
+import { SEMANTIC_FIXTURE_CASES } from "@/lib/ai/conversation/service/semantic-fixtures";
+import { PRIVATE_PRACTICE_FIXTURE } from "@/lib/ai/conversation/service/mock-voice";
 import {
   useConversationPreview,
   type ConversationPreviewStore,
@@ -452,6 +455,7 @@ function ThreadScreen({
       ) : null}
 
       <TeachingShare store={store} />
+      <ContextInspector store={store} threadId={thread.id} />
       <ReviewControls state={state} store={store} />
 
       {/* Finish — AlertDialog: focus trapped, Escape cancels, focus restored. */}
@@ -546,6 +550,7 @@ function PreferenceCard({
   thread: PreviewThread;
   store: ConversationPreviewStore;
 }) {
+  const [error, setError] = useState<string | null>(null);
   return (
     <div className="rounded-md border border-border bg-card p-3 text-sm">
       <p className="text-foreground">
@@ -557,7 +562,14 @@ function PreferenceCard({
         size="sm"
         variant="outline"
         className="mt-2"
-        onClick={() => store.setPreviewSpiritual(!thread.spiritualOn)}
+        onClick={() => {
+          const r = store.setPreviewSpiritual(!thread.spiritualOn);
+          setError(
+            r.ok
+              ? null
+              : "The setting did not change (simulated failure). It is still shown as it actually is; any reply in progress was stopped.",
+          );
+        }}
       >
         {thread.spiritualOn ? "Turn off for this preview" : "Turn on for this preview"}
       </Button>
@@ -565,6 +577,9 @@ function PreferenceCard({
         Imported once from your setting; changing it here does not change the
         app setting. Turning it off stops any reply being generated.
       </p>
+      {error ? (
+        <p role="alert" className="mt-2 text-destructive">{error}</p>
+      ) : null}
     </div>
   );
 }
@@ -595,6 +610,8 @@ function MessageRow({
         </p>
       ) : message.status === "stopped" ? (
         <p className="mt-1 text-sm text-muted-foreground">Reply stopped.</p>
+      ) : message.status === "not-answered" ? (
+        <p role="alert" className="mt-1 text-sm text-destructive">{message.text}</p>
       ) : message.status === "not-sent" ? (
         <div className="mt-1">
           <p className="text-sm text-foreground">{message.text}</p>
@@ -614,6 +631,17 @@ function MessageRow({
       ) : (
         <p className="mt-1 whitespace-pre-wrap text-foreground">{message.text}</p>
       )}
+      {message.sourceCards && message.sourceCards.length > 0 ? (
+        <ul className="mt-2 space-y-1 text-sm text-muted-foreground" aria-label="Sources admitted for this reply">
+          {message.sourceCards.map((c) => (
+            <li key={c.sourceKey}>
+              Source card (from the source register, not the reply): {c.title}
+              {c.reference ? ` · ${c.reference}` : ""}
+              {c.translation ? ` · ${c.translation}` : ""} ({c.sourceKey})
+            </li>
+          ))}
+        </ul>
+      ) : null}
       {message.sharedTeaching ? (
         <div className="mt-2">
           <Button
@@ -718,8 +746,12 @@ function VoicePanel({
         : state.voice === "speaking"
           ? "Speaking"
           : state.voice === "paused"
-            ? "Paused"
-            : "Disconnected";
+            ? "Paused (mock shutdown confirmed)"
+            : state.voice === "pausing"
+              ? "Pausing — waiting for confirmed shutdown"
+              : state.voice === "pause-failed"
+                ? "Pause not confirmed — treat the simulated microphone as still on"
+                : "Disconnected";
   return (
     <div className="rounded-md border border-border bg-card p-3" role="status">
       <h2 className="font-serif text-lg">Voice — state simulator only</h2>
@@ -752,6 +784,11 @@ function VoicePanel({
             Pause
           </Button>
         ) : null}
+        {state.voice === "pause-failed" ? (
+          <Button type="button" size="sm" variant="outline" onClick={() => store.pauseVoice()}>
+            Retry pause
+          </Button>
+        ) : null}
         {state.voice === "paused" || state.voice === "disconnected" ? (
           <Button type="button" size="sm" variant="outline" onClick={() => store.resumeVoice()}>
             {state.voice === "paused" ? "Resume" : "Reconnect (simulated)"}
@@ -761,6 +798,59 @@ function VoicePanel({
           Finish talking
         </Button>
       </div>
+      {store.service ? <VoiceFixtureControls state={state} store={store} /> : null}
+    </div>
+  );
+}
+
+function VoiceFixtureControls({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  const [practice, setPractice] = useState<string | null>(null);
+  const voice = store.service!.voice;
+  return (
+    <div className="mt-3 rounded-md border border-dashed border-border p-2">
+      <h3 className="text-sm font-medium text-muted-foreground">
+        Developer voice fixtures — mock events only, not audio
+      </h3>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <Button type="button" size="sm" variant="outline" onClick={() => store.playNextVoiceSegment()} disabled={state.voice !== "speaking"}>
+          Mark next segment played
+        </Button>
+        <Button type="button" size="sm" variant="outline" onClick={() => store.feedProvisionalFragment("I am angry with her")}>
+          Feed provisional fragment
+        </Button>
+        <Button type="button" size="sm" variant="outline" onClick={() => store.finalizeTranscript("I am not angry with her; I am tired.")}>
+          Finalize corrected transcript
+        </Button>
+        <Button type="button" size="sm" variant="outline" onClick={() => store.simulateNetworkRecovered()}>
+          Network recovered
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() =>
+            setPractice(
+              voice.privatePracticeAvailable()
+                ? PRIVATE_PRACTICE_FIXTURE
+                : "Blocked: the private spoken practice is only offered after Pause has a confirmed mock shutdown.",
+            )
+          }
+        >
+          Offer private spoken practice
+        </Button>
+      </div>
+      {practice ? <p className="mt-2 text-sm text-foreground" role="status">{practice}</p> : null}
+      <p className="mt-2 text-xs text-muted-foreground">
+        Mock session {voice.sessionId ?? "none"} · capture {voice.capture} · transport {voice.transport} ·
+        segments: {voice.segments.map((s) => s.state).join(", ") || "none"} · fragments:{" "}
+        {voice.fragments.map((f) => f.state).join(", ") || "none"}
+      </p>
     </div>
   );
 }
@@ -889,7 +979,133 @@ function ReviewControls({
         >
           Simulate voice disconnection
         </Button>
+        {store.service ? (
+          <>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => store.setSimulatePreferenceFailure(!state.simulatePreferenceFailure)}
+            >
+              Simulate preference failure: {state.simulatePreferenceFailure ? "on" : "off"}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => store.setSimulateShutdownFailure(!state.simulateShutdownFailure)}
+            >
+              Simulate voice shutdown failure: {state.simulateShutdownFailure ? "on" : "off"}
+            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => store.simulateHistoryGap()}>
+              Simulate missing earlier history
+            </Button>
+          </>
+        ) : null}
       </div>
+      {store.service ? (
+        <div className="mt-3">
+          <label htmlFor="fixture-picker" className="block text-sm text-muted-foreground">
+            Fill the composer with a review fixture sentence (only these exact sentences are classified)
+          </label>
+          <select
+            id="fixture-picker"
+            className="mt-1 w-full rounded-md border border-input bg-background px-2 py-1 text-sm text-foreground"
+            value=""
+            onChange={(e) => {
+              if (e.target.value) store.setDraft(e.target.value);
+            }}
+          >
+            <option value="">Choose a fixture…</option>
+            {SEMANTIC_FIXTURE_CASES.map((c) => (
+              <option key={c.id} value={c.text}>
+                {c.id}: {c.text}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Developer context inspector (P3a) — not a production promise
+
+function ContextInspector({
+  store,
+  threadId,
+}: {
+  store: ConversationPreviewStore;
+  threadId: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ins = store.service?.inspect(threadId) ?? null;
+  if (!store.service) return null;
+  return (
+    <div className="rounded-md border border-dashed border-border p-3">
+      <Button type="button" size="sm" variant="outline" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        {open ? "Hide context used by this preview" : "Context used by this preview (developer)"}
+      </Button>
+      {open && ins ? (
+        <div className="mt-2 space-y-2 text-sm text-foreground">
+          <p className="text-muted-foreground">
+            Developer inspection of this conversation only. Owner is a fixed preview fixture, not a signed-in person.
+            Meaning comes from exact review fixtures, not understanding.
+          </p>
+          <p>
+            Christian reflection: {ins.preferenceOn ? "on" : "off"} (revision {ins.preferenceRevision}) · Current
+            restrictions: {ins.restrictions.join(", ") || "none"} (revision {ins.restrictionRevision}) · History{" "}
+            {ins.historyComplete ? "complete" : "has a reported gap"}
+          </p>
+          <div>
+            <p className="font-medium">Effective context items</p>
+            <ul className="list-disc pl-5">
+              {ins.derived.map((d) => (
+                <li key={d.itemId}>
+                  {d.itemId} [{d.kind}] {d.text} — {d.status}
+                  {d.supersedesItemId ? ` · supersedes ${d.supersedesItemId}` : ""}
+                  {d.supersededByItemId ? ` · superseded by ${d.supersededByItemId}` : ""} · from {d.sourceEventId} (
+                  {d.origin}, {d.fixtureCaseId}, evidence {d.evidenceSha256.slice(0, 10)}…)
+                </li>
+              ))}
+              {ins.derived.length === 0 ? <li>None (unclassified text stays user-reported text only)</li> : null}
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium">Scoped requests (grants)</p>
+            <ul className="list-disc pl-5">
+              {ins.grants.map((g) => (
+                <li key={g.grantId}>
+                  {g.kind} · turn {g.turnId} · original {g.originalGrantId}
+                  {g.parentGrantId ? ` · follows ${g.parentGrantId}` : ""} · sources {g.sources.join(", ") || "none"} ·{" "}
+                  {g.revoked ? "revoked" : g.committed ? "used" : "not used"}
+                </li>
+              ))}
+              {ins.grants.length === 0 ? <li>None</li> : null}
+            </ul>
+          </div>
+          <div>
+            <p className="font-medium">Events in this conversation</p>
+            <ul className="list-disc pl-5">
+              {ins.events.map((e) => (
+                <li key={e.eventId}>
+                  {e.eventId} · {e.role} · {e.status}
+                  {e.sourceKey ? ` · ${e.sourceKey}` : ""}
+                  {e.status === "delivered" ? "" : " (excluded from context)"}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {ins.lastRequest ? (
+            <p className="text-muted-foreground">
+              Last mock request {ins.lastRequest.requestId}: policy {ins.lastRequest.policyIdentity} · history events{" "}
+              {ins.lastRequest.historyEventIds.length} · sources {ins.lastRequest.sourceKeys.join(", ") || "none"} ·
+              spiritual {ins.lastRequest.spiritualReason}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

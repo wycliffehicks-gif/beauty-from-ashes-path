@@ -16,9 +16,9 @@
 //
 // TRUST LIMITS (documented, not hidden): P1 uses fictional trusted fixtures.
 // A caller choosing a thread ID never proves ownership — ownership comes from
-// the server-supplied TrustedPrincipal. Real authenticated wiring (session
-// verification, preview-store persistence, grant issuance, turn-linkage
-// validation) is P3a/P3b; the binding CONTRACT is enforced here now.
+// the server-supplied TrustedPrincipal. P3a's shared service now issues
+// grants with lineage and supplies a FIXTURE principal internally; real
+// authenticated identity, ownership and persistence remain P3b.
 
 import {
   validateClientTurnRequest,

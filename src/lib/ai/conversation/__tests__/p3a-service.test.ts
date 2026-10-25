@@ -430,8 +430,9 @@ describe("P3a lifecycle and cancellation races (O06)", () => {
     const { svc, say } = await make();
     svc.ensureThread("t", false);
     svc.voice.start();
-    await say("t", "Please write a short Christian prayer for patience today.");
-    svc.queueVoiceAnswer("t", "One. Two.", true);
+    const r = await say("t", "Please write a short Christian prayer for patience today.");
+    svc.queueVoiceAnswer("t", r.turnId, "One. Two.", true);
+    expect(svc.voice.segments).toHaveLength(2);
     svc.saveThread("t");
     const threadId = svc.threadIdFor("t")!;
     svc.deleteThread("t");
@@ -456,7 +457,8 @@ describe("P3a honest failures", () => {
     const { svc, say } = await make({ maxHistoryEvents: 2 });
     svc.ensureThread("t", false);
     await say("t", "one");
-    const r = await say("t", "two");
+    expect((await say("t", "two")).outcome!.ok).toBe(true); // history = 2 events
+    const r = await say("t", "three"); // history = 4 > 2
     expect(r.outcome).toMatchObject({ ok: false, code: "context-limit" });
   });
 
@@ -587,7 +589,7 @@ describe("P3a mock voice lifecycle (O10–O13, mock evidence only)", () => {
     svc.voice.start();
     const first = await say("t", "hello");
     const text = okText(first.outcome);
-    svc.queueVoiceAnswer("t", text, false);
+    svc.queueVoiceAnswer("t", first.turnId, text, false);
     const played = svc.voice.playNext()!;
     svc.voice.stopAnswer();
     const next = await say("t", "again");

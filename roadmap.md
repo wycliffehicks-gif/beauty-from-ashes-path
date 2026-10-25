@@ -9,12 +9,16 @@
 
 ## P3b — isolated fictional staging
 - [x] Verify the approved baseline and connect required Cloud infrastructure.
-- [ ] Establish staging-only verified identity (identity-only decision confirmed; no profiles).
+- [x] Implement staging-only verified identity; identity-only default within approved scope, no profiles (real-session evidence blocked).
 - [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (authenticated acceptance still blocked).
 - [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
 - [x] Connect isolated staging adapter to existing service authority; participant/model/real voice remain off.
 - [ ] Verify O01–O08 against real fictional staging accounts and database concurrency.
-- [x] Record partial checkpoint evidence, limits and rollback; retain all prior work.
+- [x] Record coherent current checkpoint and labelled historical evidence, limits and rollback; retain all prior work.
 - [ ] Obtain supported fictional A/B sessions; test-session provisioning unavailable for this project.
-- [ ] Disable hosted public signup flag; settings tool requires unknown current HIBP value (providers currently all OFF).
-- [ ] Finish exact private-note excerpt preview/drift, saved-list/reopen-after-reload and separate-settings wiring; then signed-in O01–O08/UI acceptance.
+- [ ] Owner-controlled Disable sign-up at More → Users → Settings; no further agent auth mutations (all providers/anonymous OFF, zero admitted).
+- [x] Implement exact fictional excerpt preview/drift, owned saved-list/reopen and existing separate-settings wiring.
+- [x] Repair saved equivalence, auth/clear fences, pending Stop/Delete, unsaved switch decisions, draft preservation and lost-response recovery.
+- [x] Run conversation/server-double regressions and actual service-record database concurrency/argument checks.
+- [ ] Authenticated O01–O08 and signed-in phone/desktop/keyboard acceptance blocked by unsupported fictional session provisioning.
+- [ ] Deterministic locked-thread expiry-wait check blocked by sandbox SQL role privileges; do not broaden grants.

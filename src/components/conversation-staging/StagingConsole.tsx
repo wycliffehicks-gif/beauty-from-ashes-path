@@ -80,7 +80,7 @@ export function StagingConsole() {
       if (!fence.current.current(ticket) || before.data.user.id !== after.data.user?.id) return;
       if (next.kind === 'list') throw new Error();
       setActive(next.kind === 'active' ? next : null);
-      setStatus(next.kind === 'stopped' ? 'Stopped. Unsaved changes were not recovered. Reopen only a confirmed saved snapshot.' : next.kind === 'deleted' ? (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.') : next.saved ? 'Saved' : 'Unsaved changes');
+      setStatus(next.kind === 'active' ? (next.saved ? 'Saved' : 'Unsaved changes') : next.kind === 'stopped' ? 'Stopped. Unsaved changes were not recovered. Reopen only a confirmed saved snapshot.' : (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.'));
       if (action === 'append') setMessage(current => draftAfterSend(current, sent));
       if (['discard','reopen','delete','create'].includes(action)) setMessage('');
       setConfirm(null); setRecovery(next.kind === 'stopped');

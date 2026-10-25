@@ -20,6 +20,7 @@ export type StagingResult = ActiveThread | { kind: 'list'; threads: SavedThread[
 /** No server content cache, provider API, microphone or enrollment. */
 export async function stagingOperation(raw: StagingInput, client: SupabaseClient<Database>): Promise<StagingResult> {
   const input = stagingInput.parse(raw);
+  if (input.action === 'preference' && input.preferenceOn === undefined) throw new Error('Unavailable');
   async function identity(expected?: string) {
     const { data, error } = await client.auth.getUser();
     if (error || !data.user || (expected && data.user.id !== expected)) throw new Error('Unavailable');

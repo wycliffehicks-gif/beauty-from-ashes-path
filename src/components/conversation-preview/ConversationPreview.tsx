@@ -308,7 +308,10 @@ function ThreadScreen({
     return false;
   };
 
-  const attemptFinish = (decision: "save" | "discard") => {
+  const attemptFinish = (
+    decision: "save" | "discard",
+    event?: { preventDefault(): void },
+  ) => {
     const result = store.finishActiveThread(decision, {
       discardDraft: hasUnsentDraft,
     });
@@ -317,6 +320,8 @@ function ThreadScreen({
       setFinishError(null);
       return;
     }
+    // Keep the dialog open on failure (AlertDialogAction closes by default).
+    event?.preventDefault();
     // Failed save / pending response: dialog, thread and draft all stay.
     setFinishError(
       result.reason === "response-pending"

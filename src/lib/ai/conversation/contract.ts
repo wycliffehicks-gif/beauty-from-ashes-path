@@ -141,7 +141,7 @@ export const ServerContextSchema = z
 export type ServerContext = z.infer<typeof ServerContextSchema>;
 
 function firstCode(
-  issues: readonly z.core.$ZodIssue[],
+  issues: readonly z.ZodIssue[],
   fallback: ConversationErrorCode,
 ): ConversationErrorCode {
   for (const issue of issues) {

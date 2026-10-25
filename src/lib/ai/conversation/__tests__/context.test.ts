@@ -157,10 +157,10 @@ describe("conversation context assembly", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.context.restrictions).toEqual([...restrictions]);
-    // Faith-on plus a scoped prayer grant: restrictions still survive and the
-    // grant still resolves.
+    // Faith-on plus a scoped prayer grant: restrictions still survive and
+    // prayer remains permitted (preference-on governs; the grant is moot).
     expect(result.context.spiritual.prayerPermitted).toBe(true);
-    expect(result.context.spiritual.reason).toBe("scoped-grant-current-reply");
+    expect(result.context.spiritual.reason).toBe("preference-on");
   });
 
   it("O03: private canaries never enter the assembled context", async () => {

@@ -5,16 +5,19 @@
 //      it, never an AI sentence).
 //   2. Current narrower restrictions ("no advice", "no questions",
 //      "no exercises", "no Bible", "no prayer"). A narrower current restriction
-//      ALWAYS wins over the persistent preference.
+//      ALWAYS wins over the persistent preference and over any grant.
 //   3. A specific, scoped grant: an explicit request for a prayer or passage,
-//      valid for the exact current reply and its validated direct follow-ups
-//      only. It never changes the persistent preference and never carries into
-//      an unrelated later topic.
+//      valid for the exact current reply and its server-validated direct
+//      follow-ups only. It never changes the persistent preference and never
+//      carries into an unrelated later topic.
 //
-// There is deliberately NO keyword-based devotional-consent detection here.
-// Mentioning God, church, doubt or religious hurt grants nothing. Resolving
-// freeform intent into a grant is left to a later shared service; at P1 the
-// grant contract is represented and tests supply explicit fixtures.
+// Grants reach this module ONLY as server-owned, fully bound records (see
+// ServerGrantSchema in contract.ts). The client request carries no grant or
+// follow-up authority at all. There is deliberately NO keyword-based
+// devotional-consent detection: mentioning God, church, doubt or religious
+// hurt grants nothing. Resolving freeform intent into a grant is future P3a
+// work; authenticating the server records is P3b. Neither excuses a missing
+// binding contract, so the binding is enforced here.
 
 import { z } from "zod";
 
@@ -33,30 +36,20 @@ export const SpiritualRestrictionSchema = z.enum(SPIRITUAL_RESTRICTIONS);
 export const SPIRITUAL_GRANT_KINDS = ["prayer", "passage"] as const;
 export type SpiritualGrantKind = (typeof SPIRITUAL_GRANT_KINDS)[number];
 
-export interface SpiritualGrant {
-  readonly kind: SpiritualGrantKind;
-  /** P1 supports only the current reply; persistence would be a new scope. */
-  readonly scope: "current-reply";
-  /** Optional verified source record the request named (e.g. a passage). */
-  readonly sourceId?: string;
-}
-
 export interface SpiritualAccessInput {
   /** Server-owned persistent preference. */
   readonly preferenceOn: boolean;
   /** Server-owned current restrictions for this thread/turn. */
   readonly restrictions: readonly SpiritualRestriction[];
   /**
-   * The scoped grant for THIS turn, or null. On a validated direct follow-up
-   * turn the server re-attaches the original grant; the client can never
-   * attach one itself (see contract.ts).
+   * The server-owned grant for THIS turn, already binding-checked against
+   * owner, thread, exact current turn, kind and permitted sources by context
+   * assembly. Null means no grant.
    */
-  readonly grant: SpiritualGrant | null;
+  readonly grant: { readonly kind: SpiritualGrantKind } | null;
   /**
-   * True only when the current turn is a validated direct follow-up to the
-   * turn that carried the grant. P1 cannot validate turn linkage itself;
-   * context assembly requires the grant to be present on follow-up turns and
-   * documents that real linkage validation is P3b server wiring.
+   * True only when the server marked this turn a validated direct follow-up
+   * to the turn that carried the original grant.
    */
   readonly isDirectFollowUp: boolean;
 }
@@ -97,9 +90,9 @@ export function resolveSpiritualAccess(input: SpiritualAccessInput): SpiritualAc
     };
   }
 
-  // Preference off. Religious language alone is not a grant; only an explicit
-  // scoped grant (or its validated direct follow-up) permits devotional
-  // content, and only of the requested kind.
+  // Preference off. Religious language alone is not a grant; only a
+  // server-owned scoped grant (or its validated direct follow-up) permits
+  // devotional content, and only of the granted kind.
   if (!input.grant) {
     return {
       devotionalContentPermitted: false,

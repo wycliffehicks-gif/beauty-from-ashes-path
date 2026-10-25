@@ -54,7 +54,7 @@ describe("spiritual access resolution", () => {
     const access = resolveSpiritualAccess({
       preferenceOn: false,
       restrictions: [],
-      grant: { kind: "prayer", scope: "current-reply" },
+      grant: { kind: "prayer" },
       isDirectFollowUp: false,
     });
     expect(access).toEqual({
@@ -69,7 +69,7 @@ describe("spiritual access resolution", () => {
     const access = resolveSpiritualAccess({
       preferenceOn: false,
       restrictions: [],
-      grant: { kind: "prayer", scope: "current-reply" },
+      grant: { kind: "prayer" },
       isDirectFollowUp: true,
     });
     expect(access.reason).toBe("scoped-grant-direct-follow-up");
@@ -91,7 +91,7 @@ describe("spiritual access resolution", () => {
     const access = resolveSpiritualAccess({
       preferenceOn: false,
       restrictions: ["no-prayer"],
-      grant: { kind: "prayer", scope: "current-reply" },
+      grant: { kind: "prayer" },
       isDirectFollowUp: false,
     });
     expect(access.prayerPermitted).toBe(false);
@@ -102,7 +102,7 @@ describe("spiritual access resolution", () => {
     const access = resolveSpiritualAccess({
       preferenceOn: false,
       restrictions: [],
-      grant: { kind: "passage", scope: "current-reply" },
+      grant: { kind: "passage" },
       isDirectFollowUp: false,
     });
     expect(access.scripturePermitted).toBe(true);

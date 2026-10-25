@@ -375,7 +375,10 @@ export class ConversationService {
     record.restrictionRevision += 1;
     if (this.voice.threadId === record.threadId) this.voice.end("discard");
     this.voice.purgeTurns(discardedTurns);
-    for (const t of discardedTurns) this.tickets.delete(t);
+    for (const t of discardedTurns) {
+      this.tickets.delete(t);
+      this.claimedTurns.delete(t);
+    }
     this.log("thread-discarded", record.threadId);
   }
 
@@ -387,7 +390,10 @@ export class ConversationService {
     const turns = new Set(record.events.map((e) => e.turnId).filter((t): t is string => t !== null));
     this.voice.purgeThread(record.threadId);
     this.voice.purgeTurns(turns);
-    for (const t of turns) this.tickets.delete(t);
+    for (const t of turns) {
+      this.tickets.delete(t);
+      this.claimedTurns.delete(t);
+    }
     this.issuer.purgeThread(record.threadId);
     this.threads.delete(storeId);
     this.log("thread-deleted", record.threadId);
@@ -400,6 +406,7 @@ export class ConversationService {
     this.issuer = new GrantIssuer(`e${this.epoch}`);
     this.voice.purgeAll();
     this.tickets.clear();
+    this.claimedTurns.clear();
     this.log("clear-all", null);
   }
 

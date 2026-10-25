@@ -78,6 +78,15 @@ Three further defects, each with a regression in `p3a-repair.test.ts` (now 30 te
 
 Verified: `bunx vitest run src/lib/ai/conversation` → **8 files, 220 passed**; automatic build OK (2026-10-25T22:28Z). Playwright Chromium walkthrough (`/tmp/browser/p3a/ui3.py`) at 390px and 1280px: offer visible only while paused and cleared on Resume; Interrupt visible while Speaking and returns to Listening with the session kept; dialog opens with the typed draft preserved, Escape cancels keeping the draft, Append merges both texts. No page errors; only font requests left localhost. Still not verified: physical devices, real microphone/audio, screen readers, production identity/storage.
 
+## Service invariants (review of `61b243a7…`)
+
+Two independently reproduced service defects, both adapted as regressions in `p3a-repair.test.ts` (describe F, import paths only changed):
+
+- **Supersede-all on correction.** `deriveForTurn` superseded only the first matching effective item, so the exact C07 angry-report fixture sent twice and corrected once left one stale effective anger claim that reached the next provider request and recall. A correction now supersedes EVERY equivalent active claim with its tag; original source events and correction provenance (evidence hash, supersedes/superseded-by links) are retained. No semantics beyond the exact fixture rules were added.
+- **At-most-once admission claim.** Two concurrent `runTurn` calls for one admitted ticket both passed the pre-await currency check, producing two dispatches, two assistant events and two commits. The service now claims each turn synchronously before the first await (`claimedTurns`); the claim is never released, so a consumed ticket can never dispatch or commit again — a second call is traced `ticket-consumed` and returns `stale`. Claims are cleaned up on discard/delete/clear alongside tickets.
+
+Verified: `bunx vitest run src/lib/ai/conversation` → **8 files, 223 passed** (both diagnostics plus a consumed-ticket-after-commit regression; all 220 prior tests unchanged and passing). Automatic build OK (2026-10-25T22:35Z). The `ui3.py` browser walkthrough was re-run after the service change: all nine checks pass at both 390px and 1280px. Outstanding limits are unchanged: mock provider and exact fixtures only, no model quality, real audio, identity, persistence or billing evidence; the 30-case catalog remains not-run.
+
 ## Rollback
 
 To return to the P2 fake service, revert forward to `e174235c` or remove `createService` in `getBrowserStore()`. With no service the store uses the P2 path unchanged. Do not rewrite history.

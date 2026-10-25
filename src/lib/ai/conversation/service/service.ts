@@ -239,6 +239,10 @@ export class ConversationService {
   private readonly registryPromise: Promise<SourceRegistry | null>;
   private registry: SourceRegistry | null = null;
   private readonly tickets = new Map<string, AdmissionTicket>();
+  /** At-most-once claim: a turn is claimed synchronously before the first
+   *  await of its run and the claim is never released. A consumed ticket can
+   *  never dispatch again, even if the ticket record still exists. */
+  private readonly claimedTurns = new Set<string>();
 
   constructor(options: ConversationServiceOptions = {}) {
     this.provider = options.provider ?? createMockProvider({ delayMs: 350 });
@@ -371,7 +375,10 @@ export class ConversationService {
     record.restrictionRevision += 1;
     if (this.voice.threadId === record.threadId) this.voice.end("discard");
     this.voice.purgeTurns(discardedTurns);
-    for (const t of discardedTurns) this.tickets.delete(t);
+    for (const t of discardedTurns) {
+      this.tickets.delete(t);
+      this.claimedTurns.delete(t);
+    }
     this.log("thread-discarded", record.threadId);
   }
 
@@ -383,7 +390,10 @@ export class ConversationService {
     const turns = new Set(record.events.map((e) => e.turnId).filter((t): t is string => t !== null));
     this.voice.purgeThread(record.threadId);
     this.voice.purgeTurns(turns);
-    for (const t of turns) this.tickets.delete(t);
+    for (const t of turns) {
+      this.tickets.delete(t);
+      this.claimedTurns.delete(t);
+    }
     this.issuer.purgeThread(record.threadId);
     this.threads.delete(storeId);
     this.log("thread-deleted", record.threadId);
@@ -396,6 +406,7 @@ export class ConversationService {
     this.issuer = new GrantIssuer(`e${this.epoch}`);
     this.voice.purgeAll();
     this.tickets.clear();
+    this.claimedTurns.clear();
     this.log("clear-all", null);
   }
 
@@ -513,8 +524,16 @@ export class ConversationService {
       this.log("stale-work-dropped", record?.threadId ?? null, turnId, "no-ticket");
       return "stale";
     }
+    // Synchronous at-most-once claim, BEFORE any await: a second concurrent
+    // (or later) runTurn for the same admission can never dispatch or commit.
+    if (this.claimedTurns.has(turnId)) {
+      this.log("stale-work-dropped", record.threadId, turnId, "ticket-consumed");
+      return "stale";
+    }
+    this.claimedTurns.add(turnId);
     const userEvent: ThreadEvent | undefined = ticket.userEvent;
     const current = () =>
+      this.claimedTurns.has(turnId) &&
       ticket.epoch === this.epoch &&
       this.threads.get(storeId) === ticket.record &&
       record.generation === ticket.generation &&
@@ -890,16 +909,18 @@ export class ConversationService {
       if (d.kind === "restriction") {
         derived.push({ ...base, kind: "active-restriction", tag: d.add.join(","), text: d.add.join(", "), supersedesItemId: null, status: "effective" });
       } else if (d.kind === "user-correction") {
-        const target = derived.find((x) => x.tag === d.supersedesTag && x.status === "effective");
+        // Supersede EVERY equivalent active claim, not just the first: a
+        // repeated report corrected once must leave no stale effective fact.
+        const targets = derived.filter((x) => x.tag === d.supersedesTag && x.status === "effective");
         const item: DerivedItem = {
           ...base,
           kind: "user-correction",
           tag: d.tag,
           text: d.text,
-          supersedesItemId: target ? target.itemId : null,
-          status: target ? "effective" : "unanchored",
+          supersedesItemId: targets.length > 0 ? targets[0].itemId : null,
+          status: targets.length > 0 ? "effective" : "unanchored",
         };
-        if (target) {
+        for (const target of targets) {
           target.status = "superseded";
           target.supersededByItemId = item.itemId;
         }

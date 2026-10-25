@@ -10,8 +10,11 @@
 ## P3b — isolated fictional staging
 - [x] Verify the approved baseline and connect required Cloud infrastructure.
 - [ ] Establish staging-only verified identity (identity-only decision confirmed; no profiles).
-- [ ] Implement owned deliberate snapshots/deletion and non-content atomic admission ledger.
+- [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (authenticated acceptance still blocked).
 - [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
-- [ ] Connect the existing service authority without enabling participant/model/voice access.
+- [x] Connect isolated staging adapter to existing service authority; participant/model/real voice remain off.
 - [ ] Verify O01–O08 against real fictional staging accounts and database concurrency.
 - [x] Record partial checkpoint evidence, limits and rollback; retain all prior work.
+- [ ] Obtain supported fictional A/B sessions; test-session provisioning unavailable for this project.
+- [ ] Disable hosted public signup flag; settings tool requires unknown current HIBP value (providers currently all OFF).
+- [ ] Finish exact private-note excerpt preview/drift, saved-list/reopen-after-reload and separate-settings wiring; then signed-in O01–O08/UI acceptance.

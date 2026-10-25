@@ -1,6 +1,39 @@
-# P3b checkpoint — partial, locked preparation
+# P3b checkpoint — implemented boundary; acceptance blocked
 
 Starting baseline: `978908c5b6ca0905250609be7c95a338da1f1a4a`, tree `94fec8de7e4726fffcb3f0867db9b9b81ce54f6e` (verified locally). P3b is **NOT accepted or complete**. Participant AI/real voice remain OFF; unpublished. No v5, model, voice or paid-provider command ran.
+
+## Continuation evidence — 25 October 2026
+
+The sections below describe the historical preparation. This continuation supersedes their implementation status, not the acceptance limitations.
+
+- Implemented server staging adapter: Auth `getUser()` revalidated on every operation/async turn stage, expiring allowlist, explicit ownership and owner/allowlist RLS; browser history/owner/derived/grant JSON rejected. Immutable server subject, no profiles.
+- Added service authority export/restore with events, derived facts, restrictions, completeness, revisions and issuer lineage/revocations. Provider requests still use `assembleConversationContext` and exact approved policy; only local mock connected.
+- Active authority AES-GCM sealed server-side with generated `BFA_P3B_STATE_SECRET`, owner/thread/revision-bound and 15-minute expiry, component-memory-only. HMAC fingerprints. No server content cache or per-turn transcript writes. Only confirmed Save persists a sealed service snapshot; optimistic Save/Discard/Reopen/Delete/Cancel advance revisions. Delete nulls saved content and retains tombstone/accounting; stale requests fail closed. Browser copies/processor backups are not promised physically erased.
+- Unlinked `/conversation-staging` shell adds confirmations, truthful failures and context inspection. No enrollment UI or real microphone. Clear-all removes console memory and rejects late UI responses; it does not silently delete deliberate Cloud saves.
+- Applied `0002_p3b_transactional_staging_boundary.sql`: service-only create/guard/transition/reserve/claim/settle/finish, atomic integer text/voice balances, request binding and one dispatch claim, uncertain holds and idempotent receipts. `0003_p3b_no_automatic_transaction_retry.sql` replaces serialization error code with application conflict because the platform retried it; no application retry/fallback/reconnect.
+- `bunx vitest run src/lib/ai/conversation`: **10 files, 242 passed**, latest 23:13:19 UTC (223 prior + 15 admission + 4 authority).
+- `python3 scripts/p3b/check-transactions.py`: **9 actual database checks passed**: eight-way one-unit reserve admits one; identical identity duplicates only; changed binding denied; eight-way claim succeeds once; possible-dispatch cancellation holds uncertain balance; duplicate receipts refund once/conflict denied; voice balance separate; tombstone blocks stale reserve/save and saved content null; anonymous RPC bypass denied. Disposable non-auth UUID service tests, **not authenticated A/B acceptance**. First run timed out on platform retry; corrected forward migration and fresh run passed; uncertain evidence retained.
+- Three fictional passwordless A/B/C Auth identities created without emails. Actual database guard denied B for A and non-allowlisted C; no sessions minted. All three identities deleted successfully (HTTP 200 each), allowlists disabled; only content-free evidence retained. Zero admitted accounts.
+- Catalog confirms authenticated cannot execute state-changing RPCs. `/tmp/browser/p3b/check_staging.py`: normal opening agreement then signed-out denial at 390/1280 width, no overflow/page errors, screenshots viewed; **not signed-in central-flow verification**.
+- Automatic diagnostic build OK at last inspection; no manual build/typecheck. Hosted checks empty and hosted report referenced older commit; current hosted TS/deployment and GitHub remote sync unverified.
+
+### Exact blockers and remaining matrix
+
+Disposable test-session creation is unavailable for this project through the supported CLI. Admin link minting was refused as bypassing session consent; neither was bypassed and Carl's real account was not substituted. Platform-supported fictional sessions are required for full O01–O08.
+
+Hosted public Auth settings read: disable-signup flag false, anonymous false, every provider false. Admin config read returned 404; current HIBP setting unavailable. The configure tool requires preserving that unknown value, so no guess was written. Email was briefly enabled then immediately disabled; final OFF verified. Owner action for the unresolved flag: More → Users → Auth settings → Disable sign-up. No enrollment UI/provider enabled; allowlist closed.
+
+| Check | Continuation evidence / open limit |
+|---|---|
+| O01 | Anonymous RPC and B/C database guard denied; full absent/expired/forged/wrong-owner session matrix and expiry during work BLOCKED. |
+| O02 | Unit restore voice idle; authenticated A1/A2/new/reopen canaries BLOCKED. |
+| O03/O04 | No journal/weekly/hidden10 import; exact private-note preview/drift/consent NOT implemented; teaching action requires registry hash. |
+| O05 | Adapter/optimistic transactions implemented; actual authenticated save/failure/concurrent/UI BLOCKED. |
+| O06 | Real transaction tombstone/stale denial; authenticated pending deletion/audio/summary matrix BLOCKED. |
+| O07 | Prior semantics tests green; authenticated durable restore/discard BLOCKED. |
+| O08 | Nine real database checks; authenticated cannot-spend/session duplicate dispatch BLOCKED; zero paid calls. |
+
+Also open: exact excerpt integration, saved-list/reopen after reload, current separate-preference wiring and full signed-in narrow/wide/keyboard checks. No real-device/screen-reader/model/real voice evidence. P3b remains incomplete, not accepted. Cloud usage not priced/measured; no paid app calls. Normal forward autosave only. Rollback disables admission first (currently zero admitted); retain ledger/tombstones/uncertain holds, no destructive reset. Key rotation invalidates saved snapshots and is not routine rollback.
 
 ## Confirmed identity scope
 

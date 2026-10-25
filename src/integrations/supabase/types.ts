@@ -14,7 +14,131 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bfa_p3b_admissions: {
+        Row: {
+          charged_units: number | null
+          created_at: string
+          fingerprint: string
+          mode: string
+          owner_id: string
+          receipt_id: string | null
+          request_id: string
+          reserved_units: number
+          state: string
+          thread_id: string
+          thread_revision: number
+          updated_at: string
+        }
+        Insert: {
+          charged_units?: number | null
+          created_at?: string
+          fingerprint: string
+          mode: string
+          owner_id: string
+          receipt_id?: string | null
+          request_id: string
+          reserved_units: number
+          state?: string
+          thread_id: string
+          thread_revision: number
+          updated_at?: string
+        }
+        Update: {
+          charged_units?: number | null
+          created_at?: string
+          fingerprint?: string
+          mode?: string
+          owner_id?: string
+          receipt_id?: string | null
+          request_id?: string
+          reserved_units?: number
+          state?: string
+          thread_id?: string
+          thread_revision?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bfa_p3b_admissions_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "bfa_p3b_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bfa_p3b_allowances: {
+        Row: {
+          mode: string
+          owner_id: string
+          remaining_units: number
+          reservation_units: number
+        }
+        Insert: {
+          mode: string
+          owner_id: string
+          remaining_units?: number
+          reservation_units?: number
+        }
+        Update: {
+          mode?: string
+          owner_id?: string
+          remaining_units?: number
+          reservation_units?: number
+        }
+        Relationships: []
+      }
+      bfa_p3b_staging_accounts: {
+        Row: {
+          admitted: boolean
+          created_at: string
+          expires_at: string
+          user_id: string
+        }
+        Insert: {
+          admitted?: boolean
+          created_at?: string
+          expires_at: string
+          user_id: string
+        }
+        Update: {
+          admitted?: boolean
+          created_at?: string
+          expires_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bfa_p3b_threads: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          owner_id: string
+          revision: number
+          saved_at: string | null
+          saved_snapshot: Json | null
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          owner_id: string
+          revision?: number
+          saved_at?: string | null
+          saved_snapshot?: Json | null
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          owner_id?: string
+          revision?: number
+          saved_at?: string | null
+          saved_snapshot?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

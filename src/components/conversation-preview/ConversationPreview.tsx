@@ -452,15 +452,15 @@ function ThreadScreen({
           <AlertDialogFooter>
             <AlertDialogCancel>Keep working</AlertDialogCancel>
             {status !== "not-saved" ? (
-              <AlertDialogAction onClick={() => attemptFinish("discard")}>
+              <AlertDialogAction onClick={(e) => attemptFinish("discard", e)}>
                 {hasUnsentDraft ? "Discard unsent text and changes" : "Discard changes"}
               </AlertDialogAction>
             ) : (
-              <AlertDialogAction onClick={() => attemptFinish("discard")}>
+              <AlertDialogAction onClick={(e) => attemptFinish("discard", e)}>
                 {hasUnsentDraft ? "Discard unsent text and close" : "Close without saving"}
               </AlertDialogAction>
             )}
-            <AlertDialogAction onClick={() => attemptFinish("save")} disabled={pending}>
+            <AlertDialogAction onClick={(e) => attemptFinish("save", e)} disabled={pending}>
               Save & finish (simulated)
             </AlertDialogAction>
           </AlertDialogFooter>

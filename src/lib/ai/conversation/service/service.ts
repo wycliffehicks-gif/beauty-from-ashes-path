@@ -286,6 +286,7 @@ export class ConversationService {
     }
     for (const grant of state.issuer.issued) {
       const event = events.get(grant.messageEventId);
+      if (!event && state.issuer.revoked.includes(grant.grantId)) continue;
       if (grant.ownerId !== this.ownerId || grant.threadId !== state.record.threadId ||
         event?.textSha256 !== grant.messageSha256) throw new Error("Unavailable");
     }
@@ -464,7 +465,8 @@ export class ConversationService {
     text: string,
     voiceOrigin: VoiceOrigin | null = null,
   ): string {
-    const record = this.threads.get(storeId)!;
+    const record = this.threads.get(storeId);
+    if (!record) throw new Error("Unavailable");
     const turnId = `bfa-turn-e${this.epoch}-${this.nextId("t")}`;
     const event: ThreadEvent = {
       eventId: this.nextId("evt"),
@@ -482,7 +484,7 @@ export class ConversationService {
     for (const d of fixture?.derivations ?? []) {
       if (d.kind === "restriction") for (const r of d.add) next.add(r);
     }
-    record.derived = this.deriveForTurn(record, fixture, event, event.textSha256!);
+    record.derived = this.deriveForTurn(record, fixture, event, sha256HexSync(text));
     if (next.size !== before) {
       record.restrictions = [...next];
       record.restrictionRevision += 1;

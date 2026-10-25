@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useServerFn } from '@tanstack/react-start';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,18 +13,26 @@ export function StagingConsole() {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState<'discard'|'delete'|null>(null);
+  const generation = useRef(0);
+  useEffect(() => {
+    const clear = () => { generation.current += 1; setState(null); setMessage(''); setStatus(''); setConfirm(null); };
+    window.addEventListener('bfa-app-clear', clear);
+    return () => { generation.current += 1; window.removeEventListener('bfa-app-clear', clear); };
+  }, []);
   async function act(action: StagingInput['action']) {
+    const ticket = ++generation.current;
     setBusy(true); setStatus('');
     try {
       const next = await run({ data: { action, ...(state && { thread: state.thread, revision: state.revision,
         token: 'token' in state ? state.token : undefined }),
         ...(action === 'append' && { message, requestId: crypto.randomUUID() }) } });
+      if (ticket !== generation.current) return;
       setState('deleted' in next ? null : next);
       setStatus('deleted' in next ? 'Deleted' : action === 'save' ? 'Saved' : action === 'append' ? 'Unsaved changes' : 'Ready');
       if (action === 'append') setMessage('');
       setConfirm(null);
-    } catch { setStatus('Unavailable or stale. No automatic retry.'); }
-    finally { setBusy(false); }
+    } catch { if (ticket === generation.current) setStatus('Unavailable or stale. No automatic retry.'); }
+    finally { if (ticket === generation.current) setBusy(false); }
   }
   return <main className="mx-auto max-w-3xl px-5 py-10 text-foreground">
     <h1 className="font-serif text-3xl">Fictional staging conversation</h1>

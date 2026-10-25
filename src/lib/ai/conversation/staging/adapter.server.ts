@@ -34,7 +34,15 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   if (found.error || !found.data) throw new Error('Unavailable');
   const row = found.data;
   if (input.revision !== row.revision) throw new Error('Conflict');
-  const service = new ConversationService({ verifiedOwnerId: owner, provider: createMockProvider({ delayMs: 0 }) });
+  const service = new ConversationService({ verifiedOwnerId: owner, provider: createMockProvider({ delayMs: 0 }),
+    stageHook: async () => {
+      try {
+        await identity();
+        const live = await client.from('bfa_p3b_threads').select('revision').eq('id',thread).maybeSingle();
+        if (live.error || live.data?.revision !== row.revision) throw new Error('Unavailable');
+      } catch { service.cancelThread(thread, 'stale-server-work'); }
+    },
+  });
   if (input.action === 'reopen' || input.action === 'discard') {
     if (row.saved_snapshot && row.saved_revision !== null && typeof row.saved_snapshot === 'string') {
       const saved = await unseal(row.saved_snapshot, owner, thread, row.saved_revision, true);

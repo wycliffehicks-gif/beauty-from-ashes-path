@@ -271,10 +271,8 @@ export class ConversationPreviewStore {
     | { readonly ok: true }
     | { readonly ok: false; readonly reason: "needs-decision" | "unknown-thread" } {
     const active = this.activeThread();
-    if (active && (this.saveStatus(active) !== "saved" || active.messages.length > 0 && active.dirty)) {
-      if (this.saveStatus(active) !== "saved") {
-        return { ok: false, reason: "needs-decision" };
-      }
+    if (active && this.saveStatus(active) !== "saved") {
+      return { ok: false, reason: "needs-decision" };
     }
     if (next.kind === "new") {
       this.createThread();

@@ -253,12 +253,8 @@ describe("conversation preview store", () => {
     flush();
     store.saveActiveThread("Return visit");
     const id = store.activeThread()!.id;
-    store.finishActiveThread("keep");
-    store.state; // noop
-    (store as unknown as { state: object }).state = {
-      ...store.getSnapshot(),
-      activeThreadId: null,
-    };
+    expect(store.finishActiveThread("save").ok).toBe(true); // closes the thread
+    expect(store.getSnapshot().activeThreadId).toBeNull();
     expect(store.requestSwitch({ kind: "open", threadId: id }).ok).toBe(true);
     expect(store.getSnapshot().voice).toBe("off");
     store.setDraft("follow-up");

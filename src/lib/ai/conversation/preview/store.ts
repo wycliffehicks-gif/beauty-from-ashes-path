@@ -857,6 +857,8 @@ export class ConversationPreviewStore {
       this.cancelPendingJobs(thread.id, true);
       if (this.state.voice !== "off") {
         this.invalidateVoiceTimers();
+        this.voiceShutdownToken += 1;
+        this.service?.voice.end("preference-off");
         this.state = { ...this.state, voice: "off", voiceMuted: false };
       }
     }

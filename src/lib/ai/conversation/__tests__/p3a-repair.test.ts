@@ -209,7 +209,7 @@ describe("B. exact voice ownership", () => {
   });
 
   it("Stop during a voice turn: late output never queues", async () => {
-    let release: (() => void) | null = null;
+    let release = null as (() => void) | null;
     const h = await harness({ provider: { ignoreAbort: true, schedule: (fn) => { release = fn; return 0; } } });
     h.store.createThread();
     h.store.startTalking();
@@ -423,7 +423,7 @@ describe("D. mock provider settlement", () => {
   });
 
   it("abort mid-flight settles exactly once, even if the timer fires later", async () => {
-    let fire: (() => void) | null = null;
+    let fire = null as (() => void) | null;
     let outcomes = 0;
     const p = createMockProvider({ schedule: (fn) => { fire = fn; return 0; }, respond: () => ({ text: "x", sourceIds: [], interpretation: null }) });
     const c = new AbortController();

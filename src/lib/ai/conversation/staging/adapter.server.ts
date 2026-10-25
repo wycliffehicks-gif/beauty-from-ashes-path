@@ -15,7 +15,7 @@ export interface ActiveThread {
   kind: 'active'; thread: string; revision: number; token: string; saved: boolean;
   inspection: ReturnType<ConversationService['inspect']>; microphone: 'off';
 }
-export type StagingResult = ActiveThread | { kind: 'list'; threads: SavedThread[] } | { kind: 'deleted'; thread: string; revision: number };
+export type StagingResult = ActiveThread | { kind: 'list'; threads: SavedThread[] } | { kind: 'deleted' | 'stopped'; thread: string; revision: number };
 
 /** No server content cache, provider API, microphone or enrollment. */
 export async function stagingOperation(raw: StagingInput, client: SupabaseClient<Database>): Promise<StagingResult> {
@@ -50,7 +50,7 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   const found = await client.from('bfa_p3b_threads').select('id,revision,saved_revision,saved_snapshot,deleted_at').eq('id',thread).eq('owner_id',owner).maybeSingle();
   if (found.error || !found.data || found.data.deleted_at) throw new Error('Unavailable');
   const row = found.data;
-  if (input.revision !== row.revision) throw new Error('Conflict');
+  if (!['delete','cancel','preference'].includes(input.action) && input.revision !== row.revision) throw new Error('Conflict');
   const service = new ConversationService({ verifiedOwnerId: owner, provider: createMockProvider({ delayMs: 250 }),
     stageHook: async () => {
       try { await current(row.revision); }
@@ -72,8 +72,20 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   }
   // Delete can recover without any active token; never restore personal content.
   if (input.action === 'delete') {
-    await transition('delete'); await identity(owner);
+    const result = await supabaseAdmin.rpc('bfa_p3b_fence', { p_owner: owner, p_thread: thread, p_action: 'delete' });
+    if (result.error || result.data === null) throw new Error('Unavailable');
+    revision = result.data; await identity(owner);
     return { kind: 'deleted', thread, revision };
+  }
+  if (input.action === 'cancel' || input.action === 'preference') {
+    await identity(owner);
+    const result = await supabaseAdmin.rpc('bfa_p3b_fence', { p_owner: owner, p_thread: thread, p_action: 'cancel' });
+    if (result.error || result.data === null) throw new Error('Unavailable');
+    revision = result.data;
+    // A lost/competing committed response cannot be recovered from an old token.
+    if (input.revision !== row.revision || revision !== row.revision+1 || !input.token) {
+      await identity(owner); return { kind: 'stopped', thread, revision };
+    }
   }
   if (input.action === 'reopen' || input.action === 'discard') {
     if (row.saved_revision !== null && typeof row.saved_snapshot === 'string') {
@@ -133,13 +145,12 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   } else if (input.action === 'preference') {
     if (input.preferenceOn === undefined) throw new Error('Unavailable');
     service.setPreference(thread, input.preferenceOn);
-    await transition('advance');
   } else if (input.action === 'save') {
     service.saveThread(thread);
     const snapshot = await seal({ owner, thread, revision: revision+1, expires: 0, authority: service.exportAuthority(thread) });
     await transition('save', snapshot);
   } else if (['discard','reopen','cancel'].includes(input.action)) {
-    await transition(input.action);
+    if (input.action !== 'cancel') await transition(input.action);
     if (input.action === 'cancel') service.cancelThread(thread, 'confirmed-stop');
   }
   await current(revision);

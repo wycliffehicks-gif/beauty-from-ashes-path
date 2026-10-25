@@ -58,8 +58,13 @@ describe('P3b server adapter boundary doubles — NOT real Auth evidence', () =>
     fixtures.row={id:thread,revision:0,saved_revision:null,saved_snapshot:null,deleted_at:null};fixtures.rpc.mockResolvedValue({data:null,error:new Error()});
     await expect(stagingOperation({action:'delete',thread,revision:0},client())).rejects.toThrow();
   });
-  it('stale revision fails before mutation and has no automatic retry', async () => {
+  it('stale save revision fails before mutation and has no automatic retry', async () => {
     fixtures.row={id:thread,revision:2,saved_revision:null,saved_snapshot:null,deleted_at:null};
-    await expect(stagingOperation({action:'delete',thread,revision:1},client())).rejects.toThrow();expect(fixtures.rpc).not.toHaveBeenCalled();
+    await expect(stagingOperation({action:'save',thread,revision:1},client())).rejects.toThrow();expect(fixtures.rpc).not.toHaveBeenCalled();
+  });
+  it('explicit Stop fences current work even after a lost committed response', async () => {
+    fixtures.row={id:thread,revision:2,saved_revision:null,saved_snapshot:null,deleted_at:null};fixtures.rpc.mockResolvedValue({data:3,error:null});
+    expect(await stagingOperation({action:'cancel',thread,revision:1},client())).toEqual({kind:'stopped',thread,revision:3});
+    expect(fixtures.rpc).toHaveBeenCalledWith('bfa_p3b_fence',expect.objectContaining({p_action:'cancel'}));
   });
 });

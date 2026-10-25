@@ -79,11 +79,11 @@ export function StagingConsole() {
       const after = await supabase.auth.getUser();
       if (!fence.current.current(ticket) || before.data.user.id !== after.data.user?.id) return;
       if (next.kind === 'list') throw new Error();
-      setActive(next.kind === 'deleted' ? null : next);
-      setStatus(next.kind === 'deleted' ? (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.') : next.saved ? 'Saved' : 'Unsaved changes');
+      setActive(next.kind === 'active' ? next : null);
+      setStatus(next.kind === 'stopped' ? 'Stopped. Unsaved changes were not recovered. Reopen only a confirmed saved snapshot.' : next.kind === 'deleted' ? (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.') : next.saved ? 'Saved' : 'Unsaved changes');
       if (action === 'append') setMessage(current => draftAfterSend(current, sent));
       if (['discard','reopen','delete','create'].includes(action)) setMessage('');
-      setConfirm(null); setRecovery(false);
+      setConfirm(null); setRecovery(next.kind === 'stopped');
       if (nextDestination) {
         setDestination(null);
         await act(nextDestination.action, nextDestination.action === 'reopen' ? {

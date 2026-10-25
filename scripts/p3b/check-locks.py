@@ -16,7 +16,7 @@ checks = []
 def call(name, args):
     names={'create':['p_owner'],'reserve':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
       'claim':['p_owner','p_thread','p_revision','p_request','p_mode','p_fingerprint'],
-      'transition':['p_owner','p_thread','p_revision','p_action','p_snapshot'],'settle':['p_owner','p_request','p_receipt','p_charged']}
+      'transition':['p_owner','p_thread','p_revision','p_action','p_snapshot'],'settle':['p_owner','p_request','p_receipt','p_charged'],'fence':['p_owner','p_thread','p_action']}
     return api('POST','rpc/bfa_p3b_'+name,dict(zip(names[name],args)))
 def denied(name,args):
     try: call(name,args)
@@ -64,6 +64,11 @@ try:
     assert sum(r['remaining_units'] for r in api('GET','bfa_p3b_allowances?owner_id=eq.'+owner))==40
     assert api('GET','bfa_p3b_threads?id=eq.'+t)[0]['deleted_at']
     checks.append('multi-pending text/voice settle-delete terminates, exactly-once balance, tombstone')
+    fresh=call('create',[owner])
+    stopped=call('fence',[owner,fresh,'cancel']); assert stopped==1
+    deleted=call('fence',[owner,fresh,'delete']); assert deleted==2
+    denied('fence',[owner,fresh,'cancel'])
+    checks.append('explicit current-revision Stop/Delete fence and tombstone denial')
     print(json.dumps({'kind':'actual database, NOT authenticated sessions','passed':checks},indent=2))
 finally:
     api('PATCH','bfa_p3b_staging_accounts?user_id=eq.'+owner,{'admitted':False,'expires_at':datetime.datetime.now(datetime.timezone.utc).isoformat()})

@@ -36,9 +36,15 @@ function makeHarness(spiritualPref = false) {
     spiritualPref;
   return {
     store,
+    /** Run every queued callback, oldest first (adversarial ordering possible). */
     flush: () => {
       while (queue.length > 0) queue.shift()!();
     },
+    /** Run only the OLDEST queued callback, leaving the rest pending. */
+    flushOldest: () => {
+      queue.shift()?.();
+    },
+    pendingCount: () => queue.length,
   };
 }
 
@@ -122,6 +128,25 @@ describe("conversation preview store", () => {
     expect(after.messages[1].status).toBe("sent");
   });
 
+  it("retry of a failed message preserves a newer composer draft", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setSimulateSendFailure(true);
+    store.setDraft("older failed A");
+    store.sendDraft();
+    store.setSimulateSendFailure(false);
+    store.setDraft("newer draft B");
+    const failed = store.activeThread()!.messages[0];
+    expect(store.retryMessage(failed.id).ok).toBe(true);
+    // Newer draft B is untouched by A's retry.
+    expect(store.getSnapshot().draft).toBe("newer draft B");
+    flush();
+    const thread = store.activeThread()!;
+    expect(thread.messages[0].text).toBe("older failed A");
+    expect(thread.messages[0].status).toBe("sent");
+    expect(store.getSnapshot().draft).toBe("newer draft B");
+  });
+
   it("Stop response cancels the pending job; the stale completion never lands", () => {
     const { store, flush } = harness;
     store.createThread();
@@ -146,6 +171,60 @@ describe("conversation preview store", () => {
     expect(store.activeThread()!.messages[1].status).toBe("stopped");
   });
 
+  it("a second Send while a reply is generating is refused and the draft is preserved", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("first");
+    expect(store.sendDraft().ok).toBe(true);
+    store.setDraft("second");
+    const result = store.sendDraft();
+    expect(result).toEqual({ ok: false, reason: "response-pending" });
+    expect(store.getSnapshot().draft).toBe("second"); // preserved, not queued
+    expect(store.activeThread()!.messages).toHaveLength(2); // no silent drop
+    flush();
+    const thread = store.activeThread()!;
+    expect(thread.messages[1].status).toBe("sent"); // first completes normally
+    // After completion the second send works.
+    expect(store.sendDraft().ok).toBe(true);
+    flush();
+    expect(store.activeThread()!.messages).toHaveLength(4);
+  });
+
+  it("retry while a reply is generating is refused", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setSimulateSendFailure(true);
+    store.setDraft("failed one");
+    store.sendDraft();
+    store.setSimulateSendFailure(false);
+    store.setDraft("in flight");
+    store.sendDraft();
+    flush(); // wait — "in flight" is generating until flush; do not flush
+    // Re-create the pending state: send again without flushing.
+    store.setDraft("another");
+    store.sendDraft();
+    const failed = store.activeThread()!.messages.find((m) => m.status === "not-sent")!;
+    expect(store.retryMessage(failed.id)).toEqual({ ok: false, reason: "response-pending" });
+  });
+
+  it("save is refused while a reply is generating; no live placeholder is ever saved", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("first");
+    store.sendDraft();
+    expect(store.saveActiveThread()).toEqual({ ok: false, reason: "response-pending" });
+    expect(store.activeThread()!.savedSnapshot).toBeNull();
+    // Finish-with-save is equally refused and stays open.
+    expect(store.finishActiveThread("save")).toEqual({ ok: false, reason: "response-pending" });
+    expect(store.activeThread()).not.toBeNull();
+    flush();
+    // After completion the save succeeds and the snapshot has the real reply.
+    expect(store.saveActiveThread().ok).toBe(true);
+    const snapshot = store.activeThread()!.savedSnapshot!;
+    expect(snapshot.messages[1].status).toBe("sent");
+    expect(snapshot.messages[1].text.length).toBeGreaterThan(0);
+  });
+
   it("simulated save success stores an immutable snapshot; later turns show Unsaved changes", () => {
     const { store, flush } = harness;
     store.createThread();
@@ -156,6 +235,7 @@ describe("conversation preview store", () => {
     expect(store.saveActiveThread().ok).toBe(true);
     const saved = store.activeThread()!;
     expect(store.saveStatus(saved)).toBe("saved");
+    expect(saved.savedAt).toBe("2026-10-25T12:00:00.000Z");
     expect(Object.isFrozen(saved.savedSnapshot)).toBe(true);
     expect(Object.isFrozen(saved.savedSnapshot!.messages)).toBe(true);
     // Later turns create unsaved changes.
@@ -168,6 +248,36 @@ describe("conversation preview store", () => {
     expect(store.activeThread()!.messages).toHaveLength(4);
   });
 
+  it("unsent draft text makes a saved thread show Unsaved changes, never Saved", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("first");
+    store.sendDraft();
+    flush();
+    store.saveActiveThread();
+    expect(store.saveStatus(store.activeThread()!)).toBe("saved");
+    store.setDraft("typed but not sent");
+    expect(store.saveStatus(store.activeThread()!)).toBe("unsaved-changes");
+  });
+
+  it("finish never silently discards unsent draft text", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("first");
+    store.sendDraft();
+    flush();
+    store.saveActiveThread();
+    store.setDraft("unsent words");
+    expect(store.finishActiveThread("discard")).toEqual({ ok: false, reason: "unsent-draft" });
+    expect(store.activeThread()).not.toBeNull();
+    expect(store.getSnapshot().draft).toBe("unsent words"); // preserved
+    // Explicit acknowledgment discards only the draft, keeping saved messages.
+    expect(store.finishActiveThread("discard", { discardDraft: true }).ok).toBe(true);
+    const kept = store.getSnapshot().threads[0];
+    expect(kept.messages).toHaveLength(2);
+    expect(kept.savedSnapshot).not.toBeNull();
+  });
+
   it("simulated save failure changes nothing and reports failure", () => {
     const { store, flush } = harness;
     store.createThread();
@@ -175,11 +285,11 @@ describe("conversation preview store", () => {
     store.sendDraft();
     flush();
     store.setSimulateSaveFailure(true);
-    expect(store.saveActiveThread().ok).toBe(false);
+    expect(store.saveActiveThread()).toEqual({ ok: false, reason: "save-failed" });
     expect(store.saveStatus(store.activeThread()!)).toBe("not-saved");
     expect(store.activeThread()!.savedSnapshot).toBeNull();
     // Finish-with-save also refuses to close on a failed save.
-    expect(store.finishActiveThread("save").ok).toBe(false);
+    expect(store.finishActiveThread("save")).toEqual({ ok: false, reason: "save-failed" });
     expect(store.activeThread()).not.toBeNull();
   });
 
@@ -199,24 +309,73 @@ describe("conversation preview store", () => {
     expect(thread.messages).toHaveLength(2);
     expect(thread.title).toBe("My thread");
     expect(store.saveStatus(thread)).toBe("saved");
-    // Cancel preserves active state.
+    // Cancel preserves active state (no pending switch recorded here).
     store.setDraft("draft kept");
     store.resolveSwitchDecision("cancel");
     expect(store.getSnapshot().draft).toBe("draft kept");
     expect(store.activeThread()!.messages).toHaveLength(2);
   });
 
-  it("switching away with unsaved changes requires a decision", () => {
+  it("switching away with unsaved changes requires a decision, then completes the switch", () => {
     const { store, flush } = harness;
     store.createThread();
     store.setDraft("unsaved");
     store.sendDraft();
     flush();
+    const firstId = store.activeThread()!.id;
     const result = store.requestSwitch({ kind: "new" });
     expect(result).toEqual({ ok: false, reason: "needs-decision" });
+    expect(store.getSnapshot().pendingSwitch).toEqual({ kind: "new" });
+    expect(store.activeThread()!.id).toBe(firstId); // nothing changed yet
     store.resolveSwitchDecision("save");
-    expect(store.saveStatus(store.activeThread()!)).toBe("saved");
+    // Save succeeded, so the pending switch completed.
+    expect(store.getSnapshot().pendingSwitch).toBeNull();
+    expect(store.activeThread()!.id).not.toBe(firstId);
+    const first = store.getSnapshot().threads.find((t) => t.id === firstId)!;
+    expect(store.saveStatus(first)).toBe("saved");
+    // A clean thread switches immediately.
     expect(store.requestSwitch({ kind: "new" }).ok).toBe(true);
+  });
+
+  it("an unsent draft also guards switching; discard drops only the draft and changes", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("saved");
+    store.sendDraft();
+    flush();
+    store.saveActiveThread("Guarded");
+    store.setDraft("unsent draft");
+    const result = store.requestSwitch({ kind: "new" });
+    expect(result).toEqual({ ok: false, reason: "needs-decision" });
+    // Cancel restores exactly: same thread, same draft.
+    store.resolveSwitchDecision("cancel");
+    expect(store.activeThread()!.title).toBe("Guarded");
+    expect(store.getSnapshot().draft).toBe("unsent draft");
+    // Discard drops the draft, keeps the saved snapshot, then switches.
+    store.requestSwitch({ kind: "new" });
+    store.resolveSwitchDecision("discard");
+    const guarded = store.getSnapshot().threads.find((t) => t.title === "Guarded")!;
+    expect(guarded.messages).toHaveLength(2);
+    expect(store.getSnapshot().draft).toBe("");
+    expect(store.activeThread()!.id).not.toBe(guarded.id);
+  });
+
+  it("a failed save during a switch decision stays put; nothing is lost", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("unsaved");
+    store.sendDraft();
+    flush();
+    const firstId = store.activeThread()!.id;
+    store.requestSwitch({ kind: "new" });
+    store.setSimulateSaveFailure(true);
+    const result = store.resolveSwitchDecision("save");
+    expect(result).toEqual({ ok: false, reason: "save-failed" });
+    expect(store.activeThread()!.id).toBe(firstId); // stayed
+    expect(store.getSnapshot().pendingSwitch).toEqual({ kind: "new" }); // still pending
+    store.setSimulateSaveFailure(false);
+    expect(store.resolveSwitchDecision("save").ok).toBe(true);
+    expect(store.activeThread()!.id).not.toBe(firstId);
   });
 
   it("finish without saving a new thread removes it; a saved thread keeps its snapshot", () => {
@@ -257,6 +416,7 @@ describe("conversation preview store", () => {
     expect(store.getSnapshot().activeThreadId).toBeNull();
     expect(store.requestSwitch({ kind: "open", threadId: id }).ok).toBe(true);
     expect(store.getSnapshot().voice).toBe("off");
+    expect(store.getSnapshot().draft).toBe(""); // no unrelated draft carried over
     store.setDraft("follow-up");
     store.sendDraft();
     flush();
@@ -290,6 +450,61 @@ describe("conversation preview store", () => {
     expect(state.introAcknowledged).toBe(false);
     flush();
     expect(store.getSnapshot().threads).toHaveLength(0);
+  });
+
+  it("adversarial: a pre-clear callback can never fill a post-clear request", () => {
+    const { store, flushOldest, pendingCount } = harness;
+    // Before clear: send "I miss my mum" (job scheduled, not yet run).
+    store.createThread();
+    store.setDraft("I miss my mum");
+    store.sendDraft();
+    expect(pendingCount()).toBe(1);
+    // Clear everything, then make a NEW request that reuses nothing.
+    store.handleAppClear();
+    store.acknowledgeIntro();
+    store.createThread();
+    store.setDraft("inbox work tomorrow");
+    store.sendDraft();
+    expect(pendingCount()).toBe(2); // old callback + new callback
+    // Run the OLD callback first: it must be dropped by epoch validation.
+    flushOldest();
+    let thread = store.activeThread()!;
+    expect(thread.messages[1].status).toBe("generating"); // untouched
+    expect(thread.messages[1].text).toBe("");
+    // Run the NEW callback: only it may complete the new request.
+    flushOldest();
+    thread = store.activeThread()!;
+    expect(thread.messages[1].status).toBe("sent");
+    expect(thread.messages[1].text).toContain("deadline"); // inbox reply, NOT "miss her"
+    expect(thread.messages[1].text).not.toContain("miss her");
+  });
+
+  it("rename of a saved thread saves the snapshot title only; failure changes nothing", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.setDraft("saved");
+    store.sendDraft();
+    flush();
+    store.saveActiveThread("Old name");
+    const id = store.activeThread()!.id;
+    // Simulated failure: name unchanged, error reported.
+    store.setSimulateSaveFailure(true);
+    expect(store.renameThread(id, "New name")).toEqual({ ok: false, reason: "save-failed" });
+    expect(store.getSnapshot().threads[0].title).toBe("Old name");
+    expect(store.getSnapshot().threads[0].savedSnapshot!.title).toBe("Old name");
+    store.setSimulateSaveFailure(false);
+    // Success: both working title and saved snapshot title update.
+    expect(store.renameThread(id, "New name").ok).toBe(true);
+    const renamed = store.getSnapshot().threads[0];
+    expect(renamed.title).toBe("New name");
+    expect(renamed.savedSnapshot!.title).toBe("New name");
+    // A later Discard keeps the renamed title (it was explicitly saved).
+    store.setDraft("unsent turn");
+    store.sendDraft();
+    flush();
+    store.discardActiveChanges();
+    expect(store.activeThread()!.title).toBe("New name");
+    expect(store.activeThread()!.messages).toHaveLength(2);
   });
 
   it("shares exact teaching bytes only after confirmation; cancel shares nothing", () => {
@@ -332,6 +547,49 @@ describe("conversation preview store", () => {
     expect(store.getSnapshot().voice).toBe("listening");
     store.finishTalking();
     expect(store.getSnapshot().voice).toBe("off");
+  });
+
+  it("pause while connecting cancels the pending connection timer", () => {
+    const { store, flush } = harness;
+    store.createThread();
+    store.startTalking();
+    expect(store.getSnapshot().voice).toBe("connecting");
+    store.pauseVoice();
+    expect(store.getSnapshot().voice).toBe("paused");
+    flush(); // the old connection timer must NOT advance to listening
+    expect(store.getSnapshot().voice).toBe("paused");
+  });
+
+  it("an old connection timer never advances a newly started session", () => {
+    const { store, flushOldest, pendingCount } = harness;
+    store.createThread();
+    store.startTalking(); // session 1 timer queued
+    store.finishTalking(); // invalidates session 1
+    store.startTalking(); // session 2 timer queued
+    expect(pendingCount()).toBe(2);
+    flushOldest(); // stale session-1 timer: dropped
+    expect(store.getSnapshot().voice).toBe("connecting");
+    flushOldest(); // session-2 timer: advances
+    expect(store.getSnapshot().voice).toBe("listening");
+  });
+
+  it("turning Christian reflection off while speaking ends the voice session", () => {
+    const { store, flush } = harness;
+    const on = makeHarness(true);
+    on.store.createThread();
+    on.store.startTalking();
+    on.flush();
+    expect(on.store.getSnapshot().voice).toBe("listening");
+    on.store.setDraft("church hurt");
+    on.store.sendDraft();
+    expect(on.store.getSnapshot().voice).toBe("speaking");
+    on.store.setPreviewSpiritual(false);
+    // Reply stopped AND voice session explicitly ended — not left speaking.
+    expect(on.store.activeThread()!.messages[1].status).toBe("stopped");
+    expect(on.store.getSnapshot().voice).toBe("off");
+    on.flush();
+    expect(on.store.getSnapshot().voice).toBe("off");
+    expect(on.store.activeThread()!.messages[1].status).toBe("stopped");
   });
 
   it("simulated disconnection preserves the thread and offers reconnect", () => {

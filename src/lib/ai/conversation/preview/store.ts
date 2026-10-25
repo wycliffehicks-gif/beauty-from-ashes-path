@@ -125,6 +125,9 @@ export interface PreviewState {
   readonly sharePreview: ConversationTeachingRecord | null;
   /** A switch request waiting on a Save/Discard/Cancel decision. */
   readonly pendingSwitch: { readonly kind: "new" } | { readonly kind: "open"; readonly threadId: string } | null;
+  /** A finalized transcript held back because the composer has typed text;
+   *  awaits an explicit Replace/Append/Cancel choice. Never auto-sent. */
+  readonly pendingTranscript: string | null;
   /** Review controls (explicitly not participant controls). */
   readonly simulateSendFailure: boolean;
   readonly simulateSaveFailure: boolean;
@@ -144,6 +147,7 @@ const EMPTY_STATE: PreviewState = Object.freeze({
   voiceMuted: false,
   sharePreview: null,
   pendingSwitch: null,
+  pendingTranscript: null,
   simulateSendFailure: false,
   simulateSaveFailure: false,
   simulatePreferenceFailure: false,
@@ -384,7 +388,7 @@ export class ConversationPreviewStore {
       this.service?.voice.end("switch");
       this.state = { ...this.state, voice: "off", voiceMuted: false };
       this.createThread();
-      this.state = { ...this.state, pendingSwitch: null };
+      this.state = { ...this.state, pendingSwitch: null, pendingTranscript: null };
       this.emit();
       return OK;
     }
@@ -405,6 +409,7 @@ export class ConversationPreviewStore {
       draft: "",
       draftThreadId: target.id,
       pendingSwitch: null,
+      pendingTranscript: null,
     };
     this.emit();
     return OK;
@@ -1057,8 +1062,59 @@ export class ConversationPreviewStore {
       voice && this.state.voice === "listening" && !this.state.voiceMuted
         ? voice.finalizeTranscript(text, voice.origin())
         : (voice?.finalizeTranscript(text, { sessionId: null, outputGeneration: -1, threadId: null }) ?? null);
-    if (final) this.setDraft(final);
-    else this.emit();
+    if (!final) {
+      this.emit();
+      return;
+    }
+    // Never destroy typed text: a non-empty draft holds the transcript back
+    // for an explicit Replace/Append/Cancel choice. Cancel/reject preserves
+    // the draft exactly and the transcript is never sent or made context.
+    if (this.activeDraft().trim().length > 0) {
+      this.state = { ...this.state, pendingTranscript: final };
+      this.emit();
+      return;
+    }
+    this.setDraft(final);
+  }
+
+  /**
+   * Resolve a held-back finalized transcript. Replace/Append are explicit;
+   * Cancel preserves the typed draft exactly. The transcript is never sent
+   * by any of these choices and creates no context or grants.
+   */
+  resolveTranscriptChoice(choice: "replace" | "append" | "cancel"): StoreResult {
+    const pending = this.state.pendingTranscript;
+    if (pending === null) return { ok: false, reason: "no-thread" };
+    this.state = { ...this.state, pendingTranscript: null };
+    if (choice === "replace") {
+      this.setDraft(pending);
+      return OK;
+    }
+    if (choice === "append") {
+      const existing = this.activeDraft().replace(/\s+$/, "");
+      this.setDraft(existing.length > 0 ? `${existing}\n${pending}` : pending);
+      return OK;
+    }
+    this.emit();
+    return OK;
+  }
+
+  /**
+   * A private spoken practice invitation is current ONLY for the same mock
+   * session that is still confirmed paused (capture and transport closed).
+   * Resume, disconnect, switch, delete, clear or a failed shutdown all make
+   * a previously shown invitation stale.
+   */
+  isPrivatePracticeOfferCurrent(sessionId: string | null): boolean {
+    const voice = this.service?.voice;
+    return (
+      !!voice &&
+      this.state.voice === "paused" &&
+      voice.sessionId !== null &&
+      voice.sessionId === sessionId &&
+      voice.capture === "closed" &&
+      voice.transport === "closed"
+    );
   }
 
   /** Developer fixture: mark earlier history missing (gap is reported). */

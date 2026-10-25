@@ -53,7 +53,55 @@ export function ConversationPreview() {
       ) : (
         <StartScreen state={state} store={store} />
       )}
+      {state.hydrated ? <TranscriptDialog state={state} store={store} /> : null}
     </main>
+  );
+}
+
+/**
+ * A finalized simulated transcript arrived while the composer held typed
+ * text. Nothing is merged silently and nothing is sent: the person chooses
+ * Replace, Append or Keep (cancel), and cancel preserves the draft exactly.
+ */
+function TranscriptDialog({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  const pending = state.pendingTranscript;
+  return (
+    <AlertDialog
+      open={pending !== null}
+      onOpenChange={(open) => {
+        if (!open) store.resolveTranscriptChoice("cancel");
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Use the finalized transcript?</AlertDialogTitle>
+          <AlertDialogDescription>
+            You already have typed text in the composer. The transcript is never sent automatically — choose what to
+            do with it.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        {pending !== null ? (
+          <p className="rounded-md border border-border bg-muted p-3 text-sm text-foreground">{pending}</p>
+        ) : null}
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => store.resolveTranscriptChoice("cancel")}>
+            Keep my typed text
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={() => store.resolveTranscriptChoice("append")}>
+            Append to my text
+          </AlertDialogAction>
+          <AlertDialogAction onClick={() => store.resolveTranscriptChoice("replace")}>
+            Replace my text
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -797,6 +845,11 @@ function VoicePanel({
         <Button type="button" size="sm" variant="outline" onClick={() => store.finishTalking()}>
           Finish talking
         </Button>
+        {state.voice === "speaking" ? (
+          <Button type="button" size="sm" variant="outline" onClick={() => store.stopResponse()}>
+            Interrupt reply (stop speaking)
+          </Button>
+        ) : null}
       </div>
       {store.service ? <VoiceFixtureControls state={state} store={store} /> : null}
     </div>
@@ -810,7 +863,7 @@ function VoiceFixtureControls({
   state: PreviewState;
   store: ConversationPreviewStore;
 }) {
-  const [practice, setPractice] = useState<string | null>(null);
+  const [practice, setPractice] = useState<{ text: string; sessionId: string | null } | null>(null);
   const voice = store.service!.voice;
   return (
     <div className="mt-3 rounded-md border border-dashed border-border p-2">
@@ -837,15 +890,23 @@ function VoiceFixtureControls({
           onClick={() =>
             setPractice(
               voice.privatePracticeAvailable()
-                ? PRIVATE_PRACTICE_FIXTURE
-                : "Blocked: the private spoken practice is only offered after Pause has a confirmed mock shutdown.",
+                ? { text: PRIVATE_PRACTICE_FIXTURE, sessionId: voice.sessionId }
+                : {
+                    text: "Blocked: the private spoken practice is only offered after Pause has a confirmed mock shutdown.",
+                    sessionId: null,
+                  },
             )
           }
         >
           Offer private spoken practice
         </Button>
       </div>
-      {practice ? <p className="mt-2 text-sm text-foreground" role="status">{practice}</p> : null}
+      {practice &&
+      (practice.sessionId === null || store.isPrivatePracticeOfferCurrent(practice.sessionId)) ? (
+        <p className="mt-2 text-sm text-foreground" role="status">
+          {practice.text}
+        </p>
+      ) : null}
       <p className="mt-2 text-xs text-muted-foreground">
         Mock session {voice.sessionId ?? "none"} · capture {voice.capture} · transport {voice.transport} ·
         segments: {voice.segments.map((s) => s.state).join(", ") || "none"} · fragments:{" "}

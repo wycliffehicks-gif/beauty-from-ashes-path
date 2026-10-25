@@ -68,6 +68,16 @@ Fixed, each with a regression in `__tests__/p3a-repair.test.ts` (real async stor
 
 Run: `bunx vitest run src/lib/ai/conversation` → **8 files, 214 passed** (98 prior P0–P2 tests unchanged; 81 `p3a-service`, 11 `p3a-store-integration`, 24 `p3a-repair`). The older external 13-case P2 harness did not inject the service and is historical fallback-path evidence only.
 
+## UI follow-up (review of `92649bbb…`)
+
+Three further defects, each with a regression in `p3a-repair.test.ts` (now 30 tests):
+
+- **Private practice offer staleness.** The invitation is rendered only while the SAME mock session that offered it is still confirmed paused (capture and transport closed); Resume, Finish, disconnect, switch, delete, clear and failed shutdown all make it stale (`store.isPrivatePracticeOfferCurrent`).
+- **Interrupt reply.** While simulated voice output is queued/playing (state Speaking), an explicit "Interrupt reply (stop speaking)" action calls `stopResponse()`: queued segments are cancelled and the session stays listening — no stale arrivals (origin tickets still reject them).
+- **Transcript vs typed draft.** A finalized transcript never overwrites typed composer text. With a non-empty draft it is held as `pendingTranscript` behind an explicit Replace / Append / Keep-my-typed-text dialog; cancel preserves the draft exactly and the transcript is never sent and creates no context or grants. An empty composer still takes the transcript directly. A pending choice is dropped on thread switch and clear-all.
+
+Verified: `bunx vitest run src/lib/ai/conversation` → **8 files, 220 passed**; automatic build OK (2026-10-25T22:28Z). Playwright Chromium walkthrough (`/tmp/browser/p3a/ui3.py`) at 390px and 1280px: offer visible only while paused and cleared on Resume; Interrupt visible while Speaking and returns to Listening with the session kept; dialog opens with the typed draft preserved, Escape cancels keeping the draft, Append merges both texts. No page errors; only font requests left localhost. Still not verified: physical devices, real microphone/audio, screen readers, production identity/storage.
+
 ## Rollback
 
 To return to the P2 fake service, revert forward to `e174235c` or remove `createService` in `getBrowserStore()`. With no service the store uses the P2 path unchanged. Do not rewrite history.

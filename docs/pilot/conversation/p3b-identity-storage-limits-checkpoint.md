@@ -2,9 +2,9 @@
 
 Starting baseline: `978908c5b6ca0905250609be7c95a338da1f1a4a`, tree `94fec8de7e4726fffcb3f0867db9b9b81ce54f6e` (verified locally). P3b is **NOT accepted or complete**. Participant AI/real voice remain OFF; unpublished. No v5, model, voice or paid-provider command ran.
 
-## Required decision
+## Confirmed identity scope
 
-The required profile-data question was asked before any application authentication code: whether staging identity needs display names, avatars or other profile data. Answer pending. No profiles, sign-in/sign-up UI, test accounts, staging permissions, owned server functions or staging admission were implemented. General signup configuration has **not** been verified or changed; there is no app signup affordance or admitted staging account. The shared gate cookie remains a gate, not identity.
+Carl confirmed identity-only fictional staging accounts on 25 October 2026: immutable verified auth subject plus a server-controlled explicit allowlist. No profiles or extra personal fields; spiritual preferences remain a separate approved application setting. No product decision is pending. General signup configuration has **not yet** been verified or changed. The shared gate cookie remains a gate, not identity.
 
 ## Implemented independently of that decision
 
@@ -41,7 +41,7 @@ There are currently **zero application transcript writes** to Cloud. The accepte
 
 ## Remaining implementation within P3b
 
-After the profile decision: verify hosted signup settings and disable public enrollment without altering unknown settings; create disposable fictional A/B accounts without emails; server-verified staging allowlist/ownership checks plus RLS; integrate one service authority with explicitly saved validated snapshots (not client trusted history); transactionally reserve/claim/reconcile in database; connect isolated developer UI only; run the complete actual O01–O08 matrix and keyboard/narrow/wide flows. No P4.
+Verify hosted signup settings and disable public enrollment without altering unknown settings; create disposable fictional A/B accounts without sending emails; server-verified staging allowlist/ownership checks plus RLS; integrate one service authority with explicitly saved validated snapshots (not client trusted history); transactionally reserve/claim/reconcile in database; connect isolated developer UI only; run the complete actual O01–O08 matrix and keyboard/narrow/wide flows. No P4.
 
 ## Cost / sync / rollback
 

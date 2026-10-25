@@ -381,6 +381,11 @@ export class ConversationPreviewStore {
       return OK;
     }
     if (decision === "save") {
+      // Unsent composer text can never be part of a save. Refuse BEFORE any
+      // save/switch mutation so the pending target and exact draft survive.
+      if (this.activeDraft().trim().length > 0) {
+        return { ok: false, reason: "unsent-draft" };
+      }
       const saved = this.saveActiveThread();
       if (!saved.ok) return saved; // failed save: stay, dialog stays
     } else {

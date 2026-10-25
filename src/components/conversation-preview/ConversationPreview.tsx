@@ -286,6 +286,7 @@ function ThreadScreen({
   const [finishOpen, setFinishOpen] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [switchError, setSwitchError] = useState<string | null>(null);
   const [browsing, setBrowsing] = useState(false);
   if (!thread) return null;
 
@@ -328,6 +329,29 @@ function ThreadScreen({
         ? "A response is still being generated. Stop it or wait, then finish."
         : "Not saved (simulated failure). The conversation is still open.",
     );
+  };
+
+  const attemptSwitchSave = (event: { preventDefault(): void }) => {
+    const result = store.resolveSwitchDecision("save");
+    if (result.ok) {
+      setSwitchError(null);
+      return;
+    }
+    // Keep the dialog open on failure (AlertDialogAction closes by default);
+    // the pending target, active thread and draft are all preserved.
+    event.preventDefault();
+    setSwitchError(
+      result.reason === "unsent-draft"
+        ? "Send or clear your unsent draft before saving and switching, or choose Discard & continue."
+        : result.reason === "response-pending"
+          ? "A response is still being generated. Stop it or wait, then save."
+          : "Not saved (simulated failure). Nothing changed; you are still here.",
+    );
+  };
+
+  const cancelSwitch = () => {
+    store.resolveSwitchDecision("cancel");
+    setSwitchError(null);
   };
 
   return (
@@ -471,7 +495,7 @@ function ThreadScreen({
       <AlertDialog
         open={state.pendingSwitch !== null}
         onOpenChange={(open) => {
-          if (!open) store.resolveSwitchDecision("cancel");
+          if (!open) cancelSwitch();
         }}
       >
         <AlertDialogContent>
@@ -479,20 +503,34 @@ function ThreadScreen({
             <AlertDialogTitle>Leave this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
               {hasUnsentDraft
-                ? "You have unsent text and possibly unsaved changes. "
+                ? "You have unsent text and possibly unsaved changes. Unsent text cannot be saved — send or clear it first, discard it, or cancel and stay. "
                 : "You have unsaved changes. "}
-              Save them (simulated), discard them, or cancel and stay.
+              {hasUnsentDraft
+                ? "Discard & continue discards the unsent text and unsaved changes."
+                : "Save them (simulated), discard them, or cancel and stay."}
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {hasUnsentDraft ? (
+            <p className="text-sm text-muted-foreground">
+              Send or clear your unsent draft before saving and switching, or
+              choose Discard &amp; continue.
+            </p>
+          ) : null}
+          {switchError ? (
+            <p role="alert" className="text-sm text-destructive">
+              {switchError}
+            </p>
+          ) : null}
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => store.resolveSwitchDecision("cancel")}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelSwitch}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => store.resolveSwitchDecision("discard")}>
-              Discard & continue
+              Discard &amp; continue
             </AlertDialogAction>
-            <AlertDialogAction onClick={() => store.resolveSwitchDecision("save")} disabled={pending}>
-              Save & continue (simulated)
+            <AlertDialogAction
+              onClick={attemptSwitchSave}
+              disabled={pending || hasUnsentDraft}
+            >
+              Save &amp; continue (simulated)
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

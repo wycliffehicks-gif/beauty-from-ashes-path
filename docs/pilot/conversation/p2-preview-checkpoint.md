@@ -106,12 +106,28 @@ microphone or database is involved anywhere in this package.
     completed/in-progress from actual `completedDays`; the resume link remains
     `/day/$day` with `{resume: true}`; no progress is ever mutated.
 
+## Final switch-flow correction (second independent review)
+
+11. **Failed switch-save no longer auto-closes.** The switch dialog's
+    Save & continue now inspects `result.ok` and prevents the Radix default
+    close on failure, so a simulated save failure keeps the dialog open,
+    shows a `role="alert"` reason, and preserves the pending target, active
+    thread and draft. Cancel remains the only way out without switching.
+12. **Unsent text can never be silently lost by a switch-save.**
+    `resolveSwitchDecision("save")` refuses with `unsent-draft` in the
+    controller BEFORE any save/switch mutation whenever the composer holds
+    non-whitespace text; the UI disables Save & continue in that state and
+    explains: send or clear the draft first, or choose Discard & continue.
+    Cancel keeps the exact draft; Discard explicitly drops it. Drafts are
+    never auto-sent. An ordinary Save still saves submitted messages only
+    while retaining the draft, as its wording states.
+
 ## Checks actually run
 
-- `bunx vitest run src/lib/ai/conversation` — 5 files, 97 tests passed
-  (64 P1 + 33 P2 store tests, including adversarial clear/epoch, concurrent
-  send, save-during-generation, draft-ownership, rename and voice-timer
-  regressions).
+- `bunx vitest run src/lib/ai/conversation` — 5 files, 98 tests passed
+  (64 P1 + 34 P2 store tests, including adversarial clear/epoch, concurrent
+  send, save-during-generation, draft-ownership, rename, voice-timer and
+  unsent-draft switch-save regressions).
 - `bunx vitest run src/lib/journey src/lib/ai/__tests__/journey-boundary.test.ts src/content/__tests__` — 23 files, 515 tests passed (pre-repair; journey/content paths unchanged by the repair).
 - Automatic build: OK after the repaired component (one typecheck error on
   the journey-progress hook shape was found by automatic diagnostics and
@@ -123,6 +139,13 @@ microphone or database is involved anywhere in this package.
   Cancel restores the exact draft; a clean saved thread switches without a
   dialog; share dialog Escape shares nothing; voice simulator states render.
   Screenshots reviewed.
+- Playwright switch-flow correction checks (Chromium, 390px): failed
+  switch-save keeps the dialog open with a visible `role="alert"` error and
+  the active thread unchanged; Cancel closes and preserves; with an unsent
+  draft, Save & continue is disabled with the truthful explanation, Cancel
+  preserves the exact draft, Discard & continue switches and clears it; a
+  clean switch with no draft completes without a dialog. Screenshots
+  reviewed.
 
 ## NOT verified here (required later)
 

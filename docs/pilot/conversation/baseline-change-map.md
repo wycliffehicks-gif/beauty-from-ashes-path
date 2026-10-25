@@ -21,7 +21,7 @@
 | `src/lib/ai/conversation/content/teaching.ts` | Generated: ten day-teaching records (Understand heading + body only), extracted byte-exact from `journey-days-a/b.ts`. |
 | `src/lib/ai/conversation/content/index.ts` | Builds teaching source records from the generated records at snapshot commit `4b218c45d021b4b9b3ee99f271d15e775db3576c`. |
 | `src/lib/ai/conversation/index.ts` | Namespace barrel. Nothing outside the namespace imports it. |
-| `src/lib/ai/conversation/__tests__/{contract,grants,sources,context}.test.ts` | 58 focused tests. |
+| `src/lib/ai/conversation/__tests__/{contract,grants,sources,context}.test.ts` | 64 focused tests. |
 | `docs/pilot/conversation/candidate-policy-block.txt` | The exact guide §9 body (Markdown quote prefixes stripped, one trailing LF; 4,043 bytes). |
 | `docs/pilot/conversation/v5-observations-change-note.md` | Carl's two v5 wording observations, parked as reviewer observations for later policy refinement. |
 | `docs/pilot/conversation/baseline-change-map.md` | This file. |
@@ -60,7 +60,7 @@ No test claims mocked fixtures prove model behavior. No full O03/O04/C08–C12 p
 
 ## Checks actually run (post-repair)
 
-- `bunx vitest run src/lib/ai/conversation` — 58/58 passed (contract 17, grants 8, sources 15, context 18→23 after repair additions).
+- `bunx vitest run src/lib/ai/conversation` — 64/64 passed (contract 12, grants 8, sources 15, context 29 after the P2-turn binding/expiry corrections: stored-preview ID equality, epoch-based expiry with required valid clock, boundary equality and timezone-offset cases).
 - `bunx vitest run src/lib/ai/__tests__/journey-boundary.test.ts src/content/__tests__` — 76/76 passed.
 - Automatic build: OK. An earlier automatic typecheck flagged a zod v3 API mismatch (`z.core.$ZodIssue`); corrected to `z.ZodIssue` and re-verified by the passing suites and subsequent automatic build. No manual tsc/build command was run.
 

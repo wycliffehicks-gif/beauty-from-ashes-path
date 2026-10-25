@@ -13,6 +13,12 @@
 //    cancels every pending simulated job.
 //  - No microphone, speech, WebRTC or mediaDevices access anywhere. The voice
 //    panel is an explicitly labelled STATE SIMULATOR.
+//
+// P3a: when a ConversationService is attached (the browser default), every
+// confirmed lifecycle change (create/send/stop/save/discard/delete/clear/
+// preference/share/voice) is routed to it, and replies come from its MOCK
+// provider via a single synchronous commit point. Without a service the P2
+// fake-service path remains (that is the documented rollback).
 
 import { useSyncExternalStore } from "react";
 
@@ -24,7 +30,7 @@ import {
 } from "../content/teaching";
 import { fictionalReply } from "./fake-service";
 import type { SourceCard } from "../sources";
-import type { ConversationService, TurnOutcome } from "../service/service";
+import { ConversationService, type TurnOutcome } from "../service/service";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -1062,7 +1068,7 @@ let browserStore: ConversationPreviewStore | null = null;
 function getBrowserStore(): ConversationPreviewStore {
   if (!browserStore) {
     browserStore = new ConversationPreviewStore({
-      createService: () => new ServiceCtor(),
+      createService: () => new ConversationService(),
     });
   }
   return browserStore;

@@ -1,749 +1,852 @@
-// Conversation preview — S1–S8 developer preview UI.
+// Conversation preview — S1–S8 screens with a deterministic fake service.
 //
-// Everything on this screen is SIMULATED: fictional deterministic responses,
-// session-only in-memory saving, and a voice STATE SIMULATOR with no
-// microphone, audio, speech or network connection of any kind. The persistent
-// banner says so. This route is not linked from participant navigation.
+// DEVELOPER PREVIEW ONLY. Fictional responses, session-only simulated
+// saving, no AI or microphone connection. Unlinked from participant
+// navigation. See docs/pilot/conversation/p2-preview-checkpoint.md.
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { getJourneyDayById } from "@/content/journey";
-import { hasMeaningfulProgress, useJourneyProgress } from "@/lib/journey/progress";
+import {
+  hasMeaningfulProgress,
+  useJourneyProgress,
+} from "@/lib/journey/progress";
 import { CONVERSATION_TEACHING_RECORDS } from "@/lib/ai/conversation/content/teaching";
 import {
   useConversationPreview,
+  type ConversationPreviewStore,
   type PreviewMessage,
+  type PreviewState,
   type PreviewThread,
-  type VoiceSimState,
 } from "@/lib/ai/conversation/preview/store";
-
-const VOICE_LABELS: Record<VoiceSimState, string> = {
-  off: "Voice off",
-  connecting: "Connecting",
-  listening: "Listening",
-  speaking: "Speaking",
-  paused: "Paused",
-  disconnected: "Disconnected",
-};
 
 export function ConversationPreview() {
   const { state, store } = useConversationPreview();
-  const active = state.threads.find((t) => t.id === state.activeThreadId) ?? null;
-
-  if (!state.hydrated) {
-    return (
-      <div className="container-page flex min-h-[60dvh] items-center justify-center" role="status">
-        <p className="bfa-copy-support text-muted-foreground">One moment…</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="journey-page">
-      <div className="container-page flex min-h-[100dvh] flex-col">
-        <header className="grid grid-cols-2 items-center gap-2 bfa-top-safe pb-2">
-          <Link to="/" aria-label="Home — Your Journey" className="journey-chrome-btn journey-chrome-btn-labelled justify-self-start">
-            <span className="min-w-0 [overflow-wrap:anywhere]">Home</span>
-          </Link>
-          <span aria-hidden />
-        </header>
-
-        <main className="flex-1 space-y-6 pb-10">
-          <PreviewBanner />
-
-          {!state.introAcknowledged ? (
-            <IntroScreen store={store} draft={state.draft} />
-          ) : active ? (
-            <ThreadScreen store={store} state={state} thread={active} />
-          ) : (
-            <StartScreen store={store} state={state} />
-          )}
-
-          <ReviewControls store={store} state={state} />
-        </main>
-      </div>
-    </div>
-  );
-}
-
-type Store = ReturnType<typeof useConversationPreview>["store"];
-type State = ReturnType<typeof useConversationPreview>["state"];
-
-function PreviewBanner() {
-  return (
-    <p
-      role="note"
-      className="rounded-lg border border-[color:var(--bfa-interactive-gold)] bg-card px-4 py-2 text-center text-sm font-medium text-foreground"
-    >
-      Developer preview · fictional responses · session-only simulated saving
-    </p>
+    <main className="mx-auto w-full max-w-2xl px-4 pb-16 pt-6">
+      <p
+        role="status"
+        className="mb-4 rounded-md border border-border bg-muted px-3 py-2 text-center text-sm font-medium text-foreground"
+      >
+        Developer preview · fictional responses · session-only simulated saving
+      </p>
+      {!state.hydrated ? null : !state.introAcknowledged ? (
+        <IntroScreen onContinue={() => store.acknowledgeIntro()} />
+      ) : state.activeThreadId ? (
+        <ThreadScreen state={state} store={store} />
+      ) : (
+        <StartScreen state={state} store={store} />
+      )}
+    </main>
   );
 }
 
 // ---------------------------------------------------------------------------
-// S2 — one-time introduction (truthful about the CURRENT preview behavior)
+// S1 — first-entry introduction
 
-function IntroScreen({ store, draft }: { store: Store; draft: string }) {
+function IntroScreen({ onContinue }: { onContinue: () => void }) {
   return (
-    <section aria-labelledby="conv-intro-heading" className="space-y-4 rounded-xl border border-border bg-card p-5">
-      <h1 id="conv-intro-heading" className="bfa-h2 font-serif text-foreground">
-        Before the first message
+    <section aria-labelledby="preview-intro-heading" className="space-y-4">
+      <h1 id="preview-intro-heading" className="font-serif text-2xl">
+        Conversation preview — please read first
       </h1>
-      <div className="bfa-copy space-y-3 text-foreground">
+      <div className="space-y-3 text-foreground">
         <p>
-          This is a developer preview of a planned conversation feature. There is
-          no AI service and no microphone connected: every reply is a fictional,
-          pre-written response, and the voice controls only simulate states.
+          This is a developer preview of a possible conversation feature. It is
+          not connected to any AI service, and nothing here understands what
+          you write — replies are pre-written fictional examples.
         </p>
         <p>
-          Nothing here is permanently saved. Conversations you &ldquo;save&rdquo; and any
-          unsaved draft disappear when you refresh or close this page. Please use
-          fictional test text, not genuine personal writing.
+          There is no microphone or audio connection. The voice controls only
+          demonstrate the states a real feature would show.
         </p>
         <p>
-          The real journey is untouched: this preview never changes your progress,
-          your answers, or your private writing.
+          Saving is simulated and session-only: everything you do here
+          disappears when you refresh or close this page. Please use fictional
+          test text only — do not write anything genuinely personal or
+          sensitive here.
+        </p>
+        <p>
+          Your journey, your answers and your private writing are not part of
+          this preview and are not changed by it.
         </p>
       </div>
-      {draft.trim().length > 0 && (
-        <p className="bfa-copy-support text-muted-foreground">
-          Your typed opening is kept in the composer until you choose Send.
-        </p>
-      )}
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <button type="button" className="btn-primary-journey flex-1" onClick={() => store.acknowledgeIntro()}>
-          Continue
-        </button>
-        <Link to="/" className="btn-quiet flex-1 text-center">
-          Return to Home
-        </Link>
-      </div>
+      <Button type="button" onClick={onContinue} className="w-full sm:w-auto">
+        Continue
+      </Button>
     </section>
   );
 }
 
 // ---------------------------------------------------------------------------
-// S1 — start
+// S1/S6 — start screen: continue journey, saved list, new conversation
 
-function StartScreen({ store, state }: { store: Store; state: State }) {
+function StartScreen({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  const progress = useJourneyProgress();
+  const locator = hasMeaningfulProgress(progress) ? progress.locator : null;
+  const resumeDay = locator ? getJourneyDayById(locator.dayId) : null;
   const saved = state.threads.filter((t) => t.savedSnapshot !== null);
-  return (
-    <div className="space-y-6">
-      <section aria-labelledby="conv-start-heading" className="space-y-4 rounded-xl border border-border bg-card p-5">
-        <h1 id="conv-start-heading" className="bfa-h1 font-serif text-foreground">
-          What&rsquo;s on your mind?
-        </h1>
-        <p className="bfa-copy-support text-muted-foreground">
-          Begin with a question, a feeling, or something you want to understand.
-          Replies in this preview are fictional.
-        </p>
-        <Composer store={store} draft={state.draft} autoFocus={false} />
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            className="btn-primary-journey flex-1"
-            onClick={() => {
-              store.createThread();
-            }}
-          >
-            Start conversation
-          </button>
-          <button
-            type="button"
-            className="btn-quiet flex-1"
-            onClick={() => {
-              store.createThread();
-              store.startTalking();
-            }}
-          >
-            Talk (simulated)
-          </button>
-        </div>
-      </section>
-
-      <JourneyContinueCard />
-
-      <section aria-labelledby="conv-saved-heading" className="space-y-3 rounded-xl border border-border bg-card p-5">
-        <h2 id="conv-saved-heading" className="bfa-h3 font-serif text-foreground">
-          Saved conversations
-        </h2>
-        {saved.length === 0 ? (
-          <p className="bfa-copy-support text-muted-foreground">
-            None yet. Simulated saves last only until you refresh or close this page.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {saved.map((t) => (
-              <SavedRow key={t.id} store={store} thread={t} />
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
-  );
-}
-
-function JourneyContinueCard() {
-  const { progress, hydrated } = useJourneyProgress();
-  const resume = hydrated && hasMeaningfulProgress(progress) ? progress.locator : null;
-  const resumeDay = resume ? getJourneyDayById(resume.dayId) : undefined;
 
   return (
-    <section aria-labelledby="conv-journey-heading" className="space-y-3 rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5">
-      <h2 id="conv-journey-heading" className="bfa-h3 font-serif text-foreground">
-        Continue your journey
-      </h2>
-      {resume && resumeDay ? (
-        <>
-          <p className="bfa-copy-support text-muted-foreground">
-            Day {resumeDay.day} · {resumeDay.title} — in progress
+    <section aria-labelledby="preview-start-heading" className="space-y-6">
+      <h1 id="preview-start-heading" className="font-serif text-2xl">
+        Conversation preview
+      </h1>
+
+      {resumeDay ? (
+        <div className="rounded-md border border-border bg-card p-4">
+          <p className="text-sm text-muted-foreground">
+            Your journey: Day {resumeDay.day} · {resumeDay.title} —{" "}
+            {progress.completedDays.includes(resumeDay.id)
+              ? "completed"
+              : "in progress"}
           </p>
           <Link
             to="/day/$day"
             params={{ day: String(resumeDay.day) }}
             search={{ resume: true }}
-            className="btn-primary-journey inline-flex"
+            className="mt-2 inline-block font-medium text-primary underline"
           >
-            Continue
+            Continue your journey
           </Link>
-        </>
+        </div>
       ) : (
-        <>
-          <p className="bfa-copy-support text-muted-foreground">
-            Your ten-day journey is untouched by this preview.
-          </p>
-          <Link to="/" className="btn-quiet inline-flex">
-            Open Your Journey
-          </Link>
-        </>
+        <p className="text-sm text-muted-foreground">
+          You have not started the journey yet in this browser.
+        </p>
       )}
+
+      <Button
+        type="button"
+        onClick={() => store.requestSwitch({ kind: "new" })}
+        className="w-full sm:w-auto"
+      >
+        Start conversation
+      </Button>
+
+      {saved.length > 0 ? (
+        <div className="space-y-3">
+          <h2 className="font-serif text-lg">Saved conversations (this session only)</h2>
+          <ul className="space-y-3">
+            {saved.map((thread) => (
+              <SavedRow key={thread.id} thread={thread} store={store} />
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </section>
   );
 }
 
-function SavedRow({ store, thread }: { store: Store; thread: PreviewThread }) {
+function SavedRow({
+  thread,
+  store,
+}: {
+  thread: PreviewThread;
+  store: ConversationPreviewStore;
+}) {
   const [renaming, setRenaming] = useState(false);
-  const [confirming, setConfirming] = useState(false);
-  const [title, setTitle] = useState(thread.title);
+  const [name, setName] = useState(thread.title);
+  const [renameError, setRenameError] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <li className="rounded-lg border border-border p-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="bfa-h3 min-w-0 flex-1 font-serif text-foreground [overflow-wrap:anywhere]">
-          {thread.title}
-        </span>
-        <span className="bfa-copy-meta text-muted-foreground">
-          Saved {thread.savedSnapshot ? new Date(thread.createdAt).toLocaleDateString() : ""}
-        </span>
-      </div>
+    <li className="rounded-md border border-border bg-card p-3">
       {renaming ? (
         <form
-          className="mt-2 flex gap-2"
+          className="flex flex-wrap items-center gap-2"
           onSubmit={(e) => {
             e.preventDefault();
-            store.renameThread(thread.id, title);
-            setRenaming(false);
+            const result = store.renameThread(thread.id, name);
+            if (result.ok) {
+              setRenaming(false);
+              setRenameError(false);
+            } else {
+              setRenameError(true);
+            }
           }}
         >
           <label className="sr-only" htmlFor={`rename-${thread.id}`}>Rename conversation</label>
           <input
             id={`rename-${thread.id}`}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2 text-foreground"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-1 text-sm"
           />
-          <button type="submit" className="btn-quiet">Save name</button>
-          <button type="button" className="btn-quiet" onClick={() => setRenaming(false)}>
+          <Button type="submit" size="sm">Save name</Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setRenaming(false);
+              setName(thread.title);
+              setRenameError(false);
+            }}
+          >
             Cancel
-          </button>
+          </Button>
         </form>
-      ) : confirming ? (
-        <div role="alertdialog" aria-label={`Delete ${thread.title}`} className="mt-2 space-y-2">
-          <p className="bfa-copy-support text-muted-foreground">
-            Delete &ldquo;{thread.title}&rdquo;? This removes the preview&rsquo;s saved copy held
-            in this session. It says nothing about any other records — this preview
-            stores nothing outside this page.
-          </p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className="btn-quiet"
-              onClick={() => {
-                store.deleteThread(thread.id);
-                setConfirming(false);
-              }}
-            >
-              Delete
-            </button>
-            <button type="button" className="btn-quiet" onClick={() => setConfirming(false)}>
-              Keep
-            </button>
-          </div>
-        </div>
       ) : (
-        <div className="mt-2 flex flex-wrap gap-2">
-          <button type="button" className="btn-quiet" onClick={() => store.requestSwitch({ kind: "open", threadId: thread.id })}>
-            Open
-          </button>
-          <button type="button" className="btn-quiet" onClick={() => setRenaming(true)}>
-            Rename
-          </button>
-          <button type="button" className="btn-quiet" onClick={() => setConfirming(true)}>
-            Delete
-          </button>
-        </div>
+        <p className="font-medium text-foreground">{thread.title}</p>
       )}
+      {renameError ? (
+        <p role="alert" className="mt-1 text-sm text-destructive">
+          Name not saved (simulated failure). Nothing changed.
+        </p>
+      ) : null}
+      <p className="mt-1 text-sm text-muted-foreground">
+        {thread.savedSnapshot!.messages.length} messages
+        {thread.savedAt
+          ? ` · saved ${new Date(thread.savedAt).toLocaleTimeString()}`
+          : ""}
+        {thread.dirty ? " · has unsaved changes" : ""}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => store.requestSwitch({ kind: "open", threadId: thread.id })}
+        >
+          Open
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setName(thread.title);
+            setRenaming(true);
+          }}
+        >
+          Rename
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => setConfirmDelete(true)}
+        >
+          Delete
+        </Button>
+      </div>
+
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this saved conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              “{thread.title}” and its simulated saved copy will be removed from
+              this session. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => store.deleteThread(thread.id)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </li>
   );
 }
 
 // ---------------------------------------------------------------------------
-// S3 — typed conversation
+// S2–S5, S7–S8 — active thread screen
 
-function ThreadScreen({ store, state, thread }: { store: Store; state: State; thread: PreviewThread }) {
-  const saveStatus = store.saveStatus(thread);
+function ThreadScreen({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  const thread = store.activeThread();
   const [finishOpen, setFinishOpen] = useState(false);
-  const [saveError, setSaveError] = useState(false);
-  const statusRef = useRef<HTMLParagraphElement>(null);
+  const [finishError, setFinishError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [browsing, setBrowsing] = useState(false);
+  if (!thread) return null;
 
-  const statusLabel =
-    saveStatus === "not-saved" ? "Not saved" : saveStatus === "saved" ? "Saved" : "Unsaved changes";
+  const status = store.saveStatus(thread);
+  const pending = store.hasPendingResponse(thread);
+  const draft = store.activeDraft();
+  const hasUnsentDraft = draft.trim().length > 0;
 
-  useEffect(() => {
-    if (saveError) statusRef.current?.focus();
-  }, [saveError]);
+  const attemptSave = (): boolean => {
+    const result = store.saveActiveThread();
+    if (result.ok) {
+      setSaveError(null);
+      return true;
+    }
+    setSaveError(
+      result.reason === "response-pending"
+        ? "A response is still being generated. Stop it or wait, then save."
+        : "Not saved (simulated failure). Nothing changed.",
+    );
+    return false;
+  };
+
+  const attemptFinish = (decision: "save" | "discard") => {
+    const result = store.finishActiveThread(decision, {
+      discardDraft: hasUnsentDraft,
+    });
+    if (result.ok) {
+      setFinishOpen(false);
+      setFinishError(null);
+      return;
+    }
+    // Failed save / pending response: dialog, thread and draft all stay.
+    setFinishError(
+      result.reason === "response-pending"
+        ? "A response is still being generated. Stop it or wait, then finish."
+        : "Not saved (simulated failure). The conversation is still open.",
+    );
+  };
 
   return (
-    <div className="space-y-4">
-      <section aria-labelledby="conv-thread-heading" className="space-y-4 rounded-xl border border-border bg-card p-5">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 id="conv-thread-heading" className="bfa-h2 font-serif text-foreground [overflow-wrap:anywhere]">
-            {thread.title}
-          </h1>
-          <p className="bfa-copy-meta text-muted-foreground" role="status" aria-live="polite">
-            {statusLabel}
+    <section aria-labelledby="preview-thread-heading" className="space-y-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h1 id="preview-thread-heading" className="font-serif text-2xl">
+          {thread.title}
+        </h1>
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          {status === "saved"
+            ? "Saved"
+            : status === "unsaved-changes"
+              ? "Unsaved changes"
+              : "Not saved"}
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => setBrowsing((b) => !b)}
+          aria-expanded={browsing}
+        >
+          All conversations
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => store.requestSwitch({ kind: "new" })}
+        >
+          New conversation
+        </Button>
+      </div>
+
+      {browsing ? (
+        <div className="rounded-md border border-border bg-card p-3">
+          <p className="text-sm text-muted-foreground">
+            Browsing does not change the current conversation. Opening another
+            conversation with unsaved changes will ask you to Save, Discard or
+            Cancel first.
           </p>
-        </div>
-
-        <PreferencesRow store={store} thread={thread} />
-
-        {state.voice !== "off" && <VoicePanel store={store} state={state} />}
-
-        <ol aria-label="Conversation" className="space-y-3">
-          {thread.messages.map((m) => (
-            <MessageRow key={m.id} store={store} message={m} />
-          ))}
-        </ol>
-
-        {state.sharePreview && <SharePreview store={store} state={state} />}
-
-        <Composer store={store} draft={state.draft} autoFocus />
-
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <button
+          <ul className="mt-2 space-y-2">
+            {state.threads
+              .filter((t) => t.savedSnapshot !== null && t.id !== thread.id)
+              .map((t) => (
+                <li key={t.id} className="flex items-center justify-between gap-2">
+                  <span className="text-sm text-foreground">{t.title}</span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const r = store.requestSwitch({ kind: "open", threadId: t.id });
+                      if (r.ok) setBrowsing(false);
+                    }}
+                  >
+                    Open
+                  </Button>
+                </li>
+              ))}
+          </ul>
+          <Button
             type="button"
-            className="btn-primary-journey flex-1"
-            onClick={() => store.sendDraft()}
-            disabled={state.draft.trim().length === 0}
+            size="sm"
+            variant="ghost"
+            className="mt-2"
+            onClick={() => setBrowsing(false)}
           >
-            Send
-          </button>
-          {thread.messages.some((m) => m.status === "generating") && (
-            <button type="button" className="btn-quiet flex-1" onClick={() => store.stopResponse()}>
-              Stop response
-            </button>
-          )}
-          {state.voice === "off" ? (
-            <button type="button" className="btn-quiet flex-1" onClick={() => store.startTalking()}>
-              Talk (simulated)
-            </button>
-          ) : (
-            <button type="button" className="btn-quiet flex-1" onClick={() => store.finishTalking()}>
-              Finish talking
-            </button>
-          )}
+            Continue current conversation
+          </Button>
         </div>
+      ) : null}
 
-        <div className="flex flex-col gap-2 border-t border-border pt-3 sm:flex-row">
-          <button
-            type="button"
-            className="btn-quiet flex-1"
-            onClick={() => {
-              const ok = store.saveActiveThread();
-              setSaveError(!ok);
-            }}
-          >
-            {saveStatus === "not-saved" ? "Save conversation (simulated)" : "Save changes (simulated)"}
-          </button>
-          <button type="button" className="btn-quiet flex-1" onClick={() => setFinishOpen(true)}>
-            Finish conversation
-          </button>
-        </div>
-        {saveError && (
-          <p
-            ref={statusRef}
-            tabIndex={-1}
-            role="alert"
-            className="bfa-copy-support rounded-md border border-destructive px-3 py-2 text-foreground"
-          >
-            Simulated save failure — nothing was saved. Your conversation is unchanged.
-          </p>
-        )}
-      </section>
+      <PreferenceCard thread={thread} store={store} />
+      <VoicePanel state={state} store={store} />
 
-      <ShareTeachingPanel store={store} />
+      <ol className="space-y-3" aria-label="Conversation so far">
+        {thread.messages.map((m) => (
+          <MessageRow key={m.id} message={m} store={store} />
+        ))}
+      </ol>
 
-      {finishOpen && (
-        <FinishDialog
-          store={store}
-          thread={thread}
-          saveStatus={saveStatus}
-          onClose={() => setFinishOpen(false)}
-        />
-      )}
-    </div>
+      <Composer store={store} pending={pending} />
+
+      <div className="flex flex-wrap gap-2 border-t border-border pt-4">
+        <Button type="button" variant="outline" onClick={attemptSave} disabled={pending}>
+          {status === "not-saved" ? "Save conversation (simulated)" : "Save changes (simulated)"}
+        </Button>
+        <Button type="button" variant="outline" onClick={() => { setFinishError(null); setFinishOpen(true); }}>
+          Finish conversation
+        </Button>
+      </div>
+      {saveError ? (
+        <p role="alert" className="text-sm text-destructive">{saveError}</p>
+      ) : null}
+
+      <TeachingShare store={store} />
+      <ReviewControls state={state} store={store} />
+
+      {/* Finish — AlertDialog: focus trapped, Escape cancels, focus restored. */}
+      <AlertDialog open={finishOpen} onOpenChange={setFinishOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Finish this conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {hasUnsentDraft
+                ? "You have unsent text in the composer. Finishing discards that unsent text; only submitted messages can be saved. "
+                : ""}
+              {status === "not-saved"
+                ? "This conversation has never been saved. Saving is simulated and lasts only for this session."
+                : status === "unsaved-changes"
+                  ? "There are unsaved changes. You can save them (simulated), discard them, or keep working."
+                  : "Everything is saved (simulated, this session only)."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {finishError ? (
+            <p role="alert" className="text-sm text-destructive">{finishError}</p>
+          ) : null}
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep working</AlertDialogCancel>
+            {status !== "not-saved" ? (
+              <AlertDialogAction onClick={() => attemptFinish("discard")}>
+                {hasUnsentDraft ? "Discard unsent text and changes" : "Discard changes"}
+              </AlertDialogAction>
+            ) : (
+              <AlertDialogAction onClick={() => attemptFinish("discard")}>
+                {hasUnsentDraft ? "Discard unsent text and close" : "Close without saving"}
+              </AlertDialogAction>
+            )}
+            <AlertDialogAction onClick={() => attemptFinish("save")} disabled={pending}>
+              Save & finish (simulated)
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Switch decision — Save / Discard / Cancel before replacing. */}
+      <AlertDialog
+        open={state.pendingSwitch !== null}
+        onOpenChange={(open) => {
+          if (!open) store.resolveSwitchDecision("cancel");
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Leave this conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {hasUnsentDraft
+                ? "You have unsent text and possibly unsaved changes. "
+                : "You have unsaved changes. "}
+              Save them (simulated), discard them, or cancel and stay.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => store.resolveSwitchDecision("cancel")}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => store.resolveSwitchDecision("discard")}>
+              Discard & continue
+            </AlertDialogAction>
+            <AlertDialogAction onClick={() => store.resolveSwitchDecision("save")} disabled={pending}>
+              Save & continue (simulated)
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </section>
   );
 }
 
-function PreferencesRow({ store, thread }: { store: Store; thread: PreviewThread }) {
+function PreferenceCard({
+  thread,
+  store,
+}: {
+  thread: PreviewThread;
+  store: ConversationPreviewStore;
+}) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border px-3 py-2">
-      <span className="bfa-copy-support text-muted-foreground">
+    <div className="rounded-md border border-border bg-card p-3 text-sm">
+      <p className="text-foreground">
         Christian reflection (preview only):{" "}
-        <strong className="text-foreground">{thread.spiritualOn ? "On" : "Off"}</strong>
-      </span>
-      <button
+        <strong>{thread.spiritualOn ? "On" : "Off"}</strong>
+      </p>
+      <Button
         type="button"
-        className="btn-quiet"
-        aria-pressed={thread.spiritualOn}
+        size="sm"
+        variant="outline"
+        className="mt-2"
         onClick={() => store.setPreviewSpiritual(!thread.spiritualOn)}
       >
-        Turn {thread.spiritualOn ? "off" : "on"} for this preview
-      </button>
-      <span className="bfa-copy-meta text-muted-foreground">
-        Imported once from your setting; changing it here does not change the app setting.
-      </span>
+        {thread.spiritualOn ? "Turn off for this preview" : "Turn on for this preview"}
+      </Button>
+      <p className="mt-2 text-muted-foreground">
+        Imported once from your setting; changing it here does not change the
+        app setting. Turning it off stops any reply being generated.
+      </p>
     </div>
   );
 }
 
-function MessageRow({ store, message }: { store: Store; message: PreviewMessage }) {
+function MessageRow({
+  message,
+  store,
+}: {
+  message: PreviewMessage;
+  store: ConversationPreviewStore;
+}) {
+  const [showSource, setShowSource] = useState(false);
   const isPerson = message.role === "person";
   return (
     <li
-      className={`rounded-lg border px-4 py-3 ${
-        isPerson ? "border-border bg-background" : "border-[color:var(--bfa-interactive-gold)] bg-card"
-      }`}
+      className={
+        isPerson
+          ? "rounded-md border border-border bg-card p-3"
+          : "rounded-md border border-primary/40 bg-muted p-3"
+      }
     >
-      <p className="bfa-copy-meta text-muted-foreground">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">
         {isPerson ? "You" : "Beauty from Ashes (fictional preview reply)"}
       </p>
       {message.status === "generating" ? (
-        <p className="bfa-copy mt-1 text-muted-foreground" role="status">
-          Preparing a fictional reply…
+        <p className="mt-1 text-sm text-muted-foreground" role="status">
+          Writing a fictional reply…
         </p>
       ) : message.status === "stopped" ? (
-        <p className="bfa-copy mt-1 text-muted-foreground">Response stopped.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Reply stopped.</p>
       ) : message.status === "not-sent" ? (
-        <div className="mt-1 space-y-2">
-          <p className="bfa-copy text-foreground">{message.text}</p>
-          <p role="alert" className="bfa-copy-support text-foreground">
-            Not sent.{" "}
-            <button type="button" className="underline" onClick={() => store.retryMessage(message.id)}>
-              Retry
-            </button>
+        <div className="mt-1">
+          <p className="text-sm text-foreground">{message.text}</p>
+          <p role="alert" className="mt-1 text-sm text-destructive">
+            Not sent (simulated failure). Your text is still in the composer.
           </p>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="mt-2"
+            onClick={() => store.retryMessage(message.id)}
+          >
+            Retry send
+          </Button>
         </div>
       ) : (
-        <p className="bfa-copy mt-1 whitespace-pre-wrap text-foreground">{message.text}</p>
+        <p className="mt-1 whitespace-pre-wrap text-foreground">{message.text}</p>
       )}
-      {message.sharedTeaching && (
-        <details className="mt-2 rounded-md border border-border p-2">
-          <summary className="bfa-copy-support cursor-pointer text-foreground">
-            Sources — Day {message.sharedTeaching.day} · {message.sharedTeaching.title} (exact teaching shared)
-          </summary>
-          <div className="bfa-copy-support mt-2 space-y-2 text-muted-foreground">
-            <p>
-              <strong className="text-foreground">{message.sharedTeaching.heading}</strong>
+      {message.sharedTeaching ? (
+        <div className="mt-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => setShowSource((s) => !s)}
+            aria-expanded={showSource}
+          >
+            {showSource ? "Hide source details" : "Source details"}
+          </Button>
+          {showSource ? (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Exact teaching from Day {message.sharedTeaching.day} ·{" "}
+              {message.sharedTeaching.title} (source key{" "}
+              {message.sharedTeaching.sourceKey}). Shared bytes are an
+              immutable snapshot; this is simulated behavior, not evidence of
+              model grounding.
             </p>
-            {message.sharedTeaching.body.map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-            <p className="bfa-copy-meta">
-              Simulated source card — the exact bytes shared from the day&rsquo;s Understand
-              teaching. This is not evidence of model grounding.
-            </p>
-          </div>
-        </details>
-      )}
+          ) : null}
+        </div>
+      ) : null}
     </li>
   );
 }
 
-// ---------------------------------------------------------------------------
-// S7 — exact teaching share preview
-
-function ShareTeachingPanel({ store }: { store: Store }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <section aria-labelledby="conv-share-heading" className="space-y-3 rounded-xl border border-border bg-card p-5">
-      <h2 id="conv-share-heading" className="bfa-h3 font-serif text-foreground">
-        Explore journey teaching in conversation
-      </h2>
-      <p className="bfa-copy-support text-muted-foreground">
-        Only a day&rsquo;s exact Understand teaching can be shared. Your answers, notes and
-        private writing are never included.
-      </p>
-      {!open ? (
-        <button type="button" className="btn-quiet" onClick={() => setOpen(true)}>
-          Choose teaching to share
-        </button>
-      ) : (
-        <ul className="space-y-2">
-          {CONVERSATION_TEACHING_RECORDS.map((r) => (
-            <li key={r.key}>
-              <button
-                type="button"
-                className="day-row w-full"
-                onClick={() => {
-                  store.previewShareTeaching(r.key);
-                  setOpen(false);
-                }}
-              >
-                <span className="bfa-h3 block font-serif text-foreground">
-                  Day {r.day} · {r.title}
-                </span>
-                <span className="bfa-copy-support day-row-theme mt-1 block text-muted-foreground">
-                  {r.understandHeading}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
-}
-
-function SharePreview({ store, state }: { store: Store; state: State }) {
-  const record = state.sharePreview;
-  if (!record) return null;
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="share-preview-heading"
-      className="space-y-3 rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5"
-    >
-      <h2 id="share-preview-heading" className="bfa-h3 font-serif text-foreground">
-        Include this in the conversation?
-      </h2>
-      <p className="bfa-copy-support text-muted-foreground">
-        Day {record.day} · {record.title} — the exact teaching passage below, nothing else.
-      </p>
-      <div className="bfa-copy space-y-2 rounded-lg border border-border bg-background p-4 text-foreground">
-        <p>
-          <strong>{record.understandHeading}</strong>
-        </p>
-        {record.understandBody.map((para, i) => (
-          <p key={i}>{para}</p>
-        ))}
-      </div>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <button type="button" className="btn-primary-journey flex-1" onClick={() => store.confirmShareTeaching()}>
-          Send selected content
-        </button>
-        <button type="button" className="btn-quiet flex-1" onClick={() => store.cancelShareTeaching()}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// S4 — voice state simulator (no real audio of any kind)
-
-function VoicePanel({ store, state }: { store: Store; state: State }) {
-  return (
-    <section
-      aria-labelledby="voice-sim-heading"
-      className="space-y-3 rounded-lg border border-border bg-background p-4"
-    >
-      <h2 id="voice-sim-heading" className="bfa-h3 font-serif text-foreground">
-        Voice — state simulator only
-      </h2>
-      <p className="bfa-copy-support text-muted-foreground">
-        No microphone, recording or audio connection exists in this preview. These
-        controls only demonstrate the states the real feature would show.
-      </p>
-      <p role="status" aria-live="polite" className="bfa-copy font-medium text-foreground">
-        State: {VOICE_LABELS[state.voice]}
-        {state.voiceMuted ? " · microphone muted (simulated)" : ""}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {(state.voice === "listening" || state.voice === "speaking") && (
-          <>
-            <button type="button" className="btn-quiet" onClick={() => store.pauseVoice()}>
-              Pause
-            </button>
-            <button
-              type="button"
-              className="btn-quiet"
-              aria-pressed={state.voiceMuted}
-              onClick={() => store.setVoiceMuted(!state.voiceMuted)}
-            >
-              {state.voiceMuted ? "Unmute microphone (simulated)" : "Mute microphone (simulated)"}
-            </button>
-          </>
-        )}
-        {(state.voice === "paused" || state.voice === "disconnected") && (
-          <button type="button" className="btn-primary-journey" onClick={() => store.resumeVoice()}>
-            Resume talking (simulated)
-          </button>
-        )}
-        {state.voice === "disconnected" && (
-          <p className="bfa-copy-support text-muted-foreground">
-            Simulated disconnection — the thread is preserved; you can reconnect or keep typing.
-          </p>
-        )}
-      </div>
-    </section>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// S8 — finish
-
-function FinishDialog({
+function Composer({
   store,
-  thread,
-  saveStatus,
-  onClose,
+  pending,
 }: {
-  store: Store;
-  thread: PreviewThread;
-  saveStatus: "not-saved" | "saved" | "unsaved-changes";
-  onClose: () => void;
+  store: ConversationPreviewStore;
+  pending: boolean;
 }) {
-  const [saveFailed, setSaveFailed] = useState(false);
-  const closeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    closeRef.current?.querySelector("button")?.focus();
-  }, []);
-
+  const state = store.getSnapshot();
+  const thread = store.activeThread();
+  const draft = store.activeDraft();
   return (
-    <div
-      ref={closeRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="finish-heading"
-      className="space-y-3 rounded-xl border border-[color:var(--bfa-interactive-gold)] bg-card p-5"
+    <form
+      className="space-y-2"
+      onSubmit={(e) => {
+        e.preventDefault();
+        store.sendDraft();
+      }}
     >
-      <h2 id="finish-heading" className="bfa-h3 font-serif text-foreground">
-        Finish this conversation?
-      </h2>
-      <p className="bfa-copy-support text-muted-foreground">
-        {saveStatus === "not-saved"
-          ? "This conversation has not been saved. Saving is simulated and lasts only until you refresh or close this page."
-          : saveStatus === "unsaved-changes"
-            ? "There are unsaved changes. Finishing without saving keeps the last saved version."
-            : "Everything is saved (in this session only)."}
-      </p>
-      {saveFailed && (
-        <p role="alert" className="bfa-copy-support rounded-md border border-destructive px-3 py-2 text-foreground">
-          Simulated save failure — the conversation is still open and unchanged.
-        </p>
-      )}
-      <div className="flex flex-col gap-2 sm:flex-row">
-        {saveStatus !== "saved" && (
-          <button
-            type="button"
-            className="btn-primary-journey flex-1"
-            onClick={() => {
-              const ok = store.finishActiveThread("save");
-              setSaveFailed(!ok);
-              if (ok) onClose();
-            }}
-          >
-            {saveStatus === "not-saved" ? "Save conversation (simulated)" : "Save changes (simulated)"}
-          </button>
-        )}
-        <button
-          type="button"
-          className="btn-quiet flex-1"
-          onClick={() => {
-            store.finishActiveThread("discard");
-            onClose();
-          }}
-        >
-          {saveStatus === "not-saved" ? "Finish without saving" : "Finish without saving changes"}
-        </button>
-        <button type="button" className="btn-quiet flex-1" onClick={onClose}>
-          Keep talking
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Review controls — explicitly separated from intended participant controls
-
-function ReviewControls({ store, state }: { store: Store; state: State }) {
-  return (
-    <section
-      aria-labelledby="review-controls-heading"
-      className="space-y-3 rounded-xl border border-dashed border-border p-4"
-    >
-      <h2 id="review-controls-heading" className="bfa-copy-meta font-medium text-muted-foreground">
-        Review controls — not part of the participant experience
-      </h2>
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className="btn-quiet"
-          aria-pressed={state.simulateSendFailure}
-          onClick={() => store.setSimulateSendFailure(!state.simulateSendFailure)}
-        >
-          Simulate send failure: {state.simulateSendFailure ? "on" : "off"}
-        </button>
-        <button
-          type="button"
-          className="btn-quiet"
-          aria-pressed={state.simulateSaveFailure}
-          onClick={() => store.setSimulateSaveFailure(!state.simulateSaveFailure)}
-        >
-          Simulate save failure: {state.simulateSaveFailure ? "on" : "off"}
-        </button>
-        <button type="button" className="btn-quiet" onClick={() => store.simulateDisconnect()}>
-          Simulate voice disconnection
-        </button>
-      </div>
-    </section>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Shared composer
-
-function Composer({ store, draft, autoFocus }: { store: Store; draft: string; autoFocus: boolean }) {
-  return (
-    <div>
-      <label htmlFor="conv-composer" className="bfa-copy-support block text-muted-foreground">
+      <label htmlFor="preview-composer" className="block text-sm text-foreground">
         Your message (use fictional test text)
       </label>
       <textarea
-        id="conv-composer"
-        rows={3}
+        id="preview-composer"
         value={draft}
-        autoFocus={autoFocus}
         onChange={(e) => store.setDraft(e.target.value)}
-        className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground"
+        rows={3}
+        className="w-full rounded-md border border-input bg-background px-3 py-2 text-foreground"
         placeholder="Type a fictional message…"
       />
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" disabled={pending || draft.trim().length === 0}>
+          Send
+        </Button>
+        {pending ? (
+          <Button type="button" variant="outline" onClick={() => store.stopResponse()}>
+            Stop response
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => store.startTalking()}
+            disabled={state.voice !== "off" && state.voice !== "disconnected"}
+          >
+            Talk (simulated)
+          </Button>
+        )}
+      </div>
+      {pending ? (
+        <p className="text-sm text-muted-foreground" role="status">
+          A fictional reply is being written. Send and Save are paused until it
+          finishes or you stop it.
+        </p>
+      ) : null}
+      {thread && thread.messages.some((m) => m.status === "not-sent") ? null : null}
+    </form>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Voice state simulator (S4) — labelled simulation only, no real audio
+
+function VoicePanel({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  if (state.voice === "off") return null;
+  const label =
+    state.voice === "connecting"
+      ? "Connecting"
+      : state.voice === "listening"
+        ? "Listening"
+        : state.voice === "speaking"
+          ? "Speaking"
+          : state.voice === "paused"
+            ? "Paused"
+            : "Disconnected";
+  return (
+    <div className="rounded-md border border-border bg-card p-3" role="status">
+      <h2 className="font-serif text-lg">Voice — state simulator only</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        No microphone, recording or audio connection exists in this preview.
+        These controls only demonstrate the states the real feature would show.
+      </p>
+      <p className="mt-2 text-sm font-medium text-foreground">
+        State: {label}
+        {state.voiceMuted && state.voice !== "paused" ? " · muted" : ""}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {state.voice === "listening" || state.voice === "speaking" ? (
+          <>
+            <Button type="button" size="sm" variant="outline" onClick={() => store.pauseVoice()}>
+              Pause
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => store.setVoiceMuted(!state.voiceMuted)}
+            >
+              {state.voiceMuted ? "Unmute microphone (simulated)" : "Mute microphone (simulated)"}
+            </Button>
+          </>
+        ) : null}
+        {state.voice === "connecting" ? (
+          <Button type="button" size="sm" variant="outline" onClick={() => store.pauseVoice()}>
+            Pause
+          </Button>
+        ) : null}
+        {state.voice === "paused" || state.voice === "disconnected" ? (
+          <Button type="button" size="sm" variant="outline" onClick={() => store.resumeVoice()}>
+            {state.voice === "paused" ? "Resume" : "Reconnect (simulated)"}
+          </Button>
+        ) : null}
+        <Button type="button" size="sm" variant="outline" onClick={() => store.finishTalking()}>
+          Finish talking
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Exact teaching sharing (P1 source records only)
+
+function TeachingShare({ store }: { store: ConversationPreviewStore }) {
+  const state = store.getSnapshot();
+  const [picking, setPicking] = useState(false);
+  const record = state.sharePreview;
+
+  return (
+    <div className="rounded-md border border-border bg-card p-3">
+      <h2 className="font-serif text-lg">Explore journey teaching in conversation</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Only a day’s exact Understand teaching can be shared. Your answers,
+        notes and private writing are never included.
+      </p>
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        className="mt-2"
+        onClick={() => setPicking((p) => !p)}
+        aria-expanded={picking}
+      >
+        Choose teaching to share
+      </Button>
+      {picking ? (
+        <ul className="mt-2 space-y-1">
+          {CONVERSATION_TEACHING_RECORDS.map((r) => (
+            <li key={r.key}>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setPicking(false);
+                  store.previewShareTeaching(r.key);
+                }}
+              >
+                Day {r.day} · {r.title}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {/* Exact-share preview — AlertDialog: focus trapped, Escape = Cancel. */}
+      <AlertDialog
+        open={record !== null}
+        onOpenChange={(open) => {
+          if (!open) store.cancelShareTeaching();
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Include this in the conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {record
+                ? `Day ${record.day} · ${record.title} — the exact teaching passage below, nothing else.`
+                : ""}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {record ? (
+            <div className="max-h-64 overflow-y-auto rounded-md border border-border bg-muted p-3">
+              <p className="font-medium text-foreground">{record.understandHeading}</p>
+              {record.understandBody.map((para, i) => (
+                <p key={i} className="mt-2 text-sm text-foreground">{para}</p>
+              ))}
+            </div>
+          ) : null}
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => store.cancelShareTeaching()}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => store.confirmShareTeaching()}>
+              Send selected content
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Review controls — explicitly separated from participant controls
+
+function ReviewControls({
+  state,
+  store,
+}: {
+  state: PreviewState;
+  store: ConversationPreviewStore;
+}) {
+  return (
+    <div className="rounded-md border border-dashed border-border p-3">
+      <h2 className="text-sm font-medium text-muted-foreground">
+        Review controls — not part of the participant experience
+      </h2>
+      <div className="mt-2 flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => store.setSimulateSendFailure(!state.simulateSendFailure)}
+        >
+          Simulate send failure: {state.simulateSendFailure ? "on" : "off"}
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => store.setSimulateSaveFailure(!state.simulateSaveFailure)}
+        >
+          Simulate save failure: {state.simulateSaveFailure ? "on" : "off"}
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => store.simulateDisconnect()}
+          disabled={state.voice === "off"}
+        >
+          Simulate voice disconnection
+        </Button>
+      </div>
     </div>
   );
 }

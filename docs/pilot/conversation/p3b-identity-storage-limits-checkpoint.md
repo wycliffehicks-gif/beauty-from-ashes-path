@@ -1,85 +1,77 @@
-# P3b checkpoint — implemented boundary; acceptance blocked
+# P3b CURRENT checkpoint — independent implementation complete; acceptance BLOCKED
 
-Starting baseline: `978908c5b6ca0905250609be7c95a338da1f1a4a`, tree `94fec8de7e4726fffcb3f0867db9b9b81ce54f6e` (verified locally). P3b is **NOT accepted or complete**. Participant AI/real voice remain OFF; unpublished. No v5, model, voice or paid-provider command ran.
+25 October 2026 UTC. Continuation baseline: synchronized `d4a274b633bd75e405eb7de5b55c4df2f40eeed8`. **P3b is not accepted.** No P4, publication, participant activation, enrollment, real voice or app-provider/model calls. P0–P3a, v5, ten days, journal/weekly/progress stores and approved policy remain preserved.
 
-## Continuation evidence — 25 October 2026
+## Current identity, authority and staging isolation
 
-The sections below describe the historical preparation. This continuation supersedes their implementation status, not the acceptance limitations.
+Identity-only was the implementation default within Carl's approved P3b scope, not a requirement for an optional profile decision. No names, avatars, biographies or profiles. Each operation derives Auth `getUser()` subject, checks expiring server-controlled staging allowlist and owner before content access/admission, rechecks identity through async work and before responses. Shared gate cookie and fixture owners are not identity. User SDK reads use owner plus actual-time allowlist RLS; state-changing RPCs are service-only. Strict input rejects owner/history/grant/derived authority. Admin clients/sealing secrets remain server-only; browser imports of adapter types are type-only and erased.
 
-- Implemented server staging adapter: Auth `getUser()` revalidated on every operation/async turn stage, expiring allowlist, explicit ownership and owner/allowlist RLS; browser history/owner/derived/grant JSON rejected. Immutable server subject, no profiles.
-- Added service authority export/restore with events, derived facts, restrictions, completeness, revisions and issuer lineage/revocations. Provider requests still use `assembleConversationContext` and exact approved policy; only local mock connected.
-- Active authority AES-GCM sealed server-side with generated `BFA_P3B_STATE_SECRET`, owner/thread/revision-bound and 15-minute expiry, component-memory-only. HMAC fingerprints. No server content cache or per-turn transcript writes. Only confirmed Save persists a sealed service snapshot; optimistic Save/Discard/Reopen/Delete/Cancel advance revisions. Delete nulls saved content and retains tombstone/accounting; stale requests fail closed. Browser copies/processor backups are not promised physically erased.
-- Unlinked `/conversation-staging` shell adds confirmations, truthful failures and context inspection. No enrollment UI or real microphone. Clear-all removes console memory and rejects late UI responses; it does not silently delete deliberate Cloud saves.
-- Applied `0002_p3b_transactional_staging_boundary.sql`: service-only create/guard/transition/reserve/claim/settle/finish, atomic integer text/voice balances, request binding and one dispatch claim, uncertain holds and idempotent receipts. `0003_p3b_no_automatic_transaction_retry.sql` replaces serialization error code with application conflict because the platform retried it; no application retry/fallback/reconnect.
-- `bunx vitest run src/lib/ai/conversation`: **10 files, 242 passed**, latest 23:13:19 UTC (223 prior + 15 admission + 4 authority).
-- `python3 scripts/p3b/check-transactions.py`: **9 actual database checks passed**: eight-way one-unit reserve admits one; identical identity duplicates only; changed binding denied; eight-way claim succeeds once; possible-dispatch cancellation holds uncertain balance; duplicate receipts refund once/conflict denied; voice balance separate; tombstone blocks stale reserve/save and saved content null; anonymous RPC bypass denied. Disposable non-auth UUID service tests, **not authenticated A/B acceptance**. First run timed out on platform retry; corrected forward migration and fresh run passed; uncertain evidence retained.
-- Three fictional passwordless A/B/C Auth identities created without emails. Actual database guard denied B for A and non-allowlisted C; no sessions minted. All three identities deleted successfully (HTTP 200 each), allowlists disabled; only content-free evidence retained. Zero admitted accounts.
-- Catalog confirms authenticated cannot execute state-changing RPCs. `/tmp/browser/p3b/check_staging.py`: normal opening agreement then signed-out denial at 390/1280 width, no overflow/page errors, screenshots viewed; **not signed-in central-flow verification**.
-- Automatic diagnostic build OK at last inspection; no manual build/typecheck. Hosted checks empty and hosted report referenced older commit; current hosted TS/deployment and GitHub remote sync unverified.
+Service authority alone exports/restores provenance, facts/corrections/restrictions/grant lineage. Provider requests pass through P1 `assembleConversationContext` with the unchanged approved policy. Mock provider only; voice admission is testable without microphone or audio/session APIs.
 
-### Exact blockers and remaining matrix
+- Exact synthetic excerpt selection supports preview/confirm/cancel/revision/hash drift checks. Only server-resolved selected bytes are recorded, with preview/revision/hash provenance; P1 marks them **untrusted user data**, never registry/system instructions. No journal/weekly/other-day/hidden10 store imports. Cancelling preview sends nothing. Shared excerpts are thread-scoped service events, not cross-thread memory.
+- Saved list returns only owned nondeleted saved thread ID/current revision/save time, capped at 100; list metadata never enters context. Deliberate reopen restores the chosen sealed saved snapshot, restrictions/corrections, current separate app preference and microphone OFF.
+- Existing `showSpiritual` preference stays separate, defaults OFF and changes explicitly. Changes fence work and update the same service authority; failed changes block Send until resolved, not silently authorize prior preference.
+- Saved status compares actual saved content, not operational revision. Save is explicit/optimistic. Discard restores saved content or tombstones a never-saved active thread. New/switch with unsaved content offers Save/Discard/Cancel; typed unsent draft is not claimed saved.
+- Auth identity transitions and clear-all invalidate response/list tickets and clear personal content/token/draft/modals/selections/loading immediately. Server Auth/RLS remain authority. New draft typed during Send is preserved. Failed/lost responses offer last-confirmed saved recovery or leaving active state; no claimed unsaved recovery or auto retry.
+- Stop/Delete remain available during Send. The explicit service-only fence locks current owned revision then cancels/deletes, avoiding stale browser-token races. Save/restore/admission retain optimistic concurrency. If an old token cannot represent current content, Stop returns a stopped/recovery state without claiming content restoration. Delete failure remains failure.
 
-Disposable test-session creation is unavailable for this project through the supported CLI. Admin link minting was refused as bypassing session consent; neither was bypassed and Carl's real account was not substituted. Platform-supported fictional sessions are required for full O01–O08.
+## Transactions, migrations and retention
 
-Hosted public Auth settings read: disable-signup flag false, anonymous false, every provider false. Admin config read returned 404; current HIBP setting unavailable. The configure tool requires preserving that unknown value, so no guess was written. Email was briefly enabled then immediately disabled; final OFF verified. Owner action for the unresolved flag: More → Users → Auth settings → Disable sign-up. No enrollment UI/provider enabled; allowlist closed.
+Existing 0000–0003 retained. Forward migrations applied:
+- `drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql`: actual `clock_timestamp()` allowlist checks before/after thread lock; consistent owner advisory lock, allowlist/thread locks and ordered pending admissions; null/invalid trusted arguments rejected before mutations. Settlement retains service-only post-deletion reconciliation without reading content.
+- `drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql`: explicit current-revision Stop/Delete fence; anon/authenticated EXECUTE revoked, service-role grant only. Catalog verified denial and live service RPC exercise succeeded.
 
-| Check | Continuation evidence / open limit |
-|---|---|
-| O01 | Anonymous RPC and B/C database guard denied; full absent/expired/forged/wrong-owner session matrix and expiry during work BLOCKED. |
-| O02 | Unit restore voice idle; authenticated A1/A2/new/reopen canaries BLOCKED. |
-| O03/O04 | No journal/weekly/hidden10 import; exact private-note preview/drift/consent NOT implemented; teaching action requires registry hash. |
-| O05 | Adapter/optimistic transactions implemented; actual authenticated save/failure/concurrent/UI BLOCKED. |
-| O06 | Real transaction tombstone/stale denial; authenticated pending deletion/audio/summary matrix BLOCKED. |
-| O07 | Prior semantics tests green; authenticated durable restore/discard BLOCKED. |
-| O08 | Nine real database checks; authenticated cannot-spend/session duplicate dispatch BLOCKED; zero paid calls. |
+Reservations/claim/settle/finish are durable database transactions, not Maps/Set/reducer guarantees. Integer fictional text/voice allowances only, no monetary claims or paid permission. Bound owner/thread/revision/mode/request/keyed fingerprint, duplicate admission cannot dispatch twice, receipt settlement idempotent. Possible dispatch/failure/timeout retains uncertain hold; mock success provides reliable zero-paid outcome. No automatic retry/fallback/reconnect. Explicit new request needs separate admission.
 
-Also open: exact excerpt integration, saved-list/reopen after reload, current separate-preference wiring and full signed-in narrow/wide/keyboard checks. No real-device/screen-reader/model/real voice evidence. P3b remains incomplete, not accepted. Cloud usage not priced/measured; no paid app calls. Normal forward autosave only. Rollback disables admission first (currently zero admitted); retain ledger/tombstones/uncertain holds, no destructive reset. Key rotation invalidates saved snapshots and is not routine rollback.
+Active sealed authority: AES-GCM, owner/thread/revision-bound, **15-minute token lifetime**, browser component memory only. No server content cache or per-turn durable transcript. Request-local plaintext ends with request/crash; no promised physical memory erasure. Only deliberate Save persists sealed service snapshot. Delete removes saved snapshot and fences jobs, retaining minimal tombstones/non-content keyed fingerprints/accounting/uncertain holds. Clear browser app data does not silently delete Cloud saves. Previously copied browser tokens, screenshots/downloads, memory, processor logs/backups cannot be guaranteed erased; stale token expiry/revision/tombstone enforcement is not physical-copy deletion. Preserve seal key and evidence history; routine key rotation would invalidate saved snapshots.
 
-## Confirmed identity scope
+## Checks actually run this continuation
 
-Carl confirmed identity-only fictional staging accounts on 25 October 2026: immutable verified auth subject plus a server-controlled explicit allowlist. No profiles or extra personal fields; spiritual preferences remain a separate approved application setting. No product decision is pending. General signup configuration has **not yet** been verified or changed. The shared gate cookie remains a gate, not identity.
+- `bunx vitest run src/lib/ai/conversation`: **12 files / 259 passed** at 23:28:36 UTC. All prior 242 repo cases plus 9 focused repair and 8 server-boundary double cases. Doubles cover absent/nonallowlisted identity, account switch, minimal list, saved reopen equivalence/voice off, discard/delete failure/stale save, lost-response Stop. They are NOT real authenticated evidence.
+- `python3 scripts/p3b/check-transactions.py`: **9 actual database service-record checks** passed: one-unit concurrency, duplicate identity, changed payload denial, exactly-one concurrent claim, uncertain hold, duplicate/conflicting receipts, separate voice balance, deletion/stale save-reserve denial, anonymous direct RPC denial.
+- `python3 scripts/p3b/check-locks.py`: **4 additional actual database service-record checks** passed: 26 null/invalid probes with no mutations/balance changes; expired allowlist denial; mixed pending text/voice settle/delete concurrency and exact balance; explicit Stop/Delete current fence/tombstone denial. These use fictional non-Auth UUID records and privileged service REST, NOT user sessions. Evidence: `/tmp/p3b-db.log`, `/tmp/p3b-locks.log`, `/tmp/p3b-tests.log`; runnable scripts/tests are retained in project.
+- Deterministic thread-lock wait crossing expiry: **BLOCKED**, sandbox SQL role lacks table/RPC privileges; attempted direct SQL failed permission denied. No broader grants were added. Actual-time post-lock source check inspected, expired RPC denial passed, but this does not establish the unavailable deterministic wait test.
+- `python3 /tmp/browser/p3b-repair/check_public.py`: signed-out New/list failure at 390×1800 and 1280×1800; normal opening agreement, no overflow/page errors; screenshots viewed at `/tmp/browser/p3b-repair/390.png` and `1280.png`. NOT signed-in central-flow, keyboard or screen-reader acceptance.
+- Automatic **full** TypeScript/client/server build diagnostic: **build OK 23:28:39 UTC**, including adapter/SDK/new tests. Initial new-test typing and result-union narrowing errors were corrected. No manual build/typecheck; harness is authoritative. Prior scoped TS/external two gap regressions remain historical evidence, not rerun (external files unavailable this continuation).
+- Read-only route inspection: existing route architecture/content preserved; no route-tree rewrite. No replay of journey/model work.
 
-## Implemented independently of that decision
+## Actual O01–O08 matrix — all authenticated acceptance remains BLOCKED
 
-- Connected the requested Lovable Cloud integration; generated SDK clients/middleware/types and required dependencies are platform-generated. `src/start.ts` received the generated bearer attacher without replacing error middleware. No existing conversation UI/service was rewritten or switched to Cloud.
-- Applied `drizzle/migrations/0000_p3b_locked_conversation_foundation.sql`: four isolated tables (`bfa_p3b_staging_accounts`, `bfa_p3b_threads`, `bfa_p3b_allowances`, `bfa_p3b_admissions`). RLS enabled on every table, service-role grants explicit, **no browser policies**, no rows/allowances seeded.
-- Applied `0001_p3b_revoke_inherited_browser_grants.sql`: provisioning defaults initially inherited browser privileges; RLS with no policies already blocked row access. Explicitly revoked all anon/authenticated privileges and verified the result.
-- Added `service/durable-admission.ts`: pure content-free decisions, integer fictional units only. Exact owner/thread/revision/mode/request/fingerprint binding; duplicate reserve gives no dispatch; consumed dispatch is refused; confirmed pre-dispatch cancellation refunds once; possible dispatch/timeout keeps an uncertain hold; identical receipt is idempotent, conflicting/out-of-order terminal receipt cannot reopen/refund twice. Inputs and returned records are detached. No network, database store, server principal verifier, HMAC implementation or provider adapter is implied.
-- Added `__tests__/p3b-durable-admission.test.ts` (15 tests), scope memory, roadmap and architecture rule.
+| Gate | Current partial evidence | Still required with supported fictional sessions |
+|---|---|---|
+| O01 | RLS/SDK ownership, anon RPC denial, identity double fences, expired allowlist/invalid args | Real A/B/nonallowlisted valid C; absent/expired/wrong-owner/forged payload across every operation and direct REST/RPC; session expiry mid-work; zero unauthorized mutation/dispatch |
+| O02 | Saved equivalence/microphone-off double; thread-bound seals | Auth A1/A2/new/reopen canaries; no account-wide memory |
+| O03/O04 | Exact synthetic excerpt/policy/drift tests and isolated imports | Auth preview/cancel/exact-only canaries across outbound/context/log surfaces |
+| O05 | Real optimistic DB primitives; server list/reopen/discard doubles | Auth Save/Discard/Cancel/failure/concurrent/stale/reload UI and recovery |
+| O06 | Real mixed settle/delete/tombstone; delete-failure double; explicit pending fence | Auth pending delete/Stop and delayed response/save/summary/audio no resurrection |
+| O07 | Prior correction/intention/restriction tests preserved; saved content tests | Auth saved/discarded semantic context round trips |
+| O08 | 13 real service-record DB groups, concurrency/claims/receipts/invalid args | Real-session unauthorized cannot-spend and duplicate dispatch matrix; deterministic expiry lock-wait unavailable |
 
-## Data lifetime and deletion scope
+No real device, screen reader, microphone, audio, model, production participant or full signed-in UI evidence implied.
 
-There are currently **zero application transcript writes** to Cloud. The accepted P3a preview remains browser-memory-only; refresh/close loses that memory. New tables contain no seeded personal data. The threads schema reserves a nullable field for a future deliberate validated service snapshot and a content-free deletion tombstone. Admissions permit non-content identifiers, keyed fingerprints, revision/mode, integer units, state and receipt metadata only. Actual save/delete writers, crash retention/cleanup, optimistic concurrency and late-event protections across processes remain unimplemented. No claim is made about processor logs/backups deletion. No active server-content cache or durable per-turn transcript was added.
+## Exact auth capability limitation and owner setup
 
-## Evidence actually run
+Supported CLI previously reported **“Creating a test user is not available for this project.”** Alternate sign-in-link minting was refused as bypassing consent. Neither action was retried/worked around. No Carl account substitution, hand-built JWT, signing key, admin session, magic link or alternate provider. No emails/public enrollment.
 
-- `bunx vitest run src/lib/ai/conversation` — **9 files, 238 passed** on 2026-10-25T23:02Z: all prior 223 unchanged plus 15 new pure-rule tests. This is unit/application evidence, NOT O01–O08 database acceptance.
-- Real database catalog query: all four tables have RLS ON, no policies; final anon/authenticated SELECT privileges false, service_role SELECT true.
-- `python3 /tmp/browser/p3b/check_locked_tables.py` — actual publishable-key anonymous REST reads against each of the four Cloud tables denied (401/403, permission code 42501), no row content returned. This only establishes locked anonymous table reads; it does not establish wrong-owner/account/session-expiry handler behavior.
-- Automatic diagnostic log latest inspected: **build OK at 2026-10-25T23:02:19Z**. No manual build/typecheck command ran. Hosted `lovable build status --json` still reported the baseline build SHA, so current hosted deployment/typecheck and GitHub remote synchronization are **not independently verified**.
-- Activation presence check: `JOURNEY_AI_ENABLED`, `JOURNEY_AI_RELEASE_READY`, `LIVE_AI_ENABLED` absent/OFF. No activation secrets changed.
-- UI unchanged; no narrow/wide/keyboard flow was claimed or rerun for this preparation. No redundant journey suites run because journey paths were unchanged.
+Latest public settings read: **disable_signup=false; anonymous=false; every provider=false**. Zero admitted staging accounts verified after database checks. No auth-settings mutations this continuation; unknown HIBP value was not guessed.
 
-### O01–O08 acceptance status
+1. Owner can use official **More → Users → Settings → Disable sign-up** to close the currently false signup flag. Agent did not toggle it. This does **not** create fictional users/sessions or resolve unavailable test-session provisioning.
+2. No supported session-producing path is currently available in the tools for this project under the consent constraints. The platform must enable its supported fictional test-user/session capability for this project; availability is not promised. Do not enable public signup/providers as a substitute.
+3. Once that exact supported capability exists, provision identity-only fictional A/B plus nonallowlisted C through it without emails; keep credentials out of chat/docs. Admit only A/B server-side with expiry and integer test allowances; then execute full matrix above. Disable allowlists after checks. Until then, P3b remains NOT accepted; no owner handoff can certify it.
 
-| Check | Actual evidence / remaining work |
-| --- | --- |
-| O01 | Anonymous raw table access denied only. A/B accounts, server ownership matrices, expired sessions and zero unauthorized dispatch/mutation **NOT RUN**. |
-| O02 | Prior P3a evidence preserved; authenticated save/reopen/thread isolation **NOT RUN**. |
-| O03/O04 | No new content import/outbound path. Real server excerpt preview/consent/drift and canary surfaces **NOT RUN**. |
-| O05 | Schema preparation only; real save, stale/concurrent save, discard/cancel/refresh **NOT RUN**. |
-| O06 | Schema tombstone constraint only; pending delete, failure, late-event resurrection **NOT RUN**. |
-| O07 | Prior 223 conversation regressions remain green; durable restore/discard context **NOT RUN**. |
-| O08 | 15 pure rule tests only; actual transactional reservation/claim/settlement/concurrency **NOT RUN**. Zero paid provider requests. |
+## Changed files, costs, synchronization and rollback
 
-## Remaining implementation within P3b
+Changed application files: `StagingConsole.tsx`, `service/service.ts`, `staging/{adapter.server,input,excerpt,lifecycle}.ts`; tests `p3b-repair.test.ts`, `p3b-boundary.test.ts`; `scripts/p3b/check-locks.py`; migrations 0004/0005 plus tool-generated snapshots/journal/types; `AGENTS.md`, roadmap and this checkpoint. No private/journey/v5 files changed.
 
-Verify hosted signup settings and disable public enrollment without altering unknown settings; create disposable fictional A/B accounts without sending emails; server-verified staging allowlist/ownership checks plus RLS; integrate one service authority with explicitly saved validated snapshots (not client trusted history); transactionally reserve/claim/reconcile in database; connect isolated developer UI only; run the complete actual O01–O08 matrix and keyboard/narrow/wide flows. No P4.
+No paid app model/voice calls; no fresh v5 allowance. Cloud/platform/editor usage not measured as task invoice. Historical observed balance change **89.50→86.80 (2.70 credits)** is only the initial preparation observation, not this continuation cost.
 
-## Cost / sync / rollback
+Normal Lovable autosave only. Latest inspected local code SHA before this document: `02a47b57bfd3bdb72d71c5109b7f0542fac03eac`; final document autosave may advance it. Hosted `lovable build status --json` still reports synchronized **baseline d4a274b**, not new changes: final hosted build/GitHub sync **not independently verified**. Do not mislabel baseline in_sync as current sync.
 
-Credit balance observed at start 89.50; later 86.80 (2.70-credit change observed, not a final task invoice). No billing/top-up settings changed; Cloud usage may incur normal platform usage and was not measured here. No model/voice spending authorized or incurred by app calls. v5 accounting untouched.
+Rollback: disable admission first (already zero admitted); retain ledger/tombstones/uncertain holds, key, migrations and evidence. Revert UI/adapter forward only if needed. No destructive reset/drop/history rewrite, key invalidation or v5 replay.
 
-Normal Lovable autosave forward history only; latest local preparation SHA before this document was `f3b7a07656c3cdb4a12ddb92c601eb4ba6342985`. Final SHA is reported in chat after autosave; remote GitHub sync unverified.
+## Clearly labelled historical evidence (superseded implementation status)
 
-Rollback: keep admission disabled first (currently no staging adapter/admitted rows and all browser privileges revoked). Retain content-free ledger/tombstones and migration/evidence history. Do not drop/reset tables, delete v5 guards or rewrite Git history. Cloud connection is not undone by reverting source; no Cloud removal attempted.
+- Original baseline `978908c5b6ca0905250609be7c95a338da1f1a4a`, tree `94fec8de7e4726fffcb3f0867db9b9b81ce54f6e`: 223 prior tests; integration initially absent.
+- Preparation 0000/0001: four locked tables, explicit grants/revokes, no browser policies/writers then; 238 unit tests, anonymous table reads denied, automatic build OK around 23:02Z. Preparation checkpoint `9a9822b06a74553f84ef2eb433c372101f3cd3f1`; intermediate `f3b7a07656c3cdb4a12ddb92c601eb4ba6342985`. Those no-writer/no-RLS-adapter claims are HISTORY only, not current.
+- Previous continuation: 0002 transactions and 0003 no automatic serialization retry; 242 repo tests + two external gaps/scoped TS reported independently; 9 actual DB checks, no real Auth sessions. Three fictional passwordless Auth identities created without emails, B/C database guard denial checked, all identities deleted HTTP200 and allowlists disabled. Email briefly enabled then disabled then; final providers OFF. No such actions repeated now.
+- v5 complete and untouched: two actual historical calls, no retries; reserved USD 0.058412500 of 0.06. Residual is not a new allowance. No v5 evidence export or rerun.

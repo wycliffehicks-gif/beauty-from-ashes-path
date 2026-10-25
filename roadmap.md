@@ -6,3 +6,11 @@
 - [x] Add `PILOT_FOLLOW_UP.md` with the owner-approved evidence checklist and deferred decisions.
 - [x] Add focused regression coverage and run the requested tests, typecheck, build, and browser layout checks.
 - [x] Keep the project private and unpublished; preserve content, state, identity, and runtime settings.
+
+## P3b — isolated fictional staging
+- [x] Verify the approved baseline and connect required Cloud infrastructure.
+- [ ] Establish staging-only verified identity (profile-data decision required before auth code).
+- [ ] Implement owned deliberate snapshots/deletion and non-content atomic admission ledger.
+- [ ] Connect the existing service authority without enabling participant/model/voice access.
+- [ ] Verify O01–O08 against real fictional staging accounts and database concurrency.
+- [ ] Record exact checkpoint evidence, limits and rollback; retain all prior work.

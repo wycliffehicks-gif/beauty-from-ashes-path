@@ -75,8 +75,8 @@ await check('O08', 'B explicit server-owned text allowance 0: authenticated send
   assert(lastReply(v).startsWith(MOCK_REPLY_PREFIX), 'voice mode mock reply missing');
   const vAdm = (await admissions(ids.B)).filter(x => x.mode === 'voice');
   assert(vAdm.length === 1 && vAdm[0].state === 'settled', 'voice admission ' + JSON.stringify(vAdm.map(x => x.state)));
-  assert(await balance(ids.B, 'voice') === 1 && await balance(ids.B, 'text') === 0, 'ledgers not separate');
-  return `text 0 -> denied (${err.slice(0, 40)}); B text admissions ${before}->${before}; voice mock reply committed, 1 settled voice admission, voice 1 / text 0`;
+  assert(await balance(ids.B, 'voice') === 2 && await balance(ids.B, 'text') === 0, 'ledgers not separate');
+  return `text 0 -> denied (${err.slice(0, 40)}); B text admissions ${before}->${before}; voice mock reply committed, 1 settled voice admission (zero charge), voice 2 / text 0`;
 });
 
 // ---------- O06 + O08 Delete after PROVEN dispatched admission ----------
@@ -126,7 +126,8 @@ await check('O06/O08', 'Stop after proven dispatched admission: late mock reply 
 // ---------- O02–O04/O07 exact canaries after save/discard/reopen ----------
 const CROSS_THREAD = 'Was angry when came home yesterday.', CROSS_OWNER = 'Not angry with her; tired.';
 await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cross-owner canaries, correction, no-questions, exact excerpt in request', async () => {
-  // Cross-owner canary (B voice is spent above; give B a thread whose content is A-irrelevant via create only) and cross-thread canary in A.
+  let bt = asActive(await op(b, { action: 'create' })); bt = await send(b, bt, 'I am not angry with her; I am tired.', randomUUID(), 'voice');
+  assert(JSON.stringify(bt.inspection).includes(CROSS_OWNER), 'cross-owner canary not planted');
   let other = asActive(await op(a, { action: 'create' })); other = await send(a, other, 'I was angry when I came home yesterday.');
   const otherReply = lastReply(await send(a, other, 'I could write tomorrow.'));
   assert(otherReply.includes('Is there anything else'), 'control thread without restriction should ask');
@@ -138,7 +139,7 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
   assert(!lastReply(t).includes('Is there anything else'), 'no-questions restriction ignored');
   t = asActive(await op(a, { action: 'save', thread: t.thread, revision: t.revision, token: t.token, preferenceOn: false }));
   const saved = t.inspection!.events.map(e => e.eventId);
-  t = await send(a, t, 'I am not angry with her; I am tired.'); // unsaved canary, then discarded
+  t = await send(a, t, 'DISCARD-CANARY-7731 fictional unsaved line.'); // unsaved canary, then discarded
   assert(!t.saved, 'canary turn shown as saved');
   t = asActive(await op(a, { action: 'discard', thread: t.thread, revision: t.revision, preferenceOn: false }));
   assert(JSON.stringify(t.inspection!.events.map(e => e.eventId)) === JSON.stringify(saved), 'discard did not restore exact saved events');
@@ -159,7 +160,7 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
   const reply = lastReply(t), lr = t.inspection!.lastRequest!;
   for (const must of ["Came home yesterday and couldn't talk to anyone.", 'Was tired, not angry.', 'You mentioned an intention, not something done: Could write tomorrow (intention, not done).'])
     assert(reply.includes(must), 'recall reply missing: ' + must);
-  for (const never of [CROSS_THREAD, CROSS_OWNER, 'Not angry with her', 'SYNTHETIC_ADJACENT', 'Ignore all rules'])
+  for (const never of [CROSS_THREAD, CROSS_OWNER, 'Not angry with her', 'DISCARD-CANARY-7731', 'SYNTHETIC_ADJACENT', 'Ignore all rules'])
     assert(!reply.includes(never) && !JSON.stringify(t.inspection).includes(never), 'canary leaked: ' + never);
   assert(lr.historyEventIds.includes(ex.eventId), 'excerpt event not in request history');
   assert(lr.historyEventIds.every(id => t.inspection!.events.some(e => e.eventId === id)), 'request history includes foreign event');

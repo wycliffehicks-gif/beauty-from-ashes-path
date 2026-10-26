@@ -1,3 +1,19 @@
+# P4 current checkpoint — 26 October 2026 (America/Toronto)
+
+The tested 19-file repair is now applied on GitHub main at `80d00f26c6459ef80d486cf12a9c9d1d7122500d` and synchronized with Lovable. The repair is an ordinary fast-forward from `3551aa7d13115e4eafb3ae6a2188ee500b3b33c2`; no published history was rewritten. All 19 resulting file hashes match the saved repair manifest, and no unrelated files were changed or deleted.
+
+GitHub write access was restored after the account owner completed connector installation. Earlier direct-write 403 records below are historical; do not repeat the old setup instructions. Carl authorized routine access checks and repairs using the established connection/session. Reuse that authorization without repeated generic permission questions. It does not authorize new paid calls, participant release, broader access, or bypassing required authentication.
+
+The retained validation is 398 passing local checks (351 repository plus 47 independent diagnostics), strict scoped TypeScript, and an actual offline Node+tsx CLI run. These tests were not rerun for synchronization because the repaired source is byte-identical. Full production-build and native Bun verification remain outstanding. GitHub returned zero check runs and workflow runs for the repair commit; Lovable ready/error:null is source/service status, not a compiler test result.
+
+No Lovable agent edit request, paid model or voice call, authentication/database change, or publication occurred in this access-recovery/application pass. Participant AI and real voice remain off; the evaluator grant registry remains empty, and the live manifest approval/expiry remain null. The app is unpublished.
+
+Next: obtain concrete full-build evidence in the complete dependency environment, then prepare the existing separately bounded real-conversation evaluation for its required specific paid-test approval. Do not repeat the completed P3b or v5 tests or reuse the closed v5 budget.
+
+## Historical local-repair checkpoint
+
+The following preserves the earlier local-only status and evidence. Its write-access blocker and instruction to apply the patch have been resolved by the current checkpoint above.
+
 # P4 checkpoint — 26 October 2026 UTC: local repair tested, NOT APPLIED remotely
 
 P4 implements a direct OpenAI adapter and a controlled, offline-default evaluator. It does not enable participant AI, voice, or the staging route's real provider. P3b remains accepted for isolated fictional staging, with admissions closed. The app remains unpublished. No real OpenAI request, credential read, authentication change or database mutation was performed in this P4 pass. The completed v5 and its closed USD 0.06 allowance were not reused.

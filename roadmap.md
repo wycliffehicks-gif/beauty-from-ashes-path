@@ -30,8 +30,9 @@
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
 - [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.
 
-## P4 — direct provider adapter + controlled evaluator (LOCAL REPAIR ONLY, 26 Oct 2026 UTC)
-Remote application blocked: Lovable credits exhausted; GitHub write rejected HTTP 403. Remote head remains partial repair `3551aa7d`; apply the prepared forward patch before claiming implementation synchronized.
+## P4 — direct provider adapter + controlled evaluator (REPAIR SYNCHRONIZED, 26 Oct 2026)
+The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500d` and synchronized with Lovable. GitHub write access is restored. Full production-build evidence remains outstanding.
+- [x] Apply the exact verified forward repair without history rewrite, deletion or unrelated source changes; verify GitHub/Lovable commit synchronization. No Lovable agent edit request or paid provider call was used.
 - [x] Extract neutral provider types and preserve the approved policy/context boundary; staging still uses the mock.
 - [x] Implement direct OpenAI Responses with strict structured output, explicit model/tier, no provider memory/tools/retry and whole-operation cancellation.
 - [x] Repair exact full-wire UTF-8 bounds/hashes, decoded secret screening and usage validation.

@@ -8,13 +8,13 @@
 - [x] Keep the project private and unpublished; preserve content, state, identity, and runtime settings.
 
 ## P3b — isolated fictional staging
-- [x] Assess remaining blockers: Cloud healthy and local preview opens without page errors; fictional sessions and locked-thread test remain externally blocked under existing restrictions (26 October). No denied action retried.
-- [x] Fence cancelled navigation, use confirmed same-thread reopen revisions, show modal failure and reconcile initial preference without retry loops; offline component checks remain separate from blocked Auth acceptance.
+- [x] Assess remaining blockers: Cloud healthy and local preview opens without page errors; HISTORICAL (resolved 26 Oct): fictional sessions and locked-thread test were then blocked; both later completed. No denied action retried.
+- [x] Fence cancelled navigation, use confirmed same-thread reopen revisions, show modal failure and reconcile initial preference without retry loops; offline component checks remain separate from signed-in evidence (HISTORICAL: Auth acceptance was then blocked; resolved).
 - [x] Reject noncanonical sealed-token segments/encoding/IVs; preserve active/saved behavior (268 conversation tests passing).
 - [x] Repair reusable per-thread authority export; independent round-trip/revoked-lineage regressions pass (262 conversation tests).
 - [x] Verify the approved baseline and connect required Cloud infrastructure.
-- [x] Implement staging-only verified identity; identity-only default within approved scope, no profiles (real-session evidence blocked).
-- [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (authenticated acceptance still blocked).
+- [x] Implement staging-only verified identity; identity-only default within approved scope, no profiles (HISTORICAL: real-session evidence was then blocked; resolved).
+- [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (HISTORICAL: authenticated acceptance was then blocked; resolved).
 - [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
 - [x] Connect isolated staging adapter to existing service authority; participant/model/real voice remain off.
 - [x] Verify O01–O08 against real fictional staging accounts and database concurrency (completion pass 26 Oct ~03:10 UTC: handler 6/6, HTTP+UI 48/48, thread-row-lock expiry, closure probe).
@@ -26,6 +26,6 @@
 - [x] Run conversation/server-double regressions and actual service-record database concurrency/argument checks.
 - [x] Authenticated O01–O08 (23/23) and signed-in 390/1280 keyboard UI (14/14) passed with fictional A/B/C, 26 Oct ~02:30 UTC; accounts deleted, admissions closed, email sign-in OFF.
 - [x] Thread-row-lock expiry (temporary helper 0008, removed 0009) and real-session dispatched-then-Delete/Stop uncertain hold passed.
-- [ ] Carl's review of the P3b acceptance (fictional staging scope only). Not covered: real devices, screen readers, microphone/audio, real model, raw provider payload capture, login-screen UX.
+- [x] P3b technical gate accepted for isolated fictional staging after independent review (26 Oct 2026). Not covered: real devices, screen readers, microphone/audio, real model, RAW provider payload capture, login-screen UX. Later, separate scope: content/tone review, paid new model/voice tests, participant activation.
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
 - [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.

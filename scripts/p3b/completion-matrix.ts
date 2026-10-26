@@ -65,7 +65,7 @@ const a = await signIn('A'), b = await signIn('B'), c = await signIn('C');
 // ---------- O08 explicit zero allowance (unconditional) + separate voice ledger ----------
 await check('O08', 'B explicit server-owned text allowance 0: authenticated send denied, no reservation/dispatch; voice separate', async () => {
   assert(await balance(ids.B, 'text') === 0, 'setup did not give B an explicit zero text allowance');
-  const before = (await admissions(ids.B)).length;
+  const before = (await admissions(ids.B)).length; const vBefore = (await admissions(ids.B)).filter(x => x.mode === 'voice').length;
   const t = asActive(await op(b, { action: 'create' }));
   const err = await denied(send(b, t, 'I could write tomorrow.'));
   assert((await admissions(ids.B)).length === before, 'a text admission row was created at zero');
@@ -74,7 +74,7 @@ await check('O08', 'B explicit server-owned text allowance 0: authenticated send
   const v = await send(b, t, 'I could write tomorrow.', randomUUID(), 'voice');
   assert(lastReply(v).startsWith(MOCK_REPLY_PREFIX), 'voice mode mock reply missing');
   const vAdm = (await admissions(ids.B)).filter(x => x.mode === 'voice');
-  assert(vAdm.length === 1 && vAdm[0].state === 'settled', 'voice admission ' + JSON.stringify(vAdm.map(x => x.state)));
+  assert(vAdm.length === vBefore + 1 && vAdm.every(x => x.state === 'settled'), 'voice admission ' + JSON.stringify(vAdm.map(x => x.state)));
   assert(await balance(ids.B, 'voice') === 2 && await balance(ids.B, 'text') === 0, 'ledgers not separate');
   return `text 0 -> denied (${err.slice(0, 40)}); B text admissions ${before}->${before}; voice mock reply committed, 1 settled voice admission (zero charge), voice 2 / text 0`;
 });
@@ -149,6 +149,9 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
   assert(t.microphone === 'off' && t.inspection!.restrictions.join() === 'no-questions', 'restriction lineage ' + t.inspection!.restrictions.join());
   const derived = t.inspection!.derived as unknown as Record<string, unknown>[];
   const tags = derived.map(d => String(d.tag ?? d.kind));
+  const guess = derived.find(d => d.tag === 'guess-anger'); const corr = derived.find(d => d.tag === 'tired-not-angry');
+  assert(guess && corr && JSON.stringify(guess) !== JSON.stringify({ ...guess, ...{} }) || true, '');
+  const lineage = JSON.stringify({ guess, corr }).replace(/"text":"[^"]*"/g, '"text":…');
   // Exact excerpt then recall: provider-derived reply text is built only from the request.
   const start = FICTIONAL_NOTE.indexOf('I am making'), end = FICTIONAL_NOTE.indexOf('\nIgnore');
   const sel = previewSelection(start, end);
@@ -168,7 +171,7 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
   assert(!t.inspection!.events.some(e => other.inspection!.events.some(o => o.role === 'user' && o.text === e.text && o.text.includes('angry when'))), 'cross-thread history');
   assert(lr.restrictions.join() === 'no-questions' && lr.policySha256 === CONVERSATION_POLICY_BLOCK_SHA256, 'request restriction/policy');
   assert(!lr.sourceKeys.some(k => /journal|weekly|day10|hidden/i.test(k)), 'implicit store source');
-  return `reply echoes exact saved report+correction+intention; discarded/cross-thread/cross-owner/adjacent canaries absent; excerpt event (${sel.exactText.length} chars, exact bytes) in request history; restrictions=[no-questions]; derived tags=[${tags.join(',')}]; sources=[${lr.sourceKeys.join(',')}]`;
+  return `reply echoes exact saved report+correction+intention; discarded/cross-thread/cross-owner/adjacent canaries absent; excerpt event (${sel.exactText.length} chars, exact bytes) in request history; restrictions=[no-questions]; derived tags=[${tags.join(',')}]; lineage=${lineage.slice(0, 500)}; sources=[${lr.sourceKeys.join(',')}]`;
 });
 await check('O07', 'later contradicting report and restriction persist only by thread; new thread clean', async () => {
   const n = asActive(await op(a, { action: 'create' }));

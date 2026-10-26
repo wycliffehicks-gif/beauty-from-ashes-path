@@ -2,7 +2,7 @@
  * Proves previously issued fictional sessions cannot reach staging after cleanup.
  * Phase 1 (before cleanup): ordinary password sign-in for A/B/C, tokens held in memory only.
  * Waits for /tmp/p3b-auth-done (written after cleanup + email OFF), then probes the real handler,
- * direct RLS reads and a service-only RPC with the old tokens. Prints no tokens.
+ * direct RLS reads (bfa_p3b_threads) and Auth getUser with the old tokens. Prints no tokens.
  * Run in background: bun scripts/p3b/closure-probe.ts > /tmp/p3b-closure.log
  */
 import { createClient } from '@supabase/supabase-js';
@@ -23,6 +23,8 @@ for (const n of ['A', 'B']) {
   pre[n] = await stagingOperation({ action: 'list' }, cl).then(() => true, () => false);
 }
 console.log(JSON.stringify({ phase: 'ready', liveBeforeCleanup: pre }));
+// Control: the held sessions must reach staging before cleanup, or the closure result proves nothing.
+if (!pre.A || !pre.B) { console.log(JSON.stringify({ phase: 'aborted', reason: 'live-before-cleanup control failed' })); process.exit(1); }
 while (!existsSync('/tmp/p3b-auth-done')) await new Promise(r => setTimeout(r, 500));
 const after: Record<string, unknown> = {};
 for (const n of ['A', 'B', 'C']) {

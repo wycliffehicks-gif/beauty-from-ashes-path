@@ -1,0 +1,39 @@
+{
+  "package": "P3b completion pass — isolated fictional staging only",
+  "date": "2026-10-26 (UTC)",
+  "source_of_values": "Transcribed from the completed run's in-session tool output. The raw /tmp log files (/tmp/p3b-completion-matrix.log, /tmp/p3b-closure.log, /tmp/p3b-completion-http-ui.log, /tmp/p3b-rowlock.log) were NOT available when this file was written (temporary sandbox storage was cleared), so they could not be re-read. No sessions or tests were rerun to regenerate them.",
+  "contains": "No credentials, tokens, keys, account emails, user IDs or conversation content.",
+  "provider": "mock provider only; no paid app-model or voice calls",
+  "direct_handler_matrix": {
+    "script": "scripts/p3b/completion-matrix.ts (final run)",
+    "label": "real password sessions + real stagingOperation called directly (not TanStack HTTP)",
+    "total": 6, "failed": 0, "unresolved": 0,
+    "checks": ["O08 explicit zero text allowance denied + separate voice", "O06/O08 Delete after proven dispatch, uncertain hold", "O06/O08 Stop after proven dispatch, uncertain hold", "O02/O03/O04/O07 saved lineage and canaries", "O07 new thread clean", "O08 C no admission/allowance"]
+  },
+  "http_and_ui": {
+    "script": "scripts/p3b/completion-http-ui.py (final run)",
+    "http_server_function_checks": 26,
+    "ui_checks_390_and_1280": 22,
+    "passed": 48, "failed": 0
+  },
+  "thread_row_lock_expiry": {
+    "script": "scripts/p3b/check-thread-row-lock-expiry.py",
+    "label": "real database, fictional service records, no sessions; temporary helper added by migration 0008 and removed by 0009",
+    "control_unexpired": { "waited_s": 3.57, "status": 200, "admissions": 1 },
+    "expiring": { "waited_s": 3.5, "status": 403, "error": "Unavailable", "admissions": 0, "balance": 20, "revision": 0 },
+    "passed": true
+  },
+  "closure_probe": {
+    "script": "scripts/p3b/closure-probe.ts",
+    "liveBeforeCleanup": { "A": true, "B": true },
+    "after_cleanup_for_A_B_C": { "handlerList": "denied", "handlerCreate": "denied", "rlsRows": 0, "getUser": "invalid" },
+    "closed": true
+  },
+  "final_state": {
+    "fictional_accounts_deleted": 3,
+    "admitted_staging_rows": 0,
+    "auth": { "email_sign_in": false, "disable_signup": true, "leaked_password_check": true, "auto_confirm": false, "anonymous": false },
+    "temporary_test_functions_remaining": 0
+  },
+  "not_covered": ["real devices", "screen readers", "microphone/audio", "real model", "RAW provider payload capture", "login-screen UX"]
+}

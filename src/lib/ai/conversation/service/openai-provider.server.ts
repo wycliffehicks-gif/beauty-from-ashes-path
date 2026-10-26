@@ -332,7 +332,7 @@ export function createDirectOpenAIConversationProvider(
               stream: false,
               service_tier: "default",
               truncation: "disabled",
-              reasoning: { effort: "none" satisfies (typeof REASONING_EFFORTS)[number] },
+              reasoning: { effort: "none" },
               text: {
                 format: {
                   type: "json_schema",
@@ -455,7 +455,7 @@ export function createDirectOpenAIConversationProvider(
               }
             }
           }
-          if (text.includes("") || (apiKey && text.includes(apiKey))) {
+          if (text.includes(" ") || (apiKey && text.includes(apiKey))) {
             throw new ProviderRequestError("invalid-response");
           }
           if (parsed.status === "incomplete" || incompleteMessage) {

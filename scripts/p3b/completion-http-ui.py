@@ -100,6 +100,8 @@ async def ui(page,w):
   await page.get_by_role('button',name='New conversation').click(); await dlg.get_by_role('button',name='Save and continue').click()
   await expect(items).to_have_count(0,timeout=15000); await expect(st).to_have_text('Unsaved changes'); res.append(f'O05-UI {w} PASS: New while unsaved -> Save and continue -> new empty conversation')
   await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1').click()
+  await page.wait_for_timeout(700)
+  if await dlg.count(): await dlg.get_by_role('button',name='Discard and continue').click()  # the empty new conversation is itself unsaved
   await expect(items).to_have_count(4,timeout=15000); res.append(f'O05-UI {w} PASS: saved-and-continued conversation reopens with 4 events')
   # account switch without reload while a send is pending
   bBefore=len(adm(ids['B'])); await msg.fill('I could write tomorrow.'); await page.get_by_role('button',name='Send fictional message').click()

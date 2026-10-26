@@ -20,7 +20,7 @@ Evidence labels: **HANDLER** = real password sessions + real `stagingOperation` 
 
 Runs: `bun scripts/p3b/completion-matrix.ts` 6/6 (final run; two earlier runs exposed test-expectation errors only: state name is `uncertain`, thread-scoped event ids), `python3 scripts/p3b/completion-http-ui.py` 48/48 (earlier runs failed on test races: clicking Reopen before the list refresh returned — honest stale denial — and a non-exact button name), `python3 scripts/p3b/check-thread-row-lock-expiry.py` pass, `bun scripts/p3b/closure-probe.ts` closed=true.
 
-Remaining limits: no real phone/screen reader/microphone/audio/model evidence; raw provider payload bytes not captured; UI sessions are not login-screen UX; uncertain holds created by this run (A 2 units across runs ×3) and the control-owner admission remain as content-free ledger evidence pending server reconciliation.
+Remaining limits: no real phone/screen reader/microphone/audio/model evidence; raw provider payload bytes not captured; UI sessions are not login-screen UX; 6 uncertain holds created by this pass (2 per handler run × 3 runs, 1 unit each, on now-deleted fictional A) and the row-lock control owner's reserved admission remain as content-free ledger evidence pending server reconciliation.
 
 Final state: A/B/C deleted (200×3), admitted rows 0, email sign-in OFF, disable_signup=true, HIBP on, auto-confirm off, anonymous off; no `bfa_p3b_test_*` function remains; migrations 0000–0009 retained.
 

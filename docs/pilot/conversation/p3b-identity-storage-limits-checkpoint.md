@@ -1,4 +1,4 @@
-# P3b CURRENT checkpoint — independent implementation complete; acceptance BLOCKED
+# P3b CURRENT checkpoint — signed-in O01–O08 matrix PASSED (26 Oct 2026); accepted for isolated fictional staging scope, with listed limits
 
 25 October 2026 UTC. Continuation baseline: synchronized `d4a274b633bd75e405eb7de5b55c4df2f40eeed8`. **P3b is not accepted.** No P4, publication, participant activation, enrollment, real voice or app-provider/model calls. P0–P3a, v5, ten days, journal/weekly/progress stores and approved policy remain preserved.
 
@@ -121,3 +121,26 @@ Rollback: disable admission first (already zero admitted); retain ledger/tombsto
 - Carl approved setting the leaked-password (HIBP) check ON in the same change. Applied: disable_signup=true, HIBP=true, auto-confirm=false, anonymous=false.
 - Public settings read back: disable_signup=true, anonymous=false, email=false, autoconfirm=false.
 - Email sign-in deliberately NOT yet enabled; no accounts created. It will be enabled only together with the signed-in O01–O08 run, then turned back off. P3b remains NOT accepted.
+
+## 26 October 2026 ~02:27–02:40 UTC — real signed-in O01–O08 run (Carl-approved)
+
+Baseline head `084adcd4c1617b07e59fa0835fb409c28f88a405`. Sequence: public settings verified closed (disable_signup=true, anonymous=false, autoconfirm=false; HIBP set ON at 02:15 by Carl's approval) → email sign-in enabled → public signup probe HTTP 422 (refused) → fictional A/B/C created as confirmed accounts via the admin create-user route (no emails) → ordinary email/password sign-in for each → A/B admitted with 40-min expiry and integer allowances (A text 40/voice 2, B text 1/voice 1); C valid session, never allowlisted → matrix → cleanup. Credentials lived only in a 0600 temp file, never printed; file deleted. Not Carl's account; no CLI mint, link, JWT fabrication or bypass.
+
+Scripts (retained): `scripts/p3b/auth-setup.py`, `scripts/p3b/auth-matrix.ts` (real Auth sessions → real `stagingOperation` handler with the same user-scoped SDK client the auth middleware builds, real RLS/REST/RPC, mock provider), `scripts/p3b/check-signed-in-ui.py` (real browser + server functions), `scripts/p3b/auth-cleanup.py`. Evidence: `/tmp/p3b-auth-matrix.log` (**23 passed, 0 failed**), `/tmp/p3b-signed-in-ui.log` (**14 passed**), screenshots `/tmp/browser/p3b-signed-in/{a,c}-{390,1280}.png` (fictional text only).
+
+| Gate | Real signed-in evidence |
+|---|---|
+| O01 | C valid getUser but create/list Unavailable; absent and forged bearer denied; B denied on 9 ops against A's thread with no B admission; A token replayed on B thread rejected; strict input rejects owner/history/grants/derived; RLS: A sees own row, B/C 0; browser insert/update/delete denied; 10 direct RPCs with forged p_owner denied for B and C; session revoked mid-send → denied, revision unchanged; allowlist closed mid-send → denied |
+| O02 | New thread has zero A1 events/derived; request history only own events; reopen mic off |
+| O03/O04 | Confirmed excerpt = exact 37 selected chars, labelled untrusted; adjacent/injection text absent from inspection; policy identity + SHA `2fe0e26d…` unchanged; no journal/weekly/day10 source keys; drifted revision/range → Refresh, revision unchanged; UI Escape on preview shares nothing |
+| O05 | Save→Saved, later turn→Unsaved; Discard restores saved snapshot exactly; list (thread/revision/savedAt only)+reopen after reload; stale Save→Conflict; concurrent same-revision saves → exactly one; lost response: old token Conflict, Stop→stopped, reopen restores saved only |
+| O06 | Delete during pending send: send fails, tombstoned, snapshot null, stale save/reopen denied, not listed (admission `cancelled-before-dispatch`); Stop during pending send suppresses late result |
+| O07 | Reopen restores correction-derived items (4) and `no-questions` restriction |
+| O08 | Concurrent duplicate requestId → 1 commit, 1 admission row; reused id with different payload denied; mock zero-paid settle restores units; voice allowance separate; C has zero admissions/allowances and no spend path |
+| UI | 390 and 1280 px: keyboard New/Send/Save, Unsaved after turn, reload+reopen, excerpt Escape/confirm, Delete, C sees no conversation; no horizontal overflow, no page errors |
+
+Observation (not changed): closing the allowlist after reservation but before claim leaves that admission `reserved` (unit held, never dispatched). Conservative per the no-zero-charge-inference rule; reconciliation could release it later.
+
+Limits: thread-row-lock wait crossing allowlist expiry remains **untested** (the 26 Oct passed check was the owner advisory lock; not relabelled). A real-session possibly-dispatched `uncertain` hold was not produced (delete landed before dispatch); uncertain-hold evidence remains the service-record DB checks. No real device, screen reader, microphone, audio or model. Account-switch-in-place UI remains covered only by the offline harness. No code defects found; no application code changed.
+
+Cleanup verified: A/B/C admissions closed, accounts deleted (HTTP 200 ×3), `admitted_rows=0`, email sign-in OFF, settings disable_signup=true, anonymous=false, autoconfirm=false, HIBP ON; password sign-in now HTTP 422; only permanent `bfa_p3b_*` functions remain (no test helper). Ledgers/tombstones/holds, seal key, migrations, v5 and journey untouched. Participant AI/voice OFF; unpublished.

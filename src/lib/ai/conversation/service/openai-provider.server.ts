@@ -455,7 +455,7 @@ export function createDirectOpenAIConversationProvider(
               }
             }
           }
-          if (text.includes(" ") || (apiKey && text.includes(apiKey))) {
+          if (text.includes(String.fromCharCode(0)) || (apiKey && text.includes(apiKey))) {
             throw new ProviderRequestError("invalid-response");
           }
           if (parsed.status === "incomplete" || incompleteMessage) {

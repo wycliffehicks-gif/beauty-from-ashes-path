@@ -10,7 +10,7 @@
 
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { ConversationService } from "../../src/lib/ai/conversation/service/service";
 import type { TurnOutcome } from "../../src/lib/ai/conversation/service/service";
 import { CONVERSATION_POLICY_BLOCK_SHA256 } from "../../src/lib/ai/conversation/policy";
@@ -113,6 +113,7 @@ export async function runConversationEvaluation(
 
   const outDir = resolve(options.outDir);
   if (existsSync(outDir)) throw new Error("output directory already exists");
+  mkdirSync(dirname(outDir), { recursive: true });
   mkdirSync(outDir, { recursive: false });
 
   if (options.mode === "validate") {

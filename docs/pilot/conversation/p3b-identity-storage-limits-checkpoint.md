@@ -116,3 +116,8 @@ Rollback: disable admission first (already zero admitted); retain ledger/tombsto
 - `lovable auth-session --json --create-test-user` retried once on Carl's explicit request: still "Creating a test user is not available for this project." Not worked around.
 - Carl authorized temporarily enabling email/password sign-in for fictional A/B/C with public sign-up kept disabled, no emails, no personal account. Precondition failed: public settings show `disable_signup=false`. Closing it with the agent tool requires restating the leaked-password (HIBP) setting, whose current value is unknown and was not guessed. Email sign-in was therefore **not** enabled and no accounts were created. Owner action: More -> Users -> Auth settings -> **Disable sign-up**. Then email sign-in can be enabled, A/B/C created as confirmed accounts without emails, signed in through normal password sign-in, tested, deleted, and email sign-in turned back off.
 - Lock-wait expiry check passed (see above). Authenticated O01-O08 remains BLOCKED; P3b not accepted.
+
+## 26 October 2026 ~02:15 UTC — sign-up closed (Carl-approved)
+- Carl approved setting the leaked-password (HIBP) check ON in the same change. Applied: disable_signup=true, HIBP=true, auto-confirm=false, anonymous=false.
+- Public settings read back: disable_signup=true, anonymous=false, email=false, autoconfirm=false.
+- Email sign-in deliberately NOT yet enabled; no accounts created. It will be enabled only together with the signed-in O01–O08 run, then turned back off. P3b remains NOT accepted.

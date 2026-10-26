@@ -1,25 +1,39 @@
-# Diagnostic result and proposed next step: fictional-data OpenAI smoke test
+# P3b sign-in blocker: what is possible from the "Enable authentication" screen
 
-## Diagnostic findings (read-only, no changes made)
+Read-only findings. Nothing was changed.
 
-- **Repository state:** HEAD is `0e44e9526899f65524c9393d9f2e32b8cf115400` ("Work in progress" — the normal autosave/sync commit). Working tree is clean.
-- **OPENAI_API_KEY:** not configured in this workspace (boolean: present=false). Configured secrets are only LOVABLE_API_KEY (managed), SESSION_SECRET and SITE_PASSWORD.
-- **Participant AI switches:** JOURNEY_AI_ENABLED, JOURNEY_AI_RELEASE_READY and LIVE_AI_ENABLED are all present=false, enabled=false. Participant AI remains off; the app remains unpublished.
-- **Existing fictional smoke cases:** `scripts/offline-ai/run-comparison.ts` runs the three prepared fictional cases entirely offline — it hard-blocks `fetch` and throws if any network call is attempted. It cannot be reused for a live provider call without breaking its offline-only invariant, so it stays untouched.
-- **Reusable pieces:** the eval harness (`src/lib/ai/eval/harness.ts`, `fixtures.ts`) already defines allowlisted fictional fixtures, a call cap, dry-run mode and a provider interface. Only its provider (`gateway-provider.server.ts`) points at the Lovable AI Gateway; a sibling direct-OpenAI provider is the natural minimal addition.
+## Findings
 
-## Simplest supported secure way to add the key
+1. **What "Enable authentication" does.** I couldn't confirm it.
+   - The official docs only say it enables the app's built-in sign-in. They don't say what it does when no sign-in method is on.
+   - The card's own text ("Ask Lovable to set up authentication and build your login experience") suggests it hands the request to chat to build a login flow, rather than opening a settings panel. That is a guess from the card text, not something I verified.
+   - The docs also don't say whether Settings appears before any sign-in method is on. Your screenshot shows it doesn't. Pressing the button should be treated as a change that could start a build, not as opening a menu.
 
-Carl adds OPENAI_API_KEY himself in Project Settings → Secrets. It then reaches server-side code as an environment variable; the value is never printed, copied or shown in chat.
+2. **Changing only the sign-up switch while keeping the leaked-password (HIBP) value.** Not possible.
+   - The only tool that changes sign-up must set four values in the same call: sign-up off, auto-confirm, anonymous sign-in and the leaked-password check. It has no "leave unchanged" option for the leaked-password check.
+   - None of my tools reads the current leaked-password value, and that screen is the place you would see it, but your screen doesn't show it. So the current value can't be kept without guessing.
+   - The tool that turns on email sign-in doesn't touch the sign-up switch. Using it now, while public sign-up is on, would open sign-up to the public. That breaks your condition, so I won't use it first.
 
-## Proposed next step (only on approval)
+3. **What is left to decide.** This isn't a support issue. The leaked-password check just has to be set to a value you choose, instead of keeping an unknown one. Turning it **ON** is the stricter, safer choice: it only rejects passwords already known to be leaked, and it doesn't affect anything else you set.
 
-1. Carl adds OPENAI_API_KEY in Project Settings → Secrets (no value in chat).
-2. Add one new server-only file, e.g. `src/lib/ai/eval/openai-provider.server.ts`, implementing the existing `EvalProvider` interface against `https://api.openai.com/v1/chat/completions` with the same deadline/bounded-body/no-retry discipline as the existing gateway provider. No AWS, no Lovable AI Gateway fallback.
-3. Add one new runner, e.g. `scripts/ai-eval/run-openai-smoke.ts`, that reuses the existing allowlisted fictional fixtures and call cap, reads the key from the server environment, and writes artifacts outside `public/`. The offline-only runner and all app source stay unchanged.
-4. Run the three fictional smoke cases once; report pass/fail and token usage counts only.
-5. Participant AI stays off, the app stays unpublished, no reflection-model routes are wired, nothing is purchased beyond the per-call OpenAI usage Carl authorized.
+## The one next step (needs your yes)
 
-## Constraints kept
+Approve setting the leaked-password check to **ON** in the same change that turns public sign-up off. After that, I'll run the sequence you already approved:
 
-No edits in this diagnostic; no credentials in chat; no changes to the offline runner, ten-day content, server wiring, candidate policy, dependencies or build config; no publication.
+1. One settings change: public sign-up OFF, leaked-password check ON, auto-confirm OFF, anonymous sign-in OFF.
+2. Read the settings back to confirm sign-up is closed before anything else.
+3. Turn on email sign-in. Public sign-up stays closed.
+4. Create fictional A, B and C as confirmed accounts with no emails sent. Admit only A and B to staging, with an expiry date. Run the signed-in checks (O01 to O08).
+5. Delete A, B and C, remove staging access and turn email sign-in back off. The leaked-password check stays ON unless you say otherwise.
+
+These stay the same throughout:
+- Your personal account isn't used.
+- Nothing is published.
+- Participant AI and voice stay off.
+- I won't retry the actions that were refused before, or use workarounds.
+
+## Technical details
+
+- The settings tool requires `disable_signup`, `auto_confirm_email`, `password_hibp_enabled` and `external_anonymous_users_enabled` in every call. The planned values are `true`, `false`, `true` and `false`.
+- The email sign-in tool takes no parameters and leaves the sign-up switch unchanged. That is why it runs only after step 2 confirms sign-up is closed.
+- Sources: platform knowledge on auth settings (agent vs owner controls), official docs "Users and authentication" and "Email authentication: password rules", and the tool definitions available in this session.

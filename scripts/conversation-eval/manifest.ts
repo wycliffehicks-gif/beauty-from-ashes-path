@@ -10,7 +10,12 @@
 
 import { z } from "zod";
 import { EVAL_CATALOG, EVAL_TOTAL_TURNS } from "./catalog";
-import { worstCaseDispatchCostMicros, type PriceBasis } from "./pricing";
+import {
+  GPT6_LUNA_STANDARD_PRICE_BASIS,
+  worstCaseDispatchCostMicros,
+  type PriceBasis,
+} from "./pricing";
+import priceSnapshot from "./price-snapshot.json";
 
 export const EVAL_MANIFEST_VERSION = "bfa-conversation-eval-manifest-v1";
 
@@ -31,7 +36,9 @@ export const EvalManifestSchema = z
       })
       .strict()
       .nullable(),
-    expiresAtIso: Iso,
+    /** Null until a run is actually approved; live mode requires a future
+     * timestamp. The shipped draft must NOT fabricate one. */
+    expiresAtIso: Iso.nullable(),
     provider: z
       .object({
         name: z.literal("openai-direct"),
@@ -103,8 +110,41 @@ export type ManifestValidationCode =
   | "source-hash-mismatch"
   | "cost-bound-exceeded"
   | "price-basis-mismatch"
+  | "price-basis-untrusted"
+  | "price-basis-stale"
   | "manifest-expired"
   | "manifest-unapproved";
+
+/** The reviewed server-controlled price snapshot is the ONLY trusted basis. */
+const TRUSTED_PRICE_SNAPSHOT: PriceBasis = {
+  source: priceSnapshot.source,
+  retrievedOn: priceSnapshot.retrievedOn,
+  model: priceSnapshot.model,
+  tier: priceSnapshot.tier,
+  inputPerMillionUsdMicros: priceSnapshot.inputPerMillionUsdMicros,
+  cachedInputPerMillionUsdMicros: priceSnapshot.cachedInputPerMillionUsdMicros,
+  cacheWritePerMillionUsdMicros: priceSnapshot.cacheWritePerMillionUsdMicros,
+  outputPerMillionUsdMicros: priceSnapshot.outputPerMillionUsdMicros,
+};
+
+/** A price basis must be CURRENT: retrieved within this many days of now. */
+export const PRICE_BASIS_MAX_AGE_DAYS = 14;
+
+function priceBasisEqualsSnapshot(basis: PriceBasis): boolean {
+  return (
+    basis.source === TRUSTED_PRICE_SNAPSHOT.source &&
+    basis.retrievedOn === TRUSTED_PRICE_SNAPSHOT.retrievedOn &&
+    basis.model === TRUSTED_PRICE_SNAPSHOT.model &&
+    basis.tier === TRUSTED_PRICE_SNAPSHOT.tier &&
+    basis.inputPerMillionUsdMicros ===
+      TRUSTED_PRICE_SNAPSHOT.inputPerMillionUsdMicros &&
+    basis.cachedInputPerMillionUsdMicros ===
+      TRUSTED_PRICE_SNAPSHOT.cachedInputPerMillionUsdMicros &&
+    basis.cacheWritePerMillionUsdMicros ===
+      TRUSTED_PRICE_SNAPSHOT.cacheWritePerMillionUsdMicros &&
+    basis.outputPerMillionUsdMicros === TRUSTED_PRICE_SNAPSHOT.outputPerMillionUsdMicros
+  );
+}
 
 export type ManifestValidation =
   | { readonly ok: true; readonly manifest: EvalManifest; readonly costBound: CostBound }

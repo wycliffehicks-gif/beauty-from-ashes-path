@@ -192,10 +192,13 @@ async function readBounded(
   }
 }
 
-/** Strict local check of the model's JSON reply against {text, sourceIds}. */
+/** Strict local check of the model's JSON reply against {text, sourceIds}.
+ * Leakage screening runs on the DECODED layer too: a JSON string can hide the
+ * credential behind Unicode escapes that pre-parse scanning cannot see. */
 function parseReplyPayload(
   raw: string,
   admittedSourceKeys: ReadonlySet<string>,
+  secret: string,
 ): { text: string; sourceIds: string[] } {
   let parsed: unknown;
   try {
@@ -219,11 +222,23 @@ function parseReplyPayload(
   ) {
     throw new ProviderRequestError("invalid-response");
   }
+  const decodedText = reply.text as string;
   const sourceIds = [...new Set(reply.sourceIds as string[])];
+  // Post-decode screening: decoded text, every decoded source ID and any
+  // structured nesting inside the text must not carry the credential or NUL.
+  if (
+    decodedText.includes(String.fromCharCode(0)) ||
+    decodedText.includes(secret) ||
+    sourceIds.some(
+      (id) => id.includes(String.fromCharCode(0)) || id.includes(secret),
+    )
+  ) {
+    throw new ProviderRequestError("invalid-response");
+  }
   if (sourceIds.some((id) => !admittedSourceKeys.has(id))) {
     throw new ProviderRequestError("invalid-sources");
   }
-  return { text: reply.text as string, sourceIds };
+  return { text: decodedText, sourceIds };
 }
 
 export function createDirectOpenAIConversationProvider(

@@ -29,3 +29,11 @@
 - [x] P3b technical gate accepted for isolated fictional staging after independent review (26 Oct 2026). Not covered: real devices, screen readers, microphone/audio, real model, RAW provider payload capture, login-screen UX. Later, separate scope: content/tone review, paid new model/voice tests, participant activation.
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
 - [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.
+
+## P4 — direct provider adapter + controlled evaluator (implemented 26 Oct 2026 UTC)
+- [x] Extract the neutral provider contract from the mock (`service/provider.ts`); service depends on it; mock names kept as aliases.
+- [x] Add server-only direct Responses API provider (`openai-provider.server.ts`): strict {text, sourceIds} schema, effort none, tier default, store/background/stream false, truncation disabled, no tools/memory/retry; approved policy body byte-identical with a separate transport note; pre-abort zero calls; bounded body deadline; coded errors without secret/body leakage.
+- [x] Add offline-default evaluator (`scripts/conversation-eval/`): exact 9-turn catalog, manifest admission (hashes, verbatim turns, limits, price basis, approval, stop conditions), durable single-host fail-closed ledger, conservative micro-USD receipts.
+- [x] Ship the live DRAFT manifest unapproved (approval null): 9 turns, cap USD 0.10, worst case $0.03915; validation only executed — no credential read, no provider call, no paid evaluation.
+- [x] Offline evidence: 1831 tests pass (51 new), tsgo clean, real CLI validate run committed to `artifacts/conversation-eval/offline-validation-v1/`.
+- [ ] Later, separate authorized scope: approve a live manifest, run the 9-turn evaluation, apply the rubric, reconcile the ledger. Participant AI, real voice and publication remain OFF.

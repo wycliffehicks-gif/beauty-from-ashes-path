@@ -8,6 +8,7 @@
 - [x] Keep the project private and unpublished; preserve content, state, identity, and runtime settings.
 
 ## P3b — isolated fictional staging
+- [ ] Assess and resolve remaining P3b blockers through supported capabilities only; preserve the prohibition on retrying denied session actions or changing auth settings.
 - [x] Fence cancelled navigation, use confirmed same-thread reopen revisions, show modal failure and reconcile initial preference without retry loops; offline component checks remain separate from blocked Auth acceptance.
 - [x] Reject noncanonical sealed-token segments/encoding/IVs; preserve active/saved behavior (268 conversation tests passing).
 - [x] Repair reusable per-thread authority export; independent round-trip/revoked-lineage regressions pass (262 conversation tests).

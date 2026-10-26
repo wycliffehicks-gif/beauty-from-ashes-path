@@ -88,18 +88,18 @@ async def ui(page,w):
   finally: admit(ids['A'],True)
   await dlg.get_by_role('button',name='Cancel').click()
   await page.get_by_role('button',name='Leave unavailable conversation').click(); await expect(items).to_have_count(0)
-  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1').click()
+  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1',exact=True).click()
   await expect(items).to_have_count(2,timeout=15000); await expect(st).to_have_text('Saved'); res.append(f'O05-UI {w} PASS: recovery left unavailable state; reopen restored only saved 2 events')
   # reopen while unsaved: dialog -> Discard and continue -> reopened saved
   await msg.fill('I was tired, not angry.'); await page.get_by_role('button',name='Send fictional message').click(); await expect(items).to_have_count(4,timeout=15000)
-  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1').click()
+  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1',exact=True).click()
   await dlg.get_by_role('button',name='Discard and continue').click(); await expect(items).to_have_count(2,timeout=15000); await expect(st).to_have_text('Saved')
   res.append(f'O05-UI {w} PASS: reopen while unsaved -> Discard and continue -> saved 2 events')
   # New while unsaved: Save and continue -> new empty conversation
   await msg.fill('I was tired, not angry.'); await page.get_by_role('button',name='Send fictional message').click(); await expect(items).to_have_count(4,timeout=15000)
   await page.get_by_role('button',name='New conversation').click(); await dlg.get_by_role('button',name='Save and continue').click()
   await expect(items).to_have_count(0,timeout=15000); await expect(st).to_have_text('Unsaved changes'); res.append(f'O05-UI {w} PASS: New while unsaved -> Save and continue -> new empty conversation')
-  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1').click()
+  await page.get_by_role('button',name='Refresh saved list').click(); await page.get_by_role('button',name='Reopen conversation 1',exact=True).click()
   await page.wait_for_timeout(700)
   if await dlg.count(): await dlg.get_by_role('button',name='Discard and continue').click()  # the empty new conversation is itself unsaved
   await expect(items).to_have_count(4,timeout=15000); res.append(f'O05-UI {w} PASS: saved-and-continued conversation reopens with 4 events')
@@ -127,7 +127,8 @@ async def main():
       await page.goto('http://localhost:8080/conversation-staging'); await page.wait_for_timeout(2500); await page.evaluate(JS_SETUP)
       if w==390: await http_boundary(page,statuses)
       try: await ui(page,w)
-      except Exception as e: fails.append(f'O05-UI {w} FAIL: {str(e)[:200]}')
+      except Exception as e:
+        fails.append(f'O05-UI {w} FAIL: {str(e)[:200]}'); await page.screenshot(path=f'{OUT}/fail-{w}.png')
       ok('UI',f'{w} no page errors',not errs,str(errs[:2]))
       await ctx.close()
     await b.close()

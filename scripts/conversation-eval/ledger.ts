@@ -168,7 +168,7 @@ export class EvalLedger {
   private read(): LedgerFile {
     let parsed: unknown;
     try {
-      parsed = JSON.parse(readFileSync(path8(this.path), "utf8"));
+      parsed = JSON.parse(readFileSync(this.path, "utf8"));
     } catch {
       throw new EvalLedgerError("corrupt");
     }
@@ -377,8 +377,4 @@ export class EvalLedger {
       };
     });
   }
-}
-
-function path8(p: string): string {
-  return p;
 }

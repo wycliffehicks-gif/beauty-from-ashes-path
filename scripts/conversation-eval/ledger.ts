@@ -52,6 +52,10 @@ export interface EvalAdmission {
 interface LedgerFile {
   version: number;
   budgetMicros: number;
+  /** Exact run/manifest binding: reopening with a different approved cap,
+   * run identity or manifest digest is refused WITHOUT rewriting state. */
+  runId: string;
+  manifestSha256: string;
   admissions: EvalAdmission[];
 }
 
@@ -115,20 +119,31 @@ function validAdmission(a: unknown): a is EvalAdmission {
 function validFile(f: unknown): f is LedgerFile {
   if (!f || typeof f !== "object" || Array.isArray(f)) return false;
   const r = f as Record<string, unknown>;
-  return (
-    r.version === EVAL_LEDGER_VERSION &&
-    validMicros(r.budgetMicros) &&
-    Array.isArray(r.admissions) &&
-    r.admissions.length <= EVAL_LEDGER_MAX_ADMISSIONS &&
-    r.admissions.every(validAdmission) &&
-    new Set((r.admissions as EvalAdmission[]).map((a) => a.requestId)).size ===
+  if (
+    r.version !== EVAL_LEDGER_VERSION ||
+    !validMicros(r.budgetMicros) ||
+    !validId(r.runId) ||
+    typeof r.manifestSha256 !== "string" ||
+    !/^[0-9a-f]{64}$/.test(r.manifestSha256) ||
+    !Array.isArray(r.admissions) ||
+    r.admissions.length > EVAL_LEDGER_MAX_ADMISSIONS ||
+    !r.admissions.every(validAdmission) ||
+    new Set((r.admissions as EvalAdmission[]).map((a) => a.requestId)).size !==
       r.admissions.length
-  );
+  ) {
+    return false;
+  }
+  // A provider receipt is bound to ONE request: no two settled admissions may
+  // carry the same receipt identity.
+  const receiptIds = (r.admissions as EvalAdmission[])
+    .filter((a) => a.state === "settled")
+    .map((a) => a.receipt!.receiptId);
+  return new Set(receiptIds).size === receiptIds.length;
 }
 
 export class EvalLedgerError extends Error {
-  readonly code: "locked" | "corrupt";
-  constructor(code: "locked" | "corrupt") {
+  readonly code: "locked" | "corrupt" | "binding-mismatch";
+  constructor(code: "locked" | "corrupt" | "binding-mismatch") {
     super(`ledger-${code}`);
     this.name = "EvalLedgerError";
     this.code = code;

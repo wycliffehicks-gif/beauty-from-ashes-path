@@ -28,6 +28,7 @@ import {
   buildConversationInstructions,
   serializeConversationGroundedPayload,
 } from "./serialize";
+import { sha256HexSync } from "./sha256-sync";
 import type {
   ConversationProvider,
   ConversationProviderRequest,
@@ -45,6 +46,7 @@ export type DirectConversationFailureCode =
   | "missing-key"
   | "invalid-request"
   | "pre-aborted"
+  | "aborted"
   | "timeout"
   | "network"
   | "redirect"
@@ -74,8 +76,11 @@ export class ProviderRequestError extends Error {
 export interface ConversationExchangeMeta {
   readonly requestId: string;
   requestedModel: string;
+  /** SHA-256 of the exact serialized instructions + grounded payload bytes. */
+  requestPayloadSha256: string | null;
   reportedModel: string | null;
-  /** Actual service tier reported by the provider response, when present. */
+  /** Actual service tier reported by the provider response; success REQUIRES
+   * exactly "default" — absent, null or malformed tiers are rejected. */
   serviceTier: string | null;
   responseId: string | null;
   providerRequestId: string | null;
@@ -99,6 +104,9 @@ export interface DirectConversationProviderOptions {
   fetchImpl?: typeof fetch;
   maxOutputTokens: number;
   deadlineMs: number;
+  /** Actual input allowance in characters, enforced on the exact serialized
+   * instructions + payload BEFORE any dispatch. Defaults to the hard cap. */
+  maxInputChars?: number;
   /** Evidence hook: sanitized per-call metadata (no bodies, no credentials). */
   onExchange?: (meta: ConversationExchangeMeta) => void;
 }
@@ -185,10 +193,13 @@ async function readBounded(
   }
 }
 
-/** Strict local check of the model's JSON reply against {text, sourceIds}. */
+/** Strict local check of the model's JSON reply against {text, sourceIds}.
+ * Leakage screening runs on the DECODED layer too: a JSON string can hide the
+ * credential behind Unicode escapes that pre-parse scanning cannot see. */
 function parseReplyPayload(
   raw: string,
   admittedSourceKeys: ReadonlySet<string>,
+  secret: string,
 ): { text: string; sourceIds: string[] } {
   let parsed: unknown;
   try {
@@ -212,11 +223,23 @@ function parseReplyPayload(
   ) {
     throw new ProviderRequestError("invalid-response");
   }
+  const decodedText = reply.text as string;
   const sourceIds = [...new Set(reply.sourceIds as string[])];
+  // Post-decode screening: decoded text, every decoded source ID and any
+  // structured nesting inside the text must not carry the credential or NUL.
+  if (
+    decodedText.includes(String.fromCharCode(0)) ||
+    decodedText.includes(secret) ||
+    sourceIds.some(
+      (id) => id.includes(String.fromCharCode(0)) || id.includes(secret),
+    )
+  ) {
+    throw new ProviderRequestError("invalid-response");
+  }
   if (sourceIds.some((id) => !admittedSourceKeys.has(id))) {
     throw new ProviderRequestError("invalid-sources");
   }
-  return { text: reply.text as string, sourceIds };
+  return { text: decodedText, sourceIds };
 }
 
 export function createDirectOpenAIConversationProvider(
@@ -236,6 +259,7 @@ export function createDirectOpenAIConversationProvider(
       const meta: ConversationExchangeMeta = {
         requestId: request.requestId,
         requestedModel,
+        requestPayloadSha256: null,
         reportedModel: null,
         serviceTier: null,
         responseId: null,
@@ -270,12 +294,18 @@ export function createDirectOpenAIConversationProvider(
 
       const instructions = buildConversationInstructions(request);
       const groundedPayload = serializeConversationGroundedPayload(request);
+      // The exact serialized wire payload is hashed for evidence BEFORE any
+      // dispatch decision, so every attempt carries a verifiable request hash.
+      meta.requestPayloadSha256 = sha256HexSync(`${instructions}\n${groundedPayload}`);
       const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
+      const maxInputChars = options.maxInputChars ?? OPENAI_CONVERSATION_MAX_INPUT_CHARS;
       if (
         requestedModel === "invalid-model" ||
         /[\r\n]/.test(key) ||
-        instructions.length + groundedPayload.length >
-          OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
+        !Number.isSafeInteger(maxInputChars) ||
+        maxInputChars < 1 ||
+        maxInputChars > OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
+        instructions.length + groundedPayload.length > maxInputChars ||
         instructions.includes(key) ||
         groundedPayload.includes(key) ||
         !Number.isSafeInteger(options.maxOutputTokens) ||
@@ -295,8 +325,27 @@ export function createDirectOpenAIConversationProvider(
       let activeReader: ReadableStreamDefaultReader<Uint8Array> | undefined;
       let response: Response | undefined;
       let expired = false;
+      let callerAborted = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
-      const onOuterAbort = () => controller.abort();
+      let rejectCallerAbort: ((err: ProviderRequestError) => void) | undefined;
+      // Caller cancellation races the operation INDEPENDENTLY: an abort-
+      // ignoring fetch can never deliver a late "complete" result, because
+      // this promise settles the race first and operation() re-checks the
+      // flag after headers and after the body.
+      const callerAbort = new Promise<never>((_, reject) => {
+        rejectCallerAbort = reject;
+      });
+      const onOuterAbort = () => {
+        callerAborted = true;
+        controller.abort();
+        try {
+          if (activeReader) void activeReader.cancel().catch(() => {});
+          else cancelBody(response);
+        } catch {
+          // The abort outcome resolves even if a stream ignores cancellation.
+        }
+        rejectCallerAbort?.(new ProviderRequestError("aborted"));
+      };
       signal.addEventListener("abort", onOuterAbort, { once: true });
       const timeout = new Promise<never>((_, reject) => {
         timer = setTimeout(() => {
@@ -343,6 +392,10 @@ export function createDirectOpenAIConversationProvider(
               },
             }),
           });
+          if (callerAborted) {
+            cancelBody(response);
+            throw new ProviderRequestError("aborted");
+          }
           if (expired) {
             cancelBody(response);
             throw new ProviderRequestError("timeout");
@@ -363,8 +416,9 @@ export function createDirectOpenAIConversationProvider(
           }
           const body = await readBounded(response, (reader) => {
             activeReader = reader;
-            if (expired) void reader.cancel().catch(() => {});
+            if (expired || callerAborted) void reader.cancel().catch(() => {});
           });
+          if (callerAborted) throw new ProviderRequestError("aborted");
           if (expired) throw new ProviderRequestError("timeout");
           if (body.kind !== "text") {
             controller.abort();
@@ -418,7 +472,9 @@ export function createDirectOpenAIConversationProvider(
           if (meta.reportedModel !== requestedModel) {
             throw new ProviderRequestError("model-mismatch");
           }
-          if (meta.serviceTier !== null && meta.serviceTier !== "default") {
+          // The reported tier must be explicitly present and EXACTLY the
+          // requested tier: absent, null or malformed values are rejected.
+          if (meta.serviceTier !== "default") {
             throw new ProviderRequestError("tier-mismatch");
           }
 
@@ -464,18 +520,23 @@ export function createDirectOpenAIConversationProvider(
           if (!text.trim() || parsed.incomplete_details != null) {
             throw new ProviderRequestError("invalid-response");
           }
-          const reply = parseReplyPayload(text, admittedSourceKeys);
+          const reply = parseReplyPayload(text, admittedSourceKeys, key);
           finish("complete");
           return { text: reply.text, sourceIds: reply.sourceIds, interpretation: null };
         } catch (err) {
           if (err instanceof ProviderRequestError) throw err;
           // Never return/log exceptions, headers, provider error bodies or secrets.
-          throw new ProviderRequestError(expired ? "timeout" : "network");
+          throw new ProviderRequestError(
+            callerAborted ? "aborted" : expired ? "timeout" : "network",
+          );
         }
       };
       try {
-        return await Promise.race([operation(), timeout]);
+        return await Promise.race([operation(), timeout, callerAbort]);
       } catch (err) {
+        // Caller cancellation takes precedence in reporting: a late network
+        // error caused by our own abort is still an aborted outcome.
+        if (callerAborted && !expired) fail("aborted");
         if (err instanceof ProviderRequestError) fail(err.code);
         fail("network");
         throw new ProviderRequestError("network"); // unreachable; satisfies TS

@@ -1,0 +1,19 @@
+{
+  "runnerVersion": "bfa-conversation-eval-runner-v1",
+  "mode": "validate",
+  "manifestLabel": "P4 first live DRAFT — 9 catalog turns, baseline gpt-6-luna, reasoning none, default tier, spiritual off",
+  "structural": "pass",
+  "approval": "absent",
+  "costBound": {
+    "worstCasePerDispatchMicros": 4350,
+    "maxDispatchAttempts": 9,
+    "worstCaseTotalMicros": 39150,
+    "maxUsdMicros": 100000,
+    "fits": true
+  },
+  "dispatchAttempts": 0,
+  "providerCalls": 0,
+  "actualProviderCostMicros": 0,
+  "evidence": "offline validation only; no model output; no quality evidence",
+  "validatedAtIso": "2026-10-26T05:20:50.897Z"
+}

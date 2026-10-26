@@ -96,9 +96,9 @@ await check('O06/O08', 'Delete after proven dispatched admission: late mock repl
   const list = await op(a, { action: 'list' }) as { threads: { thread: string }[] };
   assert(!list.threads.some(x => x.thread === s.thread), 'deleted thread listed');
   const adm = (await admissions(ids.A)).find(x => x.request_id === req)!;
-  assert(adm.state === 'dispatched', 'admission not held uncertain: ' + adm.state);
+  assert(adm.state === 'uncertain', 'admission not held uncertain: ' + adm.state);
   assert(await balance(ids.A, 'text') === units - 1, `balance ${await balance(ids.A, 'text')} vs ${units - 1}`);
-  return `dispatched observed after ${waited}ms; tombstoned, snapshot null, save/reopen denied, unlisted; admission stays 'dispatched' (uncertain), 1 unit held (${units}->${units - 1}), no settle`;
+  return `dispatched observed after ${waited}ms; tombstoned, snapshot null, save/reopen denied, unlisted; admission moved dispatched -> 'uncertain' by the fence, 1 unit held (${units}->${units - 1}), no settle`;
 });
 
 // ---------- O06 Stop after PROVEN dispatched admission ----------
@@ -118,9 +118,9 @@ await check('O06/O08', 'Stop after proven dispatched admission: late mock reply 
   assert(r.inspection!.events.length === savedEvents, 'late reply or message resurrected');
   assert(!r.inspection!.restrictions.includes('no-questions'), 'stopped turn restriction committed');
   const adm = (await admissions(ids.A)).find(x => x.request_id === req)!;
-  assert(adm.state === 'dispatched', 'admission state ' + adm.state);
+  assert(adm.state === 'uncertain', 'admission state ' + adm.state);
   assert(await balance(ids.A, 'text') === units - 1, 'hold not retained');
-  return `dispatched after ${waited}ms; stop=${stop.kind}; old token save denied; reopen = saved ${savedEvents} events, no 'no-questions'; admission 'dispatched' held, ${units}->${units - 1}`;
+  return `dispatched after ${waited}ms; stop=${stop.kind}; old token save denied; reopen = saved ${savedEvents} events, no 'no-questions'; admission 'uncertain' held, ${units}->${units - 1}`;
 });
 
 // ---------- O02–O04/O07 exact canaries after save/discard/reopen ----------
@@ -164,7 +164,8 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
     assert(!reply.includes(never) && !JSON.stringify(t.inspection).includes(never), 'canary leaked: ' + never);
   assert(lr.historyEventIds.includes(ex.eventId), 'excerpt event not in request history');
   assert(lr.historyEventIds.every(id => t.inspection!.events.some(e => e.eventId === id)), 'request history includes foreign event');
-  assert(!lr.historyEventIds.some(id => other.inspection!.events.some(e => e.eventId === id)), 'cross-thread history');
+  // Event IDs are thread-scoped (not globally unique), so cross-thread exclusion is checked by content.
+  assert(!t.inspection!.events.some(e => other.inspection!.events.some(o => o.role === 'user' && o.text === e.text && o.text.includes('angry when'))), 'cross-thread history');
   assert(lr.restrictions.join() === 'no-questions' && lr.policySha256 === CONVERSATION_POLICY_BLOCK_SHA256, 'request restriction/policy');
   assert(!lr.sourceKeys.some(k => /journal|weekly|day10|hidden/i.test(k)), 'implicit store source');
   return `reply echoes exact saved report+correction+intention; discarded/cross-thread/cross-owner/adjacent canaries absent; excerpt event (${sel.exactText.length} chars, exact bytes) in request history; restrictions=[no-questions]; derived tags=[${tags.join(',')}]; sources=[${lr.sourceKeys.join(',')}]`;

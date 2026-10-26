@@ -20,14 +20,16 @@
 import {
   closeSync,
   existsSync,
+  fsyncSync,
   openSync,
   readFileSync,
   renameSync,
   unlinkSync,
   writeSync,
 } from "node:fs";
+import { dirname } from "node:path";
 
-export const EVAL_LEDGER_VERSION = 1;
+export const EVAL_LEDGER_VERSION = 2;
 export const EVAL_LEDGER_MAX_ADMISSIONS = 10_000;
 
 export type EvalAdmissionState =
@@ -49,6 +51,12 @@ export interface EvalAdmission {
   readonly updatedAtIso: string;
 }
 
+export interface EvalLedgerBinding {
+  readonly runId: string;
+  readonly manifestSha256: string;
+  readonly maxDispatchAttempts: number;
+}
+
 interface LedgerFile {
   version: number;
   budgetMicros: number;
@@ -56,6 +64,7 @@ interface LedgerFile {
    * run identity or manifest digest is refused WITHOUT rewriting state. */
   runId: string;
   manifestSha256: string;
+  maxDispatchAttempts: number;
   admissions: EvalAdmission[];
 }
 
@@ -77,12 +86,25 @@ const validMicros = (n: unknown): n is number =>
   typeof n === "number" && Number.isSafeInteger(n) && n >= 0 && n <= 1_000_000_000_000;
 const validId = (v: unknown): v is string =>
   typeof v === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(v);
+const validMaxDispatches = (n: unknown): n is number =>
+  typeof n === "number" && Number.isSafeInteger(n) && n >= 1 && n <= 9;
+const validBinding = (b: EvalLedgerBinding): boolean =>
+  !!b && validId(b.runId) && /^[0-9a-f]{64}$/.test(b.manifestSha256) &&
+  validMaxDispatches(b.maxDispatchAttempts);
+const countedDispatch = (a: EvalAdmission): boolean =>
+  a.state === "dispatched" || a.state === "uncertain" || a.state === "settled";
+const caseIdentity = (a: Pick<EvalAdmission, "caseId" | "turnIndex" | "model">) =>
+  `${a.caseId}:${a.turnIndex}:${a.model}`;
+const outstanding = (admissions: readonly EvalAdmission[]): number =>
+  admissions.reduce((sum, a) => sum + (a.state === "cancelled-before-dispatch" ? 0 :
+    a.state === "settled" ? a.receipt!.chargedMicros : a.reservedMicros), 0);
 const validIso = (v: unknown): v is string =>
   typeof v === "string" && Number.isFinite(Date.parse(v));
 
 function validAdmission(a: unknown): a is EvalAdmission {
   if (!a || typeof a !== "object" || Array.isArray(a)) return false;
   const r = a as Record<string, unknown>;
+  if (Object.keys(r).sort().join(",") !== "caseId,createdAtIso,model,receipt,requestId,reservedMicros,state,turnIndex,updatedAtIso") return false;
   const states: EvalAdmissionState[] = [
     "reserved",
     "dispatched",
@@ -108,6 +130,7 @@ function validAdmission(a: unknown): a is EvalAdmission {
     const receipt = r.receipt as Record<string, unknown> | null;
     return (
       !!receipt &&
+      Object.keys(receipt).sort().join(",") === "chargedMicros,receiptId" &&
       validId(receipt.receiptId) &&
       validMicros(receipt.chargedMicros) &&
       (receipt.chargedMicros as number) <= (r.reservedMicros as number)
@@ -119,9 +142,11 @@ function validAdmission(a: unknown): a is EvalAdmission {
 function validFile(f: unknown): f is LedgerFile {
   if (!f || typeof f !== "object" || Array.isArray(f)) return false;
   const r = f as Record<string, unknown>;
+  if (Object.keys(r).sort().join(",") !== "admissions,budgetMicros,manifestSha256,maxDispatchAttempts,runId,version") return false;
   if (
     r.version !== EVAL_LEDGER_VERSION ||
-    !validMicros(r.budgetMicros) ||
+    !validMicros(r.budgetMicros) || r.budgetMicros === 0 ||
+    !validMaxDispatches(r.maxDispatchAttempts) ||
     !validId(r.runId) ||
     typeof r.manifestSha256 !== "string" ||
     !/^[0-9a-f]{64}$/.test(r.manifestSha256) ||
@@ -138,7 +163,11 @@ function validFile(f: unknown): f is LedgerFile {
   const receiptIds = (r.admissions as EvalAdmission[])
     .filter((a) => a.state === "settled")
     .map((a) => a.receipt!.receiptId);
-  return new Set(receiptIds).size === receiptIds.length;
+  const admissions = r.admissions as EvalAdmission[];
+  return new Set(receiptIds).size === receiptIds.length &&
+    new Set(admissions.map(caseIdentity)).size === admissions.length &&
+    admissions.filter(countedDispatch).length <= (r.maxDispatchAttempts as number) &&
+    outstanding(admissions) <= (r.budgetMicros as number);
 }
 
 export class EvalLedgerError extends Error {
@@ -157,29 +186,44 @@ export class EvalLedgerError extends Error {
 export class EvalLedger {
   private readonly path: string;
   private readonly now: () => string;
+  private readonly budgetMicros: number;
+  private readonly binding: EvalLedgerBinding;
 
-  private constructor(path: string, now: () => string) {
+  private constructor(path: string, budgetMicros: number, binding: EvalLedgerBinding, now: () => string) {
     this.path = path;
+    this.budgetMicros = budgetMicros;
+    this.binding = { ...binding };
     this.now = now;
   }
 
-  /** Create the ledger file if absent (budget fixed at creation); load it. */
-  static open(path: string, budgetMicros: number, now: () => string = () => new Date().toISOString()): EvalLedger {
-    if (!validMicros(budgetMicros) || budgetMicros === 0) {
+  /** Every open and transaction binds the same run, manifest, count and cap. */
+  static open(
+    path: string,
+    budgetMicros: number,
+    binding: EvalLedgerBinding,
+    now: () => string = () => new Date().toISOString(),
+  ): EvalLedger {
+    if (!validMicros(budgetMicros) || budgetMicros === 0 || !validBinding(binding)) {
       throw new EvalLedgerError("corrupt");
     }
+    const ledger = new EvalLedger(path, budgetMicros, binding, now);
     if (!existsSync(path)) {
-      const initial: LedgerFile = { version: EVAL_LEDGER_VERSION, budgetMicros, admissions: [] };
-      // 'wx' fails if another creator raced us — fail closed, never overwrite.
-      const fd = openSync(path, "wx");
+      const lockPath = `${path}.lock`;
+      let fd: number;
+      try { fd = openSync(lockPath, "wx"); }
+      catch { throw new EvalLedgerError("locked"); }
       try {
-        writeSync(fd, JSON.stringify(initial, null, 2) + "\n");
+        // A competing creator may have completed between the existence check
+        // and our lock acquisition. Never overwrite its authoritative state.
+        if (!existsSync(path)) ledger.write({
+          version: EVAL_LEDGER_VERSION, budgetMicros, ...binding, admissions: [],
+        });
       } finally {
         closeSync(fd);
+        unlinkSync(lockPath);
       }
     }
-    const ledger = new EvalLedger(path, now);
-    ledger.read(); // Validates immediately: corruption fails closed at open.
+    ledger.read();
     return ledger;
   }
 
@@ -191,6 +235,12 @@ export class EvalLedger {
       throw new EvalLedgerError("corrupt");
     }
     if (!validFile(parsed)) throw new EvalLedgerError("corrupt");
+    if (parsed.budgetMicros !== this.budgetMicros ||
+      parsed.runId !== this.binding.runId ||
+      parsed.manifestSha256 !== this.binding.manifestSha256 ||
+      parsed.maxDispatchAttempts !== this.binding.maxDispatchAttempts) {
+      throw new EvalLedgerError("binding-mismatch");
+    }
     return parsed;
   }
 
@@ -199,10 +249,13 @@ export class EvalLedger {
     const fd = openSync(tmp, "w");
     try {
       writeSync(fd, JSON.stringify(file, null, 2) + "\n");
+      fsyncSync(fd);
     } finally {
       closeSync(fd);
     }
     renameSync(tmp, this.path);
+    const dirFd = openSync(dirname(this.path), "r");
+    try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
   }
 
   /** One locked transaction. A pre-existing lock fails closed. */
@@ -217,7 +270,10 @@ export class EvalLedger {
     try {
       const file = this.read();
       const { file: next, result } = fn(file);
-      if (next !== file) this.write(next);
+      if (next !== file) {
+        if (!validFile(next)) throw new EvalLedgerError("corrupt");
+        this.write(next);
+      }
       return result;
     } finally {
       closeSync(lockFd);
@@ -235,11 +291,12 @@ export class EvalLedger {
 
   /** Outstanding = held by non-terminal admissions plus settled charges. */
   outstandingMicros(): number {
-    return this.read().admissions.reduce((sum, a) => {
-      if (a.state === "cancelled-before-dispatch") return sum;
-      if (a.state === "settled") return sum + (a.receipt?.chargedMicros ?? 0);
-      return sum + a.reservedMicros;
-    }, 0);
+    return outstanding(this.read().admissions);
+  }
+
+  /** Includes uncertain and settled attempts; restarting never resets count. */
+  dispatchedAttempts(): number {
+    return this.read().admissions.filter(countedDispatch).length;
   }
 
   reserve(input: {
@@ -276,15 +333,18 @@ export class EvalLedger {
             : { ok: false as const, code: "conflict" as const },
         };
       }
-      const outstanding = file.admissions.reduce((sum, a) => {
-        if (a.state === "cancelled-before-dispatch") return sum;
-        if (a.state === "settled") return sum + (a.receipt?.chargedMicros ?? 0);
-        return sum + a.reservedMicros;
-      }, 0);
-      if (outstanding + input.reservedMicros > file.budgetMicros) {
+      // Case identity is independent of request/evidence-directory identity.
+      // No automatic retry, including a cancelled pre-dispatch reservation.
+      if (file.admissions.some((a) => caseIdentity(a) === caseIdentity(input))) {
+        return { file, result: { ok: false as const, code: "conflict" as const } };
+      }
+      if (file.admissions.length >= EVAL_LEDGER_MAX_ADMISSIONS ||
+        file.admissions.filter(countedDispatch).length >= file.maxDispatchAttempts ||
+        outstanding(file.admissions) + input.reservedMicros > file.budgetMicros) {
         return { file, result: { ok: false as const, code: "limit" as const } };
       }
       const nowIso = this.now();
+      if (!validIso(nowIso)) throw new EvalLedgerError("corrupt");
       const admission: EvalAdmission = {
         requestId: input.requestId,
         caseId: input.caseId,
@@ -305,11 +365,20 @@ export class EvalLedger {
 
   /** reserved → dispatched, once. A consumed ticket cannot dispatch again. */
   claim(requestId: string): EvalLedgerResult {
-    return this.transition(requestId, (a) =>
-      a.state === "reserved"
-        ? { ...a, state: "dispatched" as const, updatedAtIso: this.now() }
-        : null,
-    );
+    if (!validId(requestId)) return { ok: false, code: "invalid" };
+    return this.transact<EvalLedgerResult>((file) => {
+      const a = file.admissions.find((x) => x.requestId === requestId);
+      if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
+      if (a.state !== "reserved") return { file, result: { ok: false as const, code: "consumed" as const } };
+      if (file.admissions.filter(countedDispatch).length >= file.maxDispatchAttempts) {
+        return { file, result: { ok: false as const, code: "limit" as const } };
+      }
+      const next: EvalAdmission = { ...a, state: "dispatched", updatedAtIso: this.now() };
+      return {
+        file: { ...file, admissions: file.admissions.map((x) => x.requestId === requestId ? next : x) },
+        result: { ok: true as const, admission: next, duplicate: false },
+      };
+    });
   }
 
   /**
@@ -353,6 +422,9 @@ export class EvalLedger {
             ? { ok: true as const, admission: a, duplicate: true }
             : { ok: false as const, code: "receipt-conflict" as const },
         };
+      }
+      if (file.admissions.some((x) => x.requestId !== requestId && x.receipt?.receiptId === receiptId)) {
+        return { file, result: { ok: false as const, code: "receipt-conflict" as const } };
       }
       if (a.state !== "dispatched" && a.state !== "uncertain") {
         return { file, result: { ok: false as const, code: "consumed" as const } };

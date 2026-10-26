@@ -75,8 +75,10 @@ export function loadApprovalGrants(path: string = DEFAULT_GRANTS_PATH): Approval
   } catch {
     return [];
   }
-  const parsed = GrantsFileSchema.safeParse(JSON.parse(raw));
-  return parsed.success ? parsed.data.grants : [];
+  try {
+    const parsed = GrantsFileSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data.grants : [];
+  } catch { return []; }
 }
 
 export type GrantRefusal =
@@ -105,7 +107,9 @@ export function admitLiveGrant(
   if (candidates.length === 0) {
     return { ok: false, code: "grant-absent", detail: "no grant binds this exact manifest" };
   }
-  const grant = candidates[0];
+  const checked = ApprovalGrantSchema.safeParse(candidates[0]);
+  if (!checked.success) return { ok: false, code: "grant-scope-mismatch", detail: "invalid grant" };
+  const grant = checked.data;
   const s = grant.scope;
   if (
     s.model !== manifest.provider.model ||
@@ -116,6 +120,7 @@ export function admitLiveGrant(
     s.maxUsdMicros !== manifest.limits.maxUsdMicros ||
     s.priceBasisSha256 !== PRICE_BASIS_SHA256 ||
     grant.runLabel !== manifest.label ||
+    grant.expiresAtIso !== manifest.expiresAtIso ||
     !manifest.approval ||
     manifest.approval.reference !== grant.reference ||
     manifest.approval.approvedBy !== grant.approvedBy ||
@@ -126,7 +131,7 @@ export function admitLiveGrant(
   const nowMs = Date.parse(nowIso);
   const approvedMs = Date.parse(grant.approvedAtIso);
   const expiresMs = Date.parse(grant.expiresAtIso);
-  if (nowMs < approvedMs) {
+  if (!Number.isFinite(nowMs) || nowMs < approvedMs || approvedMs >= expiresMs) {
     return { ok: false, code: "grant-not-yet-valid", detail: grant.grantId };
   }
   if (expiresMs <= nowMs) {

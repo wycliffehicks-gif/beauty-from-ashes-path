@@ -5,12 +5,13 @@
  * DEFAULT IS VALIDATE (offline): no credentials are read and fetch is disabled.
  * --live requires a manifest with explicit approval; anything else fails closed.
  */
+import { randomUUID } from "node:crypto";
 import { runConversationEvaluation } from "./runner";
 
 const argv = process.argv.slice(2);
 let live = false;
 let manifestPath = "scripts/conversation-eval/draft-manifest.v1.json";
-let outDir = "artifacts/conversation-eval/offline-validation-v1";
+let outDir = `artifacts/conversation-eval/validation-${new Date().toISOString().replace(/[:.]/g, "-")}-${randomUUID()}`;
 for (let i = 0; i < argv.length; i++) {
   const flag = argv[i];
   if (flag === "--live") live = true;
@@ -36,12 +37,13 @@ if (!live) {
       `0 credential reads; 0 provider calls; USD 0. Summary: ${outDir}/run-summary.json\n` +
       `This is not model output and not quality evidence. Live mode requires an approved manifest.`,
   );
+  if (summary.structural !== "pass") process.exitCode = 1;
 } else {
   const summary = await runConversationEvaluation(
     { mode: "live", manifestPath, outDir },
     { env: process.env },
   );
   console.log(
-    `LIVE RUN: ${summary.dispatchAttempts} dispatches; charged micro-USD ${summary.actualProviderCostMicros}. Evidence: ${summary.evidence}`,
+    `LIVE RUN: ${summary.dispatchAttempts} dispatches; conservative estimated micro-USD ${summary.estimatedProviderCostMicros}. Evidence: ${summary.evidence}`,
   );
 }

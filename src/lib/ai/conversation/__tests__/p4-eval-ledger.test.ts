@@ -5,6 +5,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, openSync, closeSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { spawn } from "node:child_process";
 import { join } from "node:path";
 import { EvalLedger, EvalLedgerError } from "../../../../../scripts/conversation-eval/ledger";
 
@@ -21,7 +22,8 @@ afterEach(() => {
   rmSync(dir, { recursive: true, force: true });
 });
 
-const open = (budget = 100_000) => EvalLedger.open(path, budget, now);
+const binding = { runId: "synthetic-ledger-run", manifestSha256: "a".repeat(64), maxDispatchAttempts: 9 };
+const open = (budget = 100_000) => EvalLedger.open(path, budget, binding, now);
 const base = { requestId: "req-1", caseId: "C04", turnIndex: 0, model: "gpt-6-luna", reservedMicros: 4350 };
 
 describe("P4 eval ledger — admission and idempotency", () => {
@@ -143,4 +145,151 @@ describe("P4 eval ledger — fail-closed durability", () => {
     expect(ledger.reconcile("req-1", "receipt-1", -1)).toEqual({ ok: false, code: "invalid" });
     expect(ledger.admissions()).toHaveLength(0);
   });
+});
+
+
+describe("P4 eval ledger — exact approved scope and receipts", () => {
+  it("rejects a different cap, run, manifest or count without changing existing state", () => {
+    const ledger = open();
+    ledger.reserve(base);
+    const before = readFileSync(path, "utf8");
+    for (const [budget, scope] of [
+      [1, binding],
+      [100_000, { ...binding, runId: "another-run" }],
+      [100_000, { ...binding, manifestSha256: "b".repeat(64) }],
+      [100_000, { ...binding, maxDispatchAttempts: 8 }],
+    ] as const) {
+      expect(() => EvalLedger.open(path, budget, scope, now)).toThrow(/binding-mismatch/);
+      expect(readFileSync(path, "utf8")).toBe(before);
+    }
+    expect(open().outstandingMicros()).toBe(4350);
+  });
+
+  it("revalidates binding on every mutation, even through a previously opened handle", () => {
+    const ledger = open();
+    const file = JSON.parse(readFileSync(path, "utf8"));
+    file.runId = "changed-run";
+    writeFileSync(path, JSON.stringify(file));
+    const before = readFileSync(path, "utf8");
+    expect(() => ledger.reserve(base)).toThrow(/binding-mismatch/);
+    expect(readFileSync(path, "utf8")).toBe(before);
+  });
+
+  it("never applies one provider receipt to two requests; same-request replay stays idempotent", () => {
+    const ledger = open();
+    ledger.reserve({ ...base, reservedMicros: 500 });
+    ledger.reserve({ ...base, requestId: "req-2", turnIndex: 1, reservedMicros: 500 });
+    ledger.claim("req-1");
+    ledger.claim("req-2");
+    expect(ledger.reconcile("req-1", "actual-provider-receipt", 1).ok).toBe(true);
+    const before = readFileSync(path, "utf8");
+    expect(ledger.reconcile("req-2", "actual-provider-receipt", 1)).toEqual({ ok: false, code: "receipt-conflict" });
+    expect(readFileSync(path, "utf8")).toBe(before);
+    expect(ledger.outstandingMicros()).toBe(501);
+    expect(ledger.reconcile("req-1", "actual-provider-receipt", 1)).toMatchObject({ ok: true, duplicate: true });
+    expect(open().outstandingMicros()).toBe(501);
+  });
+
+  it("blocks the same catalog turn under a changed request or evidence identity after restart", () => {
+    const ledger = open();
+    ledger.reserve(base);
+    ledger.claim(base.requestId);
+    ledger.reconcile(base.requestId, "provider-receipt", 1);
+    expect(open().reserve({ ...base, requestId: "another-output-dir-request" }))
+      .toEqual({ ok: false, code: "conflict" });
+    expect(open().dispatchedAttempts()).toBe(1);
+  });
+
+  it("counts settled and uncertain dispatches across restart, independent of released budget", () => {
+    const scope = { ...binding, maxDispatchAttempts: 2 };
+    const ledger = EvalLedger.open(path, 100_000, scope, now);
+    for (let i = 0; i < 3; i++) {
+      expect(ledger.reserve({ ...base, requestId: `req-${i}`, turnIndex: i }).ok).toBe(true);
+    }
+    expect(ledger.claim("req-0").ok).toBe(true);
+    expect(ledger.reconcile("req-0", "provider-zero", 0).ok).toBe(true);
+    expect(ledger.claim("req-1").ok).toBe(true);
+    expect(ledger.stop("req-1").ok).toBe(true);
+    const reopened = EvalLedger.open(path, 100_000, scope, now);
+    expect(reopened.dispatchedAttempts()).toBe(2);
+    expect(reopened.claim("req-2")).toEqual({ ok: false, code: "limit" });
+    expect(reopened.reserve({ ...base, requestId: "req-4", turnIndex: 4 })).toEqual({ ok: false, code: "limit" });
+    expect(reopened.admissions()[2].state).toBe("reserved");
+    expect(reopened.outstandingMicros()).toBe(8700);
+  });
+
+  it("rejects duplicate receipts and duplicate catalog turns loaded from corrupt state", () => {
+    const ledger = open();
+    ledger.reserve(base);
+    ledger.claim(base.requestId);
+    ledger.reconcile(base.requestId, "provider-one", 1);
+    const valid = JSON.parse(readFileSync(path, "utf8"));
+    for (const duplicate of [
+      { ...valid.admissions[0], requestId: "req-2", turnIndex: 1 },
+      { ...valid.admissions[0], requestId: "req-2", receipt: { receiptId: "provider-two", chargedMicros: 1 } },
+    ]) {
+      writeFileSync(path, JSON.stringify({ ...valid, admissions: [...valid.admissions, duplicate] }));
+      expect(() => open()).toThrow(/ledger-corrupt/);
+    }
+  });
+});
+
+// Execute the actual TypeScript ledger in independent OS processes. No model,
+// credentials, network, database or Auth operations are involved.
+const workerSource = `
+import { EvalLedger } from ${JSON.stringify(new URL("../../../../../scripts/conversation-eval/ledger.ts", import.meta.url).href)};
+const [path, operation, inputJson, bindingJson] = process.argv.slice(2);
+try {
+  const ledger = EvalLedger.open(path, 100_000, JSON.parse(bindingJson), () => "${NOW}");
+  const result = operation === "reserve" ? ledger.reserve(JSON.parse(inputJson)) : ledger.claim(JSON.parse(inputJson));
+  process.stdout.write(JSON.stringify(result));
+} catch (error) { process.stdout.write(JSON.stringify({ok:false, code:error.code ?? "error"})); }
+`;
+const runWorker = (worker: string, operation: string, input: unknown, scope = binding) =>
+  new Promise<{ ok: boolean; duplicate?: boolean; code?: string }>((resolve, reject) => {
+    const child = spawn(process.execPath, [worker, path, operation, JSON.stringify(input), JSON.stringify(scope)], { stdio: ["ignore", "pipe", "pipe"] });
+    let output = "";
+    let errors = "";
+    child.stdout.on("data", (chunk) => { output += chunk; });
+    child.stderr.on("data", (chunk) => { errors += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code !== 0) return reject(new Error(`ledger worker exited ${code}: ${errors}`));
+      try { resolve(JSON.parse(output)); } catch { reject(new Error(`invalid worker output: ${output}`)); }
+    });
+  });
+
+describe("P4 eval ledger — independent OS-process races", () => {
+  it("16 competing reservations of one identity create exactly one admission", async () => {
+    open();
+    const worker = join(dir, "ledger-worker.mjs");
+    writeFileSync(worker, workerSource);
+    const results = await Promise.all(Array.from({ length: 16 }, () => runWorker(worker, "reserve", base)));
+    expect(results.filter((r) => r.ok && !r.duplicate)).toHaveLength(1);
+    expect(results.every((r) => r.ok || r.code === "locked")).toBe(true);
+    expect(open().admissions()).toHaveLength(1);
+    expect(open().outstandingMicros()).toBe(4350);
+  }, 20_000);
+
+  it("16 competing claims dispatch exactly once", async () => {
+    open().reserve(base);
+    const worker = join(dir, "ledger-worker.mjs");
+    writeFileSync(worker, workerSource);
+    const results = await Promise.all(Array.from({ length: 16 }, () => runWorker(worker, "claim", base.requestId)));
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.every((r) => r.ok || r.code === "locked" || r.code === "consumed")).toBe(true);
+    expect(open().dispatchedAttempts()).toBe(1);
+  }, 20_000);
+
+  it("different pending requests racing the final dispatch slot have one winner", async () => {
+    const scope = { ...binding, maxDispatchAttempts: 1 };
+    const ledger = EvalLedger.open(path, 100_000, scope, now);
+    for (let i = 0; i < 8; i++) ledger.reserve({ ...base, requestId: `req-${i}`, turnIndex: i });
+    const worker = join(dir, "ledger-worker.mjs");
+    writeFileSync(worker, workerSource);
+    const results = await Promise.all(Array.from({ length: 8 }, (_, i) => runWorker(worker, "claim", `req-${i}`, scope)));
+    expect(results.filter((r) => r.ok)).toHaveLength(1);
+    expect(results.every((r) => r.ok || r.code === "locked" || r.code === "limit")).toBe(true);
+    expect(EvalLedger.open(path, 100_000, scope, now).dispatchedAttempts()).toBe(1);
+  }, 20_000);
 });

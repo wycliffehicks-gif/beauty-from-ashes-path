@@ -13,6 +13,8 @@
 //   - unknown, invalid or internally inconsistent usage returns null, and the
 //     caller MUST retain the reservation (no automatic refund).
 
+import { OPENAI_CONVERSATION_PROTOCOL_TOKEN_ALLOWANCE } from "../../src/lib/ai/conversation/service/openai-provider.server";
+
 export interface PriceBasis {
   readonly source: string;
   readonly retrievedOn: string;
@@ -40,6 +42,7 @@ export interface ReportedUsage {
   readonly outputTokens: number | null;
   readonly reasoningTokens: number | null;
   readonly cachedInputTokens: number | null;
+  readonly cacheWriteTokens?: number | null;
   readonly totalTokens: number | null;
 }
 
@@ -64,6 +67,8 @@ export function computeConservativeChargeMicros(
   if (cachedInputTokens !== null && (!validCount(cachedInputTokens) || cachedInputTokens > inputTokens)) {
     return null;
   }
+  if (usage.cacheWriteTokens != null &&
+      (!validCount(usage.cacheWriteTokens) || usage.cacheWriteTokens + (cachedInputTokens ?? 0) > inputTokens)) return null;
   const cached = cachedInputTokens ?? 0;
   const uncached = inputTokens - cached;
   const uncachedRate = Math.max(
@@ -78,21 +83,21 @@ export function computeConservativeChargeMicros(
 }
 
 /**
- * Fixed protocol overhead in tokens: the Responses API envelope, the strict
- * JSON schema under text.format, role framing and the transport format note
- * wrapper around the payload. Documented and charged on every dispatch.
+ * Engineering allowance for provider-added framing. Full wire JSON bytes
+ * already include the policy, format note, escaped input, envelope and schema.
+ * The extra 4096 tokens are reserved on EVERY dispatch, not spent estimates.
+ * This is a conservative engineering bound, not a provider invoice guarantee;
+ * out-of-bound or inconsistent usage leaves the hold and stops the run.
  */
-export const PROTOCOL_OVERHEAD_TOKENS = 512;
+export const PROTOCOL_OVERHEAD_TOKENS = OPENAI_CONVERSATION_PROTOCOL_TOKEN_ALLOWANCE;
 
 /**
- * Worst-case INPUT token upper bound for a payload of at most maxInputChars
- * characters. Defensible without a tokenizer: every BPE token encodes at
- * least one UTF-8 byte, so tokens <= UTF-8 bytes for ANY input; a character
- * is at most 4 UTF-8 bytes. This covers arbitrary Unicode and pathological
- * short-token content (e.g. "!" repeated) where chars/2 would UNDERCOUNT.
+ * Byte-level BPE text token count cannot exceed its UTF-8 byte count.
+ * Count the complete serialized request bytes, including JSON escapes, instead
+ * of guessing characters/token. Provider-added framing has a separate margin.
  */
-export function worstCaseInputTokens(maxInputChars: number): number {
-  return maxInputChars * 4 + PROTOCOL_OVERHEAD_TOKENS;
+export function worstCaseInputTokens(maxInputBytes: number): number {
+  return maxInputBytes + PROTOCOL_OVERHEAD_TOKENS;
 }
 
 /**
@@ -101,11 +106,11 @@ export function worstCaseInputTokens(maxInputChars: number): number {
  * write may occur even when not reported), plus the full output token cap.
  */
 export function worstCaseDispatchCostMicros(
-  maxInputChars: number,
+  maxInputBytes: number,
   maxOutputTokens: number,
   basis: PriceBasis,
 ): number {
-  const worstInput = worstCaseInputTokens(maxInputChars);
+  const worstInput = worstCaseInputTokens(maxInputBytes);
   const uncachedRate = Math.max(
     basis.inputPerMillionUsdMicros,
     basis.cacheWritePerMillionUsdMicros,

@@ -30,10 +30,14 @@
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
 - [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.
 
-## P4 — direct provider adapter + controlled evaluator (implemented 26 Oct 2026 UTC)
-- [x] Extract the neutral provider contract from the mock (`service/provider.ts`); service depends on it; mock names kept as aliases.
-- [x] Add server-only direct Responses API provider (`openai-provider.server.ts`): strict {text, sourceIds} schema, effort none, tier default, store/background/stream false, truncation disabled, no tools/memory/retry; approved policy body byte-identical with a separate transport note; pre-abort zero calls; bounded body deadline; coded errors without secret/body leakage.
-- [x] Add offline-default evaluator (`scripts/conversation-eval/`): exact 9-turn catalog, manifest admission (hashes, verbatim turns, limits, price basis, approval, stop conditions), durable single-host fail-closed ledger, conservative micro-USD receipts.
-- [x] Ship the live DRAFT manifest unapproved (approval null): 9 turns, cap USD 0.10, worst case $0.03915; validation only executed — no credential read, no provider call, no paid evaluation.
-- [x] Offline evidence: 1831 tests pass (51 new), tsgo clean, real CLI validate run committed to `artifacts/conversation-eval/offline-validation-v1/`.
-- [ ] Later, separate authorized scope: approve a live manifest, run the 9-turn evaluation, apply the rubric, reconcile the ledger. Participant AI, real voice and publication remain OFF.
+## P4 — direct provider adapter + controlled evaluator (LOCAL REPAIR ONLY, 26 Oct 2026 UTC)
+Remote application blocked: Lovable credits exhausted; GitHub write rejected HTTP 403. Remote head remains partial repair `3551aa7d`; apply the prepared forward patch before claiming implementation synchronized.
+- [x] Extract neutral provider types and preserve the approved policy/context boundary; staging still uses the mock.
+- [x] Implement direct OpenAI Responses with strict structured output, explicit model/tier, no provider memory/tools/retry and whole-operation cancellation.
+- [x] Repair exact full-wire UTF-8 bounds/hashes, decoded secret screening and usage validation.
+- [x] Require a separate server-controlled approval grant bound to exact manifest bytes; registry ships empty. Enforce expiry and stop conditions before every dispatch.
+- [x] Persist single-host budget/run/count/case identity and unique receipts across restarts. Preserve uncertain holds. Capture each admitted request and outcome durably.
+- [x] Validate the unapproved nine-turn draft: 64,000 complete wire bytes + 4,096-token engineering framing allowance, output 1,200, deadline 45 seconds, no retries; USD 0.082008 conservative reservation under proposed USD 0.10 cap. Approval/expiry remain null.
+- [x] Local verification: 398/398 assertions (351 repository checks +47 preserved independent diagnostics), scoped strict TypeScript and actual Node+tsx CLI; zero real OpenAI calls. Evidence: `artifacts/conversation-eval/offline-validation-v2/`.
+- [ ] Full current production build and native Bun CLI remain unverified here: required packages are absent from the local cache and Lovable credits are exhausted. Prior initial-build reports do not establish final-build success.
+- [ ] After separate bounded paid-test approval and an execution environment is available: run nine real turns, review every response using the rubric and reconcile accounting. Participant AI, real voice and publication remain OFF.

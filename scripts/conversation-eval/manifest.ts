@@ -11,7 +11,6 @@
 import { z } from "zod";
 import { EVAL_CATALOG, EVAL_TOTAL_TURNS } from "./catalog";
 import {
-  GPT6_LUNA_STANDARD_PRICE_BASIS,
   worstCaseDispatchCostMicros,
   type PriceBasis,
 } from "./pricing";
@@ -62,7 +61,7 @@ export const EvalManifestSchema = z
       .max(EVAL_CATALOG.length),
     limits: z
       .object({
-        maxInputChars: z.number().int().min(1).max(64_000),
+        maxInputBytes: z.number().int().min(1).max(64_000),
         maxOutputTokens: z.number().int().min(1).max(4_096),
         deadlineMs: z.number().int().min(1).max(45_000),
         maxDispatchAttempts: z.number().int().min(1).max(EVAL_TOTAL_TURNS),
@@ -160,7 +159,7 @@ export interface CostBound {
 
 export function computeCostBound(manifest: EvalManifest): CostBound {
   const per = worstCaseDispatchCostMicros(
-    manifest.limits.maxInputChars,
+    manifest.limits.maxInputBytes,
     manifest.limits.maxOutputTokens,
     manifest.priceBasis,
   );
@@ -276,7 +275,7 @@ export function validateManifestForLive(
   if (!Number.isFinite(nowMs) || expiresMs <= nowMs) {
     return { ok: false, code: "manifest-expired", detail: manifest.expiresAtIso };
   }
-  if (approvedMs > expiresMs) {
+  if (!Number.isFinite(approvedMs) || approvedMs > nowMs || approvedMs >= expiresMs) {
     return { ok: false, code: "manifest-expired", detail: "approval after expiry" };
   }
   // Freshness: the price snapshot must have been retrieved recently enough

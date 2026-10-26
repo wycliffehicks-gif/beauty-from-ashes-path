@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/lib/ai/conversation/**/*.ts", "scripts/conversation-eval/**/*.ts"],
+  "exclude": [
+    "src/lib/ai/conversation/staging/adapter.server.ts",
+    "src/lib/ai/conversation/staging/staging.functions.ts",
+    "src/lib/ai/conversation/__tests__/p3b-boundary.test.ts"
+  ]
+}

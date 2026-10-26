@@ -2,7 +2,7 @@
   "manifestVersion": "bfa-conversation-eval-manifest-v1",
   "label": "P4 first live DRAFT — 9 catalog turns, baseline gpt-6-luna, reasoning none, default tier, spiritual off",
   "approval": null,
-  "expiresAtIso": "2026-12-31T23:59:59.000Z",
+  "expiresAtIso": null,
   "provider": {
     "name": "openai-direct",
     "model": "gpt-6-luna",
@@ -43,11 +43,11 @@
     }
   ],
   "limits": {
-    "maxInputChars": 60000,
     "maxOutputTokens": 1200,
     "deadlineMs": 45000,
     "maxDispatchAttempts": 9,
-    "maxUsdMicros": 100000
+    "maxUsdMicros": 100000,
+    "maxInputBytes": 64000
   },
   "rules": {
     "noRetry": true,

@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "bfa-p4-offline-verification-v2",
+  "testedBaseCommit": "3551aa7d13115e4eafb3ae6a2188ee500b3b33c2",
+  "mode": "offline-simulated",
+  "realProviderCalls": 0,
+  "realVoiceCalls": 0,
+  "newPaidTestApproved": false,
+  "totalAssertions": 398,
+  "passedAssertions": 398,
+  "testFiles": 24,
+  "repositoryAssertions": 351,
+  "preservedIndependentAssertions": 47,
+  "newP4Assertions": 79,
+  "tests": [
+    {
+      "file": "src/__tests__/independent-p3a-gap.test.ts",
+      "assertions": 2,
+      "status": "passed"
+    },
+    {
+      "file": "src/__tests__/independent-p3b-authority-diagnostics.test.ts",
+      "assertions": 2,
+      "status": "passed"
+    },
+    {
+      "file": "src/__tests__/independent-p3b-seal-input.test.ts",
+      "assertions": 43,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/context.test.ts",
+      "assertions": 29,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/contract.test.ts",
+      "assertions": 12,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/grants.test.ts",
+      "assertions": 8,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3a-repair.test.ts",
+      "assertions": 33,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3a-service.test.ts",
+      "assertions": 81,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts",
+      "assertions": 11,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-authority.test.ts",
+      "assertions": 4,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-boundary.test.ts",
+      "assertions": 8,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts",
+      "assertions": 15,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-repair.test.ts",
+      "assertions": 9,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-seal.test.ts",
+      "assertions": 6,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts",
+      "assertions": 3,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts",
+      "assertions": 4,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts",
+      "assertions": 4,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts",
+      "assertions": 20,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts",
+      "assertions": 12,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts",
+      "assertions": 12,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts",
+      "assertions": 27,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts",
+      "assertions": 4,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/preview-store.test.ts",
+      "assertions": 34,
+      "status": "passed"
+    },
+    {
+      "file": "src/lib/ai/conversation/__tests__/sources.test.ts",
+      "assertions": 15,
+      "status": "passed"
+    }
+  ],
+  "independentReview": {
+    "adapterPassed": 11,
+    "runnerPassed": 12,
+    "ledgerBehaviorGroupsPassed": 8,
+    "reservationRaceWorkers": 16,
+    "reservationRaceWinners": 1,
+    "claimRaceWorkers": 16,
+    "claimRaceWinners": 1,
+    "positiveSimulatedNineTurnRun": true
+  },
+  "runtime": {
+    "node": "24.22.1",
+    "vitest": "4.1.10",
+    "typescript": "5.9.3",
+    "nativeBunVerified": false
+  },
+  "commands": [
+    "node node_modules/vitest/vitest.mjs run --reporter=json --outputFile=p4-final-vitest.json",
+    "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.p4-verification.json",
+    "node --import tsx scripts/conversation-eval/run.ts --out artifacts/conversation-eval/offline-validation-v2"
+  ],
+  "productionBuild": "not verified: current complete dependency set unavailable locally; initial Lovable build claim predates repair",
+  "lovableDevelopmentCredits": 23.4,
+  "openAiRealRequestCount": 0,
+  "sourceSha256": {
+    "scripts/conversation-eval/manifest.ts": "83090a3d401171e5be117c06686182dba996390dc44d85368e2a25048acc9d1d",
+    "scripts/conversation-eval/approval-grants.ts": "b4749dbae64ed149f1b9840f82a39e7ddedc4bfa7256e91278849cf0d06f1a7a",
+    "scripts/conversation-eval/ledger.ts": "9cf36a2e8fa08a6fc0040174d1b3e1340867f98be48d25919573f53c0fa06f10",
+    "scripts/conversation-eval/draft-manifest.v1.json": "4b1ac507c65ded1b84e8af6223cae7b08efe434610b006d3bca381c49237e8be",
+    "scripts/conversation-eval/pricing.ts": "fbd21f553ed984b41398321dfdbbd3808f00293249d514c970f6b15388beb4dc",
+    "scripts/conversation-eval/runner.ts": "b48794438e9368bbab781f75e3f9f2a26e4b3b7a6c778d214efcdc2f876b8538",
+    "scripts/conversation-eval/run.ts": "11e236c42746bc0481d143936ec86069d30f3b75c9155a3846eb3e34f307a0c0",
+    "src/lib/ai/conversation/service/openai-provider.server.ts": "e8f30b8a3179f8f0273eaa8bd1c7ab0524da687180451e0c047cc272a850ea83",
+    "src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts": "e57fb9446131846d3df4c3a87a31df4b7bb4277740d8e59a3e4ed03e1238e90d",
+    "src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts": "a8ff3b32482edcd5710ada0ebf8fbdec5293e04fa3a6e3769fdfe0bbc1a2a5ad",
+    "src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts": "ae3b56adc37560d53efb19ff74b547dfa3f1983ccc887d202393792708f6d834",
+    "src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts": "6d17e31f2fe69e31c3341903db1e377e83e9764760a1480c23a86e3eb2b467d4",
+    "src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts": "bab8992966aa50cd33578b73e33129b997c2ec0f3a9f6dd97f784f55129ffb2d",
+    "artifacts/conversation-eval/offline-validation-v2/run-summary.json": "feb2ca5ea857d71b155e80f1cd184aa468b34b599cb93b875b71331283aeabcb",
+    "tsconfig.p4-verification.json": "446928915ee4fc4abef14feee374826f12840e2e80af1f8efc7b74f04111218f"
+  }
+}

@@ -38,9 +38,9 @@ describe("P4 eval manifest — structural validation (offline)", () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.costBound).toMatchObject({
-        worstCasePerDispatchMicros: 4350,
+        worstCasePerDispatchMicros: 9112,
         maxDispatchAttempts: 9,
-        worstCaseTotalMicros: 39150,
+        worstCaseTotalMicros: 82008,
         maxUsdMicros: 100000,
         fits: true,
       });
@@ -112,6 +112,18 @@ describe("P4 eval manifest — structural validation (offline)", () => {
       ok: false,
       code: "price-basis-mismatch",
     });
+  });
+
+  it("invented zero rates and stale prices are refused, while draft dates remain unset", async () => {
+    const draft = loadDraft();
+    expect(draft.approval).toBeNull(); expect(draft.expiresAtIso).toBeNull();
+    const zero = loadDraft();
+    (zero.priceBasis as { inputPerMillionUsdMicros: number }).inputPerMillionUsdMicros = 0;
+    expect(validateEvalManifest(zero, await liveContext())).toMatchObject({ ok: false, code: "price-basis-untrusted" });
+    const stale = loadDraft();
+    stale.approval = { reference: "test-only", approvedBy: "fixture", approvedAtIso: NOW };
+    stale.expiresAtIso = "2026-11-20T00:00:00.000Z";
+    expect(validateManifestForLive(stale, { ...await liveContext(), nowIso: "2026-11-15T00:00:00.000Z" })).toMatchObject({ ok: false, code: "price-basis-stale" });
   });
 
   it("incomplete manifests are refused", async () => {
@@ -206,7 +218,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
         approval: "absent",
         dispatchAttempts: 0,
         providerCalls: 0,
-        actualProviderCostMicros: 0,
+        estimatedProviderCostMicros: 0,
       });
       const written = JSON.parse(readFileSync(join(dir, "out", "run-summary.json"), "utf8"));
       expect(written.providerCalls).toBe(0);
@@ -219,10 +231,9 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
     const result = validateEvalManifest(loadDraft(), await liveContext());
     if (!result.ok) throw new Error("draft must validate");
     const bound = computeCostBound(result.manifest);
-    // 60_000 chars at 2 chars/token = 30_000 tokens at the cache-write
-    // worst rate (0.125 USD/M) = 3750 micros; 1200 output tokens at
-    // 0.50 USD/M = 600 micros; 4350 per dispatch, 39_150 for 9 dispatches.
-    expect(bound.worstCasePerDispatchMicros).toBe(4350);
-    expect(bound.worstCaseTotalMicros).toBe(39_150);
+    // Full request UTF-8 cap64,000 +4,096 protocol margin =68,096
+    // inputtokens at worst0.125 USD/M, plus1,200output at0.50 USD/M.
+    expect(bound.worstCasePerDispatchMicros).toBe(9112);
+    expect(bound.worstCaseTotalMicros).toBe(82_008);
   });
 });

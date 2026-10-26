@@ -441,3 +441,96 @@ describe("P4 direct provider — response validation", () => {
     expect(calls).toHaveLength(0);
   });
 });
+
+describe("P4 repaired provider boundaries", () => {
+  it.each([undefined, null, 12, {}, "flex"])("rejects a missing or malformed actual tier %j", async (tier) => {
+    const transport = fetchReturning(okApiResponse("ok", [], { service_tier: tier }));
+    const { provider, metas } = providerWith(transport.fetchImpl);
+    await expectCode(provider.generate(makeRequest(), new AbortController().signal), "tier-mismatch");
+    expect(transport.calls).toHaveLength(1);
+    expect(metas).toHaveLength(1);
+  });
+
+  it("cancels a stalled response body promptly on caller abort", async () => {
+    const controller = new AbortController();
+    let cancel = false;
+    let headers!: () => void;
+    const gotHeaders = new Promise<void>((r) => { headers = r; });
+    const transport = (async () => {
+      headers();
+      return new Response(new ReadableStream({ cancel() { cancel = true; } }));
+    }) as typeof fetch;
+    const { provider, metas } = providerWith(transport, { deadlineMs: 4000 });
+    const promise = provider.generate(makeRequest(), controller.signal);
+    await gotHeaders;
+    await new Promise((r) => setTimeout(r, 0));
+    const before = Date.now();
+    controller.abort();
+    await expectCode(promise, "aborted");
+    expect(Date.now() - before).toBeLessThan(500);
+    expect(cancel).toBe(true);
+    expect(metas.map((m) => m.outcome)).toEqual(["aborted"]);
+  });
+
+  it("fences late success from a transport that ignores abort", async () => {
+    let deliver!: (r: Response) => void;
+    const transport = (() => new Promise<Response>((r) => { deliver = r; })) as typeof fetch;
+    const controller = new AbortController();
+    const { provider, metas } = providerWith(transport);
+    const promise = provider.generate(makeRequest(), controller.signal);
+    controller.abort();
+    await expectCode(promise, "aborted");
+    deliver(new Response(JSON.stringify(okApiResponse("late"))));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(metas.map((m) => m.outcome)).toEqual(["aborted"]);
+  });
+
+  it.each([KEY, "\0", JSON.stringify({ nested: KEY })])("rejects escaped sensitive decoded output %j", async (sensitive) => {
+    const encoded = [...sensitive].map((c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4,"0")).join("");
+    const transport = fetchReturning(okApiResponse(encoded));
+    const { provider, metas } = providerWith(transport.fetchImpl);
+    await expectCode(provider.generate(makeRequest(), new AbortController().signal), "invalid-response");
+    expect(JSON.stringify(metas)).not.toContain(KEY);
+  });
+
+  it("bounds and hashes the exact complete UTF-8 wire body at the byte boundary", async () => {
+    const request = makeRequest({ context: { ...makeRequest().context, message: "🕊界".repeat(100) } });
+    const first = fetchReturning(okApiResponse("ok"));
+    const firstProvider = providerWith(first.fetchImpl);
+    await firstProvider.provider.generate(request, new AbortController().signal);
+    const body = String(first.calls[0].init.body);
+    const bytes = new TextEncoder().encode(body).length;
+    expect(firstProvider.metas[0].requestPayloadSha256).toBe(sha256HexSync(body));
+    expect(bytes).toBeGreaterThan(body.length);
+    const equal = fetchReturning(okApiResponse("ok"));
+    await providerWith(equal.fetchImpl, { maxInputBytes: bytes }).provider.generate(request, new AbortController().signal);
+    expect(equal.calls).toHaveLength(1);
+    const less = fetchReturning(okApiResponse("ok"));
+    await expectCode(providerWith(less.fetchImpl, { maxInputBytes: bytes - 1 }).provider.generate(request, new AbortController().signal), "invalid-request");
+    expect(less.calls).toHaveLength(0);
+  });
+
+  it("rejects pathological short-token and multibyte oversize inputs before dispatch", async () => {
+    for (const message of ["!".repeat(64000), "界".repeat(22000)]) {
+      const transport = fetchReturning(okApiResponse("ok"));
+      const request = makeRequest({ context: { ...makeRequest().context, message } });
+      const { provider, metas } = providerWith(transport.fetchImpl);
+      await expectCode(provider.generate(request, new AbortController().signal), "invalid-request");
+      expect(transport.calls).toHaveLength(0);
+      expect(metas[0].didDispatch).toBe(false);
+    }
+  });
+
+  it("flags malformed cache details and usage beyond admitted output as uncertain", async () => {
+    for (const usage of [
+      { input_tokens: 100, output_tokens: 50, total_tokens: 150, input_tokens_details: { cached_tokens: -1 } },
+      { input_tokens: 100, output_tokens: 50, total_tokens: 150, input_tokens_details: { cached_tokens: 80, cache_write_tokens: 30 } },
+      { input_tokens: 100, output_tokens: 1201, total_tokens: 1301 },
+    ]) {
+      const transport = fetchReturning(okApiResponse("ok", [], { usage }));
+      const { provider, metas } = providerWith(transport.fetchImpl);
+      await provider.generate(makeRequest(), new AbortController().signal);
+      expect(metas[0].usageConsistent).toBe(false);
+    }
+  });
+});

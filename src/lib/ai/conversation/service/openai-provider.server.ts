@@ -39,6 +39,11 @@ export const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 export const OPENAI_CONVERSATION_MAX_RESPONSE_BYTES = 256 * 1024;
 export const OPENAI_CONVERSATION_MAX_OUTPUT_CHARS = 12_000;
 export const OPENAI_CONVERSATION_MAX_INPUT_CHARS = 64_000;
+export const OPENAI_CONVERSATION_MAX_INPUT_BYTES = 64_000;
+// Engineering allowance for provider-added role/framing tokens. The complete
+// wire JSON (including schema and policy) is separately counted byte-for-byte.
+// This is a conservative reservation policy, not a provider billing guarantee.
+export const OPENAI_CONVERSATION_PROTOCOL_TOKEN_ALLOWANCE = 4_096;
 export const OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS = 4_096;
 export const OPENAI_CONVERSATION_MAX_DEADLINE_MS = 45_000;
 
@@ -76,8 +81,9 @@ export class ProviderRequestError extends Error {
 export interface ConversationExchangeMeta {
   readonly requestId: string;
   requestedModel: string;
-  /** SHA-256 of the exact serialized instructions + grounded payload bytes. */
+  /** SHA-256 of the complete exact UTF-8 POST body. */
   requestPayloadSha256: string | null;
+  didDispatch: boolean;
   reportedModel: string | null;
   /** Actual service tier reported by the provider response; success REQUIRES
    * exactly "default" — absent, null or malformed tiers are rejected. */
@@ -89,6 +95,7 @@ export interface ConversationExchangeMeta {
     outputTokens: number | null;
     reasoningTokens: number | null;
     cachedInputTokens: number | null;
+    cacheWriteTokens: number | null;
     totalTokens: number | null;
   };
   /** False when usage counts were invalid or internally inconsistent. */
@@ -107,11 +114,11 @@ export interface DirectConversationProviderOptions {
   /** Actual input allowance in characters, enforced on the exact serialized
    * instructions + payload BEFORE any dispatch. Defaults to the hard cap. */
   maxInputChars?: number;
+  /** Hard allowance over the complete UTF-8 JSON POST body, including schema. */
+  maxInputBytes?: number;
   /** Evidence hook: sanitized per-call metadata (no bodies, no credentials). */
   onExchange?: (meta: ConversationExchangeMeta) => void;
 }
-
-const REASONING_EFFORTS = ["none", "low", "medium", "high"] as const;
 
 /** Strict output schema: an ordinary valid answer may cite no source. */
 const REPLY_SCHEMA = {
@@ -145,6 +152,22 @@ function count(value: unknown): number | null {
     value <= 10_000_000
     ? value
     : null;
+}
+
+/** Inspect escaped layers without changing the user's/model's text. Nested
+ * JSON can otherwise hide a credential behind repeated Unicode escapes. */
+function containsSensitiveText(value: string, secret: string): boolean {
+  let current = value;
+  for (let layer = 0; layer < 8; layer++) {
+    if (current.includes(secret) || current.includes("\0")) return true;
+    const decoded = current.replace(/\\u([0-9a-f]{4})/gi,
+      (_, hex: string) => String.fromCharCode(parseInt(hex, 16)))
+      .replace(/\\\\/g, "\\");
+    if (decoded === current) return false;
+    current = decoded;
+  }
+  // Ambiguous deeper encodings are not needed by the reply contract.
+  return true;
 }
 
 function cancelBody(response: Response | undefined) {
@@ -228,11 +251,8 @@ function parseReplyPayload(
   // Post-decode screening: decoded text, every decoded source ID and any
   // structured nesting inside the text must not carry the credential or NUL.
   if (
-    decodedText.includes(String.fromCharCode(0)) ||
-    decodedText.includes(secret) ||
-    sourceIds.some(
-      (id) => id.includes(String.fromCharCode(0)) || id.includes(secret),
-    )
+    containsSensitiveText(decodedText, secret) ||
+    sourceIds.some((id) => containsSensitiveText(id, secret))
   ) {
     throw new ProviderRequestError("invalid-response");
   }
@@ -257,9 +277,10 @@ export function createDirectOpenAIConversationProvider(
     ): Promise<ConversationProviderResponse> {
       const startedAt = Date.now();
       const meta: ConversationExchangeMeta = {
-        requestId: request.requestId,
+        requestId: identifier(request.requestId, apiKey) ?? "invalid-request-id",
         requestedModel,
         requestPayloadSha256: null,
+        didDispatch: false,
         reportedModel: null,
         serviceTier: null,
         responseId: null,
@@ -269,6 +290,7 @@ export function createDirectOpenAIConversationProvider(
           outputTokens: null,
           reasoningTokens: null,
           cachedInputTokens: null,
+          cacheWriteTokens: null,
           totalTokens: null,
         },
         usageConsistent: false,
@@ -294,17 +316,37 @@ export function createDirectOpenAIConversationProvider(
 
       const instructions = buildConversationInstructions(request);
       const groundedPayload = serializeConversationGroundedPayload(request);
-      // The exact serialized wire payload is hashed for evidence BEFORE any
-      // dispatch decision, so every attempt carries a verifiable request hash.
-      meta.requestPayloadSha256 = sha256HexSync(`${instructions}\n${groundedPayload}`);
+      const wireBody = JSON.stringify({
+        model: requestedModel,
+        instructions,
+        input: [{ role: "user", content: groundedPayload }],
+        max_output_tokens: options.maxOutputTokens,
+        store: false,
+        background: false,
+        stream: false,
+        service_tier: "default",
+        truncation: "disabled",
+        reasoning: { effort: "none" },
+        text: { format: {
+          type: "json_schema", name: "bfa_conversation_reply",
+          strict: true, schema: REPLY_SCHEMA,
+        } },
+      });
+      const inputBytes = new TextEncoder().encode(wireBody).byteLength;
+      meta.requestPayloadSha256 = sha256HexSync(wireBody);
       const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
       const maxInputChars = options.maxInputChars ?? OPENAI_CONVERSATION_MAX_INPUT_CHARS;
+      const maxInputBytes = options.maxInputBytes ?? OPENAI_CONVERSATION_MAX_INPUT_BYTES;
       if (
         requestedModel === "invalid-model" ||
         /[\r\n]/.test(key) ||
         !Number.isSafeInteger(maxInputChars) ||
         maxInputChars < 1 ||
         maxInputChars > OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
+        !Number.isSafeInteger(maxInputBytes) ||
+        maxInputBytes < 1 ||
+        maxInputBytes > OPENAI_CONVERSATION_MAX_INPUT_BYTES ||
+        inputBytes > maxInputBytes ||
         instructions.length + groundedPayload.length > maxInputChars ||
         instructions.includes(key) ||
         groundedPayload.includes(key) ||
@@ -363,6 +405,8 @@ export function createDirectOpenAIConversationProvider(
 
       const operation = async (): Promise<ConversationProviderResponse> => {
         try {
+          if (signal.aborted) throw new ProviderRequestError("aborted");
+          meta.didDispatch = true;
           response = await doFetch(OPENAI_RESPONSES_URL, {
             method: "POST",
             redirect: "error",
@@ -371,26 +415,7 @@ export function createDirectOpenAIConversationProvider(
               "Content-Type": "application/json",
               Authorization: `Bearer ${key}`,
             },
-            body: JSON.stringify({
-              model: requestedModel,
-              instructions,
-              input: [{ role: "user", content: groundedPayload }],
-              max_output_tokens: options.maxOutputTokens,
-              store: false,
-              background: false,
-              stream: false,
-              service_tier: "default",
-              truncation: "disabled",
-              reasoning: { effort: "none" },
-              text: {
-                format: {
-                  type: "json_schema",
-                  name: "bfa_conversation_reply",
-                  strict: true,
-                  schema: REPLY_SCHEMA,
-                },
-              },
-            }),
+            body: wireBody,
           });
           if (callerAborted) {
             cancelBody(response);
@@ -444,6 +469,7 @@ export function createDirectOpenAIConversationProvider(
             outputTokens: count(usage?.output_tokens),
             reasoningTokens: count(outputDetails?.reasoning_tokens),
             cachedInputTokens: count(inputDetails?.cached_tokens),
+            cacheWriteTokens: count(inputDetails?.cache_write_tokens),
             totalTokens: count(usage?.total_tokens),
           };
           // Reasoning tokens are a subset of output tokens: never double-count.
@@ -453,10 +479,17 @@ export function createDirectOpenAIConversationProvider(
             meta.usage.totalTokens !== null &&
             meta.usage.inputTokens + meta.usage.outputTokens ===
               meta.usage.totalTokens &&
+            meta.usage.inputTokens <= inputBytes + OPENAI_CONVERSATION_PROTOCOL_TOKEN_ALLOWANCE &&
+            meta.usage.outputTokens <= options.maxOutputTokens &&
+            (outputDetails?.reasoning_tokens === undefined || meta.usage.reasoningTokens !== null) &&
+            (inputDetails?.cached_tokens === undefined || meta.usage.cachedInputTokens !== null) &&
+            (inputDetails?.cache_write_tokens === undefined || meta.usage.cacheWriteTokens !== null) &&
             (meta.usage.reasoningTokens === null ||
               meta.usage.reasoningTokens <= meta.usage.outputTokens) &&
             (meta.usage.cachedInputTokens === null ||
-              meta.usage.cachedInputTokens <= meta.usage.inputTokens);
+              meta.usage.cachedInputTokens <= meta.usage.inputTokens) &&
+            (meta.usage.cacheWriteTokens === null ||
+              meta.usage.cacheWriteTokens + (meta.usage.cachedInputTokens ?? 0) <= meta.usage.inputTokens);
           if (parsed.error !== undefined && parsed.error !== null) {
             throw new ProviderRequestError("provider-failure");
           }

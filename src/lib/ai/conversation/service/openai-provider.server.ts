@@ -270,11 +270,10 @@ export function createDirectOpenAIConversationProvider(
 
       const instructions = buildConversationInstructions(request);
       const groundedPayload = serializeConversationGroundedPayload(request);
-      if (!apiKey || !apiKey.trim()) fail("missing-key");
-      const key: string = apiKey;
+      const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
       if (
         requestedModel === "invalid-model" ||
-        /[\r\n]/.test(apiKey) ||
+        /[\r\n]/.test(key) ||
         instructions.length + groundedPayload.length >
           OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
         instructions.includes(key) ||

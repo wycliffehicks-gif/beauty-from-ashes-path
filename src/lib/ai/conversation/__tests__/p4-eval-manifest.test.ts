@@ -150,7 +150,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
         { env, fetchImpl, nowIso: () => NOW },
       ).catch((e: unknown) => e);
       expect(err).toBeInstanceOf(EvalAdmissionRefused);
-      expect(err.code).toBe("manifest-unapproved");
+      expect((err as { code?: string }).code).toBe("manifest-unapproved");
       expect(fetchCalls).toBe(0);
     } finally {
       rmSync(dir, { recursive: true, force: true });
@@ -186,7 +186,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
         },
       ).catch((e: unknown) => e);
       expect(err).toBeInstanceOf(EvalAdmissionRefused);
-      expect(err.code).toBe("policy-hash-mismatch");
+      expect((err as { code?: string }).code).toBe("policy-hash-mismatch");
       expect(fetchCalls).toBe(0);
     } finally {
       rmSync(dir, { recursive: true, force: true });

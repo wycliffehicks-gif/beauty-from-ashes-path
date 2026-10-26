@@ -32,14 +32,14 @@ import {
   type SourceRegistry,
 } from "../sources";
 import { GrantIssuer, toServerGrant, type IssuedGrant } from "./grant-issuer";
-import {
-  createMockProvider,
-  type MockProvider,
-  type MockProviderRequest,
-  type MockProviderResponse,
-  type ProviderEffectiveItem,
-  type ProviderHistoryEntry,
-} from "./mock-provider";
+import { createMockProvider } from "./mock-provider";
+import type {
+  ConversationProvider,
+  ConversationProviderRequest,
+  ConversationProviderResponse,
+  ProviderEffectiveItem,
+  ProviderHistoryEntry,
+} from "./provider";
 import { MockVoiceLifecycle, type VoiceOrigin } from "./mock-voice";
 import { sha256HexSync } from "./sha256-sync";
 import { resolveFixtureCase, type FixtureCase } from "./semantic-fixtures";

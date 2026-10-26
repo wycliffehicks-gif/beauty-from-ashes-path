@@ -520,18 +520,23 @@ export function createDirectOpenAIConversationProvider(
           if (!text.trim() || parsed.incomplete_details != null) {
             throw new ProviderRequestError("invalid-response");
           }
-          const reply = parseReplyPayload(text, admittedSourceKeys);
+          const reply = parseReplyPayload(text, admittedSourceKeys, key);
           finish("complete");
           return { text: reply.text, sourceIds: reply.sourceIds, interpretation: null };
         } catch (err) {
           if (err instanceof ProviderRequestError) throw err;
           // Never return/log exceptions, headers, provider error bodies or secrets.
-          throw new ProviderRequestError(expired ? "timeout" : "network");
+          throw new ProviderRequestError(
+            callerAborted ? "aborted" : expired ? "timeout" : "network",
+          );
         }
       };
       try {
-        return await Promise.race([operation(), timeout]);
+        return await Promise.race([operation(), timeout, callerAbort]);
       } catch (err) {
+        // Caller cancellation takes precedence in reporting: a late network
+        // error caused by our own abort is still an aborted outcome.
+        if (callerAborted && !expired) fail("aborted");
         if (err instanceof ProviderRequestError) fail(err.code);
         fail("network");
         throw new ProviderRequestError("network"); // unreachable; satisfies TS

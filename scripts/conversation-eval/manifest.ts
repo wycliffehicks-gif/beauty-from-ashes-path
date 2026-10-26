@@ -233,6 +233,15 @@ export function validateEvalManifest(
   ) {
     return { ok: false, code: "price-basis-mismatch", detail: "price basis not for this model/tier" };
   }
+  // The basis must be the reviewed server-controlled snapshot EXACTLY:
+  // invented or zeroed rates with matching labels are refused.
+  if (!priceBasisEqualsSnapshot(manifest.priceBasis)) {
+    return {
+      ok: false,
+      code: "price-basis-untrusted",
+      detail: "price basis differs from the reviewed snapshot",
+    };
+  }
   const costBound = computeCostBound(manifest);
   if (!costBound.fits) {
     return {
@@ -259,6 +268,9 @@ export function validateManifestForLive(
     return { ok: false, code: "manifest-unapproved", detail: "approval is null" };
   }
   const nowMs = Date.parse(context.nowIso);
+  if (!manifest.expiresAtIso) {
+    return { ok: false, code: "manifest-expired", detail: "expiry unset until approval" };
+  }
   const expiresMs = Date.parse(manifest.expiresAtIso);
   const approvedMs = Date.parse(manifest.approval.approvedAtIso);
   if (!Number.isFinite(nowMs) || expiresMs <= nowMs) {
@@ -266,6 +278,13 @@ export function validateManifestForLive(
   }
   if (approvedMs > expiresMs) {
     return { ok: false, code: "manifest-expired", detail: "approval after expiry" };
+  }
+  // Freshness: the price snapshot must have been retrieved recently enough
+  // to still describe current applicability.
+  const retrievedMs = Date.parse(manifest.priceBasis.retrievedOn);
+  const ageDays = (nowMs - retrievedMs) / 86_400_000;
+  if (!Number.isFinite(retrievedMs) || ageDays < 0 || ageDays > PRICE_BASIS_MAX_AGE_DAYS) {
+    return { ok: false, code: "price-basis-stale", detail: manifest.priceBasis.retrievedOn };
   }
   return base;
 }

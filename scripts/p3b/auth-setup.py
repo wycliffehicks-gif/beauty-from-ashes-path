@@ -1,7 +1,7 @@
 """Creates fictional confirmed A/B/C through the admin create-user route (no emails),
-admits only A/B with expiry and integer fictional allowances. Credentials stay in a
+admits only A/B with expiry and integer fictional allowances (--completion: explicit server-owned ZERO B text allowance). Credentials stay in a
 0600 file under /tmp/p3b-auth and are never printed."""
-import os, json, secrets, datetime, requests, pathlib
+import os, sys, json, secrets, datetime, requests, pathlib
 U=os.environ['SUPABASE_URL']; K=os.environ['SUPABASE_SERVICE_ROLE_KEY']
 H={'apikey':K,'Content-Type':'application/json','Prefer':'return=minimal'}
 if not K.startswith('sb_'): H['Authorization']='Bearer '+K
@@ -19,6 +19,6 @@ exp=(datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(minutes=40)
 for n in 'AB':
   r=requests.post(U+'/rest/v1/bfa_p3b_staging_accounts',headers={**H,'Prefer':'resolution=merge-duplicates'},json={'user_id':ids[n],'admitted':True,'expires_at':exp}); assert r.ok,r.status_code
 al=[{'owner_id':ids['A'],'mode':'text','remaining_units':40},{'owner_id':ids['A'],'mode':'voice','remaining_units':2},
-    {'owner_id':ids['B'],'mode':'text','remaining_units':1},{'owner_id':ids['B'],'mode':'voice','remaining_units':1}]
+    {'owner_id':ids['B'],'mode':'text','remaining_units':0 if '--completion' in sys.argv else 1},{'owner_id':ids['B'],'mode':'voice','remaining_units':2 if '--completion' in sys.argv else 1}]
 r=requests.post(U+'/rest/v1/bfa_p3b_allowances',headers=H,json=al); assert r.ok,r.status_code
 print(json.dumps({'created':list(ids),'admitted':['A','B'],'C':'valid account, not allowlisted'}))

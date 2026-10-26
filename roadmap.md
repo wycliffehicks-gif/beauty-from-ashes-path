@@ -17,14 +17,15 @@
 - [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (authenticated acceptance still blocked).
 - [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
 - [x] Connect isolated staging adapter to existing service authority; participant/model/real voice remain off.
-- [ ] Verify O01–O08 against real fictional staging accounts and database concurrency.
+- [x] Verify O01–O08 against real fictional staging accounts and database concurrency (completion pass 26 Oct ~03:10 UTC: handler 6/6, HTTP+UI 48/48, thread-row-lock expiry, closure probe).
 - [x] Record coherent current checkpoint and labelled historical evidence, limits and rollback; retain all prior work.
-- [ ] Obtain supported fictional A/B sessions; test-session provisioning unavailable for this project.
-- [ ] Owner-controlled Disable sign-up at More → Users → Settings; no further agent auth mutations (all providers/anonymous OFF, zero admitted).
+- [x] HISTORICAL (resolved): supported fictional sessions obtained via temporary email sign-in with public sign-up closed.
+- [x] HISTORICAL (resolved): sign-up closed with Carl's approval; menu route was unavailable and is no longer needed.
 - [x] Implement exact fictional excerpt preview/drift, owned saved-list/reopen and existing separate-settings wiring.
 - [x] Repair saved equivalence, auth/clear fences, pending Stop/Delete, unsaved switch decisions, draft preservation and lost-response recovery.
 - [x] Run conversation/server-double regressions and actual service-record database concurrency/argument checks.
 - [x] Authenticated O01–O08 (23/23) and signed-in 390/1280 keyboard UI (14/14) passed with fictional A/B/C, 26 Oct ~02:30 UTC; accounts deleted, admissions closed, email sign-in OFF.
-- [ ] Untested: thread-row-lock wait crossing allowlist expiry; real-session possibly-dispatched uncertain hold (covered only by service-record DB checks). Carl review of acceptance.
+- [x] Thread-row-lock expiry (temporary helper 0008, removed 0009) and real-session dispatched-then-Delete/Stop uncertain hold passed.
+- [ ] Carl's review of the P3b acceptance (fictional staging scope only). Not covered: real devices, screen readers, microphone/audio, real model, raw provider payload capture, login-screen UX.
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
-- [ ] Fictional A/B/C password sessions: Carl authorized temporary email sign-in, but public sign-up is open (disable_signup=false) and must be closed first; agent cannot set it without the unknown HIBP value. Owner action: More -> Users -> Auth settings -> Disable sign-up.
+- [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.

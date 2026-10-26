@@ -79,6 +79,12 @@ No real device, screen reader, microphone, audio, model, production participant 
 
 ## Exact auth capability limitation and owner setup
 
+### Availability assessment — 26 October 2026, 01:45–01:47 UTC
+
+Carl requested that remaining blockers be unblocked. Read-only `supabase.cloud_status` confirmed database and authentication services reachable and healthy; a paused backend is not the cause. Latest automatic diagnostic was **build OK 01:45:33 UTC**. `python3 /tmp/browser/p3b-unblock/check_preview.py` opened the local public entry without page errors; screenshot `/tmp/browser/p3b-unblock/preview.png` was inspected. Preview telemetry contained an earlier failed dynamic-module fetch from the editor origin; it was not reproduced locally, so no source workaround or claim of hosted repair is made.
+
+Current platform guidance documents **More → Users → Add user → Create new user** as an owner-controlled confirmed email/password account creation path, distinct from **Send invitation**, which sends email. This documentation does not establish fictional session provisioning for this project: password sign-in is disabled, changing it remains prohibited, and the unavailable CLI capability cannot be inferred fixed. No account, auth setting, session mint, invitation, database mutation, provider call or permission expansion was attempted. The locked-thread expiry-wait test likewise remains blocked by SQL privileges; no grants were broadened. Authenticated O01–O08 stays BLOCKED. The required platform action remains enabling the supported fictional test-user/session capability under the existing no-email, no-public-enrollment constraints; this agent has no available tool to enable that capability. No optional profile decision is pending.
+
 Supported CLI previously reported **“Creating a test user is not available for this project.”** Alternate sign-in-link minting was refused as bypassing consent. Neither action was retried/worked around. No Carl account substitution, hand-built JWT, signing key, admin session, magic link or alternate provider. No emails/public enrollment.
 
 Latest public settings read: **disable_signup=false; anonymous=false; every provider=false**. Zero admitted staging accounts verified after database checks. No auth-settings mutations this continuation; unknown HIBP value was not guessed.

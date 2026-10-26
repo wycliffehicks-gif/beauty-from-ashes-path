@@ -43,6 +43,13 @@
       "when": 1792970802888,
       "tag": "0005_p3b_explicit_pending_work_fence",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792979769014,
+      "tag": "0006_p3b_temporary_lock_wait_test_helper",
+      "breakpoints": true
     }
   ]
 }

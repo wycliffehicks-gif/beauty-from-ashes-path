@@ -34,7 +34,8 @@ async def run(p,w,res):
   await page.get_by_role('button',name='Reopen conversation 1').click(); await expect(page.locator('ol li')).to_have_count(2,timeout=15000)
   res.append(f'{w}: reload + reopen restored saved 2 events only')
   note=page.get_by_label('Fictional source material')
-  await note.evaluate("e=>{const s=e.value.indexOf('I am making'),t=e.value.indexOf('\\nIgnore');e.focus();e.setSelectionRange(s,t);e.dispatchEvent(new Event('select',{bubbles:true}))}")
+  await note.evaluate("e=>{const s=e.value.indexOf('I am making'),t=e.value.indexOf('\\nIgnore');e.focus();e.setSelectionRange(s,t+1)}")
+  await page.keyboard.press('Shift+ArrowLeft')  # keyboard selection adjustment fires the normal select handling
   await page.get_by_role('button',name='Preview selected excerpt').click(); dlg=page.get_by_role('dialog')
   await expect(dlg).to_contain_text('I am making room for one honest step.'); await page.keyboard.press('Escape'); await expect(dlg).to_have_count(0)
   await expect(page.locator('ol li')).to_have_count(2); res.append(f'{w}: excerpt preview Escape -> nothing shared')

@@ -213,6 +213,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      bfa_p3b_test_hold_thread_row: {
+        Args: { p_seconds: number; p_thread: string }
+        Returns: boolean
+      }
       bfa_p3b_transition: {
         Args: {
           p_action: string

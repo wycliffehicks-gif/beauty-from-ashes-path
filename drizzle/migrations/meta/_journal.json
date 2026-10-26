@@ -57,6 +57,13 @@
       "when": 1792979796173,
       "tag": "0007_p3b_remove_temporary_lock_wait_test_helper",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792982848523,
+      "tag": "0008_p3b_temporary_thread_row_lock_test_helper",
+      "breakpoints": true
     }
   ]
 }

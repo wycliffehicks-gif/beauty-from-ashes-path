@@ -140,10 +140,13 @@ export class EvalLedgerError extends Error {
  * locked transaction. NEVER reuse the v5 ledger file.
  */
 export class EvalLedger {
-  private constructor(
-    private readonly path: string,
-    private readonly now: () => string,
-  ) {}
+  private readonly path: string;
+  private readonly now: () => string;
+
+  private constructor(path: string, now: () => string) {
+    this.path = path;
+    this.now = now;
+  }
 
   /** Create the ledger file if absent (budget fixed at creation); load it. */
   static open(path: string, budgetMicros: number, now: () => string = () => new Date().toISOString()): EvalLedger {

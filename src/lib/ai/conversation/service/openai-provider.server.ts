@@ -73,23 +73,23 @@ export class ProviderRequestError extends Error {
 
 export interface ConversationExchangeMeta {
   readonly requestId: string;
-  readonly requestedModel: string;
-  readonly reportedModel: string | null;
+  requestedModel: string;
+  reportedModel: string | null;
   /** Actual service tier reported by the provider response, when present. */
-  readonly serviceTier: string | null;
-  readonly responseId: string | null;
-  readonly providerRequestId: string | null;
-  readonly usage: {
-    readonly inputTokens: number | null;
-    readonly outputTokens: number | null;
-    readonly reasoningTokens: number | null;
-    readonly cachedInputTokens: number | null;
-    readonly totalTokens: number | null;
+  serviceTier: string | null;
+  responseId: string | null;
+  providerRequestId: string | null;
+  usage: {
+    inputTokens: number | null;
+    outputTokens: number | null;
+    reasoningTokens: number | null;
+    cachedInputTokens: number | null;
+    totalTokens: number | null;
   };
   /** False when usage counts were invalid or internally inconsistent. */
-  readonly usageConsistent: boolean;
-  readonly latencyMs: number;
-  readonly outcome: "complete" | DirectConversationFailureCode;
+  usageConsistent: boolean;
+  latencyMs: number;
+  outcome: "complete" | DirectConversationFailureCode;
 }
 
 export interface DirectConversationProviderOptions {
@@ -271,13 +271,14 @@ export function createDirectOpenAIConversationProvider(
       const instructions = buildConversationInstructions(request);
       const groundedPayload = serializeConversationGroundedPayload(request);
       if (!apiKey || !apiKey.trim()) fail("missing-key");
+      const key: string = apiKey;
       if (
         requestedModel === "invalid-model" ||
         /[\r\n]/.test(apiKey) ||
         instructions.length + groundedPayload.length >
           OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
-        instructions.includes(apiKey) ||
-        groundedPayload.includes(apiKey) ||
+        instructions.includes(key) ||
+        groundedPayload.includes(key) ||
         !Number.isSafeInteger(options.maxOutputTokens) ||
         options.maxOutputTokens < 1 ||
         options.maxOutputTokens > OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS ||
@@ -320,7 +321,7 @@ export function createDirectOpenAIConversationProvider(
             signal: controller.signal,
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${apiKey}`,
+              Authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
               model: requestedModel,
@@ -349,7 +350,7 @@ export function createDirectOpenAIConversationProvider(
           }
           meta.providerRequestId = identifier(
             response.headers.get("x-request-id"),
-            apiKey,
+            key,
           );
           if (response.redirected || (response.status >= 300 && response.status < 400)) {
             cancelBody(response);
@@ -379,9 +380,9 @@ export function createDirectOpenAIConversationProvider(
             throw new ProviderRequestError("invalid-response");
           }
           if (!parsed) throw new ProviderRequestError("invalid-response");
-          meta.reportedModel = identifier(parsed.model, apiKey);
-          meta.responseId = identifier(parsed.id, apiKey);
-          meta.serviceTier = identifier(parsed.service_tier, apiKey);
+          meta.reportedModel = identifier(parsed.model, key);
+          meta.responseId = identifier(parsed.id, key);
+          meta.serviceTier = identifier(parsed.service_tier, key);
           const usage = object(parsed.usage);
           const outputDetails = object(usage?.output_tokens_details);
           const inputDetails = object(usage?.input_tokens_details);
@@ -455,7 +456,7 @@ export function createDirectOpenAIConversationProvider(
               }
             }
           }
-          if (text.includes(String.fromCharCode(0)) || (apiKey && text.includes(apiKey))) {
+          if (text.includes(String.fromCharCode(0)) || text.includes(key)) {
             throw new ProviderRequestError("invalid-response");
           }
           if (parsed.status === "incomplete" || incompleteMessage) {
@@ -478,6 +479,7 @@ export function createDirectOpenAIConversationProvider(
       } catch (err) {
         if (err instanceof ProviderRequestError) fail(err.code);
         fail("network");
+        throw new ProviderRequestError("network"); // unreachable; satisfies TS
       } finally {
         clearTimeout(timer);
         signal.removeEventListener("abort", onOuterAbort);

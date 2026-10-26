@@ -2,19 +2,19 @@
 // forged, incomplete or hash-changed manifest is refused BEFORE any credential
 // read or transport call.
 import { describe, expect, it } from "vitest";
-import { readFileSync, mkdtempSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   validateEvalManifest,
   validateManifestForLive,
   computeCostBound,
-} from "../../../../scripts/conversation-eval/manifest";
+} from "../../../../../scripts/conversation-eval/manifest";
 import {
   runConversationEvaluation,
   computeSourceSnapshotSha256,
   EvalAdmissionRefused,
-} from "../../../../scripts/conversation-eval/runner";
+} from "../../../../../scripts/conversation-eval/runner";
 import { CONVERSATION_POLICY_BLOCK_SHA256 } from "../policy";
 
 const DRAFT_PATH = "scripts/conversation-eval/draft-manifest.v1.json";
@@ -148,7 +148,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
       const err = await runConversationEvaluation(
         { mode: "live", manifestPath: DRAFT_PATH, outDir: join(dir, "out") },
         { env, fetchImpl, nowIso: () => NOW },
-      ).catch((e) => e);
+      ).catch((e: unknown) => e);
       expect(err).toBeInstanceOf(EvalAdmissionRefused);
       expect(err.code).toBe("manifest-unapproved");
       expect(fetchCalls).toBe(0);
@@ -164,7 +164,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
       forged.approval = { reference: "forged", approvedBy: "nobody", approvedAtIso: NOW };
       forged.policySha256 = "2".repeat(64);
       const forgedPath = join(dir, "forged.json");
-      require("node:fs").writeFileSync(forgedPath, JSON.stringify(forged));
+      writeFileSync(forgedPath, JSON.stringify(forged));
       let fetchCalls = 0;
       const env = new Proxy(
         {},
@@ -184,7 +184,7 @@ describe("P4 eval runner — live mode refuses before credential access", () => 
           }) as typeof fetch,
           nowIso: () => NOW,
         },
-      ).catch((e) => e);
+      ).catch((e: unknown) => e);
       expect(err).toBeInstanceOf(EvalAdmissionRefused);
       expect(err.code).toBe("policy-hash-mismatch");
       expect(fetchCalls).toBe(0);

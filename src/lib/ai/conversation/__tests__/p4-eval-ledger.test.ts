@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, openSync, closeSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { EvalLedger, EvalLedgerError } from "../../../../scripts/conversation-eval/ledger";
+import { EvalLedger, EvalLedgerError } from "../../../../../scripts/conversation-eval/ledger";
 
 let dir: string;
 let path: string;
@@ -96,7 +96,7 @@ describe("P4 eval ledger — admission and idempotency", () => {
     ledger.reserve({ ...base, requestId: "req-2", turnIndex: 1 });
 
     const reopened = open();
-    expect(reopened.admissions().map((a) => a.state)).toEqual(["uncertain", "reserved"]);
+    expect(reopened.admissions().map((a: { state: string }) => a.state)).toEqual(["uncertain", "reserved"]);
     expect(reopened.outstandingMicros()).toBe(8700);
     // The uncertain hold can still be reconciled after restart.
     expect(reopened.reconcile("req-1", "receipt-1", 4350)).toMatchObject({ ok: true });

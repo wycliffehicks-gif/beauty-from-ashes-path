@@ -17,6 +17,8 @@ async def run(p,w,res):
   b=await p.chromium.launch(headless=True); ctx=await b.new_context(viewport={'width':w,'height':1800}); page=await ctx.new_page()
   errors=[]; page.on('pageerror',lambda e:errors.append(str(e)[:120]))
   await page.goto('http://localhost:8080/'); await page.evaluate("([k,v])=>localStorage.setItem(k,v)",[KEY,session('A')])
+  # Same device-local agreement a person records in the normal opening flow (fictional test device).
+  await page.evaluate("v=>localStorage.setItem('bfa.v1',v)",json.dumps({'onboarded':True,'legalAcceptance':{'version':'2026-10-04.1','acceptedAt':'2026-10-26T02:30:00.000Z'},'showSpiritual':False}))
   await page.goto('http://localhost:8080/conversation-staging'); await page.wait_for_timeout(1500)
   await tab_to(page,'New conversation'); await page.keyboard.press('Enter')
   st=page.locator('p[role=status]').first; await expect(st).to_have_text('Unsaved changes',timeout=15000)

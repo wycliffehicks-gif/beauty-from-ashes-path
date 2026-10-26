@@ -5,60 +5,23 @@
 // APPLICATION sent and accepted — never response quality. Every reply is
 // prefixed as fictional.
 
-import type { AssembledConversationContext } from "../context";
+import type {
+  ConversationProvider,
+  ConversationProviderRequest,
+  ConversationProviderResponse,
+} from "./provider";
 
 export const MOCK_REPLY_PREFIX = "Fictional preview reply (mock provider, not AI):";
 
-export interface ProviderHistoryEntry {
-  readonly eventId: string;
-  readonly role: "user" | "assistant" | "shared-source";
-  readonly text: string;
-  /** For voice-delivered replies: whether unplayed segments were withheld. */
-  readonly unheardWithheld: boolean;
-}
-
-export interface ProviderEffectiveItem {
-  readonly itemId: string;
-  readonly kind: "user-report" | "user-intention" | "user-correction" | "ai-interpretation";
-  readonly text: string;
-  readonly sourceEventId: string;
-}
-
-export interface MockProviderRequest {
-  readonly requestId: string;
-  readonly policyIdentity: string;
-  readonly policySha256: string;
-  /** The exact approved candidate policy body bytes. */
-  readonly policyBody: string;
-  readonly context: AssembledConversationContext;
-  readonly history: readonly ProviderHistoryEntry[];
-  readonly effective: readonly ProviderEffectiveItem[];
-  readonly historyComplete: boolean;
-  readonly revisions: {
-    readonly preference: number;
-    readonly restrictions: number;
-  };
-  readonly fixture: {
-    readonly caseId: string | null;
-    readonly recallRequest: boolean;
-    readonly mockInterpretation: { readonly tag: string; readonly text: string } | null;
-    /** Kind of the service-issued scoped grant bound to this turn, if any. */
-    readonly grantKind: "prayer" | "passage" | null;
-  };
-}
-
-export interface MockProviderResponse {
-  readonly text: string;
-  /** Must be a subset of the admitted request sources, or the service refuses. */
-  readonly sourceIds: readonly string[];
-  readonly interpretation: { readonly tag: string; readonly text: string } | null;
-  /** Operational claims in the payload are NEVER executed by the service. */
-  readonly claims?: readonly string[];
-}
-
-export interface MockProvider {
-  generate(request: MockProviderRequest, signal: AbortSignal): Promise<MockProviderResponse>;
-}
+// The neutral provider contract lives in ./provider (P4). These aliases keep
+// the original P3a names working for existing tests and the service.
+export type {
+  ProviderEffectiveItem,
+  ProviderHistoryEntry,
+} from "./provider";
+export type MockProviderRequest = ConversationProviderRequest;
+export type MockProviderResponse = ConversationProviderResponse;
+export type MockProvider = ConversationProvider;
 
 /** Deterministic reply text built only from the request. */
 export function deterministicMockReply(request: MockProviderRequest): MockProviderResponse {

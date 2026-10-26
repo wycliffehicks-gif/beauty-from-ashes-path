@@ -150,7 +150,7 @@ await check('O02/O03/O04/O07', 'saved lineage, discard canary, cross-thread/cros
   const derived = t.inspection!.derived as unknown as Record<string, unknown>[];
   const tags = derived.map(d => String(d.tag ?? d.kind));
   const guess = derived.find(d => d.tag === 'guess-anger'); const corr = derived.find(d => d.tag === 'tired-not-angry');
-  assert(guess && corr && JSON.stringify(guess) !== JSON.stringify({ ...guess, ...{} }) || true, '');
+  assert(guess?.status === 'superseded' && guess.supersededByItemId === corr?.itemId && corr?.status !== 'superseded', 'correction lineage lost after save/discard/reopen');
   const lineage = JSON.stringify({ guess, corr }).replace(/"text":"[^"]*"/g, '"text":…');
   // Exact excerpt then recall: provider-derived reply text is built only from the request.
   const start = FICTIONAL_NOTE.indexOf('I am making'), end = FICTIONAL_NOTE.indexOf('\nIgnore');

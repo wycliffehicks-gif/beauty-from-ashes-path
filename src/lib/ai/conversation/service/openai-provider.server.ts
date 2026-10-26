@@ -45,6 +45,7 @@ export type DirectConversationFailureCode =
   | "missing-key"
   | "invalid-request"
   | "pre-aborted"
+  | "aborted"
   | "timeout"
   | "network"
   | "redirect"
@@ -74,8 +75,11 @@ export class ProviderRequestError extends Error {
 export interface ConversationExchangeMeta {
   readonly requestId: string;
   requestedModel: string;
+  /** SHA-256 of the exact serialized instructions + grounded payload bytes. */
+  requestPayloadSha256: string | null;
   reportedModel: string | null;
-  /** Actual service tier reported by the provider response, when present. */
+  /** Actual service tier reported by the provider response; success REQUIRES
+   * exactly "default" — absent, null or malformed tiers are rejected. */
   serviceTier: string | null;
   responseId: string | null;
   providerRequestId: string | null;
@@ -99,6 +103,9 @@ export interface DirectConversationProviderOptions {
   fetchImpl?: typeof fetch;
   maxOutputTokens: number;
   deadlineMs: number;
+  /** Actual input allowance in characters, enforced on the exact serialized
+   * instructions + payload BEFORE any dispatch. Defaults to the hard cap. */
+  maxInputChars?: number;
   /** Evidence hook: sanitized per-call metadata (no bodies, no credentials). */
   onExchange?: (meta: ConversationExchangeMeta) => void;
 }

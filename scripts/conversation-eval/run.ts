@@ -1,5 +1,7 @@
 /** Conversation P4 evaluator CLI.
- * Run from repo root: node --import ./scripts/conversation-eval/register.mjs scripts/conversation-eval/run.ts
+ * Run from repo root: bun scripts/conversation-eval/run.ts
+ * (bun, like the P3b scripts: the service graph uses TS parameter properties,
+ * which Node 22 strip-only mode cannot load.)
  * DEFAULT IS VALIDATE (offline): no credentials are read and fetch is disabled.
  * --live requires a manifest with explicit approval; anything else fails closed.
  */

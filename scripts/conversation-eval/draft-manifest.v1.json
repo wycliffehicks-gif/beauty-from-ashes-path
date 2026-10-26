@@ -1,0 +1,78 @@
+{
+  "manifestVersion": "bfa-conversation-eval-manifest-v1",
+  "label": "P4 first live DRAFT — 9 catalog turns, baseline gpt-6-luna, reasoning none, default tier, spiritual off",
+  "approval": null,
+  "expiresAtIso": "2026-12-31T23:59:59.000Z",
+  "provider": {
+    "name": "openai-direct",
+    "model": "gpt-6-luna",
+    "reasoningEffort": "none",
+    "serviceTier": "default"
+  },
+  "policySha256": "2fe0e26df0f21abd8080e3ab860e02721febf7e643ea11c940ee383637b08c09",
+  "sourceSnapshotSha256": "74b53578be20ccfe8d92797d92cce79dca16a016ac793733aea1eaed3e32c3d1",
+  "cases": [
+    {
+      "caseId": "C04",
+      "turns": [
+        "I have ten minutes before bed. How can I make tomorrow morning less rushed?",
+        "I can't prepare food tonight, and my child is already asleep."
+      ]
+    },
+    {
+      "caseId": "C05",
+      "turns": [
+        "My sister died last year. Today I miss the ordinary calls. I don't want advice.",
+        "That's all I want to say tonight."
+      ]
+    },
+    {
+      "caseId": "C07",
+      "turns": [
+        "I was angry when I came home yesterday.",
+        "Let me correct that: I was exhausted, not angry. I wasn't upset with anyone.",
+        "What have I told you about yesterday?"
+      ]
+    },
+    {
+      "caseId": "C08",
+      "turns": [
+        "At church I was told my anxiety meant I didn't trust God enough. That still hurts.",
+        "I don't want a verse or a defence of the church. I want you to understand why I stopped going."
+      ]
+    }
+  ],
+  "limits": {
+    "maxInputChars": 60000,
+    "maxOutputTokens": 1200,
+    "deadlineMs": 45000,
+    "maxDispatchAttempts": 9,
+    "maxUsdMicros": 100000
+  },
+  "rules": {
+    "noRetry": true,
+    "noFallback": true,
+    "freshThreadPerCase": true,
+    "spiritualPreference": "off"
+  },
+  "priceBasis": {
+    "source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "retrievedOn": "2026-10-26",
+    "model": "gpt-6-luna",
+    "tier": "default",
+    "inputPerMillionUsdMicros": 100000,
+    "cachedInputPerMillionUsdMicros": 10000,
+    "cacheWritePerMillionUsdMicros": 125000,
+    "outputPerMillionUsdMicros": 500000
+  },
+  "accounting": {
+    "ledgerPath": "artifacts/conversation-eval/live-ledger.json",
+    "evidenceDir": "artifacts/conversation-eval/live-evidence"
+  },
+  "stopConditions": [
+    "Any model, tier or usage mismatch stops the run with the reservation retained.",
+    "Any refusal, incomplete, malformed or oversize response stops the run.",
+    "Any ledger refusal (lock, corruption, conflict, limit) stops the run.",
+    "The dispatch attempt cap (9) is never exceeded; there are no retries or fallback models."
+  ]
+}

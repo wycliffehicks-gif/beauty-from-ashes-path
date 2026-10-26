@@ -325,8 +325,27 @@ export function createDirectOpenAIConversationProvider(
       let activeReader: ReadableStreamDefaultReader<Uint8Array> | undefined;
       let response: Response | undefined;
       let expired = false;
+      let callerAborted = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
-      const onOuterAbort = () => controller.abort();
+      let rejectCallerAbort: ((err: ProviderRequestError) => void) | undefined;
+      // Caller cancellation races the operation INDEPENDENTLY: an abort-
+      // ignoring fetch can never deliver a late "complete" result, because
+      // this promise settles the race first and operation() re-checks the
+      // flag after headers and after the body.
+      const callerAbort = new Promise<never>((_, reject) => {
+        rejectCallerAbort = reject;
+      });
+      const onOuterAbort = () => {
+        callerAborted = true;
+        controller.abort();
+        try {
+          if (activeReader) void activeReader.cancel().catch(() => {});
+          else cancelBody(response);
+        } catch {
+          // The abort outcome resolves even if a stream ignores cancellation.
+        }
+        rejectCallerAbort?.(new ProviderRequestError("aborted"));
+      };
       signal.addEventListener("abort", onOuterAbort, { once: true });
       const timeout = new Promise<never>((_, reject) => {
         timer = setTimeout(() => {
@@ -373,6 +392,10 @@ export function createDirectOpenAIConversationProvider(
               },
             }),
           });
+          if (callerAborted) {
+            cancelBody(response);
+            throw new ProviderRequestError("aborted");
+          }
           if (expired) {
             cancelBody(response);
             throw new ProviderRequestError("timeout");

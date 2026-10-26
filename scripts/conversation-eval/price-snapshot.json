@@ -1,0 +1,11 @@
+{
+  "snapshotVersion": "bfa-price-snapshot-v1",
+  "source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "retrievedOn": "2026-10-26",
+  "model": "gpt-6-luna",
+  "tier": "default",
+  "inputPerMillionUsdMicros": 100000,
+  "cachedInputPerMillionUsdMicros": 10000,
+  "cacheWritePerMillionUsdMicros": 125000,
+  "outputPerMillionUsdMicros": 500000
+}

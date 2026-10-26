@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-26",
+  "timezone": "America/Toronto",
+  "baseCommit": "6c1c1e1a112105ba4c34c9138a627ee1edf1f342",
+  "scope": "P4 complete-source local build verification plus inactive P5 lifecycle/browser-capture preparation",
+  "dependencies": {
+    "command": "bun install --frozen-lockfile --ignore-scripts",
+    "installedPackages": 487,
+    "configVersion": "2.26.5",
+    "packageJsonSha256": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bunLockSha256": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "baselineProductionBuild": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "log": "production-build-node.log",
+    "target": "default Lovable Cloudflare/Nitro",
+    "deployed": false,
+    "environmentPlaceholders": false
+  },
+  "baselineFullTypecheck": {
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0,
+    "log": "typecheck.log"
+  },
+  "nativeBunOffline": {
+    "runnerVersion": "bfa-conversation-eval-runner-v2",
+    "mode": "validate",
+    "manifestLabel": "P4 first live DRAFT \u2014 9 catalog turns, baseline gpt-6-luna, reasoning none, default tier, spiritual off",
+    "structural": "pass",
+    "approval": "absent",
+    "costBound": {
+      "worstCasePerDispatchMicros": 9112,
+      "maxDispatchAttempts": 9,
+      "worstCaseTotalMicros": 82008,
+      "maxUsdMicros": 100000,
+      "fits": true
+    },
+    "dispatchAttempts": 0,
+    "providerCalls": 0,
+    "estimatedProviderCostMicros": 0,
+    "status": "validated",
+    "simulatedTransport": false,
+    "evidence": "offline validation only; no model output; no quality evidence",
+    "validatedAtIso": "2026-10-26T14:14:27.386Z",
+    "manifestSha256": "4b1ac507c65ded1b84e8af6223cae7b08efe434610b006d3bca381c49237e8be"
+  },
+  "finalRegression": {
+    "command": "node node_modules/vitest/vitest.mjs run --maxWorkers=1 --testTimeout=60000",
+    "success": true,
+    "passed": 1916,
+    "failed": 0,
+    "testFiles": 107,
+    "newP5Checks": 48,
+    "legacyChildProcessDeadlineMs": 10000,
+    "assertionsChangedToResolveTimeouts": false,
+    "note": "Initial baseline run had4 legacy timeout failures; final complete run passed all1916 with longer outer harness allowance and one worker."
+  },
+  "focusedP5": {
+    "passed": 48,
+    "failed": 0,
+    "files": 2
+  },
+  "eslintNewFiles": {
+    "exitCode": 0,
+    "files": 4
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/service/voice-lifecycle.ts": "9fbe3d9453efab2e7276f6d299d83e0a7ccd66133c91361331675dc6d0930964",
+    "src/lib/ai/conversation/service/browser-capture.ts": "f1f5cef33893a7f9baa43cf66f6a66f5c6f0f6f8a5b0431e99b19a9fcc5b8680",
+    "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts": "9bd9e516a228bf75c6e2490e1f0e5a93ba8facfe34211a640fc3e3a92e39f9ea",
+    "src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts": "c7db2656642a49a98d3bf14b1e011957310fdb7d3251ea4274158da7ebe95caf"
+  },
+  "spend": {
+    "newLovableAgentEditRequests": 0,
+    "newLovableDevelopmentCredits": 0,
+    "providerCalls": 0,
+    "voiceSessions": 0,
+    "usd": 0
+  },
+  "state": {
+    "participantAiEnabled": false,
+    "voiceEnabled": false,
+    "published": false,
+    "newApplicationRouteImports": 0,
+    "liveApprovalPresent": false
+  },
+  "limitations": [
+    "No live text-response quality evaluation",
+    "No real microphone or playback/device acceptance",
+    "No production provider/voice integration or billing-termination proof",
+    "No new authenticated database or deployment acceptance",
+    "Full build is local default Cloudflare/Nitro output, not a publication"
+  ],
+  "finalFullTypecheck": {
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0,
+    "scope": "complete repository including final P5 files"
+  },
+  "review": {
+    "independentReview": "completed; no remaining material blocker found within offline preparation scope",
+    "fixedFindings": [
+      "Retain and stop removed owned microphone tracks, including shutdown retry",
+      "Fence old transport events by exact attempt identity",
+      "Ignore connection loss caused by deliberate shutdown to preserve ended intent"
+    ],
+    "focusedTestsAfterFinalChanges": 48
+  },
+  "finalProductionBuild": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "target": "default client + SSR + Cloudflare/Nitro",
+    "scope": "complete repository after final P5 additions",
+    "deployed": false
+  }
+}

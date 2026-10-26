@@ -1,3 +1,17 @@
+# P4 build verification and P5 offline preparation — 26 October 2026
+
+The previous full-production-build and native-Bun blockers are resolved locally. The complete repository source at `6c1c1e1a112105ba4c34c9138a627ee1edf1f342` was hydrated with exact Git-blob verification, excluding the tracked environment file. The exact frozen Bun lockfile installed 487 packages, including Lovable configuration 2.26.5, Supabase, Drizzle and Postgres. Neither dependency versions nor the lockfile were changed.
+
+`npm run build` passed for the default client, SSR and Cloudflare/Nitro output, both on the complete baseline and after the final P5 additions. Full strict TypeScript passed on that baseline and again after the final P5 additions, and the native Bun 1.4.4 offline evaluator validated the unchanged draft manifest without reading provider credentials or making provider calls. No environment placeholders, deployment, database mutation, auth change or paid Lovable request was used.
+
+An initial complete regression run passed 1,864 of 1,868 tests; four legacy offline-candidate cases exceeded test-harness time limits on this runner. A serial follow-up passed 18 of the 19 affected-file tests, leaving one existing ten-second subprocess timeout. These results must not be described as a clean default full-suite pass. The final full regression run passed all 1,916 tests across 107 files with one worker and a 60-second outer test allowance; inner ten-second subprocess limits and all assertions remained unchanged. The earlier timing failures are resolved in that final run. Final verification, including the new P5 files, is recorded in `artifacts/conversation-eval/offline-validation-v3/verification.json`.
+
+P5 preparation adds an independently reviewed asynchronous lifecycle controller and browser capture adapter, with 48 focused offline tests. These modules are not imported by application routes, and do not activate microphones, playback, provider sessions or participant AI. See `p5-offline-lifecycle-checkpoint.md` for scope, port contracts, tests and remaining real-device/provider evidence.
+
+The nine-turn P4 live manifest remains unapproved and its grants registry remains empty. Production build success does not establish real response quality, authenticated production accounting, voice behavior, retention or release readiness. The ten-day journey, completed P0–P3b and closed v5 test remain preserved.
+
+## Earlier synchronized checkpoint (build limitation superseded above)
+
 # P4 current checkpoint — 26 October 2026 (America/Toronto)
 
 The tested 19-file repair is now applied on GitHub main at `80d00f26c6459ef80d486cf12a9c9d1d7122500d` and synchronized with Lovable. The repair is an ordinary fast-forward from `3551aa7d13115e4eafb3ae6a2188ee500b3b33c2`; no published history was rewritten. All 19 resulting file hashes match the saved repair manifest, and no unrelated files were changed or deleted.

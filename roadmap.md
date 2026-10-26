@@ -31,7 +31,7 @@
 - [x] HISTORICAL (resolved): public sign-up was open; closed before any account was created.
 
 ## P4 — direct provider adapter + controlled evaluator (REPAIR SYNCHRONIZED, 26 Oct 2026)
-The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500d` and synchronized with Lovable. GitHub write access is restored. Full production-build evidence remains outstanding.
+The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500d` and synchronized with Lovable. GitHub write access is restored. Exact-dependency local production build and native Bun offline validation now pass; see the 26 October verification-v3 record for final test evidence and limits.
 - [x] Apply the exact verified forward repair without history rewrite, deletion or unrelated source changes; verify GitHub/Lovable commit synchronization. No Lovable agent edit request or paid provider call was used.
 - [x] Extract neutral provider types and preserve the approved policy/context boundary; staging still uses the mock.
 - [x] Implement direct OpenAI Responses with strict structured output, explicit model/tier, no provider memory/tools/retry and whole-operation cancellation.
@@ -40,5 +40,13 @@ The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500
 - [x] Persist single-host budget/run/count/case identity and unique receipts across restarts. Preserve uncertain holds. Capture each admitted request and outcome durably.
 - [x] Validate the unapproved nine-turn draft: 64,000 complete wire bytes + 4,096-token engineering framing allowance, output 1,200, deadline 45 seconds, no retries; USD 0.082008 conservative reservation under proposed USD 0.10 cap. Approval/expiry remain null.
 - [x] Local verification: 398/398 assertions (351 repository checks +47 preserved independent diagnostics), scoped strict TypeScript and actual Node+tsx CLI; zero real OpenAI calls. Evidence: `artifacts/conversation-eval/offline-validation-v2/`.
-- [ ] Full current production build and native Bun CLI remain unverified here: required packages are absent from the local cache and Lovable credits are exhausted. Prior initial-build reports do not establish final-build success.
+- [x] Full default production build with exact frozen-lockfile dependencies and native Bun offline CLI verified locally without Lovable edit credits; no live provider call or deployment. Final verification is in `artifacts/conversation-eval/offline-validation-v3/verification.json`.
 - [ ] After separate bounded paid-test approval and an execution environment is available: run nine real turns, review every response using the rubric and reconcile accounting. Participant AI, real voice and publication remain OFF.
+
+
+## P5 — offline voice preparation (26 October 2026)
+- [x] Prepare asynchronous admission/capture/connection/playback lifecycle with deliberate Start/Resume and independently confirmed shutdown.
+- [x] Handle late permission, late unmute, failed shutdown/retry, removed microphone tracks, and old connection events without false closure assurance.
+- [x] Prepare explicit browser capture adapter; no recording, transport, provider call or application route activation.
+- [x] Independently review the new code and verify 48 focused offline behavioral checks.
+- [ ] Select and implement a bounded developer provider route, integrate the shared service and actual accounting, and obtain real-device/played-audio/provider-termination evidence before accepting voice.

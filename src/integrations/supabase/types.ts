@@ -213,10 +213,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      bfa_p3b_test_hold_owner_lock: {
-        Args: { p_owner: string; p_seconds: number }
-        Returns: boolean
-      }
       bfa_p3b_transition: {
         Args: {
           p_action: string

@@ -78,22 +78,40 @@ export function computeConservativeChargeMicros(
 }
 
 /**
- * Worst-case cost of one dispatch in micro-USD. Input tokens are estimated
- * conservatively at 2 characters per token (JSON overhead included) and billed
- * at the higher of input/cache-write rates; output at the full token cap.
+ * Fixed protocol overhead in tokens: the Responses API envelope, the strict
+ * JSON schema under text.format, role framing and the transport format note
+ * wrapper around the payload. Documented and charged on every dispatch.
+ */
+export const PROTOCOL_OVERHEAD_TOKENS = 512;
+
+/**
+ * Worst-case INPUT token upper bound for a payload of at most maxInputChars
+ * characters. Defensible without a tokenizer: every BPE token encodes at
+ * least one UTF-8 byte, so tokens <= UTF-8 bytes for ANY input; a character
+ * is at most 4 UTF-8 bytes. This covers arbitrary Unicode and pathological
+ * short-token content (e.g. "!" repeated) where chars/2 would UNDERCOUNT.
+ */
+export function worstCaseInputTokens(maxInputChars: number): number {
+  return maxInputChars * 4 + PROTOCOL_OVERHEAD_TOKENS;
+}
+
+/**
+ * Worst-case cost of one dispatch in micro-USD: the input byte/token upper
+ * bound billed at the higher of the input and cache-write rates (a cache
+ * write may occur even when not reported), plus the full output token cap.
  */
 export function worstCaseDispatchCostMicros(
   maxInputChars: number,
   maxOutputTokens: number,
   basis: PriceBasis,
 ): number {
-  const worstInputTokens = ceilDiv(maxInputChars, 2);
+  const worstInput = worstCaseInputTokens(maxInputChars);
   const uncachedRate = Math.max(
     basis.inputPerMillionUsdMicros,
     basis.cacheWritePerMillionUsdMicros,
   );
   return (
-    ceilDiv(worstInputTokens * uncachedRate, 1_000_000) +
+    ceilDiv(worstInput * uncachedRate, 1_000_000) +
     ceilDiv(maxOutputTokens * basis.outputPerMillionUsdMicros, 1_000_000)
   );
 }

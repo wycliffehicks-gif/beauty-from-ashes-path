@@ -187,4 +187,4 @@ await check('O08', 'C valid session: no admission or allowance rows', async () =
 
 const failed = results.filter(r => r.status === 'fail').length, unresolved = results.filter(r => r.status === 'unresolved').length;
 console.log(JSON.stringify({ kind: 'REAL password sessions + real staging handler (direct call, not HTTP) + real ledger; mock provider only', total: results.length, failed, unresolved, results }, null, 1));
-process.exit(failed ? 1 : 0);
+process.exit(failed || unresolved ? 1 : 0);

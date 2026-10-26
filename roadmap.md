@@ -17,7 +17,7 @@
 - [x] Implement owned server snapshot/deletion adapter and transactional non-content admission ledger (HISTORICAL: authenticated acceptance was then blocked; resolved).
 - [x] Apply locked schema and verify anonymous denial; add 15 pure fictional admission-rule regressions.
 - [x] Connect isolated staging adapter to existing service authority; participant/model/real voice remain off.
-- [x] Verify O01–O08 against real fictional staging accounts and database concurrency (completion pass 26 Oct ~03:10 UTC: handler 6/6, HTTP+UI 48/48, thread-row-lock expiry, closure probe).
+- [x] Verify O01–O08 against real fictional staging accounts and database concurrency (completion pass 26 Oct 2026 UTC: handler 6/6, HTTP 26 + UI 22 = 48, thread-row-lock expiry, closure probe).
 - [x] Record coherent current checkpoint and labelled historical evidence, limits and rollback; retain all prior work.
 - [x] HISTORICAL (resolved): supported fictional sessions obtained via temporary email sign-in with public sign-up closed.
 - [x] HISTORICAL (resolved): sign-up closed with Carl's approval; menu route was unavailable and is no longer needed.

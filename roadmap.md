@@ -24,6 +24,7 @@
 - [x] Implement exact fictional excerpt preview/drift, owned saved-list/reopen and existing separate-settings wiring.
 - [x] Repair saved equivalence, auth/clear fences, pending Stop/Delete, unsaved switch decisions, draft preservation and lost-response recovery.
 - [x] Run conversation/server-double regressions and actual service-record database concurrency/argument checks.
-- [ ] Authenticated O01–O08 and signed-in phone/desktop/keyboard acceptance blocked by unsupported fictional session provisioning.
+- [x] Authenticated O01–O08 (23/23) and signed-in 390/1280 keyboard UI (14/14) passed with fictional A/B/C, 26 Oct ~02:30 UTC; accounts deleted, admissions closed, email sign-in OFF.
+- [ ] Untested: thread-row-lock wait crossing allowlist expiry; real-session possibly-dispatched uncertain hold (covered only by service-record DB checks). Carl review of acceptance.
 - [x] Deterministic locked-owner expiry-wait check passed via Carl-authorized temporary service-only helper (0006), removed in 0007 (26 October).
 - [ ] Fictional A/B/C password sessions: Carl authorized temporary email sign-in, but public sign-up is open (disable_signup=false) and must be closed first; agent cannot set it without the unknown HIBP value. Owner action: More -> Users -> Auth settings -> Disable sign-up.

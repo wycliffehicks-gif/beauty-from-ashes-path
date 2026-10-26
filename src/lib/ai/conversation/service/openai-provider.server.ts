@@ -28,6 +28,7 @@ import {
   buildConversationInstructions,
   serializeConversationGroundedPayload,
 } from "./serialize";
+import { sha256HexSync } from "./sha256-sync";
 import type {
   ConversationProvider,
   ConversationProviderRequest,
@@ -258,6 +259,7 @@ export function createDirectOpenAIConversationProvider(
       const meta: ConversationExchangeMeta = {
         requestId: request.requestId,
         requestedModel,
+        requestPayloadSha256: null,
         reportedModel: null,
         serviceTier: null,
         responseId: null,
@@ -292,12 +294,18 @@ export function createDirectOpenAIConversationProvider(
 
       const instructions = buildConversationInstructions(request);
       const groundedPayload = serializeConversationGroundedPayload(request);
+      // The exact serialized wire payload is hashed for evidence BEFORE any
+      // dispatch decision, so every attempt carries a verifiable request hash.
+      meta.requestPayloadSha256 = sha256HexSync(`${instructions}\n${groundedPayload}`);
       const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
+      const maxInputChars = options.maxInputChars ?? OPENAI_CONVERSATION_MAX_INPUT_CHARS;
       if (
         requestedModel === "invalid-model" ||
         /[\r\n]/.test(key) ||
-        instructions.length + groundedPayload.length >
-          OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
+        !Number.isSafeInteger(maxInputChars) ||
+        maxInputChars < 1 ||
+        maxInputChars > OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
+        instructions.length + groundedPayload.length > maxInputChars ||
         instructions.includes(key) ||
         groundedPayload.includes(key) ||
         !Number.isSafeInteger(options.maxOutputTokens) ||

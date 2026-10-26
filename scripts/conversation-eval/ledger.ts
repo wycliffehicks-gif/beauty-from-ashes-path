@@ -310,7 +310,7 @@ export class EvalLedger {
       if (a.state === "dispatched") {
         return { ...a, state: "uncertain" as const, updatedAtIso: this.now() };
       }
-      return { ...a, updatedAtIso: a.updatedAtIso };
+      return a; // terminal states acknowledge unchanged (duplicate)
     });
   }
 
@@ -368,7 +368,7 @@ export class EvalLedger {
       if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
       const next = step(a);
       if (!next) return { file, result: { ok: false as const, code: "consumed" as const } };
-      if (next === a || next.updatedAtIso === a.updatedAtIso) {
+      if (next === a) {
         return { file, result: { ok: true as const, admission: a, duplicate: true } };
       }
       return {

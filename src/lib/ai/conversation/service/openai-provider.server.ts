@@ -416,8 +416,9 @@ export function createDirectOpenAIConversationProvider(
           }
           const body = await readBounded(response, (reader) => {
             activeReader = reader;
-            if (expired) void reader.cancel().catch(() => {});
+            if (expired || callerAborted) void reader.cancel().catch(() => {});
           });
+          if (callerAborted) throw new ProviderRequestError("aborted");
           if (expired) throw new ProviderRequestError("timeout");
           if (body.kind !== "text") {
             controller.abort();
@@ -471,7 +472,9 @@ export function createDirectOpenAIConversationProvider(
           if (meta.reportedModel !== requestedModel) {
             throw new ProviderRequestError("model-mismatch");
           }
-          if (meta.serviceTier !== null && meta.serviceTier !== "default") {
+          // The reported tier must be explicitly present and EXACTLY the
+          // requested tier: absent, null or malformed values are rejected.
+          if (meta.serviceTier !== "default") {
             throw new ProviderRequestError("tier-mismatch");
           }
 

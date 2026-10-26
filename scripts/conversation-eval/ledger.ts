@@ -246,7 +246,7 @@ export class EvalLedger {
     ) {
       return { ok: false, code: "invalid" };
     }
-    return this.transact((file) => {
+    return this.transact<EvalLedgerResult>((file) => {
       const existing = file.admissions.find((a) => a.requestId === input.requestId);
       if (existing) {
         const same =
@@ -323,7 +323,7 @@ export class EvalLedger {
     if (!validId(receiptId) || !validMicros(chargedMicros)) {
       return { ok: false, code: "invalid" };
     }
-    return this.transact((file) => {
+    return this.transact<EvalLedgerResult>((file) => {
       const a = file.admissions.find((x) => x.requestId === requestId);
       if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
       if (chargedMicros > a.reservedMicros) {
@@ -363,7 +363,7 @@ export class EvalLedger {
     step: (a: EvalAdmission) => EvalAdmission | null,
   ): EvalLedgerResult {
     if (!validId(requestId)) return { ok: false, code: "invalid" };
-    return this.transact((file) => {
+    return this.transact<EvalLedgerResult>((file) => {
       const a = file.admissions.find((x) => x.requestId === requestId);
       if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
       const next = step(a);

@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.bfa_p3b_test_hold_owner_lock(uuid,numeric);

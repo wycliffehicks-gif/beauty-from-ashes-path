@@ -157,7 +157,7 @@ export type TurnStage =
 export interface ConversationServiceOptions {
   /** Server adapter only: derived from revalidated auth, never client owner input. */
   readonly verifiedOwnerId?: string;
-  readonly provider?: MockProvider;
+  readonly provider?: ConversationProvider;
   readonly registryRecords?: () => Promise<readonly unknown[]>;
   readonly allowTestSources?: boolean;
   /** Source keys a passage grant may name (harness-only Scripture fixture). */
@@ -233,7 +233,7 @@ export class ConversationService {
   private epoch = 0;
   private counter = 0;
   private traceSeq = 0;
-  private readonly provider: MockProvider;
+  private readonly provider: ConversationProvider;
   private readonly allowTestSources: boolean;
   private readonly passageSourceKeys: readonly string[];
   private readonly maxHistoryEvents: number;
@@ -792,7 +792,7 @@ export class ConversationService {
         sourceEventId: d.sourceEventId,
       }));
 
-    const request: MockProviderRequest = deepFreezeDetached({
+    const request: ConversationProviderRequest = deepFreezeDetached({
       requestId: this.nextId("req"),
       policyIdentity: CONVERSATION_POLICY_IDENTITY,
       policySha256: CONVERSATION_POLICY_BLOCK_SHA256,
@@ -832,7 +832,7 @@ export class ConversationService {
     const controller = new AbortController();
     record.controllers.add(controller);
     this.log("provider-dispatched", record.threadId, turnId, request.requestId);
-    let response: MockProviderResponse;
+    let response: ConversationProviderResponse;
     try {
       response = await this.provider.generate(request, controller.signal);
     } catch {

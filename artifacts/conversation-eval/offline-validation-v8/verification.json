@@ -1,0 +1,151 @@
+{
+  "checkpoint": "Inactive request-bound voice proof bridge and reviewed proposed SQL/RPC package",
+  "date_local": "2026-10-27",
+  "timezone": "America/Toronto",
+  "base_commit": "ff460bda57aa25b5cd19e0d56fe9b0906c290217",
+  "base_tree": "661c91de76b1bd1962ee8c76945bd01e89240d0e",
+  "source_sha256": {
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "0bb2d2e1ae8698ff66ce74460734c3237c16bb94b1804db6563820c858c4c7de",
+    "src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts": "469b743eb58bd5d549d5322d675cab6630a9e5af9509f737fbd2801843646654",
+    "src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts": "48673f2f7ca3ee5f2a1614a11461c793473c0aafc42676ca21b93b805149a410",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "bbbc438d6d458e7dec6d2cdc5a441c2bfb20d169dfec9f553f3995bf1504458e",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "2a95b02d2955797c519444b2d0d56f85ae44c9c76d8db83d67acbd771fa77566",
+    "docs/pilot/conversation/sql-drafts/README.md": "7ebe2de38d52a63921ba5da804d6d991ab20151b3f4986c3892abf2c7fd5ba93"
+  },
+  "validation": {
+    "conversation_regression": {
+      "status": "PASSED",
+      "tests_passed": 579,
+      "tests_failed": 0,
+      "files": 31,
+      "command": "node node_modules/vitest/vitest.mjs run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000 --reporter=json",
+      "new_bridge_tests": {
+        "primary": 20,
+        "independent": 23
+      },
+      "retained_test_results": "test-results.json",
+      "note": "82 nested Vitest suites are not 82 files. Auth/persistence ports are doubles; the modelled late-commit tombstone demonstrates identity forwarding, not database locks."
+    },
+    "typescript": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "scope": "Full strict project",
+      "command": "node node_modules/typescript/bin/tsc --noEmit"
+    },
+    "eslint": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "files": [
+        "src/lib/ai/conversation/service/voice-store-adapter.server.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts"
+      ],
+      "scope": "Full rules for new module and both tests"
+    },
+    "production_build": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "command": "npm run build",
+      "scope": "Client, SSR and Nitro/Cloudflare outputs; no deployment",
+      "note": "Existing toolchain advisory warnings retained; dependencies/config unchanged."
+    },
+    "independent_review": {
+      "bridge_tests_passed": 23,
+      "bridge_behavioral_defects_reproduced": 0,
+      "sql_source_review": "No remaining blocking issue identified after source-level repairs; no PostgreSQL parser/execution or concurrency validation"
+    },
+    "sql_source_shape": {
+      "status": "PASSED_SOURCE_SHAPE_ONLY",
+      "rpc_names": [
+        "register_generation",
+        "register_issuance",
+        "register_cleanup",
+        "register_proof",
+        "claim",
+        "inspect",
+        "close"
+      ],
+      "sql_dollar_quote_pairs": 19,
+      "future_fixture_assertion_sites": 39,
+      "postgresql_parser": false,
+      "postgresql_execution": false,
+      "source_fixes_reviewed": [
+        "generation nonreuse and noncascading FK instead of timestamp identity",
+        "durable session/fingerprint pin",
+        "persistent minimum from receipts and current protected records",
+        "terminal expiry/invalidation and clock watermark",
+        "semantic denial preserves fences instead of exception rollback",
+        "fixture expression and variable ambiguity repairs"
+      ]
+    },
+    "historical_not_rerun": {
+      "controls_chromium_checks": 25,
+      "full_app_tests": 1916,
+      "full_app_files": 107,
+      "note": "No UI/controller/route changes. Counts are historical and not added to this batch."
+    }
+  },
+  "implementation": {
+    "concrete": [
+      "Per-invocation authenticated verifier observations, exact session/fence/fingerprint pinning",
+      "Separate short operation proof receipts and monotone original/effective admission deadlines",
+      "Exact cleanup registration before possible claim; lost/malformed replies retain owned cleanup",
+      "Terminal Auth-independent cleanup; no automatic retry, refund, provider connection or dispatch"
+    ],
+    "draft_sql": [
+      "Private content-free schema and seven service-only RPCs, outside automatic migration journal",
+      "Current P3b lifecycle checks and established compatible owner locking",
+      "Permanent generation identity; registered thread physical reuse prohibited by noncascading FK",
+      "One-use operation/claim proofs; persisted expiry/revocation/session and database-clock fences",
+      "Unique owner/attempt winner and generic cumulative quota hold; close tombstones preserve different winners and holds"
+    ],
+    "limits": [
+      "SQL and sequential rollback fixtures are unapplied, unparsed and unexecuted; no local PostgreSQL engine/client available",
+      "No actual database concurrency, role/HTTP acceptance or production Auth/session-fence/read/issuance wiring",
+      "Concurrent-session capacity, real cost policy, reconciliation/settlement and retention remain unimplemented",
+      "External Auth/database revocation boundary needs integration acceptance",
+      "No application route imports bridge; no provider session/capability, device or participant activation",
+      "Opaque request remains within reachable existing server admission lease for revalidation; no shared cache/log; bridge copy dropped on terminal cleanup",
+      "Source ecosystem/policies unchanged; packet is not a runtime source or provider payload"
+    ]
+  },
+  "execution_limits": {
+    "lovable_agent_requests": 0,
+    "lovable_credits_used": 0,
+    "real_provider_calls": 0,
+    "real_auth_requests": 0,
+    "database_operations": 0,
+    "real_microphone_requests": 0,
+    "real_voice_sessions": 0,
+    "applied_migrations": 0,
+    "auth_database_schema_changes": 0,
+    "secret_or_dependency_changes": 0,
+    "published": false,
+    "participant_ai_enabled": false,
+    "live_voice_enabled": false,
+    "p4_manifest_approval": null,
+    "p4_manifest_expiry": null,
+    "approval_grant_registry": "empty",
+    "crypto_keys": "Ephemeral fictional test keys only"
+  },
+  "preservation": {
+    "candidate_policy_sha256": "2fe0e26df0f21abd8080e3ab860e02721febf7e643ea11c940ee383637b08c09",
+    "original_v5": "Completed/closed; not rerun",
+    "p3b": "Acceptance closed; accounts/migrations/holds unchanged",
+    "ecosystem": "Full packet intake and dated application record preserved; no doctrine/sample/policy revision",
+    "unmaterialized_environment": "Preserved by remote base tree, never read or overwritten"
+  },
+  "log_sha256": {
+    "conversation-regression.json": "a1f46bbf1ceabbff120897062741d84c2a9d7db05df52353836f2662c033a949",
+    "conversation-regression.stderr": "62627d3b226bca4b83c25d26f3f0788f89702dd29f12c824cf075f48cee57732",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "production-build.log": "d7dfa4704e8d2a711cc17fcfe928a076eeded855532d0abd7c0daa073ea075d8",
+    "sql-source-review.json": "26c1a45692e7a9a98f06e511c27fb63d1ec093103bf7b224ef28399bccbd8bfa"
+  },
+  "retained_test_results_sha256": "75d90616f7e59ff19fcd4327eaf6b1d36c6b0bce4318f874f0e337d78a05e9b1",
+  "raw_log_location": "/workspace/scratch/205dbad31641/p5-proof-work; scratch may expire; assertion results and this evidence record retained in repository",
+  "next_bounded_task": "Prepare disposable local PostgreSQL harness; execute syntax/installation and rollback fixtures, then two-connection lock/expiry/close/replay/role checks when engine available. Keep SQL outside automatic migration journal and connected project; production Auth/DB/provider/device integration remains later."
+}

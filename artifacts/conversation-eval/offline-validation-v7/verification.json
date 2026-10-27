@@ -1,0 +1,119 @@
+{
+  "checkpoint": "Inactive concrete server verification adapter and reviewed atomic voice-store contract",
+  "date_local": "2026-10-27",
+  "timezone": "America/Toronto",
+  "base_commit": "35409ac701ea2d068318aa7d275798620b9df397",
+  "base_tree": "65a1c3049cd4217b2cebe28c75747a44d265eb75",
+  "source_sha256": {
+    "src/lib/ai/conversation/service/voice-verification.server.ts": "25921a8a6db0b44562560522e0f1b0700d020d85ee017c27c2f2900e36a4765b",
+    "src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts": "16bc8bcf56e1e2a671858d7985c84438c73c71f40a76935a4405971f909e824e",
+    "src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts": "19ecc2a33763c817d95664f389ebd162c9425ebc54a717b20c7cf11eb618cbae",
+    "docs/pilot/conversation/p5-atomic-voice-store-contract.md": "62bec70bd7bd232924d2ed0d9d680a3d30d29155d0e0cb5559be290fb7fa823b"
+  },
+  "validation": {
+    "conversation_regression": {
+      "status": "PASSED",
+      "tests_passed": 536,
+      "tests_failed": 0,
+      "files": 29,
+      "command": "node node_modules/vitest/vitest.mjs run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000 --reporter=json",
+      "new_verification_tests": {
+        "primary": 18,
+        "independent": 23
+      },
+      "retained_test_results": "test-results.json",
+      "note": "Final new-module tests began after the last code/type-only fixes; 78 Vitest nested suites are not 78 files."
+    },
+    "typescript": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "scope": "Full strict project",
+      "command": "node node_modules/typescript/bin/tsc --noEmit"
+    },
+    "eslint": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0,
+      "files": [
+        "src/lib/ai/conversation/service/voice-verification.server.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts"
+      ],
+      "scope": "Full rules for new code and both new test files"
+    },
+    "production_build": {
+      "status": "PASSED",
+      "exit_code": 0,
+      "command": "npm run build",
+      "scope": "Client, SSR and Nitro/Cloudflare outputs; no deployment",
+      "note": "Existing toolchain advisory warnings retained; dependencies/configuration unchanged."
+    },
+    "independent_review": {
+      "status": "PASSED",
+      "behavioral_defects_reproduced": 0,
+      "tests_passed": 23,
+      "contract_review": "No blocker; clarified create/recreate incarnation, 15-minute issuance ceiling, invocation isolation and tombstone retention.",
+      "typecheck_repairs": "First typecheck found nullable closure narrowing and mock tuple typing; both corrected before final full typecheck. A redundant reviewer typecheck was deliberately cancelled, not counted as a pass or validation failure."
+    },
+    "historical_not_rerun": {
+      "controls_chromium_checks": 25,
+      "full_app_tests": 1916,
+      "full_app_files": 107,
+      "note": "No UI/controller/route change. Historical overlapping counts are not added to current tests."
+    }
+  },
+  "implementation": {
+    "concrete": [
+      "Real existing AES-GCM unseal and keyed HMAC with strict outer envelope validation",
+      "Cross-record owner/session/thread/incarnation/revision/attempt/approval validation",
+      "Pre-existing exact issuance-registration requirement; no legacy lazy binding",
+      "Immutable content-free evidence and nonrenewing deadlines across asynchronous waits"
+    ],
+    "limits": [
+      "Mandatory production request-bound Auth and atomic snapshot ports remain unwired",
+      "Trusted issuance registration/schema is absent; existing legacy seals have no automatic registration",
+      "Envelope body is not restored or certified as shared-service/P1 context",
+      "Transaction proof bridge and durable atomic claim/inspect/close store remain unimplemented",
+      "External Auth and database revocation are not atomically verified by these observations",
+      "No actual database concurrency, HTTP voice route, provider termination/accounting or device acceptance",
+      "No route imports the new adapter; no provider dispatch or client capability is enabled"
+    ],
+    "contract_status": "Reviewed draft requirements, conceptual records and future acceptance matrix only; no SQL/migration created or applied"
+  },
+  "execution_limits": {
+    "lovable_agent_requests": 0,
+    "lovable_credits_used": 0,
+    "real_provider_calls": 0,
+    "real_auth_requests": 0,
+    "database_operations": 0,
+    "real_microphone_requests": 0,
+    "real_voice_sessions": 0,
+    "auth_database_schema_changes": 0,
+    "secret_or_dependency_changes": 0,
+    "published": false,
+    "participant_ai_enabled": false,
+    "live_voice_enabled": false,
+    "p4_manifest_approval": null,
+    "p4_manifest_expiry": null,
+    "approval_grant_registry": "empty",
+    "crypto_keys": "Ephemeral fictional test keys only; existing production seal key/configuration untouched"
+  },
+  "preservation": {
+    "baseline_materialized_blobs_verified": 531,
+    "unmaterialized_tracked_environment": "Preserved by remote base tree, never read or overwritten",
+    "original_v5": "Completed/closed; not rerun",
+    "p3b": "Fictional-account acceptance complete and closed; holds/accounting/migrations unchanged",
+    "candidate_policy_sha256": "2fe0e26df0f21abd8080e3ab860e02721febf7e643ea11c940ee383637b08c09"
+  },
+  "log_sha256": {
+    "conversation-regression.json": "ad7794f40a114dde9da7ba3a4464be8cc52d05c18b5cb7af5e3793217df77aef",
+    "conversation-regression.stderr": "62627d3b226bca4b83c25d26f3f0788f89702dd29f12c824cf075f48cee57732",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "production-build.log": "863332dc929b27c29e3de9a1cd7820b9dbe3575774ab088c45919c1b00012f1b"
+  },
+  "retained_test_results_sha256": "a2927e8733b095313539a030a0c438b466f435e8041d88b43af166762642772d",
+  "raw_log_location": "/workspace/scratch/205dbad31641/p5-verification-work; scratch may expire. Durable assertion results and this record are retained in the repository.",
+  "next_bounded_task": "Prepare/review isolated proposed SQL/RPC package and request-bound proof bridge/server adapter with offline failure fixtures, outside automatic migration journal; no production Auth/DB integration or live calls under this checkpoint."
+}

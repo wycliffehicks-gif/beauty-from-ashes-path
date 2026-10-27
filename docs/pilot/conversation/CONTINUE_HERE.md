@@ -4,7 +4,7 @@ Carl authorizes useful offline GitHub implementation, review and testing while L
 
 ## Current completed batch
 
-Starting synchronized GitHub/Lovable commit: `35409ac701ea2d068318aa7d275798620b9df397`, tree `65a1c3049cd4217b2cebe28c75747a44d265eb75`. The commit containing this marker adds the inactive `service/voice-verification.server.ts` adapter and a reviewed draft atomic-store contract. The saved clean handoff and canonical archive record the resulting commit and post-push synchronization.
+Starting synchronized GitHub/Lovable commit: `35409ac701ea2d068318aa7d275798620b9df397`, tree `65a1c3049cd4217b2cebe28c75747a44d265eb75`. Implementation commit `7e1e839e84aa22bd369a6e6be655b49ad6e61885` adds the inactive `service/voice-verification.server.ts` adapter and a reviewed draft atomic-store contract. A subsequent documentation-only forward commit carries the standing ecosystem requirement recovered from canonical archive version 11; runtime/tests/policies are unchanged. The saved clean handoff and canonical archive record the resulting commit and post-push synchronization.
 
 The adapter uses existing AES-GCM unsealing and keyed HMAC fingerprinting, with mandatory request-bound Auth and atomic current-record snapshot ports. It checks owner/session continuity, expiring allowlist, current thread/incarnation/revision, exact issuance registration and a separate voice approval bound to the attempt. Evidence is immutable and content-free; deadlines only shorten across waits. Malformed, unavailable, revoked, expired or inconsistent evidence denies admission.
 
@@ -25,6 +25,14 @@ Verification: **536/536 conversation tests across 29 files**, including 18 prima
 5. Update this marker, the clean handoff and preserved canonical archive after meaningful work.
 
 Read `AGENTS.md`, `p5-offline-lifecycle-checkpoint.md`, `p5-server-session-contract.md` and `p5-atomic-voice-store-contract.md`. The canonical `BFA_P3b_Progress_and_Auth_Test_Handoff_2026-10-25.md` keeps the history; its filename is not its current-status date. Preserve original v5 completion, P3b acceptance/closure and all accounting evidence.
+
+## Standing ecosystem continuity requirement
+
+Carl requires every future handoff to carry his wider SRT ecosystem alongside code status: authors, books, ideas, paradigm, perspectives, influences, capstone context and later corrections. Include `SRT_Ecosystem_Handoff_2026-10-27.docx` and `SRT_Ecosystem_Source_Packet_2026-10-27.txt`, or an updated ecosystem section plus those companions. Keep confirmed commitments, working drafts, author claims, research-derived suggestions and implemented app behaviour distinct.
+
+The foundation remains content v0.7, a draft; the March 2024 capstone is historical integration context, not app validation or authority over later corrections. Priority source families include Olthuis, Summers/Barber, the Gingrichs and Gerald May; Fung remains a contributing voice. Preserve their actual reading coverage and retrieve relevant originals before substantive content/policy changes. Do not infer full-book mastery or permission for hidden religious steering. The technical markers govern current implementation and gates; older conceptual next-step paragraphs do not restart work.
+
+The current batch reviewed the ecosystem briefing and packet introduction to reconcile a concurrent archive update; it did not newly read the complete packet/foundation, capstone or underlying books, and changed no ecosystem doctrine or app policy. Carry the companions into subsequent handoffs and update their change notes when the intellectual foundation changes.
 
 ## Gates and separate unfinished work
 

@@ -5,7 +5,7 @@
 // saving, no AI or microphone connection. Unlinked from participant
 // navigation. See docs/pilot/conversation/p2-preview-checkpoint.md.
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 import {
@@ -34,6 +34,28 @@ import {
   type PreviewState,
   type PreviewThread,
 } from "@/lib/ai/conversation/preview/store";
+
+// These dialogs are controlled by service/store state, rather than a Radix
+// Trigger. Remember the actual opener and use a surviving screen control when
+// a confirmed delete/finish/switch removes it.
+function usePreviewDialogFocus(fallbackId: string) {
+  const opener = useRef<HTMLElement | null>(null);
+  return {
+    onOpenAutoFocus: () => {
+      opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+        ? document.activeElement : null;
+    },
+    onCloseAutoFocus: (event: Event) => {
+      event.preventDefault();
+      for (const target of [opener.current, document.getElementById(fallbackId), document.getElementById("preview-start-heading")]) {
+        if (!target?.isConnected || target.matches(":disabled")) continue;
+        target.focus();
+        if (document.activeElement === target) break;
+      }
+      opener.current = null;
+    },
+  };
+}
 
 export function ConversationPreview() {
   const { state, store } = useConversationPreview();
@@ -71,6 +93,7 @@ function TranscriptDialog({
   store: ConversationPreviewStore;
 }) {
   const pending = state.pendingTranscript;
+  const dialogFocus = usePreviewDialogFocus("preview-composer");
   return (
     <AlertDialog
       open={pending !== null}
@@ -78,7 +101,7 @@ function TranscriptDialog({
         if (!open) store.resolveTranscriptChoice("cancel");
       }}
     >
-      <AlertDialogContent>
+      <AlertDialogContent {...dialogFocus}>
         <AlertDialogHeader>
           <AlertDialogTitle>Use the finalized transcript?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -159,7 +182,7 @@ function StartScreen({
 
   return (
     <section aria-labelledby="preview-start-heading" className="space-y-6">
-      <h1 id="preview-start-heading" className="font-serif text-2xl">
+      <h1 id="preview-start-heading" tabIndex={-1} className="font-serif text-2xl">
         Conversation preview
       </h1>
 
@@ -217,8 +240,9 @@ function SavedRow({
 }) {
   const [renaming, setRenaming] = useState(false);
   const [name, setName] = useState(thread.title);
-  const [renameError, setRenameError] = useState(false);
+  const [renameError, setRenameError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const deleteFocus = usePreviewDialogFocus("preview-start-heading");
 
   return (
     <li className="rounded-md border border-border bg-card p-3">
@@ -230,15 +254,21 @@ function SavedRow({
             const result = store.renameThread(thread.id, name);
             if (result.ok) {
               setRenaming(false);
-              setRenameError(false);
+              setRenameError(null);
             } else {
-              setRenameError(true);
+              setRenameError(result.reason === "empty-message"
+                ? "Enter a conversation name."
+                : result.reason === "save-failed"
+                  ? "Name not saved (simulated failure). Nothing changed."
+                  : "This conversation is no longer available. Nothing changed.");
             }
           }}
         >
           <label className="sr-only" htmlFor={`rename-${thread.id}`}>Rename conversation</label>
           <input
             id={`rename-${thread.id}`}
+            aria-invalid={renameError ? true : undefined}
+            aria-describedby={renameError ? `rename-error-${thread.id}` : undefined}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-1 text-sm"
@@ -251,7 +281,7 @@ function SavedRow({
             onClick={() => {
               setRenaming(false);
               setName(thread.title);
-              setRenameError(false);
+              setRenameError(null);
             }}
           >
             Cancel
@@ -261,8 +291,8 @@ function SavedRow({
         <p className="font-medium text-foreground">{thread.title}</p>
       )}
       {renameError ? (
-        <p role="alert" className="mt-1 text-sm text-destructive">
-          Name not saved (simulated failure). Nothing changed.
+        <p id={`rename-error-${thread.id}`} role="alert" className="mt-1 text-sm text-destructive">
+          {renameError}
         </p>
       ) : null}
       <p className="mt-1 text-sm text-muted-foreground">
@@ -303,7 +333,7 @@ function SavedRow({
       </div>
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent>
+        <AlertDialogContent {...deleteFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this saved conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -339,6 +369,8 @@ function ThreadScreen({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [switchError, setSwitchError] = useState<string | null>(null);
   const [browsing, setBrowsing] = useState(false);
+  const finishFocus = usePreviewDialogFocus("preview-start-heading");
+  const switchFocus = usePreviewDialogFocus("preview-thread-heading");
   if (!thread) return null;
 
   const status = store.saveStatus(thread);
@@ -408,7 +440,7 @@ function ThreadScreen({
   return (
     <section aria-labelledby="preview-thread-heading" className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 id="preview-thread-heading" className="font-serif text-2xl">
+        <h1 id="preview-thread-heading" tabIndex={-1} className="font-serif text-2xl">
           {thread.title}
         </h1>
         <p className="text-sm text-muted-foreground" aria-live="polite">
@@ -508,7 +540,7 @@ function ThreadScreen({
 
       {/* Finish — AlertDialog: focus trapped, Escape cancels, focus restored. */}
       <AlertDialog open={finishOpen} onOpenChange={setFinishOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent {...finishFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Finish this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -550,7 +582,7 @@ function ThreadScreen({
           if (!open) cancelSwitch();
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent {...switchFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Leave this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -923,6 +955,7 @@ function TeachingShare({ store }: { store: ConversationPreviewStore }) {
   const state = store.getSnapshot();
   const [picking, setPicking] = useState(false);
   const record = state.sharePreview;
+  const shareFocus = usePreviewDialogFocus("preview-teaching-picker");
 
   return (
     <div className="rounded-md border border-border bg-card p-3">
@@ -932,6 +965,7 @@ function TeachingShare({ store }: { store: ConversationPreviewStore }) {
         notes and private writing are never included.
       </p>
       <Button
+        id="preview-teaching-picker"
         type="button"
         size="sm"
         variant="outline"
@@ -968,7 +1002,7 @@ function TeachingShare({ store }: { store: ConversationPreviewStore }) {
           if (!open) store.cancelShareTeaching();
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent {...shareFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Include this in the conversation?</AlertDialogTitle>
             <AlertDialogDescription>

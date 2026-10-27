@@ -86,7 +86,7 @@ describe("P5 injected asynchronous voice lifecycle — no device or provider", (
   it("requires explicit start, fresh revalidation and initially muted capture before connecting", async () => {
     const h = harness();
     expect(await h.controller.start("thread-1")).toBe(true);
-    expect(h.admission.revalidate).toHaveBeenCalledTimes(3);
+    expect(h.admission.revalidate).toHaveBeenCalledTimes(4);
     expect(h.ports.connect).toHaveBeenCalledWith(
       expect.objectContaining({ threadId: "thread-1" }),
       h.admission,
@@ -147,6 +147,31 @@ describe("P5 injected asynchronous voice lifecycle — no device or provider", (
     expect(h.capture.setMuted).not.toHaveBeenCalled();
     expect(h.connection.close).toHaveBeenCalledTimes(1);
     expect(h.playback.close).toHaveBeenCalledTimes(1);
+    closedSnapshot(h.controller);
+  });
+
+  it("rejects admission invalidated while initial unmute is pending and closes every resource", async () => {
+    const h = harness();
+    const input = deferred<void>();
+    let allowed = true;
+    vi.mocked(h.admission.revalidate).mockImplementation(async () => allowed);
+    vi.mocked(h.capture.setMuted).mockReturnValueOnce(input.promise);
+    const start = h.controller.start("thread");
+    await until(() => vi.mocked(h.capture.setMuted).mock.calls.length === 1);
+    allowed = false;
+    input.resolve();
+    expect(await start).toBe(false);
+    expect(h.controller.model.sessionId).toBe(null);
+    expect(h.controller.snapshot()).toMatchObject({
+      state: "failed",
+      cleanupComplete: true,
+      privatePracticeAvailable: false,
+    });
+    for (const resource of [h.admission, h.capture, h.connection, h.playback])
+      expect(resource.close).toHaveBeenCalledOnce();
+    expect(h.ports.admit).toHaveBeenCalledOnce();
+    expect(h.ports.acquireCapture).toHaveBeenCalledOnce();
+    expect(h.ports.connect).toHaveBeenCalledOnce();
     closedSnapshot(h.controller);
   });
 
@@ -338,10 +363,110 @@ describe("P5 injected asynchronous voice lifecycle — no device or provider", (
     await h.controller.start("thread");
     expect(await h.controller.stopAnswer()).toBe(false);
     expect(h.controller.snapshot().error).toBe("work-cancellation-failed");
-    expect(h.controller.snapshot().state).toBe("ended");
+    expect(h.controller.snapshot().state).toBe("failed");
+    expect(h.controller.snapshot().cancellationUnconfirmed).toBe(true);
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(1);
+    expect(await h.controller.start("another-thread")).toBe(false);
     closedSnapshot(h.controller);
     for (const r of [h.admission, h.capture, h.connection, h.playback])
       expect(r.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not assure private practice or resume until failed Pause cancellation is retried", async () => {
+    const h = harness();
+    vi.mocked(h.ports.cancelPending).mockImplementationOnce(() => {
+      throw new Error("service");
+    });
+    await h.controller.start("thread");
+    const paused = await h.controller.pause();
+    expect(paused).toMatchObject({
+      state: "failed",
+      cancellationUnconfirmed: true,
+      cleanupComplete: false,
+      privatePracticeAvailable: false,
+      error: "work-cancellation-failed",
+    });
+    expect(h.controller.model.privatePracticeAvailable()).toBe(false);
+    expect(await h.controller.resume()).toBe(false);
+    expect(await h.controller.start("another-thread")).toBe(false);
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(1);
+    const retried = await h.controller.retryShutdown();
+    expect(retried).toMatchObject({
+      state: "paused",
+      cancellationUnconfirmed: false,
+      cleanupComplete: true,
+      privatePracticeAvailable: true,
+      error: null,
+    });
+    expect(h.controller.model.privatePracticeAvailable()).toBe(true);
+    expect(h.ports.cancelPending).toHaveBeenLastCalledWith("thread", "pause");
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(2);
+    for (const r of [h.admission, h.capture, h.connection, h.playback])
+      expect(r.close).toHaveBeenCalledTimes(1);
+    expect(h.ports.admit).toHaveBeenCalledTimes(1);
+    expect(h.ports.acquireCapture).toHaveBeenCalledTimes(1);
+    expect(h.ports.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("Stop answer failure does not silently retry cancellation and retains its ended target", async () => {
+    const h = harness();
+    vi.mocked(h.ports.cancelPending).mockImplementationOnce(() => {
+      throw new Error("service");
+    });
+    await h.controller.start("thread");
+    expect(await h.controller.stopAnswer()).toBe(false);
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(1);
+    expect(h.controller.snapshot().state).toBe("failed");
+    expect(h.playback.stop).not.toHaveBeenCalled();
+    expect(await h.controller.resume()).toBe(false);
+    expect(await h.controller.start("another-thread")).toBe(false);
+    const retried = await h.controller.retryShutdown();
+    expect(retried).toMatchObject({
+      state: "ended",
+      cancellationUnconfirmed: false,
+      privatePracticeAvailable: false,
+      error: null,
+    });
+    expect(h.ports.cancelPending).toHaveBeenLastCalledWith("thread", "stop-answer");
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(2);
+    expect(h.ports.connect).toHaveBeenCalledTimes(1);
+    expect(h.capture.close).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries only unresolved cancellation and closure while preserving the failed fence", async () => {
+    const h = harness();
+    vi.mocked(h.ports.cancelPending)
+      .mockImplementationOnce(() => {
+        throw new Error("service");
+      })
+      .mockImplementationOnce(() => {
+        throw new Error("service still unavailable");
+      });
+    vi.mocked(h.capture.close).mockRejectedValueOnce(new Error("capture"));
+    await h.controller.start("thread");
+    await h.controller.pause();
+    expect(h.controller.snapshot().resources.capture).toBe("unknown");
+    const firstRetry = await h.controller.retryShutdown();
+    expect(firstRetry.resources.capture).toBe("closed");
+    expect(firstRetry).toMatchObject({
+      state: "failed",
+      cancellationUnconfirmed: true,
+      privatePracticeAvailable: false,
+      error: "work-cancellation-failed",
+    });
+    expect(await h.controller.start("another-thread")).toBe(false);
+    const secondRetry = await h.controller.retryShutdown();
+    expect(secondRetry).toMatchObject({
+      state: "paused",
+      cancellationUnconfirmed: false,
+      privatePracticeAvailable: true,
+      error: null,
+    });
+    expect(h.capture.close).toHaveBeenCalledTimes(2);
+    for (const r of [h.admission, h.connection, h.playback])
+      expect(r.close).toHaveBeenCalledTimes(1);
+    expect(h.ports.cancelPending).toHaveBeenCalledTimes(3);
+    expect(h.ports.connect).toHaveBeenCalledTimes(1);
   });
 
   it("a late unmute cannot confirm Pause until it settles and closure is reconfirmed", async () => {

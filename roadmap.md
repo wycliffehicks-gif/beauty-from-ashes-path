@@ -49,4 +49,8 @@ The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500
 - [x] Handle late permission, late unmute, failed shutdown/retry, removed microphone tracks, and old connection events without false closure assurance.
 - [x] Prepare explicit browser capture adapter; no recording, transport, provider call or application route activation.
 - [x] Independently review the new code and verify 48 focused offline behavioral checks.
-- [ ] Select and implement a bounded developer provider route, integrate the shared service and actual accounting, and obtain real-device/played-audio/provider-termination evidence before accepting voice.
+- [x] Bind the asynchronous controller to the exact shared conversation service model; fence selected versus resource-owning thread identities, pending typed work, recreated records and superseded navigation.
+- [x] Keep failed cancellation visible until explicit retry; revalidate after final input enabling and require confirmed cleanup before releasing ownership.
+- [x] Restore preview/staging dialog focus, initially focus Cancel for staging destructive actions, and expose accurate accessible rename errors; verify 20 local Chromium keyboard/mobile-width checks with transport blocked.
+- [x] Verify 441 conversation tests across 24 files (including 90 P5 checks), strict TypeScript, production build and scoped lint. Preserve the earlier full-app regression baseline separately; see offline-validation-v4 and `docs/pilot/conversation/CONTINUE_HERE.md`.
+- [ ] Select and implement a bounded developer provider route and server admission/accounting, wire the prepared coordinator, and obtain real-device/played-audio/provider-termination evidence under separate live-test approval before accepting voice.

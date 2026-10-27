@@ -1,0 +1,145 @@
+{
+  "checkpoint": "P5 shared-service integration and existing UI focus follow-up",
+  "date_local": "2026-10-26",
+  "timezone": "America/Toronto",
+  "base_commit": "01af7f1df389d20d7e894e62ead6da0f90e8403b",
+  "base_tree": "3ad007d3a5c649ca5db49989c239633be11c6ffa",
+  "source_sha256": {
+    "src/lib/ai/conversation/service/voice-service-binding.ts": "0df3eb8413f043d796de682b4f0af5dcc34eb9edf6cba107ba4989220c995991",
+    "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts": "ebf7b05f0e870e171694715930ec8cc9c21c23d4ebcae6066befb7bdb4ecebdf",
+    "src/lib/ai/conversation/service/service.ts": "56179588d9a7b596865518f4df83ff62f99e0a2c594c817942a7d1e6f46c14d3",
+    "src/lib/ai/conversation/service/voice-lifecycle.ts": "cbf0d016199f1de240fd36f3d8cbb4bc27a833d886aae80ec0c7ed84f414c04a",
+    "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts": "cee31281bc94b4e1499e6ab9cb81dbb148c3643018176b4706e00e7fd364efae",
+    "src/components/conversation-preview/ConversationPreview.tsx": "82ea337206c5a873f8f665933def18a7fb5af7aad6a1088710a39ab18422e0c1",
+    "src/components/conversation-staging/StagingConsole.tsx": "a043bd244937fa3b8d9f1ef559343f2d5ab638cd724d9df487b059c736f895da",
+    "scripts/conversation-ui/check-focus.cjs": "e32a9afba75a40aa905808701a462e9e4ee849fb858f97a6c20b4f6675a1e9c5"
+  },
+  "validation": {
+    "conversation_regression": {
+      "status": "PASSED",
+      "command": "node node_modules/vitest/vitest.mjs run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000 --reporter=json",
+      "tests_passed": 441,
+      "tests_failed": 0,
+      "files": 24,
+      "p5_counts": {
+        "controller": 34,
+        "browser_capture": 18,
+        "shared_service_binding": 38
+      },
+      "scope": "All conversation files; local mocks and injected resources. No real model/audio/provider calls."
+    },
+    "typescript": {
+      "status": "PASSED",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "scope": "Full project"
+    },
+    "production_build": {
+      "status": "PASSED",
+      "command": "npm run build",
+      "scope": "Default client, SSR and Nitro/Cloudflare outputs; no deployment"
+    },
+    "eslint": {
+      "status": "PASSED",
+      "full_rules_files": [
+        "src/lib/ai/conversation/service/voice-service-binding.ts",
+        "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+        "src/lib/ai/conversation/service/voice-lifecycle.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts",
+        "scripts/conversation-ui/check-focus.cjs"
+      ],
+      "existing_formatting_excluded_files": [
+        "src/lib/ai/conversation/service/service.ts",
+        "src/components/conversation-preview/ConversationPreview.tsx",
+        "src/components/conversation-staging/StagingConsole.tsx"
+      ],
+      "errors": 0,
+      "preexisting_staging_hook_warnings": 4
+    },
+    "browser": {
+      "status": "PASSED",
+      "checks": [
+        "staging: 390px viewport has no horizontal overflow",
+        "staging: dialog and Cancel fit within 390x844 viewport",
+        "staging Delete: initial Cancel and Escape restores opener",
+        "staging Delete: initial Cancel and Cancel restores opener",
+        "staging Discard: initial Cancel and Escape restores opener",
+        "staging Discard: initial Cancel and Cancel restores opener",
+        "staging navigation: Escape restores opener and draft",
+        "staging navigation: Cancel restores opener and draft",
+        "staging Delete during pending append stays usable, old reply fenced, focus uses surviving heading",
+        "preview: 390px viewport has no horizontal overflow",
+        "preview: dialog and Keep working fit within 390x844 viewport",
+        "preview Finish Escape restores opener and draft",
+        "preview switch Cancel restores opener and draft",
+        "preview source Cancel uses stable chooser after source button unmounts",
+        "preview confirmed Finish focuses surviving start heading",
+        "preview blank rename has accurate associated error and preserves saved title",
+        "preview simulated rename failure remains distinct and preserves saved title",
+        "preview successful rename clears error",
+        "preview saved Delete Cancel restores opener",
+        "preview confirmed saved Delete focuses surviving heading"
+      ],
+      "count": 20,
+      "pageErrors": [],
+      "blockedRequests": [],
+      "realProviderCalls": 0,
+      "scope": "Actual Chromium React/Radix keyboard behavior against local fictional doubles; not physical device, assistive technology, authenticated staging or live voice acceptance.",
+      "styled": true
+    },
+    "previous_full_suite": {
+      "base_commit": "01af7f1df389d20d7e894e62ead6da0f90e8403b",
+      "tests_passed": 1916,
+      "files": 107,
+      "rerun_this_batch": false,
+      "note": "Historical baseline. Do not add overlapping focused counts as capability counts."
+    }
+  },
+  "source_review": {
+    "independent_review": "PASSED",
+    "existing_source_files_changed": 5,
+    "new_source_and_harness_files": 3,
+    "route_imports_new_voice_modules": false,
+    "dependencies_and_lockfiles_changed": false,
+    "manifest_or_grants_changed": false,
+    "tracked_env_materialized": false,
+    "tracked_env_policy": "Preserve existing base-tree blob; never delete or retrieve it for this batch"
+  },
+  "execution_limits": {
+    "lovable_agent_requests": 0,
+    "lovable_credits_used": 0,
+    "real_provider_calls": 0,
+    "voice_sessions": 0,
+    "real_microphone_requests": 0,
+    "auth_or_database_changes": 0,
+    "published": false,
+    "participant_ai_enabled": false,
+    "live_voice_enabled": false,
+    "p4_manifest_approval": null,
+    "p4_manifest_expiry": null,
+    "approval_grant_registry": "empty"
+  },
+  "limitations": [
+    "No physical-phone or assistive-technology acceptance",
+    "No authenticated staging rerun",
+    "No real microphone, actual played audio or provider termination/billing evidence",
+    "Controller/binding/capture are inactive preparation, not route integration or server authority",
+    "Explicit cancellation retry may fence the same record twice when selected and controller holds coexist; no exact-once cancellation claim"
+  ],
+  "reproduce_browser": {
+    "script": "scripts/conversation-ui/check-focus.cjs",
+    "required": "Available Playwright module and Chromium; built production CSS for styled layout checks",
+    "environment": [
+      "BFA_PLAYWRIGHT_MODULE",
+      "BFA_CHROMIUM_EXECUTABLE (optional)",
+      "BFA_UI_CSS (built styles)"
+    ],
+    "dependencies_added_to_repository": false
+  },
+  "log_sha256": {
+    "conversation-regression.json": "d4b20c2d51d4875a9624feb05e7b198d3e2377c6a7b00674cd264a1f11d7e349",
+    "production-build.log": "5e2684a4aa10a851a7fbedd3676ca3509ac3bfe48c3327302d0ee431334f3ea6",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint-new.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint-existing.log": "186b06b15c53fadbc61ed3afe091560bec9d53edea6b14277d89e2f8a68f4ca4"
+  }
+}

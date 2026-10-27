@@ -13,6 +13,32 @@ import { FICTIONAL_NOTE, previewSelection, confirmSelection } from '@/lib/ai/con
 import { ResponseFence, NavigationIntent, selectedReopenRevision, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
 
 type Destination = { action: 'create' } | { action: 'reopen'; target: SavedThread };
+
+// Controlled dialogs have no Radix Trigger to restore focus to. Prefer the
+// actual opener, with stable fallbacks after deletion or an asynchronous switch.
+function useStagingDialogFocus(initialFocusId?: string) {
+  const opener = useRef<HTMLElement | null>(null);
+  return {
+    onOpenAutoFocus: (event: Event) => {
+      opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+        ? document.activeElement : null;
+      if (initialFocusId) {
+        event.preventDefault();
+        document.getElementById(initialFocusId)?.focus();
+      }
+    },
+    onCloseAutoFocus: (event: Event) => {
+      event.preventDefault();
+      for (const target of [opener.current, document.getElementById('staging-message'), document.getElementById('staging-heading')]) {
+        if (!target?.isConnected || target.matches(':disabled')) continue;
+        target.focus();
+        if (document.activeElement === target) break;
+      }
+      opener.current = null;
+    },
+  };
+}
+
 export function StagingConsole() {
   const run = useServerFn(runStagingOperation);
   const [prefs, updatePrefs, hydrated] = usePrefs();
@@ -35,6 +61,9 @@ export function StagingConsole() {
   const fence = useRef(new ResponseFence());
   const listFence = useRef(new ResponseFence());
   const subject = useRef<string | null | undefined>(undefined);
+  const confirmationFocus = useStagingDialogFocus('staging-confirm-cancel');
+  const destinationFocus = useStagingDialogFocus();
+  const selectionFocus = useStagingDialogFocus();
   const setActive = (value: ActiveThread | null) => { stateRef.current = value; setState(value); };
 
   useEffect(() => {
@@ -146,7 +175,7 @@ export function StagingConsole() {
   }, [prefs.showSpiritual, hydrated]);
 
   return <main className="mx-auto max-w-3xl px-5 py-10 text-foreground">
-    <h1 className="font-serif text-3xl">Fictional staging conversation</h1>
+    <h1 id="staging-heading" tabIndex={-1} className="font-serif text-3xl">Fictional staging conversation</h1>
     <div className="mt-6 flex flex-wrap items-center gap-3">
       <Button disabled={busy} onClick={() => switchTo({ action: 'create' })}>New conversation</Button>
       <label htmlFor="staging-spiritual" className="flex items-center gap-2 text-sm">Christian content
@@ -190,15 +219,15 @@ export function StagingConsole() {
       </section>
       <details className="mt-6"><summary>Context used by this staging conversation</summary><pre className="mt-3 max-w-full overflow-auto text-xs">{JSON.stringify({ preference: state.inspection.preferenceOn, restrictions: state.inspection.restrictions, derived: state.inspection.derived, shared: state.inspection.events.filter(e => e.role === 'shared-source'), lastRequest: state.inspection.lastRequest }, null, 2)}</pre></details>
     </>}
-    <Dialog open={confirm !== null} onOpenChange={open => { if (!open) setConfirm(null); }}><DialogContent><DialogTitle>{confirm === 'delete' ? 'Delete this conversation?' : 'Discard unsaved changes?'}</DialogTitle><DialogDescription>{confirm === 'delete' ? 'Saved content will be removed. Usage evidence is retained.' : 'Return to the saved snapshot, or remove this never-saved conversation.'}</DialogDescription>
-      <div className="flex flex-wrap gap-2"><Button onClick={() => confirm && act(confirm)}>Confirm {confirm}</Button><Button variant="outline" onClick={() => setConfirm(null)}>Cancel</Button></div>
+    <Dialog open={confirm !== null} onOpenChange={open => { if (!open) setConfirm(null); }}><DialogContent {...confirmationFocus}><DialogTitle>{confirm === 'delete' ? 'Delete this conversation?' : 'Discard unsaved changes?'}</DialogTitle><DialogDescription>{confirm === 'delete' ? 'Saved content will be removed. Usage evidence is retained.' : 'Return to the saved snapshot, or remove this never-saved conversation.'}</DialogDescription>
+      <div className="flex flex-wrap gap-2"><Button onClick={() => confirm && act(confirm)}>Confirm {confirm}</Button><Button id="staging-confirm-cancel" variant="outline" onClick={() => setConfirm(null)}>Cancel</Button></div>
     </DialogContent></Dialog>
-    <Dialog open={destination !== null} onOpenChange={open => { if (!open) cancelNavigation(); }}><DialogContent><DialogTitle>Unsaved conversation</DialogTitle><DialogDescription>Save the submitted conversation, discard it, or stay here. A typed unsent draft is not saved.</DialogDescription>
+    <Dialog open={destination !== null} onOpenChange={open => { if (!open) cancelNavigation(); }}><DialogContent {...destinationFocus}><DialogTitle>Unsaved conversation</DialogTitle><DialogDescription>Save the submitted conversation, discard it, or stay here. A typed unsent draft is not saved.</DialogDescription>
       {destinationError && <p role="alert">{destinationError}</p>}
       {preferenceError && <p role="alert">{preferenceError}</p>}
       <div className="flex flex-wrap gap-2"><Button disabled={busy || recovery} onClick={() => destination && act('save', {}, { destination, ticket: navigation.current.next() })}>Save and continue</Button><Button disabled={busy} variant="outline" onClick={() => destination && act('discard', {}, { destination, ticket: navigation.current.next() })}>Discard and continue</Button><Button variant="outline" onClick={cancelNavigation}>Cancel</Button></div>
     </DialogContent></Dialog>
-    <Dialog open={selection !== null} onOpenChange={open => { if (!open) setSelection(null); }}><DialogContent><DialogTitle>Share only this excerpt?</DialogTitle><DialogDescription>Fictional selection · untrusted user data</DialogDescription>
+    <Dialog open={selection !== null} onOpenChange={open => { if (!open) setSelection(null); }}><DialogContent {...selectionFocus}><DialogTitle>Share only this excerpt?</DialogTitle><DialogDescription>Fictional selection · untrusted user data</DialogDescription>
       <p className="whitespace-pre-wrap break-words">{selection?.exactText}</p><div className="flex flex-wrap gap-2"><Button onClick={() => {
         if (!selection) return;
         try { const selected = confirmSelection(selection); void act('excerpt', { selection: { start: selected.start, end: selected.end, sourceRevision: selected.sourceRevision, excerptHash: selected.excerptHash } }); }

@@ -338,6 +338,22 @@ export class ConversationService {
     return this.threads.has(storeId);
   }
 
+  /** Read-only incarnation fence for lifecycle coordination. This establishes
+   * neither authentication nor provider admission. IDs may be reused after
+   * delete/clear; a fence for the previous record must then stay invalid. */
+  getThreadLifecycleBinding(storeId: string): {
+    readonly threadId: string;
+    readonly isCurrent: () => boolean;
+  } | null {
+    const record = this.threads.get(storeId);
+    if (!record) return null;
+    const epoch = this.epoch;
+    return Object.freeze({
+      threadId: record.threadId,
+      isCurrent: () => this.epoch === epoch && this.threads.get(storeId) === record,
+    });
+  }
+
   /** Invalidate every in-flight turn for a thread (Stop, switch, etc.). */
   cancelThread(storeId: string, reason: string): void {
     const record = this.threads.get(storeId);

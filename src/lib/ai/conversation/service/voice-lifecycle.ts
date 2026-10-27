@@ -61,6 +61,9 @@ export interface VoiceLifecycleSnapshot {
   readonly generation: number;
   readonly muted: boolean;
   readonly acquisitionPending: boolean;
+  readonly cancellationUnconfirmed: boolean;
+  /** No pending acquisition/input change, failed cancellation or unclosed resource remains. */
+  readonly cleanupComplete: boolean;
   readonly resources: Readonly<Record<VoiceResourceName, VoiceResourceState>>;
   readonly privatePracticeAvailable: boolean;
   readonly error: string | null;
@@ -75,6 +78,8 @@ type Attempt = VoiceAttempt & {
   cleanup?: Promise<void>;
   pauseToken?: number;
   mutePending: boolean;
+  cancellationUnconfirmed: boolean;
+  cancellationReason?: string;
 };
 
 /** Explicit start/resume only. Successful close promises are adapter evidence,
@@ -108,6 +113,8 @@ export class VoiceLifecycleController {
       generation: this.generation,
       muted: this.model.muted,
       acquisitionPending: a?.pending ?? false,
+      cancellationUnconfirmed: a?.cancellationUnconfirmed ?? false,
+      cleanupComplete: !a || this.closed(a),
       resources,
       privatePracticeAvailable: this.state === "paused" && !!a && this.closed(a),
       error: this.error,
@@ -116,7 +123,10 @@ export class VoiceLifecycleController {
 
   private closed(a: Attempt): boolean {
     return (
-      !a.pending && !a.mutePending && Object.values(a.resources).every((r) => r.state === "closed")
+      !a.pending &&
+      !a.mutePending &&
+      !a.cancellationUnconfirmed &&
+      Object.values(a.resources).every((r) => r.state === "closed")
     );
   }
   private current(a: Attempt): boolean {
@@ -157,6 +167,7 @@ export class VoiceLifecycleController {
       target: "failed",
       resources: {},
       mutePending: false,
+      cancellationUnconfirmed: false,
     };
     this.attempt = a;
     this.state = "starting";
@@ -190,6 +201,10 @@ export class VoiceLifecycleController {
           a.resources.capture.state = "open";
       }
       if (!this.current(a)) return false;
+      // Input activation is asynchronous too: its completion must not revive
+      // an admission or thread incarnation invalidated while it was pending.
+      if (!(await admission.revalidate())) throw new Error("admission-denied");
+      if (!this.current(a)) return false;
       this.model.start(threadId);
       this.state = "active";
       return true;
@@ -210,8 +225,13 @@ export class VoiceLifecycleController {
     this.model.stopAnswer();
     try {
       this.ports.cancelPending(a.threadId, reason);
+      a.cancellationUnconfirmed = false;
+      a.cancellationReason = undefined;
+      if (this.error === "work-cancellation-failed") this.error = null;
       return true;
     } catch {
+      a.cancellationUnconfirmed = true;
+      a.cancellationReason = reason;
       this.error = "work-cancellation-failed";
       return false;
     }
@@ -224,7 +244,9 @@ export class VoiceLifecycleController {
     a.stopping = true;
     a.abort.abort();
     this.state = "stopping";
-    this.cancel(a, reason);
+    // A failed Stop answer also shuts resources down, but must not silently
+    // retry cancellation. Keep the failed fence until explicit Retry shutdown.
+    if (!a.cancellationUnconfirmed) this.cancel(a, reason);
     if (this.model.state === "active" || this.model.state === "pause-failed")
       a.pauseToken = this.model.requestPause();
     await this.cleanup(a);
@@ -249,12 +271,13 @@ export class VoiceLifecycleController {
     return !this.attempt || this.closed(this.attempt);
   }
 
-  /** Retry only failed close operations; never admission, capture or connect. */
+  /** Retry only failed cancellation/close operations; never acquire resources. */
   async retryShutdown(): Promise<VoiceLifecycleSnapshot> {
     const a = this.attempt;
     if (!a?.stopping) return this.snapshot();
     for (const r of Object.values(a.resources)) if (r.state === "unknown") r.state = "open";
     this.state = "stopping";
+    if (a.cancellationUnconfirmed) this.cancel(a, a.cancellationReason ?? "shutdown-retry");
     if (this.model.state === "pause-failed") a.pauseToken = this.model.requestPause();
     await this.cleanup(a);
     return this.snapshot();
@@ -294,14 +317,18 @@ export class VoiceLifecycleController {
 
   private finishCleanup(a: Attempt) {
     if (this.attempt !== a) return;
-    if (Object.values(a.resources).some((r) => r.state === "unknown")) {
+    if (
+      a.cancellationUnconfirmed ||
+      Object.values(a.resources).some((r) => r.state === "unknown")
+    ) {
       this.state = "failed";
-      this.error = "shutdown-unconfirmed";
+      this.error = a.cancellationUnconfirmed ? "work-cancellation-failed" : "shutdown-unconfirmed";
       if (a.pauseToken !== undefined) this.model.failShutdown(a.pauseToken);
     } else if (!this.closed(a)) this.state = "stopping";
     else {
       this.state = a.target;
-      if (this.error === "shutdown-unconfirmed") this.error = null;
+      if (this.error === "shutdown-unconfirmed" || this.error === "work-cancellation-failed")
+        this.error = null;
       if (a.target === "paused" && a.pauseToken !== undefined)
         this.model.confirmShutdown(a.pauseToken);
       else this.model.end(a.target);

@@ -53,4 +53,8 @@ The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500
 - [x] Keep failed cancellation visible until explicit retry; revalidate after final input enabling and require confirmed cleanup before releasing ownership.
 - [x] Restore preview/staging dialog focus, initially focus Cancel for staging destructive actions, and expose accurate accessible rename errors; verify 20 local Chromium keyboard/mobile-width checks with transport blocked.
 - [x] Verify 441 conversation tests across 24 files (including 90 P5 checks), strict TypeScript, production build and scoped lint. Preserve the earlier full-app regression baseline separately; see offline-validation-v4 and `docs/pilot/conversation/CONTINUE_HERE.md`.
+- [x] Prepare inactive controlled voice UI with authoritative pending-input/cleanup states, distinct lifecycle controls, preserved cancellation access and bounded keyboard-focus recovery.
+- [x] Close the active-unmute expiry/deletion race; five regressions fail before the fix and pass afterward. Preserve recreated records and unconfirmed input state.
+- [x] Record a proposed server/session contract and acceptance checklist without choosing a provider/budget or activating any approval gate.
+- [x] Verify 464 conversation tests across 25 files, full strict TypeScript, production build, scoped full lint and 25 local Chromium controls checks with current styles; see offline-validation-v5.
 - [ ] Select and implement a bounded developer provider route and server admission/accounting, wire the prepared coordinator, and obtain real-device/played-audio/provider-termination evidence under separate live-test approval before accepting voice.

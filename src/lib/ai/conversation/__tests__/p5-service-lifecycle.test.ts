@@ -608,6 +608,34 @@ describe("P5 offline shared-service voice binding", () => {
     expect(h.attempts[1].capture.close).not.toHaveBeenCalled();
   });
 
+  for (const action of ["delete", "clear"] as const) {
+    it(`external ${action} during active unmute closes the old session without cancelling a recreated record`, async () => {
+      const h = await harness();
+      await h.binding.start("a");
+      await h.binding.setMuted(true);
+      const input = deferred<void>();
+      h.attempts[0].capture.setMuted.mockImplementationOnce(() => input.promise);
+      const changing = h.binding.setMuted(false);
+      await until(() => h.attempts[0].capture.setMuted.mock.calls.length === 3);
+      if (action === "delete") h.service.deleteThread("a");
+      else h.service.clearAll();
+      h.service.ensureThread("a", true);
+      const cancel = vi.spyOn(h.service, "cancelThread");
+      input.resolve();
+      expect(await changing).toBe(false);
+      expect(h.binding.snapshot()).toMatchObject({
+        state: "ended",
+        inputChangePending: false,
+        cleanupComplete: true,
+        threadCurrent: false,
+      });
+      assertClosed(h.attempts[0]);
+      expect(cancel).not.toHaveBeenCalled();
+      expect(h.service.hasThread("a")).toBe(true);
+      expect(h.ports.connect).toHaveBeenCalledTimes(1);
+    });
+  }
+
   it("a disposed coordinator cannot modify the new owner's service or voice session", async () => {
     const h = await harness();
     await h.binding.start("a");

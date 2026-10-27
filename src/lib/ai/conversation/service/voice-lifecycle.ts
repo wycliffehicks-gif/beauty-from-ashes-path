@@ -61,6 +61,8 @@ export interface VoiceLifecycleSnapshot {
   readonly generation: number;
   readonly muted: boolean;
   readonly acquisitionPending: boolean;
+  /** Model input is suppressed while capture state is still being confirmed. */
+  readonly inputChangePending: boolean;
   readonly cancellationUnconfirmed: boolean;
   /** No pending acquisition/input change, failed cancellation or unclosed resource remains. */
   readonly cleanupComplete: boolean;
@@ -113,6 +115,7 @@ export class VoiceLifecycleController {
       generation: this.generation,
       muted: this.model.muted,
       acquisitionPending: a?.pending ?? false,
+      inputChangePending: a?.mutePending ?? false,
       cancellationUnconfirmed: a?.cancellationUnconfirmed ?? false,
       cleanupComplete: !a || this.closed(a),
       resources,
@@ -348,6 +351,10 @@ export class VoiceLifecycleController {
       if (!muted && !(await admission.revalidate())) throw new Error("admission-denied");
       if (!this.current(a)) return false;
       await capture.setMuted(muted);
+      if (!this.current(a)) return false;
+      // A record or admission can be invalidated during asynchronous unmute.
+      // Recheck before accepting input, just as for initial activation.
+      if (!muted && !(await admission.revalidate())) throw new Error("admission-denied");
       if (!this.current(a)) return false;
       this.model.setMuted(muted);
       return true;

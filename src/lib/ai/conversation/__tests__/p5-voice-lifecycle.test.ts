@@ -469,6 +469,51 @@ describe("P5 injected asynchronous voice lifecycle — no device or provider", (
     expect(h.ports.connect).toHaveBeenCalledTimes(1);
   });
 
+  for (const muted of [true, false]) {
+    it(`exposes unconfirmed input while changing muted to ${muted}`, async () => {
+      const h = harness();
+      await h.controller.start("thread");
+      if (!muted) await h.controller.setMuted(true);
+      const input = deferred<void>();
+      vi.mocked(h.capture.setMuted).mockReturnValueOnce(input.promise);
+      const changing = h.controller.setMuted(muted);
+      expect(h.controller.snapshot()).toMatchObject({
+        state: "active",
+        inputChangePending: true,
+        cleanupComplete: false,
+        privatePracticeAvailable: false,
+      });
+      expect(await h.controller.setMuted(!muted)).toBe(false);
+      input.resolve();
+      expect(await changing).toBe(true);
+      expect(h.controller.snapshot()).toMatchObject({ inputChangePending: false, muted });
+    });
+  }
+
+  it("closes an active session when admission expires during unmute", async () => {
+    const h = harness();
+    let allowed = true;
+    vi.mocked(h.admission.revalidate).mockImplementation(async () => allowed);
+    await h.controller.start("thread");
+    await h.controller.setMuted(true);
+    const input = deferred<void>();
+    vi.mocked(h.capture.setMuted).mockReturnValueOnce(input.promise);
+    const changing = h.controller.setMuted(false);
+    await until(() => vi.mocked(h.capture.setMuted).mock.calls.length === 3);
+    allowed = false;
+    input.resolve();
+    expect(await changing).toBe(false);
+    expect(h.controller.snapshot()).toMatchObject({
+      state: "ended",
+      inputChangePending: false,
+      cleanupComplete: true,
+      privatePracticeAvailable: false,
+    });
+    for (const resource of [h.admission, h.capture, h.connection, h.playback])
+      expect(resource.close).toHaveBeenCalled();
+    expect(h.ports.connect).toHaveBeenCalledTimes(1);
+  });
+
   it("a late unmute cannot confirm Pause until it settles and closure is reconfirmed", async () => {
     const h = harness();
     await h.controller.start("thread");

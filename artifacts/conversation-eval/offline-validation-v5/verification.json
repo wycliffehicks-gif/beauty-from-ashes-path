@@ -1,0 +1,205 @@
+{
+  "checkpoint": "P5 inactive developer voice controls and session contract proposal",
+  "date_local": "2026-10-27",
+  "timezone": "America/Toronto",
+  "base_commit": "77366885552dba6c4652c62e831d408ad5811e29",
+  "base_tree": "f0989d712b2d2f51179b2e72e9987e989e341f98",
+  "source_sha256": {
+    "src/lib/ai/conversation/service/voice-lifecycle.ts": "ec87e6b32eb6464a7055769d6bc9e6885ac9f0f5246700d86f580d8d1e96469b",
+    "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts": "d0a06e32e21d40f71c1bb50ee3ceb88dd68974d73ac622325e7994ae8b63837d",
+    "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts": "bbff9796b1295b7edd79689262f6fe451b7fb14f2281f932aaf3be33ed3306b8",
+    "src/lib/ai/conversation/service/voice-controls.ts": "8cc51e8d7cd2cf45f6eaba167f0c4adf0035896539915b1e799c8f838d724587",
+    "src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts": "00db8d8ac91340755b2e25a8cb815838642a4121c18dc145b522dfc75461f3fa",
+    "src/components/conversation-preview/VoiceControls.tsx": "0714adcf51d063e02293630653c8ea2b6b9129fe640cf0358932af2068119ed3",
+    "scripts/conversation-ui/check-voice-controls.cjs": "18abcfda6a02897cf616aa5499621220a7656b2cd6315874d13b8209e1de88f7"
+  },
+  "proposal_sha256": "6e5bc73e835aa72070918494dff207ed5d3d48733245c4942dbfa77597536195",
+  "validation": {
+    "conversation_regression": {
+      "status": "PASSED",
+      "command": "node node_modules/vitest/vitest.mjs run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000 --reporter=json",
+      "tests_passed": 464,
+      "tests_failed": 0,
+      "files": 25,
+      "p5_counts": {
+        "controller": 37,
+        "browser_capture": 18,
+        "shared_service_binding": 40,
+        "controls_presentation": 18
+      }
+    },
+    "input_regressions": {
+      "before_fix": {
+        "passed": 72,
+        "failed": 5
+      },
+      "after_fix": {
+        "passed": 77,
+        "failed": 0
+      },
+      "scope": [
+        "Pending Mute/Unmute visibility",
+        "Admission expiry during active unmute",
+        "External Delete/Clear and same-ID recreation during active unmute"
+      ]
+    },
+    "typescript": {
+      "status": "PASSED",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "scope": "Full project"
+    },
+    "production_build": {
+      "status": "PASSED",
+      "command": "npm run build",
+      "scope": "Final-source default client, SSR and Nitro/Cloudflare output; no deployment",
+      "styles": "styles-DuOMzkts.css",
+      "styles_sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9",
+      "note": "One intermediate repeat exited zero before final Nitro completion lines; treated as incomplete. A subsequent unchanged default build completed every output stage. No source/dependency/configuration change was made for the rerun."
+    },
+    "eslint": {
+      "status": "PASSED",
+      "full_rules_files": [
+        "src/lib/ai/conversation/service/voice-lifecycle.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+        "src/lib/ai/conversation/service/voice-controls.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts",
+        "src/components/conversation-preview/VoiceControls.tsx",
+        "scripts/conversation-ui/check-voice-controls.cjs"
+      ],
+      "errors": 0,
+      "warnings": 0
+    },
+    "browser": {
+      "status": "PASSED",
+      "count": 25,
+      "checks": [
+        "construction and network recovery do not acquire resources",
+        "keyboard Start opens one fictional resource attempt",
+        "pending Mute shows input changing and preserves cancellation actions",
+        "confirmed Mute and keyboard Unmute alter input without closing the session",
+        "Mute remains independently available while playback Stop is pending",
+        "Stop answer fences a real service turn and playback while leaving voice open",
+        "active: status and controls fit 390px with no horizontal overflow",
+        "Pause closes four resources; recovery does not automatically resume",
+        "keyboard Resume requires a fresh explicit resource attempt",
+        "Finish ends voice and offers Start rather than Resume",
+        "Type instead closes voice and retains no private-practice assurance",
+        "Pause during pending acquisition immediately blocks unsafe actions and reassurance",
+        "late capture after Pause is closed without connecting or restarting",
+        "late Start completion preserves focus after the user moves to another control",
+        "unconfirmed close cannot advertise private practice or permit Start/Mute/Resume",
+        "shutdown-failed: status and controls fit 390px with no horizontal overflow",
+        "failed close remains visible and recovery does not retry it",
+        "Type instead cannot erase a failed shutdown or silently retry the resource",
+        "explicit keyboard Retry closes only failed resource without acquiring voice",
+        "failed work cancellation stays uncertain without automatic retry",
+        "Retry after cancellation fault invokes real fence and rejects the late service reply",
+        "selecting B keeps old attempt A closed and cannot offer its Resume/Mute",
+        "Stop after selection fences B typed work while independent A work remains valid",
+        "selected B voice starts only after its own explicit Start",
+        "Start/Pause/Resume/Retry retain usable focus and status fallback supports onward Tab"
+      ],
+      "focusAfterActions": [
+        {
+          "action": "Start",
+          "tag": "DIV",
+          "role": "status",
+          "label": "Voice active.Mute changes microphone input. Stop answer cancels the current answer. Pause voice closes the session.",
+          "disabled": false
+        },
+        {
+          "action": "Pause",
+          "tag": "DIV",
+          "role": "status",
+          "label": "Voice paused.Voice session closed. Private practice is available. Resume voice starts a new session.",
+          "disabled": false
+        },
+        {
+          "action": "Resume",
+          "tag": "DIV",
+          "role": "status",
+          "label": "Voice active.Mute changes microphone input. Stop answer cancels the current answer. Pause voice closes the session.",
+          "disabled": false
+        },
+        {
+          "action": "Retry",
+          "tag": "DIV",
+          "role": "status",
+          "label": "Voice finished.Voice session closed. You can start voice again or continue typing.",
+          "disabled": false
+        }
+      ],
+      "pageErrors": [],
+      "blockedRequests": [],
+      "realProviderCalls": 0,
+      "microphoneAttempts": 0,
+      "browserVersion": "153.0.8010.0",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "styled": true,
+      "scope": "Real React component and service/binding with deferred fictional resource/provider doubles; not device, authenticated staging, screen-reader or live voice acceptance."
+    },
+    "historical_not_rerun": {
+      "full_app_tests": 1916,
+      "full_app_files": 107,
+      "earlier_dialog_focus_checks": 20,
+      "note": "Separate historical evidence; do not sum overlapping counts or claim a full-app rerun."
+    }
+  },
+  "source_review": {
+    "independent_review": "PASSED",
+    "existing_code_or_test_files_changed": 3,
+    "new_code_test_harness_files": 4,
+    "routes_changed": false,
+    "route_imports_new_voice_modules": false,
+    "service_authority_changed": false,
+    "browser_capture_changed": false,
+    "dependencies_changed": false,
+    "auth_or_database_changed": false,
+    "manifest_or_grants_changed": false,
+    "tracked_env_policy": "Not materialized; preserve existing base-tree blob"
+  },
+  "execution_limits": {
+    "lovable_agent_requests": 0,
+    "lovable_credits_used": 0,
+    "real_provider_calls": 0,
+    "real_voice_sessions": 0,
+    "real_microphone_requests": 0,
+    "published": false,
+    "participant_ai_enabled": false,
+    "live_voice_enabled": false,
+    "p4_manifest_approval": null,
+    "p4_manifest_expiry": null,
+    "approval_grant_registry": "empty"
+  },
+  "host_contract": "Controlled component only. Host synchronously invokes coordinator, immediately publishes authoritative snapshot plus pending command metadata, and publishes again on settlement. No polling or resources acquired by presentation.",
+  "limitations": [
+    "No application route wires these controls or voice ports",
+    "Server/session contract is a proposal, not implemented authority or live-test approval",
+    "No physical-device, actual played-audio, screen-reader or authenticated-staging acceptance",
+    "No real provider termination, retention or billing evidence",
+    "Approval for a separate exact live manifest remains absent"
+  ],
+  "reproduce_browser": {
+    "script": "scripts/conversation-ui/check-voice-controls.cjs",
+    "environment": [
+      "BFA_PLAYWRIGHT_MODULE",
+      "BFA_CHROMIUM_EXECUTABLE (optional)",
+      "BFA_UI_CSS (fresh built CSS)"
+    ],
+    "dependencies_added_to_repository": false
+  },
+  "log_sha256": {
+    "conversation-regression.json": "dc923c259bf1706c9b5dc01e4388f2e366cce926659ed4d8c23f1b80c08ca339",
+    "input-regression-before.json": "593c35dfe69dd393d3f5ababb321bd3b5b8e9e154559fb2b0cfaac941aa95c27",
+    "input-regression-after.json": "ca3b9fa0c182260ec879183be095e29ea210c3059b89d81ff8df7888ce99ef81",
+    "production-build.log": "1d3fc4b89a07f69fab10c04c990deafb56a56027d724e9dc8f07f9a93a4c6da9",
+    "production-build-incomplete.log": "ef46f4e77ad542a9d7a51840ff3c1aec1f5c57532a4e89f13b6e654b22621f4c",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ui-results/result.json": "565196112be4b9629d642053c5fed72ef12539fc9c30c7fe7b60b932973305ed"
+  }
+}

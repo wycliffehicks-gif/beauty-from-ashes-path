@@ -57,4 +57,7 @@ The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500
 - [x] Close the active-unmute expiry/deletion race; five regressions fail before the fix and pass afterward. Preserve recreated records and unconfirmed input state.
 - [x] Record a proposed server/session contract and acceptance checklist without choosing a provider/budget or activating any approval gate.
 - [x] Verify 464 conversation tests across 25 files, full strict TypeScript, production build, scoped full lint and 25 local Chromium controls checks with current styles; see offline-validation-v5.
+- [x] Implement inactive server admission checks with strict request/evidence binding, nonrenewing deadlines, exact claim cleanup identity and terminal explicit-retry closure; 31 new fictional tests include independent expiry-race repairs.
+- [x] Preserve P3b accepted status and original v5 attribution in continuation documentation; prepare comprehensive new-chat handoffs without changing runtime policy or approval gates.
+- [ ] Implement and verify production Auth/sealed-authority and durable atomic admission-store ports for the concrete developer voice route; the current checked orchestration supplies no dispatch permission or database guarantees.
 - [ ] Select and implement a bounded developer provider route and server admission/accounting, wire the prepared coordinator, and obtain real-device/played-audio/provider-termination evidence under separate live-test approval before accepting voice.

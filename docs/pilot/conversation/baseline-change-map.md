@@ -23,7 +23,7 @@
 | `src/lib/ai/conversation/index.ts` | Namespace barrel. Nothing outside the namespace imports it. |
 | `src/lib/ai/conversation/__tests__/{contract,grants,sources,context}.test.ts` | 64 focused tests. |
 | `docs/pilot/conversation/candidate-policy-block.txt` | The exact guide §9 body (Markdown quote prefixes stripped, one trailing LF; 4,043 bytes). |
-| `docs/pilot/conversation/v5-observations-change-note.md` | Carl's two v5 wording observations, parked as reviewer observations for later policy refinement. |
+| `docs/pilot/conversation/v5-observations-change-note.md` | Reviewer observations on the completed v5 outputs, not new user-approved corrections; parked for later separately reviewed policy refinement. |
 | `docs/pilot/conversation/baseline-change-map.md` | This file. |
 
 ## Post-repair behavior (independent-review defects fixed)

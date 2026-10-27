@@ -1,26 +1,31 @@
 # Continue here — BFA, 27 October 2026
 
-Carl authorized continued GitHub work without Lovable credits and requested durable handoff markers. Preserve completed P0–P3b, the original v5 evaluation, dependency recovery, GitHub authorization and both prior offline P5 batches. This file and the P5 checkpoint are the repository resume source.
+Carl authorized continued GitHub work without Lovable credits and requested comprehensive handoffs for seamless new-chat continuation. Preserve completed P0–P3b, the original v5 experiment, dependency/build recovery, restored GitHub access, P4 implementation and prior P5 batches. Older blocked/not-run headings are historical.
 
-## Current batch
+## Current completed batch
 
-Starting GitHub/Lovable commit: `77366885552dba6c4652c62e831d408ad5811e29`. The commit containing this marker adds inactive controlled voice UI and its presentation model, a real-component/service/binding browser harness, and a proposed server/session contract. It also repairs authoritative pending-input reporting and active-unmute expiry/deletion races. The saved user handoff records the resulting commit and synchronization result after the push.
+Starting synchronized GitHub/Lovable commit: `18af63c12867743937eb84b1cb5d93fc689ebce0`. The commit containing this marker adds inactive server admission orchestration in `service/voice-admission.server.ts`, with 18 primary and 13 independent tests. The saved clean handoff and canonical archive record the resulting commit and post-push synchronization.
 
-Verification: 464 conversation tests across 25 files (including 113 P5 checks), full strict TypeScript, production build and full lint for the seven changed/new code/test/harness files. Twenty-five actual Chromium checks pass with fictional deferred resources and freshly built CSS, covering lifecycle distinctions, failure/retry, selected-thread fencing, keyboard focus and 390px layout. Zero real provider/microphone calls. Prior 441-test/20-focus-check and 1,916-test full-app results remain historical evidence; do not add overlapping counts or call them reruns.
+Strict input rejects client owner/approval/status authority. Fresh server evidence and exact acknowledgments bind owner, thread incarnation/revision, attempt and a separate voice approval. Effective expiry only shrinks across waits. A server-allocated claim ID preserves exact cleanup ownership after lost/malformed/denied/replay acknowledgments. Close is terminal, concurrent closes coalesce and uncertain closure requires explicit retry. No automatic refund, provider termination or dispatch permission is inferred.
 
-Detailed scope and limits: `p5-offline-lifecycle-checkpoint.md`. Evidence and hashes: `artifacts/conversation-eval/offline-validation-v5/verification.json`. Next implementation contract: `p5-server-session-contract.md` (a proposal, not approval or implemented server authority).
+**Production verified-authentication and durable atomic-store ports are unimplemented.** The existing P3b sealed envelope has no incarnation field; future integration must establish that binding from real server authority. Parsing evidence does not authenticate it. The framework server-only marker complements, but does not replace, verified routing. No route imports this module; it acquires no credentials, device, provider session or client capability.
 
-No application route imports the new voice UI, coordinator, controller or capture adapter. The controlled UI requires its future host to invoke actions synchronously and publish authoritative snapshots immediately and on settlement; pending button promises never replace input/cleanup evidence. No polling or automatic connection is introduced. Live voice and participant AI remain off; nothing published. No dependency, environment, auth/database or paid-grant changes.
+Verification: **495 conversation tests across 27 files**, including all 31 new admission cases; full strict TypeScript; full ESLint for three new code/test files; and complete client/SSR/Nitro production build. Independent review reproduced and repaired two asynchronous expiry gaps. Final raw results/hashes and limits: `artifacts/conversation-eval/offline-validation-v6/verification.json`. Prior 25 Chromium checks and 1,916-test full-app pass are historical, not reruns. No UI/controller changes in this batch.
 
-## Next useful work without Lovable credits
+P3b authenticated fictional staging remains ACCEPTED and closed. Unfinished authenticated acceptance now means the future P5 voice route. Documentation removes an obsolete blocked-auth adjective and corrects reviewer-observation attribution; policy and architecture requirements are unchanged.
 
-1. Verify the current connected-branch head before editing; fast-forward only with expected-head protection.
-2. Use the server/session proposal to design and fixture-test the concrete developer route and server admission/expiry/accounting boundary. Verify candidate provider capabilities in official documentation before committing to a live adapter; no provider or budget has yet been selected for voice.
-3. Preserve distinct ownership and evidence for capture, playback, transport and provider termination. Unknown cleanup/accounting stays visible and blocks restart; cancelled/deleted work must not re-enter context. Prepare the physical-device/listener/assistive-technology acceptance cases without claiming they have run.
-4. Keep the repository marker, detailed P5 checkpoint and user's existing handoff current after each batch.
+## Next bounded free work
 
-AGENTS.md requires separate exact paid-test approval. P4 manifest approval/expiry remain null and its grant registry empty. The original v5 allowance is closed. General instructions to continue do not authorize a live paid run; no new permission is needed for ordinary offline GitHub implementation, review and tests.
+1. Verify the connected GitHub/Lovable head and inspect any later changes before editing. Use expected-head fast-forward writes; never rewrite published history.
+2. Implement and fixture-test the concrete server verification adapter and draft/review the durable admission-store contract: real server-owned incarnation, Auth/allowlist/sealed authority/voice approval, uniqueness and quota checks under lock, expiry after waits, and close tombstones that defeat late claim commit without affecting a replay winner.
+3. Keep DB/auth configuration and live-provider changes outside this offline batch. Drafted migrations are not applied migrations; fake stores do not prove database concurrency. Actual server integration and device/listener/screen-reader/provider acceptance remain separate unfinished work.
+4. Verify candidate provider capabilities in official documentation before selecting a voice adapter. No voice provider or budget has been selected. Exact separate live-test approval is required before any paid call.
+5. Update repository markers plus the saved clean handoff and canonical archive after each meaningful batch.
 
-## Separate AWS status
+Read `p5-offline-lifecycle-checkpoint.md` and `p5-server-session-contract.md` for details. The saved user-facing clean record is `BFA_Comprehensive_New_Chat_Handoff_2026-10-27.md`; `BFA_Start_New_Chat_2026-10-27.txt` is the paste-ready prompt. The canonical `BFA_P3b_Progress_and_Auth_Test_Handoff_2026-10-25.md` preserves chronological history; its newest completion block governs over older embedded headings. Filename dates do not establish current status.
 
-All six AWS Marketplace model agreements were verified cancelled. Full AWS account closure remains incomplete because its standalone closure page returned Site Unavailable. Amazon retail and Prime Video were not changed. This app's current direct-provider preparation does not depend on AWS; do not mix unrelated AWS retries into app work.
+## Gates and separate unfinished work
+
+Zero Lovable agent requests/credits or real provider/voice/microphone calls in this batch. Participant AI/live voice off; unpublished. No auth/DB/schema/environment/dependency changes. P4 approval/expiry remain null and its grant registry empty; the original two-example v5 allowance is closed. Do not replay either run under general development authorization.
+
+All six AWS Marketplace agreements were cancelled; full AWS account closure remains incomplete after Site Unavailable. Amazon retail/Prime were unchanged. This is a separate unfinished request and does not block app work. Current Lovable balance/renewal date are not established by historical credit forecasts.

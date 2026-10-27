@@ -1,0 +1,96 @@
+{
+  "checkpoint": "Inactive P5 server admission orchestration",
+  "date_local": "2026-10-27",
+  "timezone": "America/Toronto",
+  "base_commit": "18af63c12867743937eb84b1cb5d93fc689ebce0",
+  "base_tree": "43cb28c097fb63d7c2a21ca553471ff366b8e0de",
+  "source_sha256": {
+    "src/lib/ai/conversation/service/voice-admission.server.ts": "7a40ca42c9d2503cf3377098b3e7135605a2b0337dedbfa3b513e7fa2467eadd",
+    "src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts": "5e40d6eabd2df6ed87b7d1879ad5067e4bc2f58d61fd293bbaf18c2adb7399d2",
+    "src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts": "0b7a063793599dcc6d0502c324a031dd8cf14c2e812675ebd40834706239eff8"
+  },
+  "validation": {
+    "conversation_regression": {
+      "status": "PASSED",
+      "tests_passed": 495,
+      "files": 27,
+      "command": "node node_modules/vitest/vitest.mjs run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000 --reporter=json",
+      "new_admission_tests": {
+        "primary": 18,
+        "independent": 13
+      }
+    },
+    "typescript": {
+      "status": "PASSED",
+      "scope": "Full project",
+      "command": "node node_modules/typescript/bin/tsc --noEmit"
+    },
+    "eslint": {
+      "status": "PASSED",
+      "files": [
+        "src/lib/ai/conversation/service/voice-admission.server.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts"
+      ],
+      "errors": 0,
+      "warnings": 0
+    },
+    "production_build": {
+      "status": "PASSED",
+      "command": "npm run build",
+      "scope": "Client, SSR and Nitro/Cloudflare outputs; no deployment"
+    },
+    "independent_review": {
+      "status": "PASSED",
+      "before_fix_reported": {
+        "passed": 8,
+        "failed": 2,
+        "provenance": "Reviewer tool stdout and in-session report; no saved before-run raw JSON exists"
+      },
+      "findings_fixed": [
+        "Fresh shortened deadline could expire at an async continuation while original deadline still passed",
+        "Earlier shorter deadline could expire during inspection and be masked by later longer evidence"
+      ],
+      "additional_review_tests": 3
+    },
+    "historical_not_rerun": {
+      "controls_chromium_checks": 25,
+      "full_app_tests": 1916,
+      "full_app_files": 107,
+      "note": "No UI/controller change; historical counts are not current reruns and must not be added together."
+    }
+  },
+  "implementation_limits": [
+    "Production Auth/allowlist/sealed-authority verification port is unimplemented",
+    "Production durable atomic claim/inspect/close store is unimplemented",
+    "Existing P3b sealed envelope does not itself supply a thread incarnation field",
+    "Admission lease is not a provider/client capability or dispatch permit",
+    "No database concurrency, actual authenticated voice route, provider termination/billing or device acceptance is established by fictional ports"
+  ],
+  "execution_limits": {
+    "lovable_agent_requests": 0,
+    "lovable_credits_used": 0,
+    "real_provider_calls": 0,
+    "real_microphone_requests": 0,
+    "real_voice_sessions": 0,
+    "auth_database_schema_changes": 0,
+    "dependency_changes": 0,
+    "published": false,
+    "participant_ai_enabled": false,
+    "live_voice_enabled": false,
+    "p4_manifest_approval": null,
+    "p4_manifest_expiry": null,
+    "approval_grant_registry": "empty"
+  },
+  "documentation_corrections": [
+    "P3b authenticated staging accepted; incomplete future voice-route acceptance is separate",
+    "Removed obsolete blocked-auth adjective without changing architecture rule",
+    "Post-v5 wording observations attributed to reviewer, not new user approval"
+  ],
+  "log_sha256": {
+    "conversation-regression.json": "01dc7005bfd607f51f46ee16220dda7747a7cbe66f0e7d4c84cd28bb2bd2258b",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "production-build.log": "5b516483183efb3246fb148bdea199dd3bae1bd14c9c2efb859c01bb245faead"
+  }
+}

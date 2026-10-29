@@ -1,0 +1,40 @@
+[
+  {
+    "run": "wasm-first",
+    "engine": {
+      "version": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+      "current_database": "bfa_p5_offline_fixture",
+      "current_user": "postgres"
+    },
+    "status": "failed",
+    "closed": true,
+    "error": {
+      "message": "update or delete on table \"bfa_p3b_threads\" violates RESTRICT setting of foreign key constraint \"generations_thread_id_fkey\" on table \"generations\"",
+      "code": "23001",
+      "where": "SQL statement \"DELETE FROM public.bfa_p3b_threads WHERE id=v_thread_id\"\nPL/pgSQL function inline_code_block line 94 at SQL statement"
+    },
+    "failedStage": "sequential-fixtures",
+    "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+    "sourceSha256": "62b4dc47ad4459fb379da66c63a18bf974d784c34b1ecdc9d65f25b8ea138210",
+    "passedNoticeCountBeforeFailure": 31
+  },
+  {
+    "run": "wasm-second",
+    "engine": {
+      "version": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+      "current_database": "bfa_p5_offline_fixture",
+      "current_user": "postgres"
+    },
+    "status": "failed",
+    "closed": true,
+    "error": {
+      "message": "column reference \"claim\" is ambiguous",
+      "code": "42702",
+      "where": "PL/pgSQL function inline_code_block line 50 at PERFORM"
+    },
+    "failedStage": "role-execution",
+    "source": "scripts/conversation-eval/p5-sql/roles.sql",
+    "sourceSha256": "13d8c0ecb5ad2a555b63103cb0237809ef70e8f36d65bd3e66d3090b8d7a5766",
+    "passedNoticeCountBeforeFailure": 171
+  }
+]

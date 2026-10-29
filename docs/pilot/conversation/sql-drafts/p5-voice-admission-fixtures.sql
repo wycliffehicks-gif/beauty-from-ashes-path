@@ -1,4 +1,5 @@
--- EXECUTABLE FUTURE FIXTURES; NOT EXECUTED IN THE OFFLINE AUTHORING BATCH.
+-- Sequential rollback fixtures executed in isolated PostgreSQL WASM.
+-- Native multi-session execution remains a separate unrun gate.
 -- Run only in a disposable LOCAL database named bfa_p5_offline_fixture, after
 -- installing isolated copies of P3b migrations and the proposed SQL package.
 -- Direct inserts below are fictional server fixtures, never Auth evidence.
@@ -10,7 +11,10 @@ DO $$ BEGIN
  IF to_regclass('bfa_p5_voice.proofs') IS NULL THEN RAISE EXCEPTION 'Install reviewed draft in disposable fixture DB first'; END IF;
 END $$;
 CREATE FUNCTION pg_temp.check_true(p_value boolean,p_case text) RETURNS void LANGUAGE plpgsql AS $$
-BEGIN IF p_value IS DISTINCT FROM true THEN RAISE EXCEPTION 'Fixture failed: %',p_case; END IF; END $$;
+BEGIN
+ IF p_value IS DISTINCT FROM true THEN RAISE EXCEPTION 'Fixture failed: %',p_case; END IF;
+ RAISE NOTICE 'BFA_SQL_PASS:%',p_case;
+END $$;
 CREATE FUNCTION pg_temp.proof(p_claim jsonb,p_cleanup uuid,p_session uuid,p_fingerprint text,p_operation text,p_now bigint) RETURNS jsonb LANGUAGE sql AS $$
  SELECT jsonb_build_object('receiptId',gen_random_uuid(),'operation',p_operation,'claim',p_claim,
  'cleanupId',p_cleanup,'ownerSessionId',p_session,'sessionVersion',0,
@@ -110,7 +114,7 @@ BEGIN
  UPDATE public.bfa_p3b_threads SET revision=revision-1 WHERE id=v_thread_id;
  v_p:=pg_temp.proof(v_claim,v_cleanup,v_session_id,v_fingerprint,'inspect',bfa_p5_voice.ms());
  PERFORM pg_temp.check_true(public.bfa_p5_voice_register_proof(v_p) IS NULL,'restoring source revision cannot revive old admission');
- v_rejected:=false; BEGIN DELETE FROM public.bfa_p3b_threads WHERE id=v_thread_id; EXCEPTION WHEN foreign_key_violation THEN v_rejected:=true; END;
+ v_rejected:=false; BEGIN DELETE FROM public.bfa_p3b_threads WHERE id=v_thread_id; EXCEPTION WHEN foreign_key_violation OR restrict_violation THEN v_rejected:=true; END;
  PERFORM pg_temp.check_true(v_rejected,'registered physical thread identity cannot be deleted and reused');
  -- Simulate a previously committed later clock observation. This does not
  -- change the system clock and is narrower than a real clock-adjustment test.
@@ -125,11 +129,12 @@ END $$;
 -- Privilege catalogue checks are narrower than real transport/role acceptance.
 DO $$ DECLARE f record; BEGIN
  FOR f IN SELECT v_p.oid FROM pg_proc v_p JOIN pg_namespace v_n ON v_n.oid=v_p.pronamespace WHERE v_n.nspname='public' AND v_p.proname LIKE 'bfa_p5_voice_%' LOOP
-  PERFORM pg_temp.check_true(NOT has_function_privilege('anon',f.oid,'EXECUTE'),'anonymous cannot invoke RPC');
-  PERFORM pg_temp.check_true(NOT has_function_privilege('authenticated',f.oid,'EXECUTE'),'authenticated cannot invoke RPC');
-  PERFORM pg_temp.check_true(has_function_privilege('service_role',f.oid,'EXECUTE'),'service role can invoke RPC');
+  PERFORM pg_temp.check_true(NOT has_function_privilege('anon',f.oid,'EXECUTE'),'anonymous cannot invoke RPC '||f.oid::regprocedure::text);
+  PERFORM pg_temp.check_true(NOT has_function_privilege('authenticated',f.oid,'EXECUTE'),'authenticated cannot invoke RPC '||f.oid::regprocedure::text);
+  PERFORM pg_temp.check_true(has_function_privilege('service_role',f.oid,'EXECUTE'),'service role can invoke RPC '||f.oid::regprocedure::text);
  END LOOP;
 END $$;
 ROLLBACK;
--- Still required: two-process barriers/lock-wait tests, injected transport loss,
--- actual service-role/HTTP calls, Auth revocation integration and provider gates.
+-- Still required: native two-process lock-wait execution, injected transport
+-- loss, HTTP/Auth integration and provider gates. Actual SET ROLE checks live
+-- in scripts/conversation-eval/p5-sql/roles.sql and are separate from HTTP Auth.

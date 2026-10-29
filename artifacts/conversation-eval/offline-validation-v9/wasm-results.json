@@ -1,0 +1,1687 @@
+{
+  "status": "passed",
+  "engine": "PostgreSQL WASM, one exclusive connection",
+  "package": "@electric-sql/pglite",
+  "packageVersion": "0.5.12",
+  "database": "bfa_p5_offline_fixture",
+  "nativeConcurrency": "not run",
+  "httpAuthProviderDeviceAcceptance": "not run",
+  "remoteDatabaseTouched": false,
+  "stages": [
+    {
+      "label": "bootstrap",
+      "source": "scripts/conversation-eval/p5-sql/bootstrap.sql",
+      "sha256": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "DO",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0000",
+      "source": "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql",
+      "sha256": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "CREATE",
+        "COMMENT",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "CREATE",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0001",
+      "source": "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql",
+      "sha256": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "REVOKE",
+        "REVOKE",
+        "REVOKE",
+        "REVOKE"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0002",
+      "source": "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql",
+      "sha256": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "ALTER",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "GRANT",
+        "CREATE",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0003",
+      "source": "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql",
+      "sha256": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "DO"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0004",
+      "source": "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql",
+      "sha256": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "DO"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0005",
+      "source": "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql",
+      "sha256": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "REVOKE",
+        "GRANT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "draft-installation",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+      "sha256": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "CREATE",
+        "REVOKE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "REVOKE",
+        "REVOKE",
+        "DO",
+        "COMMIT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "installation-seeded-no-rows",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "sequential-fixtures",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+      "sha256": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:generation stable across issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:trusted fictional issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:identical issuance idempotent"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:issuance cannot extend existing fingerprint"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:wrong generation rejected"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:issuance cannot exceed 15 minutes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:unregistered envelope fingerprint denied without backfill"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:missing proof field fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:JSON null proof field fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:unsafe integer fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:operation receipt TTL separate and bounded"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:exact proof acknowledgment"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:receipt ID cannot be registered twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:first claim succeeds"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:claim reserves exactly one unit"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:receipt is single use"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:operation is exact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:mismatched operation did not consume someone else receipt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:another session cannot inherit exact existing claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:owner-attempt admits one winner"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:losing close leaves winner and hold intact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:same claim ID with changed original expiry cannot close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:last quota unit cannot be reserved twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:shortened current approval denies and persists"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:expired current record terminally fences cleanup"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:later longer authority cannot revive observed expiry"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:late cleanup registration cannot revive close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close before claim retires unused attempt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close created no quota claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:current P3b revision fences old authority"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:restoring source revision cannot revive old admission"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:registered physical thread identity cannot be deleted and reused"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:backward clock relative to durable watermark denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:trusted cleanup after revocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close idempotent"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close retains hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "CREATE",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        "generation stable across issuance",
+        "trusted fictional issuance",
+        "identical issuance idempotent",
+        "issuance cannot extend existing fingerprint",
+        "wrong generation rejected",
+        "issuance cannot exceed 15 minutes",
+        "unregistered envelope fingerprint denied without backfill",
+        "missing proof field fails closed",
+        "JSON null proof field fails closed",
+        "unsafe integer fails closed",
+        "operation receipt TTL separate and bounded",
+        "exact proof acknowledgment",
+        "receipt ID cannot be registered twice",
+        "first claim succeeds",
+        "claim reserves exactly one unit",
+        "receipt is single use",
+        "operation is exact",
+        "mismatched operation did not consume someone else receipt",
+        "another session cannot inherit exact existing claim",
+        "owner-attempt admits one winner",
+        "losing close leaves winner and hold intact",
+        "same claim ID with changed original expiry cannot close",
+        "last quota unit cannot be reserved twice",
+        "shortened current approval denies and persists",
+        "expired current record terminally fences cleanup",
+        "later longer authority cannot revive observed expiry",
+        "late cleanup registration cannot revive close",
+        "close before claim retires unused attempt",
+        "close created no quota claim",
+        "current P3b revision fences old authority",
+        "restoring source revision cannot revive old admission",
+        "registered physical thread identity cannot be deleted and reused",
+        "backward clock relative to durable watermark denies",
+        "trusted cleanup after revocation",
+        "close idempotent",
+        "close retains hold",
+        "anonymous cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "service role can invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "service role can invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_proof(jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_proof(jsonb)",
+        "service role can invoke RPC bfa_p5_voice_register_proof(jsonb)"
+      ]
+    },
+    {
+      "label": "sequential-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "role-execution",
+      "source": "scripts/conversation-eval/p5-sql/roles.sql",
+      "sha256": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role creates generation through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role registers trusted fixture issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role registers exact cleanup"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role receives exact proof receipt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role claims through definer without table access"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role inspects through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role closes through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:role execution retains held unit on close"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        "anon denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "anon denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.generations",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "anon denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "anon denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "anon denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "anon denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "anon denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "anon denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "anon denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "anon denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "anon denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.claims",
+        "anon denied private helper",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.generations",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.claims",
+        "authenticated denied private helper",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.generations",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.claims",
+        "service_role denied private helper",
+        "service role creates generation through definer",
+        "service role registers trusted fixture issuance",
+        "service role registers exact cleanup",
+        "service role receives exact proof receipt",
+        "service role claims through definer without table access",
+        "service role inspects through definer",
+        "service role closes through definer",
+        "role execution retains held unit on close"
+      ]
+    },
+    {
+      "label": "roles-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    }
+  ],
+  "identity": {
+    "version": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+    "current_database": "bfa_p5_offline_fixture",
+    "current_user": "postgres"
+  },
+  "closed": true
+}

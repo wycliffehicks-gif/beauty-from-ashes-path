@@ -1,0 +1,22 @@
+test_existing_comma_directory_cannot_be_a_libpq_multihost_string (__main__.ConnectionGuardTests.test_existing_comma_directory_cannot_be_a_libpq_multihost_string) ... ok
+test_private_single_local_socket_is_accepted_without_connecting (__main__.ConnectionGuardTests.test_private_single_local_socket_is_accepted_without_connecting) ... ok
+test_remote_host_and_nonfixture_identity_are_rejected (__main__.ConnectionGuardTests.test_remote_host_and_nonfixture_identity_are_rejected) ... ok
+test_resolved_parent_comma_cannot_enable_remote_fallback (__main__.ConnectionGuardTests.test_resolved_parent_comma_cannot_enable_remote_fallback) ... ok
+test_shared_or_symlink_socket_is_rejected (__main__.ConnectionGuardTests.test_shared_or_symlink_socket_is_rejected) ... ok
+test_comma_in_owned_temporary_path_cannot_redirect_libpq (__main__.RunnerIsolationTests.test_comma_in_owned_temporary_path_cannot_redirect_libpq) ... ok
+test_failed_start_still_stops_a_partially_started_server (__main__.RunnerIsolationTests.test_failed_start_still_stops_a_partially_started_server) ... ok
+test_failing_case_cannot_hide_behind_zero_failed_summary (__main__.RunnerIsolationTests.test_failing_case_cannot_hide_behind_zero_failed_summary) ... ok
+test_hostile_environment_cannot_redirect_children_or_open_tcp (__main__.RunnerIsolationTests.test_hostile_environment_cannot_redirect_children_or_open_tcp) ... ok
+test_incomplete_assertion_evidence_fails_and_stops_cluster (__main__.RunnerIsolationTests.test_incomplete_assertion_evidence_fails_and_stops_cluster) ... ok
+test_interrupt_after_start_runs_cleanup (__main__.RunnerIsolationTests.test_interrupt_after_start_runs_cleanup) ... ok
+test_no_external_connection_option_is_accepted (__main__.RunnerIsolationTests.test_no_external_connection_option_is_accepted) ... ok
+test_nonempty_output_and_output_symlink_are_rejected (__main__.RunnerIsolationTests.test_nonempty_output_and_output_symlink_are_rejected) ... ok
+test_partial_concurrency_report_cannot_claim_complete_success (__main__.RunnerIsolationTests.test_partial_concurrency_report_cannot_claim_complete_success) ... ok
+test_preflight_never_claims_database_execution (__main__.RunnerIsolationTests.test_preflight_never_claims_database_execution) ... ok
+test_root_refusal_spawns_nothing_and_records_unavailable (__main__.RunnerIsolationTests.test_root_refusal_spawns_nothing_and_records_unavailable) ... ok
+test_unconfirmed_shutdown_retains_owned_data_and_fails_run (__main__.RunnerIsolationTests.test_unconfirmed_shutdown_retains_owned_data_and_fails_run) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 4.295s
+
+OK

@@ -1,0 +1,32 @@
+{
+  "suite": "p5-native-postgresql",
+  "status": "unavailable",
+  "database": "bfa_p5_offline_fixture",
+  "scope": "disposable Unix-socket-only cluster; no connected database",
+  "nativeDatabaseTestsExecuted": false,
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/bootstrap.sql": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+    "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1",
+    "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13",
+    "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8",
+    "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db",
+    "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75",
+    "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+    "scripts/conversation-eval/p5-sql/roles.sql": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744",
+    "scripts/conversation-eval/p5-sql/concurrency.py": "fd66bbfd7fcfb1ecd732cf7a0ea597e4afeb79b637006136895174a1b6123d16",
+    "scripts/conversation-eval/p5-sql/run-local.py": "5639e42f95c4131055c9002bed317be9761c7e61288f3e85c94c55a52acc9da0"
+  },
+  "phases": [],
+  "cleanup": {
+    "status": "not_needed"
+  },
+  "preflight": {
+    "status": "unavailable",
+    "reasons": [
+      "Native initdb/postgres require a nonroot OS user; no bypass is supported",
+      "--pg-bin must be an absolute directory containing PostgreSQL binaries"
+    ]
+  }
+}

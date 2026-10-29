@@ -1,4 +1,5 @@
--- PROPOSED, UNAPPLIED, UNEXECUTED SQL. Not in the migration journal.
+-- PROPOSED SQL; never applied to the connected project or migration journal.
+-- Sequentially executed in isolated PostgreSQL WASM; native concurrency unrun.
 -- Requires existing P3b tables. Never run against the connected project as part
 -- of an offline batch. No Auth bridge, admission rows, budgets or grants seeded.
 -- Admission never authorizes provider dispatch; close never refunds a hold.

@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-29",
+  "timezone": "America/Toronto",
+  "baseCommit": "65f98f41899e825d39424f5e4f5841e558359bcc",
+  "baseTree": "5f110750b39c2c10091ecb28d25f026c53d3b40e",
+  "scope": "Offline developer database harness and isolated sequential SQL execution; no connected database or runtime activation",
+  "postgresWasm": {
+    "status": "passed",
+    "engine": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+    "package": "@electric-sql/pglite@0.5.12",
+    "scratchOnlyDependency": true,
+    "singleExclusiveConnection": true,
+    "sequentialAssertions": 57,
+    "roleAssertions": 145,
+    "totalAssertionInvocations": 202,
+    "emptyTablesAfterEachRollback": 14,
+    "closed": true,
+    "evidence": "wasm-results.json"
+  },
+  "initialFailures": {
+    "evidence": "initial-fixture-failures.json",
+    "repairs": [
+      "Accept exact RESTRICT SQLSTATE23001 as well as FK23503 in physical-delete fixture",
+      "Rename ambiguous role-fixture local claim variable"
+    ],
+    "admissionAlgorithmChanged": false
+  },
+  "nativePostgresql": {
+    "status": "unavailable",
+    "casesPrepared": 12,
+    "casesExecuted": 0,
+    "reason": "Native tools absent; only UID/GID0 mapped; ordinary nonroot setup unavailable. No bypass attempted.",
+    "evidence": "native-preflight.json"
+  },
+  "runnerUnitTests": {
+    "status": "passed",
+    "count": 17,
+    "evidence": "harness-unit-tests.log",
+    "scope": "Explicit process doubles: isolation, refusal, complete evidence, cleanup; not SQL/native concurrency"
+  },
+  "sourceReview": {
+    "status": "completed",
+    "findingsRepaired": [
+      "libpq comma-separated host fallback through socket/temp paths",
+      "partial assertion or concurrency result falsely accepted",
+      "rollback check missing expected tables",
+      "client cleanup after initialization failure or hang"
+    ]
+  },
+  "validation": {
+    "nodeSyntax": "passed",
+    "typescriptLintBuildConversationTests": "not rerun; application/dependencies unchanged",
+    "previousApplicationEvidence": "offline-validation-v8,579tests31files,type/lint/build historical"
+  },
+  "preservation": {
+    "changedExistingPaths": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md",
+      "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+      "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+      "roadmap.md"
+    ],
+    "otherExistingBlobsUnchanged": 541,
+    "environmentBlob": "unread and preserved using remote base tree",
+    "deletedFiles": 0,
+    "productionSourcePolicyUiDependenciesP3bMigrationsApprovalAccountingUnchanged": true
+  },
+  "runtime": {
+    "participantAI": false,
+    "liveVoice": false,
+    "published": false,
+    "connectedSqlApplied": false,
+    "realAuthModelVoiceCalls": 0,
+    "lovableAgentEditRequests": 0,
+    "purchases": 0
+  },
+  "unfinished": [
+    "Execute prepared native12case suite in nonroot PostgreSQL environment",
+    "Production Auth/session-fence/revocation/snapshot/issuance integration",
+    "Separate active-session capacity, real cost, reconciliation/retention rules",
+    "Connected migration/HTTP acceptance",
+    "Separately approved provider/device acceptance"
+  ],
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/bootstrap.sql": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+    "scripts/conversation-eval/p5-sql/run-local.py": "5639e42f95c4131055c9002bed317be9761c7e61288f3e85c94c55a52acc9da0",
+    "scripts/conversation-eval/p5-sql/test_runner.py": "5fc44674a98eb923c0c22b3a25a3d023a3b5f5d833cae2dd19e0914c9e657d8e",
+    "scripts/conversation-eval/p5-sql/run-wasm.mjs": "40d96093acddf3b328616f1ffc3d377de53814d20489c298202cb721b1e0d97c",
+    "scripts/conversation-eval/p5-sql/roles.sql": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744",
+    "scripts/conversation-eval/p5-sql/concurrency.py": "fd66bbfd7fcfb1ecd732cf7a0ea597e4afeb79b637006136895174a1b6123d16",
+    "scripts/conversation-eval/p5-sql/README.md": "2e1b6fe1dceef4c763da969ae1653b4640cdecda6883a6b4dbe2c41fe8dfd27d",
+    "docs/pilot/conversation/CONTINUE_HERE.md": "85989963b40977168d560f621d5939f7b9408c6c54a9c9194e4b54d92e05fbaa",
+    "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md": "061da3fb7f855392cbbe202649be5c0149709ecf2b3fda4728eace9de2dc52be",
+    "docs/pilot/conversation/sql-drafts/README.md": "21da85079d90518c8dd8532f071e8a865675511bc0a9a439f27916d9d11af608",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "roadmap.md": "a124b21c6a35c3eac18c503dba1ac9064d059c7a1967f3520749016f1bc93403"
+  }
+}

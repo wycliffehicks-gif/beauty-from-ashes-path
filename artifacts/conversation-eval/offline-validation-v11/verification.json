@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-30",
+  "timezone": "America/Toronto",
+  "baseCommit": "e75158504d63dc7aeeda53b7f0e6e87373e06869",
+  "baseTree": "6a7797baeb80528327e026ae1d7398304edb0828",
+  "scope": "Isolated proposed capacity/reconciliation SQL extension; no application or connected database integration",
+  "runtime": "Node v24.22.1; PostgreSQL18.6 / PGlite0.5.12, single exclusive connection",
+  "checks": {
+    "status": "passed",
+    "assertionInvocations": 447,
+    "unchangedAdmissionSequential": 57,
+    "unchangedAdmissionActualRole": 145,
+    "newCapacity": 129,
+    "newCapacityActualRole": 116,
+    "emptyTableCountAfterEachCapacitySuite": 20,
+    "databaseClosed": true,
+    "nodeSyntax": "passed"
+  },
+  "evidenceFiles": [
+    "wasm-results.json",
+    "initial-findings.json"
+  ],
+  "review": {
+    "independentReview": "Completed; current quota-policy-to-held-policy gap found, reproduced and fixed. No further definite blocker identified.",
+    "firstExecutionDefect": "Reconciliation SQL local evidence ambiguity, fixed and rerun.",
+    "counterexampleRegression": "Separate scratch copy with only quota-policy guard removed failed the intended assertion after292 prior checks; final current code passes."
+  },
+  "sourceSha256": {
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275",
+    "scripts/conversation-eval/p5-sql/run-capacity-wasm.mjs": "d4d95de1595a8840ad8ba2ac68a8b74abe97f18e5d0b55240224e83305e197f4",
+    "scripts/conversation-eval/p5-sql/capacity-roles.sql": "cb42fd5dc5b34907f1fc0311a800359ee228c0c5a4f1089ce064662070a0a225"
+  },
+  "notRun": [
+    "Native independent-backend concurrency; existing12 admission cases unrun; capacity contention cases not yet authored",
+    "Production Auth/session revocation/issuance/HTTP",
+    "Provider authentication, finality, cost or calls",
+    "Physical device/listener/screen-reader acceptance",
+    "Application579-test/type/lint/build rerun (app source unchanged)",
+    "Historical44 model tests and17 process-double tests rerun (those sources unchanged)"
+  ],
+  "preservation": {
+    "existingBaseAdmissionSQLAndFixtures": "unchanged",
+    "existingP3bMigrationsAndRPCs": "unchanged",
+    "applicationRouteUIController": "unchanged",
+    "dependenciesConfigurationExactPoliciesSamplesEcosystem": "unchanged",
+    "P3bLedger": "untouched; six uncertain held fictional units and one reserved unit preserved",
+    "P4": "approval/expiry null, grants empty; original v5 complete/closed",
+    "noSeeds": true,
+    "noConnectedDatabaseChanges": true
+  },
+  "paidLovableAgentCalls": 0,
+  "realModelVoiceMicrophoneCalls": 0,
+  "participantAIOrVoiceEnabled": false,
+  "published": false,
+  "next": "Extend the existing isolated native PostgreSQL harness with capacity/reconciliation contention cases: shared last slot across owners, both marker/close lock orders, duplicate finality, contradictory evidence against a pending replacement, global operation-ID contention and expiry while waiting on a pool. Keep explicit lock barriers and unchanged cumulative holds. Execute those and the existing 12 admission cases only in a suitable ordinary nonroot PostgreSQL environment; do not repeat unavailable-engine setup probes or label WASM as concurrency. Production Auth/session-revocation/snapshot/issuance and authenticated provider-evidence ports remain unfinished. Keep SQL outside automatic migrations and the connected database; no provider, paid budget, live call or activation is selected."
+}

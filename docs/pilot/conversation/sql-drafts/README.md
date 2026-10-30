@@ -1,10 +1,57 @@
 # Proposed P5 voice admission SQL package
 
-Updated 29 October 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
+Updated 30 October 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
 
 `p5-voice-admission.sql` is proposed SQL outside `drizzle/migrations/` and its journal. It creates a private `bfa_p5_voice` namespace and seven service-only public RPCs. It does not modify existing P3b functions, permissions, ledger rows or settings. Do not run it on the connected project under general offline-development authorization. No voice admission, grant, quota balance or session is seeded.
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
+
+## Separate capacity/reconciliation extension — 30 October 2026
+
+`p5-voice-capacity.sql` installs only after the unchanged admission draft. It adds
+six private `bfa_p5_capacity` tables and five service-only RPCs, outside automatic
+migrations. It seeds no pool, route, allowance or session and changes no P3b/base
+function. Missing trusted provisioning denies. Use the separate capacity WASM
+runner in [the local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
+
+| RPC | Inputs | Purpose |
+| --- | --- | --- |
+| `bfa_p5_capacity_claim` | Exact claim receipt and claim | Atomically reserve one base quota hold, one pool slot and the matching cumulative pool hold. An existing base-only claim cannot be lazily attached or charged again. |
+| `bfa_p5_capacity_mark` | Fresh inspect receipt, exact claim, immutable operation UUID, expected pool version | Recheck current authority, retained quota-policy binding and pool limits before recording one create marker. An already-marked reply never authorizes another external request. |
+| `bfa_p5_capacity_close` | Retained exact cleanup UUID and claim | Terminally fence admission; release only a never-marked slot, with all cumulative units retained. |
+| `bfa_p5_capacity_reconcile` | Exact cleanup UUID/claim and normalized observation | Record exact operation evidence; release a slot only for whole-operation finality; permanently quarantine trusted contradictions. |
+| `bfa_p5_capacity_policy` | Existing pool UUID, expected version, active/unit limits, enabled boolean | Versioned limits only; no seed, refund, counter reset, unit-definition change, route rebind or quarantine clear. |
+
+The observation has exactly `evidenceId`, `operationId`, `kind` and `sessionId`.
+Kinds are `created`, `ended`, `not-created` and `unknown`; created/ended require
+a bounded normalized session ID, the other kinds require JSON null. The future
+trusted adapter must authenticate provenance, normalize provider/account/pool
+scope and establish finality of the **entire immutable create operation**.
+An HTTP acknowledgment, timeout, abort or not-found response alone is not such
+proof. This SQL supplies no provider verifier or paid dispatch authority.
+
+Operations take the owner lock first. Claim/mark then lock proof and cleanup,
+current eligibility rows, claim/attempt/allocation, quota and shared pool, followed
+by the global operation fence for mark. Authority and
+actual time are checked again after waits. Pool routes and unit definitions are
+immutable provisioning assumptions; no application writer is provided. The
+pool policy RPC locks only its pool. Native cross-backend contention and
+multi-operation transaction/deadlock behavior remain untested.
+
+**447 single-connection PostgreSQL assertions pass: 202 unchanged admission
+checks, 129 new capacity checks and 116 actual-role checks.** All 20 tables are
+empty after rollback; the in-memory database closes. The fixture guards require
+`bfa_p5_offline_fixture`. Actual execution repaired a reconciliation variable
+ambiguity. Independent review found a current-approval quota-policy mismatch;
+a regression reproduced the missing guard and passed after repair. Evidence is
+`artifacts/conversation-eval/offline-validation-v11/`. These results do not
+establish production Auth/revocation, native concurrency, transport, provider
+termination/cost or real-device acceptance. The existing 12-case native harness
+covers admission only, remains unrun and still needs capacity race extensions.
+
+The sections below describe the original admission package and its historical
+review. Statements about its lack of separate capacity apply to that base file;
+this new, inactive draft supplies the bounded extension described above.
 
 ## Proposed RPC wire contract
 
@@ -64,6 +111,6 @@ The native runner creates its own disposable cluster and private Unix socket, re
 
 The next database step is to run that existing native harness under an ordinary nonroot OS user with PostgreSQL installed, inspect actual installation/role/lock/expiry/close/replay results and repair any failures. Do not repeat unavailable-engine probes or treat WASM connection multiplexing as independent backends. Until such an environment is available, useful offline work can proceed on the remaining concurrent-capacity, reconciliation and trusted-port contracts. Keep this draft outside the automatic migration journal and never run the harness on the connected project or recreate closed P3b accounts.
 
-Before production use, implement and accept the distinct concurrent-session-capacity limit, real provider accounting policy, trusted issuance/Auth/revocation/transport bridges and downstream dispatch gate. Production migration application, authenticated voice acceptance, provider selection/credentials/calls, physical-device/listener/screen-reader acceptance and publication remain separate unfinished gates.
+Before production use, integrate and accept the distinct concurrent-session-capacity draft, real provider accounting policy, trusted issuance/Auth/revocation/transport bridges and downstream dispatch gate. Production migration application, authenticated voice acceptance, provider selection/credentials/calls, physical-device/listener/screen-reader acceptance and publication remain separate unfinished gates.
 
 The primary PostgreSQL references reviewed on 27 October 2026 were [explicit locking](https://www.postgresql.org/docs/18/explicit-locking.html), [current-time functions](https://www.postgresql.org/docs/18/functions-datetime.html#FUNCTIONS-DATETIME-CURRENT), and [safe SECURITY DEFINER functions](https://www.postgresql.org/docs/18/sql-createfunction.html#SQL-CREATEFUNCTION-SECURITY). These support transaction advisory locks, actual-clock checks and privilege/search-path precautions. They do not establish the deployed PostgreSQL version or substitute for executing this proposed package.

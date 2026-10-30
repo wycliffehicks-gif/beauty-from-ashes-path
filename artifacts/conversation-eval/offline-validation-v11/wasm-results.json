@@ -1,0 +1,3568 @@
+{
+  "status": "passed",
+  "engine": "PostgreSQL WASM, one exclusive connection",
+  "package": "@electric-sql/pglite",
+  "packageVersion": "0.5.12",
+  "database": "bfa_p5_offline_fixture",
+  "nativeConcurrency": "not run",
+  "httpAuthProviderDeviceAcceptance": "not run",
+  "remoteDatabaseTouched": false,
+  "stages": [
+    {
+      "label": "bootstrap",
+      "source": "scripts/conversation-eval/p5-sql/bootstrap.sql",
+      "sha256": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "DO",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0000",
+      "source": "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql",
+      "sha256": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "CREATE",
+        "COMMENT",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "COMMENT",
+        "CREATE",
+        "GRANT",
+        "ALTER",
+        "CREATE",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0001",
+      "source": "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql",
+      "sha256": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "REVOKE",
+        "REVOKE",
+        "REVOKE",
+        "REVOKE"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0002",
+      "source": "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql",
+      "sha256": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "ALTER",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "GRANT",
+        "CREATE",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "COMMENT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0003",
+      "source": "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql",
+      "sha256": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "DO"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0004",
+      "source": "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql",
+      "sha256": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "CREATE",
+        "REVOKE",
+        "GRANT",
+        "DO"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "0005",
+      "source": "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql",
+      "sha256": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "CREATE",
+        "REVOKE",
+        "GRANT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "draft-installation",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+      "sha256": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "CREATE",
+        "REVOKE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "REVOKE",
+        "REVOKE",
+        "DO",
+        "COMMIT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "installation-seeded-no-rows",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "sequential-fixtures",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+      "sha256": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:generation stable across issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:trusted fictional issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:identical issuance idempotent"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:issuance cannot extend existing fingerprint"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:wrong generation rejected"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:issuance cannot exceed 15 minutes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:unregistered envelope fingerprint denied without backfill"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:missing proof field fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:JSON null proof field fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:unsafe integer fails closed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:operation receipt TTL separate and bounded"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:exact proof acknowledgment"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:receipt ID cannot be registered twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:first claim succeeds"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:claim reserves exactly one unit"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:receipt is single use"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:operation is exact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:mismatched operation did not consume someone else receipt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:another session cannot inherit exact existing claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:owner-attempt admits one winner"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:losing close leaves winner and hold intact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:same claim ID with changed original expiry cannot close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:last quota unit cannot be reserved twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:shortened current approval denies and persists"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:expired current record terminally fences cleanup"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:later longer authority cannot revive observed expiry"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:late cleanup registration cannot revive close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close before claim retires unused attempt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close created no quota claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:current P3b revision fences old authority"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:restoring source revision cannot revive old admission"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:registered physical thread identity cannot be deleted and reused"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:backward clock relative to durable watermark denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:trusted cleanup after revocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close idempotent"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:close retains hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_claim(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_close(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_inspect(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_generation(uuid,uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anonymous cannot invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated cannot invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role can invoke RPC bfa_p5_voice_register_proof(jsonb)"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "CREATE",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        "generation stable across issuance",
+        "trusted fictional issuance",
+        "identical issuance idempotent",
+        "issuance cannot extend existing fingerprint",
+        "wrong generation rejected",
+        "issuance cannot exceed 15 minutes",
+        "unregistered envelope fingerprint denied without backfill",
+        "missing proof field fails closed",
+        "JSON null proof field fails closed",
+        "unsafe integer fails closed",
+        "operation receipt TTL separate and bounded",
+        "exact proof acknowledgment",
+        "receipt ID cannot be registered twice",
+        "first claim succeeds",
+        "claim reserves exactly one unit",
+        "receipt is single use",
+        "operation is exact",
+        "mismatched operation did not consume someone else receipt",
+        "another session cannot inherit exact existing claim",
+        "owner-attempt admits one winner",
+        "losing close leaves winner and hold intact",
+        "same claim ID with changed original expiry cannot close",
+        "last quota unit cannot be reserved twice",
+        "shortened current approval denies and persists",
+        "expired current record terminally fences cleanup",
+        "later longer authority cannot revive observed expiry",
+        "late cleanup registration cannot revive close",
+        "close before claim retires unused attempt",
+        "close created no quota claim",
+        "current P3b revision fences old authority",
+        "restoring source revision cannot revive old admission",
+        "registered physical thread identity cannot be deleted and reused",
+        "backward clock relative to durable watermark denies",
+        "trusted cleanup after revocation",
+        "close idempotent",
+        "close retains hold",
+        "anonymous cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_claim(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_close(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_inspect(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "service role can invoke RPC bfa_p5_voice_register_cleanup(uuid,jsonb)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "service role can invoke RPC bfa_p5_voice_register_generation(uuid,uuid)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "service role can invoke RPC bfa_p5_voice_register_issuance(uuid,uuid,uuid,bigint,text,bigint,bigint)",
+        "anonymous cannot invoke RPC bfa_p5_voice_register_proof(jsonb)",
+        "authenticated cannot invoke RPC bfa_p5_voice_register_proof(jsonb)",
+        "service role can invoke RPC bfa_p5_voice_register_proof(jsonb)"
+      ]
+    },
+    {
+      "label": "sequential-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "role-execution",
+      "source": "scripts/conversation-eval/p5-sql/roles.sql",
+      "sha256": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:anon denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:authenticated denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.generations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.owner_clocks"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.session_fences"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.issuances"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.quotas"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.approvals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.cleanup_owners"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.proofs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.attempts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access SELECT * FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied direct access DELETE FROM bfa_p5_voice.claims"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service_role denied private helper"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role creates generation through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role registers trusted fixture issuance"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role registers exact cleanup"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role receives exact proof receipt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role claims through definer without table access"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role inspects through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:service role closes through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "BFA_SQL_PASS:role execution retains held unit on close"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        "anon denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)",
+        "anon denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_generation(NULL::uuid,NULL::uuid)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_issuance(NULL::uuid,NULL::uuid,NULL::uuid,NULL::bigint,NULL::text,NULL::bigint,NULL::bigint)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_cleanup(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_register_proof(NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_claim(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_inspect(NULL::uuid,NULL::jsonb)",
+        "authenticated denied RPC SELECT public.bfa_p5_voice_close(NULL::uuid,NULL::jsonb)",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "anon denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.generations",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "anon denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "anon denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "anon denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "anon denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "anon denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "anon denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "anon denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "anon denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "anon denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "anon denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "anon denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "anon denied direct access DELETE FROM bfa_p5_voice.claims",
+        "anon denied private helper",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.generations",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "authenticated denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "authenticated denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "authenticated denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "authenticated denied direct access DELETE FROM bfa_p5_voice.claims",
+        "authenticated denied private helper",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.generations",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.generations DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.generations SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.generations",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.owner_clocks",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.owner_clocks DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.owner_clocks SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.owner_clocks",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.session_fences",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.session_fences DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.session_fences SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.session_fences",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.issuances",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.issuances DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.issuances SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.issuances",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.quotas",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.quotas DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.quotas SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.quotas",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.approvals",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.approvals DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.approvals SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.approvals",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.cleanup_owners",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.cleanup_owners DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.cleanup_owners SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.cleanup_owners",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.proofs",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.proofs DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.proofs SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.proofs",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.attempts",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.attempts DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.attempts SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.attempts",
+        "service_role denied direct access SELECT * FROM bfa_p5_voice.claims",
+        "service_role denied direct access INSERT INTO bfa_p5_voice.claims DEFAULT VALUES",
+        "service_role denied direct access UPDATE bfa_p5_voice.claims SET owner_id=owner_id",
+        "service_role denied direct access DELETE FROM bfa_p5_voice.claims",
+        "service_role denied private helper",
+        "service role creates generation through definer",
+        "service role registers trusted fixture issuance",
+        "service role registers exact cleanup",
+        "service role receives exact proof receipt",
+        "service role claims through definer without table access",
+        "service role inspects through definer",
+        "service role closes through definer",
+        "role execution retains held unit on close"
+      ]
+    },
+    {
+      "label": "roles-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "capacity-installation",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql",
+      "sha256": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+      "notices": [],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "CREATE",
+        "REVOKE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "REVOKE",
+        "REVOKE",
+        "DO",
+        "COMMIT"
+      ],
+      "assertions": []
+    },
+    {
+      "label": "capacity-installation-seeded-no-rows",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "allocations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "conflicts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "evidence",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "pools",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "routes",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "sessions",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "capacity-fixtures",
+      "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql",
+      "sha256": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: first combined admission claims capacity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: combined claim adds one occupied slot and one pool hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: combined claim debits original owner quota once"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: base claim retains exact original hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: exact duplicate claim observes existing allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: duplicate cannot debit original quota twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: duplicate cannot add pool occupancy or hold twice"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: second owner cannot acquire shared last slot"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: capacity denial leaves second owner quota unchanged"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: capacity denial creates no partial base claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: capacity denial creates no partial allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: changed claim binding cannot consume original ownership"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: wrong binding leaves original exact receipt available"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: changed claim ID cannot win original owner attempt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: losing cleanup leaves committed winner and slot intact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: exact unmarked close succeeds"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: never-started close releases slot but retains cumulative hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: close-before-marker prevents late start"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: another deliberate attempt can use safely released capacity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: replacement adds its own single hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: missing server pool mapping denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: missing mapping cannot consume quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: disabled policy denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: disabled denial preserves original quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: disabled denial preserves pool"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-capacity policy denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-capacity denial preserves original quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-capacity denial preserves pool"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-units policy denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-units denial preserves original quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: zero-units denial preserves pool"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unit-mismatch policy denies"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unit-mismatch denial preserves original quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unit-mismatch denial preserves pool"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: insufficient original quota denies without pool debit"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: insufficient quota leaves pool empty"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: standalone base hold fixture exists"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: standalone base hold cannot lazily attach capacity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rejected attachment preserves original single hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rejected attachment creates no pool allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: close before capacity claim is accepted"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: late claim observes exact close tombstone"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: close before claim retires owner attempt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: close-before-claim creates no hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: close-before-claim creates no occupancy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: one exact create marker commits"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: marker replay is observation only"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: different operation cannot reuse marked allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: admission close after marker retains uncertain capacity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: missing create acknowledgment remains uncertain"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unknown provider outcome blocks replacement reservation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: exact final evidence reconciles unknown session after close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: terminal evidence releases one slot without refund"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: exact terminal receipt replay is idempotent"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: late historical create acknowledgment cannot revive final session"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: late inconclusive evidence cannot downgrade established finality"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: terminally released slot can be reserved deliberately"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: duplicate and late receipts cannot debit or release replacement"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: reconciliation preserves original base hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: trusted whole-operation no-create finality releases slot"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: no-create finality retains cumulative units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: free slots cannot bypass exhausted cumulative pool ceiling"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: repeated release never recycles cumulative units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: pool-unit denial preserves fresh owner quota"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: different late session contradicts original finality"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: quarantine preserves actual retained bookkeeping"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: quarantine blocks already-reserved replacement marker"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: old contradiction cannot mutate replacement ownership"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: conflict does not reopen original released allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: policy increase remains explicit versioned operation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: quarantine survives cleanup and policy increase"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: no side effect clears quarantine or cumulative holds"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: evidence ID cannot be rebound across owners and operations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rebound evidence releases neither slot"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: one session cannot be attributed to two create operations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: session rebind cannot release another operation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: known creation cannot become final no-create"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: contradictory no-create cannot fabricate termination"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: completed operation identity cannot be rebound"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: operation conflict leaves replacement reserved without dispatch marker"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: capacity decrease uses exact previous policy version"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: stale policy version cannot overwrite newer limit"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: stale caller policy version cannot mark"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: over-limit existing occupancy blocks pending marker"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: capacity decrease does not evict or refund"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: closing marked predecessor alone does not unblock capacity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: confirmed predecessor finality allows pending marker under current policy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: cumulative ceiling can be lowered below prior holds without erasing history"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: lowered unit ceiling preserves all prior reservations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: base inspect receipt alone does not certify immutable quota policy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: current approval quota Q2 cannot mark retained hold under Q1"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: policy drift creates no operation and preserves original allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: policy drift cannot rebind original cumulative hold"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: policy drift neither refunds Q1 nor debits Q2"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: policy drift retains pool occupancy and cumulative units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: revocation during backward-clock observation denies marker"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: revocation fence survives simultaneous clock denial"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: clock recovery and restored source cannot revive invalidated allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: cleanup releases only unmarked revoked allocation and never units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: revocation during backward-clock observation denies marker"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: revocation fence survives simultaneous clock denial"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: clock recovery and restored source cannot revive invalidated allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: cleanup releases only unmarked revoked allocation and never units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: shortened current approval defeats earlier inspection receipt"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: later expiry extension cannot revive observed expiry"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: retained exact cleanup works after deletion and Auth revocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: deletion and closed admission do not prove external termination"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: trusted exact terminal reconciliation works after deletion"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: reconciliation cannot restore deleted thread"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: post-deletion reconciliation releases only slot"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: post-deletion original accounting evidence survives"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: maximum safe integer reservation is exact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: second maximum reservation cannot overflow cumulative units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: overflow denial leaves exact pool totals"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: overflow denial leaves other owner quota intact"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unsafe policy amount rejects instead of coercing"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unsafe policy leaves version and counters unchanged"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: injected enclosing transaction failure executed"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rollback restores pool counters together"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rollback restores original quota debit"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rollback removes tentative base claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rollback removes tentative allocation"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: rollback restores proof consumption"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: same exact receipt works after proven rollback"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: changed generation cannot close original cleanup identity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: terminal session evidence requires exact session identity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: no-create evidence cannot smuggle a session identity"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: unknown evidence payload fields reject instead of entering retained diagnostics"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ASSERT: malformed untrusted shape changes no capacity or quarantine"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "CREATE",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        " first combined admission claims capacity",
+        " combined claim adds one occupied slot and one pool hold",
+        " combined claim debits original owner quota once",
+        " base claim retains exact original hold",
+        " exact duplicate claim observes existing allocation",
+        " duplicate cannot debit original quota twice",
+        " duplicate cannot add pool occupancy or hold twice",
+        " second owner cannot acquire shared last slot",
+        " capacity denial leaves second owner quota unchanged",
+        " capacity denial creates no partial base claim",
+        " capacity denial creates no partial allocation",
+        " changed claim binding cannot consume original ownership",
+        " wrong binding leaves original exact receipt available",
+        " changed claim ID cannot win original owner attempt",
+        " losing cleanup leaves committed winner and slot intact",
+        " exact unmarked close succeeds",
+        " never-started close releases slot but retains cumulative hold",
+        " close-before-marker prevents late start",
+        " another deliberate attempt can use safely released capacity",
+        " replacement adds its own single hold",
+        " missing server pool mapping denies",
+        " missing mapping cannot consume quota",
+        " disabled policy denies",
+        " disabled denial preserves original quota",
+        " disabled denial preserves pool",
+        " zero-capacity policy denies",
+        " zero-capacity denial preserves original quota",
+        " zero-capacity denial preserves pool",
+        " zero-units policy denies",
+        " zero-units denial preserves original quota",
+        " zero-units denial preserves pool",
+        " unit-mismatch policy denies",
+        " unit-mismatch denial preserves original quota",
+        " unit-mismatch denial preserves pool",
+        " insufficient original quota denies without pool debit",
+        " insufficient quota leaves pool empty",
+        " standalone base hold fixture exists",
+        " standalone base hold cannot lazily attach capacity",
+        " rejected attachment preserves original single hold",
+        " rejected attachment creates no pool allocation",
+        " close before capacity claim is accepted",
+        " late claim observes exact close tombstone",
+        " close before claim retires owner attempt",
+        " close-before-claim creates no hold",
+        " close-before-claim creates no occupancy",
+        " one exact create marker commits",
+        " marker replay is observation only",
+        " different operation cannot reuse marked allocation",
+        " admission close after marker retains uncertain capacity",
+        " missing create acknowledgment remains uncertain",
+        " unknown provider outcome blocks replacement reservation",
+        " exact final evidence reconciles unknown session after close",
+        " terminal evidence releases one slot without refund",
+        " exact terminal receipt replay is idempotent",
+        " late historical create acknowledgment cannot revive final session",
+        " late inconclusive evidence cannot downgrade established finality",
+        " terminally released slot can be reserved deliberately",
+        " duplicate and late receipts cannot debit or release replacement",
+        " reconciliation preserves original base hold",
+        " trusted whole-operation no-create finality releases slot",
+        " no-create finality retains cumulative units",
+        " free slots cannot bypass exhausted cumulative pool ceiling",
+        " repeated release never recycles cumulative units",
+        " pool-unit denial preserves fresh owner quota",
+        " different late session contradicts original finality",
+        " quarantine preserves actual retained bookkeeping",
+        " quarantine blocks already-reserved replacement marker",
+        " old contradiction cannot mutate replacement ownership",
+        " conflict does not reopen original released allocation",
+        " policy increase remains explicit versioned operation",
+        " quarantine survives cleanup and policy increase",
+        " no side effect clears quarantine or cumulative holds",
+        " evidence ID cannot be rebound across owners and operations",
+        " rebound evidence releases neither slot",
+        " one session cannot be attributed to two create operations",
+        " session rebind cannot release another operation",
+        " known creation cannot become final no-create",
+        " contradictory no-create cannot fabricate termination",
+        " completed operation identity cannot be rebound",
+        " operation conflict leaves replacement reserved without dispatch marker",
+        " capacity decrease uses exact previous policy version",
+        " stale policy version cannot overwrite newer limit",
+        " stale caller policy version cannot mark",
+        " over-limit existing occupancy blocks pending marker",
+        " capacity decrease does not evict or refund",
+        " closing marked predecessor alone does not unblock capacity",
+        " confirmed predecessor finality allows pending marker under current policy",
+        " cumulative ceiling can be lowered below prior holds without erasing history",
+        " lowered unit ceiling preserves all prior reservations",
+        " base inspect receipt alone does not certify immutable quota policy",
+        " current approval quota Q2 cannot mark retained hold under Q1",
+        " policy drift creates no operation and preserves original allocation",
+        " policy drift cannot rebind original cumulative hold",
+        " policy drift neither refunds Q1 nor debits Q2",
+        " policy drift retains pool occupancy and cumulative units",
+        " revocation during backward-clock observation denies marker",
+        " revocation fence survives simultaneous clock denial",
+        " clock recovery and restored source cannot revive invalidated allocation",
+        " cleanup releases only unmarked revoked allocation and never units",
+        " revocation during backward-clock observation denies marker",
+        " revocation fence survives simultaneous clock denial",
+        " clock recovery and restored source cannot revive invalidated allocation",
+        " cleanup releases only unmarked revoked allocation and never units",
+        " shortened current approval defeats earlier inspection receipt",
+        " later expiry extension cannot revive observed expiry",
+        " retained exact cleanup works after deletion and Auth revocation",
+        " deletion and closed admission do not prove external termination",
+        " trusted exact terminal reconciliation works after deletion",
+        " reconciliation cannot restore deleted thread",
+        " post-deletion reconciliation releases only slot",
+        " post-deletion original accounting evidence survives",
+        " maximum safe integer reservation is exact",
+        " second maximum reservation cannot overflow cumulative units",
+        " overflow denial leaves exact pool totals",
+        " overflow denial leaves other owner quota intact",
+        " unsafe policy amount rejects instead of coercing",
+        " unsafe policy leaves version and counters unchanged",
+        " injected enclosing transaction failure executed",
+        " rollback restores pool counters together",
+        " rollback restores original quota debit",
+        " rollback removes tentative base claim",
+        " rollback removes tentative allocation",
+        " rollback restores proof consumption",
+        " same exact receipt works after proven rollback",
+        " changed generation cannot close original cleanup identity",
+        " terminal session evidence requires exact session identity",
+        " no-create evidence cannot smuggle a session identity",
+        " unknown evidence payload fields reject instead of entering retained diagnostics",
+        " malformed untrusted shape changes no capacity or quarantine"
+      ]
+    },
+    {
+      "label": "capacity-fixtures-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "allocations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "conflicts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "evidence",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "pools",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "routes",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "sessions",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "label": "capacity-role-execution",
+      "source": "scripts/conversation-eval/p5-sql/capacity-roles.sql",
+      "sha256": "cb42fd5dc5b34907f1fc0311a800359ee228c0c5a4f1089ce064662070a0a225",
+      "notices": [
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:fixed definer path bfa_p5_capacity_claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied RPC bfa_p5_capacity_claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied RPC bfa_p5_capacity_claim"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:fixed definer path bfa_p5_capacity_close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied RPC bfa_p5_capacity_close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied RPC bfa_p5_capacity_close"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:fixed definer path bfa_p5_capacity_mark"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied RPC bfa_p5_capacity_mark"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied RPC bfa_p5_capacity_mark"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:fixed definer path bfa_p5_capacity_policy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied RPC bfa_p5_capacity_policy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied RPC bfa_p5_capacity_policy"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:fixed definer path bfa_p5_capacity_reconcile"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied RPC bfa_p5_capacity_reconcile"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied RPC bfa_p5_capacity_reconcile"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:exact five public capacity RPCs"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct SELECT * FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied direct DELETE FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied private helper conflict"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied private helper current"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied private helper denied"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied private helper retire_if_fenced"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:anon denied private helper take_proof"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct SELECT * FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied direct DELETE FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied private helper conflict"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied private helper current"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied private helper denied"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied private helper retire_if_fenced"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:authenticated denied private helper take_proof"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct SELECT * FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied direct DELETE FROM bfa_p5_capacity.sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied private helper conflict"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied private helper current"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied private helper denied"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied private helper retire_if_fenced"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service_role denied private helper take_proof"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies pools"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies routes"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies allocations"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies sessions"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:RLS with no browser policies conflicts"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service claims with exact one hold through definer"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:one cumulative debit and one slot"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service marker checks fresh protected proof"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service close retains marked occupancy and units"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service reconciles normalized final operation evidence"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:capacity release never refunds either retained unit record"
+        },
+        {
+          "severity": "NOTICE",
+          "code": "00000",
+          "message": "P5_CAPACITY_ROLE_PASS:service policy change preserves held units"
+        }
+      ],
+      "status": "passed",
+      "commands": [
+        "BEGIN",
+        "DO",
+        "CREATE",
+        "DO",
+        "DO",
+        "ROLLBACK"
+      ],
+      "assertions": [
+        "fixed definer path bfa_p5_capacity_claim",
+        "anon denied RPC bfa_p5_capacity_claim",
+        "authenticated denied RPC bfa_p5_capacity_claim",
+        "fixed definer path bfa_p5_capacity_close",
+        "anon denied RPC bfa_p5_capacity_close",
+        "authenticated denied RPC bfa_p5_capacity_close",
+        "fixed definer path bfa_p5_capacity_mark",
+        "anon denied RPC bfa_p5_capacity_mark",
+        "authenticated denied RPC bfa_p5_capacity_mark",
+        "fixed definer path bfa_p5_capacity_policy",
+        "anon denied RPC bfa_p5_capacity_policy",
+        "authenticated denied RPC bfa_p5_capacity_policy",
+        "fixed definer path bfa_p5_capacity_reconcile",
+        "anon denied RPC bfa_p5_capacity_reconcile",
+        "authenticated denied RPC bfa_p5_capacity_reconcile",
+        "exact five public capacity RPCs",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.allocations",
+        "anon denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.allocations",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.conflicts",
+        "anon denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.conflicts",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.evidence",
+        "anon denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.evidence",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.pools",
+        "anon denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.pools",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.routes",
+        "anon denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.routes",
+        "anon denied direct SELECT * FROM bfa_p5_capacity.sessions",
+        "anon denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES",
+        "anon denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false",
+        "anon denied direct DELETE FROM bfa_p5_capacity.sessions",
+        "anon denied private helper conflict",
+        "anon denied private helper current",
+        "anon denied private helper denied",
+        "anon denied private helper retire_if_fenced",
+        "anon denied private helper take_proof",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.allocations",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.allocations",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.conflicts",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.conflicts",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.evidence",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.evidence",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.pools",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.pools",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.routes",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.routes",
+        "authenticated denied direct SELECT * FROM bfa_p5_capacity.sessions",
+        "authenticated denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES",
+        "authenticated denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false",
+        "authenticated denied direct DELETE FROM bfa_p5_capacity.sessions",
+        "authenticated denied private helper conflict",
+        "authenticated denied private helper current",
+        "authenticated denied private helper denied",
+        "authenticated denied private helper retire_if_fenced",
+        "authenticated denied private helper take_proof",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.allocations",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.allocations DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.allocations SET claim_id=claim_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.allocations",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.conflicts",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.conflicts DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.conflicts SET pool_id=pool_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.conflicts",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.evidence",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.evidence DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.evidence SET pool_id=pool_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.evidence",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.pools",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.pools DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.pools SET pool_id=pool_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.pools",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.routes",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.routes DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.routes SET owner_id=owner_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.routes",
+        "service_role denied direct SELECT * FROM bfa_p5_capacity.sessions",
+        "service_role denied direct INSERT INTO bfa_p5_capacity.sessions DEFAULT VALUES",
+        "service_role denied direct UPDATE bfa_p5_capacity.sessions SET pool_id=pool_id WHERE false",
+        "service_role denied direct DELETE FROM bfa_p5_capacity.sessions",
+        "service_role denied private helper conflict",
+        "service_role denied private helper current",
+        "service_role denied private helper denied",
+        "service_role denied private helper retire_if_fenced",
+        "service_role denied private helper take_proof",
+        "RLS with no browser policies pools",
+        "RLS with no browser policies routes",
+        "RLS with no browser policies allocations",
+        "RLS with no browser policies sessions",
+        "RLS with no browser policies evidence",
+        "RLS with no browser policies conflicts",
+        "service claims with exact one hold through definer",
+        "one cumulative debit and one slot",
+        "service marker checks fresh protected proof",
+        "service close retains marked occupancy and units",
+        "service reconciles normalized final operation evidence",
+        "capacity release never refunds either retained unit record",
+        "service policy change preserves held units"
+      ]
+    },
+    {
+      "label": "capacity-roles-rollback",
+      "status": "passed",
+      "emptyTables": [
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "allocations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "conflicts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "evidence",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "pools",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "routes",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_capacity",
+          "tablename": "sessions",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "approvals",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "attempts",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "claims",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "cleanup_owners",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "generations",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "issuances",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "owner_clocks",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "proofs",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "quotas",
+          "count": 0
+        },
+        {
+          "schemaname": "bfa_p5_voice",
+          "tablename": "session_fences",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_admissions",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_allowances",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_staging_accounts",
+          "count": 0
+        },
+        {
+          "schemaname": "public",
+          "tablename": "bfa_p3b_threads",
+          "count": 0
+        }
+      ]
+    }
+  ],
+  "capacityScope": "combined admission/capacity and trusted normalized reconciliation fixtures only",
+  "identity": {
+    "version": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+    "current_database": "bfa_p5_offline_fixture",
+    "current_user": "postgres"
+  },
+  "closed": true
+}

@@ -1,6 +1,6 @@
 # Disposable P5 database checks
 
-29 October 2026. These developer-only runners never import application secrets,
+30 October 2026. These developer-only runners never import application secrets,
 select a production database, create real Auth accounts or activate AI/voice.
 They install exact P3b migrations 0000–0005 into a fresh fixture database, with
 fictional NOLOGIN roles and an `auth.uid()` stub that always returns NULL, then
@@ -39,6 +39,48 @@ PGlite has one exclusive connection. Its successful sequential execution cannot
 prove native backend locking, concurrent commits, HTTP permissions, production
 Auth/revocation, provider calls or real-device behavior. Never use a proxy or
 multiplexer to relabel this run as independent concurrent PostgreSQL backends.
+
+## Executed capacity/reconciliation extension — 30 October
+
+```sh
+node scripts/conversation-eval/p5-sql/run-capacity-wasm.mjs --module /absolute/scratch/p5-engine/node_modules/@electric-sql/pglite/dist/index.js --output /absolute/new-capacity-evidence-directory
+```
+
+This separate runner first executes the unchanged admission package and its
+**202 checks**, then installs `p5-voice-capacity.sql` and executes **129 capacity
+assertions + 116 actual role checks = 245 new checks (447 total invocations)**.
+It checks the exact 14-table inventory before extension installation and all
+20 tables afterward; every fixture suite rolls back and both instances close.
+The package remains scratch-only and pinned to PGlite 0.5.12. The original
+`run-wasm.mjs`, native runner and admission SQL are unchanged.
+
+The extension combines one original quota debit with a shared capacity slot and
+cumulative pool hold in one transaction. Exact cleanup safely releases only an
+unmarked slot; a committed operation marker retains uncertain occupancy until
+trusted whole-operation finality. Conflicting evidence permanently quarantines
+the pool. All cumulative held units remain retained. New tests cover denied
+capacity without a partial original claim/debit, policy reductions, changed
+approval quota binding, modeled missing create acknowledgments, duplicate/conflicting evidence,
+revocation with backward clocks, deletion cleanup and actual SQL rollback.
+The role suite actually switches to anon, authenticated and service_role and
+checks SQLSTATE 42501, service-only RPCs, inaccessible helpers/direct DML, fixed
+definer paths and a successful service-role flow.
+
+Execution found an ambiguous reconciliation variable, which was repaired.
+Independent review also found that a marker needed to compare its original
+hold policy with the current approval policy. Its new regression failed against
+a separate copy with that check removed, then passed with the repair. Evidence,
+source hashes and both findings are retained in
+`artifacts/conversation-eval/offline-validation-v11/`.
+
+These are single-connection PostgreSQL checks with fictional protected records,
+not native lock contention, real Auth, HTTP or authenticated provider evidence.
+The SQL does not validate a provider signature or establish that a session
+really ended. No real provider/device call, connected database or seed allowance
+is involved. The existing native runner does **not** install/test this extension;
+its 12 admission cases remain unrun. Next, extend that harness with capacity
+contention cases and run it only in a suitable nonroot PostgreSQL environment.
+Do not repeat failed setup probes or relabel serial execution as concurrency.
 
 ## Prepared native path — database execution still unrun
 
@@ -82,9 +124,9 @@ refusal guards, evidence completeness and cleanup behavior. They are not SQL
 execution. Repository evidence is in
 `artifacts/conversation-eval/offline-validation-v9/`.
 
-Production Auth/session/issuance wiring, active-session capacity, real cost and
-settlement rules, connected migration/HTTP acceptance and live provider/device
-acceptance remain unfinished. Generic cumulative fixture units are not money
+Production Auth/session/issuance wiring, integration of the draft capacity store,
+real cost and settlement rules, connected migration/HTTP acceptance and live
+provider/device acceptance remain unfinished. Generic cumulative fixture units are not money
 or permission to dispatch. The P4 grant registry remains empty.
 
 Primary references: [PGlite API](https://pglite.dev/docs/api),

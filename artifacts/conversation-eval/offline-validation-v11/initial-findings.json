@@ -1,0 +1,230 @@
+{
+  "firstExecution": {
+    "finding": "PL/pgSQL evidence variable/table-name ambiguity in reconcile; implementation defect repaired by v_evidence local rename.",
+    "run": {
+      "status": "failed",
+      "closed": true,
+      "assertionsBeforeFailure": 251,
+      "error": {
+        "message": "column reference \"evidence\" is ambiguous",
+        "code": "42702",
+        "where": "PL/pgSQL function public.bfa_p5_capacity_reconcile(uuid,jsonb,jsonb) line 25 at SQL statement\nPL/pgSQL function pg_temp_0.capacity_observe(jsonb,jsonb) line 2 at RETURN\nSQL statement \"SELECT pg_temp.capacity_assert(pg_temp.capacity_observe(a,pg_temp.capacity_observation(v_operation,'unknown'))->>'state'='uncertain','missing create acknowledgment remains uncertain')\"\nPL/pgSQL function inline_code_block line 11 at PERFORM"
+      },
+      "sources": [
+        {
+          "label": "bootstrap",
+          "source": "scripts/conversation-eval/p5-sql/bootstrap.sql",
+          "sha256": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec"
+        },
+        {
+          "label": "0000",
+          "source": "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql",
+          "sha256": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1"
+        },
+        {
+          "label": "0001",
+          "source": "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql",
+          "sha256": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13"
+        },
+        {
+          "label": "0002",
+          "source": "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql",
+          "sha256": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8"
+        },
+        {
+          "label": "0003",
+          "source": "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql",
+          "sha256": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db"
+        },
+        {
+          "label": "0004",
+          "source": "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql",
+          "sha256": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75"
+        },
+        {
+          "label": "0005",
+          "source": "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql",
+          "sha256": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740"
+        },
+        {
+          "label": "draft-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+          "sha256": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b"
+        },
+        {
+          "label": "sequential-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+          "sha256": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef"
+        },
+        {
+          "label": "role-execution",
+          "source": "scripts/conversation-eval/p5-sql/roles.sql",
+          "sha256": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744"
+        },
+        {
+          "label": "capacity-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql",
+          "sha256": "fc7123563f6b5134c9165fa3fe75b66043f4e128c852fd9b3d5e6440e992f7af"
+        },
+        {
+          "label": "capacity-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql",
+          "sha256": "8a17e1bde5bd2b5653ac33a585b4b54cf57c9735f8ceff6dad15d702ae4a2bd9"
+        }
+      ]
+    }
+  },
+  "intermediateExecution": {
+    "finding": "441 checks passed after variable rename, before independent quota-binding review fix and six new regression assertions.",
+    "run": {
+      "status": "passed",
+      "closed": true,
+      "assertionsBeforeFailure": 441,
+      "error": null,
+      "sources": [
+        {
+          "label": "bootstrap",
+          "source": "scripts/conversation-eval/p5-sql/bootstrap.sql",
+          "sha256": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec"
+        },
+        {
+          "label": "0000",
+          "source": "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql",
+          "sha256": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1"
+        },
+        {
+          "label": "0001",
+          "source": "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql",
+          "sha256": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13"
+        },
+        {
+          "label": "0002",
+          "source": "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql",
+          "sha256": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8"
+        },
+        {
+          "label": "0003",
+          "source": "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql",
+          "sha256": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db"
+        },
+        {
+          "label": "0004",
+          "source": "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql",
+          "sha256": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75"
+        },
+        {
+          "label": "0005",
+          "source": "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql",
+          "sha256": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740"
+        },
+        {
+          "label": "draft-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+          "sha256": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b"
+        },
+        {
+          "label": "sequential-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+          "sha256": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef"
+        },
+        {
+          "label": "role-execution",
+          "source": "scripts/conversation-eval/p5-sql/roles.sql",
+          "sha256": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744"
+        },
+        {
+          "label": "capacity-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql",
+          "sha256": "d1a341c7b030a4e7c2467c16e551aa1177def27077a1f01b9f4148d9f36b734e"
+        },
+        {
+          "label": "capacity-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql",
+          "sha256": "8a17e1bde5bd2b5653ac33a585b4b54cf57c9735f8ceff6dad15d702ae4a2bd9"
+        },
+        {
+          "label": "capacity-role-execution",
+          "source": "scripts/conversation-eval/p5-sql/capacity-roles.sql",
+          "sha256": "cb42fd5dc5b34907f1fc0311a800359ee228c0c5a4f1089ce064662070a0a225"
+        }
+      ]
+    }
+  },
+  "policyBindingCounterexample": {
+    "finding": "Current approval moved Q1 to Q2, but missing guard allowed a marker under original Q1 hold. Final fixture fails against separate scratch copy with only the guard removed. No repository source was replaced.",
+    "removedGuard": "IF NOT EXISTS(SELECT 1 FROM bfa_p5_voice.approvals WHERE approval_id=c.approval_id AND quota_policy_id=v.quota_policy_id) THEN RETURN bfa_p5_voice.ack(p_claim,'denied'); END IF;",
+    "run": {
+      "status": "failed",
+      "closed": true,
+      "assertionsBeforeFailure": 292,
+      "error": {
+        "message": "Capacity fixture failed: current approval quota Q2 cannot mark retained hold under Q1",
+        "code": "P0001",
+        "where": "PL/pgSQL function pg_temp_0.capacity_assert(boolean,text) line 3 at RAISE\nSQL statement \"SELECT pg_temp.capacity_assert(public.bfa_p5_capacity_mark(v_receipt,a->'claim',v_operation,1)->>'state'<>'marked','current approval quota Q2 cannot mark retained hold under Q1')\"\nPL/pgSQL function inline_code_block line 14 at PERFORM"
+      },
+      "sources": [
+        {
+          "label": "bootstrap",
+          "source": "scripts/conversation-eval/p5-sql/bootstrap.sql",
+          "sha256": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec"
+        },
+        {
+          "label": "0000",
+          "source": "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql",
+          "sha256": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1"
+        },
+        {
+          "label": "0001",
+          "source": "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql",
+          "sha256": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13"
+        },
+        {
+          "label": "0002",
+          "source": "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql",
+          "sha256": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8"
+        },
+        {
+          "label": "0003",
+          "source": "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql",
+          "sha256": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db"
+        },
+        {
+          "label": "0004",
+          "source": "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql",
+          "sha256": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75"
+        },
+        {
+          "label": "0005",
+          "source": "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql",
+          "sha256": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740"
+        },
+        {
+          "label": "draft-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql",
+          "sha256": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b"
+        },
+        {
+          "label": "sequential-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql",
+          "sha256": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef"
+        },
+        {
+          "label": "role-execution",
+          "source": "scripts/conversation-eval/p5-sql/roles.sql",
+          "sha256": "92020f09681a6a2b1e83fe6ae2b38984475d7e9e4d8e12a9eeaa685760494744"
+        },
+        {
+          "label": "capacity-installation",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql",
+          "sha256": "3a1c76dc4d81fd1c86c134b2a166b84a67816ef7289fc12d28ad0c1a7063aec0"
+        },
+        {
+          "label": "capacity-fixtures",
+          "source": "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql",
+          "sha256": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275"
+        }
+      ]
+    }
+  },
+  "finalOutcome": "Both defects repaired. Final447 checks pass; native concurrency and provider/Auth evidence remain unrun."
+}

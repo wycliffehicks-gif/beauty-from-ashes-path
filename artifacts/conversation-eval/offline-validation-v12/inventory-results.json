@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "scope": "single-connection inventory SQL only",
+  "packageVersion": "0.5.12",
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/run-local.py": "f9938b090b21a155d90af876e6480a4deac0893c601481f87b772a54c185b90f",
+    "scripts/conversation-eval/p5-sql/check-inventory-wasm.mjs": "842043f09eaa32c1ade762bc7f93144da5a71cfd53aaa8d0249b960248e78052",
+    "scripts/conversation-eval/p5-sql/bootstrap.sql": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+    "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1",
+    "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13",
+    "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8",
+    "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db",
+    "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75",
+    "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437"
+  },
+  "checks": [
+    {
+      "label": "Exact empty base14-table inventory accepted",
+      "status": "passed"
+    },
+    {
+      "label": "Exact empty capacity20-table inventory accepted",
+      "status": "passed"
+    },
+    {
+      "label": "Base mode rejects an unexpected capacity schema",
+      "status": "passed"
+    },
+    {
+      "label": "Same table count cannot disguise a renamed/missing required table",
+      "status": "passed"
+    },
+    {
+      "label": "Exact inventory with retained fictional rows fails rollback check",
+      "status": "passed"
+    },
+    {
+      "label": "All20 tables empty again after negative-fixture rollbacks",
+      "status": "passed"
+    }
+  ],
+  "nativeConcurrencyExecuted": false,
+  "remoteDatabaseTouched": false,
+  "generatedGuardSha256": [
+    "316f587d44a96966d99f027e5ac12234afe54932f287b211ad0040cd486e3b8a",
+    "1350b78faa23b9c27f67adea2c32733d718e9f3bc589dae1250342c68560708e"
+  ],
+  "identity": {
+    "version": "PostgreSQL 18.6 (PGlite 0.5.12) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+    "current_database": "bfa_p5_offline_fixture",
+    "current_user": "postgres"
+  },
+  "closed": true
+}

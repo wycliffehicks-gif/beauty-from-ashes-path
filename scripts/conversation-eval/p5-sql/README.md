@@ -77,12 +77,55 @@ These are single-connection PostgreSQL checks with fictional protected records,
 not native lock contention, real Auth, HTTP or authenticated provider evidence.
 The SQL does not validate a provider signature or establish that a session
 really ended. No real provider/device call, connected database or seed allowance
-is involved. The existing native runner does **not** install/test this extension;
-its 12 admission cases remain unrun. Next, extend that harness with capacity
-contention cases and run it only in a suitable nonroot PostgreSQL environment.
+is involved. The native runner now has the explicit `--capacity` path described below.
+Its 12 admission and nine capacity cases remain unrun; use only a suitable
+nonroot PostgreSQL environment.
 Do not repeat failed setup probes or relabel serial execution as concurrency.
 
-## Prepared native path — database execution still unrun
+## Prepared native capacity path — nine cases still unrun
+
+```sh
+python3 -I scripts/conversation-eval/p5-sql/run-local.py --capacity --pg-bin /absolute/postgresql/bin --output /absolute/new-native-capacity-evidence-directory
+```
+
+The default command below remains admission-only. Explicit `--capacity` installs
+the extension after the base rollback suites, checks the exact empty 20-table
+inventory, runs its 129 sequential + 116 actual-role assertions and checks each
+rollback. Only then do the 12 original admission and nine new capacity cases
+run. Concurrency cases intentionally commit fictional records, so no blanket
+empty-database claim is made after those cases.
+
+`capacity_concurrency.py` reuses the guarded native driver with nine named cases:
+shared last slot across owners; close-before-marker; marker-before-close;
+duplicate finality; contradiction versus a waiting replacement; cross-pool
+operation-ID collision; claim/pool expiry; marker/pool expiry; and marker/operation
+expiry. Each case records distinct backend IDs and an observed blocker relation.
+Expiry cases require an observed lock before the database clock crosses the
+eligibility deadline. The case report must contain the exact ordered inventory,
+nonempty assertions, valid lock evidence and successful cleanup; totals alone
+cannot pass. Global operation contention checks the advisory wait event.
+
+**All 21 native cases remain unexecuted.** This batch does not repeat the known
+unavailable-environment probes. Source review and Python syntax checks cannot
+establish actual native locking, concurrency, Auth/HTTP or provider acceptance.
+The updated runner's **27 tests** use explicit process doubles: 17 previous and
+10 new safeguard tests, including invalid/missing evidence and cleanup failures.
+
+The new generated table-inventory SQL has its own narrow executed check:
+
+```sh
+node scripts/conversation-eval/p5-sql/check-inventory-wasm.mjs --module /absolute/scratch/p5-engine/node_modules/@electric-sql/pglite/dist/index.js --output /absolute/new-inventory-evidence-directory
+```
+
+It runs six checks in pinned PostgreSQL WASM: valid empty 14/20-table inventories,
+unexpected extension in base mode, an equal-count renamed/missing table, a dirty
+fixture row and empty tables after the negative-case rollbacks. It imports the
+runner only to extract the exact SQL; it never starts a native server. This is
+not a rerun of the historical 447 database assertions or a concurrency test.
+Source hashes, process-double log and inventory SQL results are retained in
+`artifacts/conversation-eval/offline-validation-v12/`.
+
+## Prepared native admission path — database execution still unrun
 
 Use a normal nonroot OS account with installed PostgreSQL binaries:
 
@@ -113,7 +156,7 @@ only UID/GID 0 mapped, and ordinary nonroot/nested namespace setup refused.
 No root-check bypass, connected database, remote credentials, or production
 account was used. The prepared native cases need their first real run.
 
-Runner unit checks:
+Runner safeguard checks (process doubles, not native SQL):
 
 ```sh
 python3 -I scripts/conversation-eval/p5-sql/test_runner.py

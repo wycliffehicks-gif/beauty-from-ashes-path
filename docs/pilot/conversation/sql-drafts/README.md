@@ -46,8 +46,10 @@ ambiguity. Independent review found a current-approval quota-policy mismatch;
 a regression reproduced the missing guard and passed after repair. Evidence is
 `artifacts/conversation-eval/offline-validation-v11/`. These results do not
 establish production Auth/revocation, native concurrency, transport, provider
-termination/cost or real-device acceptance. The existing 12-case native harness
-covers admission only, remains unrun and still needs capacity race extensions.
+termination/cost or real-device acceptance. The native harness now has an explicit `--capacity` mode with nine prepared
+contention cases in addition to the original 12 admission cases. All 21 remain
+unrun; 27 process-double runner checks and six executed WASM inventory-guard
+checks in `offline-validation-v12` do not establish concurrent SQL behavior.
 
 The sections below describe the original admission package and its historical
 review. Statements about its lack of separate capacity apply to that base file;

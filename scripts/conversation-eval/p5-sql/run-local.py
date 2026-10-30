@@ -8,6 +8,7 @@ ordinary nonroot PostgreSQL binaries. No root-check workaround is supported.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -27,6 +28,14 @@ PORT = "55432"
 BINARY_NAMES = ("initdb", "pg_ctl", "postgres", "psql")
 EXPECTED_ASSERTIONS = {"sequential": 57, "roles": 145}
 EXPECTED_CONCURRENCY_CASES = 12
+EXPECTED_CAPACITY_CASES = 9
+CAPACITY_ASSERTIONS = {"capacity-sequential": (129, "P5_CAPACITY_ASSERT:"),
+                       "capacity-roles": (116, "P5_CAPACITY_ROLE_PASS:")}
+BASE_TABLES = tuple(sorted([
+    *("bfa_p5_voice." + name for name in ("generations", "owner_clocks", "session_fences", "issuances", "quotas", "approvals", "cleanup_owners", "proofs", "attempts", "claims")),
+    *("public.bfa_p3b_" + name for name in ("staging_accounts", "threads", "allowances", "admissions")),
+]))
+CAPACITY_TABLES = tuple("bfa_p5_capacity." + name for name in ("pools", "routes", "allocations", "evidence", "sessions", "conflicts"))
 MIGRATIONS = (
     "0000_p3b_locked_conversation_foundation.sql",
     "0001_p3b_revoke_inherited_browser_grants.sql",
@@ -39,6 +48,96 @@ MIGRATIONS = (
 
 class HarnessError(RuntimeError):
     pass
+
+
+def _literal_names(source: Path, variable: str, count: int) -> tuple[str, ...]:
+    """Read the reviewed literal inventory without executing a helper module."""
+    try:
+        tree = ast.parse(source.read_text(encoding="utf-8"))
+        declarations = [node.value for node in tree.body if isinstance(node, ast.Assign)
+                        and any(isinstance(target, ast.Name) and target.id == variable
+                                for target in node.targets)]
+        if len(declarations) != 1:
+            raise ValueError("Expected exactly one literal " + variable)
+        names = ast.literal_eval(declarations[0])
+        if (not isinstance(names, tuple) or len(names) != count
+                or any(not isinstance(name, str) or not name.strip() for name in names)
+                or len(set(names)) != len(names)):
+            raise ValueError(f"{variable} must contain {count} distinct nonempty strings")
+        return names
+    except (OSError, SyntaxError, ValueError) as exc:
+        raise HarnessError("Invalid capacity case inventory: " + str(exc)) from exc
+
+
+def capacity_case_names(source: Path) -> tuple[str, ...]:
+    return _literal_names(source, "CASE_NAMES", EXPECTED_CAPACITY_CASES)
+
+
+def capacity_expiry_cases(source: Path, cases: tuple[str, ...]) -> tuple[str, ...]:
+    names = _literal_names(source, "EXPIRY_CASE_NAMES", 3)
+    if not set(names).issubset(cases):
+        raise HarnessError("Capacity expiry cases must be in the reviewed case inventory")
+    return names
+
+
+def validate_capacity_evidence(evidence: object, expected: tuple[str, ...], expiry_cases: tuple[str, ...] = ()) -> None:
+    """Never accept totals alone or a nominally passed case without observed locks."""
+    if not isinstance(evidence, dict):
+        raise HarnessError("Capacity concurrency evidence must be an object")
+    cases = evidence.get("cases")
+    if (type(evidence.get("passed")) is not int or evidence["passed"] != len(expected)
+            or type(evidence.get("failed")) is not int or evidence["failed"] != 0
+            or not isinstance(cases, list) or len(cases) != len(expected)
+            or any(not isinstance(case, dict) for case in cases)
+            or tuple(case.get("name") for case in cases) != expected):
+        raise HarnessError("Capacity concurrency requires every exact ordered case name and passing totals")
+    for case in cases:
+        checks = case.get("checks")
+        barriers = case.get("barriers")
+        if (case.get("status") != "passed" or case.get("cleanupErrors")
+                or not isinstance(checks, list) or not checks
+                or any(not isinstance(label, str) or not label.strip() for label in checks)
+                or not isinstance(barriers, list)):
+            raise HarnessError("Capacity case missing passing assertions or cleanup evidence: " + case["name"])
+        locks = [barrier for barrier in barriers if isinstance(barrier, dict) and barrier.get("waitType") == "Lock"]
+        if not locks:
+            raise HarnessError("Capacity case missing observed lock barrier: " + case["name"])
+        for barrier in locks:
+            pid, holder, blockers = barrier.get("pid"), barrier.get("holderPid"), barrier.get("blockers")
+            if (type(pid) is not int or type(holder) is not int or pid <= 0 or holder <= 0
+                    or pid == holder or barrier.get("state") != "active"
+                    or not isinstance(barrier.get("waitEvent"), str) or not barrier["waitEvent"]
+                    or not isinstance(blockers, list) or holder not in blockers
+                    or any(type(blocker) is not int or blocker <= 0 for blocker in blockers)):
+                raise HarnessError("Capacity case has invalid observed blocker identity: " + case["name"])
+        if case["name"] in expiry_cases:
+            clocks = [barrier for barrier in barriers if isinstance(barrier, dict) and barrier.get("kind") == "database-clock"]
+            if (not clocks or "Database wait barrier observed before expiry" not in checks
+                    or barriers.index(locks[0]) >= barriers.index(clocks[0])):
+                raise HarnessError("Capacity expiry case missing ordered database-clock evidence: " + case["name"])
+            for clock in clocks:
+                deadline, observed = clock.get("deadlineMs"), clock.get("observedMs")
+                if (type(deadline) is not int or type(observed) is not int or deadline <= 0 or observed < deadline):
+                    raise HarnessError("Capacity expiry case has invalid database-clock evidence: " + case["name"])
+
+
+def empty_table_check(include_capacity: bool = False) -> str:
+    """Exact names, not just a count: a missing table cannot be hidden by an extra."""
+    expected = sorted(BASE_TABLES + (CAPACITY_TABLES if include_capacity else ()))
+    names = ",".join("'" + name + "'" for name in expected)
+    return """DO $$ DECLARE r record; n bigint; seen text[]:=ARRAY[]::text[]; BEGIN
+      FOR r IN SELECT schemaname,tablename FROM pg_tables
+        WHERE schemaname IN ('bfa_p5_voice','bfa_p5_capacity')
+           OR (schemaname='public' AND tablename LIKE 'bfa_p3b_%')
+        ORDER BY schemaname,tablename LOOP
+        seen:=array_append(seen,r.schemaname||'.'||r.tablename);
+        EXECUTE format('SELECT count(*) FROM %I.%I',r.schemaname,r.tablename) INTO n;
+        IF n<>0 THEN RAISE EXCEPTION 'Fixture rollback leaked rows in %.%',r.schemaname,r.tablename; END IF;
+      END LOOP;
+      IF seen IS DISTINCT FROM ARRAY[""" + names + """]::text[] THEN
+        RAISE EXCEPTION 'Fixture table inventory mismatch: %',seen;
+      END IF;
+    END $$;"""
 
 
 def prepare_output(path: Path) -> Path:
@@ -69,8 +168,11 @@ def isolated_environment(config: Path) -> dict[str, str]:
 
 
 class LocalRun:
-    def __init__(self, repo: Path, pg_bin: Path, output: Path):
+    def __init__(self, repo: Path, pg_bin: Path, output: Path, *, capacity: bool = False):
         self.repo = repo.resolve()
+        self.capacity = capacity
+        self.capacity_cases: tuple[str, ...] = ()
+        self.capacity_expiry_cases: tuple[str, ...] = ()
         self.pg_bin = pg_bin
         self.output = prepare_output(output)
         self.fixture_dir = self.repo / "scripts/conversation-eval/p5-sql"
@@ -84,6 +186,8 @@ class LocalRun:
             "database": DATABASE,
             "scope": "disposable Unix-socket-only cluster; no connected database",
             "nativeDatabaseTestsExecuted": False,
+            "capacityRequested": capacity,
+            "nativeCapacityTestsExecuted": False,
             "sourceSha256": {},
             "phases": [],
             "cleanup": {"status": "not_needed"},
@@ -103,6 +207,10 @@ class LocalRun:
             self.fixture_dir / "roles.sql",
             self.fixture_dir / "concurrency.py",
             self.fixture_dir / "run-local.py",
+            *([self.draft_dir / "p5-voice-capacity.sql",
+               self.draft_dir / "p5-voice-capacity-fixtures.sql",
+               self.fixture_dir / "capacity-roles.sql",
+               self.fixture_dir / "capacity_concurrency.py"] if self.capacity else []),
         ]
 
     def preflight(self) -> list[str]:
@@ -121,6 +229,13 @@ class LocalRun:
                 problems.append(f"Missing fixture source: {path.relative_to(self.repo)}")
             else:
                 self.result["sourceSha256"][str(path.relative_to(self.repo))] = hashlib.sha256(path.read_bytes()).hexdigest()
+        if self.capacity:
+            try:
+                source = self.fixture_dir / "capacity_concurrency.py"
+                self.capacity_cases = capacity_case_names(source)
+                self.capacity_expiry_cases = capacity_expiry_cases(source, self.capacity_cases)
+            except HarnessError as exc:
+                problems.append(str(exc))
         self.result["preflight"] = {"status": "unavailable" if problems else "ready", "reasons": problems}
         return problems
 
@@ -235,16 +350,22 @@ class LocalRun:
                 self.result[phase + "Assertions"] = labels
                 if len(labels) != EXPECTED_ASSERTIONS[phase]:
                     raise HarnessError(f"{phase} assertion evidence incomplete: expected {EXPECTED_ASSERTIONS[phase]}, got {len(labels)}")
-            empty_check = """DO $$ DECLARE r record; n bigint; tables_seen integer:=0; BEGIN
-              FOR r IN SELECT schemaname,tablename FROM pg_tables
-                WHERE schemaname='bfa_p5_voice' OR (schemaname='public' AND tablename LIKE 'bfa_p3b_%') LOOP
-                tables_seen:=tables_seen+1;
-                EXECUTE format('SELECT count(*) FROM %I.%I',r.schemaname,r.tablename) INTO n;
-                IF n<>0 THEN RAISE EXCEPTION 'Fixture rollback leaked rows in %.%',r.schemaname,r.tablename; END IF;
-              END LOOP;
-              IF tables_seen<>14 THEN RAISE EXCEPTION 'Expected fourteen fixture tables, found %',tables_seen; END IF;
-            END $$;"""
-            self.command("rollback-empty", self.psql("-c", empty_check))
+            self.command("rollback-empty", self.psql("-c", empty_table_check()))
+            if self.capacity:
+                # Both rollback suites precede committing concurrency cases. The
+                # latter deliberately retain fictional rows as case evidence.
+                self.sql_file("capacity-install", self.draft_dir / "p5-voice-capacity.sql")
+                self.command("capacity-install-empty", self.psql("-c", empty_table_check(True)))
+                self.result["nativeCapacityTestsExecuted"] = True
+                for phase, path in (("capacity-sequential", self.draft_dir / "p5-voice-capacity-fixtures.sql"),
+                                    ("capacity-roles", self.fixture_dir / "capacity-roles.sql")):
+                    self.sql_file(phase, path)
+                    count, prefix = CAPACITY_ASSERTIONS[phase]
+                    labels = re.findall(re.escape(prefix) + r"\s*(.+)", (self.output / f"{phase}.log").read_text())
+                    self.result[phase + "Assertions"] = labels
+                    if len(labels) != count:
+                        raise HarnessError(f"{phase} assertion evidence incomplete: expected {count}, got {len(labels)}")
+                    self.command(phase + "-rollback-empty", self.psql("-c", empty_table_check(True)))
             concurrency_result = self.output / "concurrency.json"
             self.command("concurrency", [sys.executable, "-I", str(self.fixture_dir / "concurrency.py"),
                                          "--psql", str(self.pg_bin / "psql"), "--socket", str(self.cluster / "socket"), "--port", PORT,
@@ -259,6 +380,16 @@ class LocalRun:
                     or len({case.get("name") for case in cases}) != EXPECTED_CONCURRENCY_CASES):
                 raise HarnessError("Concurrency subprocess did not report all twelve distinct passing cases")
             self.result["concurrency"] = {"passed": evidence["passed"], "failed": evidence["failed"], "evidence": "concurrency.json"}
+            if self.capacity:
+                capacity_result = self.output / "capacity-concurrency.json"
+                self.command("capacity-concurrency", [sys.executable, "-I", str(self.fixture_dir / "capacity_concurrency.py"),
+                             "--psql", str(self.pg_bin / "psql"), "--socket", str(self.cluster / "socket"), "--port", PORT,
+                             "--database", DATABASE, "--user", DB_USER, "--output", str(capacity_result),
+                             "--log-dir", str(self.output / "capacity-concurrency-logs")], timeout=240)
+                capacity_evidence = json.loads(capacity_result.read_text())
+                validate_capacity_evidence(capacity_evidence, self.capacity_cases, self.capacity_expiry_cases)
+                self.result["capacityConcurrency"] = {"passed": capacity_evidence["passed"], "failed": capacity_evidence["failed"],
+                                                      "evidence": capacity_result.name}
             self.result["status"] = "passed"
         except KeyboardInterrupt:
             self.result.update(status="interrupted", error="Interrupted; shutdown attempted")
@@ -274,9 +405,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pg-bin", required=True, type=Path, help="absolute directory containing installed native PostgreSQL binaries")
     parser.add_argument("--output", required=True, type=Path, help="absolute new/empty evidence directory")
     parser.add_argument("--preflight", action="store_true", help="check prerequisites only; never report database tests as passed")
+    parser.add_argument("--capacity", action="store_true", help="also install and check the inactive capacity extension and its native contention cases")
     args = parser.parse_args(argv)
     try:
-        run = LocalRun(Path(__file__).resolve().parents[3], args.pg_bin, args.output)
+        run = LocalRun(Path(__file__).resolve().parents[3], args.pg_bin, args.output, capacity=args.capacity)
         code = run.run(args.preflight)
         print(json.dumps({"status": run.result["status"], "evidence": str(run.output / "result.json")}))
         return code

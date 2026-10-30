@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-30",
+  "timezone": "America/Toronto",
+  "baseCommit": "9492cdf6bd1facf0f1ea17b4864ea6a72e10411b",
+  "baseTree": "eb44f3b73406fc03d2b5f1abcfee2ddb024d5713",
+  "scope": "Prepare native capacity contention cases and verify runner evidence/cleanup guards; no native race execution",
+  "nativeExecution": {
+    "status": "not_run",
+    "admissionCases": 12,
+    "capacityCases": 9,
+    "caseNames": [
+      "shared pool last slot across independent owners",
+      "close commits before waiting create marker",
+      "create marker commits before waiting close",
+      "duplicate final evidence releases one slot once",
+      "trusted contradiction quarantines a waiting replacement marker",
+      "global operation identity contends across distinct pools",
+      "claim pool wait crosses eligibility expiry",
+      "marker pool wait crosses eligibility expiry",
+      "marker operation wait crosses eligibility expiry"
+    ],
+    "environment": "Previous unavailable native PostgreSQL/nonroot environment retained; no new probe or bypass",
+    "sourceReview": "Root reviewed case source; case author independently reviewed runner integration; no definite blocker"
+  },
+  "executed": {
+    "runnerSafeguards": {
+      "passed": 27,
+      "existing": 17,
+      "new": 10,
+      "scope": "Explicit process doubles and synthetic evidence; not SQL or a running database",
+      "log": "runner-tests.log"
+    },
+    "inventoryGuard": {
+      "passed": 6,
+      "engine": "PostgreSQL18.6 / PGlite0.5.12",
+      "scope": "Exact generated inventory SQL in one connection only",
+      "closed": true,
+      "evidence": "inventory-results.json"
+    },
+    "syntax": "Python AST/compilation and Node check passed; exact ordered case registration verified"
+  },
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/run-local.py": "f9938b090b21a155d90af876e6480a4deac0893c601481f87b772a54c185b90f",
+    "scripts/conversation-eval/p5-sql/test_runner.py": "ea83ca8b2f625b06acfc543efbd4a4a963d4a25488a694e543acef83ff833b7b",
+    "scripts/conversation-eval/p5-sql/capacity_concurrency.py": "d1469a43d746a12be3d828fd7a98bf96c68f3c36e1f066d6e80cf50bc76cbff0",
+    "scripts/conversation-eval/p5-sql/check-inventory-wasm.mjs": "842043f09eaa32c1ade762bc7f93144da5a71cfd53aaa8d0249b960248e78052",
+    "scripts/conversation-eval/p5-sql/concurrency.py": "fd66bbfd7fcfb1ecd732cf7a0ea597e4afeb79b637006136895174a1b6123d16"
+  },
+  "historicalNotRerun": [
+    "447 admission/capacity sequential and actual-role checks",
+    "44 reference-model tests including1120 serialized orderings",
+    "579 conversation tests/type/lint/build"
+  ],
+  "unchanged": [
+    "All existing proposed SQL and SQL fixtures",
+    "Original12 native admission case bodies",
+    "Application/UI/routes/controllers",
+    "Dependencies/settings/migrations",
+    "Exact policy/sample/SRT ecosystem records",
+    "P3b closed accounts/staging and six uncertain held+one reserved fictional units",
+    "P4 null approval/expiry, empty grants; original v5 closed"
+  ],
+  "paidLovableAgentCalls": 0,
+  "realModelVoiceMicrophoneCalls": 0,
+  "connectedDatabaseChanges": false,
+  "participantAIOrVoiceEnabled": false,
+  "published": false,
+  "next": "Implement an inactive server-only RPC transport adapter for the existing voice proof bridge, with exact cleanup/proof/claim/inspect/close response and failure fixtures. Keep verified Auth/session-revocation/current-record/issuance ports mandatory, map combined capacity admission explicitly and never treat a base-only claim as a capacity or dispatch permit. No application route, credential access, connected migration or provider call is enabled. The prepared native suite (12 admission + 9 capacity cases) still needs its first actual run in a suitable ordinary nonroot PostgreSQL environment; do not repeat failed setup probes or relabel WASM/process doubles as contention evidence."
+}

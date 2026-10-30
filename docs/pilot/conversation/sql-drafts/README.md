@@ -6,6 +6,19 @@ Updated 30 October 2026 • **offline draft; sequentially executed in PostgreSQL
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
 
+## Protected readers — 30 October 2026
+
+`p5-voice-reads.sql` installs after the base admission draft, outside automatic migrations. It adds two service-only SECURITY DEFINER RPCs and no tables, records or direct schema/table/helper grants. The inactive `service/voice-read-rpc.server.ts` maps only these reads; no host/client is initialized.
+
+| RPC | Inputs | Result |
+| --- | --- | --- |
+| `bfa_p5_voice_read_session_fence` | `p_owner_id`, `p_session_id` | Exact owner/session/version/expiry and revoked=false, or null. |
+| `bfa_p5_voice_read_current` | `p_owner_id`, `p_thread_id`, `p_attempt_id`, `p_authority_fingerprint` | Exact content-free current thread/allowlist/issuance/approval snapshot, or null. |
+
+Both lock the owner and current metadata rows, then check fresh database time against expiry and existing clock high-water. Reads never mutate rows, backfill issuance, provision sessions/approvals/quotas or return private content. Null/malformed/transport failures never authorize fallback. The read snapshot is not a capacity or dispatch permit and does not persist terminal expiry/revocation: transaction-bound proof/claim/inspect/create rechecks remain mandatory. External Auth and protected session writers are still unfinished.
+
+Sixteen actual single-connection PostgreSQL 18.6/PGlite 0.5.12 cases execute this draft, both adapter mappings, real P3b Stop/Delete, no-write comparisons across 14 tables, malformed/missing/unsafe/revoked states and actual role/privilege denials. See `p5-voice-reads-sql.test.ts` and `offline-validation-v14`; the combined conversation suite passes 659 tests. Set `BFA_PGLITE_MODULE` to a separately installed pinned engine's absolute dist/index.js path (Bun on PATH for the full suite). Without that variable optional SQL tests explicitly skip. The existing native and WASM admission/capacity runners do not install this new read draft. All 21 existing native cases and reader-specific cross-backend contention remain unrun. Fictional records intentionally commit within the in-memory fixture; closure, not empty rollback, is asserted. No connected database or real Auth/provider was used.
+
 ## Separate capacity/reconciliation extension — 30 October 2026
 
 `p5-voice-capacity.sql` installs only after the unchanged admission draft. It adds

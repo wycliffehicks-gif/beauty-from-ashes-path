@@ -1,0 +1,24 @@
+Combined conversation Vitest, tsc --noEmit, scoped ESLint and npm run build: exit 0.
+Type/lint outputs empty. Final16 SQL fixture rerun: exit 0 after seed closure assertion.
+
+Build advisories:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 562ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt

@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-29",
+  "timezone": "America/Toronto",
+  "starting_commit": "94e25ba1532fe969a93c0c7b5077f02468204d3c",
+  "starting_tree": "b18d527838cbdb2844a6dc0abfb3f4c9e4c77c17",
+  "scope": "offline executable specification; not application runtime, database concurrency, provider, Auth, HTTP or device evidence",
+  "node": "v24.22.1",
+  "test_command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/conversation-eval/p5-capacity/model.test.mjs",
+    "scripts/conversation-eval/p5-capacity/model.review.test.mjs"
+  ],
+  "result": {
+    "tests": 44,
+    "primary": 23,
+    "independent": 21,
+    "pass": 44,
+    "fail": 0,
+    "serial_orderings_inside_one_test": 1120
+  },
+  "syntax_checked": [
+    "scripts/conversation-eval/p5-capacity/fixtures.mjs",
+    "scripts/conversation-eval/p5-capacity/model.mjs",
+    "scripts/conversation-eval/p5-capacity/model.review.test.mjs",
+    "scripts/conversation-eval/p5-capacity/model.test.mjs"
+  ],
+  "source_sha256": {
+    "scripts/conversation-eval/p5-capacity/README.md": "96b214dc38ccb784a3fe3c4763f1bd0916a6e0599f26abf997395b4c43f4f3eb",
+    "scripts/conversation-eval/p5-capacity/fixtures.mjs": "fc1bd1cec21c2f87aafb36010c8c4809fedf62262f5a58b392390e8a88716780",
+    "scripts/conversation-eval/p5-capacity/model.mjs": "89f9b649c600b18b2b1325b77e2c192e715aef70915c1bf2b4cce4679ff693c9",
+    "scripts/conversation-eval/p5-capacity/model.review.test.mjs": "543ed3437f4da5919cf3e7b77e7a00d1dd51c3dcb3d1816c49099b147177c7f9",
+    "scripts/conversation-eval/p5-capacity/model.test.mjs": "80ea7cca8c244c3a1eaf524e2fc2a54f5e961d5c5580213793373a555b47acd9",
+    "docs/pilot/conversation/p5-capacity-reconciliation-contract.md": "6a84d01cc118ae263736b98ce977ca0b72c220401ece0ab7498411a3853eed4b"
+  },
+  "separate_historical_evidence": {
+    "application_conversation_tests": 579,
+    "application_tested_commit": "65f98f41899e825d39424f5e4f5841e558359bcc",
+    "wasm_sql_assertions": 202,
+    "process_double_harness_tests": 17,
+    "native_multi_session_cases_unrun": 12
+  },
+  "not_performed": [
+    "application test/type/lint/build reruns (application and dependencies unchanged)",
+    "SQL execution or applied migration",
+    "real Auth/provider/model/voice/microphone calls",
+    "paid Lovable agent edits",
+    "purchase or publication"
+  ],
+  "preserved": [
+    "all existing app/SQL/migration/dependency/configuration bytes",
+    "P3b accounts closed and ledger holds unchanged",
+    "completed original v5",
+    "P4 approval/expiry null and grant registry empty",
+    "ten-day journey and exact policies/samples",
+    "ecosystem source/draft distinctions"
+  ],
+  "preservation_plan": {
+    "existing_blobs": 559,
+    "existing_documentation_changes": 3,
+    "new_files": 10,
+    "unchanged_existing_blobs": 556,
+    "removals": 0
+  }
+}

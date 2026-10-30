@@ -1,0 +1,30 @@
+✖ review: trusted eligibility loss during clock rollback remains terminal after clock recovery (6.156643ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.698545
+
+✖ failing tests:
+
+test at scripts/conversation-eval/p5-capacity/model.review.test.mjs:238:1
+✖ review: trusted eligibility loss during clock rollback remains terminal after clock recovery (6.156643ms)
+  AssertionError [ERR_ASSERTION]: An observed terminal eligibility loss must survive a simultaneous bad clock
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/205dbad31641/p5-capacity-work/repo/scripts/conversation-eval/p5-capacity/model.review.test.mjs:244:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -2,7 +2,19 @@
 
 Carl authorizes useful offline GitHub implementation, review and testing while Lovable credits are unavailable. Preserve completed P0–P3b, original v5, restored GitHub/build access, P4 preparation and completed P5 batches. Older current/blocked/not-run headings are historical; the latest completion block governs.
 
-## Current completed batch — disposable SQL harness and sequential execution
+## Current completed batch — separate capacity/reconciliation executable contract
+
+Starting connected head **`94e25ba1532fe969a93c0c7b5077f02468204d3c`** (tree `b18d527838cbdb2844a6dc0abfb3f4c9e4c77c17`) was verified unchanged on 29 October. This batch prepares [the explicit capacity/reconciliation contract](p5-capacity-reconciliation-contract.md) and a dependency-free executable reference model in `scripts/conversation-eval/p5-capacity/`. This marker's containing commit is the new source checkpoint; handoffs retain its final verified SHA.
+
+The model separates concurrent occupancy from cumulative held units. It allows safe pre-create release only after an exact terminal fence, retains uncertain post-marker slots, reconciles exact whole-operation finality, rejects operation/session/evidence reuse and permanently quarantines a pool after contradictory trusted evidence. Quarantine blocks new starts even for already-reserved replacements. No operation reduces cumulative held units. The contract explicitly prevents double-debiting the existing admission hold when a later SQL extension combines capacity with admission.
+
+**44/44 fictional Node model tests pass: 23 primary and 21 independent**, including **1,120 enumerated serial event orderings inside one test**. These are not database concurrency or provider tests. Independent review reproduced and repaired a revocation/clock-order bug: an observed terminal eligibility loss must survive a simultaneous backward clock. A second regression corrected an `unknown` observation after established finality returning a misleading `uncertain` label; the released state had already remained terminal. Source/fixtures, TAP output, initial failure details and hashes are retained in `artifacts/conversation-eval/offline-validation-v10/`.
+
+No app source/UI/route, SQL/migration, dependency/configuration, exact policy/sample, source ecosystem, P3b accounting or P4 approval changed. The model authenticates nobody, creates no durable store or provider capability and is imported only by its fictional tests. Last application checks remain the historical 579 conversation tests/type/lint/build at `65f98f4…`; the 202 WASM SQL checks and 17 process-double harness checks remain separate historical evidence. All 12 native multi-session database cases remain unrun. No Lovable agent edit, purchase, real model/voice/microphone call, participant activation or publication occurred.
+
+**Next bounded offline task:** implement/review an isolated proposed capacity/reconciliation SQL extension and rollback fixtures from this tested contract. Review atomic combined admission+capacity with one cumulative hold, shared-pool last-slot locking, exact operation/evidence uniqueness and cleanup after deletion. Keep it outside automatic migrations and the connected project; the production Auth/session-revocation/snapshot/issuance and authenticated provider-evidence ports remain unfinished. Do not replay completed setup, the SQL harness, v5 or P3b acceptance. No new paid allowance or provider is selected.
+
+## Previous completed batch — disposable SQL harness and sequential execution (29 October history)
 
 Starting and rechecked connected source: `65f98f41899e825d39424f5e4f5841e558359bcc` (tree `5f110750b39c2c10091ecb28d25f026c53d3b40e`); no intervening changes on 29 October. The proof bridge remains inactive. New developer-only runners in `scripts/conversation-eval/p5-sql/` prepare an isolated native cluster and a separately labelled PostgreSQL WASM alternative. Neither targets an existing or connected database.
 
@@ -28,11 +40,11 @@ Final checks: **579/579 conversation tests across 31 files**, including **20 pri
 
 1. Verify the connected head and inspect intervening changes before editing; use expected-head forward writes preserving published history and unrelated blobs.
 2. The disposable harness and WASM sequential/role execution are complete. Run the existing native harness under an ordinary nonroot OS user with native PostgreSQL when available, then repair actual failures in its 12 lock/expiry/close/replay cases. Do not repeat failed environment probes or label WASM as concurrency acceptance. Keep SQL outside automatic migrations and the connected project; do not recreate closed P3b accounts.
-3. **Next useful work in this environment:** continue offline design/implementation of the missing production Auth/session-revocation and atomic snapshot/read ports, trusted issuance path, explicit concurrent-capacity and reconciliation rules. An RPC wrapper/shape check cannot establish current Auth, cross-service atomic revocation or paid dispatch authority. Actual connected migration/HTTP/authenticated voice acceptance remains a separate integration batch.
+3. **Next useful work in this environment:** translate the now-tested capacity/reconciliation contract into an isolated SQL extension and rollback fixtures, preserving one cumulative hold per attempt and shared-pool atomicity. Missing production Auth/session-revocation, atomic snapshot/read and trusted issuance ports remain later unfinished work. An RPC wrapper/shape check cannot establish current Auth, cross-service atomic revocation or paid dispatch authority. Actual connected migration/HTTP/authenticated voice acceptance remains a separate integration batch.
 4. Provider selection, credentials/capabilities, real calls, physical-device/listener/screen-reader evidence and publication remain separate gates. No provider or voice budget is selected; exact live-test approval is required before real calls.
 5. Update this marker, the clean handoff and preserved canonical archive after meaningful work, carrying the ecosystem companions and dated application record.
 
-Read `AGENTS.md`, `p5-offline-lifecycle-checkpoint.md`, `p5-server-session-contract.md`, `p5-atomic-voice-store-contract.md` and `sql-drafts/README.md`. The canonical `BFA_P3b_Progress_and_Auth_Test_Handoff_2026-10-25.md` retains history; its filename is not its current-status date. Preserve completed original v5, P3b acceptance/closure, prior P5 batches and all accounting evidence.
+Read `AGENTS.md`, `p5-capacity-reconciliation-contract.md`, `p5-offline-lifecycle-checkpoint.md`, `p5-server-session-contract.md`, `p5-atomic-voice-store-contract.md` and `sql-drafts/README.md`. The canonical `BFA_P3b_Progress_and_Auth_Test_Handoff_2026-10-25.md` retains history; its filename is not its current-status date. Preserve completed original v5, P3b acceptance/closure, prior P5 batches and all accounting evidence.
 
 ## Standing ecosystem continuity requirement
 
@@ -49,3 +61,4 @@ Apply the recorded balance: acknowledgment/expression and being heard are substa
 Zero Lovable agent requests/credits or real provider/voice/microphone calls in this batch. Participant AI/live voice off; unpublished. No auth/DB/schema/environment/dependency changes. P4 approval/expiry remain null and its grant registry empty; the original two-example v5 allowance is closed. Do not replay either run under general development authorization.
 
 All six AWS Marketplace agreements were cancelled; full AWS account closure remains incomplete after Site Unavailable. Amazon retail/Prime were unchanged. This is a separate unfinished request and does not block app work. Current Lovable balance/renewal date are not established by historical credit forecasts.
+

@@ -1,0 +1,21 @@
+{
+  "regressions": [
+    {
+      "kind": "model_defect",
+      "failure": "trusted eligibility loss was discarded when clock rollback denied first",
+      "repair": "persist terminal eligibility loss before clock rollback guard for exact existing reservation",
+      "evidence": "clock-regression-before.log",
+      "final_test": "review: trusted eligibility loss during clock rollback remains terminal after clock recovery"
+    },
+    {
+      "kind": "outcome_label_defect",
+      "failure": "unknown observation after established terminal outcome returned uncertain though terminal state was retained",
+      "repair": "return late-evidence after terminal observation",
+      "final_test": "independent unknown-after-terminal regression"
+    }
+  ],
+  "initial_fixture_corrections": [
+    "Primary replacement reserve used time10 after a time20 marker attempt; corrected to30. Clock guard correctly denied initial fixture.",
+    "Independent losing-close retry used time10 after time11 marker; corrected to12. Clock guard correctly denied initial fixture."
+  ]
+}

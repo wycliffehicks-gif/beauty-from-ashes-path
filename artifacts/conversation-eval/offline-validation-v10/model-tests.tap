@@ -1,0 +1,274 @@
+TAP version 13
+# Subtest: review: owner/attempt uniqueness spans threads and incarnations; owners stay separate
+ok 1 - review: owner/attempt uniqueness spans threads and incarnations; owners stay separate
+  ---
+  duration_ms: 3.32221
+  type: 'test'
+  ...
+# Subtest: review: changed cleanup binding cannot close or reconcile another incarnation
+ok 2 - review: changed cleanup binding cannot close or reconcile another incarnation
+  ---
+  duration_ms: 1.117308
+  type: 'test'
+  ...
+# Subtest: review: close before reservation permanently retires the owner attempt without a debit
+ok 3 - review: close before reservation permanently retires the owner attempt without a debit
+  ---
+  duration_ms: 0.510051
+  type: 'test'
+  ...
+# Subtest: review: losing cleanup preserves the committed winner and its uncertain slot
+ok 4 - review: losing cleanup preserves the committed winner and its uncertain slot
+  ---
+  duration_ms: 0.834401
+  type: 'test'
+  ...
+# Subtest: review: lost creation acknowledgement plus repeated close preserves possible work
+ok 5 - review: lost creation acknowledgement plus repeated close preserves possible work
+  ---
+  duration_ms: 2.75357
+  type: 'test'
+  ...
+# Subtest: review: final operation evidence may reconcile a missing creation ack after expiry
+ok 6 - review: final operation evidence may reconcile a missing creation ack after expiry
+  ---
+  duration_ms: 1.124709
+  type: 'test'
+  ...
+# Subtest: review: contradictory late session evidence fences pending replacement and future starts
+ok 7 - review: contradictory late session evidence fences pending replacement and future starts
+  ---
+  duration_ms: 1.293695
+  type: 'test'
+  ...
+# Subtest: review: evidence replay is exact and conflicting trusted reuse cannot release holdings
+ok 8 - review: evidence replay is exact and conflicting trusted reuse cannot release holdings
+  ---
+  duration_ms: 1.298242
+  type: 'test'
+  ...
+# Subtest: review: decreasing active capacity blocks pending starts without evicting either owner
+ok 9 - review: decreasing active capacity blocks pending starts without evicting either owner
+  ---
+  duration_ms: 1.272212
+  type: 'test'
+  ...
+# Subtest: review: lowering cumulative ceiling and restoring it preserves all historical debits
+ok 10 - review: lowering cumulative ceiling and restoring it preserves all historical debits
+  ---
+  duration_ms: 0.805046
+  type: 'test'
+  ...
+# Subtest: review: safe integer ceiling cannot overflow through another attempt or policy replacement
+ok 11 - review: safe integer ceiling cannot overflow through another attempt or policy replacement
+  ---
+  duration_ms: 1.201035
+  type: 'test'
+  ...
+# Subtest: review: immutable input copies and snapshots protect identities, debit and quarantine state
+ok 12 - review: immutable input copies and snapshots protect identities, debit and quarantine state
+  ---
+  duration_ms: 0.783934
+  type: 'test'
+  ...
+# Subtest: review: malformed amounts, caller extra fields and bad session evidence are inert
+ok 13 - review: malformed amounts, caller extra fields and bad session evidence are inert
+  ---
+  duration_ms: 2.12461
+  type: 'test'
+  ...
+# Subtest: review: exact expiry fences an unstarted reservation; clock rollback cannot renew it
+ok 14 - review: exact expiry fences an unstarted reservation; clock rollback cannot renew it
+  ---
+  duration_ms: 3.285514
+  type: 'test'
+  ...
+# Subtest: review: missing/disabled policy denies allocation and disabled policy blocks a pending start
+ok 15 - review: missing/disabled policy denies allocation and disabled policy blocks a pending start
+  ---
+  duration_ms: 0.54937
+  type: 'test'
+  ...
+# Subtest: review: completed operation IDs cannot be rebound to a replacement reservation
+ok 16 - review: completed operation IDs cannot be rebound to a replacement reservation
+  ---
+  duration_ms: 0.70117
+  type: 'test'
+  ...
+# Subtest: review: one provider session identity cannot be attributed to two create operations
+ok 17 - review: one provider session identity cannot be attributed to two create operations
+  ---
+  duration_ms: 0.76141
+  type: 'test'
+  ...
+# Subtest: review: incompatible no-create and creation evidence quarantines without fabricating termination
+ok 18 - review: incompatible no-create and creation evidence quarantines without fabricating termination
+  ---
+  duration_ms: 0.548248
+  type: 'test'
+  ...
+# Subtest: review: trusted eligibility loss during clock rollback remains terminal after clock recovery
+ok 19 - review: trusted eligibility loss during clock rollback remains terminal after clock recovery
+  ---
+  duration_ms: 0.7874
+  type: 'test'
+  ...
+# Subtest: review: evidence identity rebound across existing owners quarantines both new-start paths
+ok 20 - review: evidence identity rebound across existing owners quarantines both new-start paths
+  ---
+  duration_ms: 0.914712
+  type: 'test'
+  ...
+# Subtest: review: a late inconclusive observation cannot downgrade an already final operation
+ok 21 - review: a late inconclusive observation cannot downgrade an already final operation
+  ---
+  duration_ms: 0.871256
+  type: 'test'
+  ...
+# Subtest: missing/disabled/zero policy denies without holding any unit or slot
+ok 22 - missing/disabled/zero policy denies without holding any unit or slot
+  ---
+  duration_ms: 2.080414
+  type: 'test'
+  ...
+# Subtest: one pool limits different owners together, exact replay never reserves twice
+ok 23 - one pool limits different owners together, exact replay never reserves twice
+  ---
+  duration_ms: 0.781631
+  type: 'test'
+  ...
+# Subtest: close before reserve retires exact claim and owner/attempt across changed thread IDs
+ok 24 - close before reserve retires exact claim and owner/attempt across changed thread IDs
+  ---
+  duration_ms: 0.424561
+  type: 'test'
+  ...
+# Subtest: losing close for same attempt cannot fence the winner or its operation
+ok 25 - losing close for same attempt cannot fence the winner or its operation
+  ---
+  duration_ms: 0.494928
+  type: 'test'
+  ...
+# Subtest: close wins before marker: slot reusable, cumulative units still held
+ok 26 - close wins before marker: slot reusable, cumulative units still held
+  ---
+  duration_ms: 1.503923
+  type: 'test'
+  ...
+# Subtest: marker wins before close: absent provider ACK retains capacity and cumulative hold
+ok 27 - marker wins before close: absent provider ACK retains capacity and cumulative hold
+  ---
+  duration_ms: 0.759157
+  type: 'test'
+  ...
+# Subtest: marked replay is observation only, changed operation cannot dispatch again
+ok 28 - marked replay is observation only, changed operation cannot dispatch again
+  ---
+  duration_ms: 1.379695
+  type: 'test'
+  ...
+# Subtest: terminal reconciliation works with unknown creation ACK and after close
+ok 29 - terminal reconciliation works with unknown creation ACK and after close
+  ---
+  duration_ms: 0.736934
+  type: 'test'
+  ...
+# Subtest: final no-create evidence releases slot but never refunds cumulative units
+ok 30 - final no-create evidence releases slot but never refunds cumulative units
+  ---
+  duration_ms: 0.58304
+  type: 'test'
+  ...
+# Subtest: exact terminal receipt duplicate is idempotent and late ACK does not resurrect old session
+ok 31 - exact terminal receipt duplicate is idempotent and late ACK does not resurrect old session
+  ---
+  duration_ms: 0.994352
+  type: 'test'
+  ...
+# Subtest: terminal contradiction quarantines pool including already-reserved replacement
+ok 32 - terminal contradiction quarantines pool including already-reserved replacement
+  ---
+  duration_ms: 1.044768
+  type: 'test'
+  ...
+# Subtest: quarantine survives cleanup, policy increases and unrelated terminal evidence
+ok 33 - quarantine survives cleanup, policy increases and unrelated terminal evidence
+  ---
+  duration_ms: 0.987662
+  type: 'test'
+  ...
+# Subtest: same evidence ID with changed outcome quarantines without overwriting original evidence
+ok 34 - same evidence ID with changed outcome quarantines without overwriting original evidence
+  ---
+  duration_ms: 0.581719
+  type: 'test'
+  ...
+# Subtest: different owner/claim/generation/revision/digest/expiry cannot clean up a winner
+ok 35 - different owner/claim/generation/revision/digest/expiry cannot clean up a winner
+  ---
+  duration_ms: 2.322149
+  type: 'test'
+  ...
+# Subtest: expiry or revocation before marker fences pending start; after marker retains uncertainty
+ok 36 - expiry or revocation before marker fences pending start; after marker retains uncertainty
+  ---
+  duration_ms: 0.984228
+  type: 'test'
+  ...
+# Subtest: clock rollback fails closed while exact cleanup is still available
+ok 37 - clock rollback fails closed while exact cleanup is still available
+  ---
+  duration_ms: 0.804566
+  type: 'test'
+  ...
+# Subtest: releasing capacity repeatedly cannot bypass lifetime cumulative ceiling
+ok 38 - releasing capacity repeatedly cannot bypass lifetime cumulative ceiling
+  ---
+  duration_ms: 0.517943
+  type: 'test'
+  ...
+# Subtest: lowering limits preserves holds and prevents previously reserved starts above new limits
+ok 39 - lowering limits preserves holds and prevents previously reserved starts above new limits
+  ---
+  duration_ms: 0.697684
+  type: 'test'
+  ...
+# Subtest: policy cannot rotate pool or unit definition to reset lifetime holds
+ok 40 - policy cannot rotate pool or unit definition to reset lifetime holds
+  ---
+  duration_ms: 0.374666
+  type: 'test'
+  ...
+# Subtest: MAX_SAFE checked subtraction prevents a second reservation overflowing held units
+ok 41 - MAX_SAFE checked subtraction prevents a second reservation overflowing held units
+  ---
+  duration_ms: 0.468708
+  type: 'test'
+  ...
+# Subtest: strict content-free fixture commands reject extra payloads and malformed fields
+ok 42 - strict content-free fixture commands reject extra payloads and malformed fields
+  ---
+  duration_ms: 0.327214
+  type: 'test'
+  ...
+# Subtest: caller input and returned snapshots cannot mutate retained ownership or limits
+ok 43 - caller input and returned snapshots cannot mutate retained ownership or limits
+  ---
+  duration_ms: 0.74166
+  type: 'test'
+  ...
+# Subtest: 1,120 serial event orderings preserve one occupied slot, cumulative units and terminal fences
+ok 44 - 1,120 serial event orderings preserve one occupied slot, cumulative units and terminal fences
+  ---
+  duration_ms: 328.736348
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 449.272447

@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-30",
+  "baseCommit": "f6c334b9cde6ffaa0668b729f48903ffa54416d6",
+  "baseTree": "79e3c0baf43be35e4b8fe587e84b1278e618ab2a",
+  "scope": "Inactive server-only RPC adapter, no host/client/credentials or runtime wiring",
+  "conversation": {
+    "passed": 616,
+    "files": 34,
+    "skipped": 0,
+    "newPrimary": 21,
+    "newIndependent": 10,
+    "newActualSingleConnectionSql": 6,
+    "command": "BFA_PGLITE_MODULE=<absolute separately installed pinned engine dist/index.js> vitest run src/lib/ai/conversation --maxWorkers=1 --testTimeout=60000",
+    "bunRequiredOnPath": true
+  },
+  "checks": {
+    "typecheck": "tsc --noEmit, exit 0",
+    "lint": {
+      "files": [
+        "src/lib/ai/conversation/service/voice-rpc-store.server.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts"
+      ],
+      "exitCode": 0,
+      "warnings": 0
+    },
+    "build": "npm run build, client/SSR/Nitro complete, exit 0"
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "actualRole": "service_role",
+    "appDependencyAdded": false,
+    "databaseClosureAsserted": true,
+    "rowsIntentionallyCommitted": true,
+    "emptyRollbackAssertion": false
+  },
+  "findings": [
+    "Initial six SQL fixture cases reached expected outcomes but numeric SUM observation was a string; bounded observation cast corrected fixture only.",
+    "Independent adapter and bridge review found no definite source defect."
+  ],
+  "limits": [
+    "One injected rpc invocation; transparent behavior of a future supplied transport is not verified.",
+    "Missing replies are deliberately discarded after actual local commits, not HTTP/network fault injection.",
+    "Bridge integration uses actual local crypto and fictional keys/Auth/current records.",
+    "No production Auth, session-fence writer, trusted issuance orchestration or protected read port implemented.",
+    "No capacity create marker, provider dispatch or reconciliation transport exposed.",
+    "All 21 native concurrency cases remain unrun; previous 447 SQL assertions, 44 model tests, 27 runner tests and six inventory tests not rerun.",
+    "Full-app historical 1916-test and Chromium/device evidence not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 581,
+    "materializedAndHashVerified": 580,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md"
+    ],
+    "publishedHistory": "forward-only expected-head write required",
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts": "4b3d1a0ce95ef4f87ed344cf25aec84234bd69325a696335a04417529e017e07",
+    "src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts": "131f9c8073242320f082273ebd84ca59d39c54cef050e7d0ab529684cf4195a2",
+    "src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts": "c983285c0a9f3302f32ae13aac375fdd3744b3863cf07d0fc2ad72419f7c5a70",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "scripts/conversation-eval/p5-sql/bootstrap.sql": "5ed848b9e7ca41a86a21c1a63b062186a1c4e0a98dbec719fdbd02a750c18fec",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4"
+  },
+  "next": "Implement isolated service-only read RPC drafts and an inactive typed adapter for the two remaining protected read ports, readSessionFence and readCurrent. Test exact content-free snapshots and missing/revoked/expired/wrong-owner/attempt/fingerprint/deleted or stopped-record denials, including actual local role checks. Keep reads under the agreed owner-lock contract, outside automatic migrations and the connected database. Never provision a session, approval, quota or issuance from a presented token. Verified current Auth, session-revocation writers and trusted seal/issuance orchestration remain mandatory and unfinished. Keep transaction-bound admission/capacity rechecks independent. All 21 prepared native concurrency cases still require a suitable ordinary nonroot PostgreSQL environment; do not repeat failed setup probes or label WASM/process doubles as contention evidence."
+}

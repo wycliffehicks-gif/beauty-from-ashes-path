@@ -1,0 +1,3911 @@
+{
+  "source": "Vitest JSON report from the single combined run; paths normalized, result fields retained",
+  "counts": {
+    "numTotalTests": 616,
+    "numPassedTests": 616,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "files": [
+    {
+      "path": "src/lib/ai/conversation/__tests__/context.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "conversation context assembly assembles a minimal permitted context with the policy identity",
+          "status": "passed",
+          "duration": 19.695884000000035,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly preserves ALL current restrictions in the assembled context",
+          "status": "passed",
+          "duration": 1.1753669999999943,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O03: private canaries never enter the assembled context",
+          "status": "passed",
+          "duration": 0.9144329999999741,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects principal/owner recombination across people",
+          "status": "passed",
+          "duration": 0.36444099999999935,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects a valid principal recombined with another thread's state",
+          "status": "passed",
+          "duration": 0.5774430000000166,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects a server context bound to a different thread",
+          "status": "passed",
+          "duration": 0.34441100000003644,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects a grant replayed in a new or unrelated turn",
+          "status": "passed",
+          "duration": 0.42200699999995095,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects cross-owner and cross-thread grants",
+          "status": "passed",
+          "duration": 0.49392699999998513,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly accepts a server-validated direct follow-up grant for the current turn",
+          "status": "passed",
+          "duration": 0.46741600000001426,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: a valid preview assembles only the exact validated bytes",
+          "status": "passed",
+          "duration": 2.047694999999976,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: rejects excerpts bound to the wrong owner, thread or turn",
+          "status": "passed",
+          "duration": 1.0674940000000106,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: rejects a changed client timestamp with the original ref otherwise intact",
+          "status": "passed",
+          "duration": 0.6790560000000028,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: rejects a preview whose underlying source revision changed",
+          "status": "passed",
+          "duration": 0.535398999999984,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: rejects expired previews and text/hash mismatches",
+          "status": "passed",
+          "duration": 2.2780840000000353,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: rejects duplicate excerpt references and malformed preview records",
+          "status": "passed",
+          "duration": 1.336580999999967,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly O04: hostile pasted instructions stay data and grant no authority",
+          "status": "passed",
+          "duration": 0.4641510000000153,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly a passage grant naming teaching (BFA-D01) fails kind compatibility",
+          "status": "passed",
+          "duration": 0.29312299999998004,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly a prayer grant cannot smuggle the Scripture fixture",
+          "status": "passed",
+          "duration": 2.395351000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly no-Bible excludes Scripture sources even when a grant names them",
+          "status": "passed",
+          "duration": 0.29614799999995967,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly off + no grant cannot select a Christian-classified teaching record",
+          "status": "passed",
+          "duration": 2.32483400000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly resolves server-selected teaching with exact text and provenance",
+          "status": "passed",
+          "duration": 0.7562530000000152,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects unknown teaching keys and non-teaching kinds in selection",
+          "status": "passed",
+          "duration": 0.40043500000001586,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly bounds the source list",
+          "status": "passed",
+          "duration": 0.2077239999999847,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects a map-key alias whose stored record has a different previewId",
+          "status": "passed",
+          "duration": 0.4827600000000416,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly requires a valid clock when a preview has an expiry",
+          "status": "passed",
+          "duration": 0.769473000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly rejects an unparseable expiry timestamp",
+          "status": "passed",
+          "duration": 0.4174509999999714,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly treats expiry exactly at now as expired (boundary equality)",
+          "status": "passed",
+          "duration": 0.47011100000003125,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly compares expiry by epoch time, not lexical order (timezone offset)",
+          "status": "passed",
+          "duration": 0.6509540000000129,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation context assembly admits a preview whose expiry is genuinely in the future",
+          "status": "passed",
+          "duration": 0.4688889999999901,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/contract.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "conversation contract accepts a valid minimal turn request",
+          "status": "passed",
+          "duration": 2.5596800000000144,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects a wrong contract version without echoing input",
+          "status": "passed",
+          "duration": 1.5923570000000211,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects client-supplied spiritual grants and follow-up linkage",
+          "status": "passed",
+          "duration": 0.6886410000000183,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects client-supplied owner identity, history, preferences, usage, tools",
+          "status": "passed",
+          "duration": 1.3046619999999791,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects unknown nested fields inside an excerpt reference",
+          "status": "passed",
+          "duration": 0.43537799999998583,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects an empty message and an over-long message",
+          "status": "passed",
+          "duration": 0.3522519999999929,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract never silently repairs or normalizes submitted text",
+          "status": "passed",
+          "duration": 0.1825149999999951,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract rejects a non-private-note excerpt source key",
+          "status": "passed",
+          "duration": 0.38662400000001185,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract requires a verified principal bound to an authorized thread",
+          "status": "passed",
+          "duration": 0.36403000000001384,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract requires server-sourced context carrying owner identity",
+          "status": "passed",
+          "duration": 0.8163839999999993,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract server grants require full owner/thread/turn/kind/source binding",
+          "status": "passed",
+          "duration": 0.5032799999999895,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation contract excerpt preview records require full binding fields",
+          "status": "passed",
+          "duration": 0.792287999999985,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/grants.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "spiritual access resolution C08: preference off + religious discussion, no grant permits nothing",
+          "status": "passed",
+          "duration": 1.6204890000000205,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution C09: preference on is narrowed by a current no-prayer restriction",
+          "status": "passed",
+          "duration": 0.35950400000001537,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution preference on without restrictions permits but never compels",
+          "status": "passed",
+          "duration": 0.2730329999999981,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution C10: an explicit prayer grant permits a prayer for the current reply only",
+          "status": "passed",
+          "duration": 0.12808300000000372,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution C10: a validated direct follow-up inherits the scoped grant",
+          "status": "passed",
+          "duration": 0.14201499999998646,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution C10: an unrelated later topic does not inherit the grant",
+          "status": "passed",
+          "duration": 0.17205000000001291,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution a narrower current restriction wins over an explicit grant",
+          "status": "passed",
+          "duration": 0.163376999999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "spiritual access resolution a passage grant permits scripture but not prayer",
+          "status": "passed",
+          "duration": 0.16500999999999522,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3a-repair.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning send \u2192 Stop before the scheduled run \u2192 flush: ZERO provider calls",
+          "status": "passed",
+          "duration": 34.46146999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning preference off during pending work: zero dispatch, stopped, voice off",
+          "status": "passed",
+          "duration": 8.084853000000066,
+          "failureMessages": []
+        },
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning a restriction submitted with a FAILED reply stays in later context",
+          "status": "passed",
+          "duration": 15.826917999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning a correction submitted then Stopped before dispatch persists with provenance",
+          "status": "passed",
+          "duration": 13.680784000000017,
+          "failureMessages": []
+        },
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning never-sent drafts and Not sent messages contribute nothing",
+          "status": "passed",
+          "duration": 11.354711000000066,
+          "failureMessages": []
+        },
+        {
+          "fullName": "A. admission ticket, cancellation and persisted meaning atomic commit: a synchronous subscriber Save captures the exact committed service state",
+          "status": "passed",
+          "duration": 13.863110000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "B. exact voice ownership first and second voice answers are queued for their OWN turns",
+          "status": "passed",
+          "duration": 13.645680999999968,
+          "failureMessages": []
+        },
+        {
+          "fullName": "B. exact voice ownership Stop during a voice turn: late output never queues",
+          "status": "passed",
+          "duration": 16.249402000000032,
+          "failureMessages": []
+        },
+        {
+          "fullName": "B. exact voice ownership switch to new thread / existing thread / delete end the old voice session",
+          "status": "passed",
+          "duration": 7.917325000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "B. exact voice ownership preference off ends the service voice session, matching the UI",
+          "status": "passed",
+          "duration": 12.629779999999982,
+          "failureMessages": []
+        },
+        {
+          "fullName": "discard / delete / clear: all-cache canaries discard removes canary text from every service cache",
+          "status": "passed",
+          "duration": 11.765557999999942,
+          "failureMessages": []
+        },
+        {
+          "fullName": "discard / delete / clear: all-cache canaries delete removes canary text from every service cache",
+          "status": "passed",
+          "duration": 47.45128,
+          "failureMessages": []
+        },
+        {
+          "fullName": "discard / delete / clear: all-cache canaries clear removes canary text from every service cache",
+          "status": "passed",
+          "duration": 16.402954000000022,
+          "failureMessages": []
+        },
+        {
+          "fullName": "both stores preserved on refused actions failed save, dialog cancel and unsent-draft refusal leave UI and service unchanged",
+          "status": "passed",
+          "duration": 10.907911000000013,
+          "failureMessages": []
+        },
+        {
+          "fullName": "both stores preserved on refused actions retry a failed message once; the newer draft is retained",
+          "status": "passed",
+          "duration": 7.779311000000007,
+          "failureMessages": []
+        },
+        {
+          "fullName": "C. grant / source / request integrity prayer revision never inherits a passage grant; passage follow-up pins it",
+          "status": "passed",
+          "duration": 34.56843700000002,
+          "failureMessages": []
+        },
+        {
+          "fullName": "C. grant / source / request integrity a preference change between parent and follow-up revokes the old permission",
+          "status": "passed",
+          "duration": 30.959008999999924,
+          "failureMessages": []
+        },
+        {
+          "fullName": "C. grant / source / request integrity source metadata drift (same bytes, different translation/review) is rejected",
+          "status": "passed",
+          "duration": 6.546097000000032,
+          "failureMessages": []
+        },
+        {
+          "fullName": "C. grant / source / request integrity follow-up against a parent from an older restriction revision is refused",
+          "status": "passed",
+          "duration": 11.957834000000048,
+          "failureMessages": []
+        },
+        {
+          "fullName": "C. grant / source / request integrity provider request carries the exact approved policy body and is deeply frozen/detached",
+          "status": "passed",
+          "duration": 7.71334499999989,
+          "failureMessages": []
+        },
+        {
+          "fullName": "D. mock provider settlement pre-aborted request rejects immediately and is never dispatched",
+          "status": "passed",
+          "duration": 1.55017399999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "D. mock provider settlement a throwing responder rejects through the promise",
+          "status": "passed",
+          "duration": 1.8305769999999484,
+          "failureMessages": []
+        },
+        {
+          "fullName": "D. mock provider settlement abort mid-flight settles exactly once, even if the timer fires later",
+          "status": "passed",
+          "duration": 1.5304740000001402,
+          "failureMessages": []
+        },
+        {
+          "fullName": "sync hash matches Web Crypto SHA-256",
+          "status": "passed",
+          "duration": 9.936431999999968,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice private practice offer is current only for the same confirmed-paused session",
+          "status": "passed",
+          "duration": 31.73413299999993,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice offer is never current when shutdown failed or capture is open",
+          "status": "passed",
+          "duration": 4.1417710000000625,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice Interrupt reply while Speaking cancels queued output and keeps the session listening",
+          "status": "passed",
+          "duration": 5.352978000000121,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice a finalized transcript never overwrites typed text; Cancel preserves it exactly",
+          "status": "passed",
+          "duration": 20.018389999999954,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice Append and Replace are explicit; an empty composer takes the transcript directly",
+          "status": "passed",
+          "duration": 23.22463300000004,
+          "failureMessages": []
+        },
+        {
+          "fullName": "E. voice UI follow-up: practice offer, interrupt, transcript choice a pending transcript choice is dropped on thread switch",
+          "status": "passed",
+          "duration": 4.079637000000048,
+          "failureMessages": []
+        },
+        {
+          "fullName": "F. service invariants (independent diagnostics) claims one admitted turn once even if runTurn is invoked concurrently",
+          "status": "passed",
+          "duration": 8.244605000000092,
+          "failureMessages": []
+        },
+        {
+          "fullName": "F. service invariants (independent diagnostics) a consumed ticket can never dispatch again, even after commit",
+          "status": "passed",
+          "duration": 4.475846999999931,
+          "failureMessages": []
+        },
+        {
+          "fullName": "F. service invariants (independent diagnostics) repeated report corrected once leaves no stale contradictory effective fact",
+          "status": "passed",
+          "duration": 8.353689000000031,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3a-service.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3a fixture resolver classifies only exact fixture sentences; unknown text is unclassified",
+          "status": "passed",
+          "duration": 1.816475999999966,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a fixture resolver religious mentions, negated, quoted and embedded requests grant nothing",
+          "status": "passed",
+          "duration": 0.4152979999999502,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a request construction uses the P1 policy identity/hash and only active-thread history (O02 canaries)",
+          "status": "passed",
+          "duration": 16.297279000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a request construction unknown text gets the honest fictional fallback and no derived items",
+          "status": "passed",
+          "duration": 4.412500999999963,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a corrections and provenance (O07 / C07) correction supersedes the AI guess; intention stays intention; no-questions persists",
+          "status": "passed",
+          "duration": 16.449739000000022,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a corrections and provenance (O07 / C07) C07: the user's own report is superseded by their correction",
+          "status": "passed",
+          "duration": 4.623960999999952,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a corrections and provenance (O07 / C07) a correction with no same-thread target is unanchored, not applied",
+          "status": "passed",
+          "duration": 8.726554000000021,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a corrections and provenance (O07 / C07) discard restores the saved snapshot and removes later derived context",
+          "status": "passed",
+          "duration": 8.460751000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) C10: prayer \u2192 direct revision \u2192 unrelated; preference stays off",
+          "status": "passed",
+          "duration": 9.53143,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) a follow-up with no prior grant gets nothing",
+          "status": "passed",
+          "duration": 3.6434279999999717,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) C08: religious hurt and a negated verse request grant nothing",
+          "status": "passed",
+          "duration": 4.510368999999969,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) C09: preference ON narrowed by the current restriction, which survives a later request",
+          "status": "passed",
+          "duration": 5.572294999999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) C11: exact passage only from the harness fixture; absent fixture is honest",
+          "status": "passed",
+          "duration": 9.902061000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) C12-style: user-pasted 'Scripture' never becomes a source",
+          "status": "passed",
+          "duration": 4.469341999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) lineage: forged, cross-owner/thread, replayed, mismatched and revoked grants fail",
+          "status": "passed",
+          "duration": 6.871669999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) a follow-up keeps the original kind and pinned sources",
+          "status": "passed",
+          "duration": 4.713016000000039,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a scoped grants and lineage (C08\u2013C12 application variants) discarding the granting turn revokes its grant; follow-up then fails",
+          "status": "passed",
+          "duration": 5.282641999999953,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during registry-ready never commits",
+          "status": "passed",
+          "duration": 3.2877399999999852,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during registry-ready never commits",
+          "status": "passed",
+          "duration": 1.8477830000000495,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during registry-ready never commits",
+          "status": "passed",
+          "duration": 1.3875870000000532,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during registry-ready never commits",
+          "status": "passed",
+          "duration": 1.3445529999999053,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during registry-ready never commits",
+          "status": "passed",
+          "duration": 1.3172510000000557,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during registry-ready never commits",
+          "status": "passed",
+          "duration": 1.711636999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during message-hashed never commits",
+          "status": "passed",
+          "duration": 2.129729999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during message-hashed never commits",
+          "status": "passed",
+          "duration": 1.378153999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during message-hashed never commits",
+          "status": "passed",
+          "duration": 1.7533110000000534,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during message-hashed never commits",
+          "status": "passed",
+          "duration": 1.595352000000048,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during message-hashed never commits",
+          "status": "passed",
+          "duration": 1.542342000000076,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during message-hashed never commits",
+          "status": "passed",
+          "duration": 1.4308529999999564,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 1.264562000000069,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 1.3563110000000052,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 1.4707240000000183,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 1.2874570000000176,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 2.166164999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during fixture-resolved never commits",
+          "status": "passed",
+          "duration": 1.3048630000000685,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.4648540000000594,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.2346959999999854,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.3359499999999116,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.3650539999999864,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.2967609999999468,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during grant-issued never commits",
+          "status": "passed",
+          "duration": 1.226142999999979,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.215528000000063,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.1726929999999811,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.2713119999999662,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.1238089999999374,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.3861959999999272,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during context-assembled never commits",
+          "status": "passed",
+          "duration": 1.1926330000000007,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.284793000000036,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.2253220000000056,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.3600759999999354,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.9059710000000223,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.4719149999999672,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during before-dispatch never commits",
+          "status": "passed",
+          "duration": 1.2251420000000053,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.2050329999999576,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.388971999999967,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.244053000000008,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.504526999999939,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.27174500000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during provider-returned never commits",
+          "status": "passed",
+          "duration": 2.3679100000000517,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) stop during before-commit never commits",
+          "status": "passed",
+          "duration": 2.1998459999999795,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete during before-commit never commits",
+          "status": "passed",
+          "duration": 2.5615719999999556,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) discard during before-commit never commits",
+          "status": "passed",
+          "duration": 2.401020000000017,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) clear during before-commit never commits",
+          "status": "passed",
+          "duration": 2.865722000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) preference during before-commit never commits",
+          "status": "passed",
+          "duration": 2.445836999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) switch during before-commit never commits",
+          "status": "passed",
+          "duration": 2.6960109999999986,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) a provider that ignores abort cannot resurrect a deleted thread or attach after clear",
+          "status": "passed",
+          "duration": 3.7885840000000144,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) a delayed provider error after cancellation is dropped, not shown",
+          "status": "passed",
+          "duration": 3.065954999999917,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a lifecycle and cancellation races (O06) delete removes active, saved, derived, grant and queued voice state",
+          "status": "passed",
+          "duration": 5.030555999999933,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures missing history is reported, not pretended",
+          "status": "passed",
+          "duration": 3.2373139999999694,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures over the context limit the turn is refused, never silently truncated",
+          "status": "passed",
+          "duration": 4.412812000000031,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures mock source IDs outside the admitted snapshot are refused",
+          "status": "passed",
+          "duration": 4.7305520000001025,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures shared teaching whose bytes differ from the registry is refused",
+          "status": "passed",
+          "duration": 1.453096999999957,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures exact shared teaching is admitted from the registry and cited by card",
+          "status": "passed",
+          "duration": 3.6742639999999938,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a honest failures provider text/claims about saving, deleting or settings change nothing",
+          "status": "passed",
+          "duration": 2.474350999999956,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) O10: mute, stop answer, pause with confirmed shutdown, explicit resume",
+          "status": "passed",
+          "duration": 0.8442570000000842,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) failed shutdown is reported; private practice stays blocked (O13)",
+          "status": "passed",
+          "duration": 0.30817500000000564,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) O11: provisional fragments become obsolete; only the final transcript is usable",
+          "status": "passed",
+          "duration": 0.22310700000002726,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) muted input: the final transcript is refused",
+          "status": "passed",
+          "duration": 0.10696200000006684,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) O12: preference off cancels queued devotional speech; late output is rejected",
+          "status": "passed",
+          "duration": 0.26496099999997114,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) Pause/Resume: old-session answer, fragment and transcript are rejected, not restamped",
+          "status": "passed",
+          "duration": 0.2341040000000021,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a mock voice lifecycle (O10\u2013O13, mock evidence only) only played segments enter the next request as heard (O11)",
+          "status": "passed",
+          "duration": 3.753014999999891,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3a store \u2194 service integration replies come from the mock provider via the service",
+          "status": "passed",
+          "duration": 55.221169,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration P2 invariants hold: one send at a time; save refused while pending; draft kept",
+          "status": "passed",
+          "duration": 47.090688,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration O02: A1 / new / A2 / reopen A1 \u2014 canaries stay in their thread; mic off on reopen",
+          "status": "passed",
+          "duration": 179.369504,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration discard then reopen excludes discarded user/assistant/derived context",
+          "status": "passed",
+          "duration": 182.06795599999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration Stop during generation: no late reply, service event not committed",
+          "status": "passed",
+          "duration": 44.52282700000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration preference off during generation cancels; failed update keeps truthful state",
+          "status": "passed",
+          "duration": 46.349283000000014,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration clear-all during generation: old work never attaches to a new thread",
+          "status": "passed",
+          "duration": 48.035707,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration a reply claiming saved/deleted/preference-off changes no app state",
+          "status": "passed",
+          "duration": 45.713571,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration voice Pause reports complete only after confirmed mock shutdown; failure is honest",
+          "status": "passed",
+          "duration": 1.3534459999999626,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration voice answers queue as segments; only played ones count as heard",
+          "status": "passed",
+          "duration": 44.75720100000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3a store \u2194 service integration final corrected transcript enters the composer only; provisional never does",
+          "status": "passed",
+          "duration": 2.039568000000031,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-authority.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b internal authority rejects browser owner, history, derived and grants",
+          "status": "passed",
+          "duration": 2.8592029999999795,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b internal authority uses immutable verified subject and rejects a different subject restore",
+          "status": "passed",
+          "duration": 5.211127000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b internal authority restores service facts, restrictions and original grant provenance without voice",
+          "status": "passed",
+          "duration": 17.942334000000017,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b internal authority server seal rejects tamper, wrong subject, revision and expired active state",
+          "status": "passed",
+          "duration": 13.289168999999987,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-boundary.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence absent or non-allowlisted identity fails before privileged work",
+          "status": "passed",
+          "duration": 4.168301999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence account switch during create suppresses returned content",
+          "status": "passed",
+          "duration": 2.8983619999999917,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence saved list emits minimal metadata, no sealed snapshot or context",
+          "status": "passed",
+          "duration": 0.8602510000000052,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence reopen at newer operational revision returns saved equivalence and voice off",
+          "status": "passed",
+          "duration": 12.524943999999977,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence never-saved discard tombstones without restoring client history",
+          "status": "passed",
+          "duration": 2.5195989999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence failed deletion never returns success",
+          "status": "passed",
+          "duration": 0.8322290000000123,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence stale save revision fails before mutation and has no automatic retry",
+          "status": "passed",
+          "duration": 0.5513939999999877,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b server adapter boundary doubles \u2014 NOT real Auth evidence explicit Stop fences current work even after a lost committed response",
+          "status": "passed",
+          "duration": 0.803875000000005,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) one integer allowance admits one reservation and zero balance refuses another",
+          "status": "passed",
+          "duration": 3.3274800000000084,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) identical request identity never reserves or authorizes a second dispatch",
+          "status": "passed",
+          "duration": 0.9529709999999909,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed ownerId fails exact binding",
+          "status": "passed",
+          "duration": 0.36010400000000686,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed threadId fails exact binding",
+          "status": "passed",
+          "duration": 0.18816400000000044,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed requestId fails exact binding",
+          "status": "passed",
+          "duration": 0.22566100000000233,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed mode fails exact binding",
+          "status": "passed",
+          "duration": 0.14294600000002333,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed threadRevision fails exact binding",
+          "status": "passed",
+          "duration": 0.24320700000001239,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) changed fingerprint fails exact binding",
+          "status": "passed",
+          "duration": 0.20691300000001434,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) unapproved owner/deletion refuses dispatch without mutation",
+          "status": "passed",
+          "duration": 0.4166789999999878,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) unapproved owner/deletion refuses dispatch without mutation",
+          "status": "passed",
+          "duration": 0.2472439999999949,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) pre-dispatch cancellation releases only once and cannot be dispatched/reconciled",
+          "status": "passed",
+          "duration": 0.42300999999997657,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) timeout after possible dispatch retains reservation until reliable receipt",
+          "status": "passed",
+          "duration": 0.27378400000000624,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) late/duplicate/out-of-order receipts settle once and never reopen terminal state",
+          "status": "passed",
+          "duration": 0.7300440000000208,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) rejects fractional/negative/unsafe units and unexpected content fields",
+          "status": "passed",
+          "duration": 0.7429929999999842,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b pure fictional admission decisions (NOT database evidence) ledger contains only non-content binding/state/units/receipt and detached copies",
+          "status": "passed",
+          "duration": 0.19415300000000002,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-repair.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) shares only the exact confirmed selection, not adjacent synthetic content",
+          "status": "passed",
+          "duration": 12.666298000000012,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) hostile selected text remains data, not source/system/grant authority",
+          "status": "passed",
+          "duration": 4.292288000000013,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) cancelled local preview adds no event, grant or provider request",
+          "status": "passed",
+          "duration": 0.5763720000000205,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) drift, tampered hash, invalid range and adjacent text claims fail",
+          "status": "passed",
+          "duration": 1.3247220000000084,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) saved content equivalence survives operational revision and reopen",
+          "status": "passed",
+          "duration": 1.6981780000000128,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) preference change cancels pending work at the service boundary",
+          "status": "passed",
+          "duration": 5.909283999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) clear/account change/stop tickets suppress old completion while accepting new work",
+          "status": "passed",
+          "duration": 0.30033400000002075,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) completion preserves a newer typed draft",
+          "status": "passed",
+          "duration": 0.18985699999998928,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b repair rules (unit, not Auth integration) new/reopen switching requires Save/Discard/Cancel for unsaved, draft or pending content",
+          "status": "passed",
+          "duration": 0.2536530000000141,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-seal.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b canonical sealed token parsing preserves valid active and saved envelope round trips",
+          "status": "passed",
+          "duration": 15.363425000000007,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b canonical sealed token parsing rejects an appended segment on an otherwise valid envelope",
+          "status": "passed",
+          "duration": 2.2680179999999837,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b canonical sealed token parsing requires exactly two nonempty canonical base64 segments",
+          "status": "passed",
+          "duration": 2.7648299999999892,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b canonical sealed token parsing requires a 12-byte IV and rejects malformed or truncated ciphertext",
+          "status": "passed",
+          "duration": 5.291388999999981,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b canonical sealed token parsing preserves ownership, thread, revision and authenticated-ciphertext checks",
+          "status": "passed",
+          "duration": 8.082889000000023,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b canonical sealed token parsing preserves the 350000-character token cap",
+          "status": "passed",
+          "duration": 0.2781009999999924,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "Independent P3b authority round-trip diagnostic single-thread restored grant authorizes only its direct follow-up and stays immutable",
+          "status": "passed",
+          "duration": 17.841822000000008,
+          "failureMessages": []
+        },
+        {
+          "fullName": "Independent P3b authority round-trip diagnostic exporting one thread from a multi-thread service excludes other thread grants and restores",
+          "status": "passed",
+          "duration": 5.342556999999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "Independent P3b authority round-trip diagnostic filters revoked lineage while leaving other live thread grants intact and preserves counter uniqueness",
+          "status": "passed",
+          "duration": 11.788519999999977,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P3b local navigation intent (not Auth authority) cancelled asynchronous save cannot execute captured navigation",
+          "status": "passed",
+          "duration": 1.542441999999994,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b local navigation intent (not Auth authority) new intent supersedes old intent but may navigate once confirmed",
+          "status": "passed",
+          "duration": 0.2318700000000149,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b local navigation intent (not Auth authority) same selected thread uses confirmed save/discard operational revision",
+          "status": "passed",
+          "duration": 0.22239600000000337,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P3b local navigation intent (not Auth authority) another selected thread keeps its captured optimistic revision",
+          "status": "passed",
+          "duration": 0.242937999999981,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 eval CLI \u2014 default validate mode is offline the actual bare command chooses a fresh output despite committed old evidence",
+          "status": "passed",
+          "duration": 50.422022999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval CLI \u2014 default validate mode is offline runs the real command with zero provider calls and writes a summary",
+          "status": "passed",
+          "duration": 36.166551999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval CLI \u2014 default validate mode is offline explicit existing output refuses without overwriting evidence",
+          "status": "passed",
+          "duration": 30.478925000000004,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval CLI \u2014 default validate mode is offline --live with the unapproved draft exits non-zero before any dispatch",
+          "status": "passed",
+          "duration": 33.48887399999995,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency reserve persists; a duplicate identity acknowledges without a second reservation",
+          "status": "passed",
+          "duration": 10.130066,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency same request identity with changed fields conflicts",
+          "status": "passed",
+          "duration": 4.115992000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency budget is enforced across outstanding reservations and settled charges",
+          "status": "passed",
+          "duration": 16.609391000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency claim is once-only; a consumed ticket cannot dispatch again",
+          "status": "passed",
+          "duration": 3.862378999999976,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency pre-dispatch stop releases once; post-dispatch stop keeps an uncertain hold",
+          "status": "passed",
+          "duration": 8.111021999999991,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency reconciliation is idempotent; conflicting receipts never reopen or double-refund",
+          "status": "passed",
+          "duration": 7.4798640000000205,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 admission and idempotency reservations and uncertain holds survive a restart (reload from disk)",
+          "status": "passed",
+          "duration": 17.26889699999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 fail-closed durability a held lock refuses every operation and is never broken automatically",
+          "status": "passed",
+          "duration": 10.457584999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 fail-closed durability corruption fails closed and the file is never overwritten",
+          "status": "passed",
+          "duration": 3.5952250000000276,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 fail-closed durability ambiguous state (unknown fields, bad states, duplicate ids) fails closed",
+          "status": "passed",
+          "duration": 2.2603169999999864,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 fail-closed durability invalid inputs are rejected before any mutation",
+          "status": "passed",
+          "duration": 2.558688000000018,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts rejects a different cap, run, manifest or count without changing existing state",
+          "status": "passed",
+          "duration": 7.555443000000025,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts revalidates binding on every mutation, even through a previously opened handle",
+          "status": "passed",
+          "duration": 2.383027000000027,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts never applies one provider receipt to two requests; same-request replay stays idempotent",
+          "status": "passed",
+          "duration": 116.94632100000007,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts blocks the same catalog turn under a changed request or evidence identity after restart",
+          "status": "passed",
+          "duration": 5.460430000000088,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts counts settled and uncertain dispatches across restart, independent of released budget",
+          "status": "passed",
+          "duration": 10.010454999999979,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 exact approved scope and receipts rejects duplicate receipts and duplicate catalog turns loaded from corrupt state",
+          "status": "passed",
+          "duration": 5.301495000000045,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 independent OS-process races 16 competing reservations of one identity create exactly one admission",
+          "status": "passed",
+          "duration": 788.607187,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 independent OS-process races 16 competing claims dispatch exactly once",
+          "status": "passed",
+          "duration": 427.69746899999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval ledger \u2014 independent OS-process races different pending requests racing the final dispatch slot have one winner",
+          "status": "passed",
+          "duration": 256.65131899999983,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) the shipped DRAFT passes structural validation with a fitting cost bound",
+          "status": "passed",
+          "duration": 7.865351000000004,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) the DRAFT is refused for live because approval is null",
+          "status": "passed",
+          "duration": 10.868060000000014,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) an expired manifest is refused even with approval present",
+          "status": "passed",
+          "duration": 2.570727000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) changed policy or source snapshot hashes are refused",
+          "status": "passed",
+          "duration": 4.049452000000002,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) changed, missing or reordered catalog turns are refused",
+          "status": "passed",
+          "duration": 5.078356999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) an unaffordable or mispriced manifest is refused",
+          "status": "passed",
+          "duration": 3.1526059999999916,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) invented zero rates and stale prices are refused, while draft dates remain unset",
+          "status": "passed",
+          "duration": 3.217503999999991,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval manifest \u2014 structural validation (offline) incomplete manifests are refused",
+          "status": "passed",
+          "duration": 2.8314299999999832,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval runner \u2014 live mode refuses before credential access unapproved DRAFT: no env read, no fetch, no dispatch",
+          "status": "passed",
+          "duration": 3.036731000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval runner \u2014 live mode refuses before credential access forged approval with a changed policy hash: refused before env/fetch",
+          "status": "passed",
+          "duration": 2.2997170000000153,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval runner \u2014 live mode refuses before credential access validate mode writes a summary and never dispatches",
+          "status": "passed",
+          "duration": 3.3913459999999986,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 eval runner \u2014 live mode refuses before credential access computeCostBound matches the documented hand calculation",
+          "status": "passed",
+          "duration": 1.449781999999999,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport 9 authorized simulated turns capture exact wire bytes/hashes before transport and settle unique receipts",
+          "status": "passed",
+          "duration": 146.16633500000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport forged non-null manifest approval alone cannot read credentials",
+          "status": "passed",
+          "duration": 2.1612870000000157,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport injected grants cannot authorize the default real transport",
+          "status": "passed",
+          "duration": 1.812449000000015,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport first refusal stops further dispatch and retains uncertainty",
+          "status": "passed",
+          "duration": 27.539401999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport first invalid-usage stops further dispatch and retains uncertainty",
+          "status": "passed",
+          "duration": 19.788925000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport first missing-receipt stops further dispatch and retains uncertainty",
+          "status": "passed",
+          "duration": 22.200806,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport manifest expiry after the first completed call prevents the second call",
+          "status": "passed",
+          "duration": 21.640079000000014,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport a one-byte input cap prevents any dispatch or reservation",
+          "status": "passed",
+          "duration": 14.455292999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport receipt reuse on the second call stops with its full hold retained",
+          "status": "passed",
+          "duration": 30.11789600000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport a lock after the first call preserves its durable evidence and stops",
+          "status": "passed",
+          "duration": 18.004196999999976,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport restarting with a fresh output/evidence directory cannot replay the catalog",
+          "status": "passed",
+          "duration": 103.53758000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 evaluator actual service lifecycle with simulated transport future approval and manifest tampering fail before key reads",
+          "status": "passed",
+          "duration": 5.903590000000008,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 direct provider \u2014 exact request bytes sends the verified wire profile with the approved policy body intact",
+          "status": "passed",
+          "duration": 23.84709699999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 exact request bytes serializes exact authorized context and never mock fixture directives",
+          "status": "passed",
+          "duration": 2.3995780000000195,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 exact request bytes arbitrary freeform text is preserved verbatim",
+          "status": "passed",
+          "duration": 0.2781799999999919,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation accepts an ordinary valid answer citing no source",
+          "status": "passed",
+          "duration": 0.8757540000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation rejects source IDs that were not admitted",
+          "status": "passed",
+          "duration": 1.658758000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation accepts an admitted source ID",
+          "status": "passed",
+          "duration": 1.1189119999999946,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation refusal, incomplete, malformed, oversize and unexpected output are distinct",
+          "status": "passed",
+          "duration": 6.14453899999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation model and tier must match the request exactly",
+          "status": "passed",
+          "duration": 3.769964999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation inconsistent usage is reported, never trusted",
+          "status": "passed",
+          "duration": 1.4684599999999932,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation HTTP failure, rate limit and redirect map to distinct codes with no body leakage",
+          "status": "passed",
+          "duration": 2.6346029999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation pre-abort makes zero provider calls",
+          "status": "passed",
+          "duration": 0.4179719999999918,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation deadline covers a delayed body after headers; the reader is cancelled",
+          "status": "passed",
+          "duration": 61.70547699999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation a single failed fetch is never retried",
+          "status": "passed",
+          "duration": 0.677374000000043,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 direct provider \u2014 response validation missing key and invalid options fail before any fetch",
+          "status": "passed",
+          "duration": 7.14975800000002,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects a missing or malformed actual tier undefined",
+          "status": "passed",
+          "duration": 1.0320499999999697,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects a missing or malformed actual tier null",
+          "status": "passed",
+          "duration": 0.5541680000000042,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects a missing or malformed actual tier 12",
+          "status": "passed",
+          "duration": 0.7532689999999889,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects a missing or malformed actual tier {}",
+          "status": "passed",
+          "duration": 0.7642549999999915,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects a missing or malformed actual tier \"flex\"",
+          "status": "passed",
+          "duration": 0.6904539999999884,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries cancels a stalled response body promptly on caller abort",
+          "status": "passed",
+          "duration": 2.142292999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries fences late success from a transport that ignores abort",
+          "status": "passed",
+          "duration": 1.8646640000000048,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects escaped sensitive decoded output \"test-key-not-a-real-credential\"",
+          "status": "passed",
+          "duration": 1.0039879999999926,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects escaped sensitive decoded output \"\\u0000\"",
+          "status": "passed",
+          "duration": 0.7287410000000136,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects escaped sensitive decoded output \"{\\\"nested\\\":\\\"test-key-not-a-real-credential\\\"}\"",
+          "status": "passed",
+          "duration": 0.6973039999999742,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries bounds and hashes the exact complete UTF-8 wire body at the byte boundary",
+          "status": "passed",
+          "duration": 2.107736999999986,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries rejects pathological short-token and multibyte oversize inputs before dispatch",
+          "status": "passed",
+          "duration": 7.587791999999979,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 repaired provider boundaries flags malformed cache details and usage beyond admitted output as uncertain",
+          "status": "passed",
+          "duration": 1.9336629999999673,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P4 service + direct provider (simulated fetch) commits a valid reply; the service-built request keeps the approved policy hash",
+          "status": "passed",
+          "duration": 24.104208999999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 service + direct provider (simulated fetch) a late reply after Delete never commits or resurrects",
+          "status": "passed",
+          "duration": 18.886511000000013,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 service + direct provider (simulated fetch) a reply naming an unadmitted source is refused and not committed",
+          "status": "passed",
+          "duration": 4.460482999999982,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P4 service + direct provider (simulated fetch) cross-thread canaries never enter another thread's request",
+          "status": "passed",
+          "duration": 3.496915999999999,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 browser capture adapter with fake media only does not request devices until invoked, then requests audio without video",
+          "status": "passed",
+          "duration": 4.48437899999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only rejects insecure, missing-device and already-aborted starts without a prompt",
+          "status": "passed",
+          "duration": 0.7409299999999917,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only mute suppresses input without stopping tracks; close stops every owned track",
+          "status": "passed",
+          "duration": 2.3632320000000107,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only keeps a permission request pending after abort and returns its late stream for cleanup",
+          "status": "passed",
+          "duration": 0.6780449999999973,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only reports NotAllowedError without retaining browser error details",
+          "status": "passed",
+          "duration": 0.2890469999999823,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only reports SecurityError without retaining browser error details",
+          "status": "passed",
+          "duration": 0.23441400000001522,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only reports NotFoundError as unavailable without retry",
+          "status": "passed",
+          "duration": 0.39633900000001177,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only reports NotReadableError as unavailable without retry",
+          "status": "passed",
+          "duration": 0.23467499999998154,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only reports AbortError as unavailable without retry",
+          "status": "passed",
+          "duration": 0.34438999999997577,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only retains an unusable stream for lifecycle cleanup instead of losing ownership",
+          "status": "passed",
+          "duration": 0.2885559999999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only retains streams when initial input suppression fails",
+          "status": "passed",
+          "duration": 0.8161829999999952,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only attempts every stop after a failure and permits explicit cleanup retry",
+          "status": "passed",
+          "duration": 0.42809700000000817,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only does not confirm shutdown merely because stop returned",
+          "status": "passed",
+          "duration": 0.35659899999998856,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only stops tracks added to the owned stream after acquisition",
+          "status": "passed",
+          "duration": 0.19532499999999686,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only refuses to unmute an ended microphone track",
+          "status": "passed",
+          "duration": 0.22702300000000264,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only stops original tracks even after removal from the public stream",
+          "status": "passed",
+          "duration": 0.14789400000000796,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only retains removed failed-stop handles across cleanup retries",
+          "status": "passed",
+          "duration": 0.23912200000000894,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 browser capture adapter with fake media only suppresses removed original tracks while enabling the current microphone",
+          "status": "passed",
+          "duration": 0.2157760000000053,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 offline shared-service voice binding Stop answer synchronously fences selected typed work while starting",
+          "status": "passed",
+          "duration": 20.613241000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding Stop answer synchronously fences selected typed work while paused",
+          "status": "passed",
+          "duration": 8.44860200000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding Stop answer synchronously fences selected typed work while ended",
+          "status": "passed",
+          "duration": 5.5397740000000795,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding Stop answer synchronously fences selected typed work while selected-only",
+          "status": "passed",
+          "duration": 14.92487200000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding retains a failed typed Stop while paused without private-practice assurance or automatic retry",
+          "status": "passed",
+          "duration": 8.32806000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding can switch twice and stop or delete selected typed work before starting its voice",
+          "status": "passed",
+          "duration": 8.692655000000059,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding a newer same-store selection defeats a pending switch to another thread",
+          "status": "passed",
+          "duration": 2.288469999999961,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding every returned lifecycle snapshot retains selected-thread cancellation uncertainty",
+          "status": "passed",
+          "duration": 13.237767000000076,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external delete during final input enabling cannot activate a recreated thread",
+          "status": "passed",
+          "duration": 21.046175000000062,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external clear during final input enabling cannot activate a recreated thread",
+          "status": "passed",
+          "duration": 8.038973000000055,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding is inert, rejects unknown threads and prevents two coordinators for one service",
+          "status": "passed",
+          "duration": 21.15538600000002,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding shares the exact service model and queues only its committed answer",
+          "status": "passed",
+          "duration": 7.261651000000029,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding maps exact store IDs, fences the pending turn and excludes late replies from later context",
+          "status": "passed",
+          "duration": 4.694908000000055,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding pause fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 4.408463999999981,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding finish fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 5.856433000000038,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding type fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 7.851818999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding preference-off fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 6.029749999999922,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding switch fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 9.455653000000098,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding delete fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 15.354204999999979,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 5.490760999999907,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding discard fences a real pending service turn and closes injected resources",
+          "status": "passed",
+          "duration": 6.579410000000053,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding delete purges synchronously during pending admission and cleans every late handle",
+          "status": "passed",
+          "duration": 12.41575899999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding delete purges synchronously during pending capture and cleans every late handle",
+          "status": "passed",
+          "duration": 12.75241799999992,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding delete purges synchronously during pending connection and cleans every late handle",
+          "status": "passed",
+          "duration": 25.17577200000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding delete purges synchronously during pending unmute and cleans every late handle",
+          "status": "passed",
+          "duration": 7.393115999999964,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear purges synchronously during pending admission and cleans every late handle",
+          "status": "passed",
+          "duration": 6.813916000000063,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear purges synchronously during pending capture and cleans every late handle",
+          "status": "passed",
+          "duration": 25.95669799999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear purges synchronously during pending connection and cleans every late handle",
+          "status": "passed",
+          "duration": 18.338942999999972,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear purges synchronously during pending unmute and cleans every late handle",
+          "status": "passed",
+          "duration": 3.717710000000011,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external delete and same-ID recreation invalidate the old admission without cancelling the new record",
+          "status": "passed",
+          "duration": 10.83426200000008,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external clear and same-ID recreation invalidate the old admission without cancelling the new record",
+          "status": "passed",
+          "duration": 20.93556799999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding keeps a failed close bound to the old thread until explicit cleanup retry",
+          "status": "passed",
+          "duration": 2.909178000000111,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding retains a failed service cancellation and retries it against the same pending turn",
+          "status": "passed",
+          "duration": 6.06239400000004,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding does not release coordinator ownership while unmute completion remains pending",
+          "status": "passed",
+          "duration": 13.911734999999908,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding a newer switch wins over pending disposal and retains coordinator ownership",
+          "status": "passed",
+          "duration": 18.816219000000046,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding clear wins over pending switch and does not open a recreated target",
+          "status": "passed",
+          "duration": 3.9083480000000463,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding old connection events and old replies cannot affect the explicit resumed session",
+          "status": "passed",
+          "duration": 6.784897000000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external delete during active unmute closes the old session without cancelling a recreated record",
+          "status": "passed",
+          "duration": 3.438221999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding external clear during active unmute closes the old session without cancelling a recreated record",
+          "status": "passed",
+          "duration": 20.972519000000034,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 offline shared-service voice binding a disposed coordinator cannot modify the new owner's service or voice session",
+          "status": "passed",
+          "duration": 2.936158999999975,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 voice admission independent server-orchestration review rejects client authority fields before any server port and copies accepted request data",
+          "status": "passed",
+          "duration": 6.632196000000022,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review rejects the wrong approval scope or incarnation before attempting a claim",
+          "status": "passed",
+          "duration": 1.067103000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review retains claim ownership when expiry passes during the claim await",
+          "status": "passed",
+          "duration": 2.386056999999994,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review does not attempt a claim after initial evidence expires at its continuation",
+          "status": "passed",
+          "duration": 0.4338559999999916,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review fails generically on a clock exception before claim, retaining ownership after a possible claim",
+          "status": "passed",
+          "duration": 1.0840789999999743,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review checks a freshly shortened expiry at the final continuation, not only the original claim deadline",
+          "status": "passed",
+          "duration": 0.5162210000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review does not renew a shorter observed authority deadline across an inspection wait",
+          "status": "passed",
+          "duration": 0.6329970000000174,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review keeps a failed ambiguous claim address and retries only its unconfirmed close",
+          "status": "passed",
+          "duration": 3.1464070000000106,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review keeps close terminal when an earlier inspection resolves afterward",
+          "status": "passed",
+          "duration": 0.7228429999999832,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review rejects changed owner or approval and never revives the lease after ports recover",
+          "status": "passed",
+          "duration": 1.549301999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review detaches evidence from port-owned objects before the claim await",
+          "status": "passed",
+          "duration": 0.6556209999999965,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review rejects mismatched acknowledgments without closing another claim identity",
+          "status": "passed",
+          "duration": 0.5224390000000199,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 voice admission independent server-orchestration review fails closed for nonfinite or noninteger clocks and expiry evidence",
+          "status": "passed",
+          "duration": 1.5294419999999889,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 inactive server voice admission checks constructs without calls and rejects untrusted extra authority fields before verification",
+          "status": "passed",
+          "duration": 5.051787000000019,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks accepts only verified evidence for the exact requested thread, incarnation, revision and attempt",
+          "status": "passed",
+          "duration": 4.796000000000021,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks does not extend identityExpiresAt when choosing the admission deadline",
+          "status": "passed",
+          "duration": 1.553529000000026,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks does not extend allowlistExpiresAt when choosing the admission deadline",
+          "status": "passed",
+          "duration": 0.3781410000000278,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks does not extend authorityExpiresAt when choosing the admission deadline",
+          "status": "passed",
+          "duration": 0.38916799999998375,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks does not extend approvalExpiresAt when choosing the admission deadline",
+          "status": "passed",
+          "duration": 0.43925400000000536,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks rejects invalid clocks and nonfinite/expired server evidence without attempting a claim",
+          "status": "passed",
+          "duration": 1.0405430000000138,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks keeps owner and exact voice approval bound across the claim wait",
+          "status": "passed",
+          "duration": 3.1953100000000063,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks rechecks identity after a delayed durable inspection and never revives a revoked lease",
+          "status": "passed",
+          "duration": 2.694474000000014,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks does not renew a lease when later evidence has a longer lifetime",
+          "status": "passed",
+          "duration": 0.5077679999999987,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks retains exact cleanup ownership for lost, uncertain, malformed and wrong claim acknowledgments",
+          "status": "passed",
+          "duration": 2.0009559999999738,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks uses a different cleanup identity for a replay refusal, without closing the original winner",
+          "status": "passed",
+          "duration": 0.5908530000000383,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks closes terminally before await, coalesces concurrent closes and requires explicit retry after uncertain closure",
+          "status": "passed",
+          "duration": 1.516332000000034,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks rejects closure acknowledgments for another owner, incarnation, revision or claim",
+          "status": "passed",
+          "duration": 1.7808319999999753,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks copies and freezes client and server evidence instead of retaining mutable input",
+          "status": "passed",
+          "duration": 2.0858440000000087,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks returns a controller-compatible denial before-claim without capture or connection",
+          "status": "passed",
+          "duration": 1.0961580000000026,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks returns a controller-compatible denial after-claim without capture or connection",
+          "status": "passed",
+          "duration": 0.4686290000000213,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive server voice admission checks returns a late admission handle for controller cleanup after Pause while claim is pending",
+          "status": "passed",
+          "duration": 1.3533459999999877,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 inactive voice-controls presentation requires a current selected conversation and never invokes ports while deriving display",
+          "status": "passed",
+          "duration": 25.461171999999976,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation keeps shutdown controls available during pending setup and only permits Resume after closure",
+          "status": "passed",
+          "duration": 4.62510199999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation uses authoritative pending input for Mute, even without host metadata",
+          "status": "passed",
+          "duration": 3.4977780000000394,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation uses authoritative pending input for Unmute, even without host metadata",
+          "status": "passed",
+          "duration": 21.956819999999993,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation does not reconstruct closure from closed resource handles while an input operation is unresolved",
+          "status": "passed",
+          "duration": 2.4146499999999946,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation offers explicit Retry after failed resource close and keeps uncertainty visible during retry",
+          "status": "passed",
+          "duration": 4.632522999999992,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation does not offer another Stop or Resume when cancellation failed despite every handle closing",
+          "status": "passed",
+          "duration": 2.586430000000007,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation keeps selected typed Stop usable after switching away from the retained closed voice attempt",
+          "status": "passed",
+          "duration": 1.7343420000000265,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation only offers safe closure after external deletion and same-ID recreation",
+          "status": "passed",
+          "duration": 2.177141000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation distinguishes denied setup with confirmed cleanup from uncertain shutdown",
+          "status": "passed",
+          "duration": 2.055016999999964,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation distinguishes dismissed setup with confirmed cleanup from uncertain shutdown",
+          "status": "passed",
+          "duration": 2.3159519999999816,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation distinguishes unavailable setup with confirmed cleanup from uncertain shutdown",
+          "status": "passed",
+          "duration": 2.5276759999999854,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation host promise metadata prevents duplicates without hiding confirmed closure or enabling acquisition",
+          "status": "passed",
+          "duration": 2.7239580000000387,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation explains an input failure after successful cleanup instead of presenting an ordinary Finish",
+          "status": "passed",
+          "duration": 2.024800999999968,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation never enables acquisition while a resource is unknown even if closure metadata conflicts",
+          "status": "passed",
+          "duration": 1.309078999999997,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation does not call Stop a closed voice session while playback cancellation is pending",
+          "status": "passed",
+          "duration": 1.9338040000000092,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation requires every authority signal for private-practice assurance and Resume",
+          "status": "passed",
+          "duration": 3.8620179999999777,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive voice-controls presentation keeps accessible labels distinct and input button identity stable in the view",
+          "status": "passed",
+          "duration": 1.837378000000001,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider ignores a loss event caused by deliberate close during and after Finish talking",
+          "status": "passed",
+          "duration": 4.848835000000008,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider ignores a previous transport loss event after explicit Resume",
+          "status": "passed",
+          "duration": 1.725718999999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider does no admission, capture or connection on construction or network recovery",
+          "status": "passed",
+          "duration": 0.7206990000000246,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider requires explicit start, fresh revalidation and initially muted capture before connecting",
+          "status": "passed",
+          "duration": 2.542833999999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider denied microphone leaves no connection and releases admission",
+          "status": "passed",
+          "duration": 0.834602000000018,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider dismissed microphone leaves no connection and releases admission",
+          "status": "passed",
+          "duration": 0.38945900000001643,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider unavailable microphone leaves no connection and releases admission",
+          "status": "passed",
+          "duration": 0.35168200000001093,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider cleans a partially acquired capture returned with an unavailable result",
+          "status": "passed",
+          "duration": 0.4656129999999905,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider rejects a revoked admission before acquiring capture",
+          "status": "passed",
+          "duration": 0.5872980000000041,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider rejects expiry after permission and before connection",
+          "status": "passed",
+          "duration": 0.4571509999999819,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider cleans all resources if admission expires during connection",
+          "status": "passed",
+          "duration": 0.41627900000000295,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider rejects admission invalidated while initial unmute is pending and closes every resource",
+          "status": "passed",
+          "duration": 1.4620199999999954,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider pause while permission is pending remains uncertain and cleans the late capture",
+          "status": "passed",
+          "duration": 0.7650559999999871,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider retains a late capture whose close fails and retries cleanup only on request",
+          "status": "passed",
+          "duration": 0.7353219999999965,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider cleans late admission without requesting permission or connecting",
+          "status": "passed",
+          "duration": 0.6895629999999926,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider cleans both late connection resources and never activates the obsolete session",
+          "status": "passed",
+          "duration": 0.4502209999999991,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider mute changes only input; Stop answer stops playback and clears stale queued segments",
+          "status": "passed",
+          "duration": 0.8818929999999909,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider Pause confirms all four independent resources before private practice",
+          "status": "passed",
+          "duration": 0.6575440000000015,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a failed admission close blocks private assurance and fresh session",
+          "status": "passed",
+          "duration": 0.46177799999998115,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a failed capture close blocks private assurance and fresh session",
+          "status": "passed",
+          "duration": 0.32474099999998884,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a failed connection close blocks private assurance and fresh session",
+          "status": "passed",
+          "duration": 0.4391740000000084,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a failed playback close blocks private assurance and fresh session",
+          "status": "passed",
+          "duration": 0.4104499999999973,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider network recovery never reconnects; explicit Resume uses a fresh admission and session",
+          "status": "passed",
+          "duration": 0.829353999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider Type instead closes resources and keeps the current thread identity",
+          "status": "passed",
+          "duration": 0.4790140000000065,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider switching during acquisition cleans the old thread and does not auto-start another",
+          "status": "passed",
+          "duration": 0.7225120000000231,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider faith-off and interruption invalidate old output without retracting played segments",
+          "status": "passed",
+          "duration": 1.1904499999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider playback stop failure closes the whole session and keeps failure explicit",
+          "status": "passed",
+          "duration": 0.43719100000001276,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider pending-work cancellation failure returns false and still closes every resource",
+          "status": "passed",
+          "duration": 0.8517679999999928,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider does not assure private practice or resume until failed Pause cancellation is retried",
+          "status": "passed",
+          "duration": 0.777955999999989,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider Stop answer failure does not silently retry cancellation and retains its ended target",
+          "status": "passed",
+          "duration": 0.8595589999999902,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider retries only unresolved cancellation and closure while preserving the failed fence",
+          "status": "passed",
+          "duration": 1.5318259999999952,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider exposes unconfirmed input while changing muted to true",
+          "status": "passed",
+          "duration": 0.5125950000000046,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider exposes unconfirmed input while changing muted to false",
+          "status": "passed",
+          "duration": 4.0181940000000225,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider closes an active session when admission expires during unmute",
+          "status": "passed",
+          "duration": 0.5239919999999927,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a late unmute cannot confirm Pause until it settles and closure is reconfirmed",
+          "status": "passed",
+          "duration": 0.3861740000000111,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider late initial input enabling is followed by another capture close",
+          "status": "passed",
+          "duration": 0.3828579999999988,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 injected asynchronous voice lifecycle \u2014 no device or provider a rejected late input-enabling operation also requires closure to be reconfirmed",
+          "status": "passed",
+          "duration": 0.35491700000000037,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 request-bound voice proof independent review keeps short operation receipt expiry separate from the admission lifetime",
+          "status": "passed",
+          "duration": 46.403719000000024,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review isolates interleaved proof registrations for concurrent requests on one factory",
+          "status": "passed",
+          "duration": 22.797555000000045,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review does not dispatch a claim after the proof registration wait reaches exact receipt expiry",
+          "status": "passed",
+          "duration": 3.6716200000000185,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review keeps the exact cleanup address when cleanup registration committed but its reply was lost",
+          "status": "passed",
+          "duration": 3.1634320000000002,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review does not invoke claim on a lost proof-registration reply or retry it automatically",
+          "status": "passed",
+          "duration": 5.455272999999977,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects an acknowledgment that swaps a claim proof into an inspect operation",
+          "status": "passed",
+          "duration": 3.359037999999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review pins the original session fence version instead of inheriting a later replacement",
+          "status": "passed",
+          "duration": 12.47340799999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review retains a backwards-clock denial across subsequent lease operations while allowing cleanup",
+          "status": "passed",
+          "duration": 15.412260000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review retains the earliest shortened authority deadline across separate verification calls",
+          "status": "passed",
+          "duration": 15.656708999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review exposes no receipt, cleanup credential, session ID or envelope in its public snapshot",
+          "status": "passed",
+          "duration": 17.493757000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration 0 before any operation",
+          "status": "passed",
+          "duration": 2.363193000000024,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration -1 before any operation",
+          "status": "passed",
+          "duration": 1.2087570000000483,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration 30001 before any operation",
+          "status": "passed",
+          "duration": 2.2448040000000447,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration 1.5 before any operation",
+          "status": "passed",
+          "duration": 1.8540530000000217,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration NaN before any operation",
+          "status": "passed",
+          "duration": 2.5829550000000268,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects invalid server proof-age configuration Infinity before any operation",
+          "status": "passed",
+          "duration": 9.204454999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects extra fields in a cleanup acknowledgment rather than treating it as verified ownership",
+          "status": "passed",
+          "duration": 10.842542999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects a stale proof acknowledgment from a different request without disturbing its active lease",
+          "status": "passed",
+          "duration": 15.876140999999961,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review keeps exact cleanup ownership when claim commits but arrives after receipt expiry",
+          "status": "passed",
+          "duration": 16.198268999999982,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review routes close to the original claim while a late commit fixture observes its tombstone",
+          "status": "passed",
+          "duration": 15.032247000000098,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review lets terminal close defeat a pending inspect proof without issuing another store inspection",
+          "status": "passed",
+          "duration": 27.918227,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review retries an unconfirmed close only on explicit retry with the same cleanup identity and no fresh authority",
+          "status": "passed",
+          "duration": 49.86797100000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 request-bound voice proof independent review rejects a claim acknowledgment whose original deadline was replaced by its receipt deadline",
+          "status": "passed",
+          "duration": 26.819165999999996,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL executes all five named mappings through service_role and retains the single hold",
+          "status": "passed",
+          "duration": 111.87535899999966,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL denies disabled capacity without leaving a base claim or debiting quota",
+          "status": "passed",
+          "duration": 28.421204999999645,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL refuses attaching an existing base-only hold rather than debiting a second time",
+          "status": "passed",
+          "duration": 39.12775099999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL preserves actual SQL null proof denial without a fallback claim",
+          "status": "passed",
+          "duration": 19.17840199999955,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL retains a committed claim after deliberately discarded reply and closes it after deletion",
+          "status": "passed",
+          "duration": 39.75248499999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC mappings executed in isolated single-connection PostgreSQL retries an explicitly requested close with its exact identity after discarded committed reply",
+          "status": "passed",
+          "duration": 38.822369000000435,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review retains exact cleanup after a modeled committed registration reply is lost",
+          "status": "passed",
+          "duration": 22.978443000000027,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review never reissues a possibly committed combined claim and can close after Auth and clock failure",
+          "status": "passed",
+          "duration": 24.704497000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review explicit proof null denies without retry, fallback or abandoning cleanup",
+          "status": "passed",
+          "duration": 5.849102000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review a changed winner identity cannot replace the bridge's retained cleanup claim",
+          "status": "passed",
+          "duration": 6.571604999999977,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review wrong close acknowledgment stays unconfirmed; deliberate retry uses the same exact ownership",
+          "status": "passed",
+          "duration": 17.809712999999988,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review late inspected eligibility cannot revive a lease whose capacity cleanup already acknowledged",
+          "status": "passed",
+          "duration": 66.018933,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review overlapping calls reject swapped claims independently without a shared last-call identity",
+          "status": "passed",
+          "duration": 0.9243670000000179,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review captures original nested input before waiting and returns no shared response references",
+          "status": "passed",
+          "duration": 0.7445950000000039,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review missing capacity RPC cannot silently fall back to the base-only claim",
+          "status": "passed",
+          "duration": 7.214096999999981,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 RPC adapter independent uncertainty and identity review keeps the server client's method binding and refuses inherited success envelope fields",
+          "status": "passed",
+          "duration": 1.0501780000000167,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 inactive exact RPC transport mapping constructs only five ports without invoking a client or creating capabilities",
+          "status": "passed",
+          "duration": 3.6342340000000206,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping maps exact cleanup/proof and combined capacity admission with no base-only claim",
+          "status": "passed",
+          "duration": 4.797351999999989,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping does not retry or fall back when the combined capacity RPC is unavailable",
+          "status": "passed",
+          "duration": 2.0648020000000145,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping sanitizes invalid client construction and thrown getter errors",
+          "status": "passed",
+          "duration": 0.6775749999999903,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping validates malformed claims and handles before invoking the transport",
+          "status": "passed",
+          "duration": 4.067369000000014,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping validates cleanup shape rather than stripping untrusted extra fields",
+          "status": "passed",
+          "duration": 0.900841999999983,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping rejects inherited authority fields and non-JSON extra keys before transport",
+          "status": "passed",
+          "duration": 1.1351259999999854,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping rejects inherited or extra nested response fields instead of treating them as acknowledgment",
+          "status": "passed",
+          "duration": 1.752600000000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping checks the proof wire contract and lifetime inequalities before transport",
+          "status": "passed",
+          "duration": 2.7062609999999836,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping detaches and freezes the proof and claim before awaiting a response",
+          "status": "passed",
+          "duration": 1.381467999999984,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping copies admission identity before the caller mutates an outstanding request",
+          "status": "passed",
+          "duration": 1.0143539999999973,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping isolates concurrent claim responses even when they settle in reverse order",
+          "status": "passed",
+          "duration": 1.0678139999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping rejects missing or contradictory response envelopes instead of inferring success",
+          "status": "passed",
+          "duration": 4.286018999999982,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping requires exact claim acknowledgment identity and SQL states",
+          "status": "passed",
+          "duration": 2.911391000000009,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping preserves exact SQL denials/replays/closure without retrying or creating another hold",
+          "status": "passed",
+          "duration": 1.2851830000000177,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping requires exact closed state for capacity cleanup",
+          "status": "passed",
+          "duration": 0.5682589999999834,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping treats explicit null proof as a committed semantic denial without retry",
+          "status": "passed",
+          "duration": 0.4223379999999963,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping rejects proof acknowledgments that rebind or extend any exact lifetime",
+          "status": "passed",
+          "duration": 2.7492059999999867,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping rejects cleanup acknowledgments for a different handle or with extra data",
+          "status": "passed",
+          "duration": 2.8133829999999875,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping returns detached frozen acknowledgments without reflecting transport metadata",
+          "status": "passed",
+          "duration": 0.5169209999999964,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive exact RPC transport mapping sanitizes synchronous throws, rejected promises and hostile response getters",
+          "status": "passed",
+          "duration": 0.946440999999993,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge has no default proof lifetime and performs no reads on construction",
+          "status": "passed",
+          "duration": 14.447952999999984,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge rejects client proof, claim and owner fields before server work",
+          "status": "passed",
+          "duration": 4.453852999999981,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge registers exact cleanup before claim proof and keeps operation TTL separate from admission lifetime",
+          "status": "passed",
+          "duration": 28.88924499999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge requires a current exact protected session fence",
+          "status": "passed",
+          "duration": 2.906183999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge denies session-fence expiry after its read wait before reading current records",
+          "status": "passed",
+          "duration": 2.0338350000000105,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge pins session and fence version across lease revalidation",
+          "status": "passed",
+          "duration": 16.090524999999957,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge never reuses another session of the same owner for a retained claim",
+          "status": "passed",
+          "duration": 17.138449999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge keeps exact cleanup ownership after a lost cleanup registration reply without claiming",
+          "status": "passed",
+          "duration": 3.7147360000000162,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge rejects extra-field or changed cleanup acknowledgments before proof registration",
+          "status": "passed",
+          "duration": 13.350483999999994,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge retains cleanup after lost proof registration without automatic retry or claim",
+          "status": "passed",
+          "duration": 3.6420059999999808,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge rejects changed operation, receipt, claim, deadlines and extra fields in proof acknowledgments",
+          "status": "passed",
+          "duration": 21.88941299999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge rechecks Auth after proof registration before invoking claim",
+          "status": "passed",
+          "duration": 3.4634149999999977,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge does not use a receipt after authority shortens during registration",
+          "status": "passed",
+          "duration": 4.626723999999967,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge does not claim when a proof registration wait reaches exact receipt expiry",
+          "status": "passed",
+          "duration": 3.8679179999999747,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge retains ambiguous claim cleanup after the mutation reply arrives too late",
+          "status": "passed",
+          "duration": 11.471513999999956,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge cannot turn a replay winner acknowledgment into cleanup ownership of that winner",
+          "status": "passed",
+          "duration": 9.219348000000025,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge terminal close prevents a pending inspect receipt from issuing its store operation",
+          "status": "passed",
+          "duration": 73.426267,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge late inspection success cannot revive a terminally closed lease",
+          "status": "passed",
+          "duration": 63.45601299999993,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge close remains exact after Auth revocation, clock failure and lost closure reply; retry acquires nothing",
+          "status": "passed",
+          "duration": 11.77467200000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive request-bound durable-store bridge does not renew the earliest lease deadline with later longer proof observations",
+          "status": "passed",
+          "duration": 21.196766000000025,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 server verification independent adversarial review accepts a locally authenticated envelope only with its preexisting exact incarnation registration",
+          "status": "passed",
+          "duration": 14.598584000000017,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a valid old seal when its thread ID and revision are recreated in another incarnation",
+          "status": "passed",
+          "duration": 4.06590700000001,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a missing issuance registration without treating current row ownership as a substitute",
+          "status": "passed",
+          "duration": 6.602722,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects registration for different ciphertext even when owner, thread and revision match",
+          "status": "passed",
+          "duration": 10.288394000000011,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects client supplied identity, clock and verification fields before any server reads",
+          "status": "passed",
+          "duration": 2.885526999999996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects changed Auth session even for the same owner after asynchronous verification",
+          "status": "passed",
+          "duration": 3.686854000000011,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a changed Auth owner after the first current-state read",
+          "status": "passed",
+          "duration": 2.591177000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review does not renew an early Auth deadline with a later longer identity proof",
+          "status": "passed",
+          "duration": 2.675153999999992,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a revoked approval discovered by the final current-state read",
+          "status": "passed",
+          "duration": 2.390142999999995,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a deleted thread discovered after verifying the first envelope",
+          "status": "passed",
+          "duration": 1.9405639999999948,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects an authenticated envelope with a nonnumeric expiration despite a future registration",
+          "status": "passed",
+          "duration": 1.7849890000000244,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a saved snapshot envelope instead of accepting it as active authority",
+          "status": "passed",
+          "duration": 2.3315800000000024,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review fails closed on server-port exceptions without exposing their private message",
+          "status": "passed",
+          "duration": 3.1790759999999807,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review retains an earlier shorter allowlist deadline across a later extended snapshot",
+          "status": "passed",
+          "duration": 3.2178539999999884,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review retains an earlier shorter approval deadline across a later extended snapshot",
+          "status": "passed",
+          "duration": 2.8075450000000046,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review retains an earlier shorter authority deadline across a later extended snapshot",
+          "status": "passed",
+          "duration": 2.2349080000000185,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review copies port-owned records before later waits can mutate their approval identity",
+          "status": "passed",
+          "duration": 2.5083420000000274,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review copies the original request before an asynchronous Auth read can replace its authority",
+          "status": "passed",
+          "duration": 2.0624670000000265,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review rejects a backwards trusted clock during verification",
+          "status": "passed",
+          "duration": 2.042408000000023,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review never passes a raw envelope or client incarnation into the store lookup",
+          "status": "passed",
+          "duration": 3.1631610000000023,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review requires a separate exact voice approval rather than a text-evaluation grant",
+          "status": "passed",
+          "duration": 2.305074999999988,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review denies noninteger clock readings before requesting Auth",
+          "status": "passed",
+          "duration": 1.454829000000018,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 server verification independent adversarial review denies a revoked issuance registration even when a separate approval remains valid",
+          "status": "passed",
+          "duration": 2.894106000000022,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "P5 inactive concrete server verification adapter constructs without reads and returns only immutable content-free evidence",
+          "status": "passed",
+          "duration": 15.867155999999994,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter denies missing or malformed verified identity before reading sealed authority or records",
+          "status": "passed",
+          "duration": 3.9725660000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter authenticates ciphertext rather than accepting a structurally valid plain envelope",
+          "status": "passed",
+          "duration": 5.465151999999989,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter rejects a valid seal for a different owner, thread or revision before current-record reads",
+          "status": "passed",
+          "duration": 12.527969000000013,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter binds ownerId independently in the current row, issuance record and voice approval",
+          "status": "passed",
+          "duration": 5.1873410000000035,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter binds threadId independently in the current row, issuance record and voice approval",
+          "status": "passed",
+          "duration": 3.8122630000000015,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter binds threadIncarnation independently in the current row, issuance record and voice approval",
+          "status": "passed",
+          "duration": 4.2921590000000265,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter binds threadRevision independently in the current row, issuance record and voice approval",
+          "status": "passed",
+          "duration": 3.6571389999999724,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter requires current allowlist admission for the verified owner",
+          "status": "passed",
+          "duration": 5.0600239999999985,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter requires a separate exact live-voice scope, attempt and valid approval digest",
+          "status": "passed",
+          "duration": 6.666817999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter never allows an issuance registration to extend the authenticated envelope's expiry",
+          "status": "passed",
+          "duration": 2.2438119999999913,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter retains earlier shorter allowlist, registered-authority and approval deadlines",
+          "status": "passed",
+          "duration": 2.8079099999999926,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter denies expiry at the end of a deferred record read despite a later long-lived snapshot",
+          "status": "passed",
+          "duration": 54.41055399999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter checks expiry after the final Auth wait",
+          "status": "passed",
+          "duration": 4.458044000000029,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter rejects a changed exact approval identity or digest between record reads",
+          "status": "passed",
+          "duration": 3.654775000000029,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter denies invalid or backwards clocks rather than recovering expired authority",
+          "status": "passed",
+          "duration": 2.4994480000000294,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter denies unavailable crypto credentials without accessing a production secret or accepting a fallback",
+          "status": "passed",
+          "duration": 1.4725159999999846,
+          "failureMessages": []
+        },
+        {
+          "fullName": "P5 inactive concrete server verification adapter feeds the admission controller only after verification and denies unregistered legacy seals",
+          "status": "passed",
+          "duration": 5.76126899999997,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/preview-store.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "conversation preview store server snapshot is stable, frozen and empty",
+          "status": "passed",
+          "duration": 3.753284000000008,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store first entry requires the introduction before a thread exists",
+          "status": "passed",
+          "duration": 0.511683000000005,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store imports the spiritual preference once; preview toggles never touch the source",
+          "status": "passed",
+          "duration": 0.761211000000003,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store sends a draft and completes a deterministic fictional reply",
+          "status": "passed",
+          "duration": 2.3506929999999784,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store default reply honestly states it is fictional, not understanding",
+          "status": "passed",
+          "duration": 0.6811690000000112,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store failed send retains the input and shows Not sent; retry is deliberate",
+          "status": "passed",
+          "duration": 1.2887979999999857,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store retry of a failed message preserves a newer composer draft",
+          "status": "passed",
+          "duration": 0.4279870000000301,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store Stop response cancels the pending job; the stale completion never lands",
+          "status": "passed",
+          "duration": 0.39116100000001097,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store turning Christian reflection off cancels a pending simulated reply",
+          "status": "passed",
+          "duration": 0.390420000000006,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store a second Send while a reply is generating is refused and the draft is preserved",
+          "status": "passed",
+          "duration": 1.465153999999984,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store retry while a reply is generating is refused",
+          "status": "passed",
+          "duration": 0.4365189999999757,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store save is refused while a reply is generating; no live placeholder is ever saved",
+          "status": "passed",
+          "duration": 0.7233830000000125,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store simulated save success stores an immutable snapshot; later turns show Unsaved changes",
+          "status": "passed",
+          "duration": 0.6026810000000182,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store unsent draft text makes a saved thread show Unsaved changes, never Saved",
+          "status": "passed",
+          "duration": 0.2315800000000081,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store finish never silently discards unsent draft text",
+          "status": "passed",
+          "duration": 3.5196110000000544,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store simulated save failure changes nothing and reports failure",
+          "status": "passed",
+          "duration": 0.3911509999999794,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store discard restores the last saved snapshot exactly; cancel preserves the draft",
+          "status": "passed",
+          "duration": 0.5671669999999835,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store switching away with unsaved changes requires a decision, then completes the switch",
+          "status": "passed",
+          "duration": 0.6947499999999991,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store an unsent draft also guards switching; discard drops only the draft and changes",
+          "status": "passed",
+          "duration": 0.531784000000016,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store a failed save during a switch decision stays put; nothing is lost",
+          "status": "passed",
+          "duration": 0.5306429999999978,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store save-and-switch is refused while an unsent draft exists; everything is preserved",
+          "status": "passed",
+          "duration": 1.2406950000000165,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store finish without saving a new thread removes it; a saved thread keeps its snapshot",
+          "status": "passed",
+          "duration": 5.786367000000041,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store reopening a saved thread never starts voice and shows Unsaved changes after new turns",
+          "status": "passed",
+          "duration": 0.49003000000004704,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store delete removes the thread and cancels its pending jobs",
+          "status": "passed",
+          "duration": 15.383830999999986,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store clear-all resets the store and cancels pending jobs",
+          "status": "passed",
+          "duration": 0.37665900000001784,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store adversarial: a pre-clear callback can never fill a post-clear request",
+          "status": "passed",
+          "duration": 0.22119399999996858,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store rename of a saved thread saves the snapshot title only; failure changes nothing",
+          "status": "passed",
+          "duration": 0.5772019999999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store shares exact teaching bytes only after confirmation; cancel shares nothing",
+          "status": "passed",
+          "duration": 1.4303810000000112,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store voice simulator: explicit states, mute distinct from pause, resume explicit",
+          "status": "passed",
+          "duration": 0.5384639999999763,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store pause while connecting cancels the pending connection timer",
+          "status": "passed",
+          "duration": 0.20305700000000115,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store an old connection timer never advances a newly started session",
+          "status": "passed",
+          "duration": 0.14698199999997996,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store turning Christian reflection off while speaking ends the voice session",
+          "status": "passed",
+          "duration": 0.2376989999999637,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store simulated disconnection preserves the thread and offers reconnect",
+          "status": "passed",
+          "duration": 0.28088400000001457,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation preview store no mediaDevices, speech or WebRTC APIs are referenced by the preview modules",
+          "status": "passed",
+          "duration": 4.622167000000047,
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "path": "src/lib/ai/conversation/__tests__/sources.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "fullName": "conversation source registry the production registry is exactly the ten teaching records",
+          "status": "passed",
+          "duration": 10.71058099999999,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry the evaluation registry adds the test fixture explicitly",
+          "status": "passed",
+          "duration": 2.620891999999998,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry teaching records carry the live day Understand text exactly",
+          "status": "passed",
+          "duration": 1.607670000000013,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry teaching records contain no questions, practices or reflections",
+          "status": "passed",
+          "duration": 1.8639870000000087,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry the Scripture fixture matches its catalog hash and stays test-only",
+          "status": "passed",
+          "duration": 0.28711400000000253,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry rejects a testOnly downgrade of the Scripture fixture",
+          "status": "passed",
+          "duration": 0.4686990000000151,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry rejects Scripture records without exact reference/translation provenance",
+          "status": "passed",
+          "duration": 0.24107500000002346,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry does not admit pending-review records",
+          "status": "passed",
+          "duration": 0.6391869999999926,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry rejects duplicate keys and hash mismatches",
+          "status": "passed",
+          "duration": 0.8731800000000192,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry deep-freezes admitted records and their nested arrays",
+          "status": "passed",
+          "duration": 2.3150789999999972,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry encapsulates the record map so forged records cannot be injected",
+          "status": "passed",
+          "duration": 1.3139360000000124,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry distinguishes a missing source id from an unknown source id",
+          "status": "passed",
+          "duration": 8.622514999999993,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry blocks the test-only fixture unless test sources are explicitly allowed",
+          "status": "passed",
+          "duration": 1.6835349999999778,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry C12: fabricated pasted Scripture can never resolve to a source",
+          "status": "passed",
+          "duration": 1.6946920000000034,
+          "failureMessages": []
+        },
+        {
+          "fullName": "conversation source registry records stable production and evaluation snapshot hashes",
+          "status": "passed",
+          "duration": 4.192897999999985,
+          "failureMessages": []
+        }
+      ]
+    }
+  ]
+}

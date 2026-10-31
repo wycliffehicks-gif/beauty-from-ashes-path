@@ -6,6 +6,14 @@ Updated 30 October 2026 • **offline draft; sequentially executed in PostgreSQL
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
 
+## Inactive trusted issuance integration — 31 October 2026
+
+`service/voice-issuance-rpc.server.ts` maps the existing generation/issuance RPCs without changing this SQL. `service/voice-issuance.server.ts` releases a new locally sealed authority only after exact registration and final Auth/session/current-record/service-snapshot checks. Caller token or raw-authority backfill, automatic retry and lifetime extension are refused. Lost replies can leave dormant committed registration; no cleanup deletes that evidence. Registration is not admission or a paid dispatch permit.
+
+The issuer requires a separate protected pre-issuance readCurrentThread port, still unimplemented; the existing readCurrent reader requires issuance plus approval and cannot fill that role. A trusted host must bind the supplied service to owned DB revision/creation metadata. Existing P3b sealing paths and proposed SQL are unchanged. Auth/session-revocation provisioning remains mandatory and absent.
+
+Sixteen new PostgreSQL 18.6/PGlite 0.5.12 integration cases execute real local crypto and service-role registration/session reads, including committed reply loss, Stop/Delete and final eligibility failure. Auth and current-thread provisioning/reads use explicit fictional host fixtures. Both in-memory instances close; unused registrations and cumulative holds are retained within the fixture, not refunded/rolled back. See offline-validation-v15 and p5-voice-issuance-sql.test.ts. Combined conversation tests pass 724/724 with all 38 optional SQL cases enabled. Native contention/HTTP/production Auth/provider/device acceptance remains unrun. No connected database or runtime route is enabled.
+
 ## Protected readers — 30 October 2026
 
 `p5-voice-reads.sql` installs after the base admission draft, outside automatic migrations. It adds two service-only SECURITY DEFINER RPCs and no tables, records or direct schema/table/helper grants. The inactive `service/voice-read-rpc.server.ts` maps only these reads; no host/client is initialized.

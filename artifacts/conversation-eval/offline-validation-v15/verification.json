@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-31",
+  "baseCommit": "3973938b3527eeac2e7697f0bcc2a97d4a1501fe",
+  "baseTree": "4a144c86fa5e10122f9406881d3f5006141f25c2",
+  "scope": "Inactive trusted issuer and exact two-RPC registration mapping; no production host/read port or runtime wiring",
+  "conversation": {
+    "passed": 724,
+    "files": 41,
+    "skipped": 0,
+    "newIssuer": 21,
+    "newRpc": 20,
+    "newIndependent": 8,
+    "newActualSql": 16,
+    "allActualSqlWithinTotal": 38,
+    "finalFixtureTypingOnlyPrimaryRerun": 21,
+    "countsOverlap": true
+  },
+  "checks": {
+    "typecheck": "Final standalone tsc --noEmit exit0 after fixture-only readonly typing fix",
+    "lint": {
+      "files": [
+        "src/lib/ai/conversation/service/voice-issuance.server.ts",
+        "src/lib/ai/conversation/service/voice-issuance-rpc.server.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts"
+      ],
+      "exitCode": 0,
+      "warnings": 0
+    },
+    "build": "npm run build client/SSR/Nitro, exit0"
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "roles": [
+      "service_role",
+      "anon",
+      "authenticated"
+    ],
+    "committedUnusedRegistrationsRetained": true,
+    "bothInstancesClosed": true,
+    "authAndPreIssuanceRead": "fictional trusted-host fixture ports",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Primary fixture syntax formatting corrected before targeted pass.",
+    "Full typecheck caught readonly registration-method test overrides; mutable mapped test-port type corrected fixture typing, issuer source unchanged. Final standalone typecheck and primary21 rerun passed.",
+    "No behavioral issuer/SQL defect reproduced; independent review found no blocker."
+  ],
+  "limits": [
+    "Concrete protected pre-issuance metadata reader absent; existing readCurrent requires issuance/approval and is not a substitute.",
+    "Verified Auth, session-revocation provisioning/writers and trusted host remain required and unimplemented.",
+    "Host service/revision/creation provenance is a precondition, not established by instanceof or shape parsing.",
+    "30second age bound checked after awaits; unresolved promises not actively canceled. Auth and SQL not atomic.",
+    "Scalar UUID/boolean acknowledgments rely on trusted transport association; transparent retry behavior cannot be inspected.",
+    "Local discarded replies after commits are not HTTP network fault injection.",
+    "Native21 cases plus reader/issuer contention, real Auth/provider/device acceptance remain unrun.",
+    "Prior447SQL,44model,27runner-double,6inventory/full-app/Chromium checks not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 596,
+    "materializedHashVerified": 595,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-issuance-rpc.server.ts": "e4ed20dc1f100fcf48ed8fefaa0ab57982cfb5c2cc4d5442b1153c54883998e6",
+    "src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts": "2f0fa855653f2b9d3ed5d9054b490a33be802facd050067bb495097b1f24b101",
+    "src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts": "550710d10c3a1bec32f2594b65a114d34a9a25b7970a0f06ef75f5e3c9247169",
+    "src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts": "0f010ff610e6e840ccb94b3e57b83e1e96f21b3fad9662ba8283e7fb6f13871a",
+    "src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts": "955f271d84718934f90b2f7d81e1c2288b92cae186f91ce06f12b3b03f5cd2aa",
+    "src/lib/ai/conversation/staging/seal.server.ts": "f8a188d63372bacacb1bb4bc7d3778f5c4ed8c63efcf2f5bb642598f96f75347",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement the concrete protected pre-issuance readCurrentThread SQL reader and inactive RPC adapter required by the new issuer. Return only exact owner/thread/current revision/creation metadata, registered generation or null, nondeleted state and expiring allowlist under owner/row locks with fresh database time. Never create a generation, backfill a token or read private content. The existing readCurrent requires an already registered issuance and per-attempt approval, so it cannot replace this earlier-stage read. Test actual local role restrictions, missing/stale/deleted/recreated metadata and issuer composition. Keep the SQL outside automatic migrations and the connected project. Verified current Auth, session-revocation provisioning/writers, trusted host and later admission/dispatch checks remain mandatory. All 21 prepared native cases and reader/issuer cross-backend behavior remain unrun; do not repeat unavailable-engine setup probes."
+}

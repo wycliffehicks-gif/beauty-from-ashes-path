@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-31",
+  "baseCommit": "50ffc4b7a2f7e3ffe18fdd627f1c781f65fde8d6",
+  "baseTree": "078d679f96059263f6308b7837e46eec2b331b3c",
+  "scope": "Protected content-free pre-issuance SQL reader, inactive RPC adapter and real local issuer composition; no runtime integration",
+  "conversation": {
+    "passed": 774,
+    "files": 44,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-preissue-read-rpc.test.ts": 25,
+      "p5-voice-preissue-read-sql.test.ts": 18,
+      "p5-voice-preissue-review.test.ts": 7
+    },
+    "allActualSqlWithinTotal": 56,
+    "countsOverlap": true
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "roles": [
+      "service_role",
+      "anon",
+      "authenticated"
+    ],
+    "all14TableSnapshotsUnchangedByReads": true,
+    "bothInstancesClosed": true,
+    "authAndServiceProvenance": "fictional trusted-host fixtures",
+    "preIssuanceMetadata": "actual service_role RPC via new adapter",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Initial SQL17/18: negative revision fixture hit retained database CHECK23514; repaired fixture asserts constraint and unsafe positive revision denial.",
+    "Formatter-only lint findings in new SQL test corrected before final checks.",
+    "Independent review found no behavioral SQL/adapter blocker."
+  ],
+  "limits": [
+    "Verified current Auth, real session provision/revocation propagation and trusted host remain unimplemented.",
+    "Read snapshots do not span remote Auth or later database transactions; later admission/capacity/dispatch checks remain mandatory.",
+    "Trusted host must establish real service/revision/creation provenance; timestamp is not incarnation.",
+    "No transport retry/freshness/provenance guarantee is created by parsing an RPC response.",
+    "Native21 cases and reader/issuer cross-backend contention, HTTP/Auth/provider/device acceptance remain unrun.",
+    "Historical447SQL and model/runner/inventory/full-app/Chromium checks not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 605,
+    "materializedHashVerified": 604,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "docs/pilot/conversation/sql-drafts/p5-voice-preissue-read.sql": "df9cc4296df6bb1b81a2f374e4e79fde27cce173362245fde599b046cfae6f4c",
+    "src/lib/ai/conversation/service/voice-preissue-read-rpc.server.ts": "4ea8a931becaaf36e1d2cdeb80b9eeb4b0f607ab0115b56b98a0c747c179f005",
+    "src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts": "464cd865c3bafb3e3def72ff89933dd36963e6338818da19e8d2fc3098f1e97c",
+    "src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts": "874c83af33b9268facac55dc7eb172718c84fe712eae419cee823bef32a25fdd",
+    "src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts": "91f72004901b258b90c8e20770221a55960d517fffc95ea114e3f1e609d28a71",
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-issuance-rpc.server.ts": "e4ed20dc1f100fcf48ed8fefaa0ab57982cfb5c2cc4d5442b1153c54883998e6",
+    "src/lib/ai/conversation/service/voice-read-rpc.server.ts": "5c98749fdc9c291b3cd9ed6a2d233ae09c10f0cc0c9d51eefe31d2374e28b28e",
+    "src/lib/ai/conversation/staging/seal.server.ts": "f8a188d63372bacacb1bb4bc7d3778f5c4ed8c63efcf2f5bb642598f96f75347",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement an inactive, service-only terminal exact-session revocation writer and strict RPC mapping, outside automatic migrations. Retain a tombstone even when revocation precedes provisioning; use owner-first locks, safe monotonic version handling and immutable revoked state, with no session enabling, renewal, expiry extension or accounting changes. Test actual isolated SQL reader/issuer/proof denial after committed revocation and missing acknowledgments, plus browser-role denial and unrelated-hold preservation. The future trusted Auth host must supply verified exact owner/session identity; this does not solve real Auth revocation propagation, session provisioning/renewal policy or host wiring. Keep participant AI/live voice off. All 21 native cases and reader/issuer cross-backend behavior remain unrun; do not repeat unavailable-engine probes."
+}

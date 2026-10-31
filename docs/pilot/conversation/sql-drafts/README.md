@@ -1,12 +1,22 @@
 # Proposed P5 voice admission SQL package
 
-Updated 30 October 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
+Updated 31 October 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
 
 `p5-voice-admission.sql` is proposed SQL outside `drizzle/migrations/` and its journal. It creates a private `bfa_p5_voice` namespace and seven service-only public RPCs. It does not modify existing P3b functions, permissions, ledger rows or settings. Do not run it on the connected project under general offline-development authorization. No voice admission, grant, quota balance or session is seeded.
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
 
-## Inactive trusted issuance integration — 31 October 2026
+## Protected pre-issuance metadata reader — 31 October 2026
+
+`p5-voice-preissue-read.sql` installs after the base admission draft outside automatic migrations. Its single service-only RPC, `bfa_p5_voice_read_current_thread(p_owner_id,p_thread_id)`, supplies the issuer's previously missing earlier-stage read. The inactive `service/voice-preissue-read-rpc.server.ts` provides only readCurrentThread. No route/client is initialized. The post-issuance readCurrent remains separate and still requires registered issuance and approval.
+
+The new reader checks owned current lifecycle/allowlist metadata and optional permanent generation under owner/row locks, then uses fresh DB time and the existing high-water. Invalid existing generations deny; only absence returns null incarnation. Exact UTC six-microsecond creation strings survive transport without rounding and are consistency metadata, never incarnation. No private content, writes, generation backfill or direct service-role table/helper privileges. No read snapshot is Auth or a later admission/dispatch permit.
+
+Eighteen actual PostgreSQL 18.6/PGlite 0.5.12 integration groups exercise this RPC through the adapter, no-write checks over all 14 base tables, exact timestamps, role restrictions, actual Stop/Delete and real issuer/seal/registration composition. Auth and trusted service provenance remain fictional fixtures. Both engine instances close; late denials retain committed dormant issuance and unrelated holds. First execution's negative-revision fixture correctly hit the existing CHECK; the repaired fixture asserts that protection. Combined conversation tests pass 774/774 across 44 files, all 56 optional SQL cases enabled, plus full typecheck/scoped lint/build. Evidence: offline-validation-v16. Native contention, HTTP/Auth/provider/device acceptance remain unrun; nothing was applied to the connected project.
+
+The following issuance section records the prior checkpoint. Its then-missing pre-issuance reader is supplied above; real Auth, session provisioning/revocation writers and trusted host wiring remain unfinished. Next: terminal exact-session revocation preparation as specified in CONTINUE_HERE.md, without enabling or renewing sessions.
+
+## Previous inactive trusted issuance integration — 31 October 2026
 
 `service/voice-issuance-rpc.server.ts` maps the existing generation/issuance RPCs without changing this SQL. `service/voice-issuance.server.ts` releases a new locally sealed authority only after exact registration and final Auth/session/current-record/service-snapshot checks. Caller token or raw-authority backfill, automatic retry and lifetime extension are refused. Lost replies can leave dormant committed registration; no cleanup deletes that evidence. Registration is not admission or a paid dispatch permit.
 

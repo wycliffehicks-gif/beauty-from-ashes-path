@@ -1,0 +1,51 @@
+Final frozen source: 883conversation checks/50files; all100optionalSQL enabled. Separate typecheck,scopedlint,productionbuild exit0.
+
+{
+  "conversation": 0,
+  "typecheck": 0,
+  "lint": 0,
+  "build": 0
+}
+
+Findings:
+Source review identified the legitimate mark state closed through the existing denied helper; the new adapter preserves it as a terminal observation, not permission to create.
+Initial primary adapter tests reproduced evaluation of a rejected observation getter by an outer Zod refinement. A transform after successful parsing fixed this new-adapter defect; the accessor regression passed. A deliberately invalid-client fixture cast was also corrected for strict TypeScript.
+The first SQL run's expired-proof fixture correctly hit the existing proof CHECK because only expires_ms changed. Correcting both verified_ms and expires_ms produced an internally valid expired fixture; no constraint was weakened and no existing SQL was changed.
+
+Final test summary:
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 18ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 5ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 3ms
+
+ Test Files  50 passed (50)
+      Tests  883 passed (883)
+   Start at  06:55:44
+   Duration  33.52s (transform 1.09s, setup 0ms, import 2.62s, tests 23.95s, environment 4ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-capacity-transport-work/conversation-tests.json
+
+Build advisories:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.23 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 625ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt

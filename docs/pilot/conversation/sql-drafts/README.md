@@ -6,7 +6,17 @@ Updated 1 November 2026 • **offline draft; sequentially executed in PostgreSQL
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
 
-## Terminal exact-session revocation — 1 November 2026
+## Inactive capacity mark/reconciliation transport — 1 November 2026
+
+`service/voice-capacity-rpc.server.ts` supplies exact inactive mappings for existing `bfa_p5_capacity_mark` and `bfa_p5_capacity_reconcile`. No SQL/migration/privilege change occurs. The mark request contains receiptId, exact claim, immutable operationId and expectedPoolVersion; reconcile contains exact cleanupId/claim and normalized evidenceId/operationId/kind/sessionId. Returned exact claim/state is checked, including kind/state compatibility. Mark's existing closed result is preserved.
+
+SQL does not echo operation/receipt/cleanup/evidence/pool-version identity; the supplied trusted nonretrying transport must associate the reply with the exact call. No boolean dispatch grant, default client, provider verifier/caller or policy writer exists. Lost/malformed replies cannot prove rollback, generate a new operation or trigger automatic retry. Fresh INSPECT proof for mark must not be consumed first by base inspect. Future authenticated whole-operation evidence remains necessary for final reconciliation; one HTTP result or ended session is not sufficient.
+
+22 actual PostgreSQL 18.6/PGlite 0.5.12 groups exercise mappings as service_role, proof freshness/consumption, current policy/authority, closed-before-mark, retained marked slots, lost committed acknowledgments, terminal/late/duplicate/contradictory evidence, isolation, exact cleanup and retained cumulative holds. Twenty-table comparisons and both database closures are checked. Provider observations/Auth remain fictional; no native/HTTP/provider acceptance is claimed. Combined conversation suite passes 883/883 across 50 files, including all 100 optional SQL cases, plus full typecheck/scoped lint/build. Evidence: offline-validation-v18.
+
+Primary testing repaired a new-adapter observation refinement that could evaluate rejected getters; successful-parse-only transformation and an independent regression now pass. The expired-proof SQL fixture was corrected to satisfy its existing time-order CHECK while remaining expired; no SQL constraint was weakened. A fixture-only TypeScript cast was repaired. Current next step is a trusted admission-owned fresh-proof-to-mark coordinator, as specified in CONTINUE_HERE.md, with no provider caller or exposed raw proofs.
+
+## Previous terminal exact-session revocation — 1 November 2026
 
 `p5-voice-session-revoke.sql` installs after the base admission draft, outside automatic migrations. The single service-only `bfa_p5_voice_revoke_session(p_owner_id,p_session_id)` RPC returns exact owner/session/version/expiry/revoked=true. The inactive `service/voice-session-revoke-rpc.server.ts` maps only this mutation. No host, route, Auth subscription or provider caller is installed.
 

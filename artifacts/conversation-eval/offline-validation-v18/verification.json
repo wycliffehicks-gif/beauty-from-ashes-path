@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-01",
+  "baseCommit": "c4ba2738beb38195cf6bd914a59e0a6794f1ae5b",
+  "baseTree": "aabaaf60e1f45af1bfed87bafc4b21dc11fd4666",
+  "scope": "Inactive exact capacity mark/reconciliation transport; no SQL or provider integration changes",
+  "conversation": {
+    "passed": 883,
+    "files": 50,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-capacity-rpc-review.test.ts": 7,
+      "p5-voice-capacity-rpc-sql.test.ts": 22,
+      "p5-voice-capacity-rpc.test.ts": 27
+    },
+    "allActualSqlWithinTotal": 100,
+    "countsOverlap": true
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "roles": [
+      "service_role",
+      "anon",
+      "authenticated"
+    ],
+    "bothInstancesClosed": true,
+    "tableSnapshotCoverage": 20,
+    "retainedCommittedFictionalRecords": true,
+    "authProviderObservations": "fictional fixtures; no authenticated provider evidence or dispatch",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Source review identified the legitimate mark state closed through the existing denied helper; the new adapter preserves it as a terminal observation, not permission to create.",
+    "Initial primary adapter tests reproduced evaluation of a rejected observation getter by an outer Zod refinement. A transform after successful parsing fixed this new-adapter defect; the accessor regression passed. A deliberately invalid-client fixture cast was also corrected for strict TypeScript.",
+    "The first SQL run's expired-proof fixture correctly hit the existing proof CHECK because only expires_ms changed. Correcting both verified_ms and expires_ms produced an internally valid expired fixture; no constraint was weakened and no existing SQL was changed."
+  ],
+  "limits": [
+    "ACK only echoes claim/state; exact association with operation/receipt/cleanup/evidence/poolversion remains trusted transport precondition.",
+    "Marked is offline observation only. Existing base inspect consumes its own proof; trusted fresh-proof coordinator for mark remains absent.",
+    "Provider finality/authenticated evidence verifier, real Auth/session provisioning/revocation propagation and production host remain absent.",
+    "Local discarded result/replay models are not HTTP fault injection or exactly-once external creation evidence.",
+    "Native21 cases and cross-backend acceptance remain unrun.",
+    "Historical447SQL and model/runner/inventory/full-app/Chromium not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 621,
+    "materializedHashVerified": 620,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/service/voice-capacity-rpc.server.ts": "bf1c52cc653b2204cab92c6cabff542a81c8a38840fb2ca5c2b4715bd0bc6dbb",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts": "e4f900419e29693d3976828cae114e4ad385a69cc707896766cd83e3b4a6a1f2",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts": "7027ce5a999b633ab6bee28ab577f9f4125a02e7ed8d2deb5e1facbb339ec601",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts": "237e0ee8be530560dd1475463ea81fceaf4eaf44fff0f2e93fcf60ae4425bed5",
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "0bb2d2e1ae8698ff66ce74460734c3237c16bb94b1804db6563820c858c4c7de",
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement an inactive trusted coordinator that obtains a fresh INSPECT proof and records one capacity marker for an already admitted claim, without first consuming that receipt in base inspect. Keep claim/cleanup provenance inside the admission-owned closure; a raw claim or lease snapshot must not establish ownership. Allocate and retain one immutable operation ID before asynchronous work, take the expected pool version only from a trusted server input, and recheck Auth/session/current authority, shortening deadlines and cancellation around waits. Lost, malformed, late, closed or already-marked replies must never produce a second local success or a new operation identity. Retain exact cleanup/operation evidence for deliberate reconciliation; a marker is still not a provider dispatch grant. Test with local crypto, actual isolated SQL and fictional Auth, without exposing raw proofs or adding a provider caller/callback, active-session provisioning, policy administration or connected migrations. Real Auth identity/provisioning/revocation propagation, authenticated provider finality, native concurrency and host integration remain separate unfinished gates."
+}

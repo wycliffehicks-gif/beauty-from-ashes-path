@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-01",
+  "baseCommit": "b10b0298e1a17363b3a04fa9e56fc29cf7c93219",
+  "baseTree": "df3b1df4288a36b75ed36f6ed6aab7653fba171e",
+  "scope": "Inactive terminal exact-session revocation SQL/RPC; no enabling or production Auth/host integration",
+  "conversation": {
+    "passed": 827,
+    "files": 47,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-session-revoke-review.test.ts": 6,
+      "p5-voice-session-revoke-rpc.test.ts": 25,
+      "p5-voice-session-revoke-sql.test.ts": 22
+    },
+    "allActualSqlWithinTotal": 78,
+    "countsOverlap": true
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "roles": [
+      "service_role",
+      "anon",
+      "authenticated"
+    ],
+    "bothInstancesClosed": true,
+    "retainedCommittedFictionalRecords": true,
+    "authAndServiceProvenance": "fictional trusted-host fixtures",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Initial actual SQL22/22 and full typecheck passed; a fixture helper name triggered the React hooks lint rule and was renamed from useProof to consumeProof before final checks, with no behavioral change.",
+    "Independent source review found no SQL/adapter blocker; no existing source, schema constraint or accounting behavior was changed."
+  ],
+  "limits": [
+    "No real Auth session identification, event authentication/delivery, revocation propagation or active-session provisioning/renewal policy.",
+    "Terminal revoked flag at MAX prevents access; no new version can be inferred at saturated bound. Expiry1 tombstone sentinel is not observed event time.",
+    "Writer changes only exact session row; later eligibility may additionally fence claims/proofs. Existing provider operation is not terminated by this receipt.",
+    "RPC failure cannot prove rollback. Local discarded results/model replies are not HTTP transport-fault or provider evidence.",
+    "Fresh INSPECT proof for future capacity mark must not be reused after current base inspect consumes its proof.",
+    "Native21 cases and cross-backend reader/issuer/revocation, real Auth/provider/device acceptance remain unrun.",
+    "Historical447SQL and model/runner/inventory/full-app/Chromium not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 613,
+    "materializedHashVerified": 612,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "src/lib/ai/conversation/service/voice-session-revoke-rpc.server.ts": "0c054a93787ffce4cdf4a2b6d3b97c72aeacccd08163e142e681a3872e8de018",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts": "a0aec4d25e7a6783da32961cbb234ce978778ff1a667ac031d0b9bdaf0591cd4",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts": "b39268920223f1b4403765ecb1c1570fb583168bb8b3e902d100146c11d621d6",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts": "f11df9c561c48582705c0fc0a9426cc9f6dc8510e5309add41ae1ceb244cb72f",
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "0bb2d2e1ae8698ff66ce74460734c3237c16bb94b1804db6563820c858c4c7de",
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-preissue-read.sql": "df9cc4296df6bb1b81a2f374e4e79fde27cce173362245fde599b046cfae6f4c",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement strict inactive mappings for the existing capacity mark and reconciliation RPCs, with actual isolated SQL round-trip tests and explicit lost/replayed acknowledgment handling. Preserve exact claim, cleanup, immutable operation identity, expected pool version and operation-wide finality distinctions. Mark requires a fresh INSPECT proof; the current base inspect path consumes its own proof and cannot be reused as that permit. A marked acknowledgment is not independent Auth, approval or provider-dispatch authority; already-marked, lost or malformed replies must never authorize another create. Reconciliation needs future authenticated provider evidence for the entire operation and must retain ambiguous holds. Do not add a provider caller, session enabling/renewal or policy administration in this batch. Real Auth session identity/provisioning/revocation propagation, trusted host integration and native cross-backend acceptance remain separate; keep all SQL outside automatic migrations and the connected project, and participant AI/live voice off."
+}

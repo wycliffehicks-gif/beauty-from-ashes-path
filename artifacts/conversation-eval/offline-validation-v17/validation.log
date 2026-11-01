@@ -1,0 +1,55 @@
+Final frozen source: 827conversation checks/47files; all78optionalSQL enabled. Separate typecheck,scopedlint,productionbuild exit0.
+
+{
+  "conversation": 0,
+  "typecheck": 0,
+  "lint": 0,
+  "build": 0
+}
+
+Findings:
+Initial actual SQL22/22 and full typecheck passed; a fixture helper name triggered the React hooks lint rule and was renamed from useProof to consumeProof before final checks, with no behavioral change.
+Independent source review found no SQL/adapter blocker; no existing source, schema constraint or accounting behavior was changed.
+
+Final test summary:
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 13ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 9ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 5ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 4ms
+
+ Test Files  47 passed (47)
+      Tests  827 passed (827)
+   Start at  05:38:08
+   Duration  30.71s (transform 1.16s, setup 0ms, import 2.63s, tests 21.40s, environment 4ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-revoke-work/conversation-tests.json
+
+Build advisories:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 783ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

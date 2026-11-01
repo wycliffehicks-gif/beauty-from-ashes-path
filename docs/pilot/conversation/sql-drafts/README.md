@@ -1,12 +1,24 @@
 # Proposed P5 voice admission SQL package
 
-Updated 31 October 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
+Updated 1 November 2026 • **offline draft; sequentially executed in PostgreSQL WASM, never applied to the connected project**.
 
 `p5-voice-admission.sql` is proposed SQL outside `drizzle/migrations/` and its journal. It creates a private `bfa_p5_voice` namespace and seven service-only public RPCs. It does not modify existing P3b functions, permissions, ledger rows or settings. Do not run it on the connected project under general offline-development authorization. No voice admission, grant, quota balance or session is seeded.
 
 `p5-voice-admission-fixtures.sql` is a sequential rollback fixture script. It refuses any database not named `bfa_p5_offline_fixture`; it still requires an isolated local installation of the P3b schema/roles and this draft first. Its direct record inserts are fictional infrastructure fixtures, not verified Auth, approved grants or real accounting. It is a sequential SQL suite, not a concurrency test. The native PostgreSQL server/client remain unavailable in this root-only environment. A separate in-memory PostgreSQL 18.6 WASM build (`@electric-sql/pglite@0.5.12`) now executes installation, sequential rollback and role checks. This establishes single-connection SQL execution, not native concurrent transactions, network authentication or HTTP acceptance. See [the repeatable local harness](../../../../scripts/conversation-eval/p5-sql/README.md).
 
-## Protected pre-issuance metadata reader — 31 October 2026
+## Terminal exact-session revocation — 1 November 2026
+
+`p5-voice-session-revoke.sql` installs after the base admission draft, outside automatic migrations. The single service-only `bfa_p5_voice_revoke_session(p_owner_id,p_session_id)` RPC returns exact owner/session/version/expiry/revoked=true. The inactive `service/voice-session-revoke-rpc.server.ts` maps only this mutation. No host, route, Auth subscription or provider caller is installed.
+
+The owner-first/exact-session lock protects a permanent revoked tombstone even before provisioning. Missing identity creates version0/expiry1/revokedtrue; existing active identity sets revoked and advances version with safe saturation; existing expiry is never extended; already-revoked identity is untouched. The terminal flag is authoritative at the maximum version. Revocation does not depend on current Auth/allowlist/thread eligibility, wall-clock or clock-high-water; it mutates no other table or accounting. No direct private table/helper privileges are granted.
+
+Lost/malformed acknowledgments may follow a committed block. The adapter sanitizes failure and never retries or assumes rollback. Receipts do not prove real Auth-event propagation, cancel an already created provider session or authorize dispatch. Future verified hosts must supply exact permanent owner/session identity, and enabling/renewal policy must respect retained tombstones. Those production boundaries remain unresolved.
+
+22 actual PostgreSQL 18.6/PGlite 0.5.12 groups cover exact terminal behavior, roles, clock/version/expiry boundaries, reply loss and downstream reader/issuer/proof/admission denial with retained holds and exact cleanup. Auth/service provenance remain fictional; both engines close. 6 independent bridge/crypto cases use modeled transport. Combined conversation suite 827/827 across 47 files passes with all 78 optional SQL cases enabled, plus full typecheck/scoped lint/build. Evidence: offline-validation-v17. All native contention and production Auth/provider/device acceptance remain unrun. Nothing was applied to the connected project.
+
+Older sections below describe prior checkpoints. Their then-missing session writer is now supplied only for terminal revocation; active-session provisioning, renewal decisions, verified Auth propagation and host integration remain unfinished. Next finite offline gap: exact capacity mark/reconcile transport, as specified in CONTINUE_HERE.md; no provider dispatcher or generic policy writer.
+
+## Previous protected pre-issuance metadata reader — 31 October 2026
 
 `p5-voice-preissue-read.sql` installs after the base admission draft outside automatic migrations. Its single service-only RPC, `bfa_p5_voice_read_current_thread(p_owner_id,p_thread_id)`, supplies the issuer's previously missing earlier-stage read. The inactive `service/voice-preissue-read-rpc.server.ts` provides only readCurrentThread. No route/client is initialized. The post-issuance readCurrent remains separate and still requires registered issuance and approval.
 

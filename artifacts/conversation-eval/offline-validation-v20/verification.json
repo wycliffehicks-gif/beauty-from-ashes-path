@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-01",
+  "timezone": "America/Toronto",
+  "baseCommit": "937d2c865f6e5be85473612a416ce16bac0182f0",
+  "baseTree": "a8662ff3142a7e5637e5c9e62eeed76a68258ab2",
+  "scope": "Isolated insert-once P5 session fence SQL and inactive exact RPC adapter; no connected application",
+  "conversation": {
+    "passed": 989,
+    "files": 56,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-session-provision-review.test.ts": 7,
+      "p5-voice-session-provision-rpc.test.ts": 26,
+      "p5-voice-session-provision-sql.test.ts": 21
+    },
+    "allActualSqlWithinTotal": 139,
+    "countsOverlap": true
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "bothInstancesClosed": true,
+    "tableSnapshotCoverage": 20,
+    "retainedCommittedFictionalRecords": true,
+    "exactBoundaryClock": "isolated function replacement restored afterward; not real wait/concurrency evidence",
+    "authAndPolicyProvisioning": "fictional fixtures",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Review confirmed that structurally valid denial must retain the owner clock high-water; using the existing observe_now after session locking prevents observed expiry from becoming eligible after clock rollback. No existing SQL helper was changed.",
+    "All new focused behavioral, full TypeScript and scoped lint checks passed on their first verification runs. Fixture column names were made explicit and normal formatting applied before those checks; no behavioral source defect was reproduced."
+  ],
+  "limits": [
+    "SQL receipt is an observation; it may be stale on arrival and cannot substitute for Auth or later checks.",
+    "SQL does not echo verifiedAt; exact invocation association is a trusted nonretrying transport precondition.",
+    "15min caps only this P5 fence; host must cap once to independently verified Auth expiry. No session renewal.",
+    "Only absent session row and owner clock may change; semantic denials may advance high-water.",
+    "Real Auth/event propagation, trusted initialization host and authenticated provider finality remain absent.",
+    "Native21 cases and provisioning cross-backend behavior unrun; local discarded results are not HTTP fault injection.",
+    "Historical447SQL/model/runner/inventory/full-app/Chromium not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 634,
+    "materializedHashVerified": 633,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-provision.sql": "b1ca8d2c3fca056581c74168205618d4b47d5b58a03df33417b1a053571eb360",
+    "src/lib/ai/conversation/service/voice-session-provision-rpc.server.ts": "089dc0b2b33750be8a0ddebfc9ece863e7568811cdd1c8ea300c6990e77022b6",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts": "5643777acce3dfb3057785d072cf8d82533512d6182c643861206feeaa49064f",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts": "04811802029d7c9e232002b6e3ad6e0eb588db0bc4d73961e1f23c794bd6b026",
+    "src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts": "81e7f4b0cb4fef4481e2d8fe7ff6b9656501c3569277f3d4f3da30710004246f",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "f63cb681d69f8be86b0519adbcfb8bd16b4b7f252a8130ab2ffc5f83e30b4de8",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement the missing inactive trusted session initializer that derives provisioning metadata from a mandatory request-bound verified Auth port and monotonic server clock, rather than accepting owner/session/timestamp/expiry from browser input. Require explicit bounded lifetime configuration, keep the same owner/session across waits, and retain one immutable request before any possible provisioning write. If a current active fence already exists, preserve its exact original expiry/version rather than shifting its lifetime; shortened Auth eligibility must deny. A null read may hide a terminal tombstone, so the SQL writer must still decide and must never be bypassed. After exact acknowledgment, recheck Auth and the exact protected session record before returning only a local observation. Lost/malformed/late replies must retain exact request evidence without automatic retry, replacement identity or assumed rollback. Test the coordinator with local crypto, existing isolated SQL and fictional Auth; do not wire production Auth/events/routes, enable voice, add a provider caller, renew a session or apply connected migrations. Real Auth identity/revocation propagation, authenticated whole-operation provider finality, all 21 native cases and provisioning cross-backend contention remain unfinished; do not repeat unavailable-engine setup probes."
+}

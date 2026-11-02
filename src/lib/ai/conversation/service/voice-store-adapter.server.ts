@@ -10,6 +10,7 @@ import {
   type VoiceAdmissionEvidence,
   type VoiceAdmissionLease,
 } from "./voice-admission.server";
+import type { VoiceCapacityMarkRequest, VoiceCapacityMarkState } from "./voice-capacity-rpc.server";
 import {
   createVoiceServerVerifier,
   type VoiceVerificationPorts,
@@ -59,6 +60,44 @@ const Ack = z
   .object({ claim: Claim, state: z.enum(["claimed", "denied", "replayed", "uncertain", "closed"]) })
   .strict();
 
+function exactData(value: unknown, keys: readonly string[]): value is Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return (
+    (prototype === Object.prototype || prototype === null) &&
+    Reflect.ownKeys(value).length === keys.length &&
+    keys.every((key) => {
+      const field = Object.getOwnPropertyDescriptor(value, key);
+      return !!field && Object.hasOwn(field, "value") && field.enumerable === true;
+    })
+  );
+}
+const CapacityAck = z
+  .unknown()
+  .refine(
+    (value) =>
+      exactData(value, ["claim", "state"]) &&
+      exactData(value.claim, ["claimId", "binding", "expiresAt"]) &&
+      exactData(value.claim.binding, [
+        "ownerId",
+        "threadId",
+        "threadIncarnation",
+        "threadRevision",
+        "attemptId",
+        "approvalId",
+        "approvalDigest",
+        "scope",
+      ]),
+  )
+  .pipe(
+    z
+      .object({
+        claim: Claim,
+        state: z.enum(["marked", "already-marked", "denied", "quarantined", "closed"]),
+      })
+      .strict(),
+  );
+
 export interface VoiceCleanupRegistration {
   readonly cleanupId: string;
   readonly claim: VoiceAdmissionClaim;
@@ -104,6 +143,40 @@ export interface VoiceStoreAdapterPorts extends VoiceVerificationPorts {
   close(cleanupId: string, claim: VoiceAdmissionClaim): Promise<unknown>;
 }
 
+/** Trusted server configuration only; never accept these ports or the version
+ * from a browser request. The mark port must preserve exact request/reply
+ * association and must not transparently retry or refresh/replay transport.
+ */
+export interface VoiceCapacityStoreAdapterPorts extends VoiceStoreAdapterPorts {
+  readonly expectedPoolVersion: number;
+  mark(request: VoiceCapacityMarkRequest): Promise<unknown>;
+}
+export interface VoiceCapacityMarkerObservation {
+  readonly state: "marked";
+  readonly operationId: string;
+  readonly claim: VoiceAdmissionClaim;
+}
+export interface VoiceCapacityMarkerSnapshot extends VoiceCleanupRegistration {
+  readonly state: "pending" | "observed" | "unconfirmed";
+  readonly operationId: string;
+  readonly expectedPoolVersion: number;
+  readonly acknowledgment: VoiceCapacityMarkState | null;
+}
+export interface VoiceCapacityAdmissionLease extends VoiceAdmissionLease {
+  /** At most one local observation per lease. This is not provider permission.
+   * Null never proves rollback or authorizes a different operation identity.
+   */
+  markCapacity(): Promise<VoiceCapacityMarkerObservation | null>;
+  /** Retained content-free server-only reconciliation address. Never serialize
+   * cleanup handles to the browser. No proof, token or provider fact is exposed.
+   */
+  markerSnapshot(): VoiceCapacityMarkerSnapshot | null;
+}
+type CapacityConfiguration = Readonly<{
+  expectedPoolVersion: number;
+  mark: VoiceCapacityStoreAdapterPorts["mark"];
+}>;
+
 function sameClaim(a: VoiceAdmissionClaim, b: VoiceAdmissionClaim): boolean {
   return (
     a.claimId === b.claimId &&
@@ -137,7 +210,41 @@ function unavailable(): never {
  * cleanup discards this bridge's request copy; retry retains content-free ownership.
  * Production RPC wiring, trusted issuers and actual concurrency acceptance are absent.
  */
-export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
+export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts): {
+  admit(raw: unknown): Promise<VoiceAdmissionLease | null>;
+} {
+  return createStoreAdmission(ports, null);
+}
+
+/** Inactive extension of the same admission-owned closure. No arbitrary claim
+ * or lease snapshot can be attached later. One fresh INSPECT proof goes directly
+ * to mark, never through the consuming base inspect. The returned observation
+ * is neither an atomic boundary with Auth nor a provider-dispatch grant. Real
+ * Auth/session provisioning, host integration and provider finality are absent.
+ */
+export function createVoiceCapacityStoreAdmission(ports: VoiceCapacityStoreAdapterPorts): {
+  admit(raw: unknown): Promise<VoiceCapacityAdmissionLease | null>;
+} {
+  const version = ports.expectedPoolVersion;
+  const mark = ports.mark;
+  if (!Number.isSafeInteger(version) || version < 1 || typeof mark !== "function") unavailable();
+  return createStoreAdmission(
+    ports,
+    Object.freeze({ expectedPoolVersion: version, mark: mark.bind(ports) }),
+  );
+}
+function createStoreAdmission(
+  ports: VoiceStoreAdapterPorts,
+  capacity: CapacityConfiguration,
+): { admit(raw: unknown): Promise<VoiceCapacityAdmissionLease | null> };
+function createStoreAdmission(
+  ports: VoiceStoreAdapterPorts,
+  capacity: null,
+): { admit(raw: unknown): Promise<VoiceAdmissionLease | null> };
+function createStoreAdmission(
+  ports: VoiceStoreAdapterPorts,
+  capacity: CapacityConfiguration | null,
+) {
   if (
     !Number.isSafeInteger(ports.maxProofAgeMs) ||
     ports.maxProofAgeMs < 1 ||
@@ -146,7 +253,7 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
     unavailable();
   const proofAge = ports.maxProofAgeMs;
   return {
-    async admit(raw: unknown): Promise<VoiceAdmissionLease | null> {
+    async admit(raw: unknown): Promise<VoiceAdmissionLease | VoiceCapacityAdmissionLease | null> {
       let request = parseVoiceAdmissionRequest(raw);
       if (!request) return null;
       let owned: VoiceCleanupRegistration | null = null;
@@ -177,8 +284,8 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
         ceiling = Math.min(ceiling, deadline);
         return alive();
       }
-      async function verify() {
-        if (!request || !alive()) return null;
+      async function verify(current = alive) {
+        if (!request || !current()) return null;
         const startedAt = now();
         const observations: {
           session: { ownerId: string; sessionId: string; version: number } | null;
@@ -189,9 +296,9 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
         const verifier = createVoiceServerVerifier({
           now,
           async authenticate() {
-            if (!alive()) return null;
+            if (!current()) return null;
             const identity = Identity.safeParse(await ports.authenticate());
-            if (!identity.success || !shorten(identity.data.expiresAt)) return null;
+            if (!identity.success || !shorten(identity.data.expiresAt) || !current()) return null;
             const query = Object.freeze({
               ownerId: identity.data.ownerId,
               sessionId: identity.data.sessionId,
@@ -201,7 +308,8 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
               !fence.success ||
               fence.data.ownerId !== query.ownerId ||
               fence.data.sessionId !== query.sessionId ||
-              !shorten(fence.data.expiresAt)
+              !shorten(fence.data.expiresAt) ||
+              !current()
             )
               return null;
             const candidate = Object.freeze({ ...query, version: fence.data.version });
@@ -221,7 +329,7 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
             });
           },
           async readCurrent(query) {
-            if (!alive()) return null;
+            if (!current()) return null;
             // query is emitted by the existing verifier after authenticated crypto.
             if (
               observations.authorityFingerprint !== null &&
@@ -230,7 +338,7 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
               return null;
             observations.authorityFingerprint = query.authorityFingerprint;
             const value = await ports.readCurrent(query);
-            return alive() ? value : null;
+            return current() ? value : null;
           },
         });
         const evidence = await verifier.verifyCurrent(request);
@@ -239,7 +347,8 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
           !evidence ||
           !observations.session ||
           !observations.authorityFingerprint ||
-          !shorten(evidenceDeadline(evidence))
+          !shorten(evidenceDeadline(evidence)) ||
+          !current()
         )
           return null;
         if (!expectedSession) expectedSession = observations.session;
@@ -254,16 +363,17 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
         if (!owned || !sameClaim(owned.claim, claim)) return unavailable();
         return owned;
       }
-      async function operation(
+      async function prepareProof(
         kind: "claim" | "inspect",
         claim: VoiceAdmissionClaim,
-      ): Promise<VoiceAdmissionAck> {
+        current = alive,
+      ): Promise<VoiceOperationProof> {
         const ownership = requireOwned(claim);
-        const checked = await verify();
+        const checked = await verify(current);
         if (
           !checked ||
           !sameClaim({ ...claim, binding: checked.evidence.binding }, claim) ||
-          !alive()
+          !current()
         )
           unavailable();
         const receiptDeadline = checked.startedAt + proofAge;
@@ -290,20 +400,30 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
           !sameClaim(registration.data.claim, claim) ||
           registration.data.expiresAt !== proof.expiresAt ||
           registration.data.effectiveExpiresAt !== proof.effectiveExpiresAt ||
-          !alive() ||
+          !current() ||
           now() >= proof.expiresAt
         )
           unavailable();
         // Recheck after the receipt wait. Shorter evidence requires a new deliberate
         // admission, never silent retry/reissue of this already registered proof.
-        const after = await verify();
+        const after = await verify(current);
         if (
           !after ||
           !sameClaim({ ...claim, binding: after.evidence.binding }, claim) ||
           ceiling < proof.effectiveExpiresAt ||
-          !alive() ||
+          !current() ||
           now() >= proof.expiresAt
         )
+          unavailable();
+        return proof;
+      }
+      async function operation(
+        kind: "claim" | "inspect",
+        claim: VoiceAdmissionClaim,
+      ): Promise<VoiceAdmissionAck> {
+        const ownership = requireOwned(claim);
+        const proof = await prepareProof(kind, claim);
+        if (ceiling < proof.effectiveExpiresAt || !alive() || now() >= proof.expiresAt)
           unavailable();
         const rawAck =
           kind === "claim"
@@ -361,7 +481,88 @@ export function createVoiceStoreAdmission(ports: VoiceStoreAdapterPorts) {
           return Object.freeze({ claim: ownership.claim, state: "closed" });
         },
       });
-      return checks.admit(request);
+      const lease = await checks.admit(request);
+      if (!lease || !capacity) return lease;
+      let marker: VoiceCapacityMarkerSnapshot | null = null;
+      let attempted = false;
+      // This is the actual private lease created immediately above. Only its
+      // local state is consulted; its snapshot claim is never read or adopted.
+      // All durable ownership comes exclusively from `owned` in this closure.
+      const markerAlive = () => lease.snapshot().state === "active" && alive();
+      function retain(
+        state: VoiceCapacityMarkerSnapshot["state"],
+        acknowledgment: VoiceCapacityMarkState | null,
+      ) {
+        if (marker) marker = Object.freeze({ ...marker, state, acknowledgment });
+      }
+      const extended: VoiceCapacityAdmissionLease = {
+        snapshot: lease.snapshot,
+        revalidate: lease.revalidate,
+        close() {
+          // The base lease fences itself synchronously but invokes its close
+          // port in a microtask. Fence the bridge NOW, before any marker await.
+          terminal = true;
+          request = null;
+          return lease.close();
+        },
+        markerSnapshot: () => marker,
+        async markCapacity() {
+          if (attempted) return null;
+          attempted = true;
+          // The one-attempt fence precedes even UUID allocation. A failure must
+          // never allocate a replacement identity or infer that SQL rolled back.
+          try {
+            const operationId = crypto.randomUUID();
+            const ownership = owned;
+            if (!ownership) return null;
+            marker = Object.freeze({
+              ...ownership,
+              operationId,
+              expectedPoolVersion: capacity.expectedPoolVersion,
+              state: "pending",
+              acknowledgment: null,
+            });
+            if (!markerAlive()) unavailable();
+            const proof = await prepareProof("inspect", ownership.claim, markerAlive);
+            if (ceiling < proof.effectiveExpiresAt || !markerAlive() || now() >= proof.expiresAt)
+              unavailable();
+            const ack = CapacityAck.safeParse(
+              await capacity.mark(
+                Object.freeze({
+                  receiptId: proof.receiptId,
+                  claim: ownership.claim,
+                  operationId,
+                  expectedPoolVersion: capacity.expectedPoolVersion,
+                }),
+              ),
+            );
+            if (!ack.success || !sameClaim(ack.data.claim, ownership.claim)) unavailable();
+            // Retain an exact SQL observation even when its reply arrives after
+            // cancellation/expiry. It still cannot become local success.
+            retain("unconfirmed", ack.data.state);
+            if (ack.data.state !== "marked" || !markerAlive() || now() >= proof.expiresAt)
+              unavailable();
+            const final = await verify(markerAlive);
+            if (
+              !final ||
+              !sameClaim(
+                { ...ownership.claim, binding: final.evidence.binding },
+                ownership.claim,
+              ) ||
+              ceiling < proof.effectiveExpiresAt ||
+              !markerAlive() ||
+              now() >= proof.expiresAt
+            )
+              unavailable();
+            retain("observed", "marked");
+            return Object.freeze({ state: "marked", operationId, claim: ownership.claim });
+          } catch {
+            retain("unconfirmed", marker?.acknowledgment ?? null);
+            return null;
+          }
+        },
+      };
+      return Object.freeze(extended);
     },
   };
 }

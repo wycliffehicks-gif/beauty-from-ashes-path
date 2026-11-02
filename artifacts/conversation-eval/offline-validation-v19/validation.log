@@ -1,0 +1,50 @@
+Final frozen source: 935 conversation checks/53 files; all 118 optional SQL enabled.
+
+{
+  "conversation": 0,
+  "typecheck": 0,
+  "lint": 0,
+  "build": 0
+}
+
+Findings:
+Independent source review found an extra asynchronous boundary introduced by extracting shared proof preparation. Immediate liveness, receipt-expiry and shortened-ceiling checks were added before both base claim/inspect and marker invocation; an independent cancellation schedule sweep now passes.
+The new actual-SQL fixture initially used Array.findLast, which is outside the existing TypeScript target. Replacing that fixture expression with reverse().find() fixed the compile error without changing dependencies or configuration. Formatting-only lint corrections were also applied.
+
+Final test summary:
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 12ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 12ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 5ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 3ms
+
+ Test Files  53 passed (53)
+      Tests  935 passed (935)
+   Start at  08:17:08
+   Duration  40.30s (transform 1.20s, setup 0ms, import 2.84s, tests 30.03s, environment 4ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-marker-work/conversation-tests.json
+
+Build advisories:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.23 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 506ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt

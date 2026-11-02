@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-02",
+  "timezone": "UTC",
+  "baseCommit": "d37d1fa9a5de071e4c174a9e5d857fd807668415",
+  "baseTree": "34fed9e00574550cd0ec9c929a4c3cbc1bce3c48",
+  "scope": "Inactive admission-owned fresh INSPECT proof to one capacity marker; no SQL/provider/host activation",
+  "conversation": {
+    "passed": 935,
+    "files": 53,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-capacity-marker-review.test.ts": 8,
+      "p5-voice-capacity-marker-sql.test.ts": 18,
+      "p5-voice-capacity-marker.test.ts": 26
+    },
+    "allActualSqlWithinTotal": 118,
+    "countsOverlap": true
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "build": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "bothInstancesClosed": true,
+    "retainedCommittedFictionalRecords": true,
+    "authAndProvisioning": "fictional fixtures",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "Independent source review found an extra asynchronous boundary introduced by extracting shared proof preparation. Immediate liveness, receipt-expiry and shortened-ceiling checks were added before both base claim/inspect and marker invocation; an independent cancellation schedule sweep now passes.",
+    "The new actual-SQL fixture initially used Array.findLast, which is outside the existing TypeScript target. Replacing that fixture expression with reverse().find() fixed the compile error without changing dependencies or configuration. Formatting-only lint corrections were also applied."
+  ],
+  "limits": [
+    "Marked is one local offline observation, never a provider dispatch grant.",
+    "SQL ACK echoes claim/state only; exact invocation association remains a trusted nonretrying transport precondition.",
+    "Real Auth/session provisioning/revocation propagation, authenticated provider finality and host integration remain absent.",
+    "Final Auth and SQL are not an atomic transaction; unresolved promises are not actively canceled.",
+    "Native21 cases remain unrun; local lost results are not HTTP fault injection.",
+    "Historical447SQL and model/runner/inventory/full-app/Chromium not rerun."
+  ],
+  "preservation": {
+    "baselineBlobs": 628,
+    "materializedHashVerified": 627,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "src/lib/ai/conversation/service/voice-store-adapter.server.ts",
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "f63cb681d69f8be86b0519adbcfb8bd16b4b7f252a8130ab2ffc5f83e30b4de8",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts": "56404b838974fc399cd3f1d684475034b5ebf0052fa1b4dcbbc1bee30d33d3a9",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts": "e51f05b4a103c9d17c8b2744199b9f72adf2f0406abc0b45f157a8a087e4fa0b",
+    "src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts": "b4c8801e62c7ad33e6125ec65178ae904af209025dbe96ad31c6d4ad3047e7f2",
+    "src/lib/ai/conversation/service/voice-admission.server.ts": "7a40ca42c9d2503cf3377098b3e7135605a2b0337dedbfa3b513e7fa2467eadd",
+    "src/lib/ai/conversation/service/voice-capacity-rpc.server.ts": "bf1c52cc653b2204cab92c6cabff542a81c8a38840fb2ca5c2b4715bd0bc6dbb",
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Implement the missing isolated insert-once session-fence provisioning SQL RPC and inactive exact adapter required by the existing issuer/admission readers. Accept only mandatory trusted, already verified Auth owner/session metadata and bounded expiry; a presented token, parsed JWT, browser owner or lease is never provisioning authority. Use the existing owner/session locking and fresh database-time/high-water contract. Provision an absent pair once; an existing active pair may acknowledge only the exact original metadata without extending lifetime or resetting version, and every revoked tombstone must remain terminal. Test provision-before-revoke and revoke-before-provision ordering, repeated/conflicting/expired input, lost committed acknowledgment, exact role restrictions and unchanged unrelated accounting in isolated SQL. Keep it outside migrations and the connected database, with no production Auth/event wiring, session renewal, route, provider call or activation. These sequential checks must not be labelled native concurrency. Real Auth identity/revocation propagation, authenticated whole-operation provider finality, all 21 native cases and trusted host integration remain separate unfinished gates; do not repeat unavailable-engine setup probes."
+}

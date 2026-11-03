@@ -1,0 +1,633 @@
+Frozen-source final checks:
+{
+  "conversationSuite": 0,
+  "strictTypeScript": 0,
+  "scopedEslint": 0,
+  "productionBuild": 0
+}
+
+Findings:
+Pre-execution source review made each safe forward consumption-clock observation advance the shared owner high-water record. This closes a rollback gap where the later eligibility clock could fall below the consumption sample while remaining above the older registration sample. Unsafe/null initial time instead burns an exact receipt with the explicitly documented zero fence and denies; original verification/expiry never change.
+Root and independent review moved exact existing quota-policy and allocation/route-pool association checks before the shared-pool lock. A late negative check therefore cannot retire an allocation by acquiring a second mismatched pool in reverse order. The new narrow terminal-retirement helper also requires exact cleanup/Auth/allocation/attempt/held-unit association, preserves marked uncertain slots and guards occupancy underflow. These changes affect only the new draft; native concurrency remains unproven.
+The new primary transport suite passed 79/79 and independent acknowledgment-separation suite passed 2/2 on their first runs. Initial full TypeScript ran while the independently owned SQL test file was incomplete and reported its missing closing brace; final types pass after completion. The initial diagnostic is preserved. The first actual SQL run passed 69/69; focused review cases were then added without weakening existing assertions or constraints. A later expanded candidate passed 76/77: its new retired-attempt fixture retained a winner while setting retired=true, violating the unchanged attempts CHECK before the tested call. The fixture now uses the valid terminal pair retired=true and winner_claim_id=NULL; no SQL constraint or implementation behavior was weakened. The failed JSON diagnostic is retained because that run's text reporter contained only an advisory.
+Root and independent source review found no remaining blocker. Full final conversation tests, strict types, scoped lint and production build pass on frozen files. This proves isolated versioned consumption/reservation preparation, not capacity marking, runtime integration, real Auth/provider behavior or coordinated cutover.
+
+adapter-primary-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  79 passed (79)
+   Start at  15:42:08
+   Duration  403ms (transform 98ms, setup 0ms, import 137ms, tests 89ms, environment 0ms)
+
+
+
+adapter-typecheck-initial.log
+src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts(476,1): error TS1005: '}' expected.
+
+
+adapter-typecheck-final.log
+
+
+adapter-lint-initial.log
+
+
+adapter-lint-final.log
+
+
+adapter-format.log
+src/lib/ai/conversation/service/voice-v2-capacity-rpc.server.ts 90ms
+src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-rpc.test.ts 89ms
+
+
+adapter-format-final.log
+Checking formatting...
+All matched files use Prettier code style!
+
+
+independent-review-tests-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-review.test.ts (2 tests) 38ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:41:26
+   Duration  381ms (transform 154ms, setup 0ms, import 204ms, tests 38ms, environment 0ms)
+
+
+
+independent-review-lint.log
+
+
+v2-capacity-sql-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (69 tests) 6838ms
+
+ Test Files  1 passed (1)
+      Tests  69 passed (69)
+   Start at  15:44:02
+   Duration  7.12s (transform 104ms, setup 0ms, import 140ms, tests 6.84s, environment 0ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-capacity-work/v2-capacity-sql-initial.json
+
+
+v2-capacity-sql-expanded.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (73 tests) 7161ms
+
+ Test Files  1 passed (1)
+      Tests  73 passed (73)
+   Start at  15:45:06
+   Duration  7.47s (transform 105ms, setup 0ms, import 139ms, tests 7.16s, environment 0ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-capacity-work/v2-capacity-sql-expanded.json
+
+
+initial-expanded77-failure.json
+{"numTotalTestSuites":2,"numPassedTestSuites":0,"numFailedTestSuites":2,"numPendingTestSuites":0,"numTotalTests":77,"numPassedTests":76,"numFailedTests":1,"numPendingTests":0,"numTodoTests":0,"snapshot":{"added":0,"failure":false,"filesAdded":0,"filesRemoved":0,"filesRemovedList":[],"filesUnmatched":0,"filesUpdated":0,"matched":0,"total":0,"unchecked":0,"uncheckedKeysByFile":[],"unmatched":0,"updated":0,"didUpdate":false},"startTime":1793749561451,"success":false,"testResults":[{"assertionResults":[{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL atomically claims capacity with one shared attempt, quota debit and allocation while preserving unrelated same-owner holds","status":"passed","title":"atomically claims capacity with one shared attempt, quota debit and allocation while preserving unrelated same-owner holds","duration":159.97515900000008,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies exact receipt replay without another mutation, debit or allocation","status":"passed","title":"denies exact receipt replay without another mutation, debit or allocation","duration":68.17238600000019,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL accepts a deliberate distinct claim proof for an existing allocation with no second charge","status":"passed","title":"accepts a deliberate distinct claim proof for an existing allocation with no second charge","duration":64.06330100000014,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL accepts a deliberate distinct inspect proof for an existing allocation with no second charge","status":"passed","title":"accepts a deliberate distinct inspect proof for an existing allocation with no second charge","duration":69.22423200000003,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL cannot use inspect to create a claim, winner, quota debit or capacity","status":"passed","title":"cannot use inspect to create a claim, winner, quota debit or capacity","duration":48.489689,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies claim for a base-only claim without lazy attachment or another debit","status":"passed","title":"denies claim for a base-only claim without lazy attachment or another debit","duration":60.17570400000022,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies inspect for a base-only claim without lazy attachment or another debit","status":"passed","title":"denies inspect for a base-only claim without lazy attachment or another debit","duration":45.02200200000016,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched receipt without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched receipt without consuming the stored receipt or touching any protected row","duration":47.827630999999656,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched cleanup without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched cleanup without consuming the stored receipt or touching any protected row","duration":41.04420400000026,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched Auth session without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched Auth session without consuming the stored receipt or touching any protected row","duration":43.28112600000031,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched parent version without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched parent version without consuming the stored receipt or touching any protected row","duration":47.78416100000004,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched fingerprint without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched fingerprint without consuming the stored receipt or touching any protected row","duration":46.89185899999984,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched identity expiry without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched identity expiry without consuming the stored receipt or touching any protected row","duration":47.30661599999985,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched verification without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched verification without consuming the stored receipt or touching any protected row","duration":49.059803999999986,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched receipt expiry without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched receipt expiry without consuming the stored receipt or touching any protected row","duration":46.466809999999896,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched effective expiry without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched effective expiry without consuming the stored receipt or touching any protected row","duration":43.76497100000006,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched claim expiry without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched claim expiry without consuming the stored receipt or touching any protected row","duration":51.14617499999986,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched claim ID without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched claim ID without consuming the stored receipt or touching any protected row","duration":44.271560000000136,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched owner without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched owner without consuming the stored receipt or touching any protected row","duration":52.464023,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched attempt without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched attempt without consuming the stored receipt or touching any protected row","duration":47.1075050000004,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies a mismatched approval digest without consuming the stored receipt or touching any protected row","status":"passed","title":"denies a mismatched approval digest without consuming the stored receipt or touching any protected row","duration":51.07688099999996,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not adopt a legacy-protocol stored proof","status":"passed","title":"does not adopt a legacy-protocol stored proof","duration":64.81888900000013,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rejects direct SQL wrong operation before any consumption or accounting","status":"passed","title":"rejects direct SQL wrong operation before any consumption or accounting","duration":63.194069999999556,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rejects direct SQL wrong protocol before any consumption or accounting","status":"passed","title":"rejects direct SQL wrong protocol before any consumption or accounting","duration":49.98148899999978,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rejects direct SQL extra field before any consumption or accounting","status":"passed","title":"rejects direct SQL extra field before any consumption or accounting","duration":45.538650000000416,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rejects direct SQL nil receipt before any consumption or accounting","status":"passed","title":"rejects direct SQL nil receipt before any consumption or accounting","duration":53.11961099999917,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when quota disabled denies atomic admission","status":"passed","title":"burns an exact receipt once when quota disabled denies atomic admission","duration":98.24442200000067,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when quota insufficient denies atomic admission","status":"passed","title":"burns an exact receipt once when quota insufficient denies atomic admission","duration":86.84220499999992,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when route missing denies atomic admission","status":"passed","title":"burns an exact receipt once when route missing denies atomic admission","duration":87.39208299999973,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when pool disabled denies atomic admission","status":"passed","title":"burns an exact receipt once when pool disabled denies atomic admission","duration":90.10850699999992,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when pool quarantined denies atomic admission","status":"passed","title":"burns an exact receipt once when pool quarantined denies atomic admission","duration":87.22102499999983,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when unit definitions differ denies atomic admission","status":"passed","title":"burns an exact receipt once when unit definitions differ denies atomic admission","duration":87.71291699999983,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when no active slot denies atomic admission","status":"passed","title":"burns an exact receipt once when no active slot denies atomic admission","duration":93.96736400000009,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns an exact receipt once when unit budget exhausted denies atomic admission","status":"passed","title":"burns an exact receipt once when unit budget exhausted denies atomic admission","duration":102.26173100000051,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains exactly one shared last-slot winner when first owner claims first","status":"passed","title":"retains exactly one shared last-slot winner when first owner claims first","duration":47.75830899999983,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains exactly one shared last-slot winner when second owner claims first","status":"passed","title":"retains exactly one shared last-slot winner when second owner claims first","duration":40.73559899999964,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL preserves closed status and single-use evidence when close wins before claim","status":"passed","title":"preserves closed status and single-use evidence when close wins before claim","duration":58.97254799999973,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL preserves closed status and single-use evidence when close wins before inspect","status":"passed","title":"preserves closed status and single-use evidence when close wins before inspect","duration":70.75840100000005,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies claim after parent revocation without fabricating cleanup revocation or releasing uncertain holds","status":"passed","title":"denies claim after parent revocation without fabricating cleanup revocation or releasing uncertain holds","duration":61.933500000000095,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL denies inspect after parent revocation without fabricating cleanup revocation or releasing uncertain holds","status":"passed","title":"denies inspect after parent revocation without fabricating cleanup revocation or releasing uncertain holds","duration":67.8163280000008,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains terminal cancel fencing and retires only an unmarked slot without refunding holds","status":"passed","title":"retains terminal cancel fencing and retires only an unmarked slot without refunding holds","duration":95.68154800000048,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains terminal delete fencing and retires only an unmarked slot without refunding holds","status":"passed","title":"retains terminal delete fencing and retires only an unmarked slot without refunding holds","duration":85.31015500000012,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains a shorter current deadline without rewriting the original proof or refunding usage","status":"passed","title":"retains a shorter current deadline without rewriting the original proof or refunding usage","duration":59.94900899999993,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns but denies on receipt expiry and cannot recover the same receipt","status":"passed","title":"burns but denies on receipt expiry and cannot recover the same receipt","duration":94.66649700000016,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns but denies on original age and cannot recover the same receipt","status":"passed","title":"burns but denies on original age and cannot recover the same receipt","duration":102.44281799999953,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL burns but denies on rollback and cannot recover the same receipt","status":"passed","title":"burns but denies on rollback and cannot recover the same receipt","duration":93.18265100000008,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL records unknown consumption time zero for unsafe initial clock NULL, then refuses recovery replay","status":"passed","title":"records unknown consumption time zero for unsafe initial clock NULL, then refuses recovery replay","duration":103.66379899999993,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL records unknown consumption time zero for unsafe initial clock -1, then refuses recovery replay","status":"passed","title":"records unknown consumption time zero for unsafe initial clock -1, then refuses recovery replay","duration":105.99850799999967,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL records unknown consumption time zero for unsafe initial clock 9007199254740992, then refuses recovery replay","status":"passed","title":"records unknown consumption time zero for unsafe initial clock 9007199254740992, then refuses recovery replay","duration":116.21343500000057,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rechecks original proof time after the shared pool stage before acknowledging claim","status":"passed","title":"rechecks original proof time after the shared pool stage before acknowledging claim","duration":102.92898100000002,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rechecks original proof time after the shared pool stage before acknowledging inspect","status":"passed","title":"rechecks original proof time after the shared pool stage before acknowledging inspect","duration":83.12088499999936,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass attempt retired","status":"failed","title":"does not use existing-claim inspect to bypass attempt retired","duration":22.645712999999887,"failureMessages":["error: new row for relation \"attempts\" violates check constraint \"attempts_check\"\n    at pe.Oe (file:///workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/chunk-3OMHRXTA.js:1:18162)\n    at pe.tt (file:///workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/chunk-3OMHRXTA.js:1:15548)\n    at pe.parse (file:///workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/chunk-3OMHRXTA.js:1:14222)\n    at D.Ne (file:///workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js:5:1763)\n    at file:///workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js:5:1155\n    at null.<anonymous> (wasm://wasm/0269dffe:1:5951568)\n    at null.<anonymous> (wasm://wasm/0269dffe:1:2629075)\n    at null.<anonymous> (wasm://wasm/0269dffe:1:2661584)\n    at null.<anonymous> (wasm://wasm/0269dffe:1:2662188)\n    at null.<anonymous> (wasm://wasm/0269dffe:1:5597565)"],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass attempt winner changed","status":"passed","title":"does not use existing-claim inspect to bypass attempt winner changed","duration":68.41416800000025,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass attempt absent","status":"passed","title":"does not use existing-claim inspect to bypass attempt absent","duration":62.677300999999716,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass route rebound to another shared pool","status":"passed","title":"does not use existing-claim inspect to bypass route rebound to another shared pool","duration":93.57789699999921,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass allocation absent","status":"passed","title":"does not use existing-claim inspect to bypass allocation absent","duration":90.72108600000047,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass allocation closed","status":"passed","title":"does not use existing-claim inspect to bypass allocation closed","duration":70.88246900000013,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass allocation units mismatch","status":"passed","title":"does not use existing-claim inspect to bypass allocation units mismatch","duration":125.39345599999979,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass quota disabled","status":"passed","title":"does not use existing-claim inspect to bypass quota disabled","duration":99.85078199999953,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass route absent","status":"passed","title":"does not use existing-claim inspect to bypass route absent","duration":69.42777699999988,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass pool disabled","status":"passed","title":"does not use existing-claim inspect to bypass pool disabled","duration":66.976721,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass pool quarantined","status":"passed","title":"does not use existing-claim inspect to bypass pool quarantined","duration":78.90309799999977,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass pool limit below retained occupancy","status":"passed","title":"does not use existing-claim inspect to bypass pool limit below retained occupancy","duration":81.14147099999991,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass pool limit below cumulative hold","status":"passed","title":"does not use existing-claim inspect to bypass pool limit below cumulative hold","duration":72.45289599999978,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass reservation size changed","status":"passed","title":"does not use existing-claim inspect to bypass reservation size changed","duration":72.55361699999958,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not use existing-claim inspect to bypass approval rebound to another policy","status":"passed","title":"does not use existing-claim inspect to bypass approval rebound to another policy","duration":91.00306600000022,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL does not retire an allocation bound to another cleanup when exact current cleanup is terminal","status":"passed","title":"does not retire an allocation bound to another cleanup when exact current cleanup is terminal","duration":83.37033100000008,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains an administratively marked uncertain slot after terminal fencing and exact legacy close until fictional operation-wide finality","status":"passed","title":"retains an administratively marked uncertain slot after terminal fencing and exact legacy close until fictional operation-wide finality","duration":38.75282200000038,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains committed admission and proof consumption after a lost acknowledgment without retry","status":"passed","title":"retains committed admission and proof consumption after a lost acknowledgment without retry","duration":70.20889400000033,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains committed admission and proof consumption after a malformed acknowledgment without retry","status":"passed","title":"retains committed admission and proof consumption after a malformed acknowledgment without retry","duration":74.08380400000078,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL keeps both new endpoints unavailable to anon","status":"passed","title":"keeps both new endpoints unavailable to anon","duration":66.14688099999967,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL keeps both new endpoints unavailable to authenticated","status":"passed","title":"keeps both new endpoints unavailable to authenticated","duration":71.21941599999991,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL keeps private helpers and all shared tables inaccessible, with exact service-only public functions","status":"passed","title":"keeps private helpers and all shared tables inaccessible, with exact service-only public functions","duration":21.44264899999962,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL preserves consumption high-water when a later initial eligibility sample rolls back above the older registration clock","status":"passed","title":"preserves consumption high-water when a later initial eligibility sample rolls back above the older registration clock","duration":70.94810700000016,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL cannot hide an initial rollback with a later recovered sample because it denies before resampling","status":"passed","title":"cannot hide an initial rollback with a later recovered sample because it denies before resampling","duration":71.82713299999887,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL retains exact expired cleanup/claim fences and releases only an unmarked slot, preserving cumulative holds","status":"passed","title":"retains exact expired cleanup/claim fences and releases only an unmarked slot, preserving cumulative holds","duration":83.87812699999995,"failureMessages":[],"meta":{},"tags":[]},{"ancestorTitles":["P5 proposed v2 atomic capacity admission in isolated PostgreSQL"],"fullName":"P5 proposed v2 atomic capacity admission in isolated PostgreSQL rolls back proof consumption and every atomic admission write if an injected allocation statement fails","status":"passed","title":"rolls back proof consumption and every atomic admission write if an injected allocation statement fails","duration":76.11794399999962,"failureMessages":[],"meta":{},"tags":[]}],"startTime":1793749564457,"endTime":1793749569929.118,"status":"failed","message":"","name":"/workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts"}]}
+
+v2-capacity-sql-confirmed.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (77 tests) 7695ms
+
+ Test Files  1 passed (1)
+      Tests  77 passed (77)
+   Start at  15:47:10
+   Duration  8.03s (transform 113ms, setup 0ms, import 152ms, tests 7.69s, environment 0ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-capacity-work/v2-capacity-sql-confirmed.json
+
+
+sql-test-typecheck-initial.log
+
+
+sql-test-typecheck-confirmed.log
+
+
+sql-test-lint-confirmed.log
+
+
+sql-test-format-initial.log
+src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts 250ms
+
+
+sql-test-format-corrected.log
+src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts 194ms
+
+
+sql-test-format-confirmed.log
+Checking formatting...
+All matched files use Prettier code style!
+
+
+conversation-tests.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (78 tests) 8268ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (77 tests) 8303ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (60 tests) 5294ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 5041ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  324ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 3905ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-sql.test.ts (36 tests) 4272ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 3575ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 3528ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 3081ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 3108ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 2417ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 2930ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 2828ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 2893ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 2766ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 3220ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 981ms
+     ✓ 16 competing reservations of one identity create exactly one admission  366ms
+     ✓ 16 competing claims dispatch exactly once  339ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 1766ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  1627ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 698ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-review.test.ts (3 tests) 505ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance.test.ts (74 tests) 253ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 248ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 1095ms
+     ✓ restarting with a fresh output/evidence directory cannot replay the catalog  574ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 236ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 228ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 194ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 154ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 153ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 140ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 160ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 136ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 120ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 123ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 77ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-rpc.test.ts (79 tests) 66ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts (44 tests) 70ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 87ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 87ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts (75 tests) 62ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 48ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 62ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 58ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 75ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 54ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 45ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 58ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 40ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 39ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 41ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 42ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 32ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts (2 tests) 36ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-review.test.ts (2 tests) 38ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 35ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 28ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 27ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 21ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 42ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 27ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 27ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 26ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 27ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 31ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts (2 tests) 26ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 22ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 17ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 13ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 15ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 3ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 4ms
+
+ Test Files  78 passed (78)
+      Tests  1731 passed (1731)
+   Start at  15:48:17
+   Duration  44.95s (transform 1.81s, setup 0ms, import 4.48s, tests 74.35s, environment 7ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-capacity-work/conversation-tests.json
+
+
+typecheck.log
+
+
+lint.log
+
+
+build.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.49s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-capacity-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-BF0svUSv.js                    0.24 kB │ gzip:  0.17 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-UDf-uNZZ.js                          0.41 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-BkZJ5pYT.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-DRSYhcGT.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-B8tYyj_f.js                        1.12 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-LmJkmL-w.js                             1.26 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-D9u0bWu-.js                              1.69 kB │ gzip:  0.59 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-C76ri67g.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-CSySGDu5.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-PAKXJLdU.js                         3.32 kB │ gzip:  1.15 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B1GKhRKA.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DzNBdTHW.js               5.38 kB │ gzip:  1.13 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DO0MvPiK.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-BUN5H20M.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CMqjQ9ew.js                                     12.92 kB │ gzip:  3.79 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-evIMzzLw.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DO70l_2P.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-C1KLkdYT.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-PDRnG5EA.js                                  60.14 kB │ gzip: 15.42 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BtC1Nm38.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 882ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-10-29)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.19 kB │ gzip:   0.16 kB
+.output/server/_ssr/empty-plugin-adapters-BF0svUSv.mjs               0.25 kB │ gzip:   0.18 kB
+.output/server/_ssr/createServerRpc-UDf-uNZZ.mjs                     0.41 kB │ gzip:   0.29 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.64 kB │ gzip:   0.38 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.76 kB │ gzip:   0.40 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.97 kB │ gzip:   0.57 kB
+.output/server/_ssr/start-DRSYhcGT.mjs                               1.12 kB │ gzip:   0.60 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-B8tYyj_f.mjs                   1.15 kB │ gzip:   0.61 kB
+.output/server/_ssr/gate.server-BkZJ5pYT.mjs                         1.16 kB │ gzip:   0.68 kB
+.output/server/_libs/hookable.mjs                                    1.18 kB │ gzip:   0.53 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.35 kB │ gzip:   0.73 kB
+.output/server/_ssr/createSsrRpc-LmJkmL-w.mjs                        1.36 kB │ gzip:   0.68 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.40 kB │ gzip:   0.73 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.52 kB │ gzip:   0.81 kB
+.output/server/_ssr/createStart-D9u0bWu-.mjs                         1.58 kB │ gzip:   0.59 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.83 kB │ gzip:   0.77 kB
+.output/server/__23tanstack-start-server-fn-resolver-C76ri67g.mjs    1.88 kB │ gzip:   0.81 kB
+.output/server/_ssr/gate.functions-CSySGDu5.mjs                      2.06 kB │ gzip:   0.81 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.09 kB │ gzip:   0.94 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.42 kB │ gzip:   1.12 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.47 kB │ gzip:   0.98 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.57 kB │ gzip:   0.90 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.61 kB │ gzip:   1.30 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.05 kB │ gzip:   1.02 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.21 kB │ gzip:   1.26 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.29 kB │ gzip:   1.39 kB
+.output/server/_ssr/request-response-PAKXJLdU.mjs                    3.36 kB │ gzip:   1.18 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.41 kB │ gzip:   0.94 kB
+.output/server/_ssr/auth-middleware-B1GKhRKA.mjs                     3.75 kB │ gzip:   1.48 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.06 kB │ gzip:   1.25 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.36 kB │ gzip:   1.40 kB
+.output/server/_ssr/ssr.mjs                                          4.41 kB │ gzip:   1.86 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.46 kB │ gzip:   1.94 kB
+.output/server/_libs/lucide-react.mjs                                4.67 kB │ gzip:   1.29 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.93 kB │ gzip:   1.47 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.37 kB │ gzip:   2.15 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.42 kB │ gzip:   1.93 kB
+.output/server/_tanstack-start-manifest_v-DzNBdTHW.mjs               5.46 kB │ gzip:   1.17 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.55 kB │ gzip:   1.82 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.70 kB │ gzip:   1.95 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.15 kB │ gzip:   2.36 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.16 kB │ gzip:   1.62 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.28 kB │ gzip:   2.00 kB
+.output/server/_ssr/day._day-DO0MvPiK.mjs                            6.78 kB │ gzip:   3.12 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.28 kB │ gzip:   2.13 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.57 kB │ gzip:   2.64 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.92 kB │ gzip:   3.17 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.34 kB │ gzip:   3.17 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.59 kB │ gzip:   3.09 kB
+.output/server/_ssr/esm-CMqjQ9ew.mjs                                12.08 kB │ gzip:   3.74 kB
+.output/server/_ssr/journey-ai.functions-BUN5H20M.mjs               12.22 kB │ gzip:   3.88 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.48 kB │ gzip:   4.27 kB
+.output/server/_libs/tanstack__history.mjs                          12.52 kB │ gzip:   3.72 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.62 kB │ gzip:   3.50 kB
+.output/server/_ssr/adapter.server-evIMzzLw.mjs                     13.29 kB │ gzip:   3.89 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.28 kB │ gzip:   4.25 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.42 kB │ gzip:   4.12 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.61 kB │ gzip:   4.92 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.05 kB │ gzip:   4.80 kB
+.output/server/index.mjs                                            17.28 kB │ gzip:   4.89 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.87 kB │ gzip:   5.17 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.65 kB │ gzip:   5.39 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.49 kB │ gzip:   9.04 kB
+.output/server/_ssr/conversation-staging-DO70l_2P.mjs               27.80 kB │ gzip:   6.38 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                29.95 kB │ gzip:   8.02 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.14 kB │ gzip:  10.66 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.48 kB │ gzip:   9.60 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.91 kB │ gzip:  11.19 kB
+.output/server/_ssr/router-C1KLkdYT.mjs                             38.23 kB │ gzip:   9.95 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.28 kB │ gzip:  10.68 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.56 kB │ gzip:  12.78 kB
+.output/server/_ssr/server-PDRnG5EA.mjs                             58.92 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-BtC1Nm38.mjs                           78.22 kB │ gzip:  18.70 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.20 kB │ gzip:  20.96 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.62 kB │ gzip:  17.59 kB
+.output/server/_libs/tailwind-merge.mjs                             85.67 kB │ gzip:  15.23 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.08 kB │ gzip:  24.91 kB
+.output/server/_libs/zod.mjs                                       100.20 kB │ gzip:  17.34 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.20 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 402ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+
+sql-notes.md
+# Inactive v2 capacity admission SQL — 3 November 2026, America/Toronto
+
+New owned file only: `docs/pilot/conversation/sql-drafts/p5-voice-v2-capacity.sql`. Base connected main is `491f7f0caba6fd5b0bbd19c52126c37600170559`. Read AGENTS, latest continuation/P5 checkpoint, lifetime-change contract, completed v2 proof/cleanup and old admission/capacity dependencies. No prior source, SQL, schema, grants, migration journal, settings or runtime route was edited.
+
+## Contract
+
+Two service-only endpoints accept one exact `p_proof` JSON body, the unchanged twelve-field protocol-2 proof registration receipt: `bfa_p5_v2_capacity_claim` requires operation claim; `bfa_p5_v2_voice_inspect` requires inspect. Both return exact `{protocol:2, proof:<original body>, status:'claimed'|'denied'|'closed'}`. Strict shape, canonical nonnil identifiers, safe integer timing, full claim and bounded proof intervals are validated before writes. Malformed or endpoint-operation-mismatched requests raise `Unavailable`. The full response does not establish current Auth, service provenance or provider dispatch permission.
+
+Private helpers live in the existing `bfa_p5_voice_v2` namespace; no table/schema/accounting copy is added. Parsing does not register or authenticate a proof. After common owner and namespaced receipt locks, `take_proof` requires an existing unconsumed protocol-2 row equal to the complete parsed candidate composite, including full claim, cleanup, Auth/version/fingerprint and every original timestamp. Missing, already-consumed, foreign, legacy or changed tuples deny without consuming or performing negative cleanup work.
+
+An exact proof is consumed once before semantic admission checks. The first clock sample is bounded and checked against the retained owner high-water. A safe normal sample advances that high-water so a later sample cannot hide a rollback between consumption and eligibility. A safe rollback burns the receipt and denies without lowering the clock. An unavailable/out-of-range initial sample writes consumed_ms=0 as an explicit non-null unknown-time consumption fence and immediately denies. Zero is never Auth freshness or a claimed consumption timestamp. Original verified/identity/proof/effective times remain unchanged. The local selected composite deliberately retains consumed_ms NULL while the persistent row is consumed; only that original composite enters the completed v2 eligibility predicate. SQL exceptions or outer transaction rollback remain uncertainty, not a guaranteed committed burn. The unchanged clock function is nonnull in normal operation; a later artificial NULL passed into legacy observe_now may raise and roll back.
+
+`current` calls only the completed v2 eligibility helper. It requires current exact parent/no retained legacy fence, issuance association, protocol-2 cleanup, current thread/generation/allowlist/approval, claim/winner and safe post-lock time. Its exact negative deadline and terminal behavior remains intact. Missing/revoked parent, legacy fence or missing protected records deny without inventing Auth revocation.
+
+One private capacity-admit path composes this into combined claim and existing-claim-only inspect. New claim atomically inserts the attempt winner, debits the existing quota once, inserts the shared claim/allocation and increments pool occupied/cumulative held units. A base-only claim is refused; no lazy attachment exists. Inspect cannot insert or debit. Exact existing capacity observations may succeed at the slot/unit limit with zero remaining quota, because their original reservation already committed. Current disabled/quarantined/over-limit pool, quota unit mismatch, wrong route, rebound approval quota policy or conflicting allocation denies. Existing quota/pool association is checked before selecting a different quota or locking a route pool, so later retirement cannot acquire a second pool in inverted order. Version changes alone are left to the future expected-version capacity mark.
+
+After quota/route/pool locks, current v2 eligibility and original proof time are checked again before positive return or new accounting. Three normal clock samples occur: consumption, initial eligibility, final eligibility. Administrative routes/provisioning remain outside this implementation; native contention and actual Auth serialization remain unproven.
+
+The narrow versioned retirement helper requires exact protocol-2 cleanup/Auth/full claim and matching retained claim/allocation owner, cleanup, attempt and units. It then uses the existing quota/pool and requires a nonzero occupied counter before releasing an exact terminal unmarked slot. Missing/inconsistent records deny retirement. Cumulative held units and quota are never refunded. Marked uncertain operations can become closed while their slot remains held until whole-operation finality reaches the unchanged exact reconciliation boundary. A parent failure alone does not manufacture a terminal cleanup or free a slot.
+
+Only new function privileges are revoked/granted in their creation transaction. Existing close/reconcile, all old enabling functions and their grants remain unchanged. Consequently this is inactive, nondeployable preparation until versioned capacity mark/orchestration and quiesced no-fallback cutover are completed. No real Auth/provider calls, activation, publication or Lovable paid edit occurred.
+
+## Review and validation
+
+Self-review and independent/root review corrected two design details before the first actual SQL run: recording the consumption sample in the shared high-water, and checking existing quota/route identity before shared-pool acquisition. The narrow exact retirement helper also guards cleanup association and counter underflow. No prior source was modified. Independent source review found no remaining blocker at the final hash below.
+
+The SQL test owner reports the first completed actual PostgreSQL/PGlite run passed 69/69; no initial SQL implementation failure occurred. Root reconciliation of that agent's completed evidence: the expanded final frozen suite passes 77/77, including rollback/route regressions, at the unchanged SQL hash below. An intermediate 76/77 result came from a retired-attempt fixture violating the unchanged retired/winner CHECK; its JSON diagnostic and the corrected valid fixture are recorded in sql-test-notes.md and the combined evidence. Root owns aggregate tests, strict TypeScript, scoped lint and production build. These are fictional Auth/approval records, controlled time, sequential committed-state checks and local transport doubles, not native multi-connection scheduling, real HTTP/Auth/provider or device acceptance. No exact-once external create claim is made.
+
+Frozen SQL SHA256: `4573216e9f55d6ef4e89833a90a424f1bbde9db84ad9d21ac0b67d104c40135b`.
+
+
+adapter-notes.md
+# Inactive v2 atomic capacity and inspection transport — 3 November 2026
+
+Owned new files only:
+
+- `src/lib/ai/conversation/service/voice-v2-capacity-rpc.server.ts`
+- `src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-rpc.test.ts`
+
+Read AGENTS, latest continuation, the lifetime-change contract, completed v2 proof transport, legacy capacity adapter and RPC store. No prior application/SQL/test/dependency/configuration/runtime file or connected service was changed by this agent.
+
+`createVoiceV2CapacityRpcPorts(client)` exposes only `claim(proof)` and `inspect(proof)`. The exact twelve-field protocol-2 proof receipt is supplied as `{p_proof}` to `bfa_p5_v2_capacity_claim` or `bfa_p5_v2_voice_inspect`. The method rejects an opposite operation before invocation. Replies must contain exactly `{protocol:2, proof:<exact original proof>, status:claimed|denied|closed}`. Every nested identity and timing field must match, including semantic denied/closed replies. A minimal v1 `{claim,state}`, null, registration-only receipt, refreshed or shortened proof, marker status, replay state or additional consumed field cannot substitute for that acknowledgment.
+
+The adapter independently validates exact own enumerable data schemas, rejects nil/uppercase/coerced IDs, invalid digests, getters and extraneous fields, and uses safe integer/static interval checks without consulting time. Input, output and nested claims are detached and frozen. The original protected transport method is captured once with its receiver. Each deliberate method call invokes it once and never retries, refreshes verification, calls a legacy path, creates a replacement proof, samples Auth, creates credentials or calls a provider. Errors are sanitized without a raw SQL/transport cause or identifiers. The host must retain original immutable request evidence before invoking; malformed/lost replies do not prove rollback.
+
+The two ports are structurally distinct from the v1 admission interface. Even a claimed observation does not provide a marker or provider-dispatch permission. Current Auth, service provenance and genuine transport association remain independent trusted-host requirements. Inspect requires the exact existing claim and capacity allocation plus current quota/route/pool; it creates no capacity, claim or new usage debit. Exact close and reconciliation remain separate paths; a closed acknowledgment cannot establish whole-operation provider finality or refund cumulative holds. Runtime composition and coordinated quiesced no-fallback cutover remain unfinished.
+
+Primary transport suite: **79/79 passed on the first focused run** (`adapter-primary-initial.log`). Scoped ESLint: exit 0 (`adapter-lint-initial.log`). Prettier formatting completed (`adapter-format.log`). Initial full TypeScript ran while the independently owned SQL fixture was incomplete; its sole reported diagnostic was `p5-voice-v2-capacity-sql.test.ts:476: '}' expected`. This is preserved in `adapter-typecheck-initial.log`; no adapter/primary source correction was made. Independent source review found no blocker; two separate actual-adapter-to-v1-bridge separation cases passed on their first run. A documentation-only clarification states the existing-capacity/current-quota/route/pool inspect contract. Final full strict TypeScript now passes after the independently owned SQL fixture completed (`adapter-typecheck-final.log`, exit 0). Final scoped lint and formatting also pass (`adapter-lint-final.log`, `adapter-format-final.log`). Root owns the final aggregate conversation suite and production build.
+
+Tests cover both exact endpoint mappings and operation separation; all three semantic statuses; immutable request/reply snapshots across waits and reverse-order concurrent responses; one captured transport; no local clock; bounded static times; every identity in a full tuple; rejected shape/coercion/getter variants; exact full matching even on denials; sanitized null/v1/invalid envelopes; and locally modeled committed lost/malformed responses with no retry or replacement identity. These are fictional response doubles, not actual SQL, HTTP fault injection, native concurrency or real-provider evidence; the separate actual SQL suite owns accounting and consumption behavior.
+
+Frozen SHA-256:
+
+- Adapter: `54c7f94edb25d53d98c8cd714ce03b69b68974e1cdfe6e3058ed16cebc1438bf`.
+- Primary tests: `a8da43df46b35707e23c4ce76a686e1774256ec2e1ac373508671672b06e6ab9`.
+
+
+sql-test-notes.md
+# Inactive v2 capacity SQL integration evidence — 3 November 2026
+
+Owned only `src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts` in the isolated checkout based on GitHub `491f7f0caba6fd5b0bbd19c52126c37600170559`. No existing application source, SQL, test, constraint, configuration, dependency or connected service was changed by this test agent.
+
+## Frozen result
+
+- Actual isolated PostgreSQL suite: **77/77 passed, zero failed and zero skipped/pending**, one file.
+- Authoritative final output: `v2-capacity-sql-confirmed.log` and `v2-capacity-sql-confirmed.json`; JSON reports `success: true`. Vitest 4.1.10, duration 8.03 seconds (test body 7.69 seconds).
+- Frozen test SHA256: `61ee6a68b4a21af0ade8b25c86fea92b38d860771600e07bcaaecc346b9d58d1`.
+- Frozen SQL SHA256: `4573216e9f55d6ef4e89833a90a424f1bbde9db84ad9d21ac0b67d104c40135b`.
+- Actual engine: separately installed `@electric-sql/pglite` **0.5.12**, PostgreSQL **18.6**, one connection. The fixture verifies engine identity/version and uses the named disposable `bfa_p5_offline_fixture` database. Both seed and fixture engines close; the actual SQL time function is restored and verified after every test. Temporary clock sequences and the injected exception trigger/function are removed in `finally` blocks.
+- Final formatting check: exit 0, `sql-test-format-confirmed.log`. Frozen-source full TypeScript and scoped ESLint both pass (exit 0), recorded in `sql-test-typecheck-confirmed.log` and `sql-test-lint-confirmed.log`; root's aggregate checks/build are separate evidence.
+
+## What is exercised
+
+The fixture installs actual unchanged P3b migrations and P5 legacy drafts plus completed v2 parent/issuance, pre-issuance, cleanup and proof drafts, then the new v2 capacity draft. It drives the real v2 transports through service-role SQL transactions with explicitly fictional Auth/policy/approval metadata.
+
+The happy path observes/registers the real v2 chain before storing a proof and consuming it into one shared claim, immutable attempt winner, quota debit and capacity allocation/pool update. Exact receipt replay denies without another change. Deliberate distinct claim or inspect proofs can observe the existing allocation when remaining quota is zero and pool limits exactly equal retained occupancy/units; no second debit occurs. Inspect cannot create a claim/allocation, and base-only admission cannot be attached lazily.
+
+Fourteen complete-request association changes deny without burning another receipt. Direct malformed/protocol/operation/nil input raises before writes; a stored legacy-protocol row is not adopted. Exact protected request matches burn once on semantic denial, including capacity policy denial, stale proof, current lifecycle loss, malformed stored lifecycle associations and safe clock rollback. Initial unsafe/null clock samples retain only the explicit non-null zero consumption tombstone and deny; recovery cannot resurrect that receipt. Original proof association and verification/deadline fields remain unchanged.
+
+Current capacity checks cover quota policy/enabled state, routes, pool identity/enabled/quarantine/limits/unit definition, exact allocation cleanup/units/state, and exact nonretired attempt winner. Two sequential cross-owner last-slot orderings retain one winner and one debit/allocation. They do not establish native concurrent lock behavior or absence of deadlocks.
+
+Deterministic SQL time sequences verify consumption-time high-water, an initial rollback that must deny before a later recovery sample, and later proof expiry at the final post-pool check for both claim and inspect. These are controlled SQL clock transitions, not actual concurrent lock waits. The final current check must use original verification time; nothing refreshes permission to fit a later wait.
+
+Current parent revocation denies without fabricating cleanup revocation. Actual P3b Stop/Delete, current shorter approval ceilings and exact expiry retain negative cleanup/claim evidence. Only an exact already-terminal unmarked allocation can retire its slot; cumulative claim/pool units and quota debits are never refunded. An administratively mismatched allocation cleanup cannot release another slot. The marked-uncertain case explicitly seeds an operation marker administratively because v2 mark is still unfinished: existing exact close and fictional whole-operation reconciliation preserve its slot until finality, then release only that slot while retaining holds.
+
+Post-commit lost/malformed response doubles retain successful admission and receipt consumption without retry. A separate fixture-only SQL trigger injects an allocation statement exception and proves that the whole transaction, including proof consumption, attempt, quota and claim writes, rolls back. Therefore committed semantic denials burn once; unexpected SQL exceptions/rollback do not justify a blanket consumption guarantee. Neither case establishes real HTTP fault behavior or authorizes a caller to retry an uncertain operation.
+
+Preservation snapshots cover **22 tables**, with exact-target row filtering and seeded nonzero retained P3b/legacy usage. Unrelated records of the same owner remain in preservation comparisons. Service-only endpoint security-definer/search-path checks and private helper/table privilege checks pass. Existing runtime callers, mark, close/reconcile implementation, grants and shared accounting schemas remain unchanged.
+
+## Development diagnostics retained
+
+Initial suite: **69/69 passed**, in `v2-capacity-sql-initial.log/json`. Expanded clock/route/expiry coverage: **73/73 passed**, in `v2-capacity-sql-expanded.log/json`.
+
+The expanded 77-case candidate reported **76/77**, solely because the new retired-attempt fixture set `retired=true` while retaining `winner_claim_id`. The unchanged `attempts_check` requires a retired row to have a null winner. This failed during fixture setup before the tested RPC. Correcting that fixture to set both `retired=true,winner_claim_id=NULL` produced the authoritative 77/77 result. No SQL implementation, constraint or behavioral expectation was weakened.
+
+The complete diagnostic is preserved in `initial-expanded77-failure.json` (an exact copy of `v2-capacity-sql-final.json`). A repeated candidate recorded the same setup error in `v2-capacity-sql-frozen.json`; despite that early filename, it is **not** frozen final evidence. One candidate text log contained only the runner advisory, so its JSON is the authoritative failed-run diagnostic. The final confirmed filenames above are authoritative for the current test hash.
+
+Full initial TypeScript passed once this fixture was complete. The adapter agent's earlier concurrent typecheck saw this file while it was still being authored and reported a missing closing brace; that partial-file diagnostic is separately preserved in `adapter-typecheck-initial.log`. No production type fix resulted from it.
+
+## Limits
+
+All identity, policy, approval and provider-finality observations are fictional fixtures. This is local embedded PostgreSQL plus response doubles, not deployed Supabase Auth/RLS/HTTP behavior, native multi-connection races, real cryptographic approval issuance, genuine provider finality or device acceptance. All 21 native cases and cross-backend/deployed Auth/provider/device gates remain separate and unrun. Capacity mark, runtime orchestration and coordinated quiesced no-fallback routing/privilege cutover remain unfinished. No paid Lovable edit, real Auth/model/voice/provider call, participant activation, connected SQL/settings change, purchase, publication or AWS action occurred.
+
+
+independent-review.md
+# Independent review — isolated v2 capacity admission
+
+Reviewed 3 November 2026, America/Toronto, on baseline connected main `491f7f0caba6fd5b0bbd19c52126c37600170559`. This is offline source and fictional test evidence, not deployment, native PostgreSQL concurrency, deployed Auth or provider/device acceptance.
+
+## Scope and status
+
+Read AGENTS, current continuation marker, lifetime-change contract, prior v26 independent review, complete v2 proof eligibility/registration, legacy capacity/admission and the actual legacy store caller mapping. The bounded new path must compose locked single-use v2 proof consumption directly into shared atomic capacity admission and existing-capacity-only inspection; no separate base-claim implementation is needed. Capacity mark, host orchestration and quiesced no-fallback cutover remain deferred.
+
+No remaining source blocker found in the complete new SQL and strict transport at the hashes below. Re-read the monotonic high-water and early exact quota/route guards after their final changes. Root owns final aggregate validation; the SQL test owner owns actual SQL execution evidence.
+
+## Transport checks
+
+The new mapping requires the complete exact twelve-field protocol-2 proof and enforces claim/inspect operation before the one captured protected RPC call. Input and output use own enumerable data fields, lowercase nonnil identities, safe integer timing, immutable full claim/Auth/cleanup association and positive receipt interval at most 30000 ms. Parsing detaches values, nested objects are frozen and every echoed identity and timing value must match. Null, old/minimal acknowledgment shapes, unsupported status/protocol and mismatched replies reject. Errors are sanitized. No clock, Auth SDK, credential/client creation, retries, fallback, runtime route or provider exists.
+
+The success shape `{protocol:2,proof,status}` deliberately differs from v1 `{claim,state}`. Shape/provenance checks do not authenticate a transport, establish current request-bound Auth or provide dispatch authority. Denied/lost/malformed replies can follow committed proof consumption or negative/retained capacity evidence; they do not prove rollback or authorize replacement identities. Existing claims must not require or spend a second quota reservation.
+
+## Independent composition cases
+
+Added exactly two cases in `p5-voice-v2-capacity-review.test.ts`. Both compose the actual new transport with the unchanged v1 admission bridge through deliberately fictional old registration/claim ports. One reaches claim acknowledgment; the other reaches the mandatory immediate post-claim inspect. Even a matched protocol-2 `claimed` reply cannot activate the old bridge, and its retained exact cleanup closes once. The test conversion is only a fixture and installs no application adapter. These cases establish acknowledgment separation, not SQL admission or provider permission.
+
+First run: **2/2 passed**, one file, in `independent-review-tests-initial.log`. Scoped ESLint passed (`independent-review-lint.log`); formatting check passed. No initial failure or test correction occurred. Root owns final aggregate types/tests/build; actual SQL tests are separate evidence from their owning agent.
+
+The SQL test owner's final frozen run is separately confirmed at **77/77 passed, zero failures/skips**, in `v2-capacity-sql-confirmed.log`/`.json`, against SQL hash 4573216e below and test hash `61ee6a68b4a21af0ade8b25c86fea92b38d860771600e07bcaaecc346b9d58d1`. Initial 69 and expanded 73 runs passed; an intermediate 77-case candidate passed 76 and failed during fixture setup because setting attempt retired alone violated the unchanged requirement to clear its winner. The fixture now sets retired=true and winner_claim_id=NULL together; no SQL source or constraint was changed. Initial diagnostics remain preserved. SQL tests cover actual atomic reservation, exact retained accounting, both sequential last-slot orderings, current policy, original-age/post-lock expiry, consumption high-water, initial unknown clock, exact retirement and an injected transaction exception that fully rolls back. These are single-connection fictional fixtures, not native or provider acceptance.
+
+Reviewed frozen SHA-256 values:
+
+| File | SHA-256 |
+| --- | --- |
+| `docs/pilot/conversation/sql-drafts/p5-voice-v2-capacity.sql` | `4573216e9f55d6ef4e89833a90a424f1bbde9db84ad9d21ac0b67d104c40135b` |
+| `src/lib/ai/conversation/service/voice-v2-capacity-rpc.server.ts` | `54c7f94edb25d53d98c8cd714ce03b69b68974e1cdfe6e3058ed16cebc1438bf` |
+| `src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-review.test.ts` | `9f9596a483846509c32f65f1f545b3333b6ceb55652a23dd87e3558841b19b57` |
+
+
+## SQL review and resolved design issues
+
+- Unsafe consumption time does not violate the retained consumed_ms constraint and roll back a one-use denial. The implemented path uses explicit 0 as an unknown-time consumed tombstone for null/out-of-range initial samples, followed by immediate denial. 0 is a nonnull fence, not evidence of a fresh time or Auth observation. Range-safe clock rollback records its sample and denies without lowering the owner high-water. The zero sentinel covers the initial consumption sample only; the unchanged real clock function is nonnull, but a later artificially injected NULL inside old observe_now can raise/roll back. Unexpected SQL exceptions remain transaction rollback/uncertainty, not guaranteed consumption.
+- Exact negative retirement now matches the allocation cleanup ID/fullclaim/owner/attempt/units and retained shared accounting records. Only a terminal unmarked allocation can release its occupied slot; marked uncertain allocations retain it, all cumulative holds remain. Wrong tuples cannot retire unrelated allocations.
+- Existing-capacity inspection/replay enforces current pool enabled/quarantine/limit checks without requiring another remaining-quota reservation. New acquisition checks free slot/units; existing acquisition may be exactly at the limit but must deny if protected totals exceed a lowered limit.
+- The safe initial consumption sample now advances the existing owner high-water before eligibility. A subsequent rollback below that sample cannot hide above the older proof-registration clock. The initial sample itself must not fall below the retained prior value.
+- Approval quota-policy identity and existing allocation units/route-pool identity are now checked before a different quota/shared-pool lock. A post-wait denial can therefore retire only against the same pool already locked, avoiding a second-pool lock inversion under inconsistent metadata.
+- The new eligibility helper sees the retained originally unconsumed local composite after the persistent proof is burned; the actual stored proof remains consumed. Original verified/expiry fields never refresh. Current-state checks repeat after quota/pool waits.
+
+## Next dependency
+
+After this slice passes actual SQL and aggregate verification, implement isolated versioned capacity marking using a distinct fresh inspect proof and the same locked v2 consumption/current helpers before and after quota/pool/global-operation locks. Retain exact operation identity, expected current pool version, immutable allocation, approval quota-policy binding, one marker and already-marked-as-observation semantics. Add exact nonretrying protocol-2 transport and actual SQL cases. Preserve existing exact close/reconcile/finality and accounting. Host wiring and the coordinated quiesced no-fallback route/privilege cutover remain later work; marking alone cannot enable provider dispatch.
+
+Root completion/evidence/handoff scripts were independently reviewed: baseline 1573 tests/75 files/407 SQL cases, three new test files, 689→696 tree blobs, 686 preserved existing blobs, and guarded handoff versions 24/34/24→25/35/25 are consistent. The evidence script requires exactly all four successful check keys and frozen source hashes. Prior archive 269427 bytes and protected clean-handoff sections are preserved by assertions. Root corrected wording to distinguish marked uncertain provider outcomes from unmarked reservations and initial unknown-time consumption from later SQL-exception rollback.
+
+Original v5 remains complete. P4 approval/expiry remain null, grant registry empty; P3b accounts/staging closed with retained holds. No paid Lovable edit, real model/voice call, connected SQL/settings change, activation, publication, AWS or billing action occurred. All 21 native cases, plus cross-backend/deployed Auth/provider/device acceptance, remain unrun.
+

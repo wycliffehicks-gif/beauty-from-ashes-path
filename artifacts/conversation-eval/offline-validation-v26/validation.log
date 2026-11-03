@@ -1,0 +1,859 @@
+Frozen-source final checks:
+{
+  "conversationSuite": 0,
+  "strictTypeScript": 0,
+  "scopedEslint": 0,
+  "productionBuild": 0
+}
+
+Findings:
+Design review added a separate two-integer advisory-lock namespace for receipt IDs after the common owner lock. It serializes v2 creators sharing a global receipt ID before duplicate detection, preserving unique insert and negative-write ordering. Legacy writers do not take this lock; no native or full cutover guarantee is claimed.
+The first actual SQL run passed 74 of 76 cases. Two fixture setups violated existing parent/issuance foreign keys before reaching the intended denial: deleting a referenced parent, and assigning a binding to an absent alternate parent. The corrected fixtures use an absent requested parent identity and an actually observed alternate parent. No SQL constraint or implementation behavior was weakened. The expanded suite adds both cross-owner collision orderings and an old proof writer before and after the additive column to check cached rowtype compatibility.
+The primary transport suite passed 75/75 on its first run. Initial TypeScript diagnostics exposed one Object.fromEntries fixture annotation and readonly mutations in the new SQL fixture; only test types were corrected. Initial independent composition passed one of two cases because its fixture overlooked the unchanged admission bridge's immediate inspect after claim. The corrected case verifies denial during that automatic post-claim check. Initial logs are preserved; no existing source or tests changed.
+Root and independent review found no remaining source blocker. The new full protocol-2 proof cannot complete the unchanged v1 admission flow; deliberate exact cleanup remains available. Final focused/full tests, strict types/scoped lint and production build pass on frozen source. Proof storage is distinct from versioned consumption and atomic capacity admission, which remain unfinished. Real Auth, native concurrency and provider/device evidence remain separate.
+
+adapter-primary-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > constructs a frozen registration-only port without requests 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > maps claim proof to one exact versioned request and full immutable acknowledgment 5ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > maps inspect proof to one exact versioned request and full immutable acknowledgment 4ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts own data records with null prototypes without trusting inherited identity 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > captures the original transport once with its receiver 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > does not consult a local clock or refresh supplied verification 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > detaches the caller's nested claim and all timing before a pending transport wait 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > detaches returned evidence from mutable reply bytes 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > matches the complete tuple independent of reply key order 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts the inclusive 1 ms receipt interval without extending it 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts the inclusive 30000 ms receipt interval without extending it 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts safe zero/max counter boundaries and a positive first-millisecond receipt 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects zero receipt duration before transport 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects receipt older than verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects over 30000ms receipt before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects receipt above effective ceiling before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects effective above claim ceiling before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects effective above Auth ceiling before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects Auth expiry equal to verification before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects negative verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unsafe expiry before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects fractional verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects nonfinite expiry before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects NaN expiry before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects every nil identity across the complete request tree 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects missing protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects legacy protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects coerced protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects legacy Auth field names without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unexpected supplied token without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects uppercase UUID without calling a legacy or v2 RPC 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects invalid fingerprint without calling a legacy or v2 RPC 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unknown operation without calling a legacy or v2 RPC 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects negative parent version without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unsafe thread revision without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects incorrect scope without calling a legacy or v2 RPC 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects non-string digest without calling a legacy or v2 RPC 7ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects inherited fields, symbols and nonenumerable additions at each nested boundary 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects accessor-backed fields without evaluating any getter during interval checks 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different receipt without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different operation without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different cleanup without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different Auth session without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different parent version without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different fingerprint without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different Auth expiry without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different original verification without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different receipt expiry without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different effective expiry without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different claim without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different claim expiry without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different owner without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different thread without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different incarnation without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different revision without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different attempt without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different approval without retry 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different approval digest without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > does not accept a shortened or refreshed receipt as the registered immutable request 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects old minimal ACKs, v1 protocol and already-consumed metadata 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects malformed reply intervals and accessors before matching 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > returns semantic null without assuming rollback or creating a second request 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > retains the original caller identity after a modeled committed malformed reply 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > sanitizes a lost reply without retaining or exposing raw transport error details 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 199 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 300 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 200.5 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 200 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status Infinity 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status NaN 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts successful envelopes with no status or ordinary extra metadata 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects malformed envelopes, arrays, missing error and nonnull error values 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects inherited or accessor envelope authority without evaluating it 5ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects nonobject inputs before transport and invalid clients before construction 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > waits on the exact unresolved reply without a background retry or replacement identity 1ms
+
+ Test Files  1 passed (1)
+      Tests  75 passed (75)
+   Start at  15:21:48
+   Duration  390ms (transform 69ms, setup 0ms, import 98ms, tests 82ms, environment 0ms)
+
+
+
+adapter-primary-final.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > constructs a frozen registration-only port without requests 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > maps claim proof to one exact versioned request and full immutable acknowledgment 4ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > maps inspect proof to one exact versioned request and full immutable acknowledgment 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts own data records with null prototypes without trusting inherited identity 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > captures the original transport once with its receiver 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > does not consult a local clock or refresh supplied verification 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > detaches the caller's nested claim and all timing before a pending transport wait 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > detaches returned evidence from mutable reply bytes 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > matches the complete tuple independent of reply key order 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts the inclusive 1 ms receipt interval without extending it 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts the inclusive 30000 ms receipt interval without extending it 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts safe zero/max counter boundaries and a positive first-millisecond receipt 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects zero receipt duration before transport 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects receipt older than verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects over 30000ms receipt before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects receipt above effective ceiling before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects effective above claim ceiling before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects effective above Auth ceiling before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects Auth expiry equal to verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects negative verification before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unsafe expiry before transport 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects fractional verification before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects nonfinite expiry before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects NaN expiry before transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects every nil identity across the complete request tree 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects missing protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects legacy protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects coerced protocol without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects legacy Auth field names without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unexpected supplied token without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects uppercase UUID without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects invalid fingerprint without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unknown operation without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects negative parent version without calling a legacy or v2 RPC 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects unsafe thread revision without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects incorrect scope without calling a legacy or v2 RPC 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects non-string digest without calling a legacy or v2 RPC 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects inherited fields, symbols and nonenumerable additions at each nested boundary 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects accessor-backed fields without evaluating any getter during interval checks 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different receipt without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different operation without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different cleanup without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different Auth session without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different parent version without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different fingerprint without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different Auth expiry without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different original verification without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different receipt expiry without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different effective expiry without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different claim without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different claim expiry without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different owner without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different thread without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different incarnation without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different revision without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different attempt without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different approval without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects a valid-shaped reply with a different approval digest without retry 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > does not accept a shortened or refreshed receipt as the registered immutable request 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects old minimal ACKs, v1 protocol and already-consumed metadata 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects malformed reply intervals and accessors before matching 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > returns semantic null without assuming rollback or creating a second request 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > retains the original caller identity after a modeled committed malformed reply 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > sanitizes a lost reply without retaining or exposing raw transport error details 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 199 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 300 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 200.5 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status 200 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status Infinity 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects contradictory HTTP status NaN 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > accepts successful envelopes with no status or ordinary extra metadata 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects malformed envelopes, arrays, missing error and nonnull error values 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects inherited or accessor envelope authority without evaluating it 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > rejects nonobject inputs before transport and invalid clients before construction 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts > inactive exact v2 proof transport > waits on the exact unresolved reply without a background retry or replacement identity 0ms
+
+ Test Files  1 passed (1)
+      Tests  75 passed (75)
+   Start at  15:22:39
+   Duration  274ms (transform 50ms, setup 0ms, import 73ms, tests 57ms, environment 0ms)
+
+
+
+adapter-typecheck-initial.log
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts(189,5): error TS2322: Type '{ [k: string]: string | number | { ownerId: string; threadId: string; threadIncarnation: string; threadRevision: number; attemptId: string; approvalId: string; approvalDigest: string; scope: "developer-voice-session"; }; }' is not assignable to type 'string | number | { claimId: string; binding: { ownerId: string; threadId: string; threadIncarnation: string; threadRevision: number; attemptId: string; approvalId: string; approvalDigest: string; scope: "developer-voice-session"; }; expiresAt: number; }'.
+  Type '{ [k: string]: string | number | { ownerId: string; threadId: string; threadIncarnation: string; threadRevision: number; attemptId: string; approvalId: string; approvalDigest: string; scope: "developer-voice-session"; }; }' is missing the following properties from type '{ claimId: string; binding: { ownerId: string; threadId: string; threadIncarnation: string; threadRevision: number; attemptId: string; approvalId: string; approvalDigest: string; scope: "developer-voice-session"; }; expiresAt: number; }': claimId, binding, expiresAt
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(615,48): error TS2540: Cannot assign to 'operation' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(617,16): error TS2540: Cannot assign to 'effectiveExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(618,16): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(619,16): error TS2540: Cannot assign to 'identityExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(667,42): error TS2540: Cannot assign to 'operation' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(744,41): error TS2540: Cannot assign to 'authSessionId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(745,45): error TS2540: Cannot assign to 'authorityFingerprint' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(746,41): error TS2540: Cannot assign to 'parentVersion' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(748,13): error TS2540: Cannot assign to 'claim' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(870,15): error TS2540: Cannot assign to 'identityExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(871,15): error TS2540: Cannot assign to 'effectiveExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(872,15): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(875,15): error TS2540: Cannot assign to 'effectiveExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(876,15): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(917,15): error TS2540: Cannot assign to 'identityExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(918,15): error TS2540: Cannot assign to 'effectiveExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(973,47): error TS2540: Cannot assign to 'verifiedAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(978,13): error TS2540: Cannot assign to 'verifiedAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(979,13): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(991,13): error TS2540: Cannot assign to 'effectiveExpiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(992,13): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(993,49): error TS2540: Cannot assign to 'verifiedAt' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1083,34): error TS2540: Cannot assign to 'receiptId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1084,34): error TS2540: Cannot assign to 'cleanupId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1085,34): error TS2540: Cannot assign to 'authSessionId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1086,38): error TS2540: Cannot assign to 'claimId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1094,42): error TS2540: Cannot assign to 'approvalId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1094,42): error TS2540: Cannot assign to 'attemptId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1094,42): error TS2540: Cannot assign to 'ownerId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1094,42): error TS2540: Cannot assign to 'threadId' because it is a read-only property.
+src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts(1094,42): error TS2540: Cannot assign to 'threadIncarnation' because it is a read-only property.
+
+
+adapter-typecheck-final.log
+
+
+adapter-lint-initial.log
+
+
+adapter-lint-final.log
+
+
+independent-review-tests-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts (2 tests | 1 failed) 50ms
+     × denies an actual v2 inspect receipt before old consumption and retains exact cleanup 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts > P5 v2 proof acknowledgments cannot enter the v1 admission chain > denies an actual v2 inspect receipt before old consumption and retains exact cleanup
+AssertionError: expected 'invalid' to be 'active' // Object.is equality
+
+Expected: "active"
+Received: "invalid"
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts:144:41
+    142|       });
+    143|       if (operation === "inspect") {
+    144|         expect(lease?.snapshot().state).toBe("active");
+       |                                         ^
+    145|         expect(claim).toHaveBeenCalledTimes(1);
+    146|         expect(rpc).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  15:19:42
+   Duration  586ms (transform 240ms, setup 0ms, import 303ms, tests 50ms, environment 0ms)
+
+
+
+independent-review-tests.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  15:20:11
+   Duration  461ms (transform 202ms, setup 0ms, import 259ms, tests 40ms, environment 0ms)
+
+
+
+independent-review-lint.log
+
+
+v2-proof-sql-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (76 tests | 2 failed) 8864ms
+     × denies missing parent parent association without manufacturing proof authority 19ms
+     × denies foreign issuance binding parent association without manufacturing proof authority 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts > P5 proposed v2 proof registration in isolated PostgreSQL > denies missing parent parent association without manufacturing proof authority
+error: update or delete on table "auth_parents" violates RESTRICT setting of foreign key constraint "issuance_auth_bindings_owner_id_auth_session_id_fkey" on table "issuance_auth_bindings"
+ ❯ pe.Oe ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts > P5 proposed v2 proof registration in isolated PostgreSQL > denies foreign issuance binding parent association without manufacturing proof authority
+error: insert or update on table "issuance_auth_bindings" violates foreign key constraint "issuance_auth_bindings_owner_id_auth_session_id_fkey"
+ ❯ pe.Oe ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 74 passed (76)
+   Start at  15:21:34
+   Duration  9.15s (transform 102ms, setup 0ms, import 136ms, tests 8.86s, environment 0ms)
+
+
+
+v2-proof-sql-corrected.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  78 passed (78)
+   Start at  15:23:15
+   Duration  8.02s (transform 138ms, setup 0ms, import 176ms, tests 7.69s, environment 0ms)
+
+
+
+v2-proof-sql-frozen.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (78 tests) 7280ms
+
+ Test Files  1 passed (1)
+      Tests  78 passed (78)
+   Start at  15:25:24
+   Duration  7.54s (transform 83ms, setup 0ms, import 117ms, tests 7.28s, environment 0ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-proof-work/v2-proof-sql-frozen.json
+
+
+v2-proof-sql-typecheck-final.log
+
+
+v2-proof-sql-lint-final.log
+
+
+proof-sql-format-final.log
+Checking formatting...
+All matched files use Prettier code style!
+
+
+conversation-tests.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-proof-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 5994ms
+     ✓ rechecks actual Stop, Delete and revocation after proof registration before marker submission  409ms
+     ✓ lets SQL deny actual Stop, Delete and revocation occurring at marker invocation  420ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  390ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (78 tests) 8397ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (60 tests) 5438ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-sql.test.ts (36 tests) 4505ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 3922ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 3596ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 3402ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 2944ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 3178ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 2982ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 2762ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 2797ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 2768ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 2450ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 1277ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  1120ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 1070ms
+     ✓ 16 competing reservations of one identity create exactly one admission  380ms
+     ✓ 16 competing claims dispatch exactly once  370ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 2942ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-review.test.ts (3 tests) 503ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 706ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 254ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 424ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 254ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance.test.ts (74 tests) 269ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 213ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 228ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 194ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 163ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 159ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 182ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 123ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 140ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 74ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 124ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts (44 tests) 75ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 75ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 53ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 91ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 60ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 63ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 61ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 70ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 52ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts (75 tests) 71ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 54ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 53ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 52ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 52ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 45ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 46ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 31ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 31ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts (2 tests) 40ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 35ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 42ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 28ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts (2 tests) 25ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 26ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 20ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 18ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 14ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 15ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 5ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 4ms
+
+ Test Files  75 passed (75)
+      Tests  1573 passed (1573)
+   Start at  15:28:06
+   Duration  40.73s (transform 1.75s, setup 0ms, import 4.33s, tests 66.09s, environment 9ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-proof-work/conversation-tests.json
+
+
+typecheck.log
+
+
+lint.log
+
+
+build.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+✓ built in 1.41s
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-proof-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-BF0svUSv.js                    0.24 kB │ gzip:  0.17 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-UDf-uNZZ.js                          0.41 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-BkZJ5pYT.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-DRSYhcGT.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-B8tYyj_f.js                        1.12 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-LmJkmL-w.js                             1.26 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-D9u0bWu-.js                              1.69 kB │ gzip:  0.59 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-C76ri67g.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-CSySGDu5.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-PAKXJLdU.js                         3.32 kB │ gzip:  1.15 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B1GKhRKA.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-D2Gofgdq.js               5.33 kB │ gzip:  1.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DO0MvPiK.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-BUN5H20M.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CMqjQ9ew.js                                     12.92 kB │ gzip:  3.79 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-evIMzzLw.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DO70l_2P.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-C1KLkdYT.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-D355-GTB.js                                  60.14 kB │ gzip: 15.42 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BtC1Nm38.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 919ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-10-29)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.19 kB │ gzip:   0.16 kB
+.output/server/_ssr/empty-plugin-adapters-BF0svUSv.mjs               0.25 kB │ gzip:   0.18 kB
+.output/server/_ssr/createServerRpc-UDf-uNZZ.mjs                     0.41 kB │ gzip:   0.29 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.64 kB │ gzip:   0.38 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.76 kB │ gzip:   0.40 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.97 kB │ gzip:   0.57 kB
+.output/server/_ssr/start-DRSYhcGT.mjs                               1.12 kB │ gzip:   0.60 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-B8tYyj_f.mjs                   1.15 kB │ gzip:   0.61 kB
+.output/server/_ssr/gate.server-BkZJ5pYT.mjs                         1.16 kB │ gzip:   0.68 kB
+.output/server/_libs/hookable.mjs                                    1.18 kB │ gzip:   0.53 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.35 kB │ gzip:   0.73 kB
+.output/server/_ssr/createSsrRpc-LmJkmL-w.mjs                        1.36 kB │ gzip:   0.68 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.40 kB │ gzip:   0.73 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.52 kB │ gzip:   0.81 kB
+.output/server/_ssr/createStart-D9u0bWu-.mjs                         1.58 kB │ gzip:   0.59 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.83 kB │ gzip:   0.77 kB
+.output/server/__23tanstack-start-server-fn-resolver-C76ri67g.mjs    1.88 kB │ gzip:   0.81 kB
+.output/server/_ssr/gate.functions-CSySGDu5.mjs                      2.06 kB │ gzip:   0.81 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.09 kB │ gzip:   0.94 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.42 kB │ gzip:   1.12 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.47 kB │ gzip:   0.98 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.57 kB │ gzip:   0.90 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.61 kB │ gzip:   1.30 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.05 kB │ gzip:   1.02 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.21 kB │ gzip:   1.26 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.29 kB │ gzip:   1.39 kB
+.output/server/_ssr/request-response-PAKXJLdU.mjs                    3.36 kB │ gzip:   1.18 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.41 kB │ gzip:   0.94 kB
+.output/server/_ssr/auth-middleware-B1GKhRKA.mjs                     3.75 kB │ gzip:   1.48 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.06 kB │ gzip:   1.25 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.36 kB │ gzip:   1.40 kB
+.output/server/_ssr/ssr.mjs                                          4.41 kB │ gzip:   1.86 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.46 kB │ gzip:   1.94 kB
+.output/server/_libs/lucide-react.mjs                                4.67 kB │ gzip:   1.29 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.93 kB │ gzip:   1.47 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.37 kB │ gzip:   2.15 kB
+.output/server/_tanstack-start-manifest_v-D2Gofgdq.mjs               5.41 kB │ gzip:   1.17 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.42 kB │ gzip:   1.93 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.55 kB │ gzip:   1.82 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.70 kB │ gzip:   1.95 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.15 kB │ gzip:   2.36 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.16 kB │ gzip:   1.62 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.28 kB │ gzip:   2.00 kB
+.output/server/_ssr/day._day-DO0MvPiK.mjs                            6.78 kB │ gzip:   3.12 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.28 kB │ gzip:   2.13 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.57 kB │ gzip:   2.64 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.92 kB │ gzip:   3.17 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.34 kB │ gzip:   3.17 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.59 kB │ gzip:   3.09 kB
+.output/server/_ssr/esm-CMqjQ9ew.mjs                                12.08 kB │ gzip:   3.74 kB
+.output/server/_ssr/journey-ai.functions-BUN5H20M.mjs               12.22 kB │ gzip:   3.88 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.48 kB │ gzip:   4.27 kB
+.output/server/_libs/tanstack__history.mjs                          12.52 kB │ gzip:   3.72 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.62 kB │ gzip:   3.50 kB
+.output/server/_ssr/adapter.server-evIMzzLw.mjs                     13.29 kB │ gzip:   3.89 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.28 kB │ gzip:   4.25 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.42 kB │ gzip:   4.12 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.61 kB │ gzip:   4.92 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.05 kB │ gzip:   4.80 kB
+.output/server/index.mjs                                            17.28 kB │ gzip:   4.90 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.87 kB │ gzip:   5.17 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.65 kB │ gzip:   5.39 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.49 kB │ gzip:   9.04 kB
+.output/server/_ssr/conversation-staging-DO70l_2P.mjs               27.80 kB │ gzip:   6.38 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                29.95 kB │ gzip:   8.02 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.14 kB │ gzip:  10.66 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.48 kB │ gzip:   9.60 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.91 kB │ gzip:  11.19 kB
+.output/server/_ssr/router-C1KLkdYT.mjs                             38.23 kB │ gzip:   9.95 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.28 kB │ gzip:  10.68 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.56 kB │ gzip:  12.78 kB
+.output/server/_ssr/server-D355-GTB.mjs                             58.92 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-BtC1Nm38.mjs                           78.22 kB │ gzip:  18.70 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.20 kB │ gzip:  20.96 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.62 kB │ gzip:  17.59 kB
+.output/server/_libs/tailwind-merge.mjs                             85.67 kB │ gzip:  15.23 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.08 kB │ gzip:  24.91 kB
+.output/server/_libs/zod.mjs                                       100.20 kB │ gzip:  17.34 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.20 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 366ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+
+sql-notes.md
+# Isolated v2 proof SQL implementation — 3 November 2026
+
+Owned new source only: `docs/pilot/conversation/sql-drafts/p5-voice-v2-proof.sql`.
+Base main: `d094ab0d1e49a845ef81225a221521ef32670deb`.
+
+The draft installs after the base admission, v2 Auth parent/issuance and v2 cleanup drafts. It appends nullable `protocol` to the shared proof table, keeping every old row NULL and preserving the original table-rowtype `INSERT SELECT p.*` writer. Its conditional constraint permits only legacy NULL or explicit 2 with nonnil stored receipt/cleanup/claim/owner/Auth identities; existing scalar and interval constraints remain. No table, quota, accounting or Auth identity is duplicated.
+
+Public service-only RPC: `bfa_p5_v2_register_proof(p_proof jsonb)`. Exact body and successful echo have twelve fields: protocol=2, receiptId, operation=claim|inspect, claim, cleanupId, authSessionId, parentVersion, authorityFingerprint, identityExpiresAt, verifiedAt, expiresAt, effectiveExpiresAt. The shared strict claim parser is retained, with v2 nil-ID exclusions and safe original verification/identity/proof interval checks. A successful proof lasts 1..30000 ms from its original verification, stays within all effective ceilings and is never retimed. No read or consumption RPC is added.
+
+Any existing receipt ID—including an exact, unconsumed v2 tuple—denies before negative lifetime mutations. The ID is inserted once; success is never replayed or reattested. One receipt identifies one operation invocation; there is deliberately no uniqueness constraint on claim+operation, because later deliberate inspect operations need fresh receipts. After the shared owner advisory lock, a separate namespaced two-integer receipt advisory lock serializes v2 creators of the global receipt identity across owners. The shared unique constraint remains. Legacy writers do not participate, so quiesced cutover and native cross-backend race acceptance remain outstanding.
+
+Private `bfa_p5_voice_v2.eligible(bfa_p5_voice.proofs)` checks the current clear exact Auth parent/version, every retained legacy session fence, current owner staging/thread/generation, immutable issuance and its protocol-2 association, exact approval and already-bound v2 cleanup. A colliding foreign or mismatched protected identity is denied before using its expiry as a shortening source. Missing data denies without creating a revocation record. No legacy/unbound cleanup is adopted. An existing shared claim must exactly match owner and full claim, remain claimed and have the matching nonretired attempt winner. Inspect requires that existing claim/winner; claim permits both absent or both exact. Orphans, retired/foreign winners and terminal state deny without repair.
+
+All potentially waiting record locks precede retained database time. Unsafe/rollback time, future verification and future issuance deny before lifetime mutation. The minimum exact cleanup/claim, supplied effective/Auth, bounded issuance, current approval and finite allowlist deadline can only shorten the exact cleanup and matching existing claim. This negative evidence survives stale/expired proof denial. Exact current semantic invalidation (deleted or revised thread, retired/creation-mismatched generation, staging no longer admitted, revoked issuance/approval) terminally marks only the exact cleanup and matching claimed record. Elapsed effective lifetime marks them expired. No generation, attempt winner, held units, quota, capacity or provider-finality record changes. Parent/legacy binding denial does not manufacture Auth revocation.
+
+Only successful fresh eligibility inserts a new immutable proof and echoes the exact full body. Registration neither consumes it nor grants admission or provider dispatch. A lost successful reply is uncertain committed evidence, not rollback or permission to retry with another identity. The host must keep the original request and current trusted Auth/policy provenance. The helper and private tables stay unavailable to participant/service roles directly; the one new public RPC alone receives service execution, with default new-function privileges revoked in the creation transaction.
+
+Review-stage implementation refinement: root approved the namespaced receipt lock after identifying absent global receipt collisions across different owner locks. No behavioral failure or old-source change prompted it. No existing source, SQL, test, dependency, migration, configuration or connected service was edited by this agent.
+
+Current source SHA256: `1c011ed347a0cd47489d2b714e583d473f45642c9f70998f3691e3bb3287c436`.
+Actual SQL test results and independent review are recorded by their owning agents; root owns frozen-source full verification.
+
+The draft remains inactive/nondeployable alone. Old proof/claim/inspect/capacity consumers still lack protocol-2 enforcement and must not receive this proof. Versioned consumption/admission/capacity, trusted host orchestration, full quiesced no-fallback cutover, deployed Auth ownership/policy/revocation and real provider/device finality are separate unfinished gates. No connected SQL, real Auth/model/voice call, activation or publication occurred.
+
+
+adapter-notes.md
+# Inactive v2 proof transport and primary tests — 3 November 2026
+
+Owned new files only:
+
+- `src/lib/ai/conversation/service/voice-v2-proof-rpc.server.ts`
+- `src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts`
+
+Read AGENTS, latest continuation and lifetime contract, the completed v2 cleanup adapter and the unchanged v1 proof/RPC/store contracts. No old source, SQL, tests, dependency, configuration, runtime or connected service was changed by this agent.
+
+The root-approved `createVoiceV2ProofRpcPorts(client)` exposes only `registerProof`. It makes one captured protected transport call to `bfa_p5_v2_register_proof` with `{p_proof}`. The exact body has twelve top-level keys: protocol 2, receipt ID, operation claim/inspect, complete claim, cleanup ID, actual Auth session, parent version, authority fingerprint, identity expiry, conservative verified time, receipt expiry and effective expiry. SQL success must echo every identity and timing field exactly; a shortened, refreshed, mixed-protocol, minimal old ACK or mismatched reply is rejected. A null result is preserved as semantic denial and may follow committed negative fencing. Existing receipt IDs, including exact replay, are denied by SQL; the transport does not reattest or retry them.
+
+Schemas require plain own enumerable data fields before cross-field validation, lowercase nonnil UUIDs, lowercase hex digests and safe bounded integer values. The receipt interval is positive and at most 30000 ms, receipt expiry cannot exceed effective expiry, and effective expiry cannot exceed claim or independently established Auth expiry. The mapping does not sample a clock, refresh verification or infer freshness. Input and output are detached and frozen through nested claim/binding. Transport errors are sanitized without SQL data, private identifiers or cause. Capturing the mandatory client does not establish participant Auth, service ownership or current protected eligibility; those remain trusted-host/SQL prerequisites.
+
+Primary tests cover both operations, exact mapping and all immutable tuple fields; valid interval/counter boundaries; malformed input, nil identities, accessors, inherited/symbol/hidden data; v1/minimal/consumed reply rejection; detachment during pending waits, frozen results and captured-client receiver; error/status envelopes, no local clock, semantic null and modeled committed malformed/lost replies without retry or replacement identity. The modeled commit is explicitly a local transport fixture, not actual SQL or network loss.
+
+First focused run: **75/75 passed**. Final focused run after the test-only typing correction: **75/75 passed**. Scoped ESLint and formatting checks pass. Initial full TypeScript found one primary-test-only `Object.fromEntries` inferred-union assignment error; an explicit `Record<string, unknown>` annotation corrected that fixture without any runtime/source behavior change. The initial typecheck also observed readonly mutations in the separately owned in-progress SQL fixture, which its owner handles. Initial diagnostics are preserved in `adapter-typecheck-initial.log`; full final TypeScript is recorded separately when all fixture types are ready.
+
+Final full strict TypeScript now passes (`adapter-typecheck-final.log`, exit 0), after the independently owned SQL fixture received its mutable fixture types. No adapter implementation correction was needed. Independent adapter-to-v1-bridge composition review reports no blocker.
+
+Frozen SHA256:
+
+- Adapter: `61b2132019938d087b4635913aae92e6191300c9f803f234a58ccb54b2c8622d`.
+- Primary tests: `9f2834ab0be9ab16d0614f2aaafb11a90925132e7b7123a94e8309c164b8cdf1`.
+
+Logs beside this note: `adapter-primary-initial.log`, `adapter-primary-final.log`, `adapter-typecheck-initial.log`, `adapter-typecheck-final.log`, `adapter-lint-initial.log`, `adapter-lint-final.log`. The full root conversation suite/build is separate evidence.
+
+This is an inactive strict transport, not an Auth verifier, proof consumer, admission/capacity operation or provider permission. No credential/client creation, route, real call, publication or cutover exists. Future versioned consumers and the coordinated no-fallback cutover remain required.
+
+
+sql-test-notes.md
+# V2 proof SQL test evidence
+
+Completed 2026-11-03 against the frozen new SQL and real TypeScript proof adapter. Only the new `src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts` is owned by this test batch.
+
+## Frozen files and checks
+
+- Test SHA-256: `d9b355622ee058c9f3b609fb2ad3082f66b2c28201477d4612db48e5848a606a`.
+- SQL SHA-256: `1c011ed347a0cd47489d2b714e583d473f45642c9f70998f3691e3bb3287c436`.
+- Authoritative final focused run: **78 passed / 78 total, 0 failed, 0 skipped/pending**, one test file, Vitest 4.1.10. `v2-proof-sql-frozen.log` and `v2-proof-sql-frozen.json` record this current frozen test source; JSON reports success true. Duration 7.54s, test duration 7.28s.
+- Full TypeScript check: exit 0 (`v2-proof-sql-typecheck-final.log`).
+- Scoped ESLint: exit 0 (`v2-proof-sql-lint-final.log`).
+- Prettier check: exit 0 (`proof-sql-format-final.log`).
+
+The command uses `BFA_PGLITE_MODULE=/workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js` with the actual PGlite 0.5.12 / PostgreSQL 18.6 isolated fixture engine; no database mock substitutes for SQL execution.
+
+## Meaningful coverage
+
+Tests install the existing P3b migrations and P5 drafts into a disposable, explicitly named offline database, then exercise the real v2 proof adapter against the new SQL. Both the seed and fixture engines are closed, and controlled SQL time is restored after every test. Assertions compare snapshots of all 22 relevant tables, excluding only exact target rows/columns where changes are allowed. Unrelated same-owner rows are therefore retained in preservation checks.
+
+Nonzero pre-existing P3b allowance/admission, legacy cleanup/claim, quota, capacity pool/route/allocation holds are seeded. Proof registration does not create or alter reservation budgets, held amounts, attempts, capacity, or generations. Negative lifetime fencing can only shorten exact matching cleanup/claim deadlines and mark their terminal state; retained claim holds and unrelated rows remain unchanged.
+
+Coverage includes current exact v2 parent/version, legacy-session fences, exact issuance binding, approval/thread/generation/allowlist checks, cleanup provenance and deadline restrictions, claim/attempt winner associations, terminal states, malformed input, nil identities, private helper/table access and RPC role restrictions. Claims and attempt winners seeded administratively are fictional test fixtures, not evidence of completed v2 admission.
+
+Receipt semantics include exact immutable operation/identity tuples, no adoption of existing receipt IDs, consumed and legacy receipt collisions, no uniqueness by claim+operation, legitimate repeated inspect with distinct receipts, lost/malformed committed reply doubles, and two sequential cross-owner same-receipt orderings. Duplicate receipt denial occurs before any negative lifetime mutation. Safe/future/rollback/expiry checks preserve all protected rows; shorter valid current evidence is retained and cannot later be lengthened into renewed authority. Original proof rows remain unchanged after later close/revocation/negative observations. The existing P3b deletion fence is exercised through its real SQL function.
+
+Schema compatibility is tested with the actual old proof writer executing before the nullable protocol column is added, preserving cached-rowtype behavior across ALTER, followed by the actual legacy register/proof/claim/inspect/close flow after ALTER. Four pre-existing legacy proof rows retain NULL protocol. Legacy mixed paths do not constitute v2 admission evidence; the old flow retains its held units and quota.
+
+## Initial failures and corrections
+
+The original completed run was **74 passed / 76 total**, with two failures during fictional fixture setup, before the tested RPC executed. The initial log `v2-proof-sql-initial.log` is preserved. One test attempted to delete a parent referenced by an issuance foreign key; it now requests an absent Auth-session identity instead. Another attempted to reference an alternate Auth session without its parent; it now creates that alternate fictional parent through the real v2 observer before testing the mismatch. No SQL implementation defect was found, and no constraint or behavioral assertion was weakened.
+
+The initial full TypeScript check identified readonly registration-field assignments in mutable negative fixtures. A recursive mutable fixture type corrected those fixture annotations; the SQL and adapter source were unchanged by this test agent. The adapter agent's initial compiler log is separately retained as `adapter-typecheck-initial.log`.
+
+Two cross-owner orderings were added, producing 78 passing cases in `v2-proof-sql-corrected.log`. One final assertion tightening permits only owner-clock effects for ordinary time-denial cases rather than allowing cleanup/claim effects. The final frozen JSON/log above verify that tightened assertion. An intermediate `v2-proof-sql-final.log` was empty despite an exit-0 runner and is **not used as behavioral evidence**; the explicitly captured frozen JSON/log are authoritative.
+
+## Evidence limits
+
+All records and approval metadata are fictional. This is local single-connection embedded PostgreSQL behavior plus response-loss/malformation doubles, not native PostgreSQL multi-connection race evidence, deployed Supabase HTTP/Auth/RLS behavior, real cryptographic approval issuance, provider/device acceptance, or runtime activation. The receipt-order cases are sequential and do not prove native lock scheduling or concurrent legacy-writer safety. Both v2 admission/capacity consumers and coordinated quiesced no-fallback cutover remain unfinished. All 21 native cases remain unrun. No connected settings, real Auth identities, model/voice/provider calls, budget spending, publication, or Lovable paid edits occurred.
+
+
+independent-review.md
+# Independent review — inactive v2 proof registration
+
+Reviewed 2026-11-03 against the isolated checkout based on connected main `d094ab0d1e49a845ef81225a221521ef32670deb`. This is a source and fictional local-test review, not deployment, native PostgreSQL concurrency acceptance, current Auth acceptance, or provider evidence.
+
+## Finding
+
+No remaining source blocker found for the bounded proof-registration slice. Reviewed the repository instructions, newest continuation marker, lifetime-change contract, prior cleanup review, base proof/admission and capacity dependencies, and the complete new SQL and adapter. The new slice remains outside migrations and has no runtime caller, proof consumer, admission, capacity operation, provider call, route, or cutover.
+
+Reviewed file hashes:
+
+| File | SHA-256 |
+| --- | --- |
+| `docs/pilot/conversation/sql-drafts/p5-voice-v2-proof.sql` | `1c011ed347a0cd47489d2b714e583d473f45642c9f70998f3691e3bb3287c436` |
+| `src/lib/ai/conversation/service/voice-v2-proof-rpc.server.ts` | `61b2132019938d087b4635913aae92e6191300c9f803f234a58ccb54b2c8622d` |
+| `src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts` | `bf3da1d5d907be81a18b6a8821e2b86458d8a939a7a78da6158b7a2ac82bfc65` |
+
+The final adapter hash includes formatting only since the initially reviewed behavior. No old source file was edited by this reviewer.
+
+## Contract and boundary checks
+
+- The shared proof table receives only a nullable protocol discriminator. Existing legacy rows remain null; no adoption or backfill occurs. New request and receipt bodies explicitly require protocol 2, actual Auth session/version, exact cleanup, authority fingerprint, full claim, and all original verification/deadline fields.
+- Registration accepts a strict twelve-field body. The service-only RPC either returns that exact body or null. The adapter rejects extra/accessor fields, identity drift, widened or refreshed timestamps, legacy receipt shapes, malformed transport replies and failures; it freezes the parsed request/receipt and performs no retry, local time sampling, fallback, readback or credential construction. A null or lost reply may follow committed negative evidence and cannot establish rollback or justify a replacement receipt identity.
+- Private eligibility requires the exact clear Auth parent/version, no retained legacy fence, protocol-2 issuance association and cleanup binding, current protected generation/thread/allowlist/approval provenance, and exact existing claim/attempt consistency. Inspect requires a claimed row and its unchanged attempt winner. Claim permits either absent claim/attempt or that exact claimed winner. Orphan, retired, foreign and conflicting states deny.
+- Current record ownership and immutable provenance are checked before their deadlines can shorten a record. After a safe post-lock clock observation, only the exact cleanup and an exact matching claimed row can shrink. Late original observations can still retain shorter deadlines or current revocation; they cannot produce a fresh positive receipt. Terminal invalidation/expiry is retained. Foreign approval/generation/issuance data is not used to mutate another claim.
+- Every existing global receipt ID denies before negative mutation, including exact unconsumed duplicates. There is no uniqueness constraint on claim/operation, because a later distinct inspect operation needs its own immutable receipt. That does not authorize changing the identity of an uncertain operation.
+- Lock order is shared owner lock, then the namespaced global receipt advisory lock, then protected current rows. The two-integer receipt advisory namespace is separate from the existing bigint owner lock, and no second owner lock is acquired. This serializes same-receipt competition between v2 creators while retaining the unique constraint. Legacy writers do not participate; this is not a proof of mixed-version concurrency safety or a substitute for a quiesced cutover.
+- The slice does not consume a proof, create a claim/attempt, debit quota, reserve capacity, retire an allocation, release a hold, infer provider finality, enable Auth/voice or modify the older enabling grants.
+
+## Independent tests and evidence
+
+Added two actual new-adapter-to-existing-bridge composition cases, one each for claim and inspect. Fictional service/P3b/Auth context reaches the unchanged admission bridge; a fully acknowledged new v2 proof receipt is rejected before the corresponding old consuming RPC. The exact existing cleanup remains available and is closed once. The inspect case models an initial old claim only to reach the bridge's mandatory immediate post-claim inspect; that v2 receipt invalidates initial admission immediately. Neither case proves successful v2 admission, SQL execution, real Auth or provider behavior.
+
+Initial run: 1/2 passed. The inspect fixture incorrectly expected an active lease before a manual revalidation, overlooking the existing bridge's immediate post-claim inspect. Corrected only that fixture expectation and explanatory comment to assert immediate denial; no production behavior changed. The original failure evidence is preserved in `independent-review-tests-initial.log`.
+
+Final independent run: **2/2 passed**, one file, in `independent-review-tests.log`. Scoped ESLint: exit 0, `independent-review-lint.log`. Source was reread after final formatting and the hashes above confirmed. Root owns the final aggregate test/type/build runs. Final SQL-owner result, reconciled by root: the frozen actual SQL suite passed 78/78 with strict TypeScript, scoped lint and formatting checks passing at the unchanged SQL hash above. Authoritative evidence is `v2-proof-sql-frozen.log`/`.json` and `sql-test-notes.md`, covering pre-ALTER/post-ALTER legacy registrar execution, shared rowtype compatibility, sequential same-receipt orderings and committed database-state invariants. All Auth/approval fixtures are fictional; native concurrency and provider/device acceptance remain unrun. These SQL results are separate from this review's two composition cases.
+
+## Precise next bounded dependency
+
+Implement and test a **shared private v2 current-check and locked proof-consumption primitive, composed directly into an atomic v2 capacity claim**, still as an inactive SQL draft and exact nonretrying transport mapping. Reuse the existing shared claims, attempts, quota, pools and allocations. Add an existing-claim-only v2 inspect endpoint where needed for the bridge's mandatory immediate post-claim revalidation. Do not add a separate v2 base-claim wrapper or duplicate quota-debit path unless an actual caller later requires one.
+
+This recommendation is grounded in the existing caller mapping, not just the SQL inventory: `createVoiceRpcStore` maps `claim` directly to `bfa_p5_capacity_claim`, `inspect` to `bfa_p5_voice_inspect`, and `close` to `bfa_p5_capacity_close`. `createVoiceCapacityStoreAdmission` reuses those ports; its later marker sends a distinct fresh inspect proof directly to mark. A standalone base claim would create a claimed row that the actual combined capacity path expressly refuses to attach, so implementing that detour would not advance this integration.
+
+The locked persistent proof must explicitly be protocol 2 and match owner, complete claim, operation and exact cleanup. Preserve single consumption, including denied paths, original verification timestamps, terminal fences, immutable attempt winner and at most one shared cumulative quota debit/allocation. Repeat the v2 current-state/time predicate after any quota or shared-pool wait. Test capacity denial, replay, cross-owner last-slot orderings, retained uncertain evidence and unchanged accounting using the actual SQL. No old `eligible()` fallback, simple removal of the unconsumed guard, or refreshed verification timestamp is valid.
+
+There is a subtle existing implementation detail to preserve intentionally: base `use_proof` selects and locks local composite `p`, then marks the persistent row consumed with an UPDATE that has no RETURNING. That UPDATE does not mutate local `p`; it remains the retained originally unconsumed composite passed into eligibility. Therefore marking the persistent row before validation is not inherently incompatible with the new eligibility helper. Review the locked persistent state and the local composite separately, and test replay, wrong protocol/operation, denied/expired paths and lock-wait expiry using actual SQL.
+
+Existing `bfa_p5_capacity.take_proof` and `current` still use the old predicate. The new atomic claim therefore needs the shared v2 primitive immediately; simply pointing the old capacity function at new proof rows is invalid. Capacity mark remains a later bounded dependency using the same v2 predicate before and after locks, with unchanged operation identities and exact finality/reconciliation. Marker implementation, runtime orchestration, and the coordinated quiesced privilege/routing cutover remain deferred. No new claim acknowledgment alone can be described as an enabled voice path or provider permission.
+
+Original v5 remains complete. P4 approval/expiry remain null and its grant registry empty. P3b fictional accounts and staging remain closed; retained accounting holds are unchanged. No Lovable paid edit, real model/voice call, deployment, participant activation, publication, AWS action or billing assumption was made by this reviewer. Real-device/provider and all native cross-backend acceptance remain unproven.
+

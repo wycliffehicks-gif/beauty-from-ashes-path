@@ -1,0 +1,124 @@
+{
+  "date": "2026-11-03",
+  "timezone": "UTC",
+  "kind": "documentation-only provider-specific contract research",
+  "baseCommit": "7973d90aad7b0546a2a821214524d4412fb22d71",
+  "baseTree": "010b152e65b5fc4f1347f05d440700a5f47c6730",
+  "baselineBlobs": 649,
+  "materializedHashVerified": 648,
+  "environmentRead": false,
+  "runtimeChanged": false,
+  "testsRunThisBatch": false,
+  "priorRuntimeVerification": {
+    "commit": "7973d90aad7b0546a2a821214524d4412fb22d71",
+    "evidence": "artifacts/conversation-eval/offline-validation-v21/",
+    "conversationTests": 1058,
+    "files": 59,
+    "optionalSqlExecuted": 159,
+    "typecheckLintBuild": "previously passed; not rerun"
+  },
+  "installedSupabaseJs": "2.118.0",
+  "installedAuthJs": "2.118.0",
+  "appSha256": {
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd",
+    "src/integrations/supabase/auth-attacher.ts": "24d0dbdf8dc0fd49b391a948bd04e1db43b97a1d851acc391dd3d1b13b9797fd",
+    "src/integrations/supabase/auth-middleware.ts": "ae40b141ce933b52252e00bfacd3e69fa7a8e6ef88a2c92809780bf7d1bb76cc",
+    "src/integrations/supabase/client.server.ts": "56ec7f9ac40ccdf96d8aba4f7fe33a586590ac63420b81e6cd5dc1e4777ee28e",
+    "src/lib/ai/conversation/staging/adapter.server.ts": "8c667855135827b77a14337f08930e40a85df4111d81709496cef9cd1aba9b6b",
+    "src/components/conversation-staging/StagingConsole.tsx": "a043bd244937fa3b8d9f1ef559343f2d5ab638cd724d9df487b059c736f895da",
+    "src/lib/ai/conversation/service/voice-session-initializer.server.ts": "cf188a9ef7c9d1242830a10463e2071871918a2d7f1c6a81cee150c4478502ac",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-provision.sql": "b1ca8d2c3fca056581c74168205618d4b47d5b58a03df33417b1a053571eb360"
+  },
+  "dependencySha256": {
+    "@supabase/supabase-js/package.json": "16ce1954171a17e803be9aa55f19a63d017517aa50d01d9ab44d72b3853d0e85",
+    "@supabase/auth-js/package.json": "4fc7e3e8df7be783aed9ee24338de747fde64f9bd562e00f819c8fa40bca7d9e",
+    "@supabase/auth-js/src/GoTrueClient.ts": "7552500e375665e28acf23fb552ccbf1ef11379afab15859b2f670f1ae9aee9f",
+    "@supabase/auth-js/src/GoTrueAdminApi.ts": "45591eceafe5e8d39c2acb2a7170b77e9df4978dda77e8ddb2e98609012989ec",
+    "@supabase/auth-js/src/lib/helpers.ts": "82025113a07125f319380ec5a510e58544a04f6e3bcf82c6eb8ce3a2cc6b07c5",
+    "@supabase/auth-js/src/lib/fetch.ts": "3fe0a5c08d6a8a62611ba196042b640457e844711644df9e69601af8e6c64acf",
+    "@supabase/supabase-js/src/SupabaseClient.ts": "eb923579957052a1160cda34a65ff67496d46abf37ae022cdd331f8d6d8bd800"
+  },
+  "officialDocumentation": [
+    "https://supabase.com/docs/guides/auth/sessions",
+    "https://supabase.com/docs/guides/auth/signout",
+    "https://supabase.com/docs/reference/javascript/auth-getclaims",
+    "https://supabase.com/docs/reference/javascript/auth-getuser",
+    "https://supabase.com/docs/guides/auth/server-side/advanced-guide",
+    "https://supabase.com/docs/guides/auth/auth-hooks",
+    "https://supabase.com/docs/guides/database/webhooks"
+  ],
+  "upstream": {
+    "repository": "supabase/auth",
+    "commit": "a7e97d665b9ea03853edb66d014bcde323f7894b",
+    "read_only_upstream_not_deployed_proof": true,
+    "files": [
+      {
+        "path": "internal/api/admin.go",
+        "sha256": "d172f492bf020d12727bac2166af4e3f32b9f840f49f0dd23b544616b4392a2f",
+        "bytes": 22928
+      },
+      {
+        "path": "internal/api/api.go",
+        "sha256": "806ea39c37b8ea189cffc9361073c792f80993b5849f3d50a8ea9a25f3ef92fc",
+        "bytes": 16615
+      },
+      {
+        "path": "internal/api/auth.go",
+        "sha256": "19672f8235335d723403a377ac32b76255beed8effc11f3c37d9beddc9d19926",
+        "bytes": 5386
+      },
+      {
+        "path": "internal/api/logout.go",
+        "sha256": "de117309d7e81c12cc4ee8152060bc3b5e8d8279e7f3dd6faa6b72fd8c4c3c76",
+        "bytes": 1691
+      },
+      {
+        "path": "internal/api/token_refresh.go",
+        "sha256": "cb42859267f8878c01263175cc6276e6cdd6d48f100bc6da4d00cd1878fe7c97",
+        "bytes": 1675
+      },
+      {
+        "path": "internal/api/user.go",
+        "sha256": "bae046e8931bf9e6929f5588ad49b3007881c8e9e6d61cb77268db9491791b01",
+        "bytes": 10869
+      },
+      {
+        "path": "internal/models/sessions.go",
+        "sha256": "0aa2c9c669cfaba02d036b354a0116241bee15a67ce706068845cf1f96d9018b",
+        "bytes": 13762
+      },
+      {
+        "path": "internal/models/user.go",
+        "sha256": "e5e2d66259ca9768cb6cd8d8f4cedba1c95b47cc35b02a66f9298d5945f231c5",
+        "bytes": 37114
+      },
+      {
+        "path": "internal/tokens/service.go",
+        "sha256": "03f7185ad7055dee171b03aac2076203635409fcc314dc987f880626aefcd8e9",
+        "bytes": 38240
+      }
+    ]
+  },
+  "deploymentAuthVersionConfig": "unknown; upstream is not deployment proof",
+  "lovableFreshStatus": "two internal errors; not reconfirmed",
+  "decision": "Keep inactive; distinguish exact current Auth policy/revocation from bounded voice authority; current insert-once fence prevents same-login re-entry. Review minimal lifetime design before another wrapper.",
+  "validation": "Exact baseline hashes, installed SDK and pinned upstream source inspection, documentation consistency and independent review. No new runtime acceptance claimed.",
+  "unperformed": [
+    "live Auth calls/account recreation",
+    "connected SQL/settings",
+    "native concurrency/cross-backend tests",
+    "model/voice/provider/device acceptance",
+    "paid Lovable edit/purchase/publication"
+  ],
+  "next": "Resolve the concrete P5 lifetime mismatch with a cross-file change contract and executable fictional counterexamples. Start from current SQL/issuer/proof/admission/cleanup/capacity code; demonstrate same-login re-entry denial, compare reusing existing bounded issuance/claim identities with adding a distinct episode record, and select the smallest complete design. Bind durable Auth-parent identity/version separately from bounded voice authority (exact immutable identity, expiry and terminal state) through every proof and cleanup. Preserve terminal v1 rows, retained holds and uncertain operations; never renew/reset/delete a fence or substitute an episode ID as Auth sessionId. Complete this review before another runtime wrapper or migration. Keep all work isolated/offline, with no real Auth/model/voice calls, account recreation, connected settings/SQL, activation or publication. Deployed Auth-policy/ownership, revocation serialization/delivery, native concurrency and provider/device acceptance remain separate unverified gates; do not repeat unavailable-engine probes.",
+  "independentReview": {
+    "scope": "Exact installed SDK/source audit, primary provider research and independent architecture/decision review",
+    "result": "No docs-only blocker after precision corrections",
+    "corrections": [
+      "Auth lookup denial is not evidence of terminal revocation; temporary bans/account changes need distinct semantics.",
+      "Require protected exact owner/session association.",
+      "Evaluate existing immutable issuance identity before new episode table/version."
+    ]
+  }
+}

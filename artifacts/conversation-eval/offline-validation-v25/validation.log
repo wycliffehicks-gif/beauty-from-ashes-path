@@ -1,0 +1,650 @@
+Frozen-source final checks:
+{
+  "conversationSuite": 0,
+  "strictTypeScript": 0,
+  "scopedEslint": 0,
+  "productionBuild": 0
+}
+
+Findings:
+Design review retained a shorter trusted deadline as negative evidence on an exact existing pre-proof cleanup even if verification ages while waiting. Positive registration still requires age strictly below 30000 ms; stale work cannot create a row or return permission. Safe time, nonfuture verification and exact current association precede shortening.
+Source review corrected an ambiguous local claim-id/thread-id reference by qualifying the thread column before behavioral execution, and avoided same-value cleanup updates on exact replay. These corrections touched only the new SQL draft.
+The first completed SQL run passed 54 of 56 cases. One fixture tried to set deleted_at directly while retaining saved content, violating the existing P3b constraint; it now uses the actual P3b delete fence. Another expected legacy inspect to return replayed, while the existing contract returns claimed. Correcting only those fixture assumptions produced 56/56. Initial diagnostics are preserved; no existing constraint, assertion intent or implementation behavior was weakened.
+Additional direct constraint and preexisting-legacy-row checks verify the promised additive-schema provenance, alongside private helper privilege denial. Primary transport tests passed 44/44 on their first run; two independent real-adapter composition cases deny v2 observations in the unchanged v1 admission chain before proof/claim/inspect and retain exact cleanup for close. Root and independent source review found no remaining blocker. Final focused/full tests, strict types/scoped lint and production build pass on frozen files; live Auth/native/provider evidence remains separate.
+
+adapter-primary-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > constructs only frozen registration/read ports without making a request 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > maps registration with exact nested claim and independently supplied Auth observation 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > maps exact read without a clock, fresh Auth call or write metadata 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > preserves semantic-null denial as uncertainty with no retry or fallback 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > reads retained closedAt evidence but refuses it as active registration acknowledgment 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > reads retained expiredAt evidence but refuses it as active registration acknowledgment 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > reads retained invalidatedAt evidence but refuses it as active registration acknowledgment 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > reads multiple retained terminal timestamps without inventing precedence or eligibility 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > allows exact safe integer boundaries and a positive shorter effective deadline 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects every noncanonical or nil nested request identity before transport 17ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects unsafe, fractional, negative and coercible numbers before transport 10ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects invalid Auth intervals without obtaining a new time or making a request 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects unrecognized scope and noncanonical fingerprints and approval digests 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects caller protocol, owner, token, deadline and unrecognized nested fields 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not invoke rejected own accessors at the query request boundary 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not invoke rejected own accessors at the claim request boundary 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not invoke rejected own accessors at the binding request boundary 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects inherited, hidden and symbol-bearing request identity without transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > accepts exact null-prototype wire objects and still detaches them 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects a reply for a different cleanupId on either operation 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects a reply for a different authSessionId on either operation 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects a reply for a different parentVersion on either operation 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects a reply for a different authorityFingerprint on either operation 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > matches every immutable nested claim field on either operation 4ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects missing or mixed protocol and legacy unbound metadata without a fallback 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects missing, extra, nil and unsafe reply metadata 3ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects response ceilings above the claim and registration Auth ceiling 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > accepts a shorter ceiling but rejects a registration acknowledgment expired by verification 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not evaluate rejected receipt response accessors 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not evaluate rejected claim response accessors 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not evaluate rejected binding response accessors 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects inherited or hidden reply fields and symbol-bearing nested bindings 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects malformed envelopes and unsuccessful status instead of treating them as denial 2ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > accepts successful 2xx envelope metadata without assuming it proves current eligibility 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not invoke envelope accessors or inherited data/error fields 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > captures a detached immutable register request before its first transport wait 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > captures a detached immutable read request before its first transport wait 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > does not let mutated caller state make a mismatching late response valid 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > detaches and freezes every returned claim layer without freezing the transport-owned reply 1ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > captures the original bound transport function once without reading replacement methods 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > sanitizes invalid client construction without attempting a transport 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > sanitizes thrown or lost write replies without a retry, identity replacement or leaked cause 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > waits for its exact pending reply without initiating background retry or a new identity 0ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts > inactive exact v2 cleanup transport > rejects non-object read inputs without creating a request 1ms
+
+ Test Files  1 passed (1)
+      Tests  44 passed (44)
+   Start at  13:38:01
+   Duration  409ms (transform 95ms, setup 0ms, import 127ms, tests 71ms, environment 0ms)
+
+
+
+adapter-typecheck-initial.log
+
+
+adapter-lint-initial.log
+
+
+independent-review-tests-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  13:36:40
+   Duration  390ms (transform 176ms, setup 0ms, import 220ms, tests 24ms, environment 0ms)
+
+
+
+independent-review-lint.log
+
+
+v2-cleanup-sql-initial.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (56 tests | 2 failed) 5345ms
+     × denies registration under changed current deleted state without erasing records 17ms
+     × retains full legacy register/proof/claim/inspect/close behavior after additive schema 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts > P5 proposed v2 cleanup in isolated PostgreSQL > denies registration under changed current deleted state without erasing records
+error: new row for relation "bfa_p3b_threads" violates check constraint "bfa_p3b_threads_check1"
+ ❯ pe.Oe ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts > P5 proposed v2 cleanup in isolated PostgreSQL > retains full legacy register/proof/claim/inspect/close behavior after additive schema
+AssertionError: expected { …(2) } to match object { state: 'replayed' }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "state": "replayed",
++   "state": "claimed",
+  }
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts:935:9
+    933|           )
+    934|         ).value,
+    935|       ).toMatchObject({ state: operation === "claim" ? "claimed" : "re…
+       |         ^
+    936|     }
+    937|     expect(await row(q)).toMatchObject({ protocol: null, session_id: q…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 54 passed (56)
+   Start at  13:38:01
+   Duration  5.67s (transform 114ms, setup 0ms, import 151ms, tests 5.34s, environment 0ms)
+
+
+
+v2-cleanup-sql-corrected.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  56 passed (56)
+   Start at  13:38:42
+   Duration  5.43s (transform 71ms, setup 0ms, import 110ms, tests 5.18s, environment 0ms)
+
+
+
+v2-cleanup-sql-final.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  60 passed (60)
+   Start at  13:39:41
+   Duration  5.91s (transform 98ms, setup 0ms, import 139ms, tests 5.61s, environment 0ms)
+
+
+
+v2-cleanup-sql-frozen.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  60 passed (60)
+   Start at  13:40:05
+   Duration  5.99s (transform 77ms, setup 0ms, import 111ms, tests 5.74s, environment 0ms)
+
+
+
+v2-cleanup-sql-typecheck-final.log
+
+
+v2-cleanup-sql-lint-final.log
+
+
+conversation-tests.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (60 tests) 5553ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 5917ms
+     ✓ rechecks actual Stop, Delete and revocation after proof registration before marker submission  358ms
+     ✓ lets SQL deny actual Stop, Delete and revocation occurring at marker invocation  358ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  442ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-sql.test.ts (36 tests) 4734ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 4081ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 3785ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 4117ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 2614ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 2851ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 3053ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 3077ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 3095ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 2923ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 2564ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 3052ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 1030ms
+     ✓ 16 competing reservations of one identity create exactly one admission  349ms
+     ✓ 16 competing claims dispatch exactly once  354ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 1778ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  1613ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 735ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-review.test.ts (3 tests) 577ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 257ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 427ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance.test.ts (74 tests) 246ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 228ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 223ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 259ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 160ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 153ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 165ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 192ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 135ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 123ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 77ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 122ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts (44 tests) 79ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 103ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 63ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 78ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 66ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 54ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 53ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 62ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 51ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 60ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 68ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 52ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 55ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 42ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 37ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 32ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 31ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 38ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 32ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 39ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 41ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 25ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 24ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 23ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts (2 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 21ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 21ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 15ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 14ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 12ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 14ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 6ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 3ms
+
+ Test Files  72 passed (72)
+      Tests  1418 passed (1418)
+   Start at  13:41:48
+   Duration  37.47s (transform 1.87s, setup 0ms, import 4.38s, tests 59.87s, environment 8ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-cleanup-work/conversation-tests.json
+
+
+typecheck.log
+
+
+lint.log
+
+
+build.log
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.43s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-cleanup-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-BF0svUSv.js                    0.24 kB │ gzip:  0.17 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-UDf-uNZZ.js                          0.41 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-BkZJ5pYT.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-DRSYhcGT.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-B8tYyj_f.js                        1.12 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-LmJkmL-w.js                             1.26 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-D9u0bWu-.js                              1.69 kB │ gzip:  0.59 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-C76ri67g.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-CSySGDu5.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-PAKXJLdU.js                         3.32 kB │ gzip:  1.15 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B1GKhRKA.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-BtRhMPWk.js               5.36 kB │ gzip:  1.13 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DO0MvPiK.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-BUN5H20M.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CMqjQ9ew.js                                     12.92 kB │ gzip:  3.79 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-evIMzzLw.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DO70l_2P.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-C1KLkdYT.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server--KUYEmyw.js                                  60.14 kB │ gzip: 15.42 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BtC1Nm38.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 902ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-10-29)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.19 kB │ gzip:   0.16 kB
+.output/server/_ssr/empty-plugin-adapters-BF0svUSv.mjs               0.25 kB │ gzip:   0.18 kB
+.output/server/_ssr/createServerRpc-UDf-uNZZ.mjs                     0.41 kB │ gzip:   0.29 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.64 kB │ gzip:   0.38 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.76 kB │ gzip:   0.40 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.97 kB │ gzip:   0.57 kB
+.output/server/_ssr/start-DRSYhcGT.mjs                               1.12 kB │ gzip:   0.60 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-B8tYyj_f.mjs                   1.15 kB │ gzip:   0.61 kB
+.output/server/_ssr/gate.server-BkZJ5pYT.mjs                         1.17 kB │ gzip:   0.68 kB
+.output/server/_libs/hookable.mjs                                    1.18 kB │ gzip:   0.53 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.35 kB │ gzip:   0.73 kB
+.output/server/_ssr/createSsrRpc-LmJkmL-w.mjs                        1.36 kB │ gzip:   0.68 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.40 kB │ gzip:   0.73 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.52 kB │ gzip:   0.81 kB
+.output/server/_ssr/createStart-D9u0bWu-.mjs                         1.58 kB │ gzip:   0.59 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.83 kB │ gzip:   0.77 kB
+.output/server/__23tanstack-start-server-fn-resolver-C76ri67g.mjs    1.88 kB │ gzip:   0.81 kB
+.output/server/_ssr/gate.functions-CSySGDu5.mjs                      2.07 kB │ gzip:   0.81 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.09 kB │ gzip:   0.94 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.42 kB │ gzip:   1.12 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.47 kB │ gzip:   0.98 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.57 kB │ gzip:   0.90 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.61 kB │ gzip:   1.30 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.05 kB │ gzip:   1.02 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.21 kB │ gzip:   1.26 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.29 kB │ gzip:   1.39 kB
+.output/server/_ssr/request-response-PAKXJLdU.mjs                    3.36 kB │ gzip:   1.18 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.41 kB │ gzip:   0.94 kB
+.output/server/_ssr/auth-middleware-B1GKhRKA.mjs                     3.77 kB │ gzip:   1.49 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.06 kB │ gzip:   1.25 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.36 kB │ gzip:   1.40 kB
+.output/server/_ssr/ssr.mjs                                          4.41 kB │ gzip:   1.86 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.46 kB │ gzip:   1.94 kB
+.output/server/_libs/lucide-react.mjs                                4.67 kB │ gzip:   1.29 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.93 kB │ gzip:   1.47 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.37 kB │ gzip:   2.15 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.42 kB │ gzip:   1.93 kB
+.output/server/_tanstack-start-manifest_v-BtRhMPWk.mjs               5.44 kB │ gzip:   1.17 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.55 kB │ gzip:   1.82 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.70 kB │ gzip:   1.95 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.15 kB │ gzip:   2.36 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.16 kB │ gzip:   1.62 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.28 kB │ gzip:   2.00 kB
+.output/server/_ssr/day._day-DO0MvPiK.mjs                            6.78 kB │ gzip:   3.12 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.28 kB │ gzip:   2.13 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.60 kB │ gzip:   2.64 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.92 kB │ gzip:   3.17 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.34 kB │ gzip:   3.17 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.59 kB │ gzip:   3.09 kB
+.output/server/_ssr/esm-CMqjQ9ew.mjs                                12.08 kB │ gzip:   3.74 kB
+.output/server/_ssr/journey-ai.functions-BUN5H20M.mjs               12.22 kB │ gzip:   3.88 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.48 kB │ gzip:   4.27 kB
+.output/server/_libs/tanstack__history.mjs                          12.52 kB │ gzip:   3.72 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.62 kB │ gzip:   3.50 kB
+.output/server/_ssr/adapter.server-evIMzzLw.mjs                     13.32 kB │ gzip:   3.89 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.28 kB │ gzip:   4.25 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.42 kB │ gzip:   4.12 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.61 kB │ gzip:   4.92 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.05 kB │ gzip:   4.80 kB
+.output/server/index.mjs                                            17.28 kB │ gzip:   4.90 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.87 kB │ gzip:   5.17 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.65 kB │ gzip:   5.39 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.49 kB │ gzip:   9.04 kB
+.output/server/_ssr/conversation-staging-DO70l_2P.mjs               27.80 kB │ gzip:   6.38 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                29.95 kB │ gzip:   8.02 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.14 kB │ gzip:  10.66 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.48 kB │ gzip:   9.60 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.91 kB │ gzip:  11.19 kB
+.output/server/_ssr/router-C1KLkdYT.mjs                             38.23 kB │ gzip:   9.95 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.28 kB │ gzip:  10.68 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.56 kB │ gzip:  12.78 kB
+.output/server/_ssr/server--KUYEmyw.mjs                             58.93 kB │ gzip:  15.35 kB
+.output/server/_ssr/day._day-BtC1Nm38.mjs                           78.22 kB │ gzip:  18.70 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.20 kB │ gzip:  20.96 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.62 kB │ gzip:  17.59 kB
+.output/server/_libs/tailwind-merge.mjs                             85.67 kB │ gzip:  15.23 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.08 kB │ gzip:  24.91 kB
+.output/server/_libs/zod.mjs                                       100.20 kB │ gzip:  17.34 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.23 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 421ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+
+sql-notes.md
+# Isolated v2 cleanup SQL implementation notes
+
+New repository file only: `docs/pilot/conversation/sql-drafts/p5-voice-v2-cleanup.sql`.
+
+The isolated draft adds one nullable `protocol` column to the existing shared `cleanup_owners` table. Existing rows and explicit-column writers retain NULL; new v2 registration writes exactly 2 with complete nonnil Auth-session/parent-version/fingerprint binding. The new CHECK rejects other protocol values and incomplete v2 bindings. No third sidecar, duplicate accounting, backfill, migration, runtime route or legacy source change is introduced.
+
+Two new service-only RPCs are installed in the same transaction as revocation of their default access. Their private observation helper is not executable by service_role, anon or authenticated. Existing privileges are not modified.
+
+- `bfa_p5_v2_register_cleanup(p_cleanup_id uuid,p_claim jsonb,p_auth_session_id uuid,p_parent_version bigint,p_fingerprint text,p_verified_ms bigint,p_auth_expires_ms bigint)`.
+- `bfa_p5_v2_read_cleanup(p_cleanup_id uuid,p_claim jsonb,p_auth_session_id uuid,p_parent_version bigint,p_fingerprint text)`.
+
+Both use the existing strict claim parser and additionally reject every nil UUID, plus unsafe versions/timing and invalid fingerprints. The common exclusive owner lock precedes row locks. Registration checks the exact clear current Auth parent/version, excludes every retained v1 session row for that pair, checks current protected allowlist/thread/generation, and requires the exact existing protocol-2 issuance association. Existing cleanup must already be the same complete v2 binding and claim with no terminal field; legacy/unbound, mismatched or terminal rows are denied without adoption or repair.
+
+Registration remains pre-proof/pre-admission: any retained proof at cleanup ID or claim ID, shared claim row at claim ID, or owner/attempt row denies it. It never modifies those records or their accounting. Current approval/quota admission is deliberately a later stage, not conferred here.
+
+Clock sampling occurs after all row locks. Unsafe/rollback time or future verifiedAt denies before cleanup mutation. An exact existing eligible row may retain a shorter deadline from safe, nonfuture metadata even if verification aged during waits: min of original effective expiry, exact claim, issuance, Auth and finite allowlist. This is negative evidence only. Original verification age >=30000 ms or a deadline at/before now denies success and never inserts a new row. New records require fresh verifiedAt and all positive eligibility. A later longer observation cannot extend a retained deadline. Equal/longer deadlines do not issue a no-op UPDATE. Registration changes only owner-clock high-water plus absent cleanup insertion or exact cleanup deadline shortening; no expired/invalidated timestamp is fabricated.
+
+Read returns only an exact persisted v2 association, including all nullable terminal timestamps. It uses no clock, current parent/issuance/allowlist/thread eligibility checks or writes. It stays usable after expiry, revocation, closure or deletion as server-only evidence; NULL never proves absence, and a nonterminal observation is never current Auth or admission. Request/reply association and independently verified Auth policy remain mandatory trusted-host requirements, not established by service-role access or metadata shape.
+
+Existing exact close creates or preserves terminal NULL-protocol cleanup before registration, which v2 denies. Closing a v2 cleanup preserves its v2 binding and cannot refund holds. The additive column is compatible with existing explicit-column cleanup registration/close and fixture inserts; no positional cleanup INSERT was found in docs/src/scripts/supabase. Old proof/claim/capacity paths still lack v2 provenance enforcement and remain unsuitable for v2 use. Full versioned predicates and quiesced no-fallback cutover are unfinished; this slice is inactive and nondeployable.
+
+Pretest self-review correction: the first draft selected unqualified thread `id` while declaring local claim `id`. It was qualified as `th.id` before completed behavioral testing to avoid PL/pgSQL ambiguity. A separate refinement avoids rewriting an unchanged cleanup row. No existing source or SQL changed.
+
+Current SQL SHA256: `c0a345fe9bc8232e52fde4638a8c57bbcf0a41ea1320d87f246374455fdccd6c`.
+
+The corrected actual SQL integration suite passes 56/56 at this checkpoint; its initial 54/56 failures were fixture-only (a direct deletion mutation violated an existing P3b constraint, and legacy inspect correctly returns claimed rather than the fixture's expected replayed). Additional direct CHECK/preexisting-row preservation cases are being added by the test owner before that fixture freezes. Independent source review found no blocker in the final hash above. The SQL source is frozen; root evidence owns final counts and integrated checks. No connected database or real Auth/provider/device calls occurred.
+
+
+adapter-notes.md
+# Inactive v2 cleanup transport and primary fixtures — 3 November 2026
+
+Owned repository changes are only the new `src/lib/ai/conversation/service/voice-v2-cleanup-rpc.server.ts` and `src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts`. No prior source, test, SQL, configuration, dependency, runtime route or connected service changed.
+
+The factory exposes exactly `registerCleanup` and `readCleanup`, with a captured protected transport and no default SDK/client/clock. Registration maps the exact preallocated cleanup/claim, actual Auth session, parent version, associated issuance fingerprint, conservative verification time and current Auth-policy ceiling to the agreed v2 RPC. Read maps only the exact persisted association. Both strictly validate protocol 2, every nested immutable claim field and all association fields, and detach/freeze requests and receipts through the nested claim binding. Accessors, inherited identity, symbols/hidden fields, nil or noncanonical UUIDs, unsafe/coercible numbers, extras and wrong digests/scope are rejected.
+
+Registration accepts only a nonterminal response with an effective deadline after the original verification time and no later than the claim/Auth ceilings. SQL remains responsible for locked current time, freshness, parent/legacy/issuance/thread/allowlist checks and any permitted retained shortening on denial. Read has no local clock/current-Auth requirement and accepts retained closed/expired/invalidated timestamps as content-free evidence only. An elapsed effective deadline can still be reported on read; no inference of eligibility or a synthesized state is made.
+
+Null remains semantic denial, never proof of absence or rollback. Thrown or malformed replies produce the fixed sanitized error without cause/identity. No retry, fallback, replacement claim, identity allocation, close, accounting refund or provider call exists. The trusted host must retain exact uncertain request evidence before invocation. Verification time/Auth ceiling are not echoed, so exact invocation/reply association remains a protected nonretrying transport precondition. Shapes and service-role transport establish neither participant Auth nor service provenance. Full v2 proof/admission/capacity and quiesced no-fallback cutover remain unfinished.
+
+First completed focused run: **44/44 passed**. Full `tsc --noEmit`: exit 0. Scoped ESLint for both new files: exit 0. Formatting was applied before these checks. No initial test/type/lint failure or implementation correction occurred in this task. Logs: `adapter-primary-initial.log`, `adapter-typecheck-initial.log`, `adapter-lint-initial.log` alongside this note. Independent composition and actual SQL fixtures are separate; root owns final complete-suite/build/source-preservation checks.
+
+The fixture covers exact wire mappings, nested immutable snapshots, input mutation while pending, mismatching late replies, transport-owned response mutation after return, captured bound client methods, semantic-null denial, no retries and sanitized lost-write errors. It checks terminal read versus active registration, safe numeric boundaries and shrink-only response bounds, all claim identity comparisons, mixed/missing protocol, null-prototype records and rejected request/response/envelope accessors. Transport success metadata is not current eligibility. No actual Auth/provider/network fault or native concurrency evidence is claimed.
+
+
+sql-test-notes.md
+# Actual isolated v2 cleanup SQL tests — 3 November 2026
+
+Owned new repository file only: `src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts`.
+
+Frozen SHA256: `8c0c67252777b0c1ec2f8805a68aa7756b5bf688b682f2602477d055c48fe46b`.
+SQL tested SHA256: `c0a345fe9bc8232e52fde4638a8c57bbcf0a41ea1320d87f246374455fdccd6c`.
+
+Final focused suite: **60/60 pass** in PostgreSQL 18.6 / PGlite 0.5.12. Full strict TypeScript and scoped ESLint pass. Both the seed and active database engines are closed; every controlled clock is restored and its exact function definition checked after the case.
+
+The fixture composes actual v2 parent observation, current generation registration and immutable issuance registration through the actual existing adapters, then the new cleanup adapter and SQL. Identity/policy/approval metadata is explicitly fictional; no local crypto retest, real Auth, HTTP transport, provider/device, connected SQL or native concurrency is performed.
+
+Coverage includes:
+
+- Actual bound, unbound and closed legacy rows seeded before the additive schema; every existing field survives with new protocol NULL. Existing legacy explicit-column registration/close and rowtype proof insertion continue to work. The old full register/proof/claim/inspect/close path is exercised with fictional v1 session/approval/quota fixtures and its held units stay retained. This compatibility fixture is not a cutover or v2 admission path.
+- SQL CHECK denial for unsupported protocol, unbound v2 and nil v2 session; both public RPC roles and the private cleanup-observation helper remain denied to non-service callers, with the helper also denied to service_role. Direct private table SELECT/UPDATE remain denied.
+- Exact persisted protocol/claim/parent/fingerprint, bounded effective deadline, exact replay without renewal, claim/Auth/allowlist ceilings, immutable association mismatches, legacy/unbound/terminal record refusal, current thread/generation/issuance/parent/legacy/allowlist denial and nil identity guards.
+- Pre-proof/pre-admission restriction for any retained shared claim, proof matching cleanup or claim, and retired/winning owner attempt; no accounting or downstream row rewrites.
+- Safe monotonic time, exact 30000-ms verification boundary, future verification and clock rollback. Existing exact rows retain stale-but-negative shorter Auth/allowlist ceilings, deny positive work and cannot revive under a later longer fresh observation. Future-time/rollback observations cannot shrink those rows.
+- Close-before-register permanently stays legacy/terminal and cannot be adopted. Registration-before-close retains protocol2 evidence and remains closable after expiry, Auth-parent revocation and staging removal. Read observes exact persisted data without clock mutation even after revocation/expiry or an invalid current clock; it is not eligibility.
+- Lost/malformed acknowledgment after a committed write causes one sanitized adapter failure without retries; exact persisted evidence can be deliberately read afterward. Twenty-two-table snapshots include seeded nonzero P3b and P5 accounting, and only allowed owner-local cleanup/clock rows change for registration.
+
+Initial run: **54/56 pass**. Two fixture assumptions failed, not implementation behavior: direct `deleted_at` mutation violated the existing P3b saved-content constraint, and an existing exact legacy `inspect` correctly returned `claimed` rather than the fixture's expected `replayed`. The delete case now uses the actual protected P3b delete fence; the inspect assertion matches unchanged source. Corrected suite: **56/56 pass**. Core schema compatibility/constraint cases then raised coverage to 60; final root-requested helper privilege checks remain in an existing case. No prior source, test, constraint or deadline was weakened.
+
+Logs preserved beside this note:
+
+- `v2-cleanup-sql-initial.log`: original 54/56 diagnostics.
+- `v2-cleanup-sql-corrected.log`: corrected 56/56.
+- `v2-cleanup-sql-final.log`: expanded 60/60 before helper-privilege assertion.
+- `v2-cleanup-sql-frozen.log`: final frozen-file 60/60.
+- `v2-cleanup-sql-typecheck-final.log` and `v2-cleanup-sql-lint-final.log`: passing final checks.
+
+Root owns the complete repository suite/build and publication evidence. This slice remains inactive and nondeployable until the full v2 proof/admission/capacity path and quiesced no-fallback cutover are complete.
+
+
+independent-review.md
+# Independent v2 cleanup review — 3 November 2026
+
+Base: connected main `f88acbca46ef5c8a48a694d84099cc2179fa35db`. Read AGENTS, the latest continuation block and lifetime-change contract, then the existing admission/capacity SQL, v2 parent/issuance/pre-issuance SQL and transport, and unchanged v1 store admission bridge. Reviewed both new cleanup SQL and transport in full. No existing source, SQL, tests, dependencies, configuration or connected service changed by this reviewer.
+
+## Source review
+
+No blocking defect found in the reviewed draft. The shared cleanup table gains only a nullable protocol discriminator. Legacy rows and explicit-column writers retain NULL; v2 records require protocol 2 plus a nonnil complete Auth association. The CHECK avoids SQL NULL passing for its nullable binding members through explicit nonnull tests. The existing table already bounds persisted scalar expiry/terminal values. Initial effective expiry is bounded by the writer, later writers only shorten it, and the strict adapter independently rejects effective expiry above the exact claim expiry.
+
+Registration uses the common exclusive owner advisory lock, then current parent/legacy, staging, thread/generation, issuance and its v2 association, exact cleanup and downstream-record checks before sampling retained owner time. The shared claim parser plus new nil-identity checks establish exact wire shape, canonical identity and integer bounds. Existing cleanup with a different key/claim/binding/protocol or any terminal marker denies; no legacy adoption or rebinding occurs. Any proof for the same cleanup or claim, existing claim, or retained owner/attempt row denies this pre-proof/pre-admission registrar. This keeps later accounting and lifetime changes outside this slice.
+
+For an exact existing row, a valid shorter ceiling is retained even when original verification ages while waiting or the deadline expires; semantic denial does not erase negative evidence. Safe monotonic time and nonfuture verification precede that mutation, as do exact current provenance checks. New rows require full freshness strictly below 30000 ms and positive remaining lifetime. There is no expiry-marker synthesis; persisted expiry remains evidence interpreted by future eligibility gates. No claims, attempts, quotas, proofs, capacity or usage rows are changed by registration.
+
+The exact read takes only content-free retained association identity, returns only matching protocol-2 persisted metadata, and neither samples time nor looks up current Auth eligibility. It can return records after closure, expiry, parent/legacy revocation or thread deletion. This is deliberately reconciliation evidence, never admission or continued permission. Default new-function privileges are revoked in the same transaction; only the two public RPCs gain service execution. The observation helper and private tables remain inaccessible to participant and service roles directly.
+
+The adapter uses strict own-enumerable-data schemas before cross-field checks, detached/frozen nested claims, one captured nonretrying transport call and sanitized errors. It compares the complete claim and association, rejects v1/unbound/malformed replies, bounds a positive registration receipt by supplied verification/Auth expiry, and allows terminal read metadata without a local clock. The omitted verification/Auth fields require trusted exact invocation/reply association. A null result never proves absence or rollback.
+
+The SQL author corrected a local-variable/thread-column `id` ambiguity during source review before behavioral execution and removed unnecessary same-value expiry updates. These were new-draft-only corrections. Root and the SQL-test owner record final execution, hashes and any further findings separately.
+
+## Independent composition evidence
+
+Owned new repository file: `src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts`.
+
+Two actual-adapter composition cases pass: an active v2 registration receipt and a terminal v2 read observation are each passed to the unchanged v1 request-bound admission bridge. The bridge rejects both before proof/claim/inspect, retains its exact cleanup identity and can still deliberately close it. No fallback or extra v2 call occurs. Actual local seal/HMAC and service provenance are exercised, with explicitly fictional Auth, clock and persistence. This is a boundary regression, not a complete v2 admission implementation, SQL execution, real Auth or provider evidence.
+
+Focused result: **2/2 passed**, one file; scoped ESLint passed. Logs: `independent-review-tests-initial.log` and `independent-review-lint.log` beside this note. Root owns the final full TypeScript/conversation/build checks.
+
+Reviewed hashes at this checkpoint:
+
+- SQL: `c0a345fe9bc8232e52fde4638a8c57bbcf0a41ea1320d87f246374455fdccd6c`.
+- Adapter: `f154cfb5a9f11b6a87e9e05909f0a3f8f7c8c63792f80fb745abdf1f18d81de6`.
+- Independent test: `bb394856b43b7cdabe911368f50546f636504037643df00cb00bbe4258cc0355`.
+
+## Concrete next dependency and limits
+
+The next bounded dependency is **isolated versioned proof registration plus its v2 eligibility predicate and exact inactive transport**, with actual SQL composition tests. Current `bfa_p5_voice_register_proof` accepts an unversioned payload, can adopt unbound cleanup, and calls the v1 `eligible()` helper. That helper and `bfa_p5_capacity.current/take_proof` still require an expiring legacy session fence and lack protocol checks. A v2 issuer/cleanup record cannot safely be routed through them.
+
+Implement a separate v2 proof registrar outside migrations, requiring explicit protocol 2, the exact already-bound cleanup/claim/parent/fingerprint and current trusted identity/policy. Reuse the existing proof table with a reviewed nullable protocol discriminator (legacy NULL, new 2), preserving original rowtype-based legacy insertion; no duplicate accounting table. Validate current parent/version, every legacy-fence exclusion, associated immutable issuance, current thread/generation/allowlist and exact approval at the proof stage. Preserve one receipt per operation, conservative <30000-ms freshness, immutable expiry bounds, shrink-only cleanup/claim ceilings and terminal precedence. Proof storage is not consumption, admission or provider permission. Test no legacy/unbound proof/cleanup adoption, roles, late/lost replies, current-state changes, legacy rowtype compatibility and unchanged cumulative holds. No v1 predicate fallback.
+
+New v2 proof registration and later consumption/admission/capacity remain separately unfinished. In particular, the old callable proof path can still operate on shared rows if a legacy fence is later introduced; this discriminator alone does not establish compatibility. The entire chain remains inactive/nondeployable until versioned consumers and the quiesced no-fallback route/privilege cutover are complete. Native concurrent/back-end races, deployed Auth ownership/policy/revocation and provider/device finality remain unrun. Existing exact close/reconcile paths must remain available after expiry/revocation with their original accounting semantics.
+

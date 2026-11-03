@@ -1,0 +1,102 @@
+New eight-case suite after fixture fixes
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-lifetime-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  12:10:56
+   Duration  12.83s (transform 615ms, setup 0ms, import 778ms, tests 11.68s, environment 0ms)
+
+
+
+Initial unrestricted full suite: timeout retained
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-lifetime-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests | 1 failed) 5774ms
+     × never invokes a base inspection after close starts at any observed clock-read microtask boundary 5011ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts > independent admission-owned capacity marker composition > never invokes a base inspection after close starts at any observed clock-read microtask boundary
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts:239:3
+    237|   });
+    238|
+    239|   it("never invokes a base inspection after close starts at any observ…
+       |   ^
+    240|     const reference = await fixture();
+    241|     let boundaries = 0;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 59 passed (60)
+      Tests  1 failed | 1065 passed (1066)
+   Start at  12:12:35
+   Duration  30.30s (transform 8.45s, setup 0ms, import 16.35s, tests 167.09s, environment 10ms)
+
+
+
+Two-worker full rerun: different timeout retained
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-lifetime-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests | 1 failed) 6540ms
+     × late inspected eligibility cannot revive a lease whose capacity cleanup already acknowledged 5074ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts > P5 RPC adapter independent uncertainty and identity review > late inspected eligibility cannot revive a lease whose capacity cleanup already acknowledged
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts:260:3
+    258|   });
+    259|
+    260|   it("late inspected eligibility cannot revive a lease whose capacity …
+       |   ^
+    261|     const h = await fixture();
+    262|     const lease = await h.bridge.admit(h.request);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 59 passed (60)
+      Tests  1 failed | 1065 passed (1066)
+   Start at  12:13:21
+   Duration  84.33s (transform 10.23s, setup 0ms, import 19.51s, tests 113.80s, environment 10ms)
+
+
+
+Both affected existing suites at original timeout
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-lifetime-work/repo
+
+
+ Test Files  2 passed (2)
+      Tests  18 passed (18)
+   Start at  12:15:17
+   Duration  4.71s (transform 853ms, setup 0ms, import 1.06s, tests 3.14s, environment 0ms)
+
+
+
+Complete final run, maxWorkers=2, runner testTimeout15000ms
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-lifetime-work/repo
+
+
+ Test Files  60 passed (60)
+      Tests  1066 passed (1066)
+   Start at  12:15:53
+   Duration  76.38s (transform 3.25s, setup 0ms, import 8.52s, tests 123.76s, environment 12ms)
+
+
+
+Full strict tsc --noEmit: exit 0. Scoped ESLint new test: exit 0. Both logs empty. Production build not rerun for test/documentation-only batch.

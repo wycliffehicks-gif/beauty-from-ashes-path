@@ -1,0 +1,127 @@
+{
+  "date": "2026-11-02",
+  "timezone": "America/Toronto",
+  "baseCommit": "8c149d84e2a5843e460e049739eb9734a4d30d47",
+  "baseTree": "1533b2f124030d839c4f50d6d79de1e4af544f3f",
+  "baselineBlobs": 651,
+  "materializedHashVerified": 650,
+  "environmentRead": false,
+  "runtimeChanged": false,
+  "existingSqlChanged": false,
+  "newFilesKind": "one executable v1 counterexample suite, reviewed v2 change contract and evidence",
+  "conversation": {
+    "passed": 1066,
+    "files": 60,
+    "allActualSqlWithinTotal": 167,
+    "skipped": 0,
+    "newCases": 8,
+    "maxWorkers": 2,
+    "testRunnerTimeoutMs": 15000,
+    "applicationTimeChecksChanged": false,
+    "firstFullRun": {
+      "passed": 1065,
+      "failed": 1,
+      "failure": "existing cancellation-boundary sweep exceeded unchanged 5000ms timeout under unrestricted workers"
+    },
+    "secondFullRun": {
+      "passed": 1065,
+      "failed": 1,
+      "failure": "different existing late-reply test exceeded 5000ms runner limit; two workers"
+    },
+    "focusedExistingSuites": {
+      "passed": 18,
+      "files": 2,
+      "originalTimeoutMs": 5000
+    },
+    "retry": "full suite, same source/assertions/application timing, maxWorkers=2 and runner timeout15000ms"
+  },
+  "typecheck": "full strict tsc --noEmit passed after two fixture-only typing fixes",
+  "lint": "new test scoped ESLint passed",
+  "build": "not rerun; production implementation/build remain7973d90/ offline-validation-v21",
+  "newTest": {
+    "file": "src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts",
+    "sha256": "05ad18f761a120d89a34e3985f9c3313e5b5629185d3e1e7ad7a00cd49c1ebe4",
+    "tests": 8,
+    "passed": 8,
+    "skipped": 0,
+    "engine": "PostgreSQL 18.6 via PGlite 0.5.12",
+    "databaseScope": "actual isolated single-connection PostgreSQL execution; fictional Auth and administrative policy; fixture-only clock boundary movement",
+    "setup": "Existing exact local fixture pattern reused; no exported shared SQL harness exists. Seed and fixture database closures asserted; records committed through service_role RPC calls.",
+    "typecheck": "full project tsc --noEmit passed after two test-only typing corrections",
+    "lint": "new file scoped ESLint passed",
+    "behavior": "Initial 8/8 behavioral cases passed; final 8/8 rerun after fixture typing/shape assertion corrections also passed",
+    "testOnlyCorrections": [
+      "Detached mutable provisioning-query copy instead of mutating a readonly typed query",
+      "Assert sourceCreatedAt shape and narrow unknown protected-read fixture result before use"
+    ],
+    "runtimeChanges": false,
+    "sqlChanges": false,
+    "coverage": [
+      "same-login refresh creates another envelope only within unchanged original parent fence",
+      "fresh same-login Auth eligibility cannot initialize or issue after exact parent expiry",
+      "privileged fresh issuance registration after parent expiry stays dormant and cannot restore admission",
+      "one terminal parent fence denies two distinct existing authorities without deleting their records",
+      "expired-parent denial preserves original and cumulative pool holds; exact cleanup releases only occupancy",
+      "lost committed provision acknowledgment retains original lifetime and does not authorize fresh lifetime",
+      "late issuance response retains committed dormant record and cannot enable same-login re-entry",
+      "revoke-before-first-use tombstone remains terminal despite newer same-login eligibility"
+    ],
+    "unproven": [
+      "proposed v2 behavior",
+      "deployed Auth behavior",
+      "native concurrency",
+      "HTTP fault injection",
+      "provider finality",
+      "real-device acceptance"
+    ]
+  },
+  "independentReview": {
+    "inventory": "Reuse fingerprint with two additive parent/binding tables; shared accounting; versioned no-fallback cutover",
+    "testReview": "No blocker; actual committed v1 SQL/adapters/localcrypto; controlled clock restored; both engines closed; no real Auth/provider/native evidence",
+    "documentCorrections": [
+      "Exact reads filename",
+      "Close-before-register terminal precedence",
+      "Eligibility checked at appropriate stages, not circular preissuance requirements"
+    ]
+  },
+  "proposedV2Implemented": false,
+  "proposedV2Tested": false,
+  "lovableFreshStatus": "read-only project lookup internal error; synchronization/build not reconfirmed",
+  "sha256": {
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd",
+    "docs/pilot/conversation/p5-voice-lifetime-change-contract-2026-11-02.md": "be98f27e49e174472be636cfd6e30f4b70c0db3ab06a961c66ad07c7109a0fca",
+    "src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts": "05ad18f761a120d89a34e3985f9c3313e5b5629185d3e1e7ad7a00cd49c1ebe4",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-preissue-read.sql": "df9cc4296df6bb1b81a2f374e4e79fde27cce173362245fde599b046cfae6f4c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-provision.sql": "b1ca8d2c3fca056581c74168205618d4b47d5b58a03df33417b1a053571eb360",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "src/lib/ai/conversation/service/voice-admission.server.ts": "7a40ca42c9d2503cf3377098b3e7135605a2b0337dedbfa3b513e7fa2467eadd",
+    "src/lib/ai/conversation/service/voice-capacity-rpc.server.ts": "bf1c52cc653b2204cab92c6cabff542a81c8a38840fb2ca5c2b4715bd0bc6dbb",
+    "src/lib/ai/conversation/service/voice-controls.ts": "8cc51e8d7cd2cf45f6eaba167f0c4adf0035896539915b1e799c8f838d724587",
+    "src/lib/ai/conversation/service/voice-issuance-rpc.server.ts": "e4ed20dc1f100fcf48ed8fefaa0ab57982cfb5c2cc4d5442b1153c54883998e6",
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-lifecycle.ts": "ec87e6b32eb6464a7055769d6bc9e6885ac9f0f5246700d86f580d8d1e96469b",
+    "src/lib/ai/conversation/service/voice-preissue-read-rpc.server.ts": "4ea8a931becaaf36e1d2cdeb80b9eeb4b0f607ab0115b56b98a0c747c179f005",
+    "src/lib/ai/conversation/service/voice-read-rpc.server.ts": "5c98749fdc9c291b3cd9ed6a2d233ae09c10f0cc0c9d51eefe31d2374e28b28e",
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "src/lib/ai/conversation/service/voice-service-binding.ts": "0df3eb8413f043d796de682b4f0af5dcc34eb9edf6cba107ba4989220c995991",
+    "src/lib/ai/conversation/service/voice-session-initializer.server.ts": "cf188a9ef7c9d1242830a10463e2071871918a2d7f1c6a81cee150c4478502ac",
+    "src/lib/ai/conversation/service/voice-session-provision-rpc.server.ts": "089dc0b2b33750be8a0ddebfc9ece863e7568811cdd1c8ea300c6990e77022b6",
+    "src/lib/ai/conversation/service/voice-session-revoke-rpc.server.ts": "0c054a93787ffce4cdf4a2b6d3b97c72aeacccd08163e142e681a3872e8de018",
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "f63cb681d69f8be86b0519adbcfb8bd16b4b7f252a8130ab2ffc5f83e30b4de8",
+    "src/lib/ai/conversation/service/voice-verification.server.ts": "25921a8a6db0b44562560522e0f1b0700d020d85ee017c27c2f2900e36a4765b"
+  },
+  "unperformed": [
+    "native 21 cases/cross-backend concurrency",
+    "deployed Auth ownership/policy/revocation acceptance",
+    "real provider/device/HTTP fault acceptance",
+    "connected migrations/settings",
+    "paid Lovable edits/purchases/publication"
+  ],
+  "next": "Implement only the isolated additive v2 Auth-parent and issuance-association SQL draft with exact nonretrying transport tests, outside migrations. Reuse existing bounded issuance fingerprints and shared accounting; add a terminal Auth-parent record and immutable association, never a duplicate episode/budget system. Observe/revoke/read exact parent identity and atomically register new <=15-minute issuance plus parent binding under current owner locks/time checks. Test same-login successive authorities with old expiry retained, parent/legacy revocation orderings, no existing-fingerprint backfill, lost/malformed responses, denied roles and unchanged holds. Preserve all v1 source/records; any v1 session row denies v2 at every gate. Keep this slice nondeployable until the complete versioned read/proof/cleanup/capacity chain, close-before-register precedence and quiesced no-fallback cutover are implemented/reviewed. No real Auth/model/voice calls, accounts, connected SQL/settings, activation or publication; deployed Auth ownership/policy/revocation, native concurrency and provider/device acceptance remain separate gates."
+}

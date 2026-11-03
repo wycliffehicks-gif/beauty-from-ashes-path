@@ -1,0 +1,117 @@
+{
+  "date": "2026-11-03",
+  "timezone": "America/Toronto",
+  "executionLogsTimezone": "UTC",
+  "baseCommit": "46695836b08a7498e61f380d9486d198a571ac71",
+  "baseTree": "99ee77c5b96116782e1740d3394e810ffc089de5",
+  "scope": "Isolated inactive v2 pre-issuance metadata/generation boundary only; no complete issuer or live runtime",
+  "conversation": {
+    "passed": 1199,
+    "files": 66,
+    "skipped": 0,
+    "newCases": {
+      "p5-voice-v2-preissue-review.test.ts": 2,
+      "p5-voice-v2-preissue-rpc.test.ts": 28,
+      "p5-voice-v2-preissue-sql.test.ts": 30
+    },
+    "allActualSqlWithinTotal": 233,
+    "countsOverlap": true,
+    "maxWorkers": 2,
+    "testRunnerTimeoutMs": 15000,
+    "applicationTimingChanged": false
+  },
+  "checks": {
+    "conversation": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "productionBuild": 0
+  },
+  "engine": {
+    "name": "@electric-sql/pglite",
+    "version": "0.5.12",
+    "postgresql": "18.6",
+    "connections": 1,
+    "bothInstancesClosed": true,
+    "tableSnapshotCoverage": 22,
+    "retainedCommittedFictionalRecords": true,
+    "authAndPolicy": "fictional trusted-host metadata, no real verifier",
+    "accounting": "seeded nonzero holds preserved, not v2 admission acceptance",
+    "legacyGenerationRpc": "EXECUTE revoked only in isolated test setup; new path proves no dependency, not full cutover",
+    "appDependencyAdded": false
+  },
+  "findings": [
+    "The initial actual SQL run passed 29 of 30 cases; its one failure used administrative fixture year 300000, outside PostgreSQL timestamp storage range before reaching the intended application guard. Replacing it with storable year 290000, still beyond safe JavaScript milliseconds, produced 30/30 with no SQL or assertion-intent change. The initial log is retained.",
+    "The first primary-fixture typecheck found two invalid-client typing errors: an impossible direct cast and a throwing getter inferred as void. An explicit unknown cast and getter return type corrected only those test types; the diagnostic log is retained. The adapter implementation did not change.",
+    "Independent full source/fixture review found no remaining blocker. Two real-adapter-to-v1-issuer composition cases deny mixed-protocol wiring before writes. Final focused/full checks and production build pass on frozen source; native, deployed Auth and provider evidence remain separate."
+  ],
+  "limits": [
+    "Generation is shared permanent lifecycle metadata; exact Auth parent/version checked per invocation, later issuance persists Auth/fingerprint association.",
+    "Fresh Auth/policy, service provenance and invocation/reply association remain host preconditions; verification time/Auth ceiling not echoed.",
+    "Both calls may advance only owner clock; registration also inserts absent generation, never updates/rebinds.",
+    "Trusted v2 issuer is not yet implemented; v1 issuer cannot consume these protocol-2 observations.",
+    "Versioned proof/cleanup/admission/capacity, close-before-register and quiesced no-fallback cutover unfinished; draft nondeployable.",
+    "All21native and cross-backend tests unrun; local discarded replies are not HTTP fault injection.",
+    "Production Auth/ownership/policy/revocation and provider/device acceptance unrun."
+  ],
+  "preservation": {
+    "baselineBlobs": 662,
+    "materializedHashVerified": 661,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md",
+      "docs/pilot/conversation/sql-drafts/README.md"
+    ],
+    "newFiles": [
+      "docs/pilot/conversation/sql-drafts/p5-voice-v2-preissue.sql",
+      "src/lib/ai/conversation/service/voice-v2-preissue-rpc.server.ts",
+      "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts",
+      "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts",
+      "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts",
+      "artifacts/conversation-eval/offline-validation-v23/verification.json",
+      "artifacts/conversation-eval/offline-validation-v23/validation.log"
+    ],
+    "existingSourceSqlTestsChanged": false,
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "lovableCurrentStatus": "Unconfirmed after prior get_project/list errors; no repeated lookup/paid repair in this batch; last successful ready/unpublished observation7973d90",
+  "sourceSha256": {
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-preissue.sql": "93f3e2c2c85f50583a3b24c6e03a95674cdcc65078a09aa8250b018db434d564",
+    "src/lib/ai/conversation/service/voice-v2-preissue-rpc.server.ts": "8b7cbdebadebc92f76069b3ff806a51648f201e236f10a2a76a6292d5d2b379c",
+    "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts": "a789509491594ee6bf2663ce247356a0f44b1c1987b1637fc13e784a65cdc7b8",
+    "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts": "196feba7c7cbe9cfac8430ee359167070fa7988a7ae299711107cc07c99a2c8e",
+    "src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts": "1886e55a53fdefc80f1b2c40fe6de129bbf07b491d0627e4c1349c0f44e62ddd",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd",
+    "docs/pilot/conversation/p5-voice-lifetime-change-contract-2026-11-02.md": "be98f27e49e174472be636cfd6e30f4b70c0db3ab06a961c66ad07c7109a0fca",
+    "docs/pilot/conversation/p5-supabase-auth-contract-2026-11-03.md": "7820475dbf6c1a8c62760c247c89d1fd987938537e15c1c1d2925ca7a6cb4d1d",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-preissue-read.sql": "df9cc4296df6bb1b81a2f374e4e79fde27cce173362245fde599b046cfae6f4c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-provision.sql": "b1ca8d2c3fca056581c74168205618d4b47d5b58a03df33417b1a053571eb360",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-parent-issuance.sql": "8c463bb3c1953b32e83e6d90ba0b31e629bc39cca78a0fb05e013d84c5dec342",
+    "src/lib/ai/conversation/service/voice-admission.server.ts": "7a40ca42c9d2503cf3377098b3e7135605a2b0337dedbfa3b513e7fa2467eadd",
+    "src/lib/ai/conversation/service/voice-capacity-rpc.server.ts": "bf1c52cc653b2204cab92c6cabff542a81c8a38840fb2ca5c2b4715bd0bc6dbb",
+    "src/lib/ai/conversation/service/voice-controls.ts": "8cc51e8d7cd2cf45f6eaba167f0c4adf0035896539915b1e799c8f838d724587",
+    "src/lib/ai/conversation/service/voice-issuance-rpc.server.ts": "e4ed20dc1f100fcf48ed8fefaa0ab57982cfb5c2cc4d5442b1153c54883998e6",
+    "src/lib/ai/conversation/service/voice-issuance.server.ts": "40360ed4cd26a14280feb64a6ab8acb9fd0a38682b30b01965c6dcae78074fd1",
+    "src/lib/ai/conversation/service/voice-lifecycle.ts": "ec87e6b32eb6464a7055769d6bc9e6885ac9f0f5246700d86f580d8d1e96469b",
+    "src/lib/ai/conversation/service/voice-preissue-read-rpc.server.ts": "4ea8a931becaaf36e1d2cdeb80b9eeb4b0f607ab0115b56b98a0c747c179f005",
+    "src/lib/ai/conversation/service/voice-read-rpc.server.ts": "5c98749fdc9c291b3cd9ed6a2d233ae09c10f0cc0c9d51eefe31d2374e28b28e",
+    "src/lib/ai/conversation/service/voice-rpc-store.server.ts": "2ed17fffb4e7dbf4763823d274b27d9d69893d194aaae6d66d5bb89ca0c52870",
+    "src/lib/ai/conversation/service/voice-service-binding.ts": "0df3eb8413f043d796de682b4f0af5dcc34eb9edf6cba107ba4989220c995991",
+    "src/lib/ai/conversation/service/voice-session-initializer.server.ts": "cf188a9ef7c9d1242830a10463e2071871918a2d7f1c6a81cee150c4478502ac",
+    "src/lib/ai/conversation/service/voice-session-provision-rpc.server.ts": "089dc0b2b33750be8a0ddebfc9ece863e7568811cdd1c8ea300c6990e77022b6",
+    "src/lib/ai/conversation/service/voice-session-revoke-rpc.server.ts": "0c054a93787ffce4cdf4a2b6d3b97c72aeacccd08163e142e681a3872e8de018",
+    "src/lib/ai/conversation/service/voice-store-adapter.server.ts": "f63cb681d69f8be86b0519adbcfb8bd16b4b7f252a8130ab2ffc5f83e30b4de8",
+    "src/lib/ai/conversation/service/voice-v2-parent-issuance-rpc.server.ts": "3faab08b5a7a9d5b969de990ab1b14c92782fbcf2242aa750e782e3e8292ff35",
+    "src/lib/ai/conversation/service/voice-verification.server.ts": "25921a8a6db0b44562560522e0f1b0700d020d85ee017c27c2f2900e36a4765b"
+  },
+  "next": "Implement a distinct inactive v2 trusted authority issuer using the existing service-owned snapshot and unchanged local P3b seal/HMAC, plus the completed v2 parent, pre-issuance and issuance ports. The existing voice-issuance.server.ts requires a v1 expiring fence and cannot consume protocol-2 observations; the concrete missing behavior is releasing a newly sealed authority only after exact immutable parent-bound registration and final current Auth/parent/thread/issuance checks. Derive identity/timing from mandatory request-bound trusted inputs, preserve conservative verification age, shrink-only eligibility, exact prior incarnation and service revision, synchronous cancellation and retained immutable evidence for lost/malformed/late committed responses. No automatic retry, v1 fallback, browser/raw-token backfill, new identity after uncertainty or accounting reset. Compose actual isolated SQL, local crypto and fictional Auth; preserve every existing v1/P3b source/record. Keep the issuer and entire v2 chain inactive/nondeployable pending versioned proof/cleanup/admission/capacity, close-before-register and quiesced no-fallback cutover. No real Auth/model/voice calls, accounts, connected SQL/settings, activation or publication; deployed Auth ownership/policy/revocation, native races and provider/device acceptance remain separate gates."
+}

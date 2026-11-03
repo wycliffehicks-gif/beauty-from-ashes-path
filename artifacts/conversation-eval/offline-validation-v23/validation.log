@@ -1,0 +1,476 @@
+Frozen-source final checks:
+{
+  "conversation": 0,
+  "typecheck": 0,
+  "lint": 0,
+  "productionBuild": 0
+}
+
+Findings:
+The initial actual SQL run passed 29 of 30 cases; its one failure used administrative fixture year 300000, outside PostgreSQL timestamp storage range before reaching the intended application guard. Replacing it with storable year 290000, still beyond safe JavaScript milliseconds, produced 30/30 with no SQL or assertion-intent change. The initial log is retained.
+The first primary-fixture typecheck found two invalid-client typing errors: an impossible direct cast and a throwing getter inferred as void. An explicit unknown cast and getter return type corrected only those test types; the diagnostic log is retained. The adapter implementation did not change.
+Independent full source/fixture review found no remaining blocker. Two real-adapter-to-v1-issuer composition cases deny mixed-protocol wiring before writes. Final focused/full checks and production build pass on frozen source; native, deployed Auth and provider evidence remain separate.
+
+Initial SQL fixture run29/30: administrative date out of PostgreSQL range
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests | 1 failed) 4166ms
+     × requires current finite admitted allowlist and conservatively floors its deadline 97ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts > P5 v2 pre-issuance lifecycle in isolated PostgreSQL > requires current finite admitted allowlist and conservatively floors its deadline
+error: timestamp out of range: "300000-01-01T00:00:00Z"
+ ❯ pe.Oe ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 29 passed (30)
+   Start at  11:21:02
+   Duration  4.51s (transform 105ms, setup 0ms, import 137ms, tests 4.17s, environment 0ms)
+
+
+
+Corrected SQL fixture30/30
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  30 passed (30)
+   Start at  11:21:41
+   Duration  5.14s (transform 83ms, setup 0ms, import 111ms, tests 4.86s, environment 0ms)
+
+
+
+Initial primary-fixture typing diagnostics
+src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts(494,50): error TS2352: Conversion of type '{ rpc?: undefined; } | { rpc: number; } | null | undefined' to type 'VoiceV2PreissueRpcClient' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ rpc: number; }' is not comparable to type 'VoiceV2PreissueRpcClient'.
+    Types of property 'rpc' are incompatible.
+      Type 'number' is not comparable to type '(name: VoiceV2PreissueRpcName, args: Readonly<Record<string, unknown>>) => PromiseLike<unknown>'.
+src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts(499,13): error TS2322: Type 'void' is not assignable to type '(name: VoiceV2PreissueRpcName, args: Readonly<Record<string, unknown>>) => PromiseLike<unknown>'.
+
+
+Primary adapter28/28
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  11:22:28
+   Duration  438ms (transform 120ms, setup 0ms, import 149ms, tests 93ms, environment 0ms)
+
+
+
+Independent mixed-protocol composition2/2
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  11:21:04
+   Duration  546ms (transform 267ms, setup 0ms, import 332ms, tests 18ms, environment 0ms)
+
+
+
+Final full conversation suite
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 4279ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 6273ms
+     ✓ retains committed markers after lost or malformed replies and deliberately reconciles exact retained evidence  301ms
+     ✓ rechecks actual Stop, Delete and revocation after proof registration before marker submission  396ms
+     ✓ lets SQL deny actual Stop, Delete and revocation occurring at marker invocation  362ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  408ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 3251ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 3921ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 2833ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 2823ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 3005ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 3066ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 3142ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 2481ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 3903ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 2346ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 1208ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  1072ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 1032ms
+     ✓ 16 competing reservations of one identity create exactly one admission  371ms
+     ✓ 16 competing claims dispatch exactly once  366ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 411ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 700ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 236ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 218ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 138ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 234ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 145ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 169ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 201ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 154ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 125ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 144ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 55ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 135ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 77ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 85ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 84ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 80ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 51ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 69ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 49ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 55ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 69ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 56ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 47ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 35ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 37ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 38ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 33ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 37ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 37ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 28ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 27ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 21ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 24ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 19ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 26ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 19ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 15ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 12ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 4ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 11ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 4ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 12ms
+
+ Test Files  66 passed (66)
+      Tests  1199 passed (1199)
+   Start at  11:22:50
+   Duration  31.14s (transform 2.02s, setup 0ms, import 4.32s, tests 48.04s, environment 7ms)
+
+JSON report written to /workspace/scratch/205dbad31641/p5-v2-preissue-work/conversation-tests.json
+
+
+Final strict TypeScript
+
+
+Final scoped ESLint
+
+
+Production client/SSR/Nitro build
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+✓ built in 1.44s
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/205dbad31641/p5-v2-preissue-work/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-BF0svUSv.js                    0.24 kB │ gzip:  0.17 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-UDf-uNZZ.js                          0.41 kB │ gzip:  0.28 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-BkZJ5pYT.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-DRSYhcGT.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-B8tYyj_f.js                        1.12 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-LmJkmL-w.js                             1.26 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-D9u0bWu-.js                              1.69 kB │ gzip:  0.59 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-C76ri67g.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-CSySGDu5.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-PAKXJLdU.js                         3.32 kB │ gzip:  1.15 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B1GKhRKA.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DOPIUR4b.js               5.38 kB │ gzip:  1.13 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DO0MvPiK.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-BUN5H20M.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CMqjQ9ew.js                                     12.92 kB │ gzip:  3.79 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-evIMzzLw.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DO70l_2P.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-C1KLkdYT.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-BRld4SEa.js                                  60.14 kB │ gzip: 15.42 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BtC1Nm38.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 919ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-10-29)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.19 kB │ gzip:   0.16 kB
+.output/server/_ssr/empty-plugin-adapters-BF0svUSv.mjs               0.25 kB │ gzip:   0.18 kB
+.output/server/_ssr/createServerRpc-UDf-uNZZ.mjs                     0.41 kB │ gzip:   0.29 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.64 kB │ gzip:   0.38 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.76 kB │ gzip:   0.40 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.97 kB │ gzip:   0.57 kB
+.output/server/_ssr/start-DRSYhcGT.mjs                               1.12 kB │ gzip:   0.60 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-B8tYyj_f.mjs                   1.15 kB │ gzip:   0.61 kB
+.output/server/_ssr/gate.server-BkZJ5pYT.mjs                         1.16 kB │ gzip:   0.68 kB
+.output/server/_libs/hookable.mjs                                    1.18 kB │ gzip:   0.53 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.35 kB │ gzip:   0.73 kB
+.output/server/_ssr/createSsrRpc-LmJkmL-w.mjs                        1.36 kB │ gzip:   0.68 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.40 kB │ gzip:   0.73 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.52 kB │ gzip:   0.81 kB
+.output/server/_ssr/createStart-D9u0bWu-.mjs                         1.58 kB │ gzip:   0.59 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.83 kB │ gzip:   0.77 kB
+.output/server/__23tanstack-start-server-fn-resolver-C76ri67g.mjs    1.88 kB │ gzip:   0.81 kB
+.output/server/_ssr/gate.functions-CSySGDu5.mjs                      2.06 kB │ gzip:   0.81 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.09 kB │ gzip:   0.94 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.42 kB │ gzip:   1.12 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.47 kB │ gzip:   0.98 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.57 kB │ gzip:   0.90 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.61 kB │ gzip:   1.30 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.05 kB │ gzip:   1.02 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.21 kB │ gzip:   1.26 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.29 kB │ gzip:   1.39 kB
+.output/server/_ssr/request-response-PAKXJLdU.mjs                    3.36 kB │ gzip:   1.18 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.41 kB │ gzip:   0.94 kB
+.output/server/_ssr/auth-middleware-B1GKhRKA.mjs                     3.75 kB │ gzip:   1.48 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.06 kB │ gzip:   1.25 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.36 kB │ gzip:   1.40 kB
+.output/server/_ssr/ssr.mjs                                          4.41 kB │ gzip:   1.86 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.46 kB │ gzip:   1.94 kB
+.output/server/_libs/lucide-react.mjs                                4.67 kB │ gzip:   1.29 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.93 kB │ gzip:   1.47 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.37 kB │ gzip:   2.15 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.42 kB │ gzip:   1.93 kB
+.output/server/_tanstack-start-manifest_v-DOPIUR4b.mjs               5.46 kB │ gzip:   1.17 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.55 kB │ gzip:   1.82 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.70 kB │ gzip:   1.95 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.15 kB │ gzip:   2.36 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.16 kB │ gzip:   1.62 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.28 kB │ gzip:   2.00 kB
+.output/server/_ssr/day._day-DO0MvPiK.mjs                            6.78 kB │ gzip:   3.12 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.28 kB │ gzip:   2.13 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.57 kB │ gzip:   2.64 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.92 kB │ gzip:   3.17 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.34 kB │ gzip:   3.17 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.59 kB │ gzip:   3.09 kB
+.output/server/_ssr/esm-CMqjQ9ew.mjs                                12.08 kB │ gzip:   3.74 kB
+.output/server/_ssr/journey-ai.functions-BUN5H20M.mjs               12.22 kB │ gzip:   3.88 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.48 kB │ gzip:   4.27 kB
+.output/server/_libs/tanstack__history.mjs                          12.52 kB │ gzip:   3.72 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.62 kB │ gzip:   3.50 kB
+.output/server/_ssr/adapter.server-evIMzzLw.mjs                     13.29 kB │ gzip:   3.89 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.28 kB │ gzip:   4.25 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.42 kB │ gzip:   4.12 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.61 kB │ gzip:   4.92 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.05 kB │ gzip:   4.80 kB
+.output/server/index.mjs                                            17.28 kB │ gzip:   4.90 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.87 kB │ gzip:   5.17 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.65 kB │ gzip:   5.39 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.49 kB │ gzip:   9.04 kB
+.output/server/_ssr/conversation-staging-DO70l_2P.mjs               27.80 kB │ gzip:   6.38 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                29.95 kB │ gzip:   8.02 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.14 kB │ gzip:  10.66 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.48 kB │ gzip:   9.60 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.91 kB │ gzip:  11.19 kB
+.output/server/_ssr/router-C1KLkdYT.mjs                             38.23 kB │ gzip:   9.95 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.28 kB │ gzip:  10.68 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.56 kB │ gzip:  12.78 kB
+.output/server/_ssr/server-BRld4SEa.mjs                             58.92 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-BtC1Nm38.mjs                           78.22 kB │ gzip:  18.70 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.20 kB │ gzip:  20.96 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.62 kB │ gzip:  17.59 kB
+.output/server/_libs/tailwind-merge.mjs                             85.67 kB │ gzip:  15.23 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.08 kB │ gzip:  24.91 kB
+.output/server/_libs/zod.mjs                                       100.20 kB │ gzip:  17.34 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.20 kB │ gzip:  25.10 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.48 kB │ gzip:  23.22 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.56 kB │ gzip:  23.96 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.77 kB │ gzip:  47.03 kB
+.output/server/_libs/supabase__auth-js.mjs                         319.88 kB │ gzip:  64.83 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              754.24 kB │ gzip: 159.55 kB
+
+✓ built in 399ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+
+Independent review:
+# Independent review — inactive v2 pre-issuance boundary
+
+3 November 2026, America/Toronto. Base source supplied and verified by the parent task: `46695836b08a7498e61f380d9486d198a571ac71`. This is source and isolated preparation evidence, not deployment approval.
+
+## Result
+
+No unresolved blocking issue found in the new SQL or exact transport. The slice supplies the missing v2 current-thread metadata and permanent generation registration path. It does not supply a v2 trusted issuer, proof/cleanup/admission/capacity chain, live Auth verifier, runtime route, provider caller or compatibility cutover.
+
+Read `AGENTS.md`, the latest `CONTINUE_HERE.md` and P5 checkpoint, the lifetime change contract, v1 pre-issuance reader/generation registration and their transport boundaries, the existing v1 issuer, and the prior v2 parent/issuance foundation. Reviewed both new source files and the entire new actual-SQL fixture. Existing implementation files were not edited.
+
+## Design conclusions
+
+- Both positive SQL primitives require an existing clear exact Auth parent/version and deny every legacy owner/session row, including active, expired and late-revoked records. They never create, reset or reopen a parent. Parent state remains only a negative fence; fresh trusted Auth/policy metadata is required independently.
+- Lock order is the common exclusive transaction-scoped owner advisory lock, legacy pair, parent, allowlist, thread, generation, then the retained owner clock. Clock sampling occurs after potentially blocking row locks. Both methods may advance owner high-water so an observed Auth/allowlist expiry cannot become eligible after a backward clock.
+- The reader permits true generation absence and needs no not-yet-created issuance/approval. A foreign, retired, nil-incarnation or mismatched-generation row is a retained conflict, not absence. Only lifecycle metadata is selected from the P3b thread; no saved content is returned.
+- Registration requires exact current revision and canonical six-digit UTC microsecond creation metadata. Caller text is compared with the actual database representation, never coerced through a timestamp parser or rounded to JavaScript milliseconds. Existing valid shared generation rows are observed unchanged, including their physical identity in the fixture; only actual absence creates a database-generated permanent UUID.
+- No caller incarnation parameter is needed for this primitive. A concurrent first registration can legitimately create the same shared lifecycle generation. The future trusted issuer must still compare any previously observed nonnull incarnation after waits. Adding a nullable expected-incarnation field would duplicate that host responsibility without altering the immutable shared-generation contract.
+- Retirement, deletion and source-creation conflicts deny without repairing, rebinding, deleting or retiring rows here. A legitimate later current revision can reuse the same retained generation. No quota, claim, cleanup, approval, capacity or cumulative usage writer is added. Parent revocation and generation identity are deliberately separate.
+- Both public SQL functions are SECURITY DEFINER with fixed `pg_catalog,pg_temp` search paths and exact EXECUTE grants only to `service_role`. No new direct schema/table/private-helper access is granted. All original v1 grants and code stay unchanged in the source package.
+- The adapter enforces protocol 2, exact own enumerable data fields, nonnil canonical UUIDs, safe integers, valid Auth intervals and actual Gregorian six-digit-microsecond strings. Registration correspondence includes parent, thread, revision and the complete source string. Nested allowlist ownership must match. Detached inputs, wire arguments and nested results are frozen; accessors rejected by shape checks are not evaluated by later transforms.
+- One captured bound transport call is made per invocation; no retry, fallback, cache, SDK or local clock is initialized. Invalid envelopes and uncertain replies produce sanitized errors. Explicit null remains semantic denial, never proof of absence. Verification timestamps/Auth deadlines are not echoed, so exact invocation association remains a trusted transport precondition. Late snapshots are observations, not permission to issue or dispatch.
+
+## Independent executable checks
+
+Added only `src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts`.
+
+Two focused composition cases pass actual frozen v2 current-thread receipts (generation absent/present) into the existing v1 issuer after otherwise valid fictional v1 Auth/session-fence observations. The old issuer denies before either generation or issuance registration. This protects against accidental mixed-protocol host wiring; it does not establish a v2 issuer, real Auth or deployed route cutover.
+
+Command: `node node_modules/vitest/vitest.mjs run src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts --maxWorkers=2 --testTimeout=15000`.
+
+Result: 1 file, 2 tests passed. Scoped ESLint also exited 0. Logs: `../independent-review-tests.log` and `../independent-review-lint.log`. Parent owns final aggregate TypeScript/test/build validation.
+
+## Actual SQL fixture review and limits
+
+The new fixture uses real protected-role transactions, checks 22 tables, preserves deliberately seeded nonzero accounting and unrelated owners, restores controlled clock changes and closes both database instances. It revokes service execution of the old generation registrar in the isolated fixture before exercising v2 read → generation registration → bound issuance. This directly tests removal of the previous legacy-generation dependency, not the complete planned cutover.
+
+Other reviewed cases cover no-parent/revoke-before-use denial, all legacy fence states, late revocation, saturated parent version, exact microseconds and database display settings, actual P3b Stop/Delete, retained conflict/FK behavior, verification and expiry boundaries, high-water rollback, unsafe values/current policy, committed lost/malformed/late replies and a trigger-induced failed insertion that rolls back both generation and clock. Snapshot comparisons distinguish permitted clock/new-generation mutations from unrelated data and cumulative holds. Fixture-authenticated metadata and transport losses are explicitly fictional; one connection is not native concurrency, HTTP fault injection or provider/device evidence. Parent and fixture agent own execution counts and final result.
+
+## Reviewed hashes
+
+| File | SHA-256 |
+| --- | --- |
+| `docs/pilot/conversation/sql-drafts/p5-voice-v2-preissue.sql` | `93f3e2c2c85f50583a3b24c6e03a95674cdcc65078a09aa8250b018db434d564` |
+| `src/lib/ai/conversation/service/voice-v2-preissue-rpc.server.ts` | `8b7cbdebadebc92f76069b3ff806a51648f201e236f10a2a76a6292d5d2b379c` |
+| `src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts` | `a789509491594ee6bf2663ce247356a0f44b1c1987b1637fc13e784a65cdc7b8` |
+
+## One next bounded implementation slice
+
+Add a distinct inactive **v2 trusted authority issuer**, using `service/voice-issuance.server.ts` as preserved v1 reference, the unchanged local P3b AES-GCM/HMAC helpers, and the new v2 parent/pre-issuance/issuance ports. The concrete gap is now releasing a newly sealed authority only after its exact parent-bound fingerprint registration and final current-state verification. The existing issuer requires an expiring v1 session fence and cannot consume the new observations; adapting a transport alone does not implement this behavior.
+
+Keep owner/session/parent version derived from mandatory request-bound trusted Auth and the owned service snapshot. Preserve exact lifecycle/revision/source/incarnation, conservative initial verification time, fresh rechecks around waits, shrink-only eligibility and one immutable registration identity. Treat committed lost/malformed/late registration as retained evidence, not rollback or permission to retry with a new identity. Only a new locally sealed envelope can be registered; no old/browser token adoption or v1 fallback. Test the actual SQL chain and local crypto with fictional Auth, including changed Auth/parent/legacy fence/current-thread/service state and late replies. Do not change completed P3b sealing semantics, introduce a generic host wrapper, connect a route or call real Auth/model/voice services. Downstream v2 proof/cleanup/admission/capacity, deployed Auth policy/revocation and quiesced no-fallback cutover remain separate unfinished gates.
+

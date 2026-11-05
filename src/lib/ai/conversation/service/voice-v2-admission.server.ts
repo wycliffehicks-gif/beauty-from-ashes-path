@@ -1,5 +1,6 @@
 // Inactive request-owned protocol-2 admission preparation. No route, client,
-// credential, capacity marker, provider operation or compatibility cutover.
+// credential, provider operation or compatibility cutover. Optional capacity
+// marking below remains inside the same inactive owned admission boundary.
 import "@tanstack/react-start/server-only";
 import { z } from "zod";
 import {
@@ -21,6 +22,7 @@ import type {
 } from "./voice-v2-cleanup-rpc.server";
 import type { VoiceV2ProofRegistration, VoiceV2ProofReceipt } from "./voice-v2-proof-rpc.server";
 import type { VoiceV2CapacityAck } from "./voice-v2-capacity-rpc.server";
+import type { VoiceV2MarkRequest, VoiceV2MarkAck } from "./voice-v2-mark-rpc.server";
 
 const Id = z
   .string()
@@ -98,6 +100,17 @@ const CapacityAck = wireObject({
   status: z.enum(["claimed", "denied", "closed"]),
 });
 const CloseAck = wireObject({ claim: Claim, state: z.literal("closed") });
+const MarkRequest = wireObject({
+  protocol: z.literal(2),
+  proof: Proof,
+  operationId: Id,
+  expectedPoolVersion: Expiry,
+});
+const MarkAck = wireObject({
+  protocol: z.literal(2),
+  request: MarkRequest,
+  status: z.enum(["marked", "already-marked", "denied", "quarantined", "closed"]),
+});
 
 export interface VoiceV2AdmissionPorts extends VoiceV2AuthorityVerificationPorts {
   /** Explicit trusted configuration, integer 1..30000. Not a lifecycle cap. */
@@ -153,6 +166,43 @@ export interface VoiceV2Admission {
    * and never establishes fresh eligibility or provider permission. */
   snapshot(): VoiceV2AdmissionSnapshot;
 }
+export interface VoiceV2CapacityAdmissionPorts extends VoiceV2AdmissionPorts {
+  /** Trusted explicit policy version, a positive safe integer; never browser input. */
+  readonly expectedPoolVersion: number;
+  /** Protected complete protocol-2 marker transport, with no transparent retry. */
+  mark(request: VoiceV2MarkRequest): Promise<unknown>;
+}
+export interface VoiceV2AdmissionMarkerSnapshot {
+  readonly protocol: 2;
+  readonly ownership: VoiceV2CleanupReadQuery;
+  readonly operationId: string;
+  readonly expectedPoolVersion: number;
+  readonly state: "pending" | "observed" | "unconfirmed";
+  readonly request: VoiceV2MarkRequest | null;
+  readonly registrationAttempted: boolean;
+  readonly registrationAcknowledgment: VoiceV2ProofReceipt | null;
+  readonly markAttempted: boolean;
+  readonly acknowledgment: VoiceV2MarkAck | null;
+}
+export interface VoiceV2AdmissionMarkerObservation {
+  readonly protocol: 2;
+  readonly status: "marked";
+  readonly operationId: string;
+  readonly claim: VoiceAdmissionClaim;
+}
+export interface VoiceV2CapacityAdmission extends VoiceV2Admission {
+  /** At most one admitted local attempt. A result is an offline observation,
+   * never permission to create/repeat a provider operation. Busy/inactive calls
+   * do not start an attempt; a started attempt is never retried or replaced. */
+  markCapacity(): Promise<VoiceV2AdmissionMarkerObservation | null>;
+  /** Last immutable server-only evidence, which may already be stale. Never
+   * accept this snapshot back as ownership or serialize proof data to a browser. */
+  markerSnapshot(): VoiceV2AdmissionMarkerSnapshot | null;
+}
+type MarkerConfiguration = Readonly<{
+  expectedPoolVersion: number;
+  mark: VoiceV2CapacityAdmissionPorts["mark"];
+}>;
 function unavailable(): never {
   throw new Error("voice-v2-admission-unavailable");
 }
@@ -223,10 +273,42 @@ function freezeProof(value: VoiceV2ProofRegistration): VoiceV2ProofRegistration 
  * Initial admission uses combined capacity claim then a distinct existing-claim
  * inspect. Each registration and consumption wait is followed by fresh current
  * verification within that same proof's original deadline. Finite Auth/SQL reads
- * are not an atomic provider gate. Capacity marker orchestration, real Auth and
- * provider acceptance, runtime wiring and quiesced cutover remain deferred.
+ * are not an atomic provider gate. Real Auth/provider acceptance, runtime wiring
+ * and quiesced cutover remain deferred. The opt-in marker shares this closure.
  */
 export function createVoiceV2Admission(ports: VoiceV2AdmissionPorts): VoiceV2Admission {
+  return createAdmission(ports, null);
+}
+
+/** Opt-in extension of this same admission-owned closure. No raw claim, lease
+ * snapshot or caller-supplied operation may be attached later. One fresh inspect
+ * proof goes exclusively to mark, not through the consuming ordinary inspect.
+ * The operation ID and configured pool version are retained before any await.
+ * A full late ACK survives only as evidence. Already-marked never authorizes a
+ * second provider create; no status refunds held units or proves finality. */
+export function createVoiceV2CapacityAdmission(
+  ports: VoiceV2CapacityAdmissionPorts,
+): VoiceV2CapacityAdmission {
+  let capacity: MarkerConfiguration;
+  try {
+    const expectedPoolVersion = Expiry.parse(ports.expectedPoolVersion);
+    const mark = ports.mark;
+    if (typeof mark !== "function") return unavailable();
+    capacity = Object.freeze({ expectedPoolVersion, mark: mark.bind(ports) });
+  } catch {
+    return unavailable();
+  }
+  return createAdmission(ports, capacity);
+}
+function createAdmission(ports: VoiceV2AdmissionPorts, capacity: null): VoiceV2Admission;
+function createAdmission(
+  ports: VoiceV2AdmissionPorts,
+  capacity: MarkerConfiguration,
+): VoiceV2CapacityAdmission;
+function createAdmission(
+  ports: VoiceV2AdmissionPorts,
+  capacity: MarkerConfiguration | null,
+): VoiceV2Admission | VoiceV2CapacityAdmission {
   let bound: Omit<VoiceV2AdmissionPorts, "maxProofAgeMs">;
   let proofAge: number;
   try {
@@ -420,7 +502,7 @@ export function createVoiceV2Admission(ports: VoiceV2AdmissionPorts): VoiceV2Adm
       return unavailable();
     }
   }
-  return Object.freeze({
+  const admission: VoiceV2Admission = Object.freeze({
     snapshot: () =>
       Object.freeze({
         protocol: 2 as const,
@@ -535,6 +617,105 @@ export function createVoiceV2Admission(ports: VoiceV2AdmissionPorts): VoiceV2Adm
         }
       });
       return closing;
+    },
+  });
+  if (!capacity) return admission;
+  let markerAttempted = false;
+  let marker: VoiceV2AdmissionMarkerSnapshot | null = null;
+  function retainMarker(patch: Partial<VoiceV2AdmissionMarkerSnapshot>) {
+    if (marker) marker = Object.freeze({ ...marker, ...patch });
+  }
+  return Object.freeze({
+    ...admission,
+    markerSnapshot: () => marker,
+    async markCapacity(...args: unknown[]): Promise<VoiceV2AdmissionMarkerObservation | null> {
+      if (args.length !== 0 || markerAttempted || busy || terminal || state !== "active")
+        return null;
+      // Fence before UUID generation and every wait. A failed started attempt
+      // cannot create another operation identity, even if no transport ran.
+      markerAttempted = true;
+      busy = true;
+      try {
+        const operationId = Id.parse(crypto.randomUUID());
+        const owned = ownership;
+        if (!owned) return unavailable();
+        marker = Object.freeze({
+          protocol: 2,
+          ownership: owned,
+          operationId,
+          expectedPoolVersion: capacity.expectedPoolVersion,
+          state: "pending",
+          request: null,
+          registrationAttempted: false,
+          registrationAcknowledgment: null,
+          markAttempted: false,
+          acknowledgment: null,
+        });
+        requireCurrent();
+        const evidence = await verify();
+        const deadline = evidence.verifiedAt + proofAge;
+        if (!Number.isSafeInteger(deadline)) return unavailable();
+        const proof = freezeProof(
+          Proof.parse({
+            protocol: 2,
+            ...owned,
+            receiptId: Id.parse(crypto.randomUUID()),
+            operation: "inspect",
+            identityExpiresAt: authCeiling,
+            verifiedAt: evidence.verifiedAt,
+            expiresAt: Math.min(deadline, ceiling),
+            effectiveExpiresAt: ceiling,
+          }),
+        );
+        requireCurrent(proof);
+        const markRequest: VoiceV2MarkRequest = Object.freeze({
+          protocol: 2,
+          proof,
+          operationId,
+          expectedPoolVersion: capacity.expectedPoolVersion,
+        });
+        retainMarker({ request: markRequest, registrationAttempted: true });
+        const registered = freezeProof(Proof.parse(await bound.registerProof(proof)));
+        if (!sameProof(proof, registered)) return unavailable();
+        retainMarker({ registrationAcknowledgment: registered });
+        requireCurrent(proof);
+        await verify(proof);
+        if (ceiling < proof.effectiveExpiresAt) return unavailable();
+        requireCurrent(proof);
+        retainMarker({ markAttempted: true });
+        const ack = MarkAck.parse(await capacity.mark(markRequest));
+        if (
+          ack.request.operationId !== markRequest.operationId ||
+          ack.request.expectedPoolVersion !== markRequest.expectedPoolVersion ||
+          !sameProof(ack.request.proof, markRequest.proof)
+        )
+          return unavailable();
+        const echoed: VoiceV2MarkRequest = Object.freeze({
+          ...ack.request,
+          proof: freezeProof(ack.request.proof),
+        });
+        const acknowledgment: VoiceV2MarkAck = Object.freeze({
+          protocol: 2,
+          request: echoed,
+          status: ack.status,
+        });
+        // Exact responses survive cancellation/expiry as content-free evidence;
+        // no late acknowledgment can reactivate this private admission handle.
+        retainMarker({ acknowledgment });
+        requireCurrent(proof);
+        if (ack.status !== "marked") return unavailable();
+        await verify(proof);
+        if (ceiling < proof.effectiveExpiresAt) return unavailable();
+        requireCurrent(proof);
+        retainMarker({ state: "observed" });
+        return Object.freeze({ protocol: 2, status: "marked", operationId, claim: owned.claim });
+      } catch {
+        retainMarker({ state: "unconfirmed" });
+        invalidate();
+        return null;
+      } finally {
+        busy = false;
+      }
     },
   });
 }

@@ -1,0 +1,491 @@
+
+=== build.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.41s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v32/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-B9EewoYB.js                    0.26 kB │ gzip:  0.18 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-CeifxoWL.js                          0.42 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-D9LjQpqP.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-BSbk-YsQ.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-DsOTaZCQ.js                        1.12 kB │ gzip:  0.56 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-ClZ_UBdQ.js                             1.29 kB │ gzip:  0.62 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-CSSRwTvH.js                              1.72 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-DyDal7rr.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-Dr5yYj0E.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-B3HX2ZcW.js                         3.34 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B2mZMGm7.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-BWuldxmj.js               5.09 kB │ gzip:  1.12 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BvyrwCr-.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-CZbsVd8e.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CNWWplda.js                                     13.05 kB │ gzip:  3.80 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-BtvRh_tM.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DFnZzILA.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-34Xpk4og.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-BUMZO3Nq.js                                  60.35 kB │ gzip: 15.44 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DKVPW8YF.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 952ms
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-11-06)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.20 kB │ gzip:   0.18 kB
+.output/server/_ssr/empty-plugin-adapters-B9EewoYB.mjs               0.26 kB │ gzip:   0.19 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_ssr/createServerRpc-CeifxoWL.mjs                     0.43 kB │ gzip:   0.30 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.68 kB │ gzip:   0.39 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.77 kB │ gzip:   0.41 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.99 kB │ gzip:   0.59 kB
+.output/server/_ssr/start-BSbk-YsQ.mjs                               1.13 kB │ gzip:   0.61 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-DsOTaZCQ.mjs                   1.17 kB │ gzip:   0.62 kB
+.output/server/_ssr/gate.server-D9LjQpqP.mjs                         1.17 kB │ gzip:   0.69 kB
+.output/server/_libs/hookable.mjs                                    1.20 kB │ gzip:   0.54 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.36 kB │ gzip:   0.74 kB
+.output/server/_ssr/createSsrRpc-ClZ_UBdQ.mjs                        1.38 kB │ gzip:   0.70 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.42 kB │ gzip:   0.74 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.53 kB │ gzip:   0.82 kB
+.output/server/_ssr/createStart-CSSRwTvH.mjs                         1.60 kB │ gzip:   0.61 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.84 kB │ gzip:   0.78 kB
+.output/server/__23tanstack-start-server-fn-resolver-DyDal7rr.mjs    1.89 kB │ gzip:   0.82 kB
+.output/server/_ssr/gate.functions-Dr5yYj0E.mjs                      2.08 kB │ gzip:   0.82 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.11 kB │ gzip:   0.95 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.43 kB │ gzip:   1.14 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.48 kB │ gzip:   0.99 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.58 kB │ gzip:   0.92 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.63 kB │ gzip:   1.31 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.07 kB │ gzip:   1.03 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.25 kB │ gzip:   1.28 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.31 kB │ gzip:   1.41 kB
+.output/server/_ssr/request-response-B3HX2ZcW.mjs                    3.38 kB │ gzip:   1.20 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.43 kB │ gzip:   0.95 kB
+.output/server/_ssr/auth-middleware-B2mZMGm7.mjs                     3.77 kB │ gzip:   1.50 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.08 kB │ gzip:   1.26 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.37 kB │ gzip:   1.41 kB
+.output/server/_ssr/ssr.mjs                                          4.43 kB │ gzip:   1.87 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.48 kB │ gzip:   1.95 kB
+.output/server/_libs/lucide-react.mjs                                4.79 kB │ gzip:   1.30 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.95 kB │ gzip:   1.49 kB
+.output/server/_tanstack-start-manifest_v-BWuldxmj.mjs               5.19 kB │ gzip:   1.18 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.38 kB │ gzip:   2.17 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.44 kB │ gzip:   1.94 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.56 kB │ gzip:   1.83 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.75 kB │ gzip:   1.97 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.16 kB │ gzip:   2.37 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.17 kB │ gzip:   1.63 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.29 kB │ gzip:   2.02 kB
+.output/server/_ssr/day._day-BvyrwCr-.mjs                            6.80 kB │ gzip:   3.13 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.29 kB │ gzip:   2.14 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.58 kB │ gzip:   2.65 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.94 kB │ gzip:   3.18 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.36 kB │ gzip:   3.18 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.61 kB │ gzip:   3.10 kB
+.output/server/_ssr/esm-CNWWplda.mjs                                12.09 kB │ gzip:   3.75 kB
+.output/server/_ssr/journey-ai.functions-CZbsVd8e.mjs               12.23 kB │ gzip:   3.89 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.49 kB │ gzip:   4.29 kB
+.output/server/_libs/tanstack__history.mjs                          12.54 kB │ gzip:   3.74 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.67 kB │ gzip:   3.51 kB
+.output/server/_ssr/adapter.server-BtvRh_tM.mjs                     13.31 kB │ gzip:   3.90 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.33 kB │ gzip:   4.26 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.43 kB │ gzip:   4.13 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.62 kB │ gzip:   4.93 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.06 kB │ gzip:   4.81 kB
+.output/server/index.mjs                                            17.36 kB │ gzip:   4.92 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.89 kB │ gzip:   5.19 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.66 kB │ gzip:   5.40 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.50 kB │ gzip:   9.05 kB
+.output/server/_ssr/conversation-staging-DFnZzILA.mjs               27.82 kB │ gzip:   6.39 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                30.19 kB │ gzip:   8.03 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.15 kB │ gzip:  10.67 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.51 kB │ gzip:   9.61 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.94 kB │ gzip:  11.21 kB
+.output/server/_ssr/router-34Xpk4og.mjs                             38.25 kB │ gzip:   9.96 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.54 kB │ gzip:  10.69 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.58 kB │ gzip:  12.80 kB
+.output/server/_ssr/server-BUMZO3Nq.mjs                             58.92 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-DKVPW8YF.mjs                           78.23 kB │ gzip:  18.72 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.41 kB │ gzip:  20.98 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.64 kB │ gzip:  17.60 kB
+.output/server/_libs/tailwind-merge.mjs                             85.68 kB │ gzip:  15.25 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.10 kB │ gzip:  24.93 kB
+.output/server/_libs/zod.mjs                                       100.31 kB │ gzip:  17.35 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.92 kB │ gzip:  25.14 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.50 kB │ gzip:  23.23 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.59 kB │ gzip:  23.98 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.79 kB │ gzip:  47.04 kB
+.output/server/_libs/supabase__auth-js.mjs                         320.12 kB │ gzip:  64.87 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              755.36 kB │ gzip: 159.65 kB
+
+✓ built in 439ms
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+=== conversation-tests.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v32/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-sql.test.ts (36 tests) 10313ms
+     ✓ routes one separate fresh unused inspect proof directly to actual v2 marker SQL  436ms
+     ✓ isolates concurrent owned markers and retains both independently marked holds  369ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-sql.test.ts (76 tests) 11551ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (77 tests) 8913ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (78 tests) 8725ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-sql.test.ts (43 tests) 6545ms
+     ✓ admits with real crypto and distinct consumed claim/inspect proofs before any marker  326ms
+     ✓ revalidates repeatedly with distinct inspect receipts and no second debit  302ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-sql.test.ts (75 tests) 5766ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (60 tests) 5188ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 5419ms
+     ✓ lets SQL deny actual Stop, Delete and revocation occurring at marker invocation  314ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  319ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier-sql.test.ts (45 tests) 4835ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-sql.test.ts (36 tests) 4835ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 4178ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 4372ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 3675ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 4740ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 3619ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 3899ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 3948ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 3761ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 3724ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 3207ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 1749ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  1571ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 3024ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker.test.ts (77 tests) 1872ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 1453ms
+     ✓ 16 competing reservations of one identity create exactly one admission  528ms
+     ✓ 16 competing claims dispatch exactly once  501ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission.test.ts (77 tests) 425ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 729ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-review.test.ts (3 tests) 814ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 643ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier.test.ts (92 tests) 561ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 351ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 295ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance.test.ts (74 tests) 266ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 230ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 281ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 191ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 187ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-review.test.ts (6 tests) 138ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 171ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 89ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 174ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 130ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 151ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-rpc.test.ts (90 tests) 80ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 134ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 101ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-rpc.test.ts (90 tests) 103ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-review.test.ts (6 tests) 96ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-rpc.test.ts (79 tests) 93ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 29ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 97ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts (75 tests) 62ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 71ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 59ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 60ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts (44 tests) 74ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 73ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 60ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 48ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 46ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 59ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier-review.test.ts (7 tests) 49ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 46ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 49ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 47ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-review.test.ts (2 tests) 54ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-review.test.ts (2 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts (2 tests) 47ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 39ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 67ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 36ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 23ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 44ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 34ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 43ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts (2 tests) 24ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 37ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 30ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 32ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 31ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 22ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-review.test.ts (2 tests) 25ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 14ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 17ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 16ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 10ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 5ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 3ms
+
+ Test Files  93 passed (93)
+      Tests  2455 passed (2455)
+   Start at  02:42:19
+   Duration  74.64s (transform 2.45s, setup 0ms, import 6.17s, tests 127.56s, environment 14ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v32/conversation-tests.json
+
+=== lint.log ===
+
+=== marker-primary-initial.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v32/repo
+
+
+ Test Files  2 passed (2)
+      Tests  154 passed (154)
+   Start at  20:27:03
+   Duration  1.89s (transform 507ms, setup 0ms, import 663ms, tests 2.05s, environment 0ms)
+
+
+=== marker-primary-lint.log ===
+
+=== marker-review-format-initial.log ===
+src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-review.test.ts 119ms
+
+=== marker-review-lint.log ===
+
+=== marker-review-tests-initial.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v32/repo
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  20:25:25
+   Duration  641ms (transform 202ms, setup 0ms, import 269ms, tests 151ms, environment 0ms)
+
+
+=== marker-sql-initial.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v32/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-sql.test.ts (36 tests) 10461ms
+     ✓ routes one separate fresh unused inspect proof directly to actual v2 marker SQL  354ms
+     ✓ isolates concurrent owned markers and retains both independently marked holds  315ms
+
+ Test Files  1 passed (1)
+      Tests  36 passed (36)
+   Start at  20:25:42
+   Duration  11.30s (transform 503ms, setup 0ms, import 611ms, tests 10.46s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v32/marker-sql-initial.json
+
+=== marker-sql-lint-initial.log ===
+
+=== marker-sql-typecheck-initial.log ===
+
+=== typecheck.log ===
+
+=== marker-independent-review.md ===
+# Independent review: inactive admission-owned v2 capacity marker
+
+Reviewed the v32 opt-in extension to `voice-v2-admission.server.ts` against the preserved v31 source, current continuation marker, lifetime-change contract, completed full marker transport and isolated marker SQL. No unresolved correctness or scope blocker was found. This review did not modify implementation, existing tests, SQL, configuration, dependencies, policies or runtime wiring.
+
+The marker remains inside the actual admission handle's private ownership boundary. An accepted call fences its single attempt, retains its operation ID, expected pool version and private claim/cleanup association before its first wait, and creates a separate inspect proof exclusively for the full marker request. Exact registration and marker echoes retain original proof identity and verification start. Protected revalidation cannot extend earlier deadlines or reset a proof after a wait. Failure retains ownership and uncertain evidence; only deliberate exact cleanup may run. Synchronous close fences late responses, including an exact committed-marker acknowledgment. No marker result is provider permission, and an observed snapshot is historical evidence rather than a fresh eligibility decision.
+
+Six independent regressions use the real preserved seal/HMAC boundary, completed verifier and strict marker transport with fictional Auth/current-policy data and controlled local responses:
+
+1. Operation identity and configured version exist before the first marker Auth wait; overlapping mark/revalidate calls produce no extra proof or consumption, and the marker's inspect proof is not consumed by ordinary inspect.
+2. Close during proof registration preserves the exact late registration acknowledgment but prevents a marker call or retry.
+3. Close after a simulated committed mark preserves the exact delayed full acknowledgment without reactivation, another operation or automatic cleanup.
+4. An authority with a longer lifecycle can begin a new marker at +40 seconds, while that marker's original proof expiry still denies a late acknowledgment; exact explicit cleanup remains possible after Auth and clock loss.
+5. Concurrent handles retain distinct operation/receipt identities; cancellation of one does not affect the other's observation or ownership.
+6. The original base factory retains its exact API and does not read opt-in marker configuration or marker-method getters.
+
+The focused six-test file passed on its first run (6/6). Scoped ESLint passed with exit code 0 and no diagnostics; formatting completed. The original Vitest output is retained in `marker-review-tests-initial.log`. No additional tests or source changes were needed after this review. Root owns aggregate validation and durable repository/handoff recording.
+
+Reviewed frozen SHA-256 values:
+
+- `src/lib/ai/conversation/service/voice-v2-admission.server.ts`: `9375cab5bb5e066140efd2e78f149e24818f480282ca04709b66cc31e9985380`
+- `src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-review.test.ts`: `d8b024d414f8c5b1dc20dfe3be32b101e8b06c7364d6c33f4376b9a8eda75d0d`
+
+The completion template accurately distinguishes tested preparation from enabled runtime and external acceptance. Its next-task text identifies a concrete remaining gap: current admission/marker fixtures prepare target authority with seal/registration primitives; they do not feed the actual completed trusted issuer output through the whole admission/marker lifecycle. A focused integration suite composing the existing ConversationService, issuer, verifier, owned admission/marker, exact transports and isolated SQL is therefore a useful next dependency. Reuse existing harnesses and immutable accounting rules; cover a fresh later authority under the same clear parent after an earlier authority expires, exact new approval/attempt, retained uncertain marked holds, parent/legacy revocation and close races. Do not repeat completed contract/model work or add a generic runtime wrapper. Supported host/Auth/current-policy and coordinated no-fallback cutover acceptance remain separate subsequent work.
+
+Evidence limits remain unchanged: fictional Auth/approval, local controlled waits and single-connection isolated SQL do not establish deployed Auth, native concurrency, HTTP fault injection, provider/device acceptance or clinical efficacy. All 21 native cases remain unrun. No live or connected mutations, paid calls, activation or publication were performed by this review.
+
+=== marker-sql-notes.md ===
+# Inactive admission-owned v2 marker — isolated SQL composition
+
+Owned source: `src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-sql.test.ts` only. The file is frozen. No existing test, SQL, migration or setting was edited by this test task.
+
+The first focused execution passed **36/36 cases**, zero skips, in 10.46 seconds. Initial strict TypeScript and scoped ESLint logs are empty/pass. No fixture, implementation assertion or SQL constraint was corrected or relaxed to obtain this result. Logs remain `marker-sql-initial.log/json`, `marker-sql-typecheck-initial.log`, and `marker-sql-lint-initial.log`.
+
+The fixture composes real unchanged P3b AES-GCM/HMAC, the completed verifier, actual request-owned admission and new marker orchestration, protected v2 parent/current/cleanup/proof/capacity/marker transports, and existing exact capacity close. It executes the preserved SQL draft chain only in PostgreSQL 18.6 through PGlite 0.5.12. Initial authority creation is deliberately a manual real seal plus actual v2 issuance registration; it does not execute the complete trusted v2 issuer orchestration. Auth/policy/approval metadata and transport/clock hooks are fictional local fixtures.
+
+Coverage:
+
+- One separate fresh unused inspect proof passes directly from registration to marker; ordinary admission inspection consumes its own distinct receipt. Marker adds no quota debit or reservation.
+- Private immutable claim/cleanup/Auth-parent/fingerprint ownership, retained operation ID before the first Auth wait, exact expected pool version and all full request/acknowledgment fields.
+- A marker after 40 seconds uses new conservative verification while retaining the original 60-second claim lifetime; previous shorter Auth/approval observations remain ceilings.
+- Parent/approval revocation, approval replacement, thread revision, allowlist withdrawal and Auth-session changes after proof registration and after marker commit.
+- Actual SQL pool-version, disabled-pool, quarantine and disabled-quota denials, and an actual already-marked acknowledgment that never yields a new marked observation.
+- Lost/null/mixed protocol, operation, pool version, proof receipt and proof-time replies after committed marking; no retry, replacement identity, fallback, automatic close or refund.
+- Original proof expiry at registration and marker return, post-registration shortening, same-handle overlapping markers/revalidation, close before delayed proof or marker SQL, and close during a committed marker reply.
+- Explicit exact cleanup after lost close acknowledgment, including foreign Auth/unsafe local time; marked allocations retain occupied slots and cumulative holds pending authenticated whole-operation finality.
+- Concurrent JavaScript handles preserve distinct operation/proof/owner associations. Transactions are intentionally serialized on the single local connection, so this is not native concurrency evidence.
+
+The success case compares all 22 lifecycle/accounting tables and preserves unrelated same-owner historical holds and saved fictional text, allowing only the expected target quota/pool/high-water changes. Other cases independently verify exact allocation identity and target held/occupied accounting. Both engine instances close; Date mocks and the original SQL clock restore. No provider/device, connected SQL, real Auth, runtime route, publication or paid call occurs.
+
+Next meaningful integration evidence: compose the complete trusted v2 issuer with admission and marker through actual transports/SQL, including sequential new immutable authorities under the same genuine fictional Auth parent, separate fresh attempt approvals, retained uncertain marked holds, and no cross-authority adoption. That would fill the current manually sealed/registered fixture gap without repeating completed models/contracts. A separate offline cutover preflight can verify inventory/order/privilege expectations; it must not claim deployed routing, quiesced native concurrency, real Auth or provider/device acceptance.
+
+=== marker-implementation-notes.md ===
+# Inactive admission-owned v2 capacity marker — implementation notes
+
+Client date: 5 November 2026 America/Toronto. Base main: `4f3aa6a3e89705e635d608fbe40d7e17fdd70f4f`, tree `67027ab4033ee1e8e66488dd5d23fa8beb606bcb` verified by root before the batch.
+
+Owned changes:
+- Modify only `src/lib/ai/conversation/service/voice-v2-admission.server.ts`.
+- Add only `src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker.test.ts`.
+
+Added opt-in `createVoiceV2CapacityAdmission` within the same private admission constructor. Original `createVoiceV2Admission` retains its original four-method public surface and does not read marker configuration/ports. Existing admission logic remains in the common private closure; the extension never attaches an arbitrary claim, exposed snapshot or legacy lease. The new factory requires explicit positive safe expected pool version and captures the bound protected marker method/configuration once.
+
+An active nonbusy handle accepts at most one marker attempt. Its synchronous fence precedes UUID allocation and every wait; once started, even an allocation failure cannot trigger a replacement operation. The immutable operation ID, expected pool version and exact private ownership are retained before the first verifier wait. Calls while inactive, busy or carrying extra arguments start no attempt. Concurrent marker/revalidation work shares the existing busy guard, while synchronous close still wins immediately.
+
+The marker uses a separate fresh full protocol-2 inspect proof from the completed real verifier. That proof is registered once and goes exclusively to the marker; ordinary inspect never consumes it first. The full marker request is retained before proof registration, followed by exact full registration ACK validation and fresh protected verification under the original proof's deadline. The full marker transport receives the exact proof, immutable operation ID and configured version once. Complete ACK parsing and field comparisons reject mixed/legacy/peeled/mismatched fields, including all nested proof identity/time data.
+
+A matching late ACK is retained as content-free evidence before local cancellation/expiry checks. Only status `marked`, followed by fresh same-association verification within the same original proof deadline and shrink-only lifecycle ceiling, returns an offline observation. `already-marked`, denied, quarantined and closed ACKs remain evidence but return null and do not permit any provider create or replay. Null/lost/malformed replies never imply rollback. Failure terminally invalidates local admission, clears its retained opaque request and leaves exact cleanup ownership plus marker evidence. No automatic retry, replacement ID, new marker proof, cleanup call or refund occurs. Explicit cleanup remains independent of current Auth, clock or eligibility and preserves marked uncertain accounting through the existing SQL semantics.
+
+The marker snapshot retains immutable operation/configuration/ownership, request, registration attempt/ACK and marker attempt/ACK separately from ordinary admission operations. Snapshots are detached/frozen content-free last observations; no envelope, writing, credential, raw error or provider capability is exposed. Successful markers neither extend the original claim nor adopt the verifier's 30-second freshness window as the lifecycle deadline. Later observations can only shorten effective eligibility.
+
+Validation:
+- Initial focused run: 154/154 pass across two files = 77 new marker cases plus 77 unchanged original admission cases (`marker-primary-initial.log`).
+- Scoped ESLint for modified source/new primary test passes (`marker-primary-lint.log`).
+- No initial primary implementation/test failures or corrections; no assertions, timing bounds or SQL constraints weakened.
+- Independent review reports six cases passed first run and no source blocker; SQL tests and root aggregate are separately owned.
+
+Primary coverage includes real preserved local AES-GCM/HMAC with a fictional secret, full actual verifier, new-proof exclusive marker routing, exact immutable echo/ACK fields, captured ports/version, malformed/getter inputs, already-marked and denial handling, lost/late replies, shortening, original proof freshness across postregistration waits, monotonic clock failure, +40-second later marker under the unchanged 90-second claim, concurrent-call suppression and synchronous close with retained late evidence. Explicit local clock/Auth/response doubles are not deployed Auth, native cross-backend concurrency, HTTP fault injection or provider/device acceptance.
+
+Frozen SHA-256:
+- `src/lib/ai/conversation/service/voice-v2-admission.server.ts`: `9375cab5bb5e066140efd2e78f149e24818f480282ca04709b66cc31e9985380`
+- `src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker.test.ts`: `4447ef826372662541f256f23711fb9b0fd7bd9f6a52aff14166943ce052025b`
+
+Concrete remaining offline gap: the actual v2 issuer SQL suite and admission/marker SQL suites currently exercise separate compositions. A bounded end-to-end test should start with the actual trusted issuer and fresh owned service instance, carry its returned exact envelope into real v2 admission/marker transports on one isolated database, then verify cancellation/revocation/cleanup and retained marked holds. Do not replace this with another generic contract wrapper or new protocol. Separately, exact legacy/v2 enabling RPC privilege/route cutover remains required before deployment; a read-only source/SQL inventory can prepare the future quiesced acceptance checklist without applying connected SQL or claiming live acceptance.

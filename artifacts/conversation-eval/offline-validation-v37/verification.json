@@ -1,0 +1,123 @@
+{
+  "date": "2026-11-06",
+  "timezone": "America/Toronto",
+  "executionLogsTimezone": "America/Toronto (observed EST -0500)",
+  "baseCommit": "589e594b8ad33c99176fe6fd367ce7297f5ba6c5",
+  "baseTree": "7da63548e60e5d1c7017be9615fae079bf8fb658",
+  "scope": "Never-saved preview switch-discard removes retained in-memory UI/service thread using existing deletion/cancellation path",
+  "status": "local_preview_fix_tested",
+  "checks": {
+    "passed": true,
+    "affectedPassed": 217,
+    "affectedFiles": 6,
+    "newRegressions": 18,
+    "newBaselineFailed": 12,
+    "newBaselinePassedControls": 6,
+    "newFocusedPassed": 18,
+    "independentRerunPassed": 18,
+    "countsOverlap": true,
+    "skipped": 0,
+    "strictTypesExit": 0,
+    "productionBuildExit": 0,
+    "semanticScopedLintExit": 0,
+    "newTestFullLintExit": 0,
+    "sourceFullLintPreExistingFormattingFindings": 10,
+    "sourceFullLintClaimedClean": false,
+    "sourceFullLintBaselineCompared": true,
+    "commands": {
+      "types": "node node_modules/typescript/bin/tsc --noEmit",
+      "build": "node node_modules/vite/bin/vite.js build",
+      "semanticLint": "node node_modules/eslint/bin/eslint.js src/lib/ai/conversation/preview/store.ts src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts --rule 'prettier/prettier: off'",
+      "affected": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/lib/ai/conversation/__tests__/preview-store.test.ts",
+        "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts",
+        "src/lib/ai/conversation/__tests__/p3a-service.test.ts",
+        "src/lib/ai/conversation/__tests__/p3a-repair.test.ts",
+        "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+        "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts",
+        "--maxWorkers=2",
+        "--testTimeout=15000",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/workspace/scratch/500c5aa1eb33/v37/affected-regressions.json"
+      ]
+    },
+    "browserCases": 0,
+    "nativeCases": 0,
+    "connectedCalls": 0,
+    "resultsParagraph": "217/217 affected preview/service/lifecycle tests across six files pass, including 18 new regressions; zero skips. The 18-case suite also passes an independent rerun. Strict TypeScript and the production client/SSR/Nitro build pass. New-test full lint and source semantic lint pass; full store lint retains the same 10 pre-existing formatting findings reproduced on the unchanged baseline.",
+    "findingsParagraph": "The original Node baseline executed all 18 new cases: 12 discard cases failed and six preservation controls passed. After the narrow branch fix all 18 pass without weakening assertions. An initial accidental Bun-on-Vitest invocation failed during collection (z.enum undefined), before any tests; the established Node command resolved that invocation issue without dependency changes. Full source lint findings are unchanged formatting issues on untouched lines; only the formatting rule was disabled for the separately labelled semantic check. Initial diagnostics, exact baseline reproduction, independent review and final logs remain preserved. Deleting current records does not erase detached snapshots or mock requests already retained by an external caller.",
+    "evidenceFiles": [
+      "baseline-triage-discard-repro.cjs",
+      "baseline-triage-discard-repro.json",
+      "baseline-discard-source-hashes.json",
+      "discard-switch-baseline.log",
+      "discard-switch-baseline-node.log",
+      "discard-switch-fixed.log",
+      "discard-switch-lint-initial.log",
+      "discard-switch-lint-baseline.log",
+      "discard-switch-test-lint.log",
+      "discard-switch-source-lint.log",
+      "discard-switch-implementation-notes.md",
+      "affected-regressions-command.txt",
+      "affected-regressions.log",
+      "affected-regressions-verification.json",
+      "discard-independent-focused.log",
+      "discard-independent-focused.json",
+      "discard-independent-review.md",
+      "types-final.log",
+      "lint-semantic-final.log",
+      "build-final.log",
+      "affected-regression-notes.md"
+    ],
+    "observedRuntimeClock": "2026-11-06T13:00:07 EST -0500"
+  },
+  "sourceSha256": {
+    "src/lib/ai/conversation/preview/store.ts": "1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485",
+    "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts": "28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd"
+  },
+  "priorEvidence": {
+    "fullApplicationCheckpoint": "c3f18371d120429d10282b24a8e5face4f1937fd",
+    "conversationPassed": 2518,
+    "files": 95,
+    "optionalSqlWithinTotal": 822,
+    "countsOverlap": true,
+    "fullSuiteRerunThisBatch": false,
+    "nativePrepared": 37,
+    "nativeExecuted": 0,
+    "browserHarnessesPreparedAt": "589e594b8ad33c99176fe6fd367ce7297f5ba6c5",
+    "browserCasesExecutedThisBatch": 0
+  },
+  "limits": [
+    "Actual local store/service and canned provider tests are not live provider, Auth, browser, microphone or device acceptance.",
+    "Baseline showed retained in-memory context and controller reopening; no unsaved saved-list button, persistent-storage finding or participant disclosure was demonstrated.",
+    "All 37 native cases and v36 browser cases remain unrun; no failed setup probe was repeated.",
+    "V2 remains inactive/nondeployable; host/Auth guarantees, quiescence, runtime cutover and live acceptance stay separate.",
+    "No policy, wording or styling changed; the separate draft response-review pack is the next task, not implemented here."
+  ],
+  "preservation": {
+    "baselineBlobs": 744,
+    "materializedHashVerified": 743,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "src/lib/ai/conversation/preview/store.ts",
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md"
+    ],
+    "newFiles": [
+      "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts",
+      "artifacts/conversation-eval/offline-validation-v37/verification.json",
+      "artifacts/conversation-eval/offline-validation-v37/validation.log"
+    ],
+    "priorSrcFiles": 455,
+    "priorSrcFilesUnchanged": 454,
+    "sqlMigrationsDependenciesSettingsAccountingChanged": false,
+    "paidLovableEdits": 0,
+    "liveProviderCalls": 0,
+    "published": false
+  },
+  "next": "Prepare one separate NONEXECUTABLE DRAFT response-review case pack for the two documented coverage gaps in docs/pilot/conversation/ecosystem-intake-and-application-2026-10-27.md: writing follow-through and sparse regret versus explicitly disclosed wrongdoing. Use at most four fictional, faith-OFF active-thread cases covering a requested private-writing practice, a declined exercise/private disclosure, sparse regret with no established fault, and disclosed wrongdoing with a request for practical help. For each, record the exact fictional input, permitted context, source mapping and human-review criteria. A fitting writing invitation needs a clear opening and one distinct, modest, connected after-writing direction, with no request to submit writing or contact/share with someone. Sparse regret must not imply culpability or compulsory repair; proportionate accountability may fit an explicitly disclosed action and request. Current no-advice/no-question/no-exercise requests prevail. Do not presume writing occurred or helped.\n\nGround the pack in the actual unchanged candidate policy, relevant historical v5 instructions and v5-observations-change-note.md, preserving reviewer-observation versus Carl-approved status. Keep any assistant-written examples and review criteria labelled drafts, with no claims of approval, model quality or clinical benefit. This pack must not be executable, alter the pinned catalog/nine-turn manifest/grants/policy/samples, reopen original v5, or run any model/voice calls. Leave other documented content gaps outside this bounded pack. Browser/native/deployed host-Auth/provider/device gates remain separately blocked or unrun; do not repeat probes. No runtime wiring, activation or publication follows from preparing it."
+}

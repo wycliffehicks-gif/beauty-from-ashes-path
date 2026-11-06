@@ -417,8 +417,9 @@ export class ConversationPreviewStore {
 
   /**
    * Resolve a pending switch decision. Save performs the simulated save and
-   * only switches when it succeeds; Discard restores the saved snapshot and
-   * drops the draft; Cancel preserves the active thread and draft exactly.
+   * only switches when it succeeds; Discard restores the saved snapshot or
+   * deletes a never-saved thread, and drops the draft; Cancel preserves the
+   * active thread and draft exactly.
    */
   resolveSwitchDecision(decision: "save" | "discard" | "cancel"): StoreResult {
     const pending = this.state.pendingSwitch;
@@ -437,10 +438,12 @@ export class ConversationPreviewStore {
       }
       const saved = this.saveActiveThread();
       if (!saved.ok) return saved; // failed save: stay, dialog stays
-    } else {
+    } else if (active.savedSnapshot) {
       this.cancelPendingJobs(active.id, false);
       this.discardActiveChanges();
       this.state = { ...this.state, draft: "" };
+    } else {
+      this.deleteThread(active.id);
     }
     return this.performSwitch(pending);
   }

@@ -1,0 +1,837 @@
+
+=== baseline-triage-discard-repro.cjs ===
+// Diagnostic only: runs unchanged application store/service with canned local
+// provider. No browser, HTTP, Auth, persistence, model or voice resources.
+const path = require('node:path');
+const Module = require('node:module');
+const root = process.argv[2] || '/workspace/scratch/500c5aa1eb33/v36/repo';
+const esbuild = Module.createRequire(path.join(root, 'package.json'))('esbuild');
+process.chdir(root);
+const source = `
+import assert from 'node:assert/strict';
+import { ConversationPreviewStore } from '${root}/src/lib/ai/conversation/preview/store';
+import { ConversationService } from '${root}/src/lib/ai/conversation/service/service';
+import { createMockProvider } from '${root}/src/lib/ai/conversation/service/mock-provider';
+(async () => {
+  const queue = []; let dispatches = 0;
+  const service = new ConversationService({ provider: createMockProvider({ delayMs: 0, onDispatch: () => dispatches++ }) });
+  await service.ready();
+  const store = new ConversationPreviewStore({ service, schedule: fn => { queue.push(fn); return queue.length; }, nowIso: () => '2026-11-06T12:00:00.000Z' });
+  // Existing node test harness uses the same browser-init replacement.
+  store.ensureBrowserInit = () => {};
+  const original = store.createThread();
+  store.setDraft('SYNTHETIC_NEVER_SAVED_DISCARD_CANARY');
+  assert.deepEqual(store.sendDraft(), { ok: true });
+  for (let i = 0; i < 40; i++) {
+    while (queue.length) queue.shift()();
+    await new Promise(resolve => setTimeout(resolve, 1));
+  }
+  assert.equal(dispatches, 1);
+  assert.equal(store.hasPendingResponse(store.activeThread()), false);
+  const before = { saved: store.activeThread().savedSnapshot !== null, messages: store.activeThread().messages.length, serviceEvents: service.inspect(original.id).events.length };
+  const requested = store.requestSwitch({ kind: 'new' });
+  assert.deepEqual(requested, { ok: false, reason: 'needs-decision' });
+  const decision = store.resolveSwitchDecision('discard');
+  assert.deepEqual(decision, { ok: true });
+  const retained = store.getSnapshot().threads.find(thread => thread.id === original.id);
+  const after = { retainedThread: !!retained, retainedMessages: retained?.messages.length ?? 0, serviceStillHasThread: service.hasThread(original.id), serviceRetainsCanary: JSON.stringify(service.inspect(original.id)).includes('SYNTHETIC_NEVER_SAVED_DISCARD_CANARY') };
+  const reopened = store.requestSwitch({ kind: 'open', threadId: original.id });
+  const reopenedUiRetainsCanary = JSON.stringify(store.activeThread()).includes('SYNTHETIC_NEVER_SAVED_DISCARD_CANARY');
+  console.log(JSON.stringify({ scope: 'Unchanged actual preview store + shared service; local canned provider only', before, requested, decision, after, reopened, reopenedUiRetainsCanary, mockDispatches: dispatches, browserCalls: 0, networkCalls: 0 }, null, 2));
+  // These diagnostic assertions describe the reproduced defect, not desired behavior.
+  assert.deepEqual(after, { retainedThread: true, retainedMessages: 2, serviceStillHasThread: true, serviceRetainsCanary: true });
+  assert.deepEqual(reopened, { ok: true });
+  assert.equal(reopenedUiRetainsCanary, true);
+})().catch(error => { console.error(error); process.exitCode = 1; });
+`;
+esbuild.build({ stdin: { contents: source, loader: 'ts', resolveDir: root }, bundle: true, platform: 'node', format: 'cjs', write: false, alias: { '@': path.join(root, 'src') } })
+  .then(result => {
+    const filename = path.join(root, 'triage-reproduction.cjs');
+    const unit = new Module(filename, module);
+    unit.filename = filename;
+    unit.paths = Module._nodeModulePaths(root);
+    unit._compile(result.outputFiles[0].text, filename);
+  })
+  .catch(error => { console.error(error); process.exitCode = 1; });
+
+=== baseline-triage-discard-repro.json ===
+{
+  "scope": "Unchanged actual preview store + shared service; local canned provider only",
+  "before": {
+    "saved": false,
+    "messages": 2,
+    "serviceEvents": 2
+  },
+  "requested": {
+    "ok": false,
+    "reason": "needs-decision"
+  },
+  "decision": {
+    "ok": true
+  },
+  "after": {
+    "retainedThread": true,
+    "retainedMessages": 2,
+    "serviceStillHasThread": true,
+    "serviceRetainsCanary": true
+  },
+  "reopened": {
+    "ok": true
+  },
+  "reopenedUiRetainsCanary": true,
+  "mockDispatches": 1,
+  "browserCalls": 0,
+  "networkCalls": 0
+}
+
+=== baseline-discard-source-hashes.json ===
+{
+  "src/lib/ai/conversation/preview/store.ts": {
+    "sha256": "5c7d38a1d28b8a147ebbcacb8fa11f5d969462e296ecfc7fb77fe32ab3af0ff3",
+    "matchesFreshV37": true
+  },
+  "src/components/conversation-preview/ConversationPreview.tsx": {
+    "sha256": "82ea337206c5a873f8f665933def18a7fb5af7aad6a1088710a39ab18422e0c1",
+    "matchesFreshV37": true
+  },
+  "src/lib/ai/conversation/service/service.ts": {
+    "sha256": "56179588d9a7b596865518f4df83ff62f99e0a2c594c817942a7d1e6f46c14d3",
+    "matchesFreshV37": true
+  },
+  "src/lib/ai/conversation/__tests__/preview-store.test.ts": {
+    "sha256": "ccaaa0df2897b08e3711b1d9508f3a17189e29c94907e1c0ae4bdf8694077069",
+    "matchesFreshV37": true
+  },
+  "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts": {
+    "sha256": "19e90ba47ef318b12a75d0ab3cd264a3a6165ff4517274468f97ce85ea86baf0",
+    "matchesFreshV37": true
+  }
+}
+
+=== discard-switch-baseline.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v37/repo
+
+ ❯ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts [ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts ]
+TypeError: undefined is not an object (evaluating 'z.enum')
+ ❯ src/lib/ai/conversation/grants.ts:34:43
+     32| export type SpiritualRestriction = (typeof SPIRITUAL_RESTRICTIONS)[num…
+     33|
+     34| export const SpiritualRestrictionSchema = z.enum(SPIRITUAL_RESTRICTION…
+       |                                           ^
+     35|
+     36| export const SPIRITUAL_GRANT_KINDS = ["prayer", "passage"] as const;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  12:55:41
+   Duration  1.28s (transform 896ms, setup 0ms, import 0ms, tests 0ms, environment 1ms)
+
+
+=== discard-switch-baseline-node.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v37/repo
+
+ ❯ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts (18 tests | 12 failed) 1258ms
+     × purges the actual service at completed before switching to new 255ms
+     × purges the actual service at scheduled before switching to new 117ms
+     × purges the actual service at in-flight before switching to new 166ms
+     × removes the no-service completed thread before switching to new 6ms
+     × removes the no-service scheduled thread before switching to new 3ms
+     × removes the no-service draft-only thread before switching to new 1ms
+     × purges the actual service at completed before switching to saved 174ms
+     × purges the actual service at scheduled before switching to saved 113ms
+     × purges the actual service at in-flight before switching to saved 175ms
+     × removes the no-service completed thread before switching to saved 5ms
+     × removes the no-service scheduled thread before switching to saved 2ms
+     × removes the no-service draft-only thread before switching to saved 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at completed before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at scheduled before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at in-flight before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at completed before switching to saved
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at scheduled before switching to saved
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > purges the actual service at in-flight before switching to saved
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts:147:82
+    145|           voice: "off",
+    146|         });
+    147|         expect(h.store.getSnapshot().threads.some((t) => t.id === disc…
+       |                                                                                  ^
+    148|         expect(h.service!.inspect(discarded.id)).toBeNull();
+    149|         expect(binding.isCurrent()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service completed thread before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service scheduled thread before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service draft-only thread before switching to new
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service completed thread before switching to saved
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service scheduled thread before switching to saved
+ FAIL  src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts > discarding a never-saved conversation while switching > removes the no-service draft-only thread before switching to saved
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts:206:82
+    204|           voice: "off",
+    205|         });
+    206|         expect(h.store.getSnapshot().threads.some((t) => t.id === disc…
+       |                                                                                  ^
+    207|         expect(h.store.requestSwitch({ kind: "open", threadId: discard…
+    208|           ok: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 6 passed (18)
+   Start at  12:56:05
+   Duration  3.14s (transform 1.09s, setup 0ms, import 1.33s, tests 1.26s, environment 0ms)
+
+
+=== discard-switch-fixed.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v37/repo
+
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  12:56:38
+   Duration  2.64s (transform 695ms, setup 0ms, import 888ms, tests 1.48s, environment 0ms)
+
+
+=== discard-switch-lint-initial.log ===
+
+/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/preview/store.ts
+   127:26  error  Replace `·{·readonly·kind:·"new"·}·|·{·readonly·kind:·"open";·readonly·threadId:·string·}` with `⏎····|·{·readonly·kind:·"new"·}⏎····|·{·readonly·kind:·"open";·readonly·threadId:·string·}⏎···`                                                                           prettier/prettier
+   211:20  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+   253:33  error  Delete `⏎·······`                                                                                                                                                                                                                                                          prettier/prettier
+   371:25  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+   590:16  error  Replace `·...m,·text:·outcome.text,·status:·"sent"·as·const,·sourceCards:·outcome.sourceCards` with `⏎················...m,⏎················text:·outcome.text,⏎················status:·"sent"·as·const,⏎················sourceCards:·outcome.sourceCards,⏎·············`  prettier/prettier
+   625:40  error  Replace `⏎··········?·{·...m,·text:·reply,·status:·"sent"·as·const·}⏎·········` with `·?·{·...m,·text:·reply,·status:·"sent"·as·const·}`                                                                                                                                   prettier/prettier
+   706:31  error  Replace `⏎········thread.messages.map((m)·=>·Object.freeze({·...m·})),⏎······` with `thread.messages.map((m)·=>·Object.freeze({·...m·}))`                                                                                                                                  prettier/prettier
+   883:19  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+  1067:45  error  Replace `·sessionId:·null,·outputGeneration:·-1,·threadId:·null` with `⏎············sessionId:·null,⏎············outputGeneration:·-1,⏎············threadId:·null,⏎·········`                                                                                              prettier/prettier
+  1180:38  error  Replace `⏎····store.subscribe,⏎····store.getSnapshot,⏎····()·=>·SERVER_SNAPSHOT,⏎··` with `store.subscribe,·store.getSnapshot,·()·=>·SERVER_SNAPSHOT`                                                                                                                      prettier/prettier
+
+✖ 10 problems (10 errors, 0 warnings)
+  10 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+=== discard-switch-lint-baseline.log ===
+
+/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/preview/store.ts
+   127:26  error  Replace `·{·readonly·kind:·"new"·}·|·{·readonly·kind:·"open";·readonly·threadId:·string·}` with `⏎····|·{·readonly·kind:·"new"·}⏎····|·{·readonly·kind:·"open";·readonly·threadId:·string·}⏎···`                                                                           prettier/prettier
+   211:20  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+   253:33  error  Delete `⏎·······`                                                                                                                                                                                                                                                          prettier/prettier
+   371:25  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+   587:16  error  Replace `·...m,·text:·outcome.text,·status:·"sent"·as·const,·sourceCards:·outcome.sourceCards` with `⏎················...m,⏎················text:·outcome.text,⏎················status:·"sent"·as·const,⏎················sourceCards:·outcome.sourceCards,⏎·············`  prettier/prettier
+   622:40  error  Replace `⏎··········?·{·...m,·text:·reply,·status:·"sent"·as·const·}⏎·········` with `·?·{·...m,·text:·reply,·status:·"sent"·as·const·}`                                                                                                                                   prettier/prettier
+   703:31  error  Replace `⏎········thread.messages.map((m)·=>·Object.freeze({·...m·})),⏎······` with `thread.messages.map((m)·=>·Object.freeze({·...m·}))`                                                                                                                                  prettier/prettier
+   880:19  error  Delete `⏎·····`                                                                                                                                                                                                                                                            prettier/prettier
+  1064:45  error  Replace `·sessionId:·null,·outputGeneration:·-1,·threadId:·null` with `⏎············sessionId:·null,⏎············outputGeneration:·-1,⏎············threadId:·null,⏎·········`                                                                                              prettier/prettier
+  1177:38  error  Replace `⏎····store.subscribe,⏎····store.getSnapshot,⏎····()·=>·SERVER_SNAPSHOT,⏎··` with `store.subscribe,·store.getSnapshot,·()·=>·SERVER_SNAPSHOT`                                                                                                                      prettier/prettier
+
+✖ 10 problems (10 errors, 0 warnings)
+  10 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+=== discard-switch-test-lint.log ===
+
+=== discard-switch-source-lint.log ===
+
+=== discard-switch-implementation-notes.md ===
+# v37 discard-switch implementation evidence
+
+Date: 6 November 2026, America/Toronto. Offline local controller/service evidence only.
+
+## Confirmed defect and narrow correction
+
+`ConversationPreviewStore.resolveSwitchDecision("discard")` previously called
+`discardActiveChanges()` for every source thread. That method returns immediately
+when the thread has never been saved. Switching dropped its composer text and
+cancelled work, but left the old UI transcript and service record in memory; the
+controller could reopen the old identifier. This is in-memory retention and a
+controller reopening defect. No unsaved-thread button in the saved list,
+participant exposure, or live-provider disclosure was observed.
+
+The new branch matches existing finish-discard behavior: a source with a saved
+snapshot still cancels work and restores that snapshot; a never-saved source uses
+the existing `deleteThread` lifecycle. This cancels pending store/service work,
+purges the service's record and associated caches, and invalidates its old
+lifecycle binding. The already captured pending target is then selected by the
+existing `performSwitch`. Cancel and Save branches are unchanged.
+
+Only two repository files are owned/changed by this task:
+
+- `src/lib/ai/conversation/preview/store.ts`: branch plus explanatory comment.
+- `src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts`: 18 new cases.
+
+## New regression coverage
+
+Six actual-service cases exercise completed, scheduled-before-dispatch, and
+already-dispatched turns, each switching to a new or saved destination. The real
+service uses its existing local mock provider, deliberately configured to ignore
+abort so late completion must be rejected by the actual service/store boundaries.
+Tests verify removal of the UI/service record, refusal to reopen/export old
+authority, invalidation of the old lifecycle binding, removal of synthetic draft,
+derived-context and confirmed-excerpt canaries, preservation of unrelated and
+destination saved snapshots/service content, and isolation of the next assembled
+mock-provider request. Operational target generation changes are legitimate;
+preservation checks compare saved/content state and lifecycle identity.
+
+Six no-service rollback cases cover completed, scheduled and draft-only sources,
+again with both target kinds and deliberate late scheduled callback execution.
+Six preservation controls, divided between actual-service and no-service stores,
+cover saved-snapshot restoration, exact Cancel preservation and later pending-turn
+completion, and Save refusing an unsent draft/pending reply/simulated failure
+before a successful deliberate Save-and-switch. Final switch state checks include
+empty draft, selected draft owner, null pending switch/transcript and voice off.
+
+These tests inspect live service caches; they do not claim to erase detached
+snapshots or requests already returned to and retained by a caller. Synthetic
+excerpt insertion calls the existing service method only as a test fixture; no
+private writing is retrieved and no content/sharing policy is changed.
+
+## Commands, original diagnostics and correction
+
+Initial accidental invocation used the available Bun executable directly on
+Vitest. Collection failed before tests with `z.enum` undefined in `grants.ts`.
+The unmodified diagnostic is `discard-switch-baseline.log`; this is a runner
+invocation diagnostic, not a regression result. No dependency or application
+change was made to address it.
+
+The established Node command is:
+
+```sh
+node node_modules/vitest/vitest.mjs run src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts --maxWorkers=2 --testTimeout=15000
+```
+
+- Before source fix: **12 failed, 6 passed**, all 18 executed; every failure was
+  the intended assertion that the never-saved old thread must be absent.
+  `discard-switch-baseline-node.log` preserves the original failures.
+- After narrow source fix: **18 passed, zero skipped**.
+  `discard-switch-fixed.log` preserves the result.
+- New test file passes full ESLint: `discard-switch-test-lint.log`.
+- Source plus test full lint initially reports 10 formatting-only findings in
+  untouched store locations: `discard-switch-lint-initial.log`. Passing the
+  unchanged v36 store bytes to ESLint with the same current filename reproduces
+  the same 10 findings: `discard-switch-lint-baseline.log`. Unrelated source was
+  deliberately not reformatted. Source semantic lint with only the Prettier
+  formatting rule disabled is recorded separately in
+  `discard-switch-source-lint.log`.
+
+Root/other agent owns the final affected regression suite, TypeScript and build
+validation; this note does not invent their results. Reviewer performs a separate
+read and rerun.
+
+## Frozen source identity
+
+| File | SHA-256 |
+| --- | --- |
+| `src/lib/ai/conversation/preview/store.ts` | `1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485` |
+| `src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts` | `28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd` |
+
+No existing test, application component, policy/content, SQL, dependency,
+configuration or connected service was changed. No browser, microphone,
+authenticated acceptance, live-provider, paid-model or deployment call was made.
+This does not execute the previously prepared accessibility browser checks or
+the 37 native database cases; those remain separate unrun acceptance work.
+
+=== affected-regressions-command.txt ===
+cwd: /workspace/scratch/500c5aa1eb33/v37/repo
+node node_modules/vitest/vitest.mjs run src/lib/ai/conversation/__tests__/preview-store.test.ts src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts src/lib/ai/conversation/__tests__/p3a-service.test.ts src/lib/ai/conversation/__tests__/p3a-repair.test.ts src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts --maxWorkers=2 --testTimeout=15000 --reporter=default --reporter=json --outputFile=/workspace/scratch/500c5aa1eb33/v37/affected-regressions.json
+
+=== affected-regressions.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v37/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 428ms
+ ✓ src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts (18 tests) 1465ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 780ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 355ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 343ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 25ms
+
+ Test Files  6 passed (6)
+      Tests  217 passed (217)
+   Start at  12:58:47
+   Duration  4.08s (transform 1.58s, setup 0ms, import 2.41s, tests 3.40s, environment 2ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v37/affected-regressions.json
+
+=== affected-regressions-verification.json ===
+{
+  "scope": "Only six affected preview/service/lifecycle suites; no full application, SQL, native or browser run.",
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/lib/ai/conversation/__tests__/preview-store.test.ts",
+    "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts",
+    "src/lib/ai/conversation/__tests__/p3a-service.test.ts",
+    "src/lib/ai/conversation/__tests__/p3a-repair.test.ts",
+    "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+    "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts",
+    "--maxWorkers=2",
+    "--testTimeout=15000",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=/workspace/scratch/500c5aa1eb33/v37/affected-regressions.json"
+  ],
+  "cwd": "/workspace/scratch/500c5aa1eb33/v37/repo",
+  "exitCode": 0,
+  "frozenFilesUnchanged": true,
+  "sha256Before": {
+    "src/lib/ai/conversation/preview/store.ts": "1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485",
+    "src/lib/ai/conversation/__tests__/preview-store.test.ts": "ccaaa0df2897b08e3711b1d9508f3a17189e29c94907e1c0ae4bdf8694077069",
+    "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts": "19e90ba47ef318b12a75d0ab3cd264a3a6165ff4517274468f97ce85ea86baf0",
+    "src/lib/ai/conversation/__tests__/p3a-service.test.ts": "12f614da32b4a042c4b09454cf98f2f59c0547b6ab752903cc44be8a26984f9c",
+    "src/lib/ai/conversation/__tests__/p3a-repair.test.ts": "db13586cb7edd31fcab12223b3cc54cb3a71dc38a3922e1e1c34d2fdee9c0466",
+    "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts": "bbff9796b1295b7edd79689262f6fe451b7fb14f2281f932aaf3be33ed3306b8",
+    "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts": "28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd"
+  },
+  "sha256After": {
+    "src/lib/ai/conversation/preview/store.ts": "1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485",
+    "src/lib/ai/conversation/__tests__/preview-store.test.ts": "ccaaa0df2897b08e3711b1d9508f3a17189e29c94907e1c0ae4bdf8694077069",
+    "src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts": "19e90ba47ef318b12a75d0ab3cd264a3a6165ff4517274468f97ce85ea86baf0",
+    "src/lib/ai/conversation/__tests__/p3a-service.test.ts": "12f614da32b4a042c4b09454cf98f2f59c0547b6ab752903cc44be8a26984f9c",
+    "src/lib/ai/conversation/__tests__/p3a-repair.test.ts": "db13586cb7edd31fcab12223b3cc54cb3a71dc38a3922e1e1c34d2fdee9c0466",
+    "src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts": "bbff9796b1295b7edd79689262f6fe451b7fb14f2281f932aaf3be33ed3306b8",
+    "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts": "28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd"
+  },
+  "totals": {
+    "numTotalTests": 217,
+    "numPassedTests": 217,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "byFile": [
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/p3a-repair.test.ts",
+      "status": "passed",
+      "tests": 33,
+      "passed": 33
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/p3a-service.test.ts",
+      "status": "passed",
+      "tests": 81,
+      "passed": 81
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts",
+      "status": "passed",
+      "tests": 11,
+      "passed": 11
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts",
+      "status": "passed",
+      "tests": 40,
+      "passed": 40
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts",
+      "status": "passed",
+      "tests": 18,
+      "passed": 18
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/__tests__/preview-store.test.ts",
+      "status": "passed",
+      "tests": 34,
+      "passed": 34
+    }
+  ],
+  "preservedEarlierDiagnostics": [
+    "discard-switch-baseline.log: original wrong Bun collection diagnostic, no tests executed",
+    "discard-switch-baseline-node.log: old source with 12 expected failures and 6 passing controls",
+    "discard-switch-fixed.log: implementation agent focused 18/18 pass"
+  ]
+}
+
+=== discard-independent-focused.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v37/repo
+
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  12:58:30
+   Duration  3.29s (transform 849ms, setup 0ms, import 1.10s, tests 1.55s, environment 0ms)
+
+
+=== discard-independent-focused.json ===
+{
+  "exitCode": 0,
+  "sourceSha256": {
+    "src/lib/ai/conversation/preview/store.ts": "1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485",
+    "src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts": "28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd"
+  },
+  "unchangedDuringRun": true,
+  "browserCalls": 0,
+  "connectedCalls": 0
+}
+
+=== discard-independent-review.md ===
+# Independent review — never-saved preview discard and switch
+
+6 November 2026. Read-only triage began at verified GitHub checkpoint `589e594b8ad33c99176fe6fd367ce7297f5ba6c5`, then the fresh v37 workspace was authorized for the narrow fix. No browser, Auth, model, voice provider, connected SQL or setup probe was used.
+
+## Reproduced baseline defect
+
+The actual existing `ConversationPreviewStore`, `ConversationService` and canned local provider reproduce this sequence:
+
+1. Create a never-saved thread and complete one fictional exchange.
+2. Request a new conversation: the store returns `needs-decision`.
+3. Choose `resolveSwitchDecision("discard")`: it returns success.
+4. The prior thread still has two UI messages and two service events, and its synthetic canary remains in the live service record. A direct controller request to reopen the old ID succeeds and restores that canary.
+
+The UI's existing switch dialog promises that Discard & continue discards unsent text and unsaved changes. However, `resolveSwitchDecision` called `discardActiveChanges`, which returned immediately for a null saved snapshot. The separate existing finish-discard path already deletes a never-saved thread. Existing preview and service integration tests covered discard-switch from saved snapshots, leaving this distinct branch uncovered.
+
+This is retained discarded content and authority inside the local preview's live stores. It is **not** evidence of participant exposure or a live-provider leak: the UI lists only saved conversations, so the controller reopening result does not imply an available old-thread UI button. Previously returned snapshots and captured provider requests are separate references; deleting current records cannot erase those external copies.
+
+The scratch-only runnable baseline diagnostic and result are `baseline-triage-discard-repro.cjs` and `baseline-triage-discard-repro.json`. Pass a repository path as the script's first argument to select the source. Its assertions deliberately describe the baseline defect, not desired post-fix behavior. `baseline-discard-source-hashes.json` records that the inspected v36 files exactly matched the fresh v37 baseline before edits. The script uses actual source via esbuild, the existing node-test browser-init seam and one canned provider dispatch; it does not execute UI code in a browser or create persistent data.
+
+## Review scope
+
+The narrow repair should reuse existing deletion for the never-saved branch and retain the prior saved-snapshot branch. Review covers removal of the discarded thread's current UI/service record and grants/turns, invalidation of its lifecycle binding, refusal to reopen/export that missing record, cancellation of queued or late work, final navigation/draft/voice state, and preservation of saved destinations and unrelated saved content. A reopened destination may legitimately change operational generation while its content and lifecycle association stay intact.
+
+Deleted-target/self-open controller edge paths, unrelated UI navigation redesign, new policy/content, persistence, provider lifecycle implementation and runtime wiring are outside this fix. Existing `deleteThread` and `performSwitch` already supply active voice cleanup and pending-transcript clearing; existing P3a repair regressions cover their voice/cache boundaries. No duplicate independent test fixture is needed unless review identifies a distinct new defect.
+
+## Final checks
+
+The final narrow source change is approved with no remaining blocker found. The never-saved discard branch calls the existing `deleteThread(active.id)`, while saved snapshots keep their prior cancel/restore behavior. The unchanged deletion path aborts queued work, invalidates voice, removes the service record and its owned grants/turns, and clears active local draft state. The existing switch path then opens the selected destination and clears pending switch/transcript state. No application component, policy, content, service implementation, SQL or runtime wiring changed.
+
+Independently ran the final new regression file through actual Node/Vitest: **18/18 passed, one file, zero skips**, exit 0 in 3.29 seconds. The local provider cases exercise completed work, cancellation before dispatch and deliberately late replies that ignore abort, for both new and saved destinations. The no-service cases and Cancel/Save/saved-snapshot controls also pass. The run used no browser or connected service. Evidence: `discard-independent-focused.log` and `discard-independent-focused.json`.
+
+Frozen source hashes were verified before and after the independent run:
+
+- `src/lib/ai/conversation/preview/store.ts`: `1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485`
+- `src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts`: `28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd`
+
+Compared all 455 prior `src` files with the verified v36 source: the only changed prior file is `preview/store.ts`, and the only new source file is the focused regression file. No separate independent test file was added; the new 18-case fixture and existing deletion/voice regression coverage already address the narrow change without a duplicate harness.
+
+The implementation author's first Bun attempt failed during collection and is not a functional test result. The preserved actual Node baseline is 12 failed removal assertions and six passing controls; the repaired result is 18/18. The ten reported formatting findings are also present in the unchanged baseline store; they were not repaired in this narrow batch. Full lint of the new test passes, and source semantic lint with the existing formatting rule disabled passes; this is not a claim of clean full-file formatting lint.
+
+The parent reports the affected six-file regression run passed 217/217 with zero skips, plus strict TypeScript, production build and scoped semantic lint. Those checks are separate from this independent 18-case rerun and are not a newly executed full repository or SQL suite. Browser accessibility modes and all 37 native PostgreSQL cases remain separately prepared and unrun. No visual, screen-reader, device, hosted Auth or provider acceptance is established.
+
+=== types-final.log ===
+
+=== lint-semantic-final.log ===
+
+=== build-final.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-BNPSlYR-.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-Cs1azJ2n.js                   1.24 kB │ gzip:   0.53 kB
+.output/public/assets/reflection-restore-D9U56fsy.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-BO9IedoN.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BKW6eIdD.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DC7aLNdP.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CGfBBkV8.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-Bwxuq5uL.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-BiSf0oiQ.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Bi3tl795.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-VeclcFtt.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-tTbOA7Dg.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-QiyRic2J.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-BxYPvTxx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-CSIccfmZ.js                 11.19 kB │ gzip:   3.80 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-CvALxc0F.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-DLdfJrb2.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-2P7s-j49.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-ClKPP7Ir.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-P-LILyOZ.js                38.27 kB │ gzip:  11.16 kB
+.output/public/assets/sha256-sync-kezsjzjg.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-CXJmVuKg.js   164.08 kB │ gzip:  43.71 kB
+.output/public/assets/index-UuDr3J6x.js                  759.45 kB │ gzip: 219.38 kB
+
+[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - vite-tsconfig-paths (61%)
+  - tanstack-start-core:import-protection (21%)
+  - tanstack-start-core:import-protection-transform-cache (15%)
+See https://rolldown.rs/options/checks#plugintimings for more details.
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.28s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v37/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-B9EewoYB.js                    0.26 kB │ gzip:  0.18 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-CeifxoWL.js                          0.42 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-D9LjQpqP.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-BSbk-YsQ.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-DsOTaZCQ.js                        1.12 kB │ gzip:  0.56 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-ClZ_UBdQ.js                             1.29 kB │ gzip:  0.62 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-CSSRwTvH.js                              1.72 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-DyDal7rr.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-Dr5yYj0E.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-B3HX2ZcW.js                         3.34 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B2mZMGm7.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Dd5vl7UJ.js               5.09 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BvyrwCr-.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-CZbsVd8e.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CNWWplda.js                                     13.05 kB │ gzip:  3.80 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-BtvRh_tM.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DFnZzILA.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-ROo4Kynh.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-B1WT-a64.js                                  60.35 kB │ gzip: 15.44 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DKVPW8YF.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-D81fefR1.js                    77.40 kB │ gzip: 17.42 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 1.84s
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-11-01)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.20 kB │ gzip:   0.18 kB
+.output/server/_ssr/empty-plugin-adapters-B9EewoYB.mjs               0.26 kB │ gzip:   0.19 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_ssr/createServerRpc-CeifxoWL.mjs                     0.43 kB │ gzip:   0.30 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.68 kB │ gzip:   0.39 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.77 kB │ gzip:   0.41 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.99 kB │ gzip:   0.59 kB
+.output/server/_ssr/start-BSbk-YsQ.mjs                               1.13 kB │ gzip:   0.61 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-DsOTaZCQ.mjs                   1.17 kB │ gzip:   0.62 kB
+.output/server/_ssr/gate.server-D9LjQpqP.mjs                         1.19 kB │ gzip:   0.69 kB
+.output/server/_libs/hookable.mjs                                    1.20 kB │ gzip:   0.54 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.36 kB │ gzip:   0.74 kB
+.output/server/_ssr/createSsrRpc-ClZ_UBdQ.mjs                        1.38 kB │ gzip:   0.70 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.42 kB │ gzip:   0.74 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.53 kB │ gzip:   0.82 kB
+.output/server/_ssr/createStart-CSSRwTvH.mjs                         1.60 kB │ gzip:   0.61 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.84 kB │ gzip:   0.78 kB
+.output/server/__23tanstack-start-server-fn-resolver-DyDal7rr.mjs    1.89 kB │ gzip:   0.82 kB
+.output/server/_ssr/gate.functions-Dr5yYj0E.mjs                      2.09 kB │ gzip:   0.82 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.11 kB │ gzip:   0.95 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.43 kB │ gzip:   1.14 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.48 kB │ gzip:   0.99 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.58 kB │ gzip:   0.92 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.63 kB │ gzip:   1.31 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.07 kB │ gzip:   1.03 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.25 kB │ gzip:   1.28 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.31 kB │ gzip:   1.41 kB
+.output/server/_ssr/request-response-B3HX2ZcW.mjs                    3.38 kB │ gzip:   1.20 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.43 kB │ gzip:   0.95 kB
+.output/server/_ssr/auth-middleware-B2mZMGm7.mjs                     3.78 kB │ gzip:   1.50 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.08 kB │ gzip:   1.26 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.37 kB │ gzip:   1.41 kB
+.output/server/_ssr/ssr.mjs                                          4.43 kB │ gzip:   1.87 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.48 kB │ gzip:   1.95 kB
+.output/server/_libs/lucide-react.mjs                                4.79 kB │ gzip:   1.30 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.95 kB │ gzip:   1.49 kB
+.output/server/_tanstack-start-manifest_v-Dd5vl7UJ.mjs               5.19 kB │ gzip:   1.17 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.38 kB │ gzip:   2.17 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.44 kB │ gzip:   1.94 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.56 kB │ gzip:   1.83 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.75 kB │ gzip:   1.97 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.16 kB │ gzip:   2.37 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.17 kB │ gzip:   1.63 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.29 kB │ gzip:   2.02 kB
+.output/server/_ssr/day._day-BvyrwCr-.mjs                            6.80 kB │ gzip:   3.13 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.29 kB │ gzip:   2.14 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.62 kB │ gzip:   2.65 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.94 kB │ gzip:   3.18 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.36 kB │ gzip:   3.18 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.61 kB │ gzip:   3.10 kB
+.output/server/_ssr/esm-CNWWplda.mjs                                12.09 kB │ gzip:   3.75 kB
+.output/server/_ssr/journey-ai.functions-CZbsVd8e.mjs               12.23 kB │ gzip:   3.89 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.49 kB │ gzip:   4.29 kB
+.output/server/_libs/tanstack__history.mjs                          12.54 kB │ gzip:   3.74 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.67 kB │ gzip:   3.51 kB
+.output/server/_ssr/adapter.server-BtvRh_tM.mjs                     13.34 kB │ gzip:   3.91 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.33 kB │ gzip:   4.26 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.43 kB │ gzip:   4.13 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.62 kB │ gzip:   4.93 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.06 kB │ gzip:   4.81 kB
+.output/server/index.mjs                                            17.36 kB │ gzip:   4.93 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.89 kB │ gzip:   5.19 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.66 kB │ gzip:   5.40 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.50 kB │ gzip:   9.05 kB
+.output/server/_ssr/conversation-staging-DFnZzILA.mjs               27.82 kB │ gzip:   6.39 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                30.19 kB │ gzip:   8.03 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.15 kB │ gzip:  10.67 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.51 kB │ gzip:   9.61 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.94 kB │ gzip:  11.21 kB
+.output/server/_ssr/router-ROo4Kynh.mjs                             38.25 kB │ gzip:   9.96 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.54 kB │ gzip:  10.69 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.58 kB │ gzip:  12.80 kB
+.output/server/_ssr/server-B1WT-a64.mjs                             58.93 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-DKVPW8YF.mjs                           78.23 kB │ gzip:  18.72 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.41 kB │ gzip:  20.98 kB
+.output/server/_ssr/conversation-preview-D81fefR1.mjs               82.74 kB │ gzip:  17.64 kB
+.output/server/_libs/tailwind-merge.mjs                             85.68 kB │ gzip:  15.25 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.10 kB │ gzip:  24.93 kB
+.output/server/_libs/zod.mjs                                       100.31 kB │ gzip:  17.35 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.95 kB │ gzip:  25.14 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.50 kB │ gzip:  23.23 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.59 kB │ gzip:  23.98 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.79 kB │ gzip:  47.04 kB
+.output/server/_libs/supabase__auth-js.mjs                         320.12 kB │ gzip:  64.87 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              755.36 kB │ gzip: 159.65 kB
+
+✓ built in 1.04s
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+=== affected-regression-notes.md ===
+# v37 affected discard-switch regressions
+
+The requested six-suite run passes **217/217 tests across six files**, with zero failures, skipped/pending cases or todo cases. It ran once after the implementation agent's explicit freeze. All seven watched source/test hashes match before and after the run. No source or test was edited by this regression task.
+
+| Suite | Passed |
+| --- | ---: |
+| preview-store.test.ts | 34 |
+| p3a-store-integration.test.ts | 11 |
+| p3a-service.test.ts | 81 |
+| p3a-repair.test.ts | 33 |
+| p5-service-lifecycle.test.ts | 40 |
+| preview-discard-switch.test.ts | 18 |
+| Total | 217 |
+
+The focused new 18-case result is included in the 217 total; it is not additional to it. This is an affected-suite regression result, not a new full conversation/application-suite, SQL, native or browser result. The separately preserved v34 full-suite evidence remains historical and distinct. All 37 prepared native cases remain unrun.
+
+Working directory: `/workspace/scratch/500c5aa1eb33/v37/repo`.
+
+Exact command:
+
+```sh
+node node_modules/vitest/vitest.mjs run src/lib/ai/conversation/__tests__/preview-store.test.ts src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts src/lib/ai/conversation/__tests__/p3a-service.test.ts src/lib/ai/conversation/__tests__/p3a-repair.test.ts src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts --maxWorkers=2 --testTimeout=15000 --reporter=default --reporter=json --outputFile=/workspace/scratch/500c5aa1eb33/v37/affected-regressions.json
+```
+
+The established Node runner exited 0 in 4.08 seconds. The existing two-worker limit and 15000-ms test timeout were unchanged. There was no full SQL/native run, browser lookup, install, dependency edit, Auth/provider/model/voice/microphone call or connected setting change.
+
+Evidence files under `/workspace/scratch/500c5aa1eb33/v37/`:
+
+- `affected-regressions-command.txt`: exact command and working directory.
+- `affected-regressions.log`: complete console output.
+- `affected-regressions.json`: original Vitest JSON report.
+- `affected-regressions-verification.json`: command, exit code, exact per-file counts and all seven before/after hashes.
+- `affected-regression-log-hashes.json`: SHA-256 values for final evidence and the three separate earlier diagnostic logs.
+- `run-affected-regressions.py`: bounded scratch orchestration that asserts the frozen implementation/test hashes, runs the six files once, and records post-run equality.
+
+Frozen implementation SHA-256:
+`src/lib/ai/conversation/preview/store.ts` — `1607c294265910f464e4c76c92b34d336918dac83ca5159dc555f519d4650485`.
+
+Frozen new test SHA-256:
+`src/lib/ai/conversation/__tests__/preview-discard-switch.test.ts` — `28a7f75f26f14fbd8f09584c80b13c7cd5101c59596c52bc9a2a8a184b5ac5dd`.
+
+Earlier implementation-agent diagnostics remain separate and untouched:
+
+1. `discard-switch-baseline.log`: the initial Bun invocation failed during collection with `TypeError: undefined is not an object (evaluating 'z.enum')`; no tests ran. This was a runner/import diagnostic, not a discard-switch assertion result. The established Node command was then used without changing the grants source or dependencies.
+2. `discard-switch-baseline-node.log`: the new 18-case suite on the old source reported 12 expected discard-retention failures and six passing controls.
+3. `discard-switch-fixed.log`: the implementation agent's focused run passed 18/18 after the narrow fix.
+
+The original diagnostic files were inspected and hashed, not overwritten or replayed by this task. No extra independent test file was added; the reviewer separately owns independent source review and a focused rerun of the new test.

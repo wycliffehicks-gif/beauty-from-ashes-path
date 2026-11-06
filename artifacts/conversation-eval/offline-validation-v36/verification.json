@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-06",
+  "timezone": "America/Toronto",
+  "executionLogsTimezone": "UTC",
+  "baseCommit": "1071a5259416c13ad7dabd08af3cf2e53c8682fe",
+  "baseTree": "47c53500349ae467a6321bfc844be22710957280",
+  "scope": "Existing offline conversation UI harness accessibility preparation; browser execution unavailable; no app styling fix",
+  "status": "prepared_browser_unrun",
+  "checks": {
+    "nonBrowserChecksPassed": true,
+    "productionBuild": 0,
+    "nodeSyntaxChecks": 2,
+    "scopedLint": 0,
+    "actualBundleCompositions": 3,
+    "generatedJavaScriptParses": 3,
+    "missingEmptyCssGuardChecks": 4,
+    "browserChecksExecuted": 0,
+    "browserLaunchesInHarnesses": 0,
+    "screenshots": 0,
+    "focusAddedProbesPrepared": 19,
+    "focusPriorChecksRetained": 20,
+    "voiceAddedModesPrepared": 5,
+    "sourceFilesPreserved": 455,
+    "productionCss": {
+      "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+      "bytes": 103488,
+      "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+    },
+    "independentReview": "No blocker for saving prepared harnesses; no acceptance of unexecuted UI assertions",
+    "evidenceFiles": [
+      "browser-setup.log",
+      "browser-download-diagnostic.log",
+      "build-baseline.log",
+      "focus-lint-initial.log",
+      "focus-lint-correction.log",
+      "focus-lint-final.log",
+      "voice-harness-lint-initial.log",
+      "independent-harness-syntax.log",
+      "independent-combined-bundle.log",
+      "independent-voice-bundle.log",
+      "independent-static-summary.json",
+      "independent-bundle/result.json",
+      "focus-initial/preparation-status.json",
+      "focus-final-preparation-status.json",
+      "voice-initial/bundle-validation.json",
+      "accessibility-focus-notes.md",
+      "accessibility-voice-notes.md",
+      "accessibility-independent-review.md",
+      "review-bundle-check.cjs",
+      "voice-bundle-validation.cjs"
+    ],
+    "resultsParagraph": "The production client/SSR/Nitro build passes on unchanged application source. Both extended harnesses pass syntax and scoped lint checks; independent validation compiles all three actual component fixtures and their generated JavaScript, confirms the exact built CSS, and verifies four missing/empty-CSS rejections before browser launch. All 455 prior application source files remain identical. The focus harness prepares 19 new probes alongside its 20 prior checks; the voice harness prepares five display modes alongside its prior workflow. **Zero browser checks were executed, and no screenshots or visual passes exist for this batch.**",
+    "tableSummary": "Production build, two harness syntax/lint checks, three real fixture bundles and four CSS guards pass; zero browser checks executed"
+  },
+  "findings": [
+    "Source review distinguished root-only enlargement from separately doubled inherited body copy, required actual computed media/focus evidence, and strengthened the prepared outline contrast check. Initial focus lint reported four formatting-only findings; those were corrected and final lint is clean. Independent compile-only checks use the existing bundle functions with their automatic main invocation suppressed only in memory, and explicitly trap browser launch. Missing/empty styles are rejected before launch. No geometry, keyboard, media or screenshot outcome was inferred from these checks. The local browser download failure remains a concrete execution blocker; source-suspected tall-dialog, fixed-button or focus issues remain unconfirmed and were not patched. Original setup/formatting diagnostics, reproduction wrapper sources and final review are retained."
+  ],
+  "browserBlocker": {
+    "installedPlaywrightModule": true,
+    "localChromiumAvailable": false,
+    "normalInstallAttempts": 1,
+    "sameUrlDiagnostic": "HTTP 200 text/html, 195-byte Site Unavailable response instead of ZIP archive; installer also reported lock failure",
+    "capabilityOnlyCloudFallback": "No supported viewport/media/harness controls for equivalent execution; no app or account page opened",
+    "additionalSetupRetries": 0,
+    "screenshots": 0,
+    "browserCasesExecuted": 0
+  },
+  "priorEvidence": {
+    "applicationImplementation": "a4579d2f7d77e8e722b5c5a23a43283e7bf0ce9c",
+    "fullApplicationCheckpoint": "c3f18371d120429d10282b24a8e5face4f1937fd",
+    "conversationPassed": 2518,
+    "files": 95,
+    "optionalSqlWithinTotal": 822,
+    "countsOverlap": true,
+    "fullSuiteRerunThisBatch": false,
+    "nativePreparationCheckpoint": "1071a5259416c13ad7dabd08af3cf2e53c8682fe",
+    "nativePrepared": 37,
+    "nativeExecuted": 0,
+    "v35RunnerBridgeChecks": 52,
+    "runnerBridgeRerunThisBatch": false
+  },
+  "limits": [
+    "Compilation and bundle composition do not establish browser layout, media preferences, keyboard behavior, accessibility or screenshots.",
+    "All new and prior browser checks remain unrun in v36; previous browser evidence stays historical.",
+    "Controlled root/body font enlargement is not native browser text zoom or WCAG/screen-reader certification.",
+    "External fonts are blocked in the local fixture; future results cannot establish full hosted typography.",
+    "No confirmed rendering defect exists in this batch; application source/styles remain unchanged.",
+    "All native, hosted Auth/current-policy/revocation, provider/device and release gates remain separate."
+  ],
+  "preservation": {
+    "baselineBlobs": 741,
+    "materializedHashVerified": 740,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "scripts/conversation-ui/check-focus.cjs",
+      "scripts/conversation-ui/check-voice-controls.cjs",
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md"
+    ],
+    "newFiles": [
+      "docs/pilot/conversation/conversation-accessibility-preparation-2026-11-06.md",
+      "artifacts/conversation-eval/offline-validation-v36/verification.json",
+      "artifacts/conversation-eval/offline-validation-v36/validation.log"
+    ],
+    "priorApplicationSourceFilesPreserved": 455,
+    "applicationSqlBackendTestsDependenciesSettingsChanged": false,
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "scripts/conversation-ui/check-focus.cjs": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+    "scripts/conversation-ui/check-voice-controls.cjs": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318",
+    "docs/pilot/conversation/conversation-accessibility-preparation-2026-11-06.md": "276ad2a73cdab307f8378f067edde236668834d310f7b9cebe56e5d1121b31a3",
+    "src/styles.css": "695f92f4b48ac0d1826cb159df408848377c04e52560345cf193873b15f01bdb",
+    "src/components/ui/button.tsx": "e39813b666ba434660ec088356a0349246b6803a4e99961295d0c82bab1ab862",
+    "src/components/ui/dialog.tsx": "e3a6de153fb15597ea95be9c4549211a297c060267787915599e3d680d476bd9",
+    "src/components/ui/alert-dialog.tsx": "ee4d7f3341a1e5592787b7dac8e924bd226189492819f6704d8a7faf8fe64d20",
+    "src/components/conversation-preview/ConversationPreview.tsx": "82ea337206c5a873f8f665933def18a7fb5af7aad6a1088710a39ab18422e0c1",
+    "src/components/conversation-preview/VoiceControls.tsx": "0714adcf51d063e02293630653c8ea2b6b9129fe640cf0358932af2068119ed3",
+    "src/components/conversation-staging/StagingConsole.tsx": "a043bd244937fa3b8d9f1ef559343f2d5ab638cd724d9df487b059c736f895da",
+    "package.json": "df9b912b42581e08d331852d9f42c08efa22187c1f1b66f5f96d9df0ef8e8fa4",
+    "bun.lock": "aa7518e14204212c6df1fc59a49d85876a586f48ae6870dc17c19e17e983f0cd"
+  },
+  "next": "Execute the already prepared conversation accessibility harnesses only once a working local Chromium executable is confirmed available. Do not repeat this batch's unavailable-browser download or earlier native PostgreSQL setup probes without new availability evidence. First verify current GitHub head and intervening changes, rebuild current production CSS, then run scripts/conversation-ui/check-focus.cjs and check-voice-controls.cjs with their explicit Playwright/Chromium/CSS paths. Review exact root/body enlargement metrics, reduced-motion/forced-colour activation, screenshots, keyboard containment/restoration, draft preservation and control reachability with all external transport and microphones blocked. Fix only reproduced component/style defects, preserve exact content/SRT/private-writing/chosen-faith rules, and rerun affected modes plus existing behavior regressions. Run targeted ten-day journey regression only if shared global styling actually changes. Retain local fallback-font/controlled-enlargement limits and do not claim WCAG, screen-reader, physical-device, hosted Auth/provider or native concurrency acceptance. All 37 native cases and supported host/Auth/current-policy/revocation/cutover requirements remain separate. No paid edits, real Auth/model/voice calls, connected SQL/settings, participant activation, purchases or publication."
+}

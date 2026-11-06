@@ -1,9 +1,10 @@
 // Actual VoiceControls + service/binding in an isolated fictional browser fixture.
 // No app route, real device, credentials, provider transport or external request.
 // Run with BFA_PLAYWRIGHT_MODULE and optional BFA_CHROMIUM_EXECUTABLE.
-// BFA_UI_CSS supplies generated production CSS for 390px layout checks.
+// BFA_UI_CSS is required: generated production CSS for baseline and accessibility modes.
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
+const { createHash } = require("node:crypto");
 const os = require("node:os");
 const path = require("node:path");
 const esbuild = require("esbuild");
@@ -190,6 +191,7 @@ async function bundle() {
 }
 
 async function main() {
+  assert.ok(css.trim(), "BFA_UI_CSS must supply generated production CSS for accessibility checks");
   const html = await bundle();
   const browser = await chromium.launch({
     headless: true,
@@ -203,7 +205,9 @@ async function main() {
   const checks = [],
     focusAfterActions = [],
     errors = [],
-    blocked = [];
+    blocked = [],
+    accessibilityModes = [],
+    accessibilityFailures = [];
   let microphoneAttempts = 0;
   page.on("pageerror", (error) => errors.push(error.message));
   await context.addInitScript(() => {
@@ -308,6 +312,352 @@ async function main() {
     await page.screenshot({ path: path.join(out, name + "-390px.png"), fullPage: true });
     checks.push(name + ": status and controls fit 390px with no horizontal overflow");
   };
+
+  const accessibilitySpecs = [
+    {
+      name: "root-200-narrow",
+      width: 320,
+      rootScale: 2,
+      bodyScale: 1,
+      reducedMotion: "no-preference",
+      forcedColors: "none",
+    },
+    {
+      name: "root-body-200-narrow",
+      width: 320,
+      rootScale: 2,
+      bodyScale: 2,
+      reducedMotion: "no-preference",
+      forcedColors: "none",
+    },
+    {
+      name: "reduced-motion",
+      width: 390,
+      rootScale: 1,
+      bodyScale: 1,
+      reducedMotion: "reduce",
+      forcedColors: "none",
+    },
+    {
+      name: "forced-colours",
+      width: 390,
+      rootScale: 1,
+      bodyScale: 1,
+      reducedMotion: "no-preference",
+      forcedColors: "active",
+    },
+    {
+      name: "enlarged-forced-reduced",
+      width: 320,
+      rootScale: 2,
+      bodyScale: 2,
+      reducedMotion: "reduce",
+      forcedColors: "active",
+    },
+  ];
+  const fonts = () =>
+    page.evaluate(() => ({
+      root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+      body: parseFloat(getComputedStyle(document.body).fontSize),
+      button: parseFloat(
+        getComputedStyle(document.querySelector('[role="group"] button')).fontSize,
+      ),
+      status: parseFloat(getComputedStyle(document.querySelector('[role="status"] p')).fontSize),
+      fixtureCopy: parseFloat(getComputedStyle(document.querySelector("main > p")).fontSize),
+      viewportWidth: innerWidth,
+      visualViewportScale: visualViewport?.scale ?? null,
+      devicePixelRatio,
+    }));
+  const geometry = () =>
+    page.evaluate(() => {
+      const serialize = (box) => ({ x: box.x, y: box.y, width: box.width, height: box.height });
+      const items = [...document.querySelectorAll('main p, main h2, [role="status"], button')].map(
+        (element) => {
+          const bounds = element.getBoundingClientRect(),
+            style = getComputedStyle(element);
+          const text = document.createRange();
+          text.selectNodeContents(element);
+          const textBounds = [...text.getClientRects()].map(serialize);
+          const durations = (value) =>
+            value.split(",").map((part) => {
+              const amount = parseFloat(part);
+              return part.trim().endsWith("ms") ? amount : amount * 1000;
+            });
+          return {
+            tag: element.tagName,
+            role: element.getAttribute("role"),
+            label: element.textContent,
+            disabled: element.matches(":disabled"),
+            bounds: serialize(bounds),
+            textBounds,
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            clientHeight: element.clientHeight,
+            scrollHeight: element.scrollHeight,
+            fontSize: style.fontSize,
+            whiteSpace: style.whiteSpace,
+            overflow: style.overflow,
+            foreground: style.color,
+            background: style.backgroundColor,
+            borderColor: style.borderColor,
+            borderWidth: style.borderWidth,
+            transitionMs: durations(style.transitionDuration),
+            animationMs: durations(style.animationDuration),
+            forcedColorAdjust: style.forcedColorAdjust,
+          };
+        },
+      );
+      return {
+        width: innerWidth,
+        documentWidth: document.documentElement.scrollWidth,
+        groupDisplay: getComputedStyle(document.querySelector('[role="group"]')).display,
+        reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+        forcedColors: matchMedia("(forced-colors: active)").matches,
+        items,
+        animations: document.getAnimations().map((animation) => ({
+          state: animation.playState,
+          duration: animation.effect?.getComputedTiming().duration,
+        })),
+      };
+    });
+  async function measureMode(mode, phase) {
+    const sample = { phase, ...(await geometry()) };
+    mode.layouts.push(sample);
+    await page.screenshot({ path: path.join(out, `${mode.name}-${phase}.png`), fullPage: true });
+    assert.equal(sample.groupDisplay, "flex", "Generated production utility CSS must be applied");
+    assert.equal(
+      sample.documentWidth <= sample.width + 1,
+      true,
+      `${mode.name}/${phase}: horizontal document overflow`,
+    );
+    assert.equal(sample.reducedMotion, mode.reducedMotion === "reduce");
+    assert.equal(sample.forcedColors, mode.forcedColors === "active");
+    for (const item of sample.items) {
+      assert.ok(
+        item.bounds.x >= -1 && item.bounds.x + item.bounds.width <= sample.width + 1,
+        `${mode.name}/${phase}: ${item.label} exceeds viewport`,
+      );
+      assert.ok(
+        item.scrollWidth <= item.clientWidth + 1,
+        `${mode.name}/${phase}: ${item.label} clips horizontally`,
+      );
+      assert.ok(
+        item.scrollHeight <= item.clientHeight + 1,
+        `${mode.name}/${phase}: ${item.label} clips vertically`,
+      );
+      if (item.tag === "BUTTON") {
+        assert.ok(
+          item.bounds.height >= 44,
+          `${mode.name}/${phase}: button is smaller than existing 44px minimum`,
+        );
+        for (const box of item.textBounds)
+          assert.ok(
+            box.x >= item.bounds.x - 1 &&
+              box.x + box.width <= item.bounds.x + item.bounds.width + 1 &&
+              box.y >= item.bounds.y - 1 &&
+              box.y + box.height <= item.bounds.y + item.bounds.height + 1,
+            `${mode.name}/${phase}: button text escapes its bounds`,
+          );
+      }
+      if (sample.reducedMotion)
+        assert.ok(
+          [...item.transitionMs, ...item.animationMs].every((value) => value <= 0.01),
+          `${mode.name}/${phase}: computed motion is not reduced`,
+        );
+    }
+    if (sample.reducedMotion)
+      assert.ok(
+        sample.animations.every(
+          (animation) =>
+            animation.state === "finished" ||
+            (typeof animation.duration === "number" && animation.duration <= 0.01),
+        ),
+        "Unexpected running motion in reduced mode",
+      );
+  }
+  async function focusEvidence(mode, label) {
+    const evidence = await page.evaluate(() => {
+      const element = document.activeElement,
+        style = getComputedStyle(element),
+        box = element.getBoundingClientRect();
+      const colorVisible =
+        style.outlineColor !== "transparent" && !/^rgba\([^)]*,\s*0\)$/.test(style.outlineColor);
+      return {
+        label: element.textContent,
+        role: element.getAttribute("role"),
+        tag: element.tagName,
+        disabled: element.matches(":disabled"),
+        focusVisible: element.matches(":focus-visible"),
+        outlineStyle: style.outlineStyle,
+        outlineWidth: style.outlineWidth,
+        outlineColor: style.outlineColor,
+        background: style.backgroundColor,
+        boxShadow: style.boxShadow,
+        outlineVisible:
+          parseFloat(style.outlineWidth) > 0 &&
+          style.outlineStyle !== "none" &&
+          colorVisible &&
+          style.outlineColor !== style.backgroundColor,
+        rect: { x: box.x, y: box.y, width: box.width, height: box.height },
+        viewport: { width: innerWidth, height: innerHeight },
+      };
+    });
+    mode.focus.push({ expected: label, ...evidence });
+    if (
+      mode.forcedColors === "active" &&
+      ["Start voice", "Mute", "Retry shutdown", "status"].includes(label)
+    )
+      await page.screenshot({
+        path: path.join(out, `${mode.name}-focus-${label.replaceAll(" ", "-")}.png`),
+        fullPage: true,
+      });
+    assert.notEqual(evidence.tag, "BODY");
+    assert.equal(evidence.disabled, false);
+    assert.equal(
+      evidence.focusVisible,
+      true,
+      `${mode.name}/${label}: keyboard focus-visible missing`,
+    );
+    assert.ok(
+      evidence.rect.x >= -1 &&
+        evidence.rect.x + evidence.rect.width <= evidence.viewport.width + 1 &&
+        evidence.rect.y >= -1 &&
+        evidence.rect.y + evidence.rect.height <= evidence.viewport.height + 1,
+      `${mode.name}/${label}: keyboard focus outside viewport`,
+    );
+    if (mode.forcedColors === "active")
+      assert.ok(
+        evidence.outlineVisible,
+        `${mode.name}/${label}: no visible computed focus outline in forced colours`,
+      );
+    else
+      assert.ok(
+        evidence.outlineVisible || evidence.boxShadow !== "none",
+        `${mode.name}/${label}: no computed focus indicator`,
+      );
+  }
+  async function keyboardTo(mode, name) {
+    await expect(button(name)).toBeEnabled();
+    for (let step = 0; step < 20; step++) {
+      if (await button(name).evaluate((element) => element === document.activeElement)) {
+        await focusEvidence(mode, name);
+        return;
+      }
+      await page.keyboard.press("Tab");
+    }
+    assert.fail(`${mode.name}: ${name} is not keyboard reachable`);
+  }
+  async function modeAction(mode, name, key = "Enter") {
+    await keyboardTo(mode, name);
+    await page.keyboard.press(key);
+  }
+  async function settledFocus(mode) {
+    await page.waitForFunction(() => window.voiceHarness.state().pendingActions.length === 0);
+    await page.evaluate(
+      () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+    );
+    const role = await page.evaluate(() => document.activeElement?.getAttribute("role"));
+    if (role === "status") await focusEvidence(mode, "status");
+    else {
+      const label = await page.evaluate(() => document.activeElement?.textContent);
+      await focusEvidence(mode, label);
+    }
+  }
+  async function accessibilityMode(spec) {
+    const mode = {
+      ...spec,
+      technique:
+        "Controlled document root font size; body size is separately doubled only where bodyScale=2. No viewport, pinch or browser zoom.",
+      layouts: [],
+      focus: [],
+    };
+    accessibilityModes.push(mode);
+    await page.setViewportSize({ width: spec.width, height: 844 });
+    await page.emulateMedia({ reducedMotion: spec.reducedMotion, forcedColors: spec.forcedColors });
+    await reset();
+    mode.baselineFonts = await fonts();
+    await page.evaluate(
+      ({ base, rootScale, bodyScale }) => {
+        document.documentElement.style.fontSize = `${base.root * rootScale}px`;
+        if (bodyScale !== 1) document.body.style.fontSize = `${base.body * bodyScale}px`;
+      },
+      { base: mode.baselineFonts, rootScale: spec.rootScale, bodyScale: spec.bodyScale },
+    );
+    mode.observedFonts = await fonts();
+    assert.equal(mode.observedFonts.root, mode.baselineFonts.root * spec.rootScale);
+    assert.equal(mode.observedFonts.body, mode.baselineFonts.body * spec.bodyScale);
+    assert.equal(mode.observedFonts.fixtureCopy, mode.baselineFonts.fixtureCopy * spec.bodyScale);
+    assert.equal(mode.observedFonts.button, mode.baselineFonts.button * spec.rootScale);
+    assert.equal(mode.observedFonts.status, mode.baselineFonts.status * spec.rootScale);
+    assert.equal(mode.observedFonts.visualViewportScale, 1);
+    await measureMode(mode, "idle");
+    await modeAction(mode, "Start voice");
+    await waitState("active");
+    await settledFocus(mode);
+    await measureMode(mode, "active");
+    for (const name of ["Mute", "Stop answer", "Pause voice", "Finish talking", "Type instead"])
+      await keyboardTo(mode, name);
+    await configure({ deferMute: true });
+    await modeAction(mode, "Mute", "Space");
+    await page.waitForFunction(() => window.voiceHarness.state().mutePending);
+    await measureMode(mode, "input-changing");
+    await page.evaluate(() => window.voiceHarness.resolveMute());
+    await expect(button("Unmute")).toBeEnabled();
+    await modeAction(mode, "Unmute");
+    await page.waitForFunction(() => !window.voiceHarness.state().snapshot.inputChangePending);
+    await submit("a", 1);
+    await modeAction(mode, "Stop answer");
+    await page.waitForFunction(() => window.voiceHarness.state().jobs[0].aborted);
+    await page.evaluate(() => window.voiceHarness.resolveJob(0));
+    await page.waitForFunction(() => window.voiceHarness.state().turns[0].outcome === "stale");
+    assert.equal((await snapshot()).turns[0].applied, 0);
+    await modeAction(mode, "Pause voice", "Space");
+    await waitState("paused");
+    await settledFocus(mode);
+    await measureMode(mode, "paused");
+    await modeAction(mode, "Resume voice");
+    await waitState("active");
+    await settledFocus(mode);
+    await modeAction(mode, "Finish talking", "Space");
+    await waitState("ended");
+    await settledFocus(mode);
+    await modeAction(mode, "Start voice");
+    await waitState("active");
+    await modeAction(mode, "Type instead");
+    await waitState("ended");
+    await settledFocus(mode);
+    await modeAction(mode, "Start voice");
+    await waitState("active");
+    await configure({ deferClose: true });
+    await modeAction(mode, "Pause voice");
+    await page.waitForFunction(() => window.voiceHarness.state().closePending);
+    await unsafeDisabled();
+    await measureMode(mode, "closing");
+    await page.evaluate(() => window.voiceHarness.resolveClose(false));
+    await waitState("failed");
+    await unsafeDisabled();
+    await measureMode(mode, "shutdown-failed");
+    await keyboardTo(mode, "Retry shutdown");
+    await modeAction(mode, "Type instead");
+    await page.waitForFunction(() => window.voiceHarness.state().pendingActions.length === 0);
+    await configure({ deferClose: true });
+    await modeAction(mode, "Retry shutdown");
+    await page.waitForFunction(() => window.voiceHarness.state().closePending);
+    await measureMode(mode, "retrying");
+    await page.evaluate(() => window.voiceHarness.resolveClose(true));
+    await waitState("ended");
+    await settledFocus(mode);
+    await noPrivateAssurance();
+    assert.equal((await snapshot()).attempts.length, 4);
+    assert.deepEqual((await snapshot()).faults, []);
+    mode.status = "PASSED";
+    checks.push(
+      `${spec.name}: exact font/media evidence and seven current states fit ${spec.width}px without clipping`,
+    );
+    checks.push(
+      `${spec.name}: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics`,
+    );
+  }
   let failure = null;
   try {
     await reset();
@@ -547,6 +897,19 @@ async function main() {
     checks.push(
       "Start/Pause/Resume/Retry retain usable focus and status fallback supports onward Tab",
     );
+    for (const spec of accessibilitySpecs) {
+      try {
+        await accessibilityMode(spec);
+      } catch (error) {
+        const mode = accessibilityModes.at(-1);
+        mode.status = "FAILED";
+        mode.failure = String(error.stack || error);
+        mode.fixtureState = await snapshot();
+        accessibilityFailures.push({ name: spec.name, failure: mode.failure });
+        await page.screenshot({ path: path.join(out, `${spec.name}-failure.png`), fullPage: true });
+      }
+    }
+    assert.deepEqual(accessibilityFailures, [], "Accessibility mode checks must all pass");
     assert.deepEqual(errors, []);
     assert.deepEqual(blocked, []);
     microphoneAttempts += await page.evaluate(() => window.realMicrophoneAttempts || 0);
@@ -562,12 +925,23 @@ async function main() {
       count: checks.length,
       checks,
       focusAfterActions,
+      accessibilityModes,
+      accessibilityFailures,
+      productionCss: {
+        path: process.env.BFA_UI_CSS,
+        sha256: createHash("sha256").update(css).digest("hex"),
+      },
       pageErrors: errors,
       blockedRequests: blocked,
       realProviderCalls: 0,
       microphoneAttempts,
       browserVersion: browser.version(),
       viewport: { width: 390, height: 844 },
+      accessibilityViewports: accessibilitySpecs.map((spec) => ({
+        mode: spec.name,
+        width: spec.width,
+        height: 844,
+      })),
       styled: !!css,
       scope:
         "Real React component and service/binding with deferred fictional resource/provider doubles; not device, authenticated staging, screen-reader or live voice acceptance.",

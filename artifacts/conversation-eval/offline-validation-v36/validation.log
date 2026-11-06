@@ -1,0 +1,861 @@
+
+=== browser-setup.log ===
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234)[2m from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38081:18
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38607:9
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:37504:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234)[2m from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38081:18
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38607:9
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:37504:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234)[2m from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38081:18
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38607:9
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:37504:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234)[2m from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38081:18
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:38607:9
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:37504:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234)[2m from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip[22m
+/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js:33313
+              throw new Error(`${err.message} Path: ${lockfilePath}`);
+              ^
+
+Error: Unable to update lock within the stale threshold Path: /workspace/scratch/500c5aa1eb33/v36/browser-runtime/__dirlock
+    at Object.onCompromised (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js:33313:21)
+    at setLockAsCompromised (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js:10425:17)
+    at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js:10389:16
+    at callback (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/utilsBundle.js:39023:24)
+    at FSReqCallback.oncomplete (node:fs:199:5)
+
+Node.js v24.22.1
+
+=== browser-download-diagnostic.log ===
+status 200
+Content-Type text/html
+Content-Length 195
+Location None
+<html>
+    <head><title>Site Unavailable</title></head>
+    <body>
+      <center>
+        <h1>Site Unavailable</h1>
+        <p>Unable to access this site.</p>
+      </center>
+    </body>
+</html>
+
+
+=== build-baseline.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.70s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v36/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-B9EewoYB.js                    0.26 kB │ gzip:  0.18 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-CeifxoWL.js                          0.42 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-D9LjQpqP.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-BSbk-YsQ.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-DsOTaZCQ.js                        1.12 kB │ gzip:  0.56 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-ClZ_UBdQ.js                             1.29 kB │ gzip:  0.62 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-CSSRwTvH.js                              1.72 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-DyDal7rr.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-Dr5yYj0E.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-B3HX2ZcW.js                         3.34 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B2mZMGm7.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DooZayzM.js               5.09 kB │ gzip:  1.12 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BvyrwCr-.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-CZbsVd8e.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CNWWplda.js                                     13.05 kB │ gzip:  3.80 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-BtvRh_tM.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DFnZzILA.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-34Xpk4og.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-0PUqJclp.js                                  60.35 kB │ gzip: 15.44 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DKVPW8YF.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 2.40s
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-11-01)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.20 kB │ gzip:   0.18 kB
+.output/server/_ssr/empty-plugin-adapters-B9EewoYB.mjs               0.26 kB │ gzip:   0.19 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_ssr/createServerRpc-CeifxoWL.mjs                     0.43 kB │ gzip:   0.30 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.68 kB │ gzip:   0.39 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.77 kB │ gzip:   0.41 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.99 kB │ gzip:   0.59 kB
+.output/server/_ssr/start-BSbk-YsQ.mjs                               1.13 kB │ gzip:   0.61 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-DsOTaZCQ.mjs                   1.17 kB │ gzip:   0.62 kB
+.output/server/_ssr/gate.server-D9LjQpqP.mjs                         1.19 kB │ gzip:   0.69 kB
+.output/server/_libs/hookable.mjs                                    1.20 kB │ gzip:   0.54 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.36 kB │ gzip:   0.74 kB
+.output/server/_ssr/createSsrRpc-ClZ_UBdQ.mjs                        1.38 kB │ gzip:   0.70 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.42 kB │ gzip:   0.74 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.53 kB │ gzip:   0.82 kB
+.output/server/_ssr/createStart-CSSRwTvH.mjs                         1.60 kB │ gzip:   0.61 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.84 kB │ gzip:   0.78 kB
+.output/server/__23tanstack-start-server-fn-resolver-DyDal7rr.mjs    1.89 kB │ gzip:   0.82 kB
+.output/server/_ssr/gate.functions-Dr5yYj0E.mjs                      2.09 kB │ gzip:   0.82 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.11 kB │ gzip:   0.95 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.43 kB │ gzip:   1.14 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.48 kB │ gzip:   0.99 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.58 kB │ gzip:   0.92 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.63 kB │ gzip:   1.31 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.07 kB │ gzip:   1.03 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.25 kB │ gzip:   1.28 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.31 kB │ gzip:   1.41 kB
+.output/server/_ssr/request-response-B3HX2ZcW.mjs                    3.38 kB │ gzip:   1.20 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.43 kB │ gzip:   0.95 kB
+.output/server/_ssr/auth-middleware-B2mZMGm7.mjs                     3.78 kB │ gzip:   1.50 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.08 kB │ gzip:   1.26 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.37 kB │ gzip:   1.41 kB
+.output/server/_ssr/ssr.mjs                                          4.43 kB │ gzip:   1.87 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.48 kB │ gzip:   1.95 kB
+.output/server/_libs/lucide-react.mjs                                4.79 kB │ gzip:   1.30 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.95 kB │ gzip:   1.49 kB
+.output/server/_tanstack-start-manifest_v-DooZayzM.mjs               5.19 kB │ gzip:   1.18 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.38 kB │ gzip:   2.17 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.44 kB │ gzip:   1.94 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.56 kB │ gzip:   1.83 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.75 kB │ gzip:   1.97 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.16 kB │ gzip:   2.37 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.17 kB │ gzip:   1.63 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.29 kB │ gzip:   2.02 kB
+.output/server/_ssr/day._day-BvyrwCr-.mjs                            6.80 kB │ gzip:   3.13 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.29 kB │ gzip:   2.14 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.62 kB │ gzip:   2.65 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.94 kB │ gzip:   3.18 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.36 kB │ gzip:   3.18 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.61 kB │ gzip:   3.10 kB
+.output/server/_ssr/esm-CNWWplda.mjs                                12.09 kB │ gzip:   3.75 kB
+.output/server/_ssr/journey-ai.functions-CZbsVd8e.mjs               12.23 kB │ gzip:   3.89 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.49 kB │ gzip:   4.29 kB
+.output/server/_libs/tanstack__history.mjs                          12.54 kB │ gzip:   3.74 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.67 kB │ gzip:   3.51 kB
+.output/server/_ssr/adapter.server-BtvRh_tM.mjs                     13.34 kB │ gzip:   3.91 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.33 kB │ gzip:   4.26 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.43 kB │ gzip:   4.13 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.62 kB │ gzip:   4.93 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.06 kB │ gzip:   4.81 kB
+.output/server/index.mjs                                            17.36 kB │ gzip:   4.94 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.89 kB │ gzip:   5.19 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.66 kB │ gzip:   5.40 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.50 kB │ gzip:   9.05 kB
+.output/server/_ssr/conversation-staging-DFnZzILA.mjs               27.82 kB │ gzip:   6.39 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                30.19 kB │ gzip:   8.03 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.15 kB │ gzip:  10.67 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.51 kB │ gzip:   9.61 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.94 kB │ gzip:  11.21 kB
+.output/server/_ssr/router-34Xpk4og.mjs                             38.25 kB │ gzip:   9.96 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.54 kB │ gzip:  10.69 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.58 kB │ gzip:  12.80 kB
+.output/server/_ssr/server-0PUqJclp.mjs                             58.93 kB │ gzip:  15.34 kB
+.output/server/_ssr/day._day-DKVPW8YF.mjs                           78.23 kB │ gzip:  18.72 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.41 kB │ gzip:  20.98 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.64 kB │ gzip:  17.60 kB
+.output/server/_libs/tailwind-merge.mjs                             85.68 kB │ gzip:  15.25 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.10 kB │ gzip:  24.93 kB
+.output/server/_libs/zod.mjs                                       100.31 kB │ gzip:  17.35 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.95 kB │ gzip:  25.14 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.50 kB │ gzip:  23.23 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.59 kB │ gzip:  23.98 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.79 kB │ gzip:  47.04 kB
+.output/server/_libs/supabase__auth-js.mjs                         320.12 kB │ gzip:  64.87 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              755.36 kB │ gzip: 159.65 kB
+
+✓ built in 1.10s
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+=== focus-lint-initial.log ===
+
+/workspace/scratch/500c5aa1eb33/v36/repo/scripts/conversation-ui/check-focus.cjs
+  392:28  error  Replace `⏎··········.getAnimations({·subtree:·true·})⏎··········` with `.getAnimations({·subtree:·true·})`  prettier/prettier
+  395:1   error  Delete `··`                                                                                                 prettier/prettier
+  396:1   error  Replace `············` with `··········`                                                                    prettier/prettier
+  397:1   error  Delete `··`                                                                                                 prettier/prettier
+
+✖ 4 problems (4 errors, 0 warnings)
+  4 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+=== focus-lint-correction.log ===
+
+=== focus-lint-final.log ===
+
+=== voice-harness-lint-initial.log ===
+
+=== independent-harness-syntax.log ===
+{"file": "check-focus.cjs", "exitCode": 0}
+{"file": "check-voice-controls.cjs", "exitCode": 0}
+
+=== independent-combined-bundle.log ===
+{
+  "status": "passed",
+  "scope": "Actual existing esbuild bundle functions and missing/empty-CSS guards only; no browser or rendering execution",
+  "bundles": [
+    {
+      "source": "check-focus.cjs",
+      "variant": "preview",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1963578,
+      "htmlSha256": "7c0d5663a27062a70f5bc2a4f427cf3ba497cf4e2060dc9583082065b9ac0047",
+      "scriptSyntax": "passed"
+    },
+    {
+      "source": "check-focus.cjs",
+      "variant": "staging",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1475008,
+      "htmlSha256": "d5c039d5d633c6fc6ae07527713a9d8bbd823c58b5ab258b429d47310c203f98",
+      "scriptSyntax": "passed"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "variant": "voice",
+      "sourceSha256": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318",
+      "htmlBytes": 1607411,
+      "htmlSha256": "ffdc089c5a48e32681b164745ea1c20dc2aef1313927e3d618348e8154a50b87",
+      "scriptSyntax": "passed"
+    }
+  ],
+  "cssGuards": [
+    {
+      "source": "check-focus.cjs",
+      "kind": "missing",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-focus.cjs",
+      "kind": "empty",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "kind": "missing",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "kind": "empty",
+      "status": "rejected-before-browser"
+    }
+  ],
+  "productionCss": {
+    "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+    "bytes": 103488,
+    "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+  },
+  "browserLaunches": 0,
+  "browserChecksExecuted": 0
+}
+
+=== independent-voice-bundle.log ===
+{
+  "status": "passed",
+  "scope": "Actual existing esbuild bundle functions and empty-CSS guards only; no browser or rendering execution",
+  "bundles": [
+    {
+      "source": "check-voice-controls.cjs",
+      "variant": "voice",
+      "sourceSha256": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318",
+      "htmlBytes": 1607411,
+      "htmlSha256": "ffdc089c5a48e32681b164745ea1c20dc2aef1313927e3d618348e8154a50b87",
+      "scriptSyntax": "passed"
+    }
+  ],
+  "productionCss": {
+    "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+    "bytes": 103488,
+    "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+  },
+  "browserLaunches": 0,
+  "browserChecksExecuted": 0
+}
+
+=== independent-static-summary.json ===
+{
+  "syntaxChecks": 2,
+  "bundleExitCode": 0,
+  "sourceSha256": {
+    "check-focus.cjs": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+    "check-voice-controls.cjs": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318"
+  },
+  "unchangedDuringChecks": true,
+  "browserChecksExecuted": 0,
+  "browserLaunches": 0
+}
+
+=== independent-bundle/result.json ===
+{
+  "status": "passed",
+  "scope": "Actual existing esbuild bundle functions and missing/empty-CSS guards only; no browser or rendering execution",
+  "bundles": [
+    {
+      "source": "check-focus.cjs",
+      "variant": "preview",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1963578,
+      "htmlSha256": "7c0d5663a27062a70f5bc2a4f427cf3ba497cf4e2060dc9583082065b9ac0047",
+      "scriptSyntax": "passed"
+    },
+    {
+      "source": "check-focus.cjs",
+      "variant": "staging",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1475008,
+      "htmlSha256": "d5c039d5d633c6fc6ae07527713a9d8bbd823c58b5ab258b429d47310c203f98",
+      "scriptSyntax": "passed"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "variant": "voice",
+      "sourceSha256": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318",
+      "htmlBytes": 1607411,
+      "htmlSha256": "ffdc089c5a48e32681b164745ea1c20dc2aef1313927e3d618348e8154a50b87",
+      "scriptSyntax": "passed"
+    }
+  ],
+  "cssGuards": [
+    {
+      "source": "check-focus.cjs",
+      "kind": "missing",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-focus.cjs",
+      "kind": "empty",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "kind": "missing",
+      "status": "rejected-before-browser"
+    },
+    {
+      "source": "check-voice-controls.cjs",
+      "kind": "empty",
+      "status": "rejected-before-browser"
+    }
+  ],
+  "productionCss": {
+    "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+    "bytes": 103488,
+    "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+  },
+  "browserLaunches": 0,
+  "browserChecksExecuted": 0
+}
+
+=== focus-initial/preparation-status.json ===
+{
+  "status": "PREPARED_UNRUN",
+  "nodeSyntax": "passed",
+  "bundles": [
+    {
+      "kind": "preview",
+      "bytes": 1963578,
+      "sha256": "7c0d5663a27062a70f5bc2a4f427cf3ba497cf4e2060dc9583082065b9ac0047",
+      "bundled": true,
+      "browserExecuted": false
+    },
+    {
+      "kind": "staging",
+      "bytes": 1475008,
+      "sha256": "d5c039d5d633c6fc6ae07527713a9d8bbd823c58b5ab258b429d47310c203f98",
+      "bundled": true,
+      "browserExecuted": false
+    }
+  ],
+  "browserExecuted": false,
+  "browserChecksPassed": 0,
+  "screenshots": [],
+  "reason": "No runnable Chromium after the root agent's single standard runtime preparation; no browser launched for these new checks.",
+  "cssPath": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+  "cssSha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9",
+  "scriptSha256": "14759fa4779187686fb72e549c7cfec53737606e8c96bb6e7507df2c82fa8f58"
+}
+
+=== focus-final-preparation-status.json ===
+{
+  "status": "PREPARED_UNRUN",
+  "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+  "bundles": [
+    {
+      "source": "check-focus.cjs",
+      "variant": "preview",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1963578,
+      "htmlSha256": "7c0d5663a27062a70f5bc2a4f427cf3ba497cf4e2060dc9583082065b9ac0047",
+      "scriptSyntax": "passed"
+    },
+    {
+      "source": "check-focus.cjs",
+      "variant": "staging",
+      "sourceSha256": "96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00",
+      "htmlBytes": 1475008,
+      "htmlSha256": "d5c039d5d633c6fc6ae07527713a9d8bbd823c58b5ab258b429d47310c203f98",
+      "scriptSyntax": "passed"
+    }
+  ],
+  "productionCss": {
+    "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+    "bytes": 103488,
+    "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+  },
+  "browserExecuted": false,
+  "browserChecksPassed": 0,
+  "screenshots": [],
+  "priorReport": "focus-initial/preparation-status.json",
+  "priorReportSourceSha256": "14759fa4779187686fb72e549c7cfec53737606e8c96bb6e7507df2c82fa8f58",
+  "provenanceNote": "The original report preserves the pre-formatting source hash; independent final bundle verification uses the frozen final source. Neither report claims browser execution."
+}
+
+=== voice-initial/bundle-validation.json ===
+{
+  "status": "BUNDLE_VALIDATED_BROWSER_UNRUN",
+  "sourceSha256": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318",
+  "productionCss": {
+    "path": "/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css",
+    "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9",
+    "bytes": 103488
+  },
+  "generatedHtml": {
+    "bytes": 1607411,
+    "sha256": "ffdc089c5a48e32681b164745ea1c20dc2aef1313927e3d618348e8154a50b87"
+  },
+  "actualBundleFunction": true,
+  "browserLaunched": false,
+  "accessibilityModesExecuted": 0,
+  "lifecycleBrowserChecksExecuted": 0,
+  "realMicrophoneCalls": 0,
+  "realProviderCalls": 0,
+  "limitation": "Only actual esbuild/CSS composition validated; no DOM, computed media, keyboard, layout, focus or screenshot observation occurred."
+}
+
+=== accessibility-focus-notes.md ===
+# v36 conversation focus/accessibility harness notes
+
+Work is limited to `scripts/conversation-ui/check-focus.cjs` in the root-verified v36 checkout (main prefix `1071a525`, tree prefix `47c535`). Read AGENTS.md, the current continuation marker, P2 preview constraints, existing focus harness, real ConversationPreview/StagingConsole and their existing local doubles before editing. No application component, shared style, source policy, SQL, setting, dependency or runtime route was changed by this agent.
+
+## Current outcome: prepared and unrun in Chromium
+
+The original 20 focus/layout checks are preserved. Nineteen additional mode probes are prepared, for a planned 39 checks if a future complete browser run passes. **Zero new browser probes were executed; no screenshots or reproduced application defects are claimed.** Root reported that no runnable Chromium was available and its single normal runtime preparation could not obtain a valid browser archive. This agent did not repeat installation or environment probes or substitute another browser surface lacking the required viewport/media controls. All 37 native PostgreSQL cases remain independently prepared/unrun.
+
+Initial static preparation evidence is `/workspace/scratch/500c5aa1eb33/v36/focus-initial/preparation-status.json`, explicitly marked PREPARED_UNRUN with browserExecuted:false, browserChecksPassed:0 and an empty screenshot list. It preserves the initial pre-format script and bundle hashes. `focus-initial/production.css` preserves the actual generated production CSS used for bundling. This is static evidence, not computed browser styling or visual acceptance.
+
+## Prepared added coverage
+
+The existing real React/Radix fixtures still use fictional local service/Auth-operation doubles, with no application route. New probes use three independent modes at 390×844:
+
+- Controlled 200% font enlargement: computed root and body baselines are both doubled inside the fixture (expected baseline root16px/body18px to root32px/body36px). The test records actual before/after root, body, heading, button, representative paragraph and composer sizes. It requires representative control text to double and visualViewport.scale to remain1. This method is explicitly not native browser text zoom or WCAG conformance.
+- Reduced-motion emulation: actual media-query state, dialog computed animation/transition durations and runtime animation records are captured; the current global short-duration rule is asserted.
+- Forced-colour emulation: actual media-query state, keyboard focus-visible state, outline width/style/colour, background/border/shadow and forced-colour adjustment are recorded. Focus must remain visibly outlined rather than relying on a suppressed shadow ring. The staging Christian-content switch must retain a distinguishable thumb/track without changing its setting.
+
+Each mode covers staging Delete/Cancel, navigation Cancel, Stop during a pending local append, preview Finish/Keep working, preview switch Cancel and preview Retry/Stop. Checks require sequential Tab reachability, unobscured controls after keyboard scrolling, unclipped control text, narrow page/dialog bounds and Tab/Shift+Tab dialog containment. Escape or deliberate Cancel/Keep restores the exact opener and fictional draft. Preview retry retains a newer unsent draft. Stop remains reachable during pending work.
+
+Only the preview Retry/Stop interval pauses the fixture clock so a canned response cannot finish before keyboard traversal. The installed Playwright type declarations confirm the existing install/pauseAt/resume APIs. The clock is installed once, paused at its current time plus1second and resumed in finally. This is explicitly labelled a controlled fictional pending interval, not evidence about application/provider timing. No production deadline or implementation changes.
+
+New HTTP fetch, WebSocket, peer-connection and microphone/display-capture guards record forbidden attempts; the existing all-request routing still aborts any unexpected document/resource transport. Results must show no forbidden attempts or blocked unexpected requests. No real SDK/Auth/provider/device is invoked by the fixtures. Source rendering remains exactly the existing real components and source strings; no SRT wording or policy is changed.
+
+Generated production CSS is now required for these style/layout assertions, rather than silently skipping them. The harness records its absolute path and SHA-256 and copies it into the evidence directory. Each future probe records media/fonts/style/bounds observations and saves a screenshot or a failure screenshot; failed probes remain failed in the aggregate. This browser-only evidence does not yet exist for the new modes.
+
+## Static validation and diagnostics
+
+- `node --check scripts/conversation-ui/check-focus.cjs`: passed.
+- Both actual esbuild fixture bundles compiled with the generated production CSS while an in-memory wrapper removed the final main invocation. No browser launch or page execution occurred.
+- Initial compiled preview fixture: 1,963,578 bytes, SHA-256 `7c0d5663a27062a70f5bc2a4f427cf3ba497cf4e2060dc9583082065b9ac0047`.
+- Initial compiled staging fixture: 1,475,008 bytes, SHA-256 `d5c039d5d633c6fc6ae07527713a9d8bbd823c58b5ab258b429d47310c203f98`.
+- Production CSS: `/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css`, SHA-256 `83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9`.
+- Initial scoped ESLint reported four formatting-only findings around the animation mapping expression after standalone formatting. Repository ESLint --fix corrected those; `focus-lint-initial.log`, `focus-lint-correction.log` and `focus-lint-final.log` preserve the sequence. Final scoped ESLint passes.
+- Independent review requested one narrow strengthening: forced-colour outline colour must differ from the control background. This was added before freeze, without weakening other checks.
+
+Final frozen harness SHA-256: `96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00`. Root/reviewer own final independent bundle-only verification and the wider checkpoint evidence. Previous browser keyboard results remain historical, not rerun results for this changed harness.
+
+## Future reproduction once a browser runtime is available
+
+Use the existing harness and explicit installed paths; do not substitute viewport/pinch scaling for font enlargement or label static bundles as browser acceptance:
+
+```
+BFA_PLAYWRIGHT_MODULE=/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright BFA_CHROMIUM_EXECUTABLE=/absolute/installed/chromium BFA_UI_CSS=/absolute/current/generated-production.css node scripts/conversation-ui/check-focus.cjs /absolute/new-focus-evidence
+```
+
+Inspect the preserved failure observations/screenshots first, then fix only reproduced component/style defects. Potential issues suggested by source—nowrap/fixed-height controls, centered tall dialogs and shadow-only forced-colour focus—remain hypotheses, not confirmed defects. No speculative application fix was made.
+
+Independent final review completed on the frozen harness hash: both real-component bundles and their generated JavaScript syntax passed; missing and empty CSS each failed before browser launch. The reviewer recorded zero browser launches/checks in `accessibility-independent-review.md`. No source blocker was found, and all new actual media/layout/keyboard outcomes remain unrun.
+
+## Final evidence correlation
+
+The preserved `focus-initial/preparation-status.json` records the earlier pre-formatting source hash `14759fa4779187686fb72e549c7cfec53737606e8c96bb6e7507df2c82fa8f58`. The final frozen hash is `96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00`, independently compiled in `independent-bundle/result.json` and correlated in `focus-final-preparation-status.json`. Both reports are preparation-only with zero browser execution; the initial record is not overwritten or mislabelled as the final hash.
+
+=== accessibility-voice-notes.md ===
+# VoiceControls accessibility preparation — v36
+
+Owned repository change: `scripts/conversation-ui/check-voice-controls.cjs` only.
+Frozen SHA-256: `fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318`.
+
+## Confirmed result
+
+The existing harness extension parses, passes scoped ESLint and successfully executes its actual esbuild `bundle()` function with generated production CSS. **No browser was launched. No new or existing browser check was executed in this batch, and no screenshot, computed-mode observation or UI pass is claimed.** The previous browser evidence remains historical and separate.
+
+Root established that the installed Playwright package has no usable Chromium binary. One normal official browser setup attempt failed; the download response was a small HTML response rather than a browser archive. Root retains that setup diagnostic. This subtask did not install dependencies, repeat the download/setup attempt or substitute a remote browser without the required media/fixture APIs.
+
+There is no reproduced component, focus, motion, colour or layout defect. Consequently this subtask made no application component/style change. All 37 prepared native cases remain unrun and separate.
+
+## Prepared coverage
+
+All original VoiceControls checks are preserved. The new layout/media cases now require a nonempty `BFA_UI_CSS` rather than silently reporting layout success without production styles. The report records the exact CSS path/hash and checks actual computed flex layout before interpreting geometry.
+
+Five prepared modes reuse the same real VoiceControls, ConversationService and ConversationVoiceBinding with deferred fictional resource/provider ports:
+
+1. 320 CSS-pixel viewport, controlled root font doubled, body unchanged.
+2. 320 CSS-pixel viewport, controlled root font and separately computed body font both doubled.
+3. 390 CSS-pixel viewport with reduced-motion preference.
+4. 390 CSS-pixel viewport with forced colours.
+5. 320 CSS-pixel viewport combining controlled root/body doubling, reduced motion and forced colours.
+
+The technique is explicit inline fixture sizing derived from observed baseline computed fonts. The intended usual root change is 16 to 32 px and the current source's fixed body size is 18 px, separately doubled to 36 px in the body-enlargement modes. These numeric browser observations are still unrun. At execution, the harness records actual root, body, inherited fixture copy, button and status font sizes before/after, requires the intended ratios and requires visualViewport.scale to stay 1. It does not call viewport/pinch scaling genuine text zoom, and it does not claim that root-only sizing enlarges all text.
+
+Each prepared mode follows seven actual current states: idle, active, changing input, paused, closing, shutdown failed and retrying. It uses the unchanged real long labels/status wording, including Finish talking and Retry shutdown. It records document/element geometry, text rectangles, scroll extents and screenshots; asserts no clipping or horizontal overflow; and preserves the existing 44px control minimum.
+
+Actual keyboard navigation and activation exercise Start, Mute, Unmute, Stop answer, Pause, Resume, Finish talking, Type instead and Retry shutdown. The real service still cancels its fictional turn and rejects the deliberately late reply. Mode evidence includes keyboard focus-visible state, target rectangle, outline style/width/colour, background and shadow. Forced-colour focus requires a visible computed outline rather than relying only on a box-shadow ring. Status focus fallback is also inspected. No assertion is weakened because a browser is unavailable.
+
+Reduced-motion and forced-colour media must match their requested runtime values. Reduced-motion checks inspect actual computed transition/animation durations and any running document animations. This is prepared browser evidence, not currently observed behaviour or a screen-reader/WCAG conformance claim.
+
+Existing transport/WebSocket interception and real microphone rejection remain in place. The fixture resources are fictional, and application routes remain inactive. Runtime errors, blocked requests and attempted real microphone access still fail the harness.
+
+## Static and bundle validation
+
+- `node --check scripts/conversation-ui/check-voice-controls.cjs` passed.
+- Scoped ESLint passed with empty diagnostics in `/workspace/scratch/500c5aa1eb33/v36/voice-harness-lint-initial.log`.
+- Existing repository Prettier formatted the extension.
+- `/workspace/scratch/500c5aa1eb33/v36/voice-bundle-validation.cjs` loads the actual harness definitions after removing only the final `main().catch(...)` invocation in memory, then invokes the actual `bundle()` function. It supplies no fake browser, media, layout, focus or keyboard results. The repository harness itself retains its normal entrypoint.
+- `/workspace/scratch/500c5aa1eb33/v36/voice-initial/bundle-validation.log` and `.json` record `BUNDLE_VALIDATED_BROWSER_UNRUN`, zero browser checks/modes executed and no browser launch.
+
+Independent review repeated the actual bundle composition and generated-JavaScript syntax check on the same frozen source, and verified actual main() rejects empty CSS before any browser launch. Its launch counter and browser-check count remained zero; `/workspace/scratch/500c5aa1eb33/v36/independent-voice-bundle.log` records this. Review found no blocker in the prepared source, while actual browser acceptance remains unrun.
+
+The generated production stylesheet is 103488 bytes with SHA-256 `83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9`. Its source is the root task's completed v36 baseline build, `repo/.output/public/assets/styles-DuOMzkts.css`. The actual bundle includes that complete stylesheet and resolves the real component/service/binding with fictional ports. Generated HTML is 1607411 bytes, SHA-256 `ffdc089c5a48e32681b164745ea1c20dc2aef1313927e3d618348e8154a50b87`. It was composed in memory and not executed.
+
+Exact bundle-validation invocation:
+
+```sh
+BFA_PLAYWRIGHT_MODULE=/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright BFA_UI_CSS=/workspace/scratch/500c5aa1eb33/v36/repo/.output/public/assets/styles-DuOMzkts.css node /workspace/scratch/500c5aa1eb33/v36/voice-bundle-validation.cjs
+```
+
+Future browser invocation, only when an existing usable Chromium runtime is available:
+
+```sh
+BFA_PLAYWRIGHT_MODULE=/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright BFA_UI_CSS=/absolute/path/to/fresh/production.css BFA_CHROMIUM_EXECUTABLE=/absolute/path/to/existing/chromium node scripts/conversation-ui/check-voice-controls.cjs /absolute/path/to/new/evidence-directory
+```
+
+The existing native browser executable override remains optional when Playwright already has its compatible browser. No package, browser, app dependency or paid service is installed by this harness.
+
+## Remaining limits
+
+All five new browser modes and the existing baseline browser workflow are unrun here. Actual Chromium DOM/media/geometry, forced-colour focus, enlarged text, screenshots and real keyboard observations require the missing runtime. Static checks and bundling cannot establish them. No layout/focus/contrast/motion fix should be claimed until an actual defect is reproduced and the same browser checks pass after repair. No actual Auth, provider, microphone, model/voice, device or screen-reader acceptance occurred. No connected SQL/settings, route activation, publication, paid edit or purchase occurred.
+
+=== accessibility-independent-review.md ===
+# Independent conversation accessibility review
+
+6 November 2026. Scope: the existing transport-blocked conversation preview, fictional staging console and inactive VoiceControls fixtures. No authored content, clinical policy, private-writing rule, runtime activation or service/SQL behavior is in scope.
+
+## Initial source and harness review
+
+Read repository `AGENTS.md`, the latest continuation completion/next-task block, `p2-preview-checkpoint.md`, both existing browser harnesses, the actual conversation components, shared dialog/button primitives and relevant production CSS.
+
+The earlier checkpoint explicitly leaves enlarged text, reduced motion and forced colours unverified for these conversation surfaces. Its ordinary keyboard/mobile checks and the separate completed ten-day journey root-font checks remain historical evidence, not new results of this batch.
+
+Review requirements sent to the two harness authors:
+
+- Label the enlargement technique precisely: a controlled root font of 32px compared with 16px, at the same CSS viewport and scale. Record actual representative computed text sizes. This is not browser/native text zoom, pinch zoom or proof that every text node doubled. Production body text is fixed at 18px (19px at wide viewports), so root-font enlargement alone does not enlarge inherited pixel-sized body copy.
+- Verify reduced-motion media activation and actual computed animation/transition durations and runtime animation state. Existing production CSS already reduces animation and transition durations to 0.001ms; asserting only a media preference is insufficient.
+- Verify forced-colour activation together with computed and visible keyboard focus/boundaries. A nominal focus state or shadow-only focus ring is insufficient. Inspect actual screenshots as well as measurements.
+- Keep actual dialogs keyboard-reachable, including Tab/Shift+Tab containment, Escape/Cancel focus restoration and exact unsent draft preservation. Enlarged long labels and taller dialogs must remain reachable without horizontal clipping.
+- Retain blocked HTTP/WebSocket behavior and explicit microphone guards. Count real API attempts separately from intentionally fictional service/resource calls. No live Auth, microphone, provider or persistence acceptance may be inferred.
+
+Potential source targets are not yet confirmed defects: Button defaults to fixed height and nowrap; Dialog and AlertDialog center fixed content without explicit maximum height or scrolling. Any repair must follow actual reproduced evidence.
+
+The component import audit shows the shared Button/Dialog/AlertDialog are consumed by the conversation components; their remaining references are unused UI helper components. Journey routes use their own controls and classes. Shared global styling changes would warrant targeted journey regression; a source-verified conversation-only repair does not justify replaying the completed journey audit.
+
+## Execution status
+
+The installed Playwright package did not have a usable Chromium runtime. The root task preserved one normal setup failure and a diagnostic showing the official archive endpoint returned a 195-byte HTML “Site Unavailable” response, not a browser archive. The inspected fallback lacked the necessary media, viewport and fixture-routing capabilities. This reviewer did not install anything, repeat setup, launch a browser or substitute mock layout observations.
+
+All new browser modes/probes remain prepared and **unrun**, as do the existing baseline browser workflows in this batch. There are no screenshots or newly observed UI defects. No application fix, layout pass, forced-colour result, reduced-motion result or visual accessibility acceptance is claimed.
+
+## Final prepared source review
+
+The focus harness preserves its twenty original checks and adds nineteen probes across three requested modes at 390×844: controlled root/body enlargement, reduced motion and forced colours. It records baseline/current computed font sizes and scale, actual media values, page/dialog bounds, focus styling and runtime animation data. Tab and Shift+Tab containment, Cancel/Keep/Escape restoration, exact drafts, pending staging Stop and preview Retry/Stop remain assertions on real components with fictional operation doubles. A paused Playwright clock holds only the fictional retry-response interval; the code resumes it in `finally` and does not call this production timing acceptance. The forced-colour switch probe checks actual thumb/track distinction without a shadow. Review added the explicit focused-outline/background inequality before freeze.
+
+The VoiceControls harness preserves the original service/binding lifecycle checks and prepares five modes: root-only enlargement and separate root+body enlargement at 320px, reduced motion and forced colours at 390px, and the combined enlarged/reduced/forced mode at 320px. Seven current states, nine actual action labels, keyboard/focus state, document/control geometry, unclipped text, original 44px minimum controls, actual computed durations and runtime animations are covered by prepared assertions. No fictional resource callback is represented as a real microphone/provider call.
+
+The fixed production body font means the distinction between root-only and root+body enlargement matters. Both scripts explicitly describe controlled fixture sizing and record actual ratios; neither presents viewport/pinch scaling as native text zoom. Actual browser values still await execution.
+
+Both harnesses now reject absent or empty production CSS instead of silently skipping styled checks. Their evidence binds the exact supplied CSS hash; a hash alone does not establish freshness against arbitrary caller source. For this checkpoint, the stylesheet is the output of the successful baseline build while all 455 application source files remained byte-identical to the preceding checkpoint, with no added source files. Future browser execution must rebuild immediately before freezing and recording its source/CSS evidence. Fixtures omit the app root's external Google-font stylesheet and therefore use locally available fallback fonts; they do not establish hosted typography or full-route rendering.
+
+No blocking source-review finding remains for saving this prepared harness extension. This is not acceptance of the unexecuted browser assertions.
+
+## Independent non-browser verification
+
+- Two frozen harness files passed `node --check`.
+- Invoked the actual existing esbuild `bundle()` functions for preview, staging and VoiceControls. An in-memory copy removed only the final automatic `main().catch(...)` invocation and exported the existing functions. The repository scripts were not modified for this check. Browser launch was trapped; the launch counter remained zero.
+- All three generated HTML fixtures contained the exact production CSS and their compiled JavaScript parsed successfully. HTML sizes were 1,963,578 bytes (preview), 1,475,008 bytes (staging) and 1,607,411 bytes (VoiceControls).
+- Four independent guard checks passed: missing and empty CSS each rejected before browser launch in each harness. These are configuration checks, not browser-mode tests.
+- Both harness hashes remained unchanged during the independent checks. No browser checks, media emulation, keyboard interaction, geometry inspection or screenshot capture ran.
+
+Evidence: `independent-harness-syntax.log`, `independent-combined-bundle.log`, `independent-static-summary.json`, `independent-bundle/result.json`, and the scratch-only reproducible `review-bundle-check.cjs`. The earlier independent VoiceControls-only bundle run remains in `independent-voice-bundle.log`. Authors retain their scoped lint and bundle diagnostics separately; the focus lint initially had four formatting findings that were corrected, not UI failures.
+
+| Frozen input | SHA-256 |
+| --- | --- |
+| `check-focus.cjs` | `96ae59ca9162db2e35d6981aa060e1001ae5e88bda00cb35ab8ae5d6f1c77c00` |
+| `check-voice-controls.cjs` | `fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318` |
+| Generated production CSS, 103488 bytes | `83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9` |
+
+## Concrete continuation
+
+When a usable existing Chromium runtime is available, run these same frozen harnesses with freshly built CSS, inspect their recorded screenshots/computed observations, and fix only reproduced component/style defects. Do not create another generic harness or infer fixes from static suspicion. Keep P2's enlarged-text/reduced-motion/forced-colour acceptance items unverified until that work actually runs. All 37 prepared native PostgreSQL cases and future v2 Auth/provider/device acceptance remain separate and unrun; prior P3b fictional-account acceptance is preserved. The completed ten-day journey enlargement evidence remains unchanged; no journey rerun was triggered by these harness-only edits.
+
+=== review-bundle-check.cjs ===
+// Independent compile-only check. Existing harness functions are invoked in
+// memory; their main entry points and every browser launch are blocked.
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const Module = require('node:module');
+const vm = require('node:vm');
+const {createHash} = require('node:crypto');
+
+const root = '/workspace/scratch/500c5aa1eb33/v36/repo';
+const out = '/workspace/scratch/500c5aa1eb33/v36/independent-bundle';
+const cssPath = path.join(root, '.output/public/assets/styles-DuOMzkts.css');
+const runtime = '/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright';
+const names = process.argv.slice(2);
+assert.ok(names.length > 0);
+assert.ok(names.every(name => ['check-focus.cjs','check-voice-controls.cjs'].includes(name)));
+fs.mkdirSync(out, {recursive:true});
+process.chdir(root);
+process.env.BFA_PLAYWRIGHT_MODULE = runtime;
+process.env.BFA_UI_CSS = cssPath;
+const hash = value => createHash('sha256').update(value).digest('hex');
+const css = fs.readFileSync(cssPath, 'utf8');
+assert.ok(css.length > 100000);
+let launches = 0;
+function load(name, stylesheet) {
+  const filename = path.join(root, 'scripts/conversation-ui', name);
+  const source = fs.readFileSync(filename, 'utf8');
+  const tail = source.lastIndexOf('\nmain().catch(');
+  assert.ok(tail > 0, 'Expected existing main entry point');
+  assert.match(source.slice(tail), /^\nmain\(\)\.catch\(\(error\) => \{\s*console\.error\(error\);\s*process\.exitCode = 1;\s*\}\);\s*$/);
+  const unit = new Module(filename, module);
+  unit.filename = filename;
+  unit.paths = Module._nodeModulePaths(path.dirname(filename));
+  const normalRequire = unit.require.bind(unit);
+  unit.require = request => {
+    if (request !== runtime) return normalRequire(request);
+    const actual = normalRequire(request);
+    return {...actual, chromium: new Proxy(actual.chromium, {get(target, key) {
+      if (key === 'launch') return () => { launches++; throw Error('Browser launch forbidden in compile-only review'); };
+      return Reflect.get(target, key);
+    }})};
+  };
+  process.env.BFA_UI_CSS = stylesheet;
+  process.argv = [process.execPath, filename, path.join(out, name.replace('.cjs',''))];
+  unit._compile(source.slice(0,tail)+'\nmodule.exports = {bundle, main};\n', filename);
+  return {source, exports:unit.exports};
+}
+async function run() {
+  const results=[];
+  const cssGuards=[];
+  const emptyCss=path.join(out,'empty.css');
+  fs.writeFileSync(emptyCss,'');
+  for(const name of names) {
+    const unit=load(name,cssPath);
+    const variants=name==='check-focus.cjs'?['preview','staging']:['voice'];
+    for(const variant of variants) {
+      const html=await unit.exports.bundle(variant);
+      assert.ok(html.startsWith('<!doctype html>'));
+      assert.ok(html.includes(css));
+      assert.ok(html.includes('name="viewport"'));
+      const script=html.slice(html.indexOf('<script>')+8,html.lastIndexOf('</script>'));
+      assert.ok(script.length>100000);
+      new vm.Script(script,{filename:name+':'+variant+':compiled'});
+      results.push({source:name,variant,sourceSha256:hash(unit.source),htmlBytes:Buffer.byteLength(html),htmlSha256:hash(html),scriptSyntax:'passed'});
+    }
+    // Actual module/main guards reject missing and empty CSS before launch.
+    for(const [kind,stylesheet] of [['missing',''],['empty',emptyCss]]) {
+      let missing, rejectedAtLoad=false;
+      try { missing=load(name,stylesheet); }
+      catch(error) { assert.match(String(error),/BFA_UI_CSS|production CSS must not be empty/); rejectedAtLoad=true; }
+      if(!rejectedAtLoad) await assert.rejects(missing.exports.main(),/BFA_UI_CSS|production CSS must not be empty/);
+      cssGuards.push({source:name,kind,status:'rejected-before-browser'});
+    }
+  }
+  assert.equal(launches,0);
+  const report={status:'passed',scope:'Actual existing esbuild bundle functions and missing/empty-CSS guards only; no browser or rendering execution',bundles:results,cssGuards,productionCss:{path:cssPath,bytes:Buffer.byteLength(css),sha256:hash(css)},browserLaunches:launches,browserChecksExecuted:0};
+  fs.writeFileSync(path.join(out,'result.json'),JSON.stringify(report,null,2)+'\n');
+  console.log(JSON.stringify(report,null,2));
+}
+run().catch(error=>{console.error(error);process.exitCode=1});
+
+=== voice-bundle-validation.cjs ===
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const Module = require('node:module');
+const { createHash } = require('node:crypto');
+const root = '/workspace/scratch/500c5aa1eb33/v36/repo';
+const output = '/workspace/scratch/500c5aa1eb33/v36/voice-initial';
+const filename = path.join(root, 'scripts/conversation-ui/check-voice-controls.cjs');
+const source = fs.readFileSync(filename, 'utf8');
+const ending = source.lastIndexOf('\nmain().catch(');
+assert.ok(ending > 0, 'Expected exact existing main invocation');
+process.chdir(root);
+process.argv[2] = output;
+const loaded = new Module(filename, module);
+loaded.filename = filename;
+loaded.paths = Module._nodeModulePaths(path.dirname(filename));
+loaded._compile(source.slice(0, ending) + '\nmodule.exports = { bundle };\n', filename);
+(async () => {
+ const html = await loaded.exports.bundle();
+ assert.ok(html.startsWith('<!doctype html>'));
+ assert.ok(html.includes('Offline UI fixture. All voice resources and replies are fictional.'));
+ assert.ok(html.includes('Retry shutdown') && html.includes('Finish talking'));
+ assert.ok(html.includes('voiceHarness') && html.includes('FICTIONAL_LATE_REPLY'));
+ const css = fs.readFileSync(process.env.BFA_UI_CSS, 'utf8');
+ assert.ok(css.length > 1000 && html.includes(css));
+ const result = {
+  status: 'BUNDLE_VALIDATED_BROWSER_UNRUN',
+  sourceSha256: createHash('sha256').update(source).digest('hex'),
+  productionCss: { path: process.env.BFA_UI_CSS, sha256: createHash('sha256').update(css).digest('hex'), bytes: Buffer.byteLength(css) },
+  generatedHtml: { bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex') },
+  actualBundleFunction: true, browserLaunched: false,
+  accessibilityModesExecuted: 0, lifecycleBrowserChecksExecuted: 0,
+  realMicrophoneCalls: 0, realProviderCalls: 0,
+  limitation: 'Only actual esbuild/CSS composition validated; no DOM, computed media, keyboard, layout, focus or screenshot observation occurred.'
+ };
+ fs.writeFileSync(path.join(output, 'bundle-validation.json'), JSON.stringify(result, null, 2) + '\n');
+ console.log(JSON.stringify(result, null, 2));
+})().catch(error => { console.error(error); process.exitCode = 1; });

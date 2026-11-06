@@ -1,0 +1,647 @@
+
+=== bridge-config-correction.log ===
+test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim (__main__.OfflineBridgeTests.test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim) ... ok
+test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options (__main__.OfflineBridgeTests.test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options) ... ok
+test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) ... ok
+test_actual_offline_bridge_describes_existing_manifest_without_client (__main__.OfflineBridgeTests.test_actual_offline_bridge_describes_existing_manifest_without_client) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.347s
+
+OK
+
+=== bridge-lint-initial.log ===
+
+=== bridge-startup-probe.log ===
+exit=0
+stdout:
+
+stderr:
+
+=== bridge-typecheck-initial.log ===
+
+=== independent-legacy-runner.log ===
+test_complete_named_observed_lock_evidence_is_accepted (__main__.CapacityEvidenceTests.test_complete_named_observed_lock_evidence_is_accepted) ... ok
+test_expiry_evidence_requires_ordered_actual_clock_and_preexpiry_check (__main__.CapacityEvidenceTests.test_expiry_evidence_requires_ordered_actual_clock_and_preexpiry_check) ... ok
+test_incomplete_forged_or_failed_case_evidence_is_rejected (__main__.CapacityEvidenceTests.test_incomplete_forged_or_failed_case_evidence_is_rejected) ... ok
+test_existing_comma_directory_cannot_be_a_libpq_multihost_string (__main__.ConnectionGuardTests.test_existing_comma_directory_cannot_be_a_libpq_multihost_string) ... ok
+test_private_single_local_socket_is_accepted_without_connecting (__main__.ConnectionGuardTests.test_private_single_local_socket_is_accepted_without_connecting) ... ok
+test_remote_host_and_nonfixture_identity_are_rejected (__main__.ConnectionGuardTests.test_remote_host_and_nonfixture_identity_are_rejected) ... ok
+test_resolved_parent_comma_cannot_enable_remote_fallback (__main__.ConnectionGuardTests.test_resolved_parent_comma_cannot_enable_remote_fallback) ... ok
+test_shared_or_symlink_socket_is_rejected (__main__.ConnectionGuardTests.test_shared_or_symlink_socket_is_rejected) ... ok
+test_capacity_barrier_failure_cannot_pass_and_still_cleans_up (__main__.RunnerIsolationTests.test_capacity_barrier_failure_cannot_pass_and_still_cleans_up) ... ok
+test_capacity_install_failure_cleans_up_and_skips_all_races (__main__.RunnerIsolationTests.test_capacity_install_failure_cleans_up_and_skips_all_races) ... ok
+test_capacity_missing_source_fails_without_starting_children (__main__.RunnerIsolationTests.test_capacity_missing_source_fails_without_starting_children) ... ok
+test_capacity_mode_runs_rollback_suites_before_committing_races (__main__.RunnerIsolationTests.test_capacity_mode_runs_rollback_suites_before_committing_races) ... ok
+test_capacity_partial_role_evidence_fails_before_races_and_cleans_up (__main__.RunnerIsolationTests.test_capacity_partial_role_evidence_fails_before_races_and_cleans_up) ... ok
+test_case_inventory_is_read_without_executing_source (__main__.RunnerIsolationTests.test_case_inventory_is_read_without_executing_source) ... ok
+test_comma_in_owned_temporary_path_cannot_redirect_libpq (__main__.RunnerIsolationTests.test_comma_in_owned_temporary_path_cannot_redirect_libpq) ... ok
+test_default_path_does_not_require_or_execute_capacity_sources (__main__.RunnerIsolationTests.test_default_path_does_not_require_or_execute_capacity_sources) ... ok
+test_failed_start_still_stops_a_partially_started_server (__main__.RunnerIsolationTests.test_failed_start_still_stops_a_partially_started_server) ... ok
+test_failing_case_cannot_hide_behind_zero_failed_summary (__main__.RunnerIsolationTests.test_failing_case_cannot_hide_behind_zero_failed_summary) ... ok
+test_hostile_environment_cannot_redirect_children_or_open_tcp (__main__.RunnerIsolationTests.test_hostile_environment_cannot_redirect_children_or_open_tcp) ... ok
+test_incomplete_assertion_evidence_fails_and_stops_cluster (__main__.RunnerIsolationTests.test_incomplete_assertion_evidence_fails_and_stops_cluster) ... ok
+test_interrupt_after_start_runs_cleanup (__main__.RunnerIsolationTests.test_interrupt_after_start_runs_cleanup) ... ok
+test_no_external_connection_option_is_accepted (__main__.RunnerIsolationTests.test_no_external_connection_option_is_accepted) ... ok
+test_nonempty_output_and_output_symlink_are_rejected (__main__.RunnerIsolationTests.test_nonempty_output_and_output_symlink_are_rejected) ... ok
+test_partial_concurrency_report_cannot_claim_complete_success (__main__.RunnerIsolationTests.test_partial_concurrency_report_cannot_claim_complete_success) ... ok
+test_preflight_never_claims_database_execution (__main__.RunnerIsolationTests.test_preflight_never_claims_database_execution) ... ok
+test_root_refusal_spawns_nothing_and_records_unavailable (__main__.RunnerIsolationTests.test_root_refusal_spawns_nothing_and_records_unavailable) ... ok
+test_unconfirmed_shutdown_retains_owned_data_and_fails_run (__main__.RunnerIsolationTests.test_unconfirmed_shutdown_retains_owned_data_and_fails_run) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 37.307s
+
+OK
+
+=== independent-sequential-smoke.log ===
+{"exactRunnerDraftOrder":["p5-voice-admission.sql","p5-voice-capacity.sql","p5-voice-reads.sql","p5-voice-preissue-read.sql","p5-voice-session-provision.sql","p5-voice-session-revoke.sql","p5-voice-v2-parent-issuance.sql","p5-voice-v2-preissue.sql","p5-voice-v2-current.sql","p5-voice-v2-cleanup.sql","p5-voice-v2-proof.sql","p5-voice-v2-capacity.sql","p5-voice-v2-mark.sql"]}
+{"sequentialOnly":true,"nativeCasesExecuted":0,"fixtureChecks":306,"casesExercisedSequentially":14,"exactCatalogCandidate":"pass","tableInventory":22}
+{"queries":664,"expectedErrors":2,"seedClosed":true,"nativeCasesExecuted":0}
+{"allEnginesClosed":true}
+
+=== independent-v2-runner.log ===
+test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim (__main__.OfflineBridgeTests.test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim) ... ok
+test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options (__main__.OfflineBridgeTests.test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options) ... ok
+test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) ... ok
+test_actual_offline_bridge_describes_existing_manifest_without_client (__main__.OfflineBridgeTests.test_actual_offline_bridge_describes_existing_manifest_without_client) ... ok
+test_ambiguous_case_backend_identity_and_state_evidence_fails (__main__.V2EvidenceTests.test_ambiguous_case_backend_identity_and_state_evidence_fails) ... ok
+test_complete_explicitly_synthetic_evidence_is_accepted_structurally (__main__.V2EvidenceTests.test_complete_explicitly_synthetic_evidence_is_accepted_structurally) ... ok
+test_each_case_requires_its_exact_stage_proof_presence (__main__.V2EvidenceTests.test_each_case_requires_its_exact_stage_proof_presence) ... ok
+test_exact_original_proof_and_marker_cannot_change_or_renew (__main__.V2EvidenceTests.test_exact_original_proof_and_marker_cannot_change_or_renew) ... ok
+test_revocation_alone_cannot_replace_exact_drain_order_and_observation (__main__.V2EvidenceTests.test_revocation_alone_cannot_replace_exact_drain_order_and_observation) ... ok
+test_source_and_runtime_evidence_must_match_preflight (__main__.V2EvidenceTests.test_source_and_runtime_evidence_must_match_preflight) ... ok
+test_default_and_capacity_paths_do_not_require_v2_files_or_runtime (__main__.V2RunnerProcessTests.test_default_and_capacity_paths_do_not_require_v2_files_or_runtime) ... ok
+test_direct_v2_child_cli_refuses_root_before_connection_or_driver (__main__.V2RunnerProcessTests.test_direct_v2_child_cli_refuses_root_before_connection_or_driver) ... ok
+test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema (__main__.V2RunnerProcessTests.test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema) ... ok
+test_invalid_or_missing_runtime_refuses_before_any_child (__main__.V2RunnerProcessTests.test_invalid_or_missing_runtime_refuses_before_any_child) ... ok
+test_missing_v2_source_refuses_before_any_child (__main__.V2RunnerProcessTests.test_missing_v2_source_refuses_before_any_child) ... ok
+test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up) ... ok
+test_v2_install_failure_skips_all_races_and_cleans_owned_cluster (__main__.V2RunnerProcessTests.test_v2_install_failure_skips_all_races_and_cleans_owned_cluster) ... ok
+test_v2_inventory_is_literal_and_not_executed_during_preflight (__main__.V2RunnerProcessTests.test_v2_inventory_is_literal_and_not_executed_during_preflight) ... ok
+test_v2_keeps_isolated_environment_and_socket_arguments (__main__.V2RunnerProcessTests.test_v2_keeps_isolated_environment_and_socket_arguments) ... ok
+test_v2_missing_barrier_rejects_partial_report_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_missing_barrier_rejects_partial_report_and_cleans_up) ... ok
+test_v2_preflight_hashes_exact_sources_and_runtime_without_execution (__main__.V2RunnerProcessTests.test_v2_preflight_hashes_exact_sources_and_runtime_without_execution) ... ok
+test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options (__main__.V2RunnerProcessTests.test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options) ... ok
+test_v2_root_refusal_starts_no_child_and_claims_no_attempt (__main__.V2RunnerProcessTests.test_v2_root_refusal_starts_no_child_and_claims_no_attempt) ... ok
+test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance (__main__.V2RunnerProcessTests.test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance) ... ok
+test_v2_runtime_provenance_mismatch_fails_after_attempt (__main__.V2RunnerProcessTests.test_v2_runtime_provenance_mismatch_fails_after_attempt) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 29.509s
+
+OK
+
+=== native-fixture-smoke-corrected-bridge.log ===
+{"sequentialOnly":true,"nativeCasesExecuted":0,"fixtureChecks":294,"casesExercisedSequentially":14,"exactCatalogCandidate":"pass","tableInventory":22}
+{"queries":516,"expectedErrors":2,"seedClosed":true,"nativeCasesExecuted":0}
+{"allEnginesClosed":true}
+
+=== native-fixture-smoke-final.log ===
+{"sequentialOnly":true,"nativeCasesExecuted":0,"fixtureChecks":306,"casesExercisedSequentially":14,"exactCatalogCandidate":"pass","tableInventory":22}
+{"queries":664,"expectedErrors":2,"seedClosed":true,"nativeCasesExecuted":0}
+{"allEnginesClosed":true}
+
+=== native-fixture-smoke-initial.log ===
+{"allEnginesClosed":true}
+file:///workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.mjs:32
+ if(code!==0||!complete)throw new Error('Sequential smoke failed: '+errors);
+                              ^
+
+Error: Sequential smoke failed: Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.py", line 37, in <module>
+    described = d.bridge({'operation': 'describe'})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/v2_concurrency.py", line 159, in bridge
+    value = json.loads(result.stdout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+    at file:///workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.mjs:32:31
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.22.1
+
+=== native-fixture-smoke-runner-order.log ===
+{"exactRunnerDraftOrder":["p5-voice-admission.sql","p5-voice-capacity.sql","p5-voice-reads.sql","p5-voice-preissue-read.sql","p5-voice-session-provision.sql","p5-voice-session-revoke.sql","p5-voice-v2-parent-issuance.sql","p5-voice-v2-preissue.sql","p5-voice-v2-current.sql","p5-voice-v2-cleanup.sql","p5-voice-v2-proof.sql","p5-voice-v2-capacity.sql","p5-voice-v2-mark.sql"]}
+{"sequentialOnly":true,"nativeCasesExecuted":0,"fixtureChecks":306,"casesExercisedSequentially":14,"exactCatalogCandidate":"pass","tableInventory":22}
+{"queries":664,"expectedErrors":2,"seedClosed":true,"nativeCasesExecuted":0}
+{"allEnginesClosed":true}
+
+=== runner-v2-final.log ===
+test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim (__main__.OfflineBridgeTests.test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim) ... ok
+test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options (__main__.OfflineBridgeTests.test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options) ... ok
+test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) ... ok
+test_actual_offline_bridge_describes_existing_manifest_without_client (__main__.OfflineBridgeTests.test_actual_offline_bridge_describes_existing_manifest_without_client) ... ok
+test_ambiguous_case_backend_identity_and_state_evidence_fails (__main__.V2EvidenceTests.test_ambiguous_case_backend_identity_and_state_evidence_fails) ... ok
+test_complete_explicitly_synthetic_evidence_is_accepted_structurally (__main__.V2EvidenceTests.test_complete_explicitly_synthetic_evidence_is_accepted_structurally) ... ok
+test_each_case_requires_its_exact_stage_proof_presence (__main__.V2EvidenceTests.test_each_case_requires_its_exact_stage_proof_presence) ... ok
+test_exact_original_proof_and_marker_cannot_change_or_renew (__main__.V2EvidenceTests.test_exact_original_proof_and_marker_cannot_change_or_renew) ... ok
+test_revocation_alone_cannot_replace_exact_drain_order_and_observation (__main__.V2EvidenceTests.test_revocation_alone_cannot_replace_exact_drain_order_and_observation) ... ok
+test_source_and_runtime_evidence_must_match_preflight (__main__.V2EvidenceTests.test_source_and_runtime_evidence_must_match_preflight) ... ok
+test_default_and_capacity_paths_do_not_require_v2_files_or_runtime (__main__.V2RunnerProcessTests.test_default_and_capacity_paths_do_not_require_v2_files_or_runtime) ... ok
+test_direct_v2_child_cli_refuses_root_before_connection_or_driver (__main__.V2RunnerProcessTests.test_direct_v2_child_cli_refuses_root_before_connection_or_driver) ... ok
+test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema (__main__.V2RunnerProcessTests.test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema) ... ok
+test_invalid_or_missing_runtime_refuses_before_any_child (__main__.V2RunnerProcessTests.test_invalid_or_missing_runtime_refuses_before_any_child) ... ok
+test_missing_v2_source_refuses_before_any_child (__main__.V2RunnerProcessTests.test_missing_v2_source_refuses_before_any_child) ... ok
+test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up) ... ok
+test_v2_install_failure_skips_all_races_and_cleans_owned_cluster (__main__.V2RunnerProcessTests.test_v2_install_failure_skips_all_races_and_cleans_owned_cluster) ... ok
+test_v2_inventory_is_literal_and_not_executed_during_preflight (__main__.V2RunnerProcessTests.test_v2_inventory_is_literal_and_not_executed_during_preflight) ... ok
+test_v2_keeps_isolated_environment_and_socket_arguments (__main__.V2RunnerProcessTests.test_v2_keeps_isolated_environment_and_socket_arguments) ... ok
+test_v2_missing_barrier_rejects_partial_report_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_missing_barrier_rejects_partial_report_and_cleans_up) ... ok
+test_v2_preflight_hashes_exact_sources_and_runtime_without_execution (__main__.V2RunnerProcessTests.test_v2_preflight_hashes_exact_sources_and_runtime_without_execution) ... ok
+test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options (__main__.V2RunnerProcessTests.test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options) ... ok
+test_v2_root_refusal_starts_no_child_and_claims_no_attempt (__main__.V2RunnerProcessTests.test_v2_root_refusal_starts_no_child_and_claims_no_attempt) ... ok
+test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance (__main__.V2RunnerProcessTests.test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance) ... ok
+test_v2_runtime_provenance_mismatch_fails_after_attempt (__main__.V2RunnerProcessTests.test_v2_runtime_provenance_mismatch_fails_after_attempt) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 23.774s
+
+OK
+
+=== runner-v2-initial.log ===
+test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim (__main__.OfflineBridgeTests.test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim) ... ERROR
+test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options (__main__.OfflineBridgeTests.test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options) ... FAIL
+test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) ... 
+  test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=0) ... FAIL
+  test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=2) ... FAIL
+  test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=23) ... FAIL
+  test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=52) ... FAIL
+  test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=1048577) ... FAIL
+test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) ... FAIL
+test_actual_offline_bridge_describes_existing_manifest_without_client (__main__.OfflineBridgeTests.test_actual_offline_bridge_describes_existing_manifest_without_client) ... ERROR
+test_ambiguous_case_backend_identity_and_state_evidence_fails (__main__.V2EvidenceTests.test_ambiguous_case_backend_identity_and_state_evidence_fails) ... ok
+test_complete_explicitly_synthetic_evidence_is_accepted_structurally (__main__.V2EvidenceTests.test_complete_explicitly_synthetic_evidence_is_accepted_structurally) ... ok
+test_each_case_requires_its_exact_stage_proof_presence (__main__.V2EvidenceTests.test_each_case_requires_its_exact_stage_proof_presence) ... ok
+test_exact_original_proof_and_marker_cannot_change_or_renew (__main__.V2EvidenceTests.test_exact_original_proof_and_marker_cannot_change_or_renew) ... ok
+test_revocation_alone_cannot_replace_exact_drain_order_and_observation (__main__.V2EvidenceTests.test_revocation_alone_cannot_replace_exact_drain_order_and_observation) ... ok
+test_source_and_runtime_evidence_must_match_preflight (__main__.V2EvidenceTests.test_source_and_runtime_evidence_must_match_preflight) ... ok
+test_default_and_capacity_paths_do_not_require_v2_files_or_runtime (__main__.V2RunnerProcessTests.test_default_and_capacity_paths_do_not_require_v2_files_or_runtime) ... ok
+test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema (__main__.V2RunnerProcessTests.test_exact_v2_empty_inventory_has22_named_tables_and_no_extra_schema) ... ok
+test_invalid_or_missing_runtime_refuses_before_any_child (__main__.V2RunnerProcessTests.test_invalid_or_missing_runtime_refuses_before_any_child) ... ok
+test_missing_v2_source_refuses_before_any_child (__main__.V2RunnerProcessTests.test_missing_v2_source_refuses_before_any_child) ... ok
+test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_child_failure_records_attempt_without_acceptance_and_cleans_up) ... ok
+test_v2_install_failure_skips_all_races_and_cleans_owned_cluster (__main__.V2RunnerProcessTests.test_v2_install_failure_skips_all_races_and_cleans_owned_cluster) ... ok
+test_v2_inventory_is_literal_and_not_executed_during_preflight (__main__.V2RunnerProcessTests.test_v2_inventory_is_literal_and_not_executed_during_preflight) ... ok
+test_v2_keeps_isolated_environment_and_socket_arguments (__main__.V2RunnerProcessTests.test_v2_keeps_isolated_environment_and_socket_arguments) ... ok
+test_v2_missing_barrier_rejects_partial_report_and_cleans_up (__main__.V2RunnerProcessTests.test_v2_missing_barrier_rejects_partial_report_and_cleans_up) ... ok
+test_v2_preflight_hashes_exact_sources_and_runtime_without_execution (__main__.V2RunnerProcessTests.test_v2_preflight_hashes_exact_sources_and_runtime_without_execution) ... ok
+test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options (__main__.V2RunnerProcessTests.test_v2_requires_explicit_runtime_pair_and_rejects_external_database_options) ... ok
+test_v2_root_refusal_starts_no_child_and_claims_no_attempt (__main__.V2RunnerProcessTests.test_v2_root_refusal_starts_no_child_and_claims_no_attempt) ... ok
+test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance (__main__.V2RunnerProcessTests.test_v2_runs_complete_legacy_paths_then_new_cases_and_retains_provenance) ... ok
+test_v2_runtime_provenance_mismatch_fails_after_attempt (__main__.V2RunnerProcessTests.test_v2_runtime_provenance_mismatch_fails_after_attempt) ... ok
+
+======================================================================
+ERROR: test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim (__main__.OfflineBridgeTests.test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 416, in test_actual_bridge_evaluator_fails_missing_catalog_without_deployment_claim
+    parsed=json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_actual_offline_bridge_describes_existing_manifest_without_client (__main__.OfflineBridgeTests.test_actual_offline_bridge_describes_existing_manifest_without_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 404, in test_actual_offline_bridge_describes_existing_manifest_without_client
+    parsed=json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+FAIL: test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options (__main__.OfflineBridgeTests.test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 442, in test_actual_bridge_ignores_hostile_dotenv_bunfig_and_inherited_runtime_options
+    self.assertEqual(result.returncode,0,result.stderr.decode())
+AssertionError: 1 != 0 : 1 | import {writeFileSync} from 'node:fs';writeFileSync("/tmp/bfa-offline-bridge-test-emoh8svy/must-not-exist",'SYNTHETIC preload ran');throw Error('SYNTHETIC_SECRET');
+                                                                                                                                              ^
+error: SYNTHETIC_SECRET
+      at /tmp/bfa-offline-bridge-test-emoh8svy/hostile-preload.ts:1:139
+
+Bun v1.4.4 (Linux x64)
+
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 427, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(result.returncode,0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 427, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(result.returncode,0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=23)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 427, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(result.returncode,0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=52)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 427, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(result.returncode,0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo) (size=1048577)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 427, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(result.returncode,0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo (__main__.OfflineBridgeTests.test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/500c5aa1eb33/v35/repo/scripts/conversation-eval/p5-sql/test_runner_v2.py", line 431, in test_actual_bridge_rejects_malformed_oversized_and_extra_input_without_echo
+    self.assertNotEqual(extra.returncode,0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 24 tests in 28.227s
+
+FAILED (failures=7, errors=2)
+
+=== native-runner-notes.md ===
+# v35 native runner preparation notes
+
+Baseline supplied and verified by root: main `c3f18371d120429d10282b24a8e5face4f1937fd`, tree `f4333d6e23702af8bb7b4f37ed9f415063715231`; 734 non-environment blobs. Read AGENTS.md, current continuation/P5 position, lifetime/cutover contract and the complete old runner/test harness before editing.
+
+## Scope and implementation
+
+Owned changes: existing `scripts/conversation-eval/p5-sql/run-local.py`; new `test_runner_v2.py`; new `cutover-native-bridge.ts`; new `docs/pilot/conversation/p5-v2-native-acceptance-preparation-2026-11-06.md`. The SQL agent owns new `v2_concurrency.py` and its sequential local fixture smoke. No application source, SQL draft/migration, preflight inventory/evaluator, old `test_runner.py`, old concurrency modules, dependency, application deadline, runtime route, account or setting was changed by this work.
+
+The explicit --v2 option implies capacity and requires its paired absolute existing --v2-runtime Bun executable. Default and --capacity paths do not require/read/run any v2 source or runtime. All old safeguards and 12+9 case paths remain: nonroot refusal, fresh owned cluster, private Unix socket/no TCP, fixed fixture identity, clean child environment, bounded children and stop confirmation before deletion. No external DSN/host/socket selection was added. Missing sources/runtime and malformed literal inventories fail before cluster creation.
+
+The v2 path installs exactly four preserved legacy read/session drafts and seven completed v2 drafts after the original rollback suites, then checks all 22 exact table names are empty before committing races. It runs the unchanged legacy 12+9 cases first and the new 16 cases afterward; only the last two new cases change fixture privileges. Source hashes include all installation sources, new native module, preserved driver chain, existing catalog preflight, bridge and explicit runtime binary. The child's five source hashes and runtime path/hash/name/version must match captured preflight provenance.
+
+The validator requires all 16 exact ordered case names and successful checks/cleanup, explicit protocol 2/inventory version 1/nondeployable status, distinct observer/worker PIDs, observed holder/blocker identities, committed before/after state, immutable stage-specific ownership/proof/marker evidence, and all 18 prior P5 accounting tables retained with a source report hash. Issuance cases have no later proof; proof cases require the original claim proof; marker/close cases require the original inspect proof and full marker request. The two old-protocol cutover cases explicitly retain parentVersion:null with no manufactured v2 proof/marker. Their exact event sequences distinguish a running call surviving EXECUTE revoke from actual tracked-worker completion/commit and idle/no-transaction/no-lock drain before the candidate. This remains a known-fixture worker-set demonstration, not deployed-host quiescence.
+
+The result separates nativeV2PhaseAttempted (set before invoking the child) from nativeV2EvidenceAccepted (set only after complete report/provenance validation). Partial/failed work can therefore be attempted without accepted evidence. No false unrun inference from a failed acceptance flag is needed. Process-double reports remain explicitly synthetic.
+
+The tiny TS bridge reuses the unchanged manifest/query/evaluator through bounded JSON stdin/stdout, with generic non-echoing errors. It has no SQL client, connection, environment credential lookup, network or privilege writes. Actual local invocation uses --no-env-file, --no-install, one --config=/owned/empty-bunfig.toml argument, empty owned cwd/config and clean environment with DO_NOT_TRACK=1. Source files are copied into an owned temporary directory for bridge tests; no repository environment file is read. Runtime is explicit, never installed or discovered.
+
+## Tests and initial corrections
+
+Final focused command:
+
+```
+BFA_P5_BUN_EXECUTABLE=/workspace/scratch/205dbad31641/p5-rpc-work/test-tools/node_modules/@oven/bun-linux-x64/bin/bun python3 -I scripts/conversation-eval/p5-sql/test_runner_v2.py
+```
+
+Final result: **25/25 passed, zero skips**, `runner-v2-final.log`: 21 process/evidence guard tests and four actual offline Bun bridge cases. Numerous rejection subcases remain part of those test methods, not extra case totals. The direct new native-child root check uses process/driver doubles and asserts neither connection validation nor session construction happens. No actual PostgreSQL executable was run.
+
+Initial run `runner-v2-initial.log` ran 24 methods: all 20 non-bridge methods passed; the four actual bridge methods failed, with unittest reporting seven assertion failures and two errors across the malformed-input subcases. The actual defect was fixed invocation syntax: Bun interpreted the separated --config/path form as an entry-point path, yielding empty stdout from the empty TOML and allowing a synthetic default bunfig preload in the hostile-configuration control. The one-argument --config=/path form corrected both. The four actual bridge methods then passed in `bridge-config-correction.log`, before the expanded final 25-case run. The TS bridge implementation did not need changes, and no assertion or guard was relaxed. The native module's strict JSON handling rejected the initial empty output; SQL-agent logs retain that initial sequential smoke failure separately.
+
+Source review additionally strengthened the new report validator before final run: stage-specific proof presence, exact protocol/inventory version, retained accounting summary, direct-child nonroot refusal and explicit attempted-versus-accepted phase status. No pre-correction failure run is claimed for those review observations. Initial failed command logs and successful corrections remain saved.
+
+Python compilation passes for the modified runner and new tests. Root separately passed strict standalone TypeScript and scoped ESLint for the unchanged bridge hash (`bridge-typecheck-initial.log`, `bridge-lint-initial.log`). The independent reviewer owns rerunning the unchanged 27 legacy guard tests plus these 25 tests on final frozen sources. SQL-agent sequential smoke reports 306 checks across 14 serial paths and 664 queries, including two expected missing/extra inventory drift denials; root records the final exact serial evidence. Neither test category proves native scheduling.
+
+## Evidence limits and preserved work
+
+All 16 new native cases and all 21 old native cases are **prepared/unrun**: 37 total, zero native attempts. There was no native setup probe, root workaround, network/connected SQL, real Auth/model/voice/device call, paid edit, purchase, activation or publication. The only actual runtime test here was the already installed local Bun bridge; fake PostgreSQL processes exercised harness control flow. PGlite smoke, if cited, is serialized SQL only. The preserved v34 2518/2518 application suite, 822 optional SQL cases and build remain historical evidence rather than being presented as newly rerun for this tooling-only change.
+
+Hosted Auth owner/session/current-policy support and synchronous revocation/current-state serialization, actual deployed quiescence/routes/privileges, native backend acceptance and provider/device finality remain separate unestablished requirements. This preparation does not manufacture those facts or justify another speculative Auth wrapper. Meaningful next acceptance requires a suitable native environment and supported platform facts, without repeated failed setup or Lovable probes.
+
+Narrow official-source checks used for the Bun invocation: https://bun.com/docs/runtime/environment-variables (no-env-file), https://bun.com/docs/runtime (configuration flag), https://bun.com/docs/runtime/bunfig (preloads and telemetry/config behavior). Actual local tests established the precise one-argument syntax used here. No Auth research was repeated.
+
+## Frozen owned-file SHA-256
+
+- `run-local.py`: `d093b9237a86d11e6f91bd2dd63bab55baeccf09b5bc1547c0f8c15aa3777888`
+- `test_runner_v2.py`: `8ebbe96beadaa70859c55d748a36a90067536eb2c68c27e98d5bb2234f888f5a`
+- `cutover-native-bridge.ts`: `775e5c9f5a2d0d85e3abf25a07eed11d539ad283b884d46eca444ef5b2dfcd98`
+- New native preparation document: `19c5567046abebb8bcca11120055dcd1345e20ed9345680a7a475c3bc84fe598`
+- Unchanged old `test_runner.py`: `ea83ca8b2f625b06acfc543efbd4a4a963d4a25488a694e543acef83ff833b7b`
+
+=== native-cases-notes.md ===
+# Prepared v2 native cases — v35
+
+Owned new repository file: `scripts/conversation-eval/p5-sql/v2_concurrency.py`.
+Frozen SHA-256: `2d1ea49a2011fefe573b77e9b49363ba9cb5b66febe6b6c1028fe8d388bfa007`.
+
+## Scope
+
+The new module reuses the unchanged `CapacityDriver` → `Driver` → `Session` implementation from the two existing native race modules. It imports without opening connections. Its CLI refuses root before connection validation and reuses the exact local Unix-socket/private-directory/database/user guard. The outer `run-local.py` remains responsible for creating and owning a fresh nonroot cluster; a matching socket/database label alone is not proof of that provenance.
+
+The exact literal inventory contains **16 newly prepared native cases**:
+
+- Parent revocation before and after v2 issuance, proof registration and capacity marker: six cases.
+- Legacy revocation before and after those same v2 operations: six cases.
+- Exact close before and after a v2 marker: two cases.
+- A legacy enabling call already running when execution is revoked, and a separately observed drained fixture candidate: two cases.
+
+**No native case, native setup or native environment probe was executed.** The prior 21 native cases remain unchanged and unrun; the new 16 cases also remain unrun. The sequential smoke below is not substituted for them.
+
+The SQL fixtures use explicitly fictional Auth/policy/approval and fingerprint metadata with the exact existing v2 parent/generation/issuance/cleanup/proof registrars. They do not create a sealed envelope or claim actual TypeScript trusted-issuer provenance. The preserved earlier v33 suite covers actual local crypto and full issuer/admission/marker composition separately.
+
+## Prepared evidence requirements
+
+Every case records at least three distinct positive backend PIDs, including the observer and real worker sessions. Ordering comes from the existing bounded `pg_stat_activity`/`pg_blocking_pids` observation, with the expected holder PID explicitly retained. No naked sleep is treated as concurrency evidence. Existing statement, lock, idle-transaction and response timeouts remain unchanged.
+
+V2 cases retain exact full protocol-2 proof/marker inputs, original issuance timestamps and association, exact claim/cleanup ownership and committed before/after rows. Expected positive or negative acknowledgments must match the full original request. The selected receipt must be absent after denied registration or present exactly once with every original field and a non-null consumption sample strictly within its original freshness interval. Existing claim-proof consumption timestamps remain immutable. Committed issuance and immutable v2 binding are checked against the complete original tuple. Later protected reads must deny after revocation. Close remains available, keeps cumulative quota/pool usage, and retains marked uncertain occupancy while freeing only never-started slots.
+
+Both cutover cases reuse the exact existing TypeScript inventory and evaluator via the new isolated bridge owned by the runner task. The baseline must fail; exact fixture-only grant/revoke changes must pass with `deployable:false`. The bridge has no database client. Python invokes the explicit existing Bun binary from its owned empty client-config directory with a clean environment, `DO_NOT_TRACK=1`, `--no-env-file`, `--no-install` and one explicit `--config=<owned empty bunfig>` argument. The request/response size and subprocess duration are bounded. Runtime identity/binary hash and five exact source hashes are reported for outer-runner validation.
+
+The already-running case observes the old call blocked inside its protected body, applies the candidate, observes it still active and blocked, and then requires its original committed claim. This is deliberately evidence that a catalog pass does not stop work already running. The separate drained case closes its local fixture admission gate, observes the original response and COMMIT, then requires the tracked worker to be idle with no transaction start or locks before candidate revocation. Both cases verify all nine old enabling signatures deny new service execution and existing exact cleanup succeeds. Running-worker, negative-execution and positive-cleanup controls assert the actual service `session_user` and `current_user`, then restore and assert the known fixture administrator identity. The legacy cases explicitly record `parentVersion:null`; old records are never presented as having a v2 parent association.
+
+The gate/drain evidence covers the exact tracked runner-owned legacy workers. It does not claim deployed host-wide quiescence, hidden-session discovery or synchronous Auth revocation. All earlier committed rows in the 18 private lifecycle/accounting tables are retained unchanged across the new cases; the separate exact installed-table inventory remains 22 tables including the four preserved P3b tables.
+
+## Sequential generated-SQL validation
+
+Parent approved one bounded scratch-only PGlite smoke of the new module's exact generated SQL and fixture methods. It uses a thin stdin/stdout bridge between Python methods and the existing PGlite engine. It never instantiates a native Driver, invokes `psql`, creates a native cluster, fabricates a backend blocker, emits native-case reports or marks a native case passed.
+
+Final sources:
+
+- `/workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.py` — SHA-256 `7deda21a62e8c113e6faa152bb42bcfbb3c0aa1eb78dfa3e9c8dc7ed7bf29018`.
+- `/workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.mjs` — SHA-256 `efb48cbcc82d7ef3df163d6a6cca8b8270d8d7ced82bbf1eefd91a5a74cedb0d`.
+- Final focused log: `native-fixture-smoke-runner-order.log`.
+
+The final smoke AST-reads the runner's exact six migration names and eleven additional v2 draft names, asserts their counts and installs admission/capacity plus those drafts in the actual runner order. It runs the exact 22-table empty inventory SQL, with missing/extra-table negative controls, before fixture rows are created. It executes both catalog outcomes through the real existing Bun/TypeScript bridge, exact v2 fixture helpers, fourteen sequential revocation/close ordering paths, explicit receipt consumption/identity checks, all nine legacy permission-denial calls and actual service-session positive cleanup of a retained old claim after candidate revocation.
+
+**The one serial smoke passed with 306 internal fixture assertions, 664 SQL requests and two expected table-inventory errors.** Both PGlite engines closed. These are internal smoke diagnostics, not 306 tests, native races or an addition to the conversation-suite test count. Native cases executed: **zero**.
+
+Commands:
+
+```sh
+python -m py_compile scripts/conversation-eval/p5-sql/v2_concurrency.py
+node /workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.mjs > /workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke-runner-order.log 2>&1
+```
+
+Python compilation passes. Independent review reran the frozen exact-order smoke with the same 306 internal assertions/fourteen serial paths/664 SQL requests and two expected errors; both engines closed and no blocker remained. Review is recorded in `/workspace/scratch/500c5aa1eb33/v35/native-independent-review.md`. The root task owns runner/process-double tests, aggregate source/type/lint/build checks and final evidence copying.
+
+## Diagnostics and review corrections
+
+- `native-fixture-smoke-initial.log` failed before fixture SQL because Bun exited 0 with empty stdout. `bridge-startup-probe.log` records the same exact empty output and exit status. The separate `--config`, `<file>` arguments made Bun interpret the empty TOML file as its entrypoint. The corrected invocation uses one `--config=<file>` argument; no timeout, assertion or runtime dependency changed. The initial assumption that this might be async-stdin behavior was not confirmed and led to no source change.
+- `native-fixture-smoke-corrected-bridge.log` passed with 294 internal assertions before added source-session cleanup and exact issuance checks. It used the same drafts in an earlier equivalent order; that log is preserved as intermediate evidence, not the final runner-order check.
+- `native-fixture-smoke-final.log` passed with the expanded 306 assertions but still used the earlier copied draft order. Review requested exact runner order; the final smoke derives it from the actual literal inventory and passes again in `native-fixture-smoke-runner-order.log`.
+- Pre-execution review strengthened selected-proof consumption assertions, direct-child nonroot rejection, exact original issuance/binding equality, and real service-session identity for all cutover worker/denial/cleanup controls. No native failure is claimed for these changes; native execution remains unrun.
+- The native race source, original driver, capacity driver, SQL drafts and application timing are not modified by the smoke. The only repository file edited by this subtask is the new `v2_concurrency.py`.
+
+## Remaining limits
+
+Independent native sessions, actual scheduling, role-revocation concurrency and quiescence are only prepared until the guarded runner executes in a suitable independently established nonroot environment. Serial PGlite plus process doubles cannot establish them. Actual deployed Auth ownership/effective policy/synchronous revocation, HTTP faults, provider finality, model/voice calls and device acceptance remain separate. No connected SQL/settings, migration, runtime route, paid edit, participant activation or publication occurred. V2 remains inactive/nondeployable.
+
+=== native-independent-review.md ===
+# Independent review — native v2 runner preparation
+
+Review date: 6 November 2026. Scope is the opt-in local runner extension and its evidence, against the existing inactive v2 SQL and catalog inventory. This is preparation, not native PostgreSQL acceptance or a deployment recommendation.
+
+## Scope and boundaries reviewed
+
+- `--v2` requires an explicit absolute existing Bun executable and implies the existing capacity path. It preserves the original default path, twelve original admission cases and nine original capacity cases. The new sixteen cases run after those twenty-one cases.
+- The eleven remaining tracked SQL drafts install before committed races, allowing the exact twenty-two-table empty inventory to be checked. The last two new cases apply fixture-local grants/revokes through the existing sixty-function catalog inventory and evaluator. No application SQL or catalog policy was changed.
+- Native entry points refuse root. The outer runner owns a fresh disposable cluster and private Unix socket, permits no DSN, strips inherited connection/runtime configuration and treats failed or uncertain shutdown as failure. The child rejects a root process before connection and documents that direct supplied fixture labels alone do not establish cluster provenance.
+- The Bun bridge has no database client, environment lookup, installation or network path. Its bounded stdin protocol imports the existing catalog query, inventory and evaluator. An isolated working directory, explicit empty Bun config, `--no-env-file`, `--no-install` and clean environment prevent inherited preload/configuration from becoming executable input.
+- Each native case must record distinct observer/worker backend identities and an observed lock with its exact holder. Successful reports retain exact immutable issuance, parent, claim, cleanup, original proof and marker identities, before/after committed snapshots and prior held accounting. Source and explicit runtime hashes must match preflight records.
+- The final two cases distinguish an already-running legacy call completing after EXECUTE revocation from a fixture gate followed by an observed drained tracked worker before revocation. This is only the exact runner-owned worker set. It cannot establish deployed host quiescence, route isolation or acceptance.
+
+## Concrete review findings and corrections
+
+These were source-review corrections before native execution, not observed native failures.
+
+1. Merely preserving proof fields allowed an unused receipt to remain unconsumed without detecting a mistake. The fixture now asserts the exact selected receipt, all twelve original protocol-2 fields and a non-null safe consumption time within its original proof freshness. Denied registration leaves the selected receipt absent; already consumed proof timestamps remain unchanged.
+2. The new child originally inherited a connection guard without its own nonroot check. It now refuses root before the connection guard or driver can run; a process-double regression exercises this boundary.
+3. New result flags now distinguish a v2 child phase being attempted from its complete evidence being accepted. Partial failure cannot appear as no attempt or accepted execution.
+4. The outer validator pins protocol 2, inventory version 1, exact retained accounting-table inventory and hash, ordered cases, backend/lock identities, drain ordering, and source/runtime provenance. These structural checks cannot authenticate fabricated reports; tests explicitly label their reports synthetic.
+5. Cutover execution-denial and preserved-cleanup controls use the exact service source session principal, with both `session_user` and `current_user` asserted. The old running call likewise establishes that source principal before its lock wait. Restoration is explicit to the known disposable fixture admin.
+
+## Preserved evidence limits
+
+All thirty-seven native cases remain prepared and unrun: the previous twenty-one plus sixteen new cases. No native setup command, native preflight, root workaround, connected SQL, real Auth, provider or device call was performed during this review. Process doubles check orchestration/guards and report rejection; actual Bun checks cover the offline bridge only. Any sequential PGlite check covers SQL shape and committed serial outcomes only, never separate backend locks, concurrency, native role semantics or quiescence.
+
+The unchanged legacy runner tests, original concurrency modules and catalog inventory were independently compared byte-for-byte with the prior checkpoint. All twenty-eight prior SQL files were also compared byte-for-byte with the prior checkpoint and remain unchanged.
+
+## Next useful bounded offline work
+
+Actual native execution remains an environmental prerequisite; supported hosted Auth/current-policy/provider facts remain unestablished. The concrete offline product gap is the existing conversation preview/staging/VoiceControls surface at enlarged text, reduced motion and forced colours. Reuse the existing blocked-transport UI checks, label the exact enlargement method, and fix only observed layout/focus defects while preserving content and policies. The ten-day journey's prior 200% root-font check must not be replayed or represented as new evidence. This would not establish WCAG, screen-reader, native-device or provider acceptance.
+
+
+## Final independent validation
+
+The frozen source and document were independently checked after the source-session and proof assertions were complete:
+
+- Unchanged `test_runner.py`: **27/27 passing**, no skips. These are process-double/guard tests.
+- New `test_runner_v2.py`: **25/25 passing**, no skips: twenty-one process-double, guard and report-evidence tests, plus four tests executing the actual local Bun stdin/stdout bridge. No native database process ran.
+- Scratch sequential PGlite smoke: **306 fixture assertions across fourteen serial ordering paths**, 664 SQL requests, two expected missing/extra inventory errors, exact twenty-two-table inventory and unchanged catalog candidate passing. Both PGlite engines closed. The exact six migrations and thirteen drafts follow the runner's AST-read source order. Source-session EXECUTE-denial and positive preserved cleanup are exercised serially. These checks are not added native race or application test counts.
+- Every reviewed source/document hash remained unchanged during the independent runs. No additional source changes were made by this reviewer.
+
+Independent logs: `independent-legacy-runner.log`, `independent-v2-runner.log`, `independent-sequential-smoke.log`; machine-readable summaries and exact hashes: `independent-runner-summary.json`, `independent-sequential-summary.json`, `independent-reviewed-hashes.json`.
+
+The initial author diagnostics remain preserved: the first twenty-four-test new suite recorded seven failure subrecords and two errors caused by the separated Bun `--config` argument. Its synthetic hostile preload control actually executed before correction, and malformed-input cases received empty stdout because the TOML was treated as the entry point. The initial sequential smoke also failed parsing that empty bridge output. The corrected `--config=/absolute/path` invocation passed the actual bridge checks; an intermediate smoke recorded 294 assertions before the final service-principal and exact-install-order additions. These were local bridge/fixture diagnostics, never native SQL failures. Review-only corrections above have no invented pre-correction execution log.
+
+Frozen new/modified source hashes:
+
+| File | SHA-256 |
+| --- | --- |
+| `run-local.py` | `d093b9237a86d11e6f91bd2dd63bab55baeccf09b5bc1547c0f8c15aa3777888` |
+| `test_runner_v2.py` | `8ebbe96beadaa70859c55d748a36a90067536eb2c68c27e98d5bb2234f888f5a` |
+| `v2_concurrency.py` | `2d1ea49a2011fefe573b77e9b49363ba9cb5b66febe6b6c1028fe8d388bfa007` |
+| `cutover-native-bridge.ts` | `775e5c9f5a2d0d85e3abf25a07eed11d539ad283b884d46eca444ef5b2dfcd98` |
+| `p5-v2-native-acceptance-preparation-2026-11-06.md` | `19c5567046abebb8bcca11120055dcd1345e20ed9345680a7a475c3bc84fe598` |
+
+Final review: no remaining blocking source or evidence-scope finding for committing this prepared, inactive runner extension. All thirty-seven native cases remain unrun. Actual function-lock scheduling, native PostgreSQL role behavior and observed drain must await a suitable explicitly authorized nonroot native run; source review and serial emulation cannot establish them.
+
+=== diagnostic source: native-fixture-smoke.py ===
+"""Sequential PGlite shape check only; never launches native PostgreSQL."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import tempfile
+
+ROOT = Path('/workspace/scratch/500c5aa1eb33/v35/repo')
+def load(name, filename):
+    spec = importlib.util.spec_from_file_location(name, ROOT / 'scripts/conversation-eval/p5-sql' / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+v2 = load('smoke_v2', 'v2_concurrency.py')
+runner = load('smoke_runner', 'run-local.py')
+class Observer:
+    def query(self, sql):
+        print(json.dumps({'sql': sql}), flush=True)
+        response = json.loads(input())
+        if 'error' in response:
+            raise RuntimeError(response['error'])
+        return response['lines']
+    def scalar(self, sql):
+        rows = self.query(sql)
+        assert len(rows) == 1, rows
+        return rows[0]
+d = object.__new__(v2.V2Driver)
+d.observer = Observer()
+d.current = {'checks': []}
+with tempfile.TemporaryDirectory(prefix='bfa-v2-bridge-smoke-') as tmp:
+    d.bridge_config_dir = Path(tmp)
+    d.bunfig = Path(tmp) / 'bunfig.toml'
+    d.bunfig.write_text('telemetry = false\npreload = []\n')
+    d.env = {'PATH': os.defpath, 'HOME': tmp, 'LC_ALL': 'C'}
+    d.runtime = '/workspace/scratch/205dbad31641/p5-rpc-work/test-tools/node_modules/@oven/bun-linux-x64/bin/bun'
+    d.bridge_path = ROOT / 'scripts/conversation-eval/p5-sql/cutover-native-bridge.ts'
+    described = d.bridge({'operation': 'describe'})
+    d.catalog_sql = described['catalogSql']
+    d.inventory = described['functions']
+    d.legacy_enablers = [row for row in d.inventory if row['category'] == 'legacy-enable']
+    d.observer.query(runner.empty_table_check(True, True))
+    for mutation, restore in (
+        ('ALTER TABLE bfa_p5_voice_v2.auth_parents RENAME TO offline_missing_parent;',
+         'ALTER TABLE bfa_p5_voice_v2.offline_missing_parent RENAME TO auth_parents;'),
+        ('CREATE TABLE bfa_p5_voice_v2.offline_extra_table(id integer);',
+         'DROP TABLE bfa_p5_voice_v2.offline_extra_table;'),
+    ):
+        d.observer.query(mutation)
+        try:
+            try:
+                d.observer.query(runner.empty_table_check(True, True))
+                raise AssertionError('Exact empty inventory accepted drift')
+            except RuntimeError as error:
+                assert 'inventory mismatch' in str(error), error
+        finally:
+            d.observer.query(restore)
+    d.observer.query(runner.empty_table_check(True, True))
+    assert d.catalog_report()['catalogStatus'] == 'fail'
+    d.apply_candidate()
+    assert d.catalog_report()['catalogStatus'] == 'pass'
+    # Exact new fixture methods and SQL builders; no fake blocking or PID result.
+    for kind in ('parent', 'legacy'):
+        f = d.v2_fixture('issuance')
+        # This is the native revoke-first absent-cleanup path under review.
+        assert d.json_result(d.observer.query(v2.revoke_sql(f, kind)))['revoked']
+        assert d.json_result(d.observer.query(v2.issuance_sql(f))) is None
+        d.exact_issuance(f, expected_present=False)
+        d.check_closed(f, marked=False, charged=False)
+        f = d.v2_fixture('issuance')
+        assert d.json_result(d.observer.query(v2.issuance_sql(f))) == v2.issuance_receipt(f)
+        d.exact_issuance(f)
+        assert d.json_result(d.observer.query(v2.revoke_sql(f, kind)))['revoked']
+        d.check_closed(f, marked=False, charged=False)
+        for registered in (False, True):
+            f = d.v2_fixture('proof')
+            if registered:
+                assert d.json_result(d.observer.query(v2.proof_sql(f['proof']))) == f['proof']
+            assert d.json_result(d.observer.query(v2.revoke_sql(f, kind)))['revoked']
+            if not registered:
+                assert d.json_result(d.observer.query(v2.proof_sql(f['proof']))) is None
+            assert d.json_result(d.observer.query(v2.claim_v2_sql(f['proof'])))['status'] == 'denied'
+            d.consumed_exact_proof(f, expected_present=registered)
+            d.check_closed(f, marked=False, charged=False)
+        for marked in (False, True):
+            f = d.v2_fixture('marker')
+            if marked:
+                assert d.json_result(d.observer.query(v2.marker_sql(f['mark'])))['status'] == 'marked'
+            assert d.json_result(d.observer.query(v2.revoke_sql(f, kind)))['revoked']
+            if not marked:
+                assert d.json_result(d.observer.query(v2.marker_sql(f['mark'])))['status'] == 'denied'
+            d.consumed_exact_proof(f)
+            d.check_closed(f, marked=marked, charged=True)
+    for close_first in (False, True):
+        f = d.v2_fixture('marker')
+        before = d.details(f)
+        if close_first:
+            d.check_closed(f, marked=False, charged=True)
+        assert d.json_result(d.observer.query(v2.marker_sql(f['mark'])))['status'] == ('closed' if close_first else 'marked')
+        d.consumed_exact_proof(f)
+        d.check_closed(f, marked=not close_first, charged=True)
+        after = d.details(f)
+        d.unchanged_issuance(before, after)
+        d.unchanged_proofs(before['proofs'], after['proofs'])
+    v2.deny_legacy_calls(d, d.observer)
+    # Exact positive legacy cleanup uses the same helper as native cutover;
+    # this remains sequential and supplies no lock/drain evidence.
+    d.restore_legacy_grants()
+    old = d.capacity_fixture(d.pool())
+    d.ack(d.observer.query(d.capacity_call(old)), old, 'claimed')
+    d.apply_candidate()
+    v2.close_as_service(d, d.observer, old)
+    d.retained(old)
+    assert d.pool_state(old['pool']) == {'occupied': 0, 'held': 1, 'quarantined': False}
+    before = v2.accounting_snapshot(d)
+    v2.retained_rows(d, before)
+    print(json.dumps({'done': {'sequentialOnly': True, 'nativeCasesExecuted': 0,
+                              'fixtureChecks': len(d.current['checks']), 'casesExercisedSequentially': 14,
+                              'exactCatalogCandidate': 'pass', 'tableInventory': 22}}), flush=True)
+
+=== diagnostic source: native-fixture-smoke.mjs ===
+import { PGlite } from '/workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js';
+import { readFile } from 'node:fs/promises';
+import { spawn, execFileSync } from 'node:child_process';
+import { createInterface } from 'node:readline';
+const root='/workspace/scratch/500c5aa1eb33/v35/repo';
+let seed, db, child;
+let queries=0, expectedErrors=0, complete=false;
+try {
+ seed=await PGlite.create();
+ await seed.exec('CREATE DATABASE bfa_p5_offline_fixture;');
+ const bundle=await seed.dumpDataDir('none'); await seed.close();
+ db=await PGlite.create({loadDataDir:bundle,database:'bfa_p5_offline_fixture'});
+ await db.exec('CREATE ROLE bfa_fixture_admin SUPERUSER LOGIN; SET SESSION AUTHORIZATION bfa_fixture_admin;');
+ const install=async(file)=>db.exec(await readFile(root+'/'+file,'utf8'));
+ await install('scripts/conversation-eval/p5-sql/bootstrap.sql');
+ const inventories=JSON.parse(execFileSync('python',['-I','-c',
+  "import ast,json,sys; from pathlib import Path; tree=ast.parse(Path(sys.argv[1]).read_text()); names={n.targets[0].id:ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and len(n.targets)==1 and isinstance(n.targets[0],ast.Name) and n.targets[0].id in ('MIGRATIONS','V2_DRAFTS')}; print(json.dumps(names))",
+  root+'/scripts/conversation-eval/p5-sql/run-local.py'],{encoding:'utf8',env:{PATH:process.env.PATH,LANG:'C.UTF-8'}}));
+ if(inventories.MIGRATIONS.length!==6||inventories.V2_DRAFTS.length!==11)throw new Error('Exact runner inventory unavailable');
+ for(const name of inventories.MIGRATIONS) await install('drizzle/migrations/'+name);
+ for(const name of ['p5-voice-admission.sql','p5-voice-capacity.sql',...inventories.V2_DRAFTS]) await install('docs/pilot/conversation/sql-drafts/'+name);
+ console.log(JSON.stringify({exactRunnerDraftOrder:['p5-voice-admission.sql','p5-voice-capacity.sql',...inventories.V2_DRAFTS]}));
+ child=spawn('python',['-I','/workspace/scratch/500c5aa1eb33/v35/native-fixture-smoke.py'],{stdio:['pipe','pipe','pipe'],env:{PATH:process.env.PATH,LANG:'C.UTF-8'},cwd:'/workspace/scratch/500c5aa1eb33/v35'});
+ let errors=''; child.stderr.on('data',d=>errors+=d);
+ const ended=new Promise(resolve=>child.on('close',code=>resolve(code)));
+ for await(const line of createInterface({input:child.stdout})){
+  const request=JSON.parse(line);
+  if(request.done){console.log(JSON.stringify(request.done));complete=true;continue;}
+  queries++;
+  try {
+   const results=await db.exec(request.sql);
+   const lines=results.flatMap(r=>r.rows.flatMap(row=>Object.values(row).map(value=>value===null?'':typeof value==='boolean'?value?'t':'f':typeof value==='object'?JSON.stringify(value):String(value)))).filter(Boolean);
+   child.stdin.write(JSON.stringify({lines})+'\n');
+  }catch(error){expectedErrors++;child.stdin.write(JSON.stringify({error:error.message})+'\n');}
+ }
+ const code=await ended;
+ if(code!==0||!complete)throw new Error('Sequential smoke failed: '+errors);
+ console.log(JSON.stringify({queries,expectedErrors,seedClosed:seed.closed,nativeCasesExecuted:0}));
+}finally{
+ if(child&&child.exitCode===null)child.kill();
+ if(db&&!db.closed)await db.close();
+ if(seed&&!seed.closed)await seed.close();
+ console.log(JSON.stringify({allEnginesClosed:(!db||db.closed)&&(!seed||seed.closed)}));
+}

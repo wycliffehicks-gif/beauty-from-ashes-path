@@ -29,6 +29,7 @@ BINARY_NAMES = ("initdb", "pg_ctl", "postgres", "psql")
 EXPECTED_ASSERTIONS = {"sequential": 57, "roles": 145}
 EXPECTED_CONCURRENCY_CASES = 12
 EXPECTED_CAPACITY_CASES = 9
+EXPECTED_V2_CASES = 16
 CAPACITY_ASSERTIONS = {"capacity-sequential": (129, "P5_CAPACITY_ASSERT:"),
                        "capacity-roles": (116, "P5_CAPACITY_ROLE_PASS:")}
 BASE_TABLES = tuple(sorted([
@@ -36,6 +37,20 @@ BASE_TABLES = tuple(sorted([
     *("public.bfa_p3b_" + name for name in ("staging_accounts", "threads", "allowances", "admissions")),
 ]))
 CAPACITY_TABLES = tuple("bfa_p5_capacity." + name for name in ("pools", "routes", "allocations", "evidence", "sessions", "conflicts"))
+V2_TABLES = ("bfa_p5_voice_v2.auth_parents", "bfa_p5_voice_v2.issuance_auth_bindings")
+V2_DRAFTS = (
+    "p5-voice-reads.sql",
+    "p5-voice-preissue-read.sql",
+    "p5-voice-session-provision.sql",
+    "p5-voice-session-revoke.sql",
+    "p5-voice-v2-parent-issuance.sql",
+    "p5-voice-v2-preissue.sql",
+    "p5-voice-v2-current.sql",
+    "p5-voice-v2-cleanup.sql",
+    "p5-voice-v2-proof.sql",
+    "p5-voice-v2-capacity.sql",
+    "p5-voice-v2-mark.sql",
+)
 MIGRATIONS = (
     "0000_p3b_locked_conversation_foundation.sql",
     "0001_p3b_revoke_inherited_browser_grants.sql",
@@ -121,13 +136,159 @@ def validate_capacity_evidence(evidence: object, expected: tuple[str, ...], expi
                     raise HarnessError("Capacity expiry case has invalid database-clock evidence: " + case["name"])
 
 
-def empty_table_check(include_capacity: bool = False) -> str:
+
+def v2_case_names(source: Path) -> tuple[str, ...]:
+    return _literal_names(source, "CASE_NAMES", EXPECTED_V2_CASES)
+
+
+def v2_drain_cases(source: Path, cases: tuple[str, ...]) -> tuple[str, ...]:
+    names = _literal_names(source, "DRAIN_CASE_NAMES", 2)
+    if names != cases[-2:]:
+        raise HarnessError("V2 cutover cases must be the exact final two reviewed cases")
+    return names
+
+
+def validate_v2_evidence(evidence: object, expected: tuple[str, ...], drain_cases: tuple[str, ...]) -> None:
+    """Require recorded backend contention and explicit bounded drain evidence.
+
+    These structural checks cannot authenticate a fabricated report or turn
+    process doubles into native acceptance. Actual assertions live in the
+    source-hashed native module and its owned database sessions.
+    """
+    if len(expected) != EXPECTED_V2_CASES or drain_cases != expected[-2:]:
+        raise HarnessError("V2 evidence requires the complete reviewed inventory")
+    validate_capacity_evidence(evidence, expected)
+    assert isinstance(evidence, dict)
+    if (evidence.get("deployable") is not False or type(evidence.get("protocol")) is not int
+            or evidence["protocol"] != 2 or type(evidence.get("caseInventoryVersion")) is not int
+            or evidence["caseInventoryVersion"] != 1):
+        raise HarnessError("V2 evidence must match protocol/inventory and remain explicitly nondeployable")
+    accounting = evidence.get("earlierAccounting")
+    accounting_tables = set(table for table in BASE_TABLES + CAPACITY_TABLES + V2_TABLES if not table.startswith("public."))
+    if (not isinstance(accounting, dict) or accounting.get("retained") is not True
+            or not isinstance(accounting.get("tables"), list) or len(accounting["tables"]) != len(accounting_tables)
+            or any(not isinstance(table, str) for table in accounting["tables"])
+            or set(accounting["tables"]) != accounting_tables or not isinstance(accounting.get("sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", accounting["sha256"]) is None):
+        raise HarnessError("V2 evidence lacks its complete retained earlier-accounting snapshot")
+    for case in evidence["cases"]:
+        name = case["name"]
+        pids = case.get("backendPids")
+        if (not isinstance(pids, list) or len(pids) < 3
+                or any(type(pid) is not int or pid <= 0 for pid in pids)
+                or len(set(pids)) != len(pids)):
+            raise HarnessError("V2 case lacks distinct observer and worker backends: " + name)
+        for lock in case["barriers"]:
+            if isinstance(lock, dict) and lock.get("waitType") == "Lock":
+                if (lock["pid"] not in pids[1:] or lock["holderPid"] not in pids[1:]
+                        or any(pid not in pids for pid in lock["blockers"])):
+                    raise HarnessError("V2 blocker is not an owned distinct worker: " + name)
+        for field in ("committedStateBefore", "committedStateAfter"):
+            if not isinstance(case.get(field), dict) or not case[field]:
+                raise HarnessError("V2 case lacks exact committed-state observation: " + name)
+        identity = case.get("identity")
+        if (not isinstance(identity, dict)
+                or set(identity) != {"ownerId", "authSessionId", "parentVersion", "authorityFingerprint",
+                                     "issuedAt", "expiresAt", "claim", "cleanupId", "proof", "markRequest"}
+                or any(not isinstance(identity.get(field), str) or not identity[field]
+                       for field in ("ownerId", "authSessionId", "authorityFingerprint", "cleanupId"))
+                or (identity["parentVersion"] is not None if name in drain_cases
+                    else type(identity["parentVersion"]) is not int or identity["parentVersion"] < 0)
+                or type(identity["issuedAt"]) is not int or identity["issuedAt"] < 0
+                or type(identity["expiresAt"]) is not int
+                or not 0 < identity["expiresAt"] - identity["issuedAt"] <= 900000
+                or not isinstance(identity["claim"], dict) or not identity["claim"]):
+            raise HarnessError("V2 case lacks immutable issuance/ownership identity: " + name)
+        proof = identity["proof"]
+        slot = expected.index(name)
+        if slot in (0, 1, 6, 7):
+            if proof is not None or identity["markRequest"] is not None:
+                raise HarnessError("Issuance race must not invent later proof/marker evidence: " + name)
+        elif slot in (2, 3, 8, 9):
+            if not isinstance(proof, dict) or proof.get("operation") != "claim" or identity["markRequest"] is not None:
+                raise HarnessError("Proof race requires the original claim proof only: " + name)
+        elif slot in (4, 5, 10, 11, 12, 13):
+            if not isinstance(proof, dict) or proof.get("operation") != "inspect" or identity["markRequest"] is None:
+                raise HarnessError("Marker race requires its original inspect proof and marker request: " + name)
+        if name in drain_cases and (proof is not None or identity["markRequest"] is not None):
+            raise HarnessError("Legacy cutover evidence must not manufacture v2 proof ownership: " + name)
+        if proof is not None:
+            if (not isinstance(proof, dict)
+                    or set(proof) != {"protocol", "receiptId", "operation", "claim", "cleanupId", "authSessionId",
+                                      "parentVersion", "authorityFingerprint", "identityExpiresAt", "verifiedAt",
+                                      "expiresAt", "effectiveExpiresAt"}
+                    or type(proof["protocol"]) is not int or proof["protocol"] != 2
+                    or proof["claim"] != identity["claim"]
+                    or any(proof[field] != identity[field] for field in ("cleanupId", "authSessionId", "parentVersion", "authorityFingerprint"))
+                    or proof["operation"] not in ("claim", "inspect")
+                    or not isinstance(proof["receiptId"], str) or not proof["receiptId"]
+                    or any(type(proof[field]) is not int for field in ("verifiedAt", "expiresAt", "effectiveExpiresAt", "identityExpiresAt"))
+                    or not 0 <= proof["verifiedAt"] < proof["expiresAt"] <= proof["effectiveExpiresAt"] <= identity["expiresAt"]
+                    or proof["expiresAt"] - proof["verifiedAt"] > 30000
+                    or proof["effectiveExpiresAt"] > proof["identityExpiresAt"]):
+                raise HarnessError("V2 case lacks the exact original fresh proof: " + name)
+        mark = identity["markRequest"]
+        if mark is not None:
+            if (not isinstance(mark, dict) or set(mark) != {"protocol", "proof", "operationId", "expectedPoolVersion"}
+                    or type(mark["protocol"]) is not int or mark["protocol"] != 2
+                    or proof is None or mark["proof"] != proof or proof["operation"] != "inspect"
+                    or not isinstance(mark["operationId"], str) or not mark["operationId"]
+                    or type(mark["expectedPoolVersion"]) is not int or mark["expectedPoolVersion"] <= 0):
+                raise HarnessError("V2 case lacks the exact original marker identity: " + name)
+        if name not in drain_cases:
+            continue
+        cutover = case.get("cutover")
+        drained = name == drain_cases[1]
+        events = (["lock-observed", "fixture-gate-closed", "legacy-call-completed", "drain-observed", "privileges-revoked",
+                   "new-legacy-call-denied", "cleanup-completed"] if drained else
+                  ["lock-observed", "fixture-gate-closed", "privileges-revoked", "not-drained-observed", "legacy-call-completed",
+                   "new-legacy-call-denied", "cleanup-completed"])
+        if (not isinstance(cutover, dict) or cutover.get("baselineStatus") != "fail"
+                or cutover.get("candidateStatus") != "pass" or cutover.get("gateClosed") is not True
+                or cutover.get("completedBeforeRevoke") is not drained
+                or cutover.get("newLegacyDenied") is not True or cutover.get("events") != events
+                or type(cutover.get("legacyWorkerPid")) is not int or cutover["legacyWorkerPid"] not in pids[1:]):
+            raise HarnessError("V2 cutover case lacks the exact gate/revoke/completion ordering: " + name)
+        drain = cutover.get("drain")
+        worker = cutover["legacyWorkerPid"]
+        if (not isinstance(drain, dict) or drain.get("drained") is not drained
+                or drain.get("trackedPids") != [worker] or not isinstance(drain.get("observed"), list)
+                or len(drain["observed"]) != 1 or not isinstance(drain["observed"][0], dict)):
+            raise HarnessError("V2 cutover case lacks a bounded tracked-worker drain observation: " + name)
+        observation = drain["observed"][0]
+        if (observation.get("pid") != worker or type(observation.get("pid")) is not int
+                or type(observation.get("lockCount")) is not int or observation["lockCount"] < 0):
+            raise HarnessError("V2 cutover drain has invalid worker/lock identity: " + name)
+        if drained:
+            if observation.get("state") != "idle" or observation.get("xactStart") is not None or observation["lockCount"] != 0:
+                raise HarnessError("V2 drained worker still has active transaction/locks: " + name)
+        elif (observation.get("state") != "active" or not isinstance(observation.get("xactStart"), str)
+                or not observation["xactStart"] or observation["lockCount"] <= 0):
+            raise HarnessError("V2 non-drained case lacks the still-running transaction: " + name)
+
+
+def validate_v2_provenance(evidence: dict, sources: dict[str, str], runtime: dict[str, str]) -> None:
+    names = ("v2_concurrency.py", "concurrency.py", "capacity_concurrency.py", "cutover-native-bridge.ts", "cutover-inventory.ts")
+    expected = {"scripts/conversation-eval/p5-sql/" + name: sources["scripts/conversation-eval/p5-sql/" + name] for name in names}
+    if evidence.get("sourceSha256") != expected:
+        raise HarnessError("V2 subprocess source provenance does not match preflight hashes")
+    observed = evidence.get("runtime")
+    if (not isinstance(observed, dict) or set(observed) != {"path", "sha256", "name", "version"}
+            or observed.get("path") != runtime["path"] or observed.get("sha256") != runtime["sha256"]
+            or observed.get("name") != "bun" or not isinstance(observed.get("version"), str)
+            or re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][a-zA-Z0-9.-]+)?", observed["version"]) is None):
+        raise HarnessError("V2 subprocess runtime provenance does not match the explicit executable")
+
+
+def empty_table_check(include_capacity: bool = False, include_v2: bool = False) -> str:
     """Exact names, not just a count: a missing table cannot be hidden by an extra."""
-    expected = sorted(BASE_TABLES + (CAPACITY_TABLES if include_capacity else ()))
+    expected = sorted(BASE_TABLES + (CAPACITY_TABLES if include_capacity or include_v2 else ())
+                      + (V2_TABLES if include_v2 else ()))
+    schemas = "'bfa_p5_voice','bfa_p5_capacity'" + (",'bfa_p5_voice_v2'" if include_v2 else "")
     names = ",".join("'" + name + "'" for name in expected)
     return """DO $$ DECLARE r record; n bigint; seen text[]:=ARRAY[]::text[]; BEGIN
       FOR r IN SELECT schemaname,tablename FROM pg_tables
-        WHERE schemaname IN ('bfa_p5_voice','bfa_p5_capacity')
+        WHERE schemaname IN (""" + schemas + """)
            OR (schemaname='public' AND tablename LIKE 'bfa_p3b_%')
         ORDER BY schemaname,tablename LOOP
         seen:=array_append(seen,r.schemaname||'.'||r.tablename);
@@ -168,9 +329,16 @@ def isolated_environment(config: Path) -> dict[str, str]:
 
 
 class LocalRun:
-    def __init__(self, repo: Path, pg_bin: Path, output: Path, *, capacity: bool = False):
+    def __init__(self, repo: Path, pg_bin: Path, output: Path, *, capacity: bool = False,
+                 v2: bool = False, v2_runtime: Path | None = None):
         self.repo = repo.resolve()
-        self.capacity = capacity
+        if v2_runtime is not None and not v2:
+            raise HarnessError("--v2-runtime is only accepted with --v2")
+        self.capacity = capacity or v2
+        self.v2 = v2
+        self.v2_runtime = v2_runtime
+        self.v2_cases: tuple[str, ...] = ()
+        self.v2_drain_cases: tuple[str, ...] = ()
         self.capacity_cases: tuple[str, ...] = ()
         self.capacity_expiry_cases: tuple[str, ...] = ()
         self.pg_bin = pg_bin
@@ -186,7 +354,10 @@ class LocalRun:
             "database": DATABASE,
             "scope": "disposable Unix-socket-only cluster; no connected database",
             "nativeDatabaseTestsExecuted": False,
-            "capacityRequested": capacity,
+            "capacityRequested": self.capacity,
+            "v2Requested": v2,
+            "nativeV2PhaseAttempted": False,
+            "nativeV2EvidenceAccepted": False,
             "nativeCapacityTestsExecuted": False,
             "sourceSha256": {},
             "phases": [],
@@ -211,6 +382,10 @@ class LocalRun:
                self.draft_dir / "p5-voice-capacity-fixtures.sql",
                self.fixture_dir / "capacity-roles.sql",
                self.fixture_dir / "capacity_concurrency.py"] if self.capacity else []),
+            *([*(self.draft_dir / name for name in V2_DRAFTS),
+               self.fixture_dir / "v2_concurrency.py",
+               self.fixture_dir / "cutover-inventory.ts",
+               self.fixture_dir / "cutover-native-bridge.ts"] if self.v2 else []),
         ]
 
     def preflight(self) -> list[str]:
@@ -234,6 +409,20 @@ class LocalRun:
                 source = self.fixture_dir / "capacity_concurrency.py"
                 self.capacity_cases = capacity_case_names(source)
                 self.capacity_expiry_cases = capacity_expiry_cases(source, self.capacity_cases)
+            except HarnessError as exc:
+                problems.append(str(exc))
+        if self.v2:
+            if (self.v2_runtime is None or not self.v2_runtime.is_absolute()
+                    or not self.v2_runtime.is_file() or not os.access(self.v2_runtime, os.X_OK)):
+                problems.append("--v2 requires an explicit absolute executable --v2-runtime Bun path")
+            else:
+                self.v2_runtime = self.v2_runtime.resolve()
+                self.result["v2Runtime"] = {"path": str(self.v2_runtime),
+                    "sha256": hashlib.sha256(self.v2_runtime.read_bytes()).hexdigest()}
+            try:
+                source = self.fixture_dir / "v2_concurrency.py"
+                self.v2_cases = v2_case_names(source)
+                self.v2_drain_cases = v2_drain_cases(source, self.v2_cases)
             except HarnessError as exc:
                 problems.append(str(exc))
         self.result["preflight"] = {"status": "unavailable" if problems else "ready", "reasons": problems}
@@ -366,6 +555,13 @@ class LocalRun:
                     if len(labels) != count:
                         raise HarnessError(f"{phase} assertion evidence incomplete: expected {count}, got {len(labels)}")
                     self.command(phase + "-rollback-empty", self.psql("-c", empty_table_check(True)))
+            if self.v2:
+                # Install before committing any race fixtures so the complete
+                # 22-table inventory can be checked empty. The old 21 cases
+                # still run first; no cutover revocation occurs until v2 cases.
+                for name in V2_DRAFTS:
+                    self.sql_file("v2-install-" + Path(name).stem, self.draft_dir / name)
+                self.command("v2-install-empty", self.psql("-c", empty_table_check(True, True)))
             concurrency_result = self.output / "concurrency.json"
             self.command("concurrency", [sys.executable, "-I", str(self.fixture_dir / "concurrency.py"),
                                          "--psql", str(self.pg_bin / "psql"), "--socket", str(self.cluster / "socket"), "--port", PORT,
@@ -390,6 +586,22 @@ class LocalRun:
                 validate_capacity_evidence(capacity_evidence, self.capacity_cases, self.capacity_expiry_cases)
                 self.result["capacityConcurrency"] = {"passed": capacity_evidence["passed"], "failed": capacity_evidence["failed"],
                                                       "evidence": capacity_result.name}
+            if self.v2:
+                assert self.v2_runtime is not None
+                v2_result = self.output / "v2-concurrency.json"
+                self.result["nativeV2PhaseAttempted"] = True
+                self.command("v2-concurrency", [sys.executable, "-I", str(self.fixture_dir / "v2_concurrency.py"),
+                             "--psql", str(self.pg_bin / "psql"), "--socket", str(self.cluster / "socket"), "--port", PORT,
+                             "--database", DATABASE, "--user", DB_USER, "--output", str(v2_result),
+                             "--log-dir", str(self.output / "v2-concurrency-logs"),
+                             "--runtime", str(self.v2_runtime),
+                             "--bridge", str(self.fixture_dir / "cutover-native-bridge.ts")], timeout=360)
+                v2_evidence = json.loads(v2_result.read_text())
+                validate_v2_evidence(v2_evidence, self.v2_cases, self.v2_drain_cases)
+                validate_v2_provenance(v2_evidence, self.result["sourceSha256"], self.result["v2Runtime"])
+                self.result["nativeV2EvidenceAccepted"] = True
+                self.result["v2Concurrency"] = {"passed": v2_evidence["passed"], "failed": v2_evidence["failed"],
+                                                "evidence": v2_result.name}
             self.result["status"] = "passed"
         except KeyboardInterrupt:
             self.result.update(status="interrupted", error="Interrupted; shutdown attempted")
@@ -406,9 +618,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", required=True, type=Path, help="absolute new/empty evidence directory")
     parser.add_argument("--preflight", action="store_true", help="check prerequisites only; never report database tests as passed")
     parser.add_argument("--capacity", action="store_true", help="also install and check the inactive capacity extension and its native contention cases")
+    parser.add_argument("--v2", action="store_true", help="also prepare/run the exact v2 native cases; implies --capacity")
+    parser.add_argument("--v2-runtime", type=Path, help="with --v2 only: absolute existing Bun executable for the offline cutover bridge")
     args = parser.parse_args(argv)
+    if args.v2 != (args.v2_runtime is not None):
+        parser.error("--v2 and an explicit --v2-runtime must be supplied together")
     try:
-        run = LocalRun(Path(__file__).resolve().parents[3], args.pg_bin, args.output, capacity=args.capacity)
+        run = LocalRun(Path(__file__).resolve().parents[3], args.pg_bin, args.output, capacity=args.capacity,
+                       v2=args.v2, v2_runtime=args.v2_runtime)
         code = run.run(args.preflight)
         print(json.dumps({"status": run.result["status"], "evidence": str(run.output / "result.json")}))
         return code

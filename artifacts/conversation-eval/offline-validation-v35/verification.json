@@ -1,0 +1,127 @@
+{
+  "date": "2026-11-06",
+  "timezone": "America/Toronto",
+  "executionLogsTimezone": "UTC",
+  "baseCommit": "c3f18371d120429d10282b24a8e5face4f1937fd",
+  "baseTree": "f4333d6e23702af8bb7b4f37ed9f415063715231",
+  "scope": "Opt-in isolated native v2 acceptance runner preparation only; all actual native cases remain unrun",
+  "checks": {
+    "allPassed": true,
+    "legacyRunnerSafeguards": 27,
+    "newRunnerBridgeTests": 25,
+    "actualBunBridgeWithinNew": 4,
+    "skipped": 0,
+    "independentRerun": true,
+    "sequentialFixtureSmoke": {
+      "engine": "PGlite 0.5.12 / PostgreSQL 18.6",
+      "connections": 1,
+      "assertions": 306,
+      "serialOutcomePaths": 14,
+      "sqlRequests": 664,
+      "expectedInventoryErrors": 2,
+      "tables": 22,
+      "allEnginesClosed": true,
+      "nativeRacesExecuted": 0,
+      "independentRerun": true,
+      "exactRunnerInstallOrder": true
+    },
+    "strictStandaloneTypeScript": 0,
+    "scopedEslint": 0,
+    "pythonSyntaxCompilation": 0,
+    "sourceHashesUnchangedDuringIndependentRuns": true,
+    "resultsParagraph": "**27 unchanged runner safeguards and 25 new runner/bridge checks pass, with zero skips**; the latter include four actual local Bun bridge cases. Independent review confirms both suites on unchanged frozen hashes. The exact runner-order sequential PGlite smoke passes 306 assertions across 14 serial outcome paths, including exact 22-table inventory checks, catalog/permission candidate and service-session cleanup; 664 SQL requests include two expected inventory-drift errors, and both engines close. These are separate categories, not 306 new application tests or native races. Strict standalone TypeScript, scoped ESLint and Python syntax/compilation checks pass.",
+    "tableSummary": "27 preserved safeguards +25 new runner/bridge checks pass, including4 actual bridge cases; independent rerun; 306 serial SQL assertions across14 paths; scoped types/lint/Python checks",
+    "preservedDiagnosticSources": [
+      "native-fixture-smoke.py",
+      "native-fixture-smoke.mjs"
+    ]
+  },
+  "native": {
+    "legacyAdmissionPrepared": 12,
+    "legacyCapacityPrepared": 9,
+    "v2Prepared": 16,
+    "totalPrepared": 37,
+    "executed": 0,
+    "newEnvironmentProbeAttempts": 0,
+    "nonrootGuardBypassed": false
+  },
+  "priorApplicationEvidence": {
+    "checkpoint": "c3f18371d120429d10282b24a8e5face4f1937fd",
+    "artifact": "offline-validation-v34",
+    "implementationCommit": "a4579d2f7d77e8e722b5c5a23a43283e7bf0ce9c",
+    "conversationPassed": 2518,
+    "files": 95,
+    "optionalSqlWithinTotal": 822,
+    "countsOverlap": true,
+    "typesLintProductionBuildPassed": true,
+    "rerunThisBatch": false
+  },
+  "findings": [
+    "Review corrected new preparation gaps before final acceptance: exact stage-specific proof presence and consumption, source-session identity for negative legacy execution and positive cleanup, direct-child nonroot refusal, retained accounting/provenance validation, and separate attempted-versus-accepted result fields. The first 24-method run passed all 20 non-bridge methods but failed its four actual bridge methods (seven assertion failures and two errors across subcases). Bun interpreted a separated configuration argument as the entry-point path; it produced empty output and allowed the synthetic default preload control. One fixed --config=/owned/path argument corrected both problems without weakening assertions or changing the TypeScript bridge. The four focused bridge cases then passed, followed by all 25 expanded checks. The first serial SQL smoke likewise rejected that empty bridge response; the corrected smoke passed, and later service-session controls plus exact runner installation order were independently checked. Original failures, corrections, diagnostic smoke sources and final logs are preserved. Root and independent review found no remaining blocker in this bounded preparation; no actual native execution or application/SQL change is claimed."
+  ],
+  "limitations": [
+    "Process doubles prove runner behaviour only, never actual native database execution.",
+    "Single-connection sequential PGlite checks validate new fixture SQL, not native race order or deployed quiescence.",
+    "Fixture SQL uses fictional Auth, policy, approval and fingerprint metadata; prior crypto/issuer composition evidence remains separately preserved.",
+    "A passing catalog observation is always nondeployable and cannot prove already-running requests drained.",
+    "The prepared drain assertion covers only exact tracked runner-owned fixture backends, not deployed hosts.",
+    "Supported hosted Auth/current-policy/ownership/synchronous-revocation, real provider/device and release acceptance remain unresolved.",
+    "No application route, connected privilege cutover, migration or runtime activation is added."
+  ],
+  "preservation": {
+    "baselineBlobs": 735,
+    "materializedHashVerified": 734,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "scripts/conversation-eval/p5-sql/run-local.py",
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md"
+    ],
+    "newFiles": [
+      "scripts/conversation-eval/p5-sql/test_runner_v2.py",
+      "scripts/conversation-eval/p5-sql/v2_concurrency.py",
+      "scripts/conversation-eval/p5-sql/cutover-native-bridge.ts",
+      "docs/pilot/conversation/p5-v2-native-acceptance-preparation-2026-11-06.md",
+      "artifacts/conversation-eval/offline-validation-v35/verification.json",
+      "artifacts/conversation-eval/offline-validation-v35/validation.log"
+    ],
+    "applicationSqlPriorTestsDependenciesSettingsChanged": false,
+    "offlineRunnerChanged": true,
+    "paidLovableEdits": 0,
+    "providerCalls": 0,
+    "published": false
+  },
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/run-local.py": "d093b9237a86d11e6f91bd2dd63bab55baeccf09b5bc1547c0f8c15aa3777888",
+    "scripts/conversation-eval/p5-sql/test_runner.py": "ea83ca8b2f625b06acfc543efbd4a4a963d4a25488a694e543acef83ff833b7b",
+    "scripts/conversation-eval/p5-sql/test_runner_v2.py": "8ebbe96beadaa70859c55d748a36a90067536eb2c68c27e98d5bb2234f888f5a",
+    "scripts/conversation-eval/p5-sql/v2_concurrency.py": "2d1ea49a2011fefe573b77e9b49363ba9cb5b66febe6b6c1028fe8d388bfa007",
+    "scripts/conversation-eval/p5-sql/cutover-native-bridge.ts": "775e5c9f5a2d0d85e3abf25a07eed11d539ad283b884d46eca444ef5b2dfcd98",
+    "scripts/conversation-eval/p5-sql/cutover-inventory.ts": "128f21a6b311ac0f36f61728cbb8e69417ab61da4205a1834e1d75f357a465c4",
+    "scripts/conversation-eval/p5-sql/concurrency.py": "fd66bbfd7fcfb1ecd732cf7a0ea597e4afeb79b637006136895174a1b6123d16",
+    "scripts/conversation-eval/p5-sql/capacity_concurrency.py": "d1469a43d746a12be3d828fd7a98bf96c68f3c36e1f066d6e80cf50bc76cbff0",
+    "docs/pilot/conversation/p5-v2-native-acceptance-preparation-2026-11-06.md": "19c5567046abebb8bcca11120055dcd1345e20ed9345680a7a475c3bc84fe598",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission-fixtures.sql": "0e82c5eb683e4b9d357c55ce1a564c96b2a50707ad4f7710ae39fb32345361ef",
+    "docs/pilot/conversation/sql-drafts/p5-voice-admission.sql": "f4358f4587af9b2997f3763ee28c1327ef930dd80ded7af12fd028d50b669a7b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity-fixtures.sql": "f0b8b76802bec0460a8a6f96cbc3e46316fe506a61b7b9297c3ce0d5bf3bf275",
+    "docs/pilot/conversation/sql-drafts/p5-voice-capacity.sql": "d6623e7def0d223b14b934ebb5b3cb4b8bf7ce595c6233f4aabb2a25a0ce8437",
+    "docs/pilot/conversation/sql-drafts/p5-voice-preissue-read.sql": "df9cc4296df6bb1b81a2f374e4e79fde27cce173362245fde599b046cfae6f4c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-reads.sql": "4cf7cc7e9fd6aeaf38a7c834990c930994e8d8cb430ab3a7c2b7e9ade1ee722c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-provision.sql": "b1ca8d2c3fca056581c74168205618d4b47d5b58a03df33417b1a053571eb360",
+    "docs/pilot/conversation/sql-drafts/p5-voice-session-revoke.sql": "0d476468912648de48f31ae10ec6c5d4570cda1301bec609524f931f7f05df3f",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-capacity.sql": "4573216e9f55d6ef4e89833a90a424f1bbde9db84ad9d21ac0b67d104c40135b",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-cleanup.sql": "c0a345fe9bc8232e52fde4638a8c57bbcf0a41ea1320d87f246374455fdccd6c",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-current.sql": "49aedde5ec95462fb98d28d4df02568355a223994f2605c91d723c406838c302",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-mark.sql": "bc38971a749b98b41daa9b42f8fff55c3f48fc540eba083492deeb31b80881ec",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-parent-issuance.sql": "8c463bb3c1953b32e83e6d90ba0b31e629bc39cca78a0fb05e013d84c5dec342",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-preissue.sql": "93f3e2c2c85f50583a3b24c6e03a95674cdcc65078a09aa8250b018db434d564",
+    "docs/pilot/conversation/sql-drafts/p5-voice-v2-proof.sql": "1c011ed347a0cd47489d2b714e583d473f45642c9f70998f3691e3bb3287c436",
+    "drizzle/migrations/0000_p3b_locked_conversation_foundation.sql": "a4f128d0a77541a5841fe25465673e404795f360f0a08ee7e8b71ecec63cf5c1",
+    "drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql": "d315765936b7cbcad51e5b88e2868c5e32e47e0b5d5224cb54c300afaad8eb13",
+    "drizzle/migrations/0002_p3b_transactional_staging_boundary.sql": "e3466a327d33e3cc58b335e76c09a488ded0f9cff13f838e395a270773a693d8",
+    "drizzle/migrations/0003_p3b_no_automatic_transaction_retry.sql": "77599f5176873abe21d02916c7a09535ada88006655833ad82f6d19b09cd76db",
+    "drizzle/migrations/0004_p3b_lock_expiry_argument_guards.sql": "a24221f14032a00f6748dace3bb02fb55540fba27c14f3356454494b55136d75",
+    "drizzle/migrations/0005_p3b_explicit_pending_work_fence.sql": "671deaec0a0fe83b72a6b370315222609af03449e58191c8eb5bd7319e3c4740"
+  },
+  "next": "Continue one bounded offline accessibility pass on the existing blocked-transport conversation preview/staging and VoiceControls fixtures, reusing scripts/conversation-ui/check-focus.cjs and check-voice-controls.cjs. Address the explicitly unverified conversation modes in p2-preview-checkpoint.md: 200% text enlargement, reduced motion and forced colours; inspect current actual source/harness first and verify any intervening GitHub changes. Record the exact enlargement technique (for example controlled root-font enlargement), never call viewport/pinch scaling genuine text zoom or claim WCAG/screen-reader conformance. Check real existing dialogs, keyboard/focus restoration, controls and narrow-width layout with fictional data and all transport/provider calls blocked. Fix only reproduced layout/focus/motion/contrast defects and preserve exact SRT wording, samples, private-writing/chosen-faith policies and inactive AI/voice controls. Existing ten-day journey root-font enlargement evidence is already complete in PRODUCTION_BROWSER_CHECK_2026-10-04.md; rerun targeted journey regression only if shared styling changes. Do not add a new generic harness or repeat completed contracts/models. All 37 prepared native cases and supported hosted Auth/current-policy/ownership/synchronous-revocation guarantees remain separate unresolved release prerequisites; no native setup retry or connected SQL/settings, actual Auth/model/voice/microphone calls, paid edits, activation, purchase or publication."
+}

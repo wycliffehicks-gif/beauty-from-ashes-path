@@ -1,0 +1,1198 @@
+
+=== build.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+vite v8.0.16 building client environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:client] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 2136 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/public/assets/styles-DuOMzkts.css                103.48 kB │ gzip:  18.30 kB
+.output/public/assets/root-DLTE-HSj.js                     0.03 kB │ gzip:   0.05 kB
+.output/public/assets/_shell.resources-DJ7LAi8J.js         0.03 kB │ gzip:   0.05 kB
+.output/public/assets/not-found-DIgawKw1.js                0.05 kB │ gzip:   0.07 kB
+.output/public/assets/invariant-DEEwAagU.js                0.06 kB │ gzip:   0.08 kB
+.output/public/assets/redirect-DmtLUW0N.js                 0.38 kB │ gzip:   0.25 kB
+.output/public/assets/use-page-focus-CnKx1bKi.js           0.40 kB │ gzip:   0.29 kB
+.output/public/assets/_shell-BHg9YuhN.js                   1.24 kB │ gzip:   0.52 kB
+.output/public/assets/reflection-restore-C6--J1At.js       1.64 kB │ gzip:   0.83 kB
+.output/public/assets/_shell.practices-DyW0MNuv.js         1.70 kB │ gzip:   0.73 kB
+.output/public/assets/LegalPage-BrfAoqWW.js                1.80 kB │ gzip:   0.66 kB
+.output/public/assets/practice._id-DZuyf5F7.js             1.97 kB │ gzip:   0.77 kB
+.output/public/assets/journey-disclosure-DxCTfUQV.js       2.31 kB │ gzip:   0.94 kB
+.output/public/assets/contact-support-CAtJLF0s.js          3.22 kB │ gzip:   1.22 kB
+.output/public/assets/_shell.shifted-BGV09fsp.js           3.33 kB │ gzip:   1.35 kB
+.output/public/assets/pilot-feedback-Cp5MVZNI.js           3.98 kB │ gzip:   1.34 kB
+.output/public/assets/prefs-Dv4qR0-W.js                    4.01 kB │ gzip:   1.56 kB
+.output/public/assets/terms-Cbj9MZ_j.js                    4.61 kB │ gzip:   1.78 kB
+.output/public/assets/export-GOc69KWd.js                   4.91 kB │ gzip:   2.35 kB
+.output/public/assets/important-information-DhSo05p5.js    5.06 kB │ gzip:   1.79 kB
+.output/public/assets/_shell.support-BYpX9C4B.js           7.95 kB │ gzip:   2.59 kB
+.output/public/assets/useRouter-B_9rxz8q.js                8.49 kB │ gzip:   3.24 kB
+.output/public/assets/onboarding-HEC55_rx.js              10.26 kB │ gzip:   3.88 kB
+.output/public/assets/privacy-DHKjuztQ.js                 11.19 kB │ gzip:   3.79 kB
+.output/public/assets/link-BvipR3t3.js                    11.22 kB │ gzip:   4.96 kB
+.output/public/assets/_shell.settings-D0lQSDVl.js         12.63 kB │ gzip:   3.96 kB
+.output/public/assets/_shell.index-Dep9B7dv.js            14.71 kB │ gzip:   4.22 kB
+.output/public/assets/conversation-staging-_A__rXPe.js    19.34 kB │ gzip:   6.56 kB
+.output/public/assets/progress-gfwChnz1.js                27.71 kB │ gzip:   9.97 kB
+.output/public/assets/day._day-KahSz69A.js                38.27 kB │ gzip:  11.15 kB
+.output/public/assets/sha256-sync-BR4XjAaB.js             64.02 kB │ gzip:  21.58 kB
+.output/public/assets/conversation-preview-DKwyqhRy.js   164.04 kB │ gzip:  43.72 kB
+.output/public/assets/index-D8phlxaP.js                  759.45 kB │ gzip: 219.39 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.33s
+vite v8.0.16 building ssr environment for production...
+[2K
+transforming...[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/gate.functions.ts?tss-serverfn-split:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/conversation/staging/staging.functions.ts?tss-serverfn-split:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/journey-ai.functions.ts?tss-serverfn-split:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/conversation/staging/staging.functions.ts:4:36 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/gate.functions.ts:10:27 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+[plugin tanstack-start-core::server-fn:ssr] /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/journey-ai.functions.ts:44:44 createServerFn().inputValidator() is deprecated. Use createServerFn().validator() instead.
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+node_modules/.nitro/vite/services/ssr/assets/styles-DuOMzkts.css                                103.48 kB │ gzip: 18.30 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.resources-BehINSA0.js                         0.14 kB │ gzip:  0.13 kB
+node_modules/.nitro/vite/services/ssr/assets/empty-plugin-adapters-B9EewoYB.js                    0.26 kB │ gzip:  0.18 kB
+node_modules/.nitro/vite/services/ssr/assets/createServerRpc-CeifxoWL.js                          0.42 kB │ gzip:  0.30 kB
+node_modules/.nitro/vite/services/ssr/assets/agreement-dMeTV1GN.js                                0.90 kB │ gzip:  0.52 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.server-D9LjQpqP.js                              1.05 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/use-page-focus-BCp47MFc.js                           1.07 kB │ gzip:  0.58 kB
+node_modules/.nitro/vite/services/ssr/assets/start-BSbk-YsQ.js                                    1.11 kB │ gzip:  0.57 kB
+node_modules/.nitro/vite/services/ssr/assets/staging.functions-DsOTaZCQ.js                        1.12 kB │ gzip:  0.56 kB
+node_modules/.nitro/vite/services/ssr/assets/createSsrRpc-ClZ_UBdQ.js                             1.29 kB │ gzip:  0.62 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-Dz_9xnrP.js                             1.30 kB │ gzip:  0.66 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-DAQKsW_K.js                               1.42 kB │ gzip:  0.74 kB
+node_modules/.nitro/vite/services/ssr/assets/createStart-CSSRwTvH.js                              1.72 kB │ gzip:  0.61 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-consent-C-kX-6lQ.js                          1.76 kB │ gzip:  0.72 kB
+node_modules/.nitro/vite/services/ssr/assets/__23tanstack-start-server-fn-resolver-DyDal7rr.js    1.76 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/button-CCQEfgNs.js                                   1.81 kB │ gzip:  0.82 kB
+node_modules/.nitro/vite/services/ssr/assets/gate.functions-Dr5yYj0E.js                           1.97 kB │ gzip:  0.75 kB
+node_modules/.nitro/vite/services/ssr/assets/Icons-CiUx5VOG.js                                    2.05 kB │ gzip:  0.87 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell-nVHQq7Fs.js                                   2.06 kB │ gzip:  0.80 kB
+node_modules/.nitro/vite/services/ssr/assets/lifecycle-XFsfXwlG.js                                2.46 kB │ gzip:  1.11 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.practices-CR-SXDUh.js                         2.52 kB │ gzip:  0.92 kB
+node_modules/.nitro/vite/services/ssr/assets/sha256-sync-Dmw-glrM.js                              2.57 kB │ gzip:  1.26 kB
+node_modules/.nitro/vite/services/ssr/assets/LegalPage-DKLq9bQT.js                                2.82 kB │ gzip:  0.83 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-disclosure-CTmrDKxU.js                       3.23 kB │ gzip:  1.35 kB
+node_modules/.nitro/vite/services/ssr/assets/request-response-B3HX2ZcW.js                         3.34 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/practice._id-DNWhxDN7.js                             3.42 kB │ gzip:  1.16 kB
+node_modules/.nitro/vite/services/ssr/assets/auth-middleware-B2mZMGm7.js                          3.58 kB │ gzip:  1.41 kB
+node_modules/.nitro/vite/services/ssr/assets/contact-support-bS8k577G.js                          4.22 kB │ gzip:  1.37 kB
+node_modules/.nitro/vite/services/ssr/assets/reflection-restore-DbryoAzB.js                       4.40 kB │ gzip:  1.89 kB
+node_modules/.nitro/vite/services/ssr/index.js                                                    4.51 kB │ gzip:  1.86 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.shifted-Dbwll1Jp.js                           4.77 kB │ gzip:  1.69 kB
+node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-CRVOuj1o.js               5.09 kB │ gzip:  1.12 kB
+node_modules/.nitro/vite/services/ssr/assets/pilot-feedback-DHjqjgNc.js                           5.27 kB │ gzip:  1.51 kB
+node_modules/.nitro/vite/services/ssr/assets/practices-C7E1B0j-.js                                5.30 kB │ gzip:  2.10 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-transport.server-C2A3l1ZL.js                 5.36 kB │ gzip:  1.88 kB
+node_modules/.nitro/vite/services/ssr/assets/terms-CNQCC8q1.js                                    5.47 kB │ gzip:  1.90 kB
+node_modules/.nitro/vite/services/ssr/assets/reminder-DXUlCmg2.js                                 5.81 kB │ gzip:  2.23 kB
+node_modules/.nitro/vite/services/ssr/assets/important-information-Bgy-_f2V.js                    6.39 kB │ gzip:  2.03 kB
+node_modules/.nitro/vite/services/ssr/assets/client-DaUVSx77.js                                   7.53 kB │ gzip:  2.58 kB
+node_modules/.nitro/vite/services/ssr/assets/export-CLVXEZ6_.js                                   7.86 kB │ gzip:  3.12 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-BvyrwCr-.js                                 8.09 kB │ gzip:  3.54 kB
+node_modules/.nitro/vite/services/ssr/assets/JourneyScreen-CPW3_0XM.js                            8.54 kB │ gzip:  3.04 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.support-BIcnXl6k.js                          10.40 kB │ gzip:  3.01 kB
+node_modules/.nitro/vite/services/ssr/assets/prefs-C81FXCKz.js                                   12.02 kB │ gzip:  4.13 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-ai.functions-CZbsVd8e.js                    12.32 kB │ gzip:  3.83 kB
+node_modules/.nitro/vite/services/ssr/assets/privacy-DHDweL4m.js                                 12.84 kB │ gzip:  4.00 kB
+node_modules/.nitro/vite/services/ssr/assets/esm-CNWWplda.js                                     13.05 kB │ gzip:  3.80 kB
+node_modules/.nitro/vite/services/ssr/assets/adapter.server-BtvRh_tM.js                          13.33 kB │ gzip:  3.85 kB
+node_modules/.nitro/vite/services/ssr/assets/onboarding-BZGLa8QH.js                              15.06 kB │ gzip:  4.79 kB
+node_modules/.nitro/vite/services/ssr/assets/VisualMotifs-CEb-qbyk.js                            15.84 kB │ gzip:  4.66 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.settings-CS5NNarX.js                         17.92 kB │ gzip:  5.03 kB
+node_modules/.nitro/vite/services/ssr/assets/_shell.index-8C_NtsTW.js                            22.14 kB │ gzip:  5.23 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-staging-DFnZzILA.js                    25.62 kB │ gzip:  6.27 kB
+node_modules/.nitro/vite/services/ssr/assets/journey-policy-CqDMcCbn.js                          26.92 kB │ gzip:  9.07 kB
+node_modules/.nitro/vite/services/ssr/assets/progress-DybV3HvU.js                                34.04 kB │ gzip: 10.56 kB
+node_modules/.nitro/vite/services/ssr/assets/router-34Xpk4og.js                                  37.18 kB │ gzip:  9.93 kB
+node_modules/.nitro/vite/services/ssr/assets/server-DeM8PDPB.js                                  60.35 kB │ gzip: 15.44 kB
+node_modules/.nitro/vite/services/ssr/assets/day._day-DKVPW8YF.js                                72.62 kB │ gzip: 18.52 kB
+node_modules/.nitro/vite/services/ssr/assets/conversation-preview-BCis-6CC.js                    77.30 kB │ gzip: 17.39 kB
+node_modules/.nitro/vite/services/ssr/assets/service-CykluSHm.js                                 88.33 kB │ gzip: 24.90 kB
+node_modules/.nitro/vite/services/ssr/assets/first-journey-m3OgQbgi.js                          188.81 kB │ gzip: 47.03 kB
+
+✓ built in 2.72s
+
+[nitro] ◐ Building [Nitro] (preset: cloudflare-module, compatibility: 2026-11-01)
+[nitro] ✔ Generated public .output/public
+vite v8.0.16 building nitro environment for production...
+
+ WARN  inlineDynamicImports option is ignored because the codeSplitting option is specified.
+
+[2K
+transforming...✓ 2116 modules transformed.
+rendering chunks...
+computing gzip size...
+.output/server/_shell.resources-BehINSA0.mjs                         0.20 kB │ gzip:   0.18 kB
+.output/server/_ssr/empty-plugin-adapters-B9EewoYB.mjs               0.26 kB │ gzip:   0.19 kB
+.output/server/_libs/radix-ui__primitive.mjs                         0.42 kB │ gzip:   0.23 kB
+.output/server/_ssr/createServerRpc-CeifxoWL.mjs                     0.43 kB │ gzip:   0.30 kB
+.output/server/_chunks/ssr-renderer.mjs                              0.68 kB │ gzip:   0.39 kB
+.output/server/_libs/tanstack__react-query.mjs                       0.77 kB │ gzip:   0.41 kB
+.output/server/_ssr/agreement-dMeTV1GN.mjs                           0.99 kB │ gzip:   0.59 kB
+.output/server/_ssr/start-BSbk-YsQ.mjs                               1.13 kB │ gzip:   0.61 kB
+.output/server/_runtime.mjs                                          1.14 kB │ gzip:   0.57 kB
+.output/server/_ssr/staging.functions-DsOTaZCQ.mjs                   1.17 kB │ gzip:   0.62 kB
+.output/server/_ssr/gate.server-D9LjQpqP.mjs                         1.19 kB │ gzip:   0.69 kB
+.output/server/_libs/hookable.mjs                                    1.20 kB │ gzip:   0.54 kB
+.output/server/_ssr/use-page-focus-BCp47MFc.mjs                      1.36 kB │ gzip:   0.74 kB
+.output/server/_ssr/createSsrRpc-ClZ_UBdQ.mjs                        1.38 kB │ gzip:   0.70 kB
+.output/server/_ssr/practice._id-Dz_9xnrP.mjs                        1.42 kB │ gzip:   0.74 kB
+.output/server/_ssr/onboarding-DAQKsW_K.mjs                          1.53 kB │ gzip:   0.82 kB
+.output/server/_ssr/createStart-CSSRwTvH.mjs                         1.60 kB │ gzip:   0.61 kB
+.output/server/_ssr/journey-consent-C-kX-6lQ.mjs                     1.84 kB │ gzip:   0.78 kB
+.output/server/__23tanstack-start-server-fn-resolver-DyDal7rr.mjs    1.89 kB │ gzip:   0.82 kB
+.output/server/_ssr/gate.functions-Dr5yYj0E.mjs                      2.09 kB │ gzip:   0.82 kB
+.output/server/_ssr/button-CCQEfgNs.mjs                              2.11 kB │ gzip:   0.95 kB
+.output/server/_ssr/lifecycle-XFsfXwlG.mjs                           2.43 kB │ gzip:   1.14 kB
+.output/server/_ssr/Icons-CiUx5VOG.mjs                               2.48 kB │ gzip:   0.99 kB
+.output/server/_shell-nVHQq7Fs.mjs                                   2.58 kB │ gzip:   0.92 kB
+.output/server/_ssr/sha256-sync-Dmw-glrM.mjs                         2.63 kB │ gzip:   1.31 kB
+.output/server/_shell.practices-CR-SXDUh.mjs                         3.07 kB │ gzip:   1.03 kB
+.output/server/_libs/class-variance-authority+clsx.mjs               3.25 kB │ gzip:   1.28 kB
+.output/server/_ssr/journey-disclosure-CTmrDKxU.mjs                  3.31 kB │ gzip:   1.41 kB
+.output/server/_ssr/request-response-B3HX2ZcW.mjs                    3.38 kB │ gzip:   1.20 kB
+.output/server/_ssr/LegalPage-DKLq9bQT.mjs                           3.43 kB │ gzip:   0.95 kB
+.output/server/_ssr/auth-middleware-B2mZMGm7.mjs                     3.78 kB │ gzip:   1.50 kB
+.output/server/_ssr/practice._id-DNWhxDN7.mjs                        4.08 kB │ gzip:   1.26 kB
+.output/server/_libs/radix-ui__react-slot.mjs                        4.37 kB │ gzip:   1.41 kB
+.output/server/_ssr/ssr.mjs                                          4.43 kB │ gzip:   1.87 kB
+.output/server/_ssr/reflection-restore-DbryoAzB.mjs                  4.48 kB │ gzip:   1.95 kB
+.output/server/_libs/lucide-react.mjs                                4.79 kB │ gzip:   1.30 kB
+.output/server/_ssr/contact-support-bS8k577G.mjs                     4.95 kB │ gzip:   1.49 kB
+.output/server/_tanstack-start-manifest_v-CRVOuj1o.mjs               5.19 kB │ gzip:   1.18 kB
+.output/server/_ssr/practices-C7E1B0j-.mjs                           5.38 kB │ gzip:   2.17 kB
+.output/server/_ssr/journey-transport.server-C2A3l1ZL.mjs            5.44 kB │ gzip:   1.94 kB
+.output/server/_shell.shifted-Dbwll1Jp.mjs                           5.56 kB │ gzip:   1.83 kB
+.output/server/_libs/@radix-ui/react-switch+[...].mjs                5.75 kB │ gzip:   1.97 kB
+.output/server/_ssr/reminder-DXUlCmg2.mjs                            6.16 kB │ gzip:   2.37 kB
+.output/server/_ssr/pilot-feedback-DHjqjgNc.mjs                      6.17 kB │ gzip:   1.63 kB
+.output/server/_ssr/terms-CNQCC8q1.mjs                               6.29 kB │ gzip:   2.02 kB
+.output/server/_ssr/day._day-BvyrwCr-.mjs                            6.80 kB │ gzip:   3.13 kB
+.output/server/_ssr/important-information-Bgy-_f2V.mjs               7.29 kB │ gzip:   2.14 kB
+.output/server/_ssr/client-DaUVSx77.mjs                              7.62 kB │ gzip:   2.65 kB
+.output/server/_ssr/export-CLVXEZ6_.mjs                              7.94 kB │ gzip:   3.18 kB
+.output/server/_ssr/JourneyScreen-CPW3_0XM.mjs                       9.36 kB │ gzip:   3.18 kB
+.output/server/_shell.support-BIcnXl6k.mjs                          11.61 kB │ gzip:   3.10 kB
+.output/server/_ssr/esm-CNWWplda.mjs                                12.09 kB │ gzip:   3.75 kB
+.output/server/_ssr/journey-ai.functions-CZbsVd8e.mjs               12.23 kB │ gzip:   3.89 kB
+.output/server/_ssr/prefs-C81FXCKz.mjs                              12.49 kB │ gzip:   4.29 kB
+.output/server/_libs/tanstack__history.mjs                          12.54 kB │ gzip:   3.74 kB
+.output/server/_libs/supabase__functions-js.mjs                     12.67 kB │ gzip:   3.51 kB
+.output/server/_ssr/adapter.server-BtvRh_tM.mjs                     13.34 kB │ gzip:   3.91 kB
+.output/server/_libs/h3+rou3+srvx.mjs                               14.33 kB │ gzip:   4.26 kB
+.output/server/_ssr/privacy-DHDweL4m.mjs                            14.43 kB │ gzip:   4.13 kB
+.output/server/_ssr/onboarding-BZGLa8QH.mjs                         16.62 kB │ gzip:   4.93 kB
+.output/server/_ssr/VisualMotifs-CEb-qbyk.mjs                       17.06 kB │ gzip:   4.81 kB
+.output/server/index.mjs                                            17.36 kB │ gzip:   4.93 kB
+.output/server/_shell.settings-CS5NNarX.mjs                         19.89 kB │ gzip:   5.19 kB
+.output/server/_shell.index-8C_NtsTW.mjs                            25.66 kB │ gzip:   5.40 kB
+.output/server/_ssr/journey-policy-CqDMcCbn.mjs                     26.50 kB │ gzip:   9.05 kB
+.output/server/_ssr/conversation-staging-DFnZzILA.mjs               27.82 kB │ gzip:   6.39 kB
+.output/server/_libs/@tanstack/router-core+[...].mjs                30.19 kB │ gzip:   8.03 kB
+.output/server/_ssr/progress-DybV3HvU.mjs                           34.15 kB │ gzip:  10.67 kB
+.output/server/_libs/h3-v2+srvx.mjs                                 34.51 kB │ gzip:   9.61 kB
+.output/server/_libs/supabase__supabase-js.mjs                      37.94 kB │ gzip:  11.21 kB
+.output/server/_ssr/router-34Xpk4og.mjs                             38.25 kB │ gzip:   9.96 kB
+.output/server/_libs/tanstack__query-core.mjs                       48.54 kB │ gzip:  10.69 kB
+.output/server/_libs/supabase__phoenix.mjs                          50.58 kB │ gzip:  12.80 kB
+.output/server/_ssr/server-DeM8PDPB.mjs                             58.93 kB │ gzip:  15.35 kB
+.output/server/_ssr/day._day-DKVPW8YF.mjs                           78.23 kB │ gzip:  18.72 kB
+.output/server/_libs/supabase__realtime-js+unenv.mjs                82.41 kB │ gzip:  20.98 kB
+.output/server/_ssr/conversation-preview-BCis-6CC.mjs               82.64 kB │ gzip:  17.60 kB
+.output/server/_libs/tailwind-merge.mjs                             85.68 kB │ gzip:  15.25 kB
+.output/server/_ssr/service-CykluSHm.mjs                            88.10 kB │ gzip:  24.93 kB
+.output/server/_libs/zod.mjs                                       100.31 kB │ gzip:  17.35 kB
+.output/server/_libs/@radix-ui/react-alert-dialog+[...].mjs        109.95 kB │ gzip:  25.14 kB
+.output/server/_libs/supabase__postgrest-js.mjs                    110.50 kB │ gzip:  23.23 kB
+.output/server/_libs/@supabase/storage-js+[...].mjs                127.59 kB │ gzip:  23.98 kB
+.output/server/_ssr/first-journey-m3OgQbgi.mjs                     188.79 kB │ gzip:  47.04 kB
+.output/server/_libs/supabase__auth-js.mjs                         320.12 kB │ gzip:  64.87 kB
+.output/server/_libs/@tanstack/react-router+[...].mjs              755.36 kB │ gzip: 159.65 kB
+
+✓ built in 2.66s
+[nitro] ℹ Using auto generated worker name: tanstack-start-ts
+ℹ Generated .output/server/wrangler.json
+ℹ Generated .wrangler/deploy/config.json
+ℹ Generated .output/public/_headers
+ℹ Generated .output/nitro.json
+
+[nitro] ✔ You can preview this build using npx vite preview
+[nitro] ✔ You can deploy this build using npx nitro deploy --prebuilt
+
+=== conversation-tests.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (41 tests) 33602ms
+     ✓ fails unchanged source privileges without changing catalog, lifecycle or accounting  527ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  1138ms
+       ✓ rejects an extra PUBLIC execute grant  316ms
+       ✓ rejects an extra anon execute grant  969ms
+       ✓ rejects an extra authenticated execute grant  1038ms
+       ✓ rejects public CREATE drift  454ms
+       ✓ rejects private USAGE drift  752ms
+       ✓ rejects private PUBLIC CREATE drift  804ms
+       ✓ rejects SECURITY INVOKER drift  322ms
+       ✓ rejects an new prefixed entry even when app execution is denied  976ms
+       ✓ rejects a new private helper even when all app roles are denied  925ms
+       ✓ rejects a function owned by a different explicitly untrusted role  305ms
+       ✓ rejects set-returning result despite identical input types and execution grants  426ms
+       ✓ rejects named argument drift despite identical input types and execution grants  437ms
+       ✓ rejects default argument despite identical input types and execution grants  418ms
+       ✓ runs actual issuer to owned admission and marker while all old enablers deny  1375ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after expired eligibility  2565ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after revoked eligibility  1077ms
+       ✓ preserves exact close-before-register cancellation under candidate privileges  487ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-sql.test.ts (76 tests) 46795ms
+     ✓ denies consumed receipt replay and treats a distinct same-operation proof as an observation only  323ms
+     ✓ preserves global operation identity across both sequential owner orderings with shared pool  367ms
+     ✓ rejects direct SQL unsafe version before consuming a proof  703ms
+     ✓ rejects direct SQL string version before consuming a proof  539ms
+     ✓ burns one exact proof when retired attempt blocks the marker without changing accounting  833ms
+     ✓ burns one exact proof when different attempt winner blocks the marker without changing accounting  1046ms
+     ✓ burns one exact proof when missing allocation blocks the marker without changing accounting  1098ms
+     ✓ burns one exact proof when closed allocation blocks the marker without changing accounting  1105ms
+     ✓ burns one exact proof when released slot blocks the marker without changing accounting  847ms
+     ✓ burns one exact proof when allocation units mismatch blocks the marker without changing accounting  650ms
+     ✓ burns one exact proof when disabled quota blocks the marker without changing accounting  2567ms
+     ✓ burns one exact proof when missing route blocks the marker without changing accounting  1398ms
+     ✓ burns one exact proof when route rebound blocks the marker without changing accounting  762ms
+     ✓ burns one exact proof when disabled pool blocks the marker without changing accounting  810ms
+     ✓ burns one exact proof when quarantined pool blocks the marker without changing accounting  642ms
+     ✓ burns one exact proof when quota reservation size changed blocks the marker without changing accounting  327ms
+     ✓ burns one exact proof when approval rebound to another policy blocks the marker without changing accounting  322ms
+     ✓ uses the current expected pool version without rewriting the admission allocation version  510ms
+     ✓ rechecks parent revoked with no fabricated revocation or accounting writes  404ms
+     ✓ rechecks issuance association absent with no fabricated revocation or accounting writes  390ms
+     ✓ rechecks cleanup not protocol two with no fabricated revocation or accounting writes  312ms
+     ✓ rechecks approval digest mismatch with no fabricated revocation or accounting writes  340ms
+     ✓ retains exact terminal cancel evidence and releases only an unmarked slot  496ms
+     ✓ retains exact terminal delete evidence and releases only an unmarked slot  419ms
+     ✓ retains exact terminal approval revoked evidence and releases only an unmarked slot  442ms
+     ✓ retains exact terminal issuance revoked evidence and releases only an unmarked slot  434ms
+     ✓ retains exact terminal allowlist withdrawn evidence and releases only an unmarked slot  461ms
+     ✓ burns and denies at receipt expiry without refreshing the original receipt  486ms
+     ✓ burns and denies at original age without refreshing the original receipt  469ms
+     ✓ burns and denies at rollback without refreshing the original receipt  308ms
+     ✓ burns exact receipt with the unknown-time zero fence on unsafe initial clock NULL  356ms
+     ✓ burns exact receipt with the unknown-time zero fence on unsafe initial clock -1  315ms
+     ✓ burns exact receipt with the unknown-time zero fence on unsafe initial clock 9007199254740992  415ms
+     ✓ rechecks rollback after the final pool/global-operation lock stage  888ms
+     ✓ preserves closed status when exact legacy close wins before marking  377ms
+     ✓ keeps the committed marker after a lost reply without retry or replacement identity  310ms
+     ✓ keeps the committed marker after a malformed reply without retry or replacement identity  425ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-sql.test.ts (36 tests) 37745ms
+     ✓ routes one separate fresh unused inspect proof directly to actual v2 marker SQL  793ms
+     ✓ uses fresh marker verification after 40 seconds without extending the immutable claim  602ms
+     ✓ retains operation identity before its first Auth wait and rejects an overlapping marker  646ms
+     ✓ denies parent revocation after bfa_p5_v2_register_proof commits without forgetting marker ownership  428ms
+     ✓ denies approval revocation after bfa_p5_v2_register_proof commits without forgetting marker ownership  501ms
+     ✓ denies approval replacement after bfa_p5_v2_register_proof commits without forgetting marker ownership  387ms
+     ✓ denies thread revision after bfa_p5_v2_register_proof commits without forgetting marker ownership  315ms
+     ✓ denies allowlist withdrawal after bfa_p5_v2_register_proof commits without forgetting marker ownership  705ms
+     ✓ denies Auth session change after bfa_p5_v2_register_proof commits without forgetting marker ownership  1595ms
+     ✓ denies parent revocation after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  795ms
+     ✓ denies approval revocation after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  831ms
+     ✓ denies approval replacement after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  441ms
+     ✓ denies thread revision after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  369ms
+     ✓ denies allowlist withdrawal after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  1232ms
+     ✓ denies Auth session change after bfa_p5_v2_capacity_mark commits without forgetting marker ownership  1047ms
+     ✓ retains actual marker version denial and consumes only its separate proof  1287ms
+     ✓ retains actual marker disabled denial and consumes only its separate proof  468ms
+     ✓ retains actual marker quarantined denial and consumes only its separate proof  500ms
+     ✓ retains actual marker quota disabled denial and consumes only its separate proof  480ms
+     ✓ retains uncertain committed marker for a lost reply and never retries  1410ms
+     ✓ retains uncertain committed marker for a null reply and never retries  374ms
+     ✓ retains uncertain committed marker for a protocol reply and never retries  364ms
+     ✓ retains uncertain committed marker for a operation reply and never retries  354ms
+     ✓ retains uncertain committed marker for a pool version reply and never retries  570ms
+     ✓ retains uncertain committed marker for a proof receipt reply and never retries  489ms
+     ✓ retains uncertain committed marker for a proof time reply and never retries  443ms
+     ✓ keeps an actual already-marked acknowledgment without yielding a new marked observation  675ms
+     ✓ keeps original proof deadline when registration reply arrives at exact expiry  651ms
+     ✓ keeps original proof deadline when marker reply arrives at exact expiry  548ms
+     ✓ does not consume or replace a registered marker proof after eligibility shortens  511ms
+     ✓ retains earlier shorter Auth/approval ceilings across fresh marker verification  959ms
+     ✓ synchronous exact close defeats delayed bfa_p5_v2_register_proof without reactivation  364ms
+     ✓ synchronous exact close defeats delayed bfa_p5_v2_capacity_mark without reactivation  413ms
+     ✓ close during committed marker reply preserves marked uncertainty and its occupied slot  445ms
+     ✓ retains marked operation and exact cleanup after a lost close reply despite Auth/time loss  1191ms
+     ✓ isolates concurrent owned markers and retains both independently marked holds  1313ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-sql.test.ts (77 tests) 34835ms
+     ✓ denies claim for a base-only claim without lazy attachment or another debit  763ms
+     ✓ denies inspect for a base-only claim without lazy attachment or another debit  652ms
+     ✓ denies a mismatched identity expiry without consuming the stored receipt or touching any protected row  426ms
+     ✓ denies a mismatched receipt expiry without consuming the stored receipt or touching any protected row  326ms
+     ✓ denies a mismatched attempt without consuming the stored receipt or touching any protected row  309ms
+     ✓ denies a mismatched approval digest without consuming the stored receipt or touching any protected row  549ms
+     ✓ rejects direct SQL wrong operation before any consumption or accounting  400ms
+     ✓ rejects direct SQL wrong protocol before any consumption or accounting  352ms
+     ✓ burns an exact receipt once when quota disabled denies atomic admission  624ms
+     ✓ burns an exact receipt once when quota insufficient denies atomic admission  508ms
+     ✓ burns an exact receipt once when route missing denies atomic admission  512ms
+     ✓ burns an exact receipt once when pool disabled denies atomic admission  1212ms
+     ✓ burns an exact receipt once when pool quarantined denies atomic admission  467ms
+     ✓ burns an exact receipt once when unit definitions differ denies atomic admission  1046ms
+     ✓ burns an exact receipt once when no active slot denies atomic admission  330ms
+     ✓ burns an exact receipt once when unit budget exhausted denies atomic admission  585ms
+     ✓ burns but denies on original age and cannot recover the same receipt  470ms
+     ✓ records unknown consumption time zero for unsafe initial clock NULL, then refuses recovery replay  338ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-sql.test.ts (78 tests) 29242ms
+     ✓ stores an exact fresh protocol-2 proof without consuming it, admitting a claim or spending held usage  497ms
+     ✓ rejects expired cleanup without adoption or revival  772ms
+     ✓ rejects invalidated cleanup without adoption or revival  493ms
+     ✓ rejects wrong session cleanup without adoption or revival  470ms
+     ✓ rejects wrong fingerprint cleanup without adoption or revival  801ms
+     ✓ denies legacy expired parent association without manufacturing proof authority  448ms
+     ✓ denies legacy revoked parent association without manufacturing proof authority  636ms
+     ✓ denies missing issuance binding parent association without manufacturing proof authority  458ms
+     ✓ denies foreign issuance binding parent association without manufacturing proof authority  412ms
+     ✓ withholds proof after revoked approval while retaining matching held usage  319ms
+     ✓ retains expired shorter Auth evidence from a delayed verification and never revives it later  413ms
+     ✓ retains expired shorter allowlist evidence from a delayed verification and never revives it later  629ms
+     ✓ retains expired shorter approval evidence from a delayed verification and never revives it later  332ms
+     ✓ does not retain supplied shortening under future verification  363ms
+     ✓ preserves committed proof after lost reply and makes no automatic retry  394ms
+     ✓ preserves committed proof after malformed reply and makes no automatic retry  949ms
+     ✓ keeps a registered proof immutable when exact close follows and denies a later new proof  423ms
+     ✓ denies nil approval at the SQL boundary  331ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-lifecycle-composition-sql.test.ts (22 tests) 25371ms
+     ✓ drives actual service through trusted issuer, admission, marker and exact cleanup without target resealing  1149ms
+     ✓ issues later authority after original expiry under the same parent and preserves uncertain marked history  1740ms
+     ✓ cannot reuse a prior marked attempt with a new genuine issuer authority  1245ms
+     ✓ retained uncertain marked occupancy blocks later authority without a second debit  1636ms
+     ✓ new genuine authorities never replenish the shared cumulative quota  1660ms
+     ✓ fresh shorter Auth bounds later authority without changing prior issuance or holds  1064ms
+     ✓ parent fence denies both existing lifecycle and new issuer while preserving exact cleanup  503ms
+     ✓ legacy active fence denies both existing lifecycle and new issuer while preserving exact cleanup  470ms
+     ✓ legacy expired fence denies both existing lifecycle and new issuer while preserving exact cleanup  606ms
+     ✓ legacy revoked fence denies both existing lifecycle and new issuer while preserving exact cleanup  580ms
+     ✓ downstream admission denies parent loss during issuer final Auth wait  311ms
+     ✓ downstream admission denies allowlist loss during issuer final Auth wait  319ms
+     ✓ issuer-fed exact close defeats pending bfa_p5_v2_register_cleanup without reviving the lifecycle  303ms
+     ✓ issuer-fed exact close defeats pending bfa_p5_v2_capacity_mark without reviving the lifecycle  1945ms
+     ✓ issuer-fed close after committed delayed marking retains exact operation and occupied hold  2726ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-sql.test.ts (43 tests) 21371ms
+     ✓ admits with real crypto and distinct consumed claim/inspect proofs before any marker  1245ms
+     ✓ keeps immutable 60-second lifecycle alive beyond the first 30-second verification window  1014ms
+     ✓ revalidates repeatedly with distinct inspect receipts and no second debit  698ms
+     ✓ denies a second owned call for the same attempt without closing or refunding the winner  514ms
+     ✓ rechecks thread revision after bfa_p5_v2_capacity_claim commits  1619ms
+     ✓ rechecks allowlist withdrawal after bfa_p5_v2_capacity_claim commits  2312ms
+     ✓ rechecks Auth session change after bfa_p5_v2_capacity_claim commits  309ms
+     ✓ rechecks parent revocation after bfa_p5_v2_voice_inspect commits  725ms
+     ✓ rechecks allowlist withdrawal after bfa_p5_v2_voice_inspect commits  450ms
+     ✓ keeps shorter eligibility across later Auth/policy extension and fresh revalidation  561ms
+     ✓ isolates concurrent request-owned handles while serializing only the local SQL connection  458ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-sql.test.ts (18 tests) 22482ms
+     ✓ consumes a distinct fresh INSPECT proof directly in the exact marker transaction  649ms
+     ✓ fences concurrent and subsequent attempts before a delayed proof acknowledgment  410ms
+     ✓ retains committed markers after lost or malformed replies and deliberately reconciles exact retained evidence  566ms
+     ✓ rechecks actual Stop, Delete and revocation after proof registration before marker submission  869ms
+     ✓ lets SQL deny actual Stop, Delete and revocation occurring at marker invocation  686ms
+     ✓ withholds committed marker observations when actual Stop, Delete or revocation wins before final reads  798ms
+     ✓ withholds success after final fictional Auth changes while preserving committed marker evidence  648ms
+     ✓ withholds a committed marker when approval shortens below its proof ceiling after acknowledgment  434ms
+     ✓ passes only the trusted configured pool version and retains a denied operation without replacement  683ms
+     ✓ treats an actual already-marked response as unconfirmed without a second local success  806ms
+     ✓ preserves actual closed acknowledgment when a trusted cleanup wins before SQL mark  1432ms
+     ✓ denies a fresh registered proof that expires in SQL before consumption  704ms
+     ✓ retains all records on anonymous or authenticated marker RPC denial  448ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-sql.test.ts (75 tests) 18915ms
+     ✓ denies foreign thread without lifecycle, proof or accounting mutations  645ms
+     ✓ denies missing approval without lifecycle, proof or accounting mutations  371ms
+     ✓ retains committed clock evidence after a malformed reply without retry or new identity  465ms
+     ✓ treats a reply delayed past parent revocation only as a historical observation  396ms
+     ✓ rolls back an unexpected clock-write exception without revoking or reserving anything  387ms
+     ✓ denies authenticated direct reader access  315ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-sql.test.ts (60 tests) 18009ms
+     ✓ denies adoption/reopening of closed cleanup evidence  510ms
+     ✓ denies registration under changed current retired state without erasing records  304ms
+     ✓ denies registration or shortening after any retained downstream proof claim  365ms
+     ✓ rejects nil session identity at the SQL boundary  324ms
+     ✓ rejects nil claim identity at the SQL boundary  426ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-sql.test.ts (36 tests) 19009ms
+     ✓ withholds the token when Auth session changes after committed generation  392ms
+     ✓ withholds the token when parent revoke changes after committed generation  344ms
+     ✓ withholds the token when legacy fence changes after committed generation  512ms
+     ✓ withholds the token when thread Stop changes after committed generation  350ms
+     ✓ withholds the token when legacy fence changes after committed issuance  600ms
+     ✓ withholds the token when thread Stop changes after committed issuance  479ms
+     ✓ withholds the token when thread Delete changes after committed issuance  720ms
+     ✓ retains committed parent evidence after a malformed reply and never retries  926ms
+     ✓ synchronous cancellation while the parent write is in flight retains its late acknowledgment  354ms
+     ✓ retains committed generation evidence after a lost reply and never retries  804ms
+     ✓ retains committed generation evidence after a malformed reply and never retries  802ms
+     ✓ synchronous cancellation while the generation write is in flight retains its late acknowledgment  526ms
+     ✓ retains committed issuance evidence after a lost reply and never retries  434ms
+     ✓ synchronous cancellation while the issuance write is in flight retains its late acknowledgment  416ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier-sql.test.ts (45 tests) 13751ms
+     ✓ rechecks parent changed during final Auth wait  671ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-sql.test.ts (20 tests) 16867ms
+     ✓ derives one immutable bounded request from fictional Auth and obtains exact protected SQL evidence  350ms
+     ✓ preserves exact original expiry and nonzero safe versions without rewriting an active fence  343ms
+     ✓ supplies real admission through local crypto while preserving both cumulative holds on later initialization  1323ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-sql.test.ts (30 tests) 21830ms
+     ✓ reads content-free current metadata before generation or issuance exists  384ms
+     ✓ registers one shared permanent generation, preserves six microseconds and re-observes the exact row  301ms
+     ✓ denies mixed parent identity/version and missing protected metadata without creating a generation  617ms
+     ✓ requires current finite admitted allowlist and conservatively floors its deadline  301ms
+     ✓ denies nonfinite/out-of-wire creation timestamps and unsafe revision without registering  724ms
+     ✓ denies malformed direct SQL scalars before mutation  399ms
+     ✓ unsafe current clocks deny enabling work but do not erase existing parent/generation/holds  499ms
+     ✓ a failed generation insert rolls back both new row and incidental clock advance  1472ms
+     ✓ keeps both exact RPCs service-only without granting private schema/table/helper access  1497ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-sql.test.ts (36 tests) 14905ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-sql.test.ts (21 tests) 26405ms
+     ✓ commits one exact active fence and its clock through the actual named service-role mapping  332ms
+     ✓ acknowledges exact active metadata without updating its row or resetting its version  1274ms
+     ✓ refuses both longer and shorter conflicting expiries without rewriting the original fence  397ms
+     ✓ keeps revoke-before-provision tombstones terminal across repeated valid provisioning  313ms
+     ✓ denies future, stale and expired valid-shaped metadata while retaining the observed clock  412ms
+     ✓ supplies the missing reader prerequisite for real admission and preserves holds after revocation  623ms
+     ✓ restricts the new RPC to service role without opening private schemas tables or helpers  600ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-sql.test.ts (22 tests) 10288ms
+     ✓ executes exact named mark and reconciliation mappings as service_role without private content  384ms
+     ✓ reports already-marked only with a fresh proof and never rebinds or debits the operation  301ms
+     ✓ retains committed terminal reconciliation after lost or malformed replies and permits exact evidence reconciliation only  1012ms
+     ✓ keeps both RPCs service-only and all private table and helper privileges unavailable  582ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-sql.test.ts (16 tests) 8866ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-sql.test.ts (18 tests) 14463ms
+     ✓ denies withdrawn, expired, non-finite and unsafe staging deadlines without mutation  531ms
+     ✓ withholds an already registered token after late Stop, Delete, expiry or generation retirement  534ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-sql.test.ts (16 tests) 11221ms
+     ✓ denies revoked, expired or non-admitted snapshot records without writing terminal state  441ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifetime-contract-sql.test.ts (8 tests) 10651ms
+     ✓ expired-parent re-entry denial preserves an existing lease's holds and exact cleanup  1637ms
+     ✓ revoke-before-first-use keeps its terminal tombstone despite fresh same-login metadata  1001ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-sql.test.ts (6 tests) 10586ms
+     ✓ executes all five named mappings through service_role and retains the single hold  630ms
+     ✓ refuses attaching an existing base-only hold rather than debiting a second time  607ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker-review.test.ts (8 tests) 6305ms
+     ✓ fences same-tick close before the underlying cleanup microtask or any marker Auth read  658ms
+     ✓ never invokes a base inspection after close starts at any observed clock-read microtask boundary  5152ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-ledger.test.ts (20 tests) 4757ms
+     ✓ 16 competing reservations of one identity create exactly one admission  1477ms
+     ✓ 16 competing claims dispatch exactly once  1721ms
+     ✓ different pending requests racing the final dispatch slot have one winner  1243ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-sql.test.ts (22 tests) 14717ms
+     ✓ isolates the exact owner/session pair from another session and the same UUID under another owner  461ms
+     ✓ rejects null SQL identities before persistence with a generic error  551ms
+     ✓ grants only the service RPC and preserves direct private table, schema and helper restrictions  780ms
+     ✓ denies stale inspection, preserves existing and unrelated holds, and allows exact cleanup after revocation  538ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker.test.ts (77 tests) 2689ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-store-integration.test.ts (11 tests) 842ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission.test.ts (77 tests) 1615ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance-review.test.ts (3 tests) 3789ms
+     ✓ starts no further Auth, protected read or write after cancellation at each observed clock-read microtask boundary  1805ms
+     ✓ starts no further port after conservative verification reaches exactly 30000 ms in an intervening microtask  786ms
+     ✓ starts no further port after the owned service snapshot changes in an intervening microtask  1194ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier.test.ts (92 tests) 1726ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-runner.test.ts (12 tests) 991ms
+     ✓ 9 authorized simulated turns capture exact wire bytes/hashes before transport and settle unique receipts  433ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-marker.test.ts (26 tests) 809ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-store-adapter.test.ts (20 tests) 1192ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-issuance.test.ts (74 tests) 660ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-repair.test.ts (33 tests) 317ms
+ ✓ src/lib/ai/conversation/__tests__/p3a-service.test.ts (81 tests) 1398ms
+     ✓ uses the P1 policy identity/hash and only active-thread history (O02 canaries)  515ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-proof-review.test.ts (23 tests) 584ms
+ ✓ src/lib/ai/conversation/__tests__/p5-service-lifecycle.test.ts (40 tests) 357ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance.test.ts (21 tests) 436ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-cli.test.ts (4 tests) 924ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-marker-review.test.ts (6 tests) 480ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification.test.ts (18 tests) 383ms
+ ✓ src/lib/ai/conversation/__tests__/p4-openai-provider.test.ts (27 tests) 289ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-review.test.ts (6 tests) 324ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store-review.test.ts (10 tests) 793ms
+     ✓ late inspected eligibility cannot revive a lease whose capacity cleanup already acknowledged  330ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-rpc.test.ts (79 tests) 575ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-rpc.test.ts (90 tests) 734ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-admission-review.test.ts (6 tests) 306ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-verification-review.test.ts (23 tests) 194ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-rpc.test.ts (90 tests) 234ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-reads-review.test.ts (7 tests) 318ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc.test.ts (27 tests) 176ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-controls.test.ts (18 tests) 196ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-mark-review.test.ts (2 tests) 154ms
+ ✓ src/lib/ai/conversation/__tests__/p4-eval-manifest.test.ts (12 tests) 178ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-review.test.ts (8 tests) 196ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-rpc.test.ts (75 tests) 365ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer-review.test.ts (8 tests) 131ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-authority-verifier-review.test.ts (7 tests) 126ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-rpc.test.ts (44 tests) 615ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-seal.test.ts (6 tests) 102ms
+stdout | src/lib/ai/conversation/__tests__/sources.test.ts > conversation source registry > records stable production and evaluation snapshot hashes
+CONVERSATION_SOURCE_SNAPSHOT_PRODUCTION_SHA256 f7ad7cc7c2174a8c97580286999660aa55abee1944061d2afa15a6e102136553
+CONVERSATION_SOURCE_SNAPSHOT_EVALUATION_SHA256 0cb2dc1e8ef9336c0568a4c1e1cfdb51f373c468bb4cd152cef93510dc110da6
+
+ ✓ src/lib/ai/conversation/__tests__/sources.test.ts (15 tests) 118ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-review.test.ts (7 tests) 286ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-rpc.test.ts (28 tests) 384ms
+ ✓ src/lib/ai/conversation/__tests__/p4-service-direct-provider.test.ts (4 tests) 278ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-thread-authority.test.ts (3 tests) 116ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-proof-review.test.ts (2 tests) 318ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-capacity-review.test.ts (2 tests) 102ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-rpc.test.ts (33 tests) 712ms
+     ✓ captures and freezes detached arguments before a caller mutates a pending registration  560ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission.test.ts (18 tests) 103ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-repair.test.ts (9 tests) 154ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-review.test.ts (7 tests) 320ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-read-rpc.test.ts (20 tests) 97ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-initializer.test.ts (41 tests) 86ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-authority.test.ts (4 tests) 76ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-issuance-rpc.test.ts (20 tests) 69ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-boundary.test.ts (8 tests) 103ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-lifecycle.test.ts (37 tests) 69ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-preissue-read-rpc.test.ts (25 tests) 247ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-revoke-rpc.test.ts (25 tests) 86ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-session-provision-rpc.test.ts (26 tests) 171ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-rpc-store.test.ts (21 tests) 98ms
+ ✓ src/lib/ai/conversation/__tests__/context.test.ts (29 tests) 60ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cleanup-review.test.ts (2 tests) 58ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-capacity-rpc-review.test.ts (7 tests) 53ms
+ ✓ src/lib/ai/conversation/__tests__/preview-store.test.ts (34 tests) 77ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-admission-review.test.ts (13 tests) 61ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-parent-issuance-review.test.ts (4 tests) 40ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-current-review.test.ts (2 tests) 66ms
+ ✓ src/lib/ai/conversation/__tests__/p5-browser-capture.test.ts (18 tests) 28ms
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-preissue-review.test.ts (2 tests) 77ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-durable-admission.test.ts (15 tests) 15ms
+ ✓ src/lib/ai/conversation/__tests__/grants.test.ts (8 tests) 6ms
+ ✓ src/lib/ai/conversation/__tests__/contract.test.ts (12 tests) 66ms
+ ✓ src/lib/ai/conversation/__tests__/p3b-ui-intent.test.ts (4 tests) 6ms
+
+ Test Files  95 passed (95)
+      Tests  2518 passed (2518)
+   Start at  09:20:59
+   Duration  304.69s (transform 11.24s, setup 0ms, import 27.03s, tests 522.79s, environment 33ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/conversation-tests.json
+
+=== cutover-independent-final-lint.log ===
+
+=== cutover-independent-final-tests.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  09:20:26
+   Duration  36.10s (transform 1.98s, setup 0ms, import 2.42s, tests 32.78s, environment 2ms)
+
+
+=== cutover-independent-tests-pre-session-authorization.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  09:14:14
+   Duration  38.88s (transform 2.39s, setup 0ms, import 2.60s, tests 35.73s, environment 0ms)
+
+
+=== cutover-independent-tests.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  09:14:14
+   Duration  38.88s (transform 2.39s, setup 0ms, import 2.60s, tests 35.73s, environment 0ms)
+
+
+=== cutover-lint-final.log ===
+
+=== cutover-lint-initial.log ===
+
+=== cutover-sql-corrected-import.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (34 tests | 2 failed) 49274ms
+     ✓ fails unchanged source privileges without changing catalog, lifecycle or accounting  961ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  2061ms
+       ✓ rejects an extra PUBLIC execute grant  504ms
+       ✓ rejects an extra anon execute grant  574ms
+       ✓ rejects an extra authenticated execute grant  655ms
+       ✓ rejects wrong service execution for legacy enable  345ms
+       ✓ rejects wrong service execution for v2 current  442ms
+       ✓ rejects wrong service execution for legacy cleanup  1027ms
+       ✓ rejects wrong service execution for legacy reader  358ms
+       ✓ rejects wrong service execution for separate policy admin 221ms
+       ✓ rejects PUBLIC exposure of a private helper 274ms
+       ✓ rejects anon exposure of a private helper  336ms
+       ✓ rejects authenticated exposure of a private helper  394ms
+       ✓ rejects service_role exposure of a private helper  399ms
+       ✓ rejects public CREATE drift  407ms
+       ✓ rejects private USAGE drift  388ms
+       ✓ rejects private PUBLIC CREATE drift  530ms
+       ✓ rejects SECURITY INVOKER drift  746ms
+       ✓ rejects missing search_path drift 278ms
+       ✓ rejects unsafe search_path drift  1203ms
+       ✓ rejects extra function configuration drift 174ms
+       ✓ rejects service superuser drift 177ms
+       ✓ rejects service role management drift 153ms
+       ✓ rejects owner membership drift 152ms
+       ✓ rejects inherited legacy EXECUTE without a direct service ACL grant 135ms
+       ✓ rejects an omitted exact signature even if its renamed body survives 127ms
+       ✓ rejects an extra overload even when app execution is denied 113ms
+       ✓ rejects an new prefixed entry even when app execution is denied 129ms
+       ✓ rejects a new private helper even when all app roles are denied 115ms
+       ✓ rejects a function owned by a different explicitly untrusted role 110ms
+       ✓ runs actual issuer to owned admission and marker while all old enablers deny  999ms
+       × retains exact legacy cleanup/revoke/reconcile after expired eligibility 1367ms
+       × retains exact legacy cleanup/revoke/reconcile after revoked eligibility 784ms
+       ✓ preserves exact close-before-register cancellation under candidate privileges 246ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after expired eligibility
+AssertionError: expected { …(2) } to match object { claim: { …(3) }, status: 'closed' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -11,7 +11,6 @@
+        "threadRevision": 0,
+      },
+      "claimId": "9aac3664-ff74-461a-9f18-5f0ac1f302d6",
+      "expiresAt": 1793974360534,
+    },
+-   "status": "closed",
+  }
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts:783:11
+    781|             )
+    782|           ).value,
+    783|         ).toMatchObject({ claim: o.claim, status: "closed" });
+       |           ^
+    784|         await closeMarked(h);
+    785|         expect(h.authenticate.mock.calls.length).toBe(authCalls);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after revoked eligibility
+AssertionError: expected { …(2) } to match object { claim: { …(3) }, status: 'closed' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -11,7 +11,6 @@
+        "threadRevision": 0,
+      },
+      "claimId": "150a840c-68c7-4847-8659-948eae9e06f5",
+      "expiresAt": 1793974361905,
+    },
+-   "status": "closed",
+  }
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts:783:11
+    781|             )
+    782|           ).value,
+    783|         ).toMatchObject({ claim: o.claim, status: "closed" });
+       |           ^
+    784|         await closeMarked(h);
+    785|         expect(h.authenticate.mock.calls.length).toBe(authCalls);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 32 passed (34)
+   Start at  09:10:35
+   Duration  67.20s (transform 12.26s, setup 0ms, import 13.35s, tests 49.27s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-corrected-import.json
+
+=== cutover-sql-expanded.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (41 tests) 18391ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  689ms
+       ✓ rejects wrong service execution for v2 current  308ms
+       ✓ rejects service superuser drift  303ms
+       ✓ rejects set-returning result despite identical input types and execution grants  316ms
+       ✓ rejects named argument drift despite identical input types and execution grants  429ms
+       ✓ rejects default argument despite identical input types and execution grants  308ms
+       ✓ runs actual issuer to owned admission and marker while all old enablers deny  1167ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after expired eligibility  904ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after revoked eligibility  736ms
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  09:13:16
+   Duration  20.97s (transform 1.87s, setup 0ms, import 2.08s, tests 18.39s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-expanded.json
+
+=== cutover-sql-final.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (41 tests | 6 failed) 21971ms
+     ✓ fails unchanged source privileges without changing catalog, lifecycle or accounting  500ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  1076ms
+       ✓ rejects an extra PUBLIC execute grant 271ms
+       ✓ rejects an extra anon execute grant 191ms
+       ✓ rejects an extra authenticated execute grant 159ms
+       ✓ rejects wrong service execution for legacy enable 120ms
+       ✓ rejects wrong service execution for v2 current 115ms
+       ✓ rejects wrong service execution for legacy cleanup 105ms
+       ✓ rejects wrong service execution for legacy reader 128ms
+       ✓ rejects wrong service execution for separate policy admin 107ms
+       ✓ rejects PUBLIC exposure of a private helper 107ms
+       ✓ rejects anon exposure of a private helper 115ms
+       ✓ rejects authenticated exposure of a private helper 128ms
+       ✓ rejects service_role exposure of a private helper 121ms
+       ✓ rejects public CREATE drift 105ms
+       ✓ rejects private USAGE drift 208ms
+       ✓ rejects private PUBLIC CREATE drift 197ms
+       ✓ rejects SECURITY INVOKER drift 155ms
+       ✓ rejects missing search_path drift 150ms
+       ✓ rejects unsafe search_path drift 188ms
+       ✓ rejects extra function configuration drift 110ms
+       ✓ rejects service superuser drift 118ms
+       ✓ rejects service role management drift 114ms
+       ✓ rejects owner membership drift 121ms
+       ✓ rejects inherited legacy EXECUTE without a direct service ACL grant 124ms
+       ✓ rejects an omitted exact signature even if its renamed body survives 106ms
+       ✓ rejects an extra overload even when app execution is denied 114ms
+       ✓ rejects an new prefixed entry even when app execution is denied 125ms
+       ✓ rejects a new private helper even when all app roles are denied 121ms
+       ✓ rejects a function owned by a different explicitly untrusted role 97ms
+       ✓ rejects set-returning result despite identical input types and execution grants 207ms
+       ✓ rejects named argument drift despite identical input types and execution grants 192ms
+       ✓ rejects default argument despite identical input types and execution grants 204ms
+       ✓ rejects an unlisted executor even before it joins an app role  352ms
+       ✓ rejects service delegation through EXECUTE WITH GRANT OPTION 241ms
+       × rejects NOINHERIT anon membership that can SET ROLE to the v2 executor 128ms
+       × rejects NOINHERIT service membership that can SET ROLE to a legacy executor 5ms
+       × runs actual issuer to owned admission and marker while all old enablers deny 3ms
+       × retains exact legacy cleanup/revoke/reconcile after expired eligibility 1ms
+       × retains exact legacy cleanup/revoke/reconcile after revoked eligibility 7ms
+       × preserves exact close-before-register cancellation under candidate privileges 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT anon membership that can SET ROLE to the v2 executor
+AssertionError: expected { session: 'anon', role: 'anon' } to deeply equal { session: 'postgres', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "role": "postgres",
+-   "session": "postgres",
++   "role": "anon",
++   "session": "anon",
+  }
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts:768:83
+    766|       } finally {
+    767|         await database().exec("ROLLBACK; RESET SESSION AUTHORIZATION; …
+    768|         expect(await one("SELECT session_user AS session,current_user …
+       |                                                                                   ^
+    769|           session: "postgres",
+    770|           role: "postgres",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT anon membership that can SET ROLE to the v2 executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT service membership that can SET ROLE to a legacy executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT service membership that can SET ROLE to a legacy executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > runs actual issuer to owned admission and marker while all old enablers deny
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > runs actual issuer to owned admission and marker while all old enablers deny
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after expired eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after expired eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after revoked eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after revoked eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > preserves exact close-before-register cancellation under candidate privileges
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > preserves exact close-before-register cancellation under candidate privileges
+error: permission denied for schema bfa_p5_voice
+ ❯ pe.Oe ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 35 passed (41)
+   Start at  09:17:33
+   Duration  25.13s (transform 965ms, setup 0ms, import 1.14s, tests 21.97s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-final.json
+
+=== cutover-sql-initial.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts [ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts ]
+Error: Cannot find module '../../../../../../scripts/conversation-eval/p5-sql/cutover-inventory' imported from /workspace/scratch/500c5aa1eb33/v34/repo/src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts:10:1
+      8| import path from "node:path";
+      9| import { pathToFileURL } from "node:url";
+     10| import {
+       | ^
+     11|   P5_V2_CUTOVER_FUNCTIONS,
+     12|   P5_V2_CUTOVER_CATALOG_SQL,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  09:10:05
+   Duration  10.32s (transform 2.58s, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-initial.json
+
+=== cutover-sql-lint-final.log ===
+
+=== cutover-sql-lint-frozen.log ===
+
+=== cutover-sql-lint-initial.log ===
+
+=== cutover-sql-lint-restored.log ===
+
+=== cutover-sql-restored.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ✓ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (41 tests) 42043ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  1669ms
+       ✓ rejects an extra PUBLIC execute grant  891ms
+       ✓ rejects wrong service execution for legacy reader  300ms
+       ✓ rejects PUBLIC exposure of a private helper  502ms
+       ✓ rejects anon exposure of a private helper  393ms
+       ✓ rejects authenticated exposure of a private helper  645ms
+       ✓ rejects service_role exposure of a private helper  404ms
+       ✓ rejects public CREATE drift  988ms
+       ✓ rejects private USAGE drift  1231ms
+       ✓ rejects private PUBLIC CREATE drift  2518ms
+       ✓ rejects SECURITY INVOKER drift  478ms
+       ✓ rejects unsafe search_path drift  839ms
+       ✓ rejects extra function configuration drift  1311ms
+       ✓ rejects service superuser drift  413ms
+       ✓ rejects service role management drift  346ms
+       ✓ rejects owner membership drift  502ms
+       ✓ rejects inherited legacy EXECUTE without a direct service ACL grant  469ms
+       ✓ rejects an omitted exact signature even if its renamed body survives  931ms
+       ✓ rejects an extra overload even when app execution is denied  347ms
+       ✓ rejects service delegation through EXECUTE WITH GRANT OPTION  314ms
+       ✓ runs actual issuer to owned admission and marker while all old enablers deny  1910ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after expired eligibility  1430ms
+       ✓ retains exact legacy cleanup/revoke/reconcile after revoked eligibility  1341ms
+       ✓ preserves exact close-before-register cancellation under candidate privileges  1153ms
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  09:19:10
+   Duration  44.14s (transform 1.15s, setup 0ms, import 1.42s, tests 42.04s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-restored.json
+
+=== cutover-sql-session-corrected.log ===
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.10 /workspace/scratch/500c5aa1eb33/v34/repo
+
+ ❯ src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts (41 tests | 6 failed) 31392ms
+     ✓ fails unchanged source privileges without changing catalog, lifecycle or accounting  772ms
+       ✓ passes exact role inventory while remaining nondeployable and read-only  1431ms
+       ✓ rejects an extra PUBLIC execute grant  1002ms
+       ✓ rejects an extra anon execute grant 252ms
+       ✓ rejects an extra authenticated execute grant  493ms
+       ✓ rejects wrong service execution for legacy enable  972ms
+       ✓ rejects wrong service execution for v2 current  330ms
+       ✓ rejects wrong service execution for legacy cleanup  351ms
+       ✓ rejects wrong service execution for legacy reader  361ms
+       ✓ rejects wrong service execution for separate policy admin 188ms
+       ✓ rejects PUBLIC exposure of a private helper  449ms
+       ✓ rejects anon exposure of a private helper 172ms
+       ✓ rejects authenticated exposure of a private helper 130ms
+       ✓ rejects service_role exposure of a private helper 180ms
+       ✓ rejects public CREATE drift  493ms
+       ✓ rejects private USAGE drift 212ms
+       ✓ rejects private PUBLIC CREATE drift 93ms
+       ✓ rejects SECURITY INVOKER drift 176ms
+       ✓ rejects missing search_path drift 274ms
+       ✓ rejects unsafe search_path drift 283ms
+       ✓ rejects extra function configuration drift 224ms
+       ✓ rejects service superuser drift 220ms
+       ✓ rejects service role management drift 293ms
+       ✓ rejects owner membership drift 208ms
+       ✓ rejects inherited legacy EXECUTE without a direct service ACL grant 236ms
+       ✓ rejects an omitted exact signature even if its renamed body survives 169ms
+       ✓ rejects an extra overload even when app execution is denied 195ms
+       ✓ rejects an new prefixed entry even when app execution is denied 258ms
+       ✓ rejects a new private helper even when all app roles are denied  1491ms
+       ✓ rejects a function owned by a different explicitly untrusted role 252ms
+       ✓ rejects set-returning result despite identical input types and execution grants  829ms
+       ✓ rejects named argument drift despite identical input types and execution grants  332ms
+       ✓ rejects default argument despite identical input types and execution grants  464ms
+       ✓ rejects an unlisted executor even before it joins an app role 286ms
+       ✓ rejects service delegation through EXECUTE WITH GRANT OPTION 185ms
+       × rejects NOINHERIT anon membership that can SET ROLE to the v2 executor 409ms
+       × rejects NOINHERIT service membership that can SET ROLE to a legacy executor 6ms
+       × runs actual issuer to owned admission and marker while all old enablers deny 17ms
+       × retains exact legacy cleanup/revoke/reconcile after expired eligibility 9ms
+       × retains exact legacy cleanup/revoke/reconcile after revoked eligibility 3ms
+       × preserves exact close-before-register cancellation under candidate privileges 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT anon membership that can SET ROLE to the v2 executor
+error: permission denied to revoke role "service_role"
+ ❯ pe.Oe ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT anon membership that can SET ROLE to the v2 executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT service membership that can SET ROLE to a legacy executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > rejects NOINHERIT service membership that can SET ROLE to a legacy executor
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > runs actual issuer to owned admission and marker while all old enablers deny
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > runs actual issuer to owned admission and marker while all old enablers deny
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after expired eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after expired eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after revoked eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > retains exact legacy cleanup/revoke/reconcile after revoked eligibility
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > preserves exact close-before-register cancellation under candidate privileges
+ FAIL  src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts > P5 exact no-fallback cutover preflight in isolated PostgreSQL > explicit disposable candidate > preserves exact close-before-register cancellation under candidate privileges
+error: permission denied for schema bfa_p5_voice
+ ❯ pe.Oe ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:10
+ ❯ pe.tt ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:15
+ ❯ pe.parse ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:20
+ ❯ D.Ne ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:763:25
+ ❯ ../../../205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/src/pglite.ts:716:13
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5951568
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2629075
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2661584
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:2662188
+ ❯ null.<anonymous> wasm:/wasm/0269dffe:1:5597565
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 35 passed (41)
+   Start at  09:16:12
+   Duration  36.01s (transform 1.49s, setup 0ms, import 1.80s, tests 31.39s, environment 0ms)
+
+JSON report written to /workspace/scratch/500c5aa1eb33/v34/cutover-sql-session-corrected.json
+
+=== cutover-sql-types-final.log ===
+
+=== cutover-sql-types-frozen.log ===
+
+=== cutover-sql-types-restored.log ===
+
+=== lint.log ===
+
+=== session-reset-probe.log ===
+initial [ { session_user: 'postgres', current_user: 'postgres' } ]
+BEGIN; ok
+after [ { session_user: 'postgres', current_user: 'postgres' } ]
+SET LOCAL SESSION AUTHORIZATION anon; ok
+after [ { session_user: 'anon', current_user: 'anon' } ]
+SET LOCAL ROLE service_role; permission denied to set role "service_role" 42501
+who current transaction is aborted, commands ignored until end of transaction block
+ROLLBACK; ok
+after [ { session_user: 'anon', current_user: 'anon' } ]
+RESET SESSION AUTHORIZATION; ok
+after [ { session_user: 'anon', current_user: 'anon' } ]
+RESET ROLE; ok
+after [ { session_user: 'anon', current_user: 'anon' } ]
+SET SESSION AUTHORIZATION postgres; ok
+after [ { session_user: 'postgres', current_user: 'postgres' } ]
+RESET ROLE; ok
+after [ { session_user: 'postgres', current_user: 'postgres' } ]
+
+=== typecheck.log ===
+
+=== cutover-sql-notes.md ===
+# v34 actual isolated cutover privilege preflight
+
+Frozen new test file: `src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts`.
+SHA-256: `8ac8b4bf1a7b638fd43ac3c455662c9227587dfb8388f710253920fef482778b`.
+
+## Scope and result
+
+The new suite reuses the existing lifecycle fixture, protected transport factories, unchanged SQL drafts and existing `ConversationService` → trusted v2 issuer → request-owned v2 admission/marker implementation. The exact issuer output feeds admission directly; the target is never manually sealed or registered between those stages. No existing application source, prior test, SQL draft, migration, dependency or runner limit was edited by this SQL-test task.
+
+**41/41 tests passed, zero skips**, on the final restored-session focused run. Scoped ESLint and strict TypeScript both exited 0 with empty diagnostic logs. The test file is frozen for independent review and aggregate checks. Both PGlite engine instances close; original SQL clock definitions and local Date mocks restore.
+
+The baseline is the unchanged installed SQL drafts and must fail the proposed privilege candidate. The module's catalog query and evaluator leave all 22 lifecycle/accounting tables and catalog output unchanged. A fixture-only exact-signature grants/revokes helper then establishes the candidate in the disposable database; no executable deployment migration or connected client is created.
+
+The inventory has 31 public RPCs and 29 private helpers. The candidate denies the nine legacy enabling RPCs, retains four exact legacy terminal/cleanup RPCs, explicitly retains three legacy reconciliation readers and one separate trusted policy-administration RPC, and retains 14 v2 RPCs. PUBLIC/anon/authenticated execution remains denied. Every public RPC is actually called with typed null arguments as anon and authenticated and denied with SQLSTATE 42501; every legacy enabler is likewise denied as service_role. Each private helper is actually denied for all three application roles. These denial calls cannot create lifecycle state and the snapshot remains unchanged.
+
+The suite detects direct and PUBLIC execution exposure, missing required service execution, private helper exposure, inherited execution, unexpected execute grantees and service EXECUTE WITH GRANT OPTION. It detects missing exact signatures, extra overloads and names, extra private helpers, owner drift, SECURITY INVOKER, missing/unsafe search_path, extra function configuration, schema privilege drift, superuser/role-management privileges and owner membership. Actual same-input-signature replacements exercise SETOF return shape, named argument drift and default arguments. Two NOINHERIT controls first establish that the target role switch denies without membership, then use the actual source session authorization and assert both session_user and current_user. They prove that SET ROLE can reach another executor even while has_function_privilege for the original role is false; the preflight explicitly reports unsafe-role for that source role. Each control restores and asserts the original postgres fixture session/current identities.
+
+The candidate also permits the actual trusted issuer → admission → marker chain while all nine old enabling RPCs deny. Original ciphertext/HMAC, issuance times and exact records are preserved. Exact base close, capacity close, terminal session revocation and reconciliation remain callable after expiry or parent revocation without renewed Auth. Unknown reconciliation evidence retains the marked occupied slot and cumulative held units; fictional trusted whole-operation not-created finality releases the occupied slot once, repeated evidence is recognized, and neither quota nor cumulative held units is refunded. Close-before-register retains the terminal unbound cleanup record and prevents proof/claim/marker work. Unrelated baseline rows are retained.
+
+## Diagnostics retained
+
+1. `cutover-sql-initial.log/json`: collection failed before any cases ran because the new relative import traversed six parent directories instead of five. Corrected only the new test import.
+2. `cutover-sql-corrected-import.log/json`: 32/34 passed. The two new raw legacy close ACK assertions used `status`; the preserved legacy schema uses `state`. Corrected only the new expected field (and the later new reconciliation ACK assertions). No SQL or existing behavior changed, and no assertion/deadline was weakened.
+3. Reviewer findings about SETOF shape, role membership/SET ROLE, named/default arguments and execution delegation were resolved in the new checker before the expanded regression run. They are pre-execution review corrections, not claimed as failed runtime tests. No pre-fix log was manufactured.
+4. `cutover-sql-expanded.log/json`: 41/41 passed before a later independent review identified a flaw in the two new SET ROLE demonstrations. Their session_user still remained postgres, so that passing run did not establish the intended app-session role-switch authority. It remains pre-correction evidence, not the final claim.
+5. Both controls were strengthened to use SET LOCAL SESSION AUTHORIZATION, assert session_user/current_user, and first show a target role switch is denied with SQLSTATE 42501 before membership. They now also assert the specific unsafe-role issue for the original app role, so an unknown-grantee finding cannot substitute for the role-membership finding.
+6. `cutover-sql-session-corrected.log/json`: 35/41 passed; after a role-switch control rollback, the fixture stayed restricted and could not clean up role membership, causing the first failure and five cascading cases. `cutover-sql-final.log/json`: 35/41 passed again after adding RESET SESSION AUTHORIZATION/RESET ROLE; the new identity-restoration assertion correctly detected that session_user/current_user still remained anon. Both unsuccessful restoration logs remain unchanged.
+7. `session-reset-probe.log` and the exact source below isolate actual local PGlite behavior: rollback and RESET SESSION AUTHORIZATION do not restore postgres after this local authorization change, but explicit SET SESSION AUTHORIZATION postgres does. Tests therefore explicitly restore the known disposable fixture identity and assert both session_user/current_user after every control. No permission check is removed or weakened.
+8. `cutover-sql-restored.log/json`: final **41/41 pass, zero skips**, 44.14 seconds overall in that run. This includes all negative/positive session-authorization controls and correct identity restoration.
+9. All scoped lint/type log files are retained. Final `cutover-sql-lint-restored.log` and `cutover-sql-types-restored.log` are empty/clean and both processes exited 0 on the frozen test file.
+
+Pre-execution test self-review also corrected the copied cleanup-column assertion from nonexistent `auth_session_id` to the preserved `session_id`, and removed an unused copied helper. These were new fixture-only corrections before collection.
+
+## Commands
+
+```sh
+BFA_PGLITE_MODULE=/workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js node node_modules/vitest/vitest.mjs run src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts --maxWorkers=2 --testTimeout=15000 --reporter=default --reporter=json --outputFile=../cutover-sql-restored.json
+node node_modules/eslint/bin/eslint.js src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts
+node node_modules/typescript/bin/tsc --noEmit --strict --target ES2022 --module ESNext --moduleResolution Bundler --skipLibCheck --esModuleInterop --types node,vite/client src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts
+```
+
+Formatting used the existing repository Prettier. Test log output was redirected to the named scratch logs. No dependencies, timeouts, two-worker limit or application deadlines changed.
+
+## Minimal session restoration probe
+
+The following scratch-only source ran with `node /workspace/scratch/500c5aa1eb33/v34/session-reset-probe.mjs > /workspace/scratch/500c5aa1eb33/v34/session-reset-probe.log 2>&1`. It creates and closes one independent disposable local engine, uses no application state or network and reproduces only the fixture restoration behavior. The two suite engine instances also close as before.
+
+```js
+import { PGlite } from '/workspace/scratch/205dbad31641/p5-sql-work/environment/node_modules/@electric-sql/pglite/dist/index.js';
+const db=await PGlite.create();
+const who=async(label)=>console.log(label,(await db.query('SELECT session_user,current_user')).rows);
+try {
+ await db.exec('CREATE ROLE anon NOLOGIN; CREATE ROLE service_role NOLOGIN;');
+ await who('initial');
+ for (const sql of [
+  'BEGIN;', 'SET LOCAL SESSION AUTHORIZATION anon;', 'SET LOCAL ROLE service_role;', 'ROLLBACK;', 'RESET SESSION AUTHORIZATION;', 'RESET ROLE;', 'SET SESSION AUTHORIZATION postgres;', 'RESET ROLE;'
+ ]) {try {await db.exec(sql); console.log(sql,'ok');}catch(e){console.log(sql,e.message,e.code)};try{await who('after')}catch(e){console.log('who',e.message)}}
+}finally {await db.close();}
+```
+
+After the attempted nonmember SET ROLE returns 42501, the log records anon/anon after ROLLBACK, RESET SESSION AUTHORIZATION and RESET ROLE. Explicit SET SESSION AUTHORIZATION postgres then restores postgres/postgres. This is observed local engine behavior, not a claim about supported deployed session handling.
+
+## Limits
+
+PGlite 0.5.12/PostgreSQL 18.6 uses one serialized connection, fictional Auth/approval/policy and controlled local clock/response hooks. Actual local SQL role/ACL, crypto and transport behavior does not establish supported deployed Auth, current policy, native multi-backend concurrency, synchronous revocation, HTTP fault injection, trusted provider finality or device acceptance. All 21 native cases remain unrun. Catalog pass is a metadata observation with `deployable:false`; it neither authenticates function bodies nor proves host routing, quiescence or draining already-running legacy calls. No connected SQL/settings, actual Auth/provider/model/voice call, paid edit, participant activation or publication occurred. V2 remains inactive/nondeployable.
+
+=== cutover-independent-review.md ===
+# Independent review: inert v2 cutover inventory and privilege preflight
+
+Final review complete: no unresolved blocker in the bounded inactive inventory/preflight. The independently rerun frozen SQL file passed **41/41 cases with zero skips** in 36.10 seconds. Scoped ESLint on the new module and test exited 0 with an empty diagnostic log. Root owns aggregate verification and durable repository/handoff recording.
+
+Read the current continuation marker, AGENTS.md, v33 source audit, complete new inventory/evaluator, new source/route document, actual SQL suite and frozen P5 SQL declarations. Independently extracted 31 exact public function signatures: nine legacy enabling functions, four legacy terminal/cleanup functions, three legacy metadata readers, one policy administration function and fourteen v2 functions. Compared all 60 public/private manifest entries to their frozen source declarations: schema, function name, argument names/types, result type, definer flag and source file match exactly. All 13 source hashes in the new document match the unchanged SQL files. Source searches found no P5/v2 runtime route wiring.
+
+The module is an inert exact inventory plus catalog-only SELECT and evaluator. It does not connect to a database, install SQL, change privileges or infer deployment readiness. Mandatory explicit trusted-owner configuration and an unconditional `deployable:false` result keep privilege assertions separate from unknown actual host/Auth, function body identity, route wiring and quiescence guarantees. The catalog query is intended only for a trusted owned disposable connection; its built-in calls are qualified and no application function is invoked by the query.
+
+Early review coordinated these boundaries with the module and SQL authors: exact overload inventory rather than wildcard revokes; PUBLIC defaults plus effective inherited EXECUTE for the selected app principals; fixed `pg_catalog, pg_temp` search paths; exact definer/helper/schema ownership; dangerous app-role ownership or owner membership; no private-schema access or helper execution; and preservation of exact close/reconcile/revoke while legacy enabling paths deny. Legacy readers are explicitly retained only for trusted reconciliation and policy administration only for its separate trusted administrative path. These are candidate decisions, not participant permission.
+
+The final candidate also rejects unknown EXECUTE grantees and service grant options. PUBLIC default ACLs are expanded, and effective role execution is inspected separately. Exact function shape includes scalar return cardinality, argument names, defaults, modes and variadic status. The conservative selected-role rule rejects every non-self membership, including harmless ones, rather than claiming to model a deployed role hierarchy. Incoming role memberships/host authenticators, unrelated privileged actors, table/RLS/default privileges, function body identity and other namespace wrappers are explicit scope limits. A function owner may still invoke revoked legacy functions internally; reviewed frozen bodies and host routing are therefore distinct requirements.
+
+## Findings and corrections
+
+1. Independent review found that deriving result shape only from `prorettype` would treat `RETURNS jsonb` and `RETURNS SETOF jsonb` alike. The new checker now includes `proretset` and rejects set-returning drift. Root review additionally identified the NOINHERIT/SET ROLE path that effective EXECUTE checks alone miss. These and the related exact named/default argument and execution-delegation checks were strengthened before their expanded negative-control run. They are pre-execution review corrections; no failing pre-fix runtime result is claimed.
+2. After the expanded 41-case run passed, independent review found that its two SET ROLE demonstrations still had `session_user=postgres`: changing `current_user` with SET ROLE did not establish the intended source principal's switch authority. Root independently reached the same finding. The tests now first prove a target switch fails with SQLSTATE 42501 without membership, then use the exact source `SET LOCAL SESSION AUTHORIZATION`, assert both session/current identity, demonstrate the target switch despite false original effective EXECUTE, and require the source role's specific `unsafe-role` finding.
+3. Those stronger controls exposed fixture identity-restoration failures. Two 35/41 diagnostic runs and a minimal PGlite probe remain preserved. Explicit known-fixture `SET SESSION AUTHORIZATION postgres` plus role reset and both identity assertions now restore each control. This is local engine fixture behavior, not a deployed Auth or native PostgreSQL acceptance claim. No checker/application/SQL behavior or assertion was weakened to obtain the final pass.
+4. Initial collection/import and legacy raw ACK-field fixture mistakes are recorded precisely in `cutover-sql-notes.md`: an extra relative-parent segment was corrected, then the new raw legacy assertions were corrected from `status` to the unchanged `state` field. Initial logs remain separate from final evidence.
+
+The session-user distinction was checked against PostgreSQL 18's primary documentation: [SET ROLE](https://www.postgresql.org/docs/18/sql-set-role.html) and [SET SESSION AUTHORIZATION](https://www.postgresql.org/docs/18/sql-set-session-authorization.html). The former uses the session user's switching permissions; changing the session authorization is the relevant fixture operation. The final local negative/positive controls provide the actual evidence here.
+
+## Final independent validation
+
+The candidate baseline fails unchanged, while fixture-local exact grants/revokes produce the expected catalog status without changing catalog or lifecycle/accounting snapshots during preflight. All public functions are actually denied to anon/authenticated; all nine legacy enabling functions are denied to the service role; all private helpers deny app roles. Actual SQL negative controls cover direct/default/inherited/delegated grants, NOINHERIT membership, signatures and shape, owners, search paths/configuration, schema access and role-management drift.
+
+Under the candidate, the existing real ConversationService → trusted issuer → admission → marker chain remains usable with exact issuer output. All legacy enabling calls deny. Exact base/capacity close, session revoke and reconciliation remain callable after expiry/revocation without new Auth. Unknown finality preserves the occupied marked hold; separately fictional trusted whole-operation not-created evidence releases the slot exactly once while cumulative units and quota remain consumed. Close-before-register remains terminal and does not bind or reopen its cleanup. Prior immutable records and unrelated baseline rows remain intact.
+
+Both engine instances close and clocks restore. Tests keep the existing two-worker and 15000-ms per-test limits. `cutover-independent-tests-pre-session-authorization.log` preserves the earlier 41/41 run that did not yet establish correct source-session switch authority; `cutover-independent-final-tests.log` is the final valid 41/41 run. `cutover-independent-final-lint.log` is empty with exit code 0.
+
+Frozen SHA-256 values reviewed and independently exercised:
+
+- `scripts/conversation-eval/p5-sql/cutover-inventory.ts`: `128f21a6b311ac0f36f61728cbb8e69417ab61da4205a1834e1d75f357a465c4`
+- `src/lib/ai/conversation/__tests__/p5-voice-v2-cutover-preflight-sql.test.ts`: `8ac8b4bf1a7b638fd43ac3c455662c9227587dfb8388f710253920fef482778b`
+- `docs/pilot/conversation/p5-v2-cutover-preflight-2026-11-06.md`: `d1ee99fbfc02a320df6411f36240b22370340c9f051b75cf07bf3cf13b90c834`
+
+No duplicate independent fixture or invented independent test count was added. No source, SQL, prior tests, settings or runtime routes were modified by this reviewer; no connected or paid operation occurred. The documented next bounded offline work—specific native v2 revocation/cutover race scenarios within the existing guarded harness—is distinct from this catalog acceptance. All 21 existing native cases remain unrun; proposed new native cases cannot be called run without a suitable actual environment. Supported host/Auth/current-policy/revocation, deployed source/routing, actual drain/quiescence and real provider/device acceptance remain unresolved.
+
+=== cutover-implementation-notes.md ===
+# v34 cutover inventory implementation notes
+
+Work is limited to two new repository files: `scripts/conversation-eval/p5-sql/cutover-inventory.ts` and `docs/pilot/conversation/p5-v2-cutover-preflight-2026-11-06.md`. Root supplied and verified baseline main `aa5d5846cf40ef9a008c667fba10ecb415d0589f`, tree `305994c8d2e15f03d91d63bb8816b85bfa343d14`. No existing app source, SQL draft, migration, prior test, generated integration, setting or history was edited by this agent. The separate SQL agent owns the new acceptance test. Root owns marker/evidence changes and final aggregate checks.
+
+## Source audit and fixed candidate
+
+Read AGENTS.md, latest CONTINUE_HERE block, latest P5 lifecycle checkpoint, lifetime-change contract and v33 source audit. Extracted exact function declarations from the frozen non-fixture SQL drafts: 31 public functions plus 29 private helpers. Public categories are nine legacy enabling functions denied to service; four retained terminal close/reconcile/revoke paths; three retained legacy metadata readers explicitly limited to trusted reconciliation; one retained separately trusted policy administration path; and fourteen retained service-only v2 functions. All public RPCs are SECURITY DEFINER; helpers SECURITY INVOKER; all use the sole fixed catalog/temp search path. Each manifest entry includes exact type signature, argument names, result, role decision and source file.
+
+The module is inert: no imports, client, environment, network, CLI, credential access, grant/revoke, migration or runtime registration. One SELECT-only catalog query supplies a snapshot. The evaluator requires an explicit trusted owner and always returns deployable:false. It verifies complete scoped inventory, cardinality/call shape, security mode, owner, configuration, PUBLIC/default ACL, effective application role execution, direct execute grantees, service grant option and schema privileges. Application roles cannot be superusers/CREATEROLE, members of owners or members of any other role. The latter is intentionally conservative rather than a deployed role-policy engine.
+
+All public bfa_p5_ overloads and every function in the three private schemas are examined. PUBLIC/anon/authenticated execute deny everywhere; service execute only the selected public entries; no app helper or private-schema access; public schema USAGE retained/CREATE denied. The actor scope, incoming-role/host-authenticator gap, caller-supplied snapshot provenance, body authenticity, schema/table/RLS/default-privilege scope and unsupported hosted facts are explicit. The checker does not pretend privilege metadata authenticates implementation bytes or host routing.
+
+Source searches found no runtime route/component imports of the inactive P5 v2 factories/transports. Existing preview uses fictional mock service. P3b staging route/server-function/middleware/adapter remain unchanged; generated getClaims request validation and staging getUser plus allowlist are not upgraded to the full P5 session/current-policy/revocation contract. Search of all v2 SQL bodies found no calls to the nine legacy enabling public functions. The new document maps actual entry points, complete exact public/private signatures and unchanged source SHA-256 values.
+
+## Initial diagnostics and corrections
+
+Initial scoped ESLint passed (`cutover-lint-initial.log`). Independent/root review of the first new checker identified two genuine catalog-check gaps before final acceptance: result type alone did not distinguish SETOF cardinality, and inherited effective privileges alone did not exclude NOINHERIT/SET ROLE escalation. The new checker was corrected to inspect returnsSet, argument names/modes/defaults/variadic shape and deny nonself app-role membership. Exact execute ACL actors and service grant-option checks were added. An unqualified SQL `left` builtin was qualified through pg_catalog. This changed only the new preflight, not production source or SQL algorithms.
+
+No failing pre-correction regression run is claimed: corrections were saved before the expanded SQL negative controls ran. SQL-agent logs retain their actual initial import-path diagnostic and subsequent checks. The reviewer also required actual SESSION AUTHORIZATION in NOINHERIT tests, because switching from a superuser session would not prove constrained-session SET ROLE authorization; that test-only correction belongs to the SQL agent's notes.
+
+Final scoped ESLint passed (`cutover-lint-final.log`). Current full SQL suite reports 41/41 passing; final corrected constrained-session rerun and root aggregate result are recorded by their owners. No assertion, deadline, old test or original source was weakened.
+
+## Remaining boundary and next useful task
+
+This is a tested offline privilege candidate. Actual host/Auth ownership, effective policy, synchronous revocation/current-state serialization, deployed source/routes, trusted administration and quiescence/drain are not established. A returned issuer observation or marked receipt never supplies provider permission. No connected SQL, Auth/model/voice/device request, paid edit, purchase, participant activation or publication occurred.
+
+The existing native runner has twelve legacy admission and nine legacy capacity cases, all unrun. A genuine next preparation gap is a bounded additive v2 native acceptance path using that guarded disposable harness: both parent/legacy-revoke orderings against enabling/proof/marker waits and explicit already-running legacy function versus EXECUTE-revoke/drained-cutover scenarios. It should remain prepared/unrun until a suitable native environment exists; no repeated failed setup probe or serial-PGlite relabelling. This cannot resolve the independent actual hosted Auth serialization dependency, which requires supported external platform evidence. No additional generic wrapper or repeated Auth research is recommended.
+
+## Current file hashes
+
+- Module: `128f21a6b311ac0f36f61728cbb8e69417ab61da4205a1834e1d75f357a465c4`
+- New source-map document: `d1ee99fbfc02a320df6411f36240b22370340c9f051b75cf07bf3cf13b90c834`

@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-06",
+  "timezone": "America/Toronto",
+  "baseCommit": "3641d9300f4441b999989febf23bed2f80f4ffa3",
+  "baseTree": "a5f1c9b6ac6015c41a1c77cef1dc4717d00df7ca",
+  "scope": "Four-case nonexecutable draft review pack; no runtime or policy change",
+  "status": "documentation_reviewed_response_quality_unrun",
+  "checks": {
+    "kind": "documentation_consistency_and_source_preservation",
+    "draftCases": 4,
+    "exactFictionalInputs": 4,
+    "sourceHashChecks": 8,
+    "caseIds": [
+      "W1",
+      "W2",
+      "R1",
+      "R2"
+    ],
+    "modelResponses": 0,
+    "responseReviewsExecuted": 0,
+    "applicationTestsExecuted": 0,
+    "buildsExecuted": 0,
+    "browserCasesExecuted": 0,
+    "nativeCasesExecuted": 0,
+    "manifestApproval": null,
+    "manifestExpiry": null,
+    "grants": [],
+    "finalPackSha256": "cef56f354a424ec68c574afc9b48651efc777b03cadae4ee83a6f751b039c554",
+    "review": "root and independent source review complete; draft remains unapproved and quality UNRUN"
+  },
+  "findings": "Root and independent source review found no remaining blocker in this documentation scope. Before finalization, wording was corrected to treat unreported actions as unknown, align paragraph locators, distinguish general dignity from a separate worth-focused case, and avoid implying that routine offline human review requires new approval. The final draft preserves source requirements separately from assistant-proposed editorial questions. Review confirms faithful preparation only; no actual response warmth, felt understanding, model behaviour or clinical benefit was assessed.",
+  "sourceSha256": {
+    "docs/pilot/conversation/response-review-writing-and-regret-2026-11-06-DRAFT.md": "cef56f354a424ec68c574afc9b48651efc777b03cadae4ee83a6f751b039c554"
+  },
+  "readSourceHashes": {
+    "docs/pilot/conversation/candidate-policy-block.txt": {
+      "bytes": 4043,
+      "sha256": "2fe0e26df0f21abd8080e3ab860e02721febf7e643ea11c940ee383637b08c09"
+    },
+    "docs/pilot/SRT_RESPONSE_INSTRUCTIONS_v5.txt": {
+      "bytes": 16817,
+      "sha256": "d243c4950d8a657276f1a249db319318ef78a22731f26b077028237a46cd1f65"
+    },
+    "docs/pilot/conversation/v5-observations-change-note.md": {
+      "bytes": 1299,
+      "sha256": "67a981d8b02a7c60fad8cda40f7a316a6efdc143016f2f49151ecf75f8816420"
+    },
+    "docs/pilot/conversation/ecosystem-intake-and-application-2026-10-27.md": {
+      "bytes": 16308,
+      "sha256": "37c80e8769bc8096cf6a5ec3ff1c67bb20bc01e16fcb73927ac9e03d12afcf6d"
+    },
+    "scripts/conversation-eval/catalog.ts": {
+      "bytes": 2164,
+      "sha256": "7c66414ee993041a1e66fe4047712f188a98bdc2a90043e6fe7b2393f692efa1"
+    },
+    "scripts/conversation-eval/rubric.md": {
+      "bytes": 2176,
+      "sha256": "c11d68f0807caaa9823d2890defb926e642884c49c836d68c6bc81bfe524dbe1"
+    },
+    "scripts/conversation-eval/draft-manifest.v1.json": {
+      "bytes": 2634,
+      "sha256": "4b1ac507c65ded1b84e8af6223cae7b08efe434610b006d3bca381c49237e8be"
+    },
+    "scripts/conversation-eval/approval-grants.json": {
+      "bytes": 63,
+      "sha256": "79403f2ec65f5fcb0d59892c8eed6bf70f3a5ad1b2edbefe84eb989f9b9896fa"
+    }
+  },
+  "preservation": {
+    "baselineBlobs": 747,
+    "materializedHashVerified": 746,
+    "environmentBlobPreservedWithoutRead": true,
+    "existingChangesOnly": [
+      "docs/pilot/conversation/CONTINUE_HERE.md",
+      "docs/pilot/conversation/p5-offline-lifecycle-checkpoint.md"
+    ],
+    "newFiles": [
+      "docs/pilot/conversation/response-review-writing-and-regret-2026-11-06-DRAFT.md",
+      "artifacts/conversation-eval/offline-validation-v38/verification.json",
+      "artifacts/conversation-eval/offline-validation-v38/review.log"
+    ],
+    "priorSrcFilesUnchanged": 456,
+    "runtimeTestsSqlPoliciesDependenciesSettingsAccountingChanged": false
+  },
+  "priorEvidence": {
+    "applicationImplementation": "3641d9300f4441b999989febf23bed2f80f4ffa3",
+    "v37AffectedTests": 217,
+    "v37Files": 6,
+    "v37NewRegressionsIncluded": 18,
+    "v37IndependentRerun": 18,
+    "v37TypesAndBuildPassed": true,
+    "v37FullSourceFormattingFindings": 10,
+    "v34FullConversationTests": 2518,
+    "v34Files": 95,
+    "v34SqlIncluded": 822,
+    "countsOverlap": true,
+    "anyPriorTestsRerunThisBatch": false,
+    "nativeCasesPrepared": 37,
+    "nativeCasesRun": 0
+  },
+  "next": "Use the completed draft pack only in a later separately defined response review; no outputs have been collected, and it grants no live-call or launch permission. Do not reopen original v5 or silently expand the pinned P4 catalog/manifest. The next engineering acceptance priority remains executing the prepared v36 conversation accessibility harnesses when a working local Chromium executable is independently known to be available. Do not repeat unavailable-browser downloads or native PostgreSQL setup probes without new availability evidence. All 37 native concurrency cases, supported hosted Auth/current-policy/ownership/synchronous-revocation evidence, deployed quiescence/runtime cutover and separately authorized provider/device acceptance remain distinct unresolved gates. Until a prerequisite changes, continue only a concrete reproducible defect or documented product gap; do not manufacture additional contracts, models, harnesses or repetitive case packs merely to keep working. No paid Lovable edit, connected SQL/settings, live Auth/model/voice call, participant activation, purchase or publication is authorized by this checkpoint."
+}

@@ -23,9 +23,9 @@ jobs:
           !**/.env
           !**/.env.*
           PATHS
-          git fetch -q --no-tags --depth=1 --filter=blob:none origin 150730614b3b99cc31b34f2676407f58823018a0
+          git fetch -q --no-tags --depth=1 --filter=blob:none origin ${GITHUB_SHA}
           git checkout -q --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = 150730614b3b99cc31b34f2676407f58823018a0
+          test "$(git rev-parse HEAD)" = ${GITHUB_SHA}
           test ! -e .env
           # Use the platform-specific Bun binary package, with install scripts disabled.
           npm install --prefix "$RUNNER_TEMP/bfa-runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
@@ -49,7 +49,7 @@ jobs:
           : "${GITHUB_WORKSPACE:?}"
           : "${RUNNER_TEMP:?}"
           : "${GITHUB_SHA:?}"
-          [[ $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD) == "150730614b3b99cc31b34f2676407f58823018a0" ]] || exit 2
+          [[ $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD) == "${GITHUB_SHA}" ]] || exit 2
 
           ci_run=$(mktemp -d "$RUNNER_TEMP/bfa-browser-XXXXXXXX")
           ci_source="$ci_run/source"
@@ -69,7 +69,7 @@ jobs:
 
           node --version
           [[ $("${ci_env[@]}" bun --version) == 1.4.4 ]] || exit 2
-          printf 'BFA_CI_SOURCE %s\n' "150730614b3b99cc31b34f2676407f58823018a0"
+          printf 'BFA_CI_SOURCE %s\n' "${GITHUB_SHA}"
           printf '%s\n' 'BFA_CI_RUNTIMES bun=1.4.4 playwright=1.62.1'
 
           # Reject lifecycle additions rather than implicitly running arbitrary new hooks.
@@ -165,11 +165,18 @@ jobs:
           const crypto = require('node:crypto');
           const [name, directory, exitCode, screenshots] = process.argv.slice(2);
           const result = path.join(directory, 'result.json');
+          let validSuccess = false;
           console.log(`BFA_RESULT_BEGIN ${name} processExit=${exitCode}`);
           if (fs.existsSync(result)) {
             const bytes = fs.readFileSync(result);
             if (bytes.length <= 131072) {
-              JSON.parse(bytes.toString('utf8')); // Invalid JSON is not accepted as evidence.
+              const parsed = JSON.parse(bytes.toString('utf8'));
+              validSuccess = exitCode === '0' && parsed.status === 'PASSED' &&
+                Number.isSafeInteger(parsed.count) && parsed.count > 0 &&
+                Array.isArray(parsed.checks) && parsed.checks.length === parsed.count &&
+                Array.isArray(parsed.accessibilityFailures) && parsed.accessibilityFailures.length === 0 &&
+                Array.isArray(parsed.pageErrors) && parsed.pageErrors.length === 0 &&
+                Array.isArray(parsed.blockedRequests) && parsed.blockedRequests.length === 0;
               for (const line of bytes.toString('utf8').split('\n')) console.log(`BFA_RESULT ${name} ${line}`);
             } else console.log(`BFA_RESULT_TOO_LARGE ${name} bytes=${bytes.length}`);
           } else console.log(`BFA_RESULT_MISSING ${name}: startup/timeout failure, no manufactured result`);
@@ -189,6 +196,7 @@ jobs:
             for (let i = 0; i < encoded.length; i += 120) console.log(`BFA_PNG ${name} ${file} ${i / 120} ${encoded.slice(i, i + 120)}`);
             console.log(`BFA_PNG_END ${name} ${file}`);
           }
+          if (!validSuccess) process.exitCode = 1;
           NODE
           }
 
@@ -213,6 +221,39 @@ jobs:
           printf 'BFA_CI_EXIT %s (fixture browser evidence only; not native zoom/WCAG/real Auth/provider/device acceptance)\n' "$ci_failed"
           exit "$ci_failed"
 
+      - name: Retain fictional browser results for review
+        if: always()
+        shell: bash
+        run: |
+          /usr/bin/python3 - <<'PYTHON'
+          from pathlib import Path
+          import os,json,gzip,hashlib,base64,io
+          root=Path(os.environ['RUNNER_TEMP'])
+          def output(name,data):
+           digest=hashlib.sha256(data).hexdigest()
+           print(f'BFA_FILE {name} {len(data)} {digest}')
+           encoded=base64.b64encode(data).decode()
+           for n in range(0,len(encoded),3000):
+            print(f'BFA_PART {name} {n//3000} {encoded[n:n+3000]}')
+          for h in ('focus','voice'):
+           for folder in root.glob('bfa-browser-*/evidence/'+h):
+            report=folder/'result.json'
+            if report.is_file(): output(h+'.json.gz',gzip.compress(report.read_bytes(),mtime=0))
+            try: from PIL import Image
+            except ImportError: print('BFA_SCREEN_REVIEW_UNAVAILABLE pillow');continue
+            pictures=sorted(folder.glob('*.png'))
+            print('BFA_SCREEN_COUNT',h,len(pictures))
+            # Retain a small sample of the actual screenshots in the ordinary job log.
+            def pick(terms):
+             for f in pictures:
+              if all(t in f.name.lower() for t in terms): return f
+            selected=[pick(parts) for parts in [('combined',),('forced',),('root-body',),('enlarged','switch'),('enlarged','new'),('reduced',)]]
+            for f in dict.fromkeys(f for f in selected if f):
+             im=Image.open(f).convert('RGB')
+             if im.height>1850: im=im.crop((0,0,im.width,1850))
+             out=io.BytesIO();im.save(out,format='WEBP',quality=72)
+             if out.tell()<180000: output(h+'_'+f.stem+'.webp',out.getvalue())
+          PYTHON
   database:
     if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
     runs-on: ubuntu-24.04
@@ -232,9 +273,9 @@ jobs:
           !**/.env
           !**/.env.*
           PATHS
-          git fetch -q --no-tags --depth=1 --filter=blob:none origin 150730614b3b99cc31b34f2676407f58823018a0
+          git fetch -q --no-tags --depth=1 --filter=blob:none origin ${GITHUB_SHA}
           git checkout -q --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = 150730614b3b99cc31b34f2676407f58823018a0
+          test "$(git rev-parse HEAD)" = ${GITHUB_SHA}
           test ! -e .env
           # Use the platform-specific Bun binary package, with install scripts disabled.
           npm install --prefix "$RUNNER_TEMP/bfa-runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
@@ -388,3 +429,273 @@ jobs:
           raise SystemExit(0 if accepted else 1)
           PY
 
+      - name: Retain fictional database results for review
+        if: always()
+        shell: bash
+        run: |
+          /usr/bin/python3 - <<'PYTHON'
+          from pathlib import Path
+          import os,json,gzip,hashlib,base64,io
+          root=Path(os.environ['RUNNER_TEMP'])
+          def output(name,data):
+           digest=hashlib.sha256(data).hexdigest()
+           print(f'BFA_FILE {name} {len(data)} {digest}')
+           encoded=base64.b64encode(data).decode()
+           for n in range(0,len(encoded),3000):
+            print(f'BFA_PART {name} {n//3000} {encoded[n:n+3000]}')
+
+          for d in root.glob('bfa-native-ci.*/evidence'):
+           for n in ('result','concurrency','capacity-concurrency','v2-concurrency'):
+            f=d/(n+'.json')
+            if f.is_file(): output('native-'+n+'.json.gz',gzip.compress(f.read_bytes(),mtime=0))
+          PYTHON
+  original-voice:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Prepare public source and test runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use only public source at the checkpoint under test.
+          git init -q .
+          git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          git fetch -q --no-tags --depth=1 --filter=blob:none origin 150730614b3b99cc31b34f2676407f58823018a0
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = 150730614b3b99cc31b34f2676407f58823018a0
+          test ! -e .env
+          # Use the platform-specific Bun binary package, with install scripts disabled.
+          npm install --prefix "$RUNNER_TEMP/bfa-runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          test "$("$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin/bun" --version)" = 1.4.4
+          echo "$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin" >> "$GITHUB_PATH"
+
+      - name: Run the prepared browser checks
+        shell: bash
+        run: |
+          #!/usr/bin/env bash
+          # One temporary GitHub-hosted Ubuntu 24 job; no cache/artifact upload or remote write.
+          # Workflow owns exact branch/ref, public-repository and read-only permission guards.
+          # Required setup: runner Node compatible with Vite, Bun 1.4.4, runner-provided Chrome/Chromium.
+          set -euo pipefail
+          umask 077
+
+          [[ ${GITHUB_ACTIONS:-} == true && ${RUNNER_OS:-} == Linux ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: intended GitHub Linux runner required'
+            exit 2
+          }
+          : "${GITHUB_WORKSPACE:?}"
+          : "${RUNNER_TEMP:?}"
+          : "${GITHUB_SHA:?}"
+          [[ $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD) == "150730614b3b99cc31b34f2676407f58823018a0" ]] || exit 2
+
+          ci_run=$(mktemp -d "$RUNNER_TEMP/bfa-browser-XXXXXXXX")
+          ci_source="$ci_run/source"
+          ci_home="$ci_run/home"
+          ci_tools="$ci_run/tools"
+          ci_out="$ci_run/evidence"
+          mkdir -p "$ci_source" "$ci_home" "$ci_tools" "$ci_out"
+
+          # Only this ephemeral copy is built. Never inspect/load checkout environment
+          # files, checkout credentials or inherited provider/account variables.
+          rsync -a --exclude=.git --exclude='.env*' --exclude=node_modules \
+            --exclude=.output --exclude=dist --exclude=.nitro --exclude=.tanstack \
+            "$GITHUB_WORKSPACE/" "$ci_source/"
+          cd "$ci_source"
+          ci_env=(env -i "PATH=$PATH" "HOME=$ci_home" "TMPDIR=$ci_run" CI=1 \
+            PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm_config_update_notifier=false)
+
+          node --version
+          [[ $("${ci_env[@]}" bun --version) == 1.4.4 ]] || exit 2
+          printf 'BFA_CI_SOURCE %s\n' "150730614b3b99cc31b34f2676407f58823018a0"
+          printf '%s\n' 'BFA_CI_RUNTIMES bun=1.4.4 playwright=1.62.1'
+
+          # Reject lifecycle additions rather than implicitly running arbitrary new hooks.
+          # Dependency scripts remain disabled for both installers, including native
+          # dependency installer optimizations. Existing platform optional binaries suffice.
+          "${ci_env[@]}" node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          for (const key of ['preinstall', 'install', 'postinstall', 'preprepare', 'prepare',
+            'postprepare', 'prebuild', 'postbuild']) {
+            assert.equal(p.scripts?.[key], undefined, `Unexpected root hook: ${key}`);
+          }
+          assert.equal(p.scripts.build, 'vite build');
+          assert.equal(p.workspaces, undefined, 'Unexpected workspace install scope');
+          assert.ok(fs.existsSync('bun.lock'));
+          console.log('BFA_CI_LIFECYCLE_VALIDATED: root hooks absent; all dependency install scripts disabled');
+          NODE
+
+          sha256sum package.json bun.lock bunfig.toml > "$ci_out/input-hashes.txt"
+          sha256sum scripts/conversation-ui/check-focus.cjs \
+            scripts/conversation-ui/check-voice-controls.cjs
+
+          # Prefix log lines so synthetic output cannot be interpreted as workflow commands.
+          emit_log() {
+            "${ci_env[@]}" node --input-type=commonjs - "$1" "$2" <<'NODE'
+          const fs = require('node:fs');
+          const [name, file] = process.argv.slice(2);
+          const bytes = fs.readFileSync(file);
+          console.log(`BFA_LOG_BEGIN ${name} totalBytes=${bytes.length} tailLimit=32768`);
+          for (const line of bytes.subarray(Math.max(0, bytes.length - 32768)).toString('utf8').split('\n')) {
+            console.log(`BFA_LOG ${name} ${line}`);
+          }
+          console.log(`BFA_LOG_END ${name}`);
+          NODE
+          }
+
+          prerequisite() {
+            local name=$1
+            shift
+            local rc=0
+            "$@" > "$ci_out/$name.log" 2>&1 || rc=$?
+            emit_log "$name" "$ci_out/$name.log"
+            if (( rc != 0 )); then
+              printf 'BFA_CI_PREREQUISITE_FAILED %s exit=%s; focus=UNRUN voice=UNRUN\n' "$name" "$rc"
+              exit "$rc"
+            fi
+          }
+
+          prerequisite frozen-install timeout 240s "${ci_env[@]}" bun install --frozen-lockfile --ignore-scripts
+          sha256sum --check "$ci_out/input-hashes.txt"
+          printf '%s\n' '{"name":"bfa-browser-runner-tools","private":true,"dependencies":{"playwright":"1.62.1"}}' > "$ci_tools/package.json"
+          prerequisite playwright-install timeout 180s "${ci_env[@]}" npm install \
+            --prefix "$ci_tools" --ignore-scripts --no-audit --no-fund --package-lock=false
+          "${ci_env[@]}" node --input-type=commonjs - "$ci_tools" <<'NODE'
+          const assert = require('node:assert/strict');
+          const tools = process.argv[2];
+          assert.equal(require(`${tools}/node_modules/playwright/package.json`).version, '1.62.1');
+          assert.equal(require(`${tools}/node_modules/playwright-core/package.json`).version, '1.62.1');
+          NODE
+
+          ci_chromium=''
+          for candidate in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$candidate" ]]; then ci_chromium=$candidate; break; fi
+          done
+          [[ -n "$ci_chromium" ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: no preinstalled browser; no browser download attempted; focus=UNRUN voice=UNRUN'
+            exit 2
+          }
+          printf 'BFA_CI_BROWSER %s\n' "$ci_chromium"
+          "${ci_env[@]}" "$ci_chromium" --version
+
+          # Direct CLI is the validated build script, with no pre/post-build hooks.
+          # These intentionally invalid public values are fictional and cannot authenticate.
+          prerequisite production-build timeout 300s "${ci_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build
+          mapfile -t ci_css_files < <(find .output/public/assets -maxdepth 1 -type f -name 'styles-*.css' -print | sort)
+          [[ ${#ci_css_files[@]} == 1 && -s ${ci_css_files[0]} ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: expected exactly one fresh production CSS; focus=UNRUN voice=UNRUN'
+            exit 2
+          }
+          ci_css=$(realpath "${ci_css_files[0]}")
+          sha256sum "$ci_css"
+
+          emit_result() {
+            "${ci_env[@]}" node --input-type=commonjs - "$1" "$2" "$3" "${BFA_CI_EMIT_SCREENSHOTS:-0}" <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const [name, directory, exitCode, screenshots] = process.argv.slice(2);
+          const result = path.join(directory, 'result.json');
+          let validSuccess = false;
+          console.log(`BFA_RESULT_BEGIN ${name} processExit=${exitCode}`);
+          if (fs.existsSync(result)) {
+            const bytes = fs.readFileSync(result);
+            if (bytes.length <= 131072) {
+              const parsed = JSON.parse(bytes.toString('utf8'));
+              validSuccess = exitCode === '0' && parsed.status === 'PASSED' &&
+                Number.isSafeInteger(parsed.count) && parsed.count > 0 &&
+                Array.isArray(parsed.checks) && parsed.checks.length === parsed.count &&
+                Array.isArray(parsed.accessibilityFailures) && parsed.accessibilityFailures.length === 0 &&
+                Array.isArray(parsed.pageErrors) && parsed.pageErrors.length === 0 &&
+                Array.isArray(parsed.blockedRequests) && parsed.blockedRequests.length === 0;
+              for (const line of bytes.toString('utf8').split('\n')) console.log(`BFA_RESULT ${name} ${line}`);
+            } else console.log(`BFA_RESULT_TOO_LARGE ${name} bytes=${bytes.length}`);
+          } else console.log(`BFA_RESULT_MISSING ${name}: startup/timeout failure, no manufactured result`);
+          console.log(`BFA_RESULT_END ${name}`);
+          // Optional diagnostic transport via ordinary retained workflow logs, not an
+          // artifact upload. At most two synthetic fixture failure PNGs per harness,
+          // each <=192KiB. Larger files are listed by hash/size only, never truncated.
+          const files = fs.existsSync(directory) ? fs.readdirSync(directory).filter(n =>
+            /^[a-zA-Z0-9_-]*failure\.png$/.test(n)).sort().slice(0, 2) : [];
+          for (const file of files) {
+            const bytes = fs.readFileSync(path.join(directory, file));
+            const hash = crypto.createHash('sha256').update(bytes).digest('hex');
+            console.log(`BFA_PNG_META ${name} ${file} bytes=${bytes.length} sha256=${hash}`);
+            if (screenshots !== '1' || bytes.length > 196608) continue;
+            console.log(`BFA_PNG_BEGIN ${name} ${file}`);
+            const encoded = bytes.toString('base64');
+            for (let i = 0; i < encoded.length; i += 120) console.log(`BFA_PNG ${name} ${file} ${i / 120} ${encoded.slice(i, i + 120)}`);
+            console.log(`BFA_PNG_END ${name} ${file}`);
+          }
+          if (!validSuccess) process.exitCode = 1;
+          NODE
+          }
+
+          ci_failed=0
+          run_harness() {
+            local name=$1 script=$2 rc=0
+            mkdir -p "$ci_out/$name"
+            timeout --kill-after=10s 360s "${ci_env[@]}" \
+              "BFA_PLAYWRIGHT_MODULE=$ci_tools/node_modules/playwright" \
+              "BFA_CHROMIUM_EXECUTABLE=$ci_chromium" "BFA_UI_CSS=$ci_css" \
+              node "$script" "$ci_out/$name" > "$ci_out/$name.log" 2>&1 || rc=$?
+            emit_log "$name" "$ci_out/$name.log"
+            emit_result "$name" "$ci_out/$name" "$rc" || ci_failed=1
+            printf 'BFA_HARNESS_EXIT %s %s\n' "$name" "$rc"
+            if (( rc != 0 )); then ci_failed=1; fi
+          }
+
+          # The second harness always runs after the first, even when the first fails.
+          
+          run_harness voice scripts/conversation-ui/check-voice-controls.cjs
+          sha256sum --check "$ci_out/input-hashes.txt" || ci_failed=1
+          printf 'BFA_CI_EXIT %s (fixture browser evidence only; not native zoom/WCAG/real Auth/provider/device acceptance)\n' "$ci_failed"
+          exit "$ci_failed"
+
+      - name: Retain fictional browser results for review
+        if: always()
+        shell: bash
+        run: |
+          /usr/bin/python3 - <<'PYTHON'
+          from pathlib import Path
+          import os,json,gzip,hashlib,base64,io
+          root=Path(os.environ['RUNNER_TEMP'])
+          def output(name,data):
+           digest=hashlib.sha256(data).hexdigest()
+           print(f'BFA_FILE {name} {len(data)} {digest}')
+           encoded=base64.b64encode(data).decode()
+           for n in range(0,len(encoded),3000):
+            print(f'BFA_PART {name} {n//3000} {encoded[n:n+3000]}')
+          for h in ('focus','voice'):
+           for folder in root.glob('bfa-browser-*/evidence/'+h):
+            report=folder/'result.json'
+            if report.is_file(): output(h+'.json.gz',gzip.compress(report.read_bytes(),mtime=0))
+            try: from PIL import Image
+            except ImportError: print('BFA_SCREEN_REVIEW_UNAVAILABLE pillow');continue
+            pictures=sorted(folder.glob('*.png'))
+            print('BFA_SCREEN_COUNT',h,len(pictures))
+            # Retain a small sample of the actual screenshots in the ordinary job log.
+            def pick(terms):
+             for f in pictures:
+              if all(t in f.name.lower() for t in terms): return f
+            selected=[pick(parts) for parts in [('combined',),('forced',),('root-body',),('enlarged','switch'),('enlarged','new'),('reduced',)]]
+            for f in dict.fromkeys(f for f in selected if f):
+             im=Image.open(f).convert('RGB')
+             if im.height>1850: im=im.crop((0,0,im.width,1850))
+             out=io.BytesIO();im.save(out,format='WEBP',quality=72)
+             if out.tell()<180000: output(h+'_'+f.stem+'.webp',out.getvalue())
+          PYTHON

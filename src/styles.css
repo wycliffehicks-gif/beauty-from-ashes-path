@@ -4,6 +4,40 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Conversation controls must grow with enlarged text instead of clipping long
+   labels. Keep this override local to the reviewed conversation surfaces. */
+.conversation-ui button:not([role="switch"]),
+.conversation-dialog button:not([role="switch"]) {
+  height: auto;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Radix portals sit outside main, so they carry their own scope. Long dialogs
+   scroll within the viewport while retaining the existing focus trap. */
+.conversation-dialog {
+  width: calc(100% - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+.conversation-dialog > * {
+  min-width: 0;
+}
+
+@media (forced-colors: active) {
+  /* Shadow focus rings disappear in forced colours; use the user's system
+     highlight colour without overriding their chosen colour adjustment. */
+  .conversation-ui :focus-visible,
+  .conversation-dialog :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+}
+
 /*
  * Beauty from Ashes — Resurgence Therapeutics visual system.
  * Warm ivory pages, charcoal body, royal blue / deep navy anchors,

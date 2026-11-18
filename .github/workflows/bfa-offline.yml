@@ -1,0 +1,390 @@
+name: BFA offline acceptance
+on:
+  push:
+    branches: [validation/browser-db-20261118]
+permissions: {}
+jobs:
+  browser:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Prepare public source and test runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use only public source at the checkpoint under test.
+          git init -q .
+          git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          git fetch -q --no-tags --depth=1 --filter=blob:none origin 150730614b3b99cc31b34f2676407f58823018a0
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = 150730614b3b99cc31b34f2676407f58823018a0
+          test ! -e .env
+          # Use the platform-specific Bun binary package, with install scripts disabled.
+          npm install --prefix "$RUNNER_TEMP/bfa-runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          test "$("$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin/bun" --version)" = 1.4.4
+          echo "$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin" >> "$GITHUB_PATH"
+
+      - name: Run the prepared browser checks
+        shell: bash
+        run: |
+          #!/usr/bin/env bash
+          # One temporary GitHub-hosted Ubuntu 24 job; no cache/artifact upload or remote write.
+          # Workflow owns exact branch/ref, public-repository and read-only permission guards.
+          # Required setup: runner Node compatible with Vite, Bun 1.4.4, runner-provided Chrome/Chromium.
+          set -euo pipefail
+          umask 077
+
+          [[ ${GITHUB_ACTIONS:-} == true && ${RUNNER_OS:-} == Linux ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: intended GitHub Linux runner required'
+            exit 2
+          }
+          : "${GITHUB_WORKSPACE:?}"
+          : "${RUNNER_TEMP:?}"
+          : "${GITHUB_SHA:?}"
+          [[ $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD) == "150730614b3b99cc31b34f2676407f58823018a0" ]] || exit 2
+
+          ci_run=$(mktemp -d "$RUNNER_TEMP/bfa-browser-XXXXXXXX")
+          ci_source="$ci_run/source"
+          ci_home="$ci_run/home"
+          ci_tools="$ci_run/tools"
+          ci_out="$ci_run/evidence"
+          mkdir -p "$ci_source" "$ci_home" "$ci_tools" "$ci_out"
+
+          # Only this ephemeral copy is built. Never inspect/load checkout environment
+          # files, checkout credentials or inherited provider/account variables.
+          rsync -a --exclude=.git --exclude='.env*' --exclude=node_modules \
+            --exclude=.output --exclude=dist --exclude=.nitro --exclude=.tanstack \
+            "$GITHUB_WORKSPACE/" "$ci_source/"
+          cd "$ci_source"
+          ci_env=(env -i "PATH=$PATH" "HOME=$ci_home" "TMPDIR=$ci_run" CI=1 \
+            PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm_config_update_notifier=false)
+
+          node --version
+          [[ $("${ci_env[@]}" bun --version) == 1.4.4 ]] || exit 2
+          printf 'BFA_CI_SOURCE %s\n' "150730614b3b99cc31b34f2676407f58823018a0"
+          printf '%s\n' 'BFA_CI_RUNTIMES bun=1.4.4 playwright=1.62.1'
+
+          # Reject lifecycle additions rather than implicitly running arbitrary new hooks.
+          # Dependency scripts remain disabled for both installers, including native
+          # dependency installer optimizations. Existing platform optional binaries suffice.
+          "${ci_env[@]}" node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          for (const key of ['preinstall', 'install', 'postinstall', 'preprepare', 'prepare',
+            'postprepare', 'prebuild', 'postbuild']) {
+            assert.equal(p.scripts?.[key], undefined, `Unexpected root hook: ${key}`);
+          }
+          assert.equal(p.scripts.build, 'vite build');
+          assert.equal(p.workspaces, undefined, 'Unexpected workspace install scope');
+          assert.ok(fs.existsSync('bun.lock'));
+          console.log('BFA_CI_LIFECYCLE_VALIDATED: root hooks absent; all dependency install scripts disabled');
+          NODE
+
+          sha256sum package.json bun.lock bunfig.toml > "$ci_out/input-hashes.txt"
+          sha256sum scripts/conversation-ui/check-focus.cjs \
+            scripts/conversation-ui/check-voice-controls.cjs
+
+          # Prefix log lines so synthetic output cannot be interpreted as workflow commands.
+          emit_log() {
+            "${ci_env[@]}" node --input-type=commonjs - "$1" "$2" <<'NODE'
+          const fs = require('node:fs');
+          const [name, file] = process.argv.slice(2);
+          const bytes = fs.readFileSync(file);
+          console.log(`BFA_LOG_BEGIN ${name} totalBytes=${bytes.length} tailLimit=32768`);
+          for (const line of bytes.subarray(Math.max(0, bytes.length - 32768)).toString('utf8').split('\n')) {
+            console.log(`BFA_LOG ${name} ${line}`);
+          }
+          console.log(`BFA_LOG_END ${name}`);
+          NODE
+          }
+
+          prerequisite() {
+            local name=$1
+            shift
+            local rc=0
+            "$@" > "$ci_out/$name.log" 2>&1 || rc=$?
+            emit_log "$name" "$ci_out/$name.log"
+            if (( rc != 0 )); then
+              printf 'BFA_CI_PREREQUISITE_FAILED %s exit=%s; focus=UNRUN voice=UNRUN\n' "$name" "$rc"
+              exit "$rc"
+            fi
+          }
+
+          prerequisite frozen-install timeout 240s "${ci_env[@]}" bun install --frozen-lockfile --ignore-scripts
+          sha256sum --check "$ci_out/input-hashes.txt"
+          printf '%s\n' '{"name":"bfa-browser-runner-tools","private":true,"dependencies":{"playwright":"1.62.1"}}' > "$ci_tools/package.json"
+          prerequisite playwright-install timeout 180s "${ci_env[@]}" npm install \
+            --prefix "$ci_tools" --ignore-scripts --no-audit --no-fund --package-lock=false
+          "${ci_env[@]}" node --input-type=commonjs - "$ci_tools" <<'NODE'
+          const assert = require('node:assert/strict');
+          const tools = process.argv[2];
+          assert.equal(require(`${tools}/node_modules/playwright/package.json`).version, '1.62.1');
+          assert.equal(require(`${tools}/node_modules/playwright-core/package.json`).version, '1.62.1');
+          NODE
+
+          ci_chromium=''
+          for candidate in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$candidate" ]]; then ci_chromium=$candidate; break; fi
+          done
+          [[ -n "$ci_chromium" ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: no preinstalled browser; no browser download attempted; focus=UNRUN voice=UNRUN'
+            exit 2
+          }
+          printf 'BFA_CI_BROWSER %s\n' "$ci_chromium"
+          "${ci_env[@]}" "$ci_chromium" --version
+
+          # Direct CLI is the validated build script, with no pre/post-build hooks.
+          # These intentionally invalid public values are fictional and cannot authenticate.
+          prerequisite production-build timeout 300s "${ci_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build
+          mapfile -t ci_css_files < <(find .output/public/assets -maxdepth 1 -type f -name 'styles-*.css' -print | sort)
+          [[ ${#ci_css_files[@]} == 1 && -s ${ci_css_files[0]} ]] || {
+            printf '%s\n' 'BFA_CI_PREREQUISITE_FAILED: expected exactly one fresh production CSS; focus=UNRUN voice=UNRUN'
+            exit 2
+          }
+          ci_css=$(realpath "${ci_css_files[0]}")
+          sha256sum "$ci_css"
+
+          emit_result() {
+            "${ci_env[@]}" node --input-type=commonjs - "$1" "$2" "$3" "${BFA_CI_EMIT_SCREENSHOTS:-0}" <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const [name, directory, exitCode, screenshots] = process.argv.slice(2);
+          const result = path.join(directory, 'result.json');
+          console.log(`BFA_RESULT_BEGIN ${name} processExit=${exitCode}`);
+          if (fs.existsSync(result)) {
+            const bytes = fs.readFileSync(result);
+            if (bytes.length <= 131072) {
+              JSON.parse(bytes.toString('utf8')); // Invalid JSON is not accepted as evidence.
+              for (const line of bytes.toString('utf8').split('\n')) console.log(`BFA_RESULT ${name} ${line}`);
+            } else console.log(`BFA_RESULT_TOO_LARGE ${name} bytes=${bytes.length}`);
+          } else console.log(`BFA_RESULT_MISSING ${name}: startup/timeout failure, no manufactured result`);
+          console.log(`BFA_RESULT_END ${name}`);
+          // Optional diagnostic transport via ordinary retained workflow logs, not an
+          // artifact upload. At most two synthetic fixture failure PNGs per harness,
+          // each <=192KiB. Larger files are listed by hash/size only, never truncated.
+          const files = fs.existsSync(directory) ? fs.readdirSync(directory).filter(n =>
+            /^[a-zA-Z0-9_-]*failure\.png$/.test(n)).sort().slice(0, 2) : [];
+          for (const file of files) {
+            const bytes = fs.readFileSync(path.join(directory, file));
+            const hash = crypto.createHash('sha256').update(bytes).digest('hex');
+            console.log(`BFA_PNG_META ${name} ${file} bytes=${bytes.length} sha256=${hash}`);
+            if (screenshots !== '1' || bytes.length > 196608) continue;
+            console.log(`BFA_PNG_BEGIN ${name} ${file}`);
+            const encoded = bytes.toString('base64');
+            for (let i = 0; i < encoded.length; i += 120) console.log(`BFA_PNG ${name} ${file} ${i / 120} ${encoded.slice(i, i + 120)}`);
+            console.log(`BFA_PNG_END ${name} ${file}`);
+          }
+          NODE
+          }
+
+          ci_failed=0
+          run_harness() {
+            local name=$1 script=$2 rc=0
+            mkdir -p "$ci_out/$name"
+            timeout --kill-after=10s 360s "${ci_env[@]}" \
+              "BFA_PLAYWRIGHT_MODULE=$ci_tools/node_modules/playwright" \
+              "BFA_CHROMIUM_EXECUTABLE=$ci_chromium" "BFA_UI_CSS=$ci_css" \
+              node "$script" "$ci_out/$name" > "$ci_out/$name.log" 2>&1 || rc=$?
+            emit_log "$name" "$ci_out/$name.log"
+            emit_result "$name" "$ci_out/$name" "$rc" || ci_failed=1
+            printf 'BFA_HARNESS_EXIT %s %s\n' "$name" "$rc"
+            if (( rc != 0 )); then ci_failed=1; fi
+          }
+
+          # The second harness always runs after the first, even when the first fails.
+          run_harness focus scripts/conversation-ui/check-focus.cjs
+          run_harness voice scripts/conversation-ui/check-voice-controls.cjs
+          sha256sum --check "$ci_out/input-hashes.txt" || ci_failed=1
+          printf 'BFA_CI_EXIT %s (fixture browser evidence only; not native zoom/WCAG/real Auth/provider/device acceptance)\n' "$ci_failed"
+          exit "$ci_failed"
+
+  database:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Prepare public source and test runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use only public source at the checkpoint under test.
+          git init -q .
+          git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          git fetch -q --no-tags --depth=1 --filter=blob:none origin 150730614b3b99cc31b34f2676407f58823018a0
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = 150730614b3b99cc31b34f2676407f58823018a0
+          test ! -e .env
+          # Use the platform-specific Bun binary package, with install scripts disabled.
+          npm install --prefix "$RUNNER_TEMP/bfa-runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          test "$("$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin/bun" --version)" = 1.4.4
+          echo "$RUNNER_TEMP/bfa-runtime/node_modules/@oven/bun-linux-x64/bin" >> "$GITHUB_PATH"
+
+      - name: Run the prepared database checks
+        shell: bash
+        run: |
+          #!/usr/bin/env bash
+          # Embed as a step in the temporary branch-only Ubuntu 24.04 workflow.
+          # Uses installed tools only. No package installation, service, sudo, or upload.
+          set -Eeuo pipefail
+          umask 077
+
+          bfa_unavailable() {
+            printf 'BFA_NATIVE_UNAVAILABLE: %s\n' "$1" >&2
+            printf 'mode=v2+capacity+admission expected_native_cases=37 native_cases_executed=0\n' >&2
+            exit 2
+          }
+
+          [[ "${EUID}" -ne 0 ]] || bfa_unavailable 'Ordinary nonroot execution is required.'
+          [[ -x /usr/bin/python3 ]] || bfa_unavailable '/usr/bin/python3 is unavailable.'
+          [[ -x /usr/bin/timeout ]] || bfa_unavailable '/usr/bin/timeout is unavailable.'
+          [[ -n "${RUNNER_TEMP:-}" && "$RUNNER_TEMP" == /* && -d "$RUNNER_TEMP" && -O "$RUNNER_TEMP" && ! -L "$RUNNER_TEMP" ]] \
+            || bfa_unavailable 'An absolute runner-owned temporary directory is required.'
+
+          bfa_repo=$(pwd -P)
+          bfa_runner="$bfa_repo/scripts/conversation-eval/p5-sql/run-local.py"
+          [[ -f "$bfa_runner" ]] || bfa_unavailable 'Run this step from the checked-out repository root.'
+
+          # Inspect only explicit conventional installed directories; never start a service.
+          bfa_pg_bin=''
+          for bfa_candidate in /usr/lib/postgresql/18/bin /usr/lib/postgresql/17/bin /usr/lib/postgresql/16/bin /usr/lib/postgresql/15/bin /usr/lib/postgresql/14/bin; do
+            bfa_complete=1
+            for bfa_binary in initdb pg_ctl postgres psql; do
+              [[ -f "$bfa_candidate/$bfa_binary" && -x "$bfa_candidate/$bfa_binary" ]] || bfa_complete=0
+            done
+            if [[ "$bfa_complete" -eq 1 ]]; then
+              bfa_pg_bin="$bfa_candidate"
+              break
+            fi
+          done
+          [[ -n "$bfa_pg_bin" ]] || bfa_unavailable 'No complete installed PostgreSQL binary directory was found; nothing was installed.'
+          bfa_bun=$(command -v bun || true)
+          [[ "$bfa_bun" == /* && -f "$bfa_bun" && -x "$bfa_bun" ]] \
+            || bfa_unavailable 'An already-installed absolute Bun executable is required for all 37 cases; nothing was installed.'
+          bfa_bun=$(readlink -f -- "$bfa_bun")
+
+          bfa_owned=$(mktemp -d "$RUNNER_TEMP/bfa-native-ci.XXXXXXXX")
+          mkdir -m 700 "$bfa_owned/tmp"
+          bfa_output="$bfa_owned/evidence"
+          printf 'BFA_NATIVE_MODE: v2+capacity+admission; expected cases: 12+9+16=37\n'
+          printf 'PostgreSQL binary directory: %s\nBun executable: %s\nEvidence directory: %s\n' "$bfa_pg_bin" "$bfa_bun" "$bfa_output"
+
+          # No inherited secrets, PG options, user startup files, DSN, or remote host.
+          # The unchanged runner owns cluster startup/shutdown and each subprocess bound.
+          # INT lets its finally block confirm shutdown; forced timeout can never pass.
+          set +e
+          /usr/bin/timeout --signal=INT --kill-after=45s 18m \
+            /usr/bin/env -i PATH=/usr/bin:/bin LANG=C LC_ALL=C TMPDIR="$bfa_owned/tmp" \
+            /usr/bin/python3 -I "$bfa_runner" \
+            --pg-bin "$bfa_pg_bin" --v2 --v2-runtime "$bfa_bun" --output "$bfa_output" \
+            >"$bfa_owned/runner.log" 2>&1
+          bfa_runner_status=$?
+          set -e
+
+          # Only known fixture-owned files are emitted. No environment/configuration dump.
+          # Full local evidence is retained until the disposable runner is destroyed.
+          /usr/bin/env -i PATH=/usr/bin:/bin LANG=C LC_ALL=C \
+            /usr/bin/python3 -I - "$bfa_owned" "$bfa_runner_status" <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+
+          owned = Path(sys.argv[1])
+          runner_status = int(sys.argv[2])
+          output = owned / "evidence"
+
+          def emit(label, value):
+              print(label + ": " + json.dumps(value, sort_keys=True), flush=True)
+
+          def tail(path, limit=12000):
+              if path.is_file() and not path.is_symlink():
+                  data = path.read_bytes()
+                  emit("fixture_log", {"file": path.name, "bytes": len(data),
+                       "tail": data[-limit:].decode("utf-8", errors="replace")})
+
+          tail(owned / "runner.log")
+          result_path = output / "result.json"
+          if not result_path.is_file():
+              emit("native_result", {"status": "failed", "runnerExitCode": runner_status,
+                   "reason": "No runner result; no acceptance or case-count claim."})
+              raise SystemExit(1)
+
+          result = json.loads(result_path.read_text())
+          emit("native_result", result)
+          expected = (("concurrency.json", 12), ("capacity-concurrency.json", 9),
+                      ("v2-concurrency.json", 16))
+          observed = []
+          all_groups = True
+          for filename, count in expected:
+              path = output / filename
+              if not path.is_file():
+                  emit("native_group", {"file": filename, "expected": count,
+                       "status": "no_report", "reportedCases": 0})
+                  all_groups = False
+                  continue
+              report = json.loads(path.read_text())
+              cases = report.get("cases", [])
+              valid = (isinstance(cases, list) and len(cases) == count
+                       and report.get("passed") == count and report.get("failed") == 0
+                       and all(isinstance(case, dict) and case.get("status") == "passed"
+                               and isinstance(case.get("name"), str) for case in cases)
+                       and len({case["name"] for case in cases}) == count)
+              all_groups = all_groups and valid
+              emit("native_group", {"file": filename, "expected": count,
+                   "reportedPassed": report.get("passed"), "reportedFailed": report.get("failed"),
+                   "reportedCases": len(cases) if isinstance(cases, list) else None,
+                   "complete": valid})
+              if isinstance(cases, list):
+                  observed.extend(cases)
+                  for case in cases:
+                      if isinstance(case, dict):
+                          emit("native_case", {key: case[key] for key in
+                               ("name", "status", "error", "backendPids", "events", "locks", "drain")
+                               if key in case})
+
+          failed_logs = []
+          for phase in result.get("phases", []):
+              if phase.get("status") != "passed" and isinstance(phase.get("log"), str):
+                  path = output / phase["log"]
+                  if path.parent == output:
+                      failed_logs.append(path)
+          for path in failed_logs[:8]:
+              tail(path)
+          if runner_status or result.get("status") != "passed":
+              tail(output / "postgres.log")
+
+          cleanup = result.get("cleanup", {})
+          accepted = (runner_status == 0 and result.get("status") == "passed" and all_groups
+                      and result.get("nativeDatabaseTestsExecuted") is True
+                      and result.get("nativeCapacityTestsExecuted") is True
+                      and result.get("nativeV2PhaseAttempted") is True
+                      and result.get("nativeV2EvidenceAccepted") is True
+                      and cleanup.get("status") == "removed" and cleanup.get("serverStopped") is True)
+          emit("native_acceptance", {"mode": "v2+capacity+admission", "expectedCases": 37,
+               "reportedCases": len(observed), "accepted": accepted,
+               "runnerExitCode": runner_status, "cleanup": cleanup,
+               "scope": "Disposable local fixture only; not hosted Auth, deployment drain or provider acceptance."})
+          raise SystemExit(0 if accepted else 1)
+          PY
+

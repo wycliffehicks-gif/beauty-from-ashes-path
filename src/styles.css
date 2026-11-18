@@ -15,6 +15,24 @@
   overflow-wrap: anywhere;
 }
 
+/* Preserve each shared Button size as a minimum while allowing wrapped labels
+   to grow. The existing 44px target floor still applies at ordinary text size. */
+:is(.conversation-ui, .conversation-dialog) button.h-8 {
+  min-height: max(44px, 2rem);
+}
+
+:is(.conversation-ui, .conversation-dialog) button.h-9 {
+  min-height: max(44px, 2.25rem);
+}
+
+:is(.conversation-ui, .conversation-dialog) button.h-10 {
+  min-height: max(44px, 2.5rem);
+}
+
+:is(.conversation-ui, .conversation-dialog) button.w-9 {
+  min-width: 2.25rem;
+}
+
 /* Radix portals sit outside main, so they carry their own scope. Long dialogs
    scroll within the viewport while retaining the existing focus trap. */
 .conversation-dialog {
@@ -35,6 +53,12 @@
   .conversation-dialog :focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 3px;
+  }
+
+  /* Forced colours remove the thumb shadow and give thumb/track the same
+     background. A system-colour border keeps both switch states visible. */
+  .conversation-ui [role="switch"] > span {
+    border: 1px solid CanvasText;
   }
 }
 

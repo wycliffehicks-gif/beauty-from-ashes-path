@@ -9,13 +9,16 @@ import importlib.util
 import io
 import json
 import os
+import queue
+import re
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 HERE = Path(__file__).resolve().parent
 _spec = importlib.util.spec_from_file_location("p5_unchanged_runner_tests", HERE / "test_runner.py")
@@ -394,6 +397,129 @@ class V2EvidenceTests(unittest.TestCase):
         changed["sourceSha256"].pop(next(iter(sources)))
         with self.assertRaises(runner.HarnessError):
             runner.validate_v2_provenance(changed,sources,runtime)
+
+
+class V2NativeReportingTests(unittest.TestCase):
+    """Actual framing/report code with explicit doubles; no database is started."""
+
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location("p5_v2_reporting_test", HERE / "v2_concurrency.py")
+        assert spec is not None and spec.loader is not None
+        self.native = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.native)
+
+    def test_catalog_select_executes_before_interactive_psql_echo(self):
+        source = (HERE / "cutover-inventory.ts").read_text()
+        match = re.search(r"export const P5_V2_CUTOVER_CATALOG_SQL = String.raw`([\s\S]*?)`;", source)
+        self.assertIsNotNone(match)
+        catalog_sql = match.group(1)
+        catalog = {"functions": [], "schemas": [], "roles": []}
+        report = {"inventoryVersion": 1, "deployable": False, "catalogStatus": "fail"}
+        session = object.__new__(self.native.base.Session)
+        session.log = io.StringIO()
+        session.lines = queue.Queue()
+        sent = []
+
+        class FictionalPsqlInput:
+            def write(inner, payload):
+                # Simulate only psql's statement/echo boundary. An unterminated
+                # SELECT has no result before echo; this is not SQL execution.
+                sql, separator, token = payload.rpartition("\n\\echo ")
+                if not separator:
+                    raise AssertionError("Session framing omitted its echo boundary")
+                sent.append(sql)
+                if sql.rstrip().endswith(";") and sql.lstrip().startswith("WITH "):
+                    session.lines.put(json.dumps(catalog))
+                session.lines.put(token.strip())
+                return len(payload)
+
+            def flush(inner):
+                pass
+
+        session.process = SimpleNamespace(stdin=FictionalPsqlInput())
+        driver = object.__new__(self.native.V2Driver)
+        driver.observer = session
+        driver.catalog_sql = catalog_sql
+        driver.bridge = Mock(return_value={"report": report})
+        with patch.object(self.native.base.subprocess, "Popen", side_effect=AssertionError("No child allowed")):
+            self.assertEqual(driver.catalog_report(), report)
+            self.assertEqual(session.query("GRANT EXECUTE ON FUNCTION fictional() TO service_role;"), [])
+        self.assertEqual(sent, [catalog_sql.rstrip() + ";", "GRANT EXECUTE ON FUNCTION fictional() TO service_role;"])
+        driver.bridge.assert_called_once_with({"operation": "evaluate", "catalog": catalog,
+                                               "trustedOwnerRole": "bfa_fixture_admin"})
+
+    def test_failed_observer_retains_completed_cases_and_failure_report(self):
+        native = self.native
+        with tempfile.TemporaryDirectory(prefix="bfa-v2-report-double-") as temporary:
+            root = Path(temporary)
+            runtime = root / "fictional-bun"
+            runtime.write_text("SYNTHETIC runtime identity only; never executed\n")
+            output = root / "report.json"
+            driver = object.__new__(native.V2Driver)
+            driver.sessions = []
+            driver.current = {}
+            driver.runtime = str(runtime)
+            driver.runtime_identity = {"name": "bun", "version": "0.0.0-process-double"}
+            driver.bridge_path = HERE / "cutover-native-bridge.ts"
+            version = "SYNTHETIC process-double server version; NOT PostgreSQL evidence"
+            observed = {"dead": False, "versionReads": 0}
+
+            def scalar(sql):
+                if observed["dead"]:
+                    raise BrokenPipeError("SYNTHETIC observer pipe is closed")
+                if sql == "SHOW server_version;":
+                    observed["versionReads"] += 1
+                    return version
+                if sql.startswith("SELECT COALESCE(jsonb_agg(to_jsonb(t)"):
+                    return "[]"
+                raise AssertionError("Unexpected synthetic observer query")
+
+            driver.observer = SimpleNamespace(pid=1000, scalar=scalar, close=Mock())
+
+            def owned_worker_doubles():
+                start = len(driver.sessions) + 1001
+                driver.sessions.extend([SimpleNamespace(pid=start, close=Mock()),
+                                        SimpleNamespace(pid=start + 1, close=Mock())])
+
+            def completed():
+                owned_worker_doubles()
+                driver.check(True, "SYNTHETIC completed case; no native locks")
+
+            def loses_observer():
+                owned_worker_doubles()
+                observed["dead"] = True
+                raise AssertionError("SYNTHETIC case lost its observer")
+
+            def later_case():
+                owned_worker_doubles()
+                driver.observer.scalar("SELECT 1;")
+
+            modeled_cases = [(name, completed) for name in CASE_NAMES[:-2]] + [
+                (CASE_NAMES[-2], loses_observer), (CASE_NAMES[-1], later_case)]
+            argv = ["v2_concurrency.py", "--psql", "/synthetic/psql", "--socket", "/synthetic/socket",
+                    "--port", "55432", "--runtime", str(runtime), "--bridge", str(driver.bridge_path),
+                    "--output", str(output)]
+            with patch.object(sys, "argv", argv), patch.object(native.os, "geteuid", return_value=1000), \
+                    patch.object(native.base, "validate_connection_arguments"), \
+                    patch.object(native, "V2Driver", return_value=driver), \
+                    patch.object(native, "cases", return_value=modeled_cases), \
+                    patch.object(native.base.subprocess, "Popen", side_effect=AssertionError("No child allowed")), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(native.main(), 1)
+            evidence = json.loads(output.read_text())
+            self.assertEqual(evidence["serverVersion"], version)
+            self.assertEqual(observed["versionReads"], 1)
+            self.assertEqual((evidence["passed"], evidence["failed"]), (14, 2))
+            self.assertEqual([case["name"] for case in evidence["cases"]], list(CASE_NAMES))
+            self.assertEqual(evidence["cases"][-2]["error"], "SYNTHETIC case lost its observer")
+            self.assertEqual(evidence["cases"][-1]["error"], "SYNTHETIC observer pipe is closed")
+            self.assertFalse(evidence["earlierAccounting"]["retained"])
+            self.assertFalse(evidence["deployable"])
+            driver.observer.close.assert_called_once_with()
+            for session in driver.sessions:
+                session.close.assert_called_once_with()
+            with self.assertRaises(runner.HarnessError):
+                runner.validate_v2_evidence(evidence, CASE_NAMES, DRAIN_CASE_NAMES)
 
 
 class OfflineBridgeTests(unittest.TestCase):

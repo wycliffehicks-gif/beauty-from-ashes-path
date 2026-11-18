@@ -280,6 +280,14 @@ async function main() {
       const rect = element.getBoundingClientRect(),
         style = getComputedStyle(element);
       const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+      const rootFont = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const heightRem = element.classList.contains("h-10")
+        ? 2.5
+        : element.classList.contains("h-9")
+          ? 2.25
+          : element.classList.contains("h-8")
+            ? 2
+            : null;
       return {
         bounds: {
           left: rect.left,
@@ -306,6 +314,8 @@ async function main() {
         borderWidth: style.borderWidth,
         boxShadow: style.boxShadow,
         forcedColorAdjust: style.forcedColorAdjust,
+        originalMinimumHeight: heightRem === null ? null : Math.max(44, heightRem * rootFont),
+        originalIconWidth: element.classList.contains("w-9") ? 2.25 * rootFont : null,
       };
     });
     accessibilityObservations.push({
@@ -315,6 +325,16 @@ async function main() {
       ...observation,
     });
     const r = observation.bounds;
+    if (observation.originalMinimumHeight !== null)
+      assert.ok(
+        r.height + 1 >= observation.originalMinimumHeight,
+        `${label} retains its original Button height minimum as text grows`,
+      );
+    if (observation.originalIconWidth !== null)
+      assert.ok(
+        r.width + 1 >= observation.originalIconWidth,
+        `${label} retains its original icon target width`,
+      );
     assert.ok(
       r.width > 0 &&
         r.height > 0 &&
@@ -805,27 +825,37 @@ async function main() {
           await stagedNew();
           const toggle = page.getByRole("switch", { name: "Christian content", exact: true });
           await keyboardReach(toggle, "staging Christian-content switch");
-          const styles = await toggle.evaluate((element) => {
-            const track = getComputedStyle(element),
-              thumb = getComputedStyle(element.querySelector("span"));
-            return {
-              trackBackground: track.backgroundColor,
-              trackBorder: track.borderColor,
-              thumbBackground: thumb.backgroundColor,
-              thumbBorder: thumb.borderColor,
-              thumbBorderWidth: thumb.borderWidth,
-              thumbShadow: thumb.boxShadow,
-              checked: element.getAttribute("aria-checked"),
-            };
-          });
-          accessibilityObservations.push({ mode: mode.name, kind: "switch-appearance", ...styles });
-          assert.equal(styles.checked, "false");
-          assert.ok(
-            styles.thumbBackground !== styles.trackBackground ||
-              (Number.parseFloat(styles.thumbBorderWidth) > 0 &&
-                styles.thumbBorder !== styles.thumbBackground),
-            "Forced-colour switch thumb remains distinguishable from its track without relying on a shadow",
-          );
+          for (const checked of ["false", "true"]) {
+            if (checked === "true") await page.keyboard.press("Space");
+            await expect(toggle).toHaveAttribute("aria-checked", checked);
+            const styles = await toggle.evaluate((element) => {
+              const track = getComputedStyle(element),
+                thumb = getComputedStyle(element.querySelector("span"));
+              return {
+                trackBackground: track.backgroundColor,
+                trackBorder: track.borderColor,
+                thumbBackground: thumb.backgroundColor,
+                thumbBorder: thumb.borderColor,
+                thumbBorderWidth: thumb.borderWidth,
+                thumbShadow: thumb.boxShadow,
+                forcedColorAdjust: thumb.forcedColorAdjust,
+                checked: element.getAttribute("aria-checked"),
+              };
+            });
+            accessibilityObservations.push({
+              mode: mode.name,
+              kind: "switch-appearance",
+              ...styles,
+            });
+            assert.equal(styles.checked, checked);
+            assert.equal(styles.forcedColorAdjust, "auto");
+            assert.ok(
+              styles.thumbBackground !== styles.trackBackground ||
+                (Number.parseFloat(styles.thumbBorderWidth) > 0 &&
+                  styles.thumbBorder !== styles.thumbBackground),
+              "Forced-colour switch thumb remains distinguishable from its track without relying on a shadow",
+            );
+          }
         });
     }
     assert.deepEqual(accessibilityFailures, [], "All accessibility mode probes must pass");

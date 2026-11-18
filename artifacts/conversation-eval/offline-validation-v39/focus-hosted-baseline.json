@@ -1,0 +1,289 @@
+{
+  "source": "GitHub decoded workflow-job log",
+  "runId": 44307873870,
+  "jobId": 134814036352,
+  "head": "150730614b3b99cc31b34f2676407f58823018a0",
+  "browser": "Chrome 157.0.8103.50",
+  "status": "FAILED",
+  "completedChecks": 27,
+  "expectedTotal": 39,
+  "passedChecks": [
+    "staging: 390px viewport has no horizontal overflow",
+    "staging: dialog and Cancel fit within 390x844 viewport",
+    "staging Delete: initial Cancel and Escape restores opener",
+    "staging Delete: initial Cancel and Cancel restores opener",
+    "staging Discard: initial Cancel and Escape restores opener",
+    "staging Discard: initial Cancel and Cancel restores opener",
+    "staging navigation: Escape restores opener and draft",
+    "staging navigation: Cancel restores opener and draft",
+    "staging Delete during pending append stays usable, old reply fenced, focus uses surviving heading",
+    "preview: 390px viewport has no horizontal overflow",
+    "preview: dialog and Keep working fit within 390x844 viewport",
+    "preview Finish Escape restores opener and draft",
+    "preview switch Cancel restores opener and draft",
+    "preview source Cancel uses stable chooser after source button unmounts",
+    "preview confirmed Finish focuses surviving start heading",
+    "preview blank rename has accurate associated error and preserves saved title",
+    "preview simulated rename failure remains distinct and preserves saved title",
+    "preview successful rename clears error",
+    "preview saved Delete Cancel restores opener",
+    "preview confirmed saved Delete focuses surviving heading",
+    "controlled-font-200-preview-retry-stop: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-delete-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-navigation-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-pending-stop: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-finish-keep: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-switch-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-retry-stop: actual keyboard, media/style and draft assertions"
+  ],
+  "failures": [
+    {
+      "name": "controlled-font-200-staging-delete-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging has no horizontal page overflow"
+    },
+    {
+      "name": "controlled-font-200-staging-navigation-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging unsaved dialog does not clip text horizontally"
+    },
+    {
+      "name": "controlled-font-200-staging-pending-stop",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging Send is visible and unobscured after keyboard scrolling"
+    },
+    {
+      "name": "controlled-font-200-preview-finish-keep",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: preview has no horizontal page overflow"
+    },
+    {
+      "name": "controlled-font-200-preview-switch-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: preview switch dialog fits the narrow viewport; tall content needs usable internal scrolling"
+    },
+    {
+      "name": "forced-colours-staging-delete-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging Delete retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-staging-navigation-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging New conversation retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-staging-pending-stop",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging Send retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-preview-finish-keep",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: preview Finish retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-preview-switch-cancel",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: preview New conversation retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-preview-retry-stop",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: preview Send retains a visible outline when forced colours suppress shadow rings"
+    },
+    {
+      "name": "forced-colours-staging-switch-focus",
+      "firstAssertion": "AssertionError [ERR_ASSERTION]: staging Christian-content switch retains a visible outline when forced colours suppress shadow rings"
+    }
+  ],
+  "pageErrors": [],
+  "blockedRequests": [],
+  "forbiddenCalls": [],
+  "cssSha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9",
+  "representativeObservations": [
+    {
+      "mode": "controlled-font-200",
+      "kind": "page-layout",
+      "label": "staging",
+      "width": 390,
+      "scrollWidth": 457,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "text": "Send fictional message",
+          "left": 40,
+          "right": 429.765625
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Preview selected excerpt",
+          "left": 40,
+          "right": 456.6875
+        }
+      ]
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "staging unsaved dialog",
+      "bounds": {
+        "left": 0,
+        "right": 390,
+        "top": 119,
+        "bottom": 725
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 412,
+      "clientWidth": 388,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": []
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "page-layout",
+      "label": "preview",
+      "width": 390,
+      "scrollWidth": 604,
+      "overflow": [
+        {
+          "tag": "BUTTON",
+          "text": "Save conversation (simulated)",
+          "left": 32,
+          "right": 525.65625
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Choose teaching to share",
+          "left": 57,
+          "right": 413.515625
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Context used by this preview (developer)",
+          "left": 57,
+          "right": 603.640625
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate send failure: off",
+          "left": 57,
+          "right": 408.765625
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate save failure: off",
+          "left": 57,
+          "right": 407.234375
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate voice disconnection",
+          "left": 57,
+          "right": 458.46875
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate preference failure: off",
+          "left": 57,
+          "right": 480.875
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate voice shutdown failure: off",
+          "left": 57,
+          "right": 539.28125
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Simulate missing earlier history",
+          "left": 57,
+          "right": 487.953125
+        }
+      ]
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "preview switch dialog",
+      "bounds": {
+        "left": 0,
+        "right": 390,
+        "top": -11,
+        "bottom": 855
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 511,
+      "clientWidth": 388,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": []
+    },
+    {
+      "mode": "forced-colours",
+      "label": "staging Delete",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "staging New conversation",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "staging Send",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "preview Finish",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "preview New conversation",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "preview Send",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    },
+    {
+      "mode": "forced-colours",
+      "label": "staging Christian-content switch",
+      "outlineStyle": "none",
+      "outlineWidth": "2px",
+      "outlineColor": "rgba(5, 0, 73, 0.8)",
+      "background": "rgb(255, 255, 255)",
+      "boxShadow": "none"
+    }
+  ],
+  "limits": "Synthetic browser fixture, controlled root/body enlargement not native zoom; no WCAG/assistive technology/real Auth/provider/device acceptance. Screenshots generated in runner but no PNG bytes emitted."
+}

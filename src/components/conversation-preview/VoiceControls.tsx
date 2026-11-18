@@ -56,7 +56,10 @@ export function VoiceControls({
   });
 
   return (
-    <section aria-labelledby={`${id}-heading`} className={cn("space-y-3", className)}>
+    <section
+      aria-labelledby={`${id}-heading`}
+      className={cn("conversation-ui space-y-3", className)}
+    >
       <h2 id={`${id}-heading`} className="font-serif text-lg">
         Voice controls
       </h2>

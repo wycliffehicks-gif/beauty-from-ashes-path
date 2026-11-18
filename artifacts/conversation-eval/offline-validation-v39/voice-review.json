@@ -1,0 +1,314 @@
+{
+  "status": "PASSED",
+  "date": "2026-11-18",
+  "jobUrl": "https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/44309353470/job/134819148124",
+  "jobId": 134819148124,
+  "runId": 44309353470,
+  "browserVersion": "157.0.8103.50",
+  "namedChecksPassed": 35,
+  "checks": [
+    "construction and network recovery do not acquire resources",
+    "keyboard Start opens one fictional resource attempt",
+    "pending Mute shows input changing and preserves cancellation actions",
+    "confirmed Mute and keyboard Unmute alter input without closing the session",
+    "Mute remains independently available while playback Stop is pending",
+    "Stop answer fences a real service turn and playback while leaving voice open",
+    "active: status and controls fit 390px with no horizontal overflow",
+    "Pause closes four resources; recovery does not automatically resume",
+    "keyboard Resume requires a fresh explicit resource attempt",
+    "Finish ends voice and offers Start rather than Resume",
+    "Type instead closes voice and retains no private-practice assurance",
+    "Pause during pending acquisition immediately blocks unsafe actions and reassurance",
+    "late capture after Pause is closed without connecting or restarting",
+    "late Start completion preserves focus after the user moves to another control",
+    "unconfirmed close cannot advertise private practice or permit Start/Mute/Resume",
+    "shutdown-failed: status and controls fit 390px with no horizontal overflow",
+    "failed close remains visible and recovery does not retry it",
+    "Type instead cannot erase a failed shutdown or silently retry the resource",
+    "explicit keyboard Retry closes only failed resource without acquiring voice",
+    "failed work cancellation stays uncertain without automatic retry",
+    "Retry after cancellation fault invokes real fence and rejects the late service reply",
+    "selecting B keeps old attempt A closed and cannot offer its Resume/Mute",
+    "Stop after selection fences B typed work while independent A work remains valid",
+    "selected B voice starts only after its own explicit Start",
+    "Start/Pause/Resume/Retry retain usable focus and status fallback supports onward Tab",
+    "root-200-narrow: exact font/media evidence and seven current states fit 320px without clipping",
+    "root-200-narrow: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics",
+    "root-body-200-narrow: exact font/media evidence and seven current states fit 320px without clipping",
+    "root-body-200-narrow: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics",
+    "reduced-motion: exact font/media evidence and seven current states fit 390px without clipping",
+    "reduced-motion: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics",
+    "forced-colours: exact font/media evidence and seven current states fit 390px without clipping",
+    "forced-colours: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics",
+    "enlarged-forced-reduced: exact font/media evidence and seven current states fit 320px without clipping",
+    "enlarged-forced-reduced: all nine action labels remain keyboard reachable with usable focus and unchanged lifecycle semantics"
+  ],
+  "modes": [
+    {
+      "name": "root-200-narrow",
+      "status": "PASSED",
+      "viewportWidth": 320,
+      "layoutStates": [
+        "idle",
+        "active",
+        "input-changing",
+        "paused",
+        "closing",
+        "shutdown-failed",
+        "retrying"
+      ],
+      "focusObservations": 25,
+      "baselineFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "observedFonts": {
+        "root": 32,
+        "body": 18,
+        "button": 28,
+        "status": 28,
+        "fixtureCopy": 18,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      }
+    },
+    {
+      "name": "root-body-200-narrow",
+      "status": "PASSED",
+      "viewportWidth": 320,
+      "layoutStates": [
+        "idle",
+        "active",
+        "input-changing",
+        "paused",
+        "closing",
+        "shutdown-failed",
+        "retrying"
+      ],
+      "focusObservations": 25,
+      "baselineFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "observedFonts": {
+        "root": 32,
+        "body": 36,
+        "button": 28,
+        "status": 28,
+        "fixtureCopy": 36,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "previousPaddingOnlyFailure": {
+        "boxBottom": 852.125,
+        "viewportHeight": 844,
+        "lastTextBottom": 823.125,
+        "textRectangleCount": 10,
+        "outlineVisible": true,
+        "focusVisible": true
+      }
+    },
+    {
+      "name": "reduced-motion",
+      "status": "PASSED",
+      "viewportWidth": 390,
+      "layoutStates": [
+        "idle",
+        "active",
+        "input-changing",
+        "paused",
+        "closing",
+        "shutdown-failed",
+        "retrying"
+      ],
+      "focusObservations": 25,
+      "baselineFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 390,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "observedFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 390,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      }
+    },
+    {
+      "name": "forced-colours",
+      "status": "PASSED",
+      "viewportWidth": 390,
+      "layoutStates": [
+        "idle",
+        "active",
+        "input-changing",
+        "paused",
+        "closing",
+        "shutdown-failed",
+        "retrying"
+      ],
+      "focusObservations": 25,
+      "baselineFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 390,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "observedFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 390,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      }
+    },
+    {
+      "name": "enlarged-forced-reduced",
+      "status": "PASSED",
+      "viewportWidth": 320,
+      "layoutStates": [
+        "idle",
+        "active",
+        "input-changing",
+        "paused",
+        "closing",
+        "shutdown-failed",
+        "retrying"
+      ],
+      "focusObservations": 25,
+      "baselineFonts": {
+        "root": 16,
+        "body": 18,
+        "button": 14,
+        "status": 14,
+        "fixtureCopy": 18,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "observedFonts": {
+        "root": 32,
+        "body": 36,
+        "button": 28,
+        "status": 28,
+        "fixtureCopy": 36,
+        "viewportWidth": 320,
+        "visualViewportScale": 1,
+        "devicePixelRatio": 1
+      },
+      "previousPaddingOnlyFailure": {
+        "boxBottom": 852.125,
+        "viewportHeight": 844,
+        "lastTextBottom": 823.125,
+        "textRectangleCount": 10,
+        "outlineVisible": true,
+        "focusVisible": true
+      }
+    }
+  ],
+  "corrections": [
+    "VoiceControls section gained conversation-ui scope marker; shared scoped styles supply a visible system-colour outline when forced-colours media is active. Voice lifecycle/focus behavior and wording unchanged.",
+    "Baseline root/body doubled mode had focused status box bottom852.125 in844px viewport. Revised oracle checks all actual rendered paragraph text rectangles, visible status top/sides and focus indication instead of requiring every lower padding pixel. All interactive controls retain full bounds checks; existing content overflow assertions remain.",
+    "Final measured last status text bottom823.125 with10 text rectangles is fully inside844px viewport in both affected modes. The8.125px outside region is lower padding, not clipped words."
+  ],
+  "baselineEvidence": {
+    "replayJobId": 134816684553,
+    "initialJobId": 134814036352,
+    "initialFailures": [
+      "root-body-200-narrow/status keyboard focus outside viewport (whole-box oracle)",
+      "forced-colours/Start voice no visible outline",
+      "enlarged-forced-reduced/Start voice no visible outline"
+    ],
+    "afterScopedStylesJobId": 134816684481,
+    "remainingBeforeOracleCorrection": [
+      "root-body-200-narrow/status whole-box oracle",
+      "enlarged-forced-reduced/status whole-box oracle"
+    ]
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "observations": "Four full-page original PNGs visually inspected: active muted, shutdown unconfirmed, enlarged combined idle and enlarged combined focused finished status. Controls/text wrap within width; shutdown caution and Retry remain readable; focused status has visible outline. Full-page captures show layout context; viewport containment is evidenced by recorded geometry.",
+    "files": [
+      {
+        "name": "voice_active-390px.png",
+        "sizeBytes": 37614,
+        "sha256": "3888780f38c3c1a81bd3648a64b869f6ea804fe3cdb31535fc3decfd104ccce8"
+      },
+      {
+        "name": "voice_enlarged-forced-reduced-focus-status.png",
+        "sizeBytes": 86097,
+        "sha256": "3f89e7dfdf84b16d6b7786290189411adcffd7a26d4b97b4fa5d9649c7db5a47"
+      },
+      {
+        "name": "voice_enlarged-forced-reduced-idle.png",
+        "sizeBytes": 82525,
+        "sha256": "01bfb8fc095529b7087c343b9e0f6c0b6c5f01aba0b66b93d544dda4d6efcd5d"
+      },
+      {
+        "name": "voice_shutdown-failed-390px.png",
+        "sizeBytes": 41092,
+        "sha256": "14bcf62d5d4d4c600b44ceca626012451ce00d192c1ee1c70925d0cc53c86dd1"
+      }
+    ]
+  },
+  "rawReport": {
+    "name": "voice.json",
+    "sizeBytes": 793310,
+    "sha256": "a32f0622dbdb1e430dc48ea69e84e3860a0a483577473b05819f2e8d4bd0c86b",
+    "availableIn": "BFA_FILE/BFA_PART compressed report records in the linked job log"
+  },
+  "inputs": [
+    {
+      "path": "scripts/conversation-ui/check-voice-controls.cjs",
+      "sha256": "54c3507a4a8976e039b4393c7c03493cb4489886f09a95c873c69638c5196933"
+    },
+    {
+      "path": "src/components/conversation-preview/VoiceControls.tsx",
+      "sha256": "541a08af74577367846ac1dd28320ef215d8c8b855c23ba038dbb687232314ec"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "41b0dab167af44eaab0cd3665085309b30093f415ed4349876934b861d748231"
+    }
+  ],
+  "productionCss": {
+    "path": "/home/runner/work/_temp/bfa-browser-QvHr1Kou/source/.output/public/assets/styles-BkO6zvNq.css",
+    "sha256": "9295b83111acff9cd4658f72044be87acc49b8096a0e08a21abbbfa30b2b1af3"
+  },
+  "pageErrors": [],
+  "blockedRequests": [],
+  "microphoneAttempts": 0,
+  "realProviderCalls": 0,
+  "validation": "node --check plus scoped full ESLint passed. Initial one-line prettier finding corrected before final scoped lint. Independent reviewer verified the narrowed status oracle rejects clipped text, missing geometry, offscreen top and offscreen buttons.",
+  "scope": "Actual React VoiceControls and service/binding in isolated hosted Chromium fixture with fictional resources/provider responses; all external requests and microphones blocked. Controlled root/body font enlargement and emulated media only, not native zoom, screen-reader/WCAG certification, physical-device, authenticated hosted-route or real provider/voice acceptance."
+}

@@ -61,7 +61,7 @@ export function ConversationPreview() {
   const { state, store } = useConversationPreview();
 
   return (
-    <main className="mx-auto w-full max-w-2xl px-4 pb-16 pt-6">
+    <main className="conversation-ui mx-auto w-full max-w-2xl px-4 pb-16 pt-6">
       <p
         role="status"
         className="mb-4 rounded-md border border-border bg-muted px-3 py-2 text-center text-sm font-medium text-foreground"
@@ -101,7 +101,7 @@ function TranscriptDialog({
         if (!open) store.resolveTranscriptChoice("cancel");
       }}
     >
-      <AlertDialogContent {...dialogFocus}>
+      <AlertDialogContent className="conversation-dialog" {...dialogFocus}>
         <AlertDialogHeader>
           <AlertDialogTitle>Use the finalized transcript?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -333,7 +333,7 @@ function SavedRow({
       </div>
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent {...deleteFocus}>
+        <AlertDialogContent className="conversation-dialog" {...deleteFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this saved conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -540,7 +540,7 @@ function ThreadScreen({
 
       {/* Finish — AlertDialog: focus trapped, Escape cancels, focus restored. */}
       <AlertDialog open={finishOpen} onOpenChange={setFinishOpen}>
-        <AlertDialogContent {...finishFocus}>
+        <AlertDialogContent className="conversation-dialog" {...finishFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Finish this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -582,7 +582,7 @@ function ThreadScreen({
           if (!open) cancelSwitch();
         }}
       >
-        <AlertDialogContent {...switchFocus}>
+        <AlertDialogContent className="conversation-dialog" {...switchFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Leave this conversation?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -1002,7 +1002,7 @@ function TeachingShare({ store }: { store: ConversationPreviewStore }) {
           if (!open) store.cancelShareTeaching();
         }}
       >
-        <AlertDialogContent {...shareFocus}>
+        <AlertDialogContent className="conversation-dialog" {...shareFocus}>
           <AlertDialogHeader>
             <AlertDialogTitle>Include this in the conversation?</AlertDialogTitle>
             <AlertDialogDescription>

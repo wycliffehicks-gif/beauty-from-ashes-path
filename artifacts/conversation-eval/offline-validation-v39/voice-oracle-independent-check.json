@@ -1,0 +1,36 @@
+{
+  "scope": "Extracted actual geometry predicate with synthetic data, not browser evidence",
+  "sourceSha256": "54c3507a4a8976e039b4393c7c03493cb4489886f09a95c873c69638c5196933",
+  "checks": [
+    {
+      "name": "visible status text with only lower padding outside viewport",
+      "expectedPass": true,
+      "observedPass": true
+    },
+    {
+      "name": "status text below viewport",
+      "expectedPass": false,
+      "observedPass": false
+    },
+    {
+      "name": "status text clipped horizontally",
+      "expectedPass": false,
+      "observedPass": false
+    },
+    {
+      "name": "missing status text measurements",
+      "expectedPass": false,
+      "observedPass": false
+    },
+    {
+      "name": "status focus top outside viewport",
+      "expectedPass": false,
+      "observedPass": false
+    },
+    {
+      "name": "interactive control bottom outside viewport",
+      "expectedPass": false,
+      "observedPass": false
+    }
+  ]
+}

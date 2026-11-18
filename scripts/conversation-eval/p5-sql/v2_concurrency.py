@@ -165,7 +165,9 @@ class V2Driver(capacity.CapacityDriver):
         return value
 
     def catalog_report(self) -> dict:
-        catalog = json.loads(self.observer.scalar(self.catalog_sql))
+        # The bridge's driver-neutral SELECT has no statement terminator.
+        # Interactive psql must execute it before Session's following echo.
+        catalog = json.loads(self.observer.scalar(self.catalog_sql.rstrip().rstrip(";") + ";"))
         response = self.bridge({"operation": "evaluate", "catalog": catalog,
                                 "trustedOwnerRole": "bfa_fixture_admin"})
         report = response.get("report")
@@ -603,6 +605,9 @@ def main() -> int:
         parser.error(str(error))
     driver = V2Driver(args)
     try:
+        # Preserve the environment fact before a failing case can disconnect
+        # the observer; report assembly must not erase completed case evidence.
+        server_version = driver.observer.scalar("SHOW server_version;")
         baseline = accounting_snapshot(driver)
         results = []
         for name, fn in cases(driver):
@@ -614,7 +619,7 @@ def main() -> int:
         sources = [Path(__file__).resolve(), _CAPACITY_PATH, _CAPACITY_PATH.with_name("concurrency.py"),
                    driver.bridge_path, driver.bridge_path.with_name("cutover-inventory.ts")]
         result = {"suite": "P5 disposable local PostgreSQL v2 concurrency", "protocol": 2,
-                  "caseInventoryVersion": 1, "deployable": False, "serverVersion": driver.observer.scalar("SHOW server_version;"),
+                  "caseInventoryVersion": 1, "deployable": False, "serverVersion": server_version,
                   "cases": results, "passed": sum(case["status"] == "passed" for case in results),
                   "failed": sum(case["status"] != "passed" for case in results),
                   "runtime": {"path": driver.runtime, "sha256": hashlib.sha256(Path(driver.runtime).read_bytes()).hexdigest(),

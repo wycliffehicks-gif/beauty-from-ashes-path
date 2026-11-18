@@ -1,0 +1,287 @@
+{
+  "status": "PASSED",
+  "runId": 44309353470,
+  "jobId": 134819148124,
+  "jobUrl": "https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/44309353470/job/134819148124",
+  "completedChecks": 39,
+  "passedChecks": [
+    "staging: 390px viewport has no horizontal overflow",
+    "staging: dialog and Cancel fit within 390x844 viewport",
+    "staging Delete: initial Cancel and Escape restores opener",
+    "staging Delete: initial Cancel and Cancel restores opener",
+    "staging Discard: initial Cancel and Escape restores opener",
+    "staging Discard: initial Cancel and Cancel restores opener",
+    "staging navigation: Escape restores opener and draft",
+    "staging navigation: Cancel restores opener and draft",
+    "staging Delete during pending append stays usable, old reply fenced, focus uses surviving heading",
+    "preview: 390px viewport has no horizontal overflow",
+    "preview: dialog and Keep working fit within 390x844 viewport",
+    "preview Finish Escape restores opener and draft",
+    "preview switch Cancel restores opener and draft",
+    "preview source Cancel uses stable chooser after source button unmounts",
+    "preview confirmed Finish focuses surviving start heading",
+    "preview blank rename has accurate associated error and preserves saved title",
+    "preview simulated rename failure remains distinct and preserves saved title",
+    "preview successful rename clears error",
+    "preview saved Delete Cancel restores opener",
+    "preview confirmed saved Delete focuses surviving heading",
+    "controlled-font-200-staging-delete-cancel: actual keyboard, media/style and draft assertions",
+    "controlled-font-200-staging-navigation-cancel: actual keyboard, media/style and draft assertions",
+    "controlled-font-200-staging-pending-stop: actual keyboard, media/style and draft assertions",
+    "controlled-font-200-preview-finish-keep: actual keyboard, media/style and draft assertions",
+    "controlled-font-200-preview-switch-cancel: actual keyboard, media/style and draft assertions",
+    "controlled-font-200-preview-retry-stop: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-delete-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-navigation-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-staging-pending-stop: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-finish-keep: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-switch-cancel: actual keyboard, media/style and draft assertions",
+    "reduced-motion-preview-retry-stop: actual keyboard, media/style and draft assertions",
+    "forced-colours-staging-delete-cancel: actual keyboard, media/style and draft assertions",
+    "forced-colours-staging-navigation-cancel: actual keyboard, media/style and draft assertions",
+    "forced-colours-staging-pending-stop: actual keyboard, media/style and draft assertions",
+    "forced-colours-preview-finish-keep: actual keyboard, media/style and draft assertions",
+    "forced-colours-preview-switch-cancel: actual keyboard, media/style and draft assertions",
+    "forced-colours-preview-retry-stop: actual keyboard, media/style and draft assertions",
+    "forced-colours-staging-switch-focus: actual keyboard, media/style and draft assertions"
+  ],
+  "pageErrors": [],
+  "blockedRequests": [],
+  "forbiddenCalls": [],
+  "accessibilityFailures": [],
+  "cssSha256": "9295b83111acff9cd4658f72044be87acc49b8096a0e08a21abbbfa30b2b1af3",
+  "fullResultSha256": "dcd7e9fdc6bd9970a3eba57fb0fda8d29c94680faedaeb271120de2b710e430b",
+  "controlledFonts": {
+    "mode": "controlled-font-200",
+    "fixture": "staging",
+    "kind": "fonts-and-media",
+    "before": {
+      "root": 16,
+      "body": 18,
+      "heading": 30,
+      "paragraph": 14,
+      "button": 14,
+      "composer": 16,
+      "visualViewportScale": 1
+    },
+    "after": {
+      "root": 32,
+      "body": 36,
+      "heading": 60,
+      "paragraph": 28,
+      "button": 28,
+      "composer": 32,
+      "visualViewportScale": 1
+    },
+    "media": {
+      "reducedMotion": false,
+      "forcedColors": false,
+      "width": 390,
+      "height": 844
+    }
+  },
+  "enlargedGeometry": [
+    {
+      "mode": "controlled-font-200",
+      "kind": "page-layout",
+      "label": "staging",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": []
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "staging delete dialog",
+      "bounds": {
+        "left": 32,
+        "right": 358,
+        "top": 104,
+        "bottom": 740
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 324,
+      "clientWidth": 324,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": [
+        {
+          "state": "running",
+          "duration": 200
+        }
+      ]
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "staging unsaved dialog",
+      "bounds": {
+        "left": 32,
+        "right": 358,
+        "top": 32,
+        "bottom": 812
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 324,
+      "clientWidth": 324,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": []
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "page-layout",
+      "label": "preview",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": []
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "preview finish dialog",
+      "bounds": {
+        "left": 32,
+        "right": 358,
+        "top": 32,
+        "bottom": 812
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 324,
+      "clientWidth": 324,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": []
+    },
+    {
+      "mode": "controlled-font-200",
+      "kind": "dialog-style",
+      "label": "preview switch dialog",
+      "bounds": {
+        "left": 32,
+        "right": 358,
+        "top": 32,
+        "bottom": 812
+      },
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 324,
+      "clientWidth": 324,
+      "animationName": "enter",
+      "animationMs": [
+        200
+      ],
+      "transitionMs": [
+        200
+      ],
+      "animations": []
+    }
+  ],
+  "forcedControlEvidence": {
+    "measuredControls": 14,
+    "allSolidTwoPixelOutline": true,
+    "allAutomaticColourAdjustment": true,
+    "allContrastingOutlineBackground": true
+  },
+  "switchStates": [
+    {
+      "mode": "forced-colours",
+      "kind": "switch-appearance",
+      "trackBackground": "rgb(255, 255, 255)",
+      "trackBorder": "rgba(5, 0, 73, 0.8)",
+      "thumbBackground": "rgb(255, 255, 255)",
+      "thumbBorder": "rgb(0, 0, 0)",
+      "thumbBorderWidth": "1px",
+      "thumbShadow": "none",
+      "forcedColorAdjust": "auto",
+      "checked": "false"
+    },
+    {
+      "mode": "forced-colours",
+      "kind": "switch-appearance",
+      "trackBackground": "rgb(255, 255, 255)",
+      "trackBorder": "rgba(5, 0, 73, 0.8)",
+      "thumbBackground": "rgb(255, 255, 255)",
+      "thumbBorder": "rgb(0, 0, 0)",
+      "thumbBorderWidth": "1px",
+      "thumbShadow": "none",
+      "forcedColorAdjust": "auto",
+      "checked": "true"
+    }
+  ],
+  "reducedMotion": [
+    {
+      "label": "staging delete dialog",
+      "animationMs": [
+        0.001
+      ],
+      "transitionMs": [
+        0.001
+      ]
+    },
+    {
+      "label": "staging unsaved dialog",
+      "animationMs": [
+        0.001
+      ],
+      "transitionMs": [
+        0.001
+      ]
+    },
+    {
+      "label": "preview finish dialog",
+      "animationMs": [
+        0.001
+      ],
+      "transitionMs": [
+        0.001
+      ]
+    },
+    {
+      "label": "preview switch dialog",
+      "animationMs": [
+        0.001
+      ],
+      "transitionMs": [
+        0.001
+      ]
+    }
+  ],
+  "screenshotsInspected": [
+    {
+      "filename": "focus_controlled-font-200-preview-finish-keep.png",
+      "bytes": 359418,
+      "sha256": "3a52983a822b5479836bc2d14eb39e8ba5b9b45c867ee0ff936539bd64e1f809"
+    },
+    {
+      "filename": "focus_forced-colours-staging-switch-focus.png",
+      "bytes": 64554,
+      "sha256": "3fd534fc2418ded83b09eb7a02586ccd1c5cf9eb11decd1a7b778086de53c054"
+    },
+    {
+      "filename": "focus_staging-390px-dialog.png",
+      "bytes": 51852,
+      "sha256": "fbfa39f76c6cd9be4dfd10bef583dafb8a7705891d422ca23694b529f6271806"
+    }
+  ],
+  "scope": "Actual Chromium React/Radix keyboard and emulated-media behavior against local fictional doubles, with controlled root/body fonts and a paused fictional reply timer; not native text zoom, WCAG conformance, physical device, assistive technology, authenticated staging or live voice acceptance.",
+  "visualLimit": "Retained switch PNG shows branded colours, so the screenshot supports the visible ring/thumb only; forced-colour system palette statements rely on recorded media/computed styles. Full-page enlarged preview PNG is after Keep working closes the dialog; modal bounds come from actual DOM measurements."
+}

@@ -1,0 +1,36 @@
+{
+  "status": "BLOCKED_BEFORE_BROWSER_CONTEXT",
+  "date": "2026-11-18",
+  "scope": "Prepared local fictional VoiceControls browser harness; no application route or real voice/provider/device acceptance.",
+  "command": "BFA_PLAYWRIGHT_MODULE=/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright BFA_CHROMIUM_EXECUTABLE=/usr/bin/chromium BFA_UI_CSS=/workspace/scratch/500c5aa1eb33/v37/repo/.output/public/assets/styles-DuOMzkts.css node scripts/conversation-ui/check-voice-controls.cjs /workspace/scratch/500c5aa1eb33/v39/voice-baseline",
+  "browserVersion": "Chromium 156.0.8078.79 built on Debian GNU/Linux 13 (trixie)",
+  "nodeVersion": "v24.22.3",
+  "exitCode": 1,
+  "blocker": "Chromium exited SIGABRT before creating a browser context; process_singleton_posix.cc socket() failed: Operation not permitted (1). Crashpad ptrace was also denied.",
+  "browserAssertionsRun": 0,
+  "accessibilityModesRun": 0,
+  "screenshotsProduced": 0,
+  "resultJsonProduced": false,
+  "appOrHarnessDefectEstablished": false,
+  "sourceModified": false,
+  "rawScratchLog": "/workspace/scratch/500c5aa1eb33/v39/voice-baseline/run.log",
+  "rawScratchLogSha256": "c9f878c28019cd924a767bdba3cee5658dc38b87069f86a5adbafc38330b1f6d",
+  "inputs": [
+    {
+      "path": "scripts/conversation-ui/check-voice-controls.cjs",
+      "sizeBytes": 41879,
+      "sha256": "fb6ebbb67fbbf170866b9d19ee48f472e43badccc98a07bf5c46574f79d9a318"
+    },
+    {
+      "path": "src/components/conversation-preview/VoiceControls.tsx",
+      "sizeBytes": 3838,
+      "sha256": "0714adcf51d063e02293630653c8ea2b6b9129fe640cf0358932af2068119ed3"
+    },
+    {
+      "path": "/workspace/scratch/500c5aa1eb33/v37/repo/.output/public/assets/styles-DuOMzkts.css",
+      "sizeBytes": 103488,
+      "sha256": "83f967bcb9eb8de6df69b5f08b191eb607fb0d33c7517b40c6ef94e3e1ef44f9"
+    }
+  ],
+  "limits": "Previous prepared cases remain UNRUN. No local browser/device/model/voice acceptance is claimed. No flags were changed or repeated launch attempt made."
+}

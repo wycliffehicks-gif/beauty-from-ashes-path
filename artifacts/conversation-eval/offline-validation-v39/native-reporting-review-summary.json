@@ -1,0 +1,39 @@
+{
+  "sourceSha256": {
+    "scripts/conversation-eval/p5-sql/v2_concurrency.py": "374dd1f4138c042ff11909a971a10212b96fdbb51f40e7bff061749620652728",
+    "scripts/conversation-eval/p5-sql/test_runner_v2.py": "c1930e5992c12d5cd918f260b2c7ef66bfe8fc2c473bc3bb4e2bd05a0a90ec73",
+    "scripts/conversation-eval/p5-sql/test_runner.py": "ea83ca8b2f625b06acfc543efbd4a4a963d4a25488a694e543acef83ff833b7b"
+  },
+  "baselineModuleSha256": "2d1ea49a2011fefe573b77e9b49363ba9cb5b66febe6b6c1028fe8d388bfa007",
+  "focusedBaseline": {
+    "passed": 0,
+    "failures": 1,
+    "errors": 1
+  },
+  "focusedFixed": {
+    "passed": 2,
+    "skipped": 0
+  },
+  "legacyGuards": {
+    "passed": 27,
+    "skipped": 0
+  },
+  "v2Guards": {
+    "discovered": 27,
+    "passed": 27,
+    "skipped": 0
+  },
+  "countsOverlap": true,
+  "localNativeExecuted": false,
+  "localBridgeExecuted": true,
+  "earlierV2Guards": {
+    "discovered": 27,
+    "passed": 23,
+    "skipped": 4
+  },
+  "explicitRuntime": {
+    "path": "/workspace/scratch/205dbad31641/p5-rpc-work/test-tools/node_modules/@oven/bun-linux-x64/bin/bun",
+    "version": "1.4.4",
+    "sha256": "10702245766b225e70bbf6235fd6b47214fd94b4760d00ffaed8ab0df57ac235"
+  }
+}

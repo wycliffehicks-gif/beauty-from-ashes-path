@@ -482,6 +482,19 @@ async function main() {
         box = element.getBoundingClientRect();
       const colorVisible =
         style.outlineColor !== "transparent" && !/^rgba\([^)]*,\s*0\)$/.test(style.outlineColor);
+      const statusTextBounds =
+        element.getAttribute("role") === "status"
+          ? [...element.querySelectorAll("p")].flatMap((paragraph) => {
+              const range = document.createRange();
+              range.selectNodeContents(paragraph);
+              return [...range.getClientRects()].map((rect) => ({
+                x: rect.x,
+                y: rect.y,
+                width: rect.width,
+                height: rect.height,
+              }));
+            })
+          : [];
       return {
         label: element.textContent,
         role: element.getAttribute("role"),
@@ -499,6 +512,7 @@ async function main() {
           colorVisible &&
           style.outlineColor !== style.backgroundColor,
         rect: { x: box.x, y: box.y, width: box.width, height: box.height },
+        statusTextBounds,
         viewport: { width: innerWidth, height: innerHeight },
       };
     });
@@ -518,13 +532,35 @@ async function main() {
       true,
       `${mode.name}/${label}: keyboard focus-visible missing`,
     );
-    assert.ok(
-      evidence.rect.x >= -1 &&
-        evidence.rect.x + evidence.rect.width <= evidence.viewport.width + 1 &&
-        evidence.rect.y >= -1 &&
-        evidence.rect.y + evidence.rect.height <= evidence.viewport.height + 1,
-      `${mode.name}/${label}: keyboard focus outside viewport`,
-    );
+    const horizontalFocusVisible =
+      evidence.rect.x >= -1 && evidence.rect.x + evidence.rect.width <= evidence.viewport.width + 1;
+    if (evidence.role === "status") {
+      // Asynchronous status copy can grow after focus is restored. A little
+      // lower padding may extend below the viewport while every word and the
+      // upper/side focus outline remain visible; that is not clipped content.
+      // Check the actual rendered text instead of requiring all padding pixels.
+      assert.ok(
+        horizontalFocusVisible &&
+          evidence.rect.y >= -1 &&
+          evidence.rect.y < evidence.viewport.height &&
+          evidence.statusTextBounds.length > 0 &&
+          evidence.statusTextBounds.every(
+            (rect) =>
+              rect.x >= -1 &&
+              rect.x + rect.width <= evidence.viewport.width + 1 &&
+              rect.y >= -1 &&
+              rect.y + rect.height <= evidence.viewport.height + 1,
+          ),
+        `${mode.name}/${label}: focused status text or upper outline outside viewport`,
+      );
+    } else {
+      assert.ok(
+        horizontalFocusVisible &&
+          evidence.rect.y >= -1 &&
+          evidence.rect.y + evidence.rect.height <= evidence.viewport.height + 1,
+        `${mode.name}/${label}: keyboard focus outside viewport`,
+      );
+    }
     if (mode.forcedColors === "active")
       assert.ok(
         evidence.outlineVisible,

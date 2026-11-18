@@ -1,0 +1,8 @@
+browserType.launch: Target page, context or browser has been closed
+[pid=32][err] /usr/bin/chromium: 9: [: 5225713664: unexpected operator
+[pid=32][err] [32:32:1118/074525.962377:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)
+[pid=32][err] [1118/074525.962610:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)
+[2m  - [pid=32][err] /usr/bin/chromium: 9: [: 5225713664: unexpected operator[22m
+[2m  - [pid=32][err] [32:32:1118/074525.962377:FATAL:chrome/browser/process_singleton_posix.cc:297] Check failed: . socket() failed: Operation not permitted (1)[22m
+[2m  - [pid=32][err] [1118/074525.962610:ERROR:third_party/crashpad/crashpad/util/linux/scoped_ptrace_attach.cc:27] ptrace: Operation not permitted (1)[22m
+    at main (/workspace/scratch/500c5aa1eb33/v39/repo/scripts/conversation-ui/check-voice-controls.cjs:196:34) {

@@ -1,4 +1,12 @@
-# Continue here — BFA, 18 November 2026, America/Toronto
+# Continue here — BFA, 25 November 2026, America/Toronto
+
+## Lovable editor and hosted preview verified — 25 November 2026
+
+Carl confirmed that his ChatGPT Lovable connection showed Connected. The project-list request through that integration returned an internal error (-32603). The signed-in Lovable web editor opened Beauty From Ashes Path in Carl's Lovable workspace. The workspace menu showed 200 credits left, separately displayed 5 daily build credits left, and showed December 24 as the next monthly renewal. These are dated observations. No paid Lovable request or purchase was made.
+
+GitHub main contained application commit `60a197583120b8424da43852c3b182a0feccb5fc`. The latest Lovable history entry matched its title, “Fix conversation accessibility and verify native database concurrency on isolated runners.” Its code changes opened, and the version-specific hosted preview identified revision `60a19758` and rendered “Beauty from Ashes,” “The ten days,” and “Privacy” on desktop. This verifies hosted rendering of that application revision. No paid edit, fresh build, physical-device test, real model or voice call, or publication action was run in this check.
+
+The next device check is the fictional conversation on a physical phone with larger text. At `/conversation-preview`, enter an unsent fictional draft, open **Finish conversation**, choose **Keep working**, and check button readability and return to the intact draft. Screen reader, hosted Auth, provider and physical voice acceptance remain open. The November 18 results and the SRT source and policy record below continue to govern their respective scope.
 
 ## Current checkpoint — 18 November 2026, America/Toronto
 

@@ -121,7 +121,9 @@ BEGIN
    IF d.dispatch_id IS NOT NULL OR a.state<>'held' THEN RETURN NULL; END IF;
  ELSIF d.dispatch_id IS DISTINCT FROM p_dispatch_id THEN RETURN NULL;
  END IF;
- IF d.evidence_sha256 IS NOT NULL AND NOT bfa_private_text_spend.settled_matches(a,d) THEN RETURN NULL; END IF;
+ IF (d.evidence_sha256 IS NULL AND a.state<>'held')
+   OR (d.evidence_sha256 IS NOT NULL AND NOT bfa_private_text_spend.settled_matches(a,d))
+   THEN RETURN NULL; END IF;
  expected:=coalesce(d.finished_revision,a.thread_revision);
  r:=bfa_private_text_spend.lock_current(a,expected,p_auth_verified_at,p_auth_expires_at,p_eligibility_expires_at,
    d.effective_expires_at,greatest(d.dispatched_at,d.settled_at,d.finished_at));

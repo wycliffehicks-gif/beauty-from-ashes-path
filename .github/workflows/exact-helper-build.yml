@@ -239,7 +239,7 @@ jobs:
                 if(await visible(page.getByTestId('close-return-home'))) break;
                 const before=page.url();
                 const heading=await page.locator('h1').first().innerText();
-                const choices=page.locator('button.bfa-journey-choice');
+                const choices=page.locator('[role="group"][aria-labelledby="journey-question-prompt"] button.bfa-journey-choice');
                 if(await choices.count()) {
                   const first=choices.first();
                   const label=await first.locator('span.block').first().innerText();
@@ -323,6 +323,8 @@ jobs:
             if(context) await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));
             if(browser) await browser.close().catch(()=>report.cleanupErrors.push('browser-close-failed'));
             if(child&&!childExited) {
+              if(!guardStatus && child.connected) { child.send({type:'bfa-smoke-fetch-guard-status'}); for(let i=0;i<20&&!guardStatus;i++) await sleep(50); }
+              if(guardStatus) report.serverFetch=guardStatus;
               child.kill('SIGTERM');
               for(let i=0;i<20&&!childExited;i++) await sleep(100);
               if(!childExited) { child.kill('SIGKILL'); for(let i=0;i<20&&!childExited;i++) await sleep(100); }

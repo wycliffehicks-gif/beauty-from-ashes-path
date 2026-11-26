@@ -844,6 +844,11 @@ function VoicePanel({
         {state.voiceMuted && state.voice !== "paused" ? " · muted" : ""}
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
+        {/* Keep Finish before controls that appear on connection, so a pointer
+            aimed at it cannot become a Mute click when the state advances. */}
+        <Button type="button" size="sm" variant="outline" onClick={() => store.finishTalking()}>
+          Finish talking
+        </Button>
         {state.voice === "listening" || state.voice === "speaking" ? (
           <>
             <Button type="button" size="sm" variant="outline" onClick={() => store.pauseVoice()}>
@@ -874,9 +879,6 @@ function VoicePanel({
             {state.voice === "paused" ? "Resume" : "Reconnect (simulated)"}
           </Button>
         ) : null}
-        <Button type="button" size="sm" variant="outline" onClick={() => store.finishTalking()}>
-          Finish talking
-        </Button>
         {state.voice === "speaking" ? (
           <Button type="button" size="sm" variant="outline" onClick={() => store.stopResponse()}>
             Interrupt reply (stop speaking)

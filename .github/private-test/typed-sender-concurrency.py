@@ -110,6 +110,7 @@ class RaceTests:
         self.withdrawn_approval()
         self.shortened_dispatch_ceiling()
         self.collision_rollback_expiry()
+        self.legacy_settlement_read()
         return {"status":"PASS","sqlSha256":hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
                 "baseSpendSha256":hashlib.sha256(SPEND.read_bytes()).hexdigest(),
                 "postgres":self.o.scalar("SHOW server_version;"),"cases":self.cases,
@@ -136,6 +137,23 @@ class RaceTests:
         outcome=self.block_then(f"UPDATE bfa_private_text_spend.approvals SET revoked=true WHERE approval_id={q(f['approval'])};",self.mark(f))
         require(outcome==["f"] and self.state(f)=="held","newly revoked approval cannot send or refund")
         self.cases.append("independent revocation during marker lock wait preserves hold")
+
+    def legacy_settlement_read(self):
+        f=self.held()
+        require(self.a.scalar(self.mark(f))=="t","marked funding fixture")
+        legacy=(f"SELECT public.bfa_private_text_spend_settle({self.binding(f)},"
+                f"{q(f['receipt'])},{q(f['evidence'])},143);")
+        read=self.observed(f,"read",f["marker"])
+        x,y=self.simultaneous(legacy,f"SELECT coalesce(({read})->>'state','unavailable');")
+        require(x=="t" and y==["unavailable"],
+                "funding already settled by preserved ledger cannot be reported as dispatched without matched marker settlement")
+        require(self.b.scalar(self.done(f))=="-1" and self.revision(f)==0,
+                "base settlement alone cannot finish")
+        require(self.b.scalar(self.paid(f))=="t","exact receipt association can recover independently")
+        read=self.observed(f,"read",f["marker"])
+        require(self.b.scalar(f"SELECT ({read})->>'state';")=="settled" and self.revision(f)==0,
+                "matched receipt resolves accounting only")
+        self.cases.append("old settlement wins post-marker read; no false dispatch authority until exact independent receipt association")
 
     def collision_rollback_expiry(self):
         x,y=self.held(),self.held("envelope")

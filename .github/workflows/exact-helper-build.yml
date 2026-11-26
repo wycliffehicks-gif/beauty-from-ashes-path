@@ -1,0 +1,93 @@
+name: BFA exact 2.27.1 helper build
+on:
+  push:
+    branches: [validation/exact-helper-2271-20261126]
+permissions: {}
+jobs:
+  build:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Build exact public source with its frozen helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          source_sha=9d35897111e0bdf9c705336e62e6418bc7043465
+          task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
+          task_source="$task_root/source"
+          task_home="$task_root/home"
+          task_runtime="$task_root/runtime"
+          task_logs="$task_root/logs"
+          mkdir -p "$task_source" "$task_home" "$task_runtime" "$task_logs"
+          clean_env=(env -i "PATH=$PATH" "HOME=$task_home" "TMPDIR=$task_root" CI=1 npm_config_update_notifier=false)
+
+          emit_log() {
+            "${clean_env[@]}" node --input-type=commonjs - "$1" "$2" <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const [phase, path] = process.argv.slice(2);
+          const bytes = fs.readFileSync(path);
+          console.log(`BFA_BUILD_LOG ${phase} bytes=${bytes.length} sha256=${crypto.createHash('sha256').update(bytes).digest('hex')}`);
+          const chunks = bytes.length <= 49152 ? [bytes] : [bytes.subarray(0, 16384), Buffer.from('\n[bounded log: middle omitted]\n'), bytes.subarray(-32768)];
+          for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) console.log(`BFA_BUILD ${phase} ${line}`);
+          NODE
+          }
+          phase() {
+            local label=$1
+            shift
+            local rc=0
+            "$@" > "$task_logs/$label.log" 2>&1 || rc=$?
+            emit_log "$label" "$task_logs/$label.log"
+            printf 'BFA_BUILD_PHASE %s exit=%s\n' "$label" "$rc"
+            if (( rc != 0 )); then exit "$rc"; fi
+          }
+
+          "${clean_env[@]}" git init -q "$task_source"
+          cd "$task_source"
+          "${clean_env[@]}" git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          "${clean_env[@]}" git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          phase source-fetch timeout 120s "${clean_env[@]}" git fetch --no-tags --depth=1 --filter=blob:none origin "$source_sha"
+          "${clean_env[@]}" git checkout -q --detach FETCH_HEAD
+          [[ $(git rev-parse HEAD) == "$source_sha" ]]
+          test ! -e .env
+          printf 'BFA_BUILD_SOURCE %s workflow=%s\n' "$source_sha" "$GITHUB_SHA"
+          "${clean_env[@]}" node --version
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          for (const key of ['preinstall','install','postinstall','preprepare','prepare','postprepare','prebuild','postbuild']) assert.equal(p.scripts?.[key], undefined, `Unexpected root lifecycle hook: ${key}`);
+          assert.equal(p.scripts.build, 'vite build');
+          assert.equal(p.workspaces, undefined);
+          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.27.1');
+          console.log('BFA_BUILD_GUARDS root hooks absent; exact helper declared; no workspace install; no provider credentials inherited');
+          NODE
+          sha256sum package.json bun.lock bunfig.toml vite.config.ts > "$task_logs/source-inputs.sha256"
+          cat "$task_logs/source-inputs.sha256"
+          phase bun-runtime timeout 180s "${clean_env[@]}" npm install --prefix "$task_runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          task_bun="$task_runtime/node_modules/@oven/bun-linux-x64/bin/bun"
+          [[ $("${clean_env[@]}" "$task_bun" --version) == 1.4.4 ]]
+          phase frozen-install timeout 240s "${clean_env[@]}" "$task_bun" install --frozen-lockfile --ignore-scripts
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const p = require('./node_modules/@lovable.dev/vite-tanstack-config/package.json');
+          assert.equal(p.version, '2.27.1');
+          console.log('BFA_BUILD_INSTALLED_HELPER', JSON.stringify({name:p.name,version:p.version,exports:p.exports,main:p.main}));
+          NODE
+          phase production-build timeout 300s "${clean_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          printf 'BFA_BUILD_RESULT PASS source=%s helper=2.27.1; no deploy, model calls, artifact upload, caches or main changes\n' "$source_sha"

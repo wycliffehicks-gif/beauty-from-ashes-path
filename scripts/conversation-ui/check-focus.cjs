@@ -122,7 +122,9 @@ async function main() {
     checks = [],
     accessibilityObservations = [],
     accessibilityFailures = [],
-    forbiddenCalls = [];
+    forbiddenCalls = [],
+    voiceTransitionObservations = [],
+    voiceTransitionFailures = [];
   let currentMode = null;
   let previewClockInstalled = false;
   page.on("console", (message) => {
@@ -657,6 +659,121 @@ async function main() {
       .click();
     await focused(page.getByRole("heading", { name: "Conversation preview", exact: true }));
     checks.push("preview confirmed saved Delete focuses surviving heading");
+    // Real preview controls with a held fictional connection timer. A pointer
+    // aimed at Finish must not become a Mute click when connection completes.
+    const voiceSnapshot = () =>
+      page.evaluate(() => {
+        const store = window.previewHarness.store;
+        const state = store.getSnapshot();
+        const voice = store.service.voice;
+        return {
+          voice: state.voice,
+          muted: state.voiceMuted,
+          draft: store.activeDraft(),
+          threadId: state.activeThreadId,
+          serviceState: voice.state,
+          sessionId: voice.sessionId,
+          capture: voice.capture,
+          transport: voice.transport,
+        };
+      });
+    const voiceProbe = async (name, run) => {
+      try {
+        await run();
+        checks.push(name);
+      } catch (error) {
+        voiceTransitionFailures.push({ name, failure: String(error.stack || error) });
+        await page.screenshot({ path: path.join(out, `${name}-failure.png`), fullPage: true });
+      } finally {
+        await page.clock.resume();
+      }
+    };
+    const connectingPreview = async (width, resume) => {
+      await page.setViewportSize({ width, height: 844 });
+      await previewNew();
+      await page.getByLabel("Your message (use fictional test text)", { exact: true })
+        .fill("KEEP_FICTIONAL_VOICE_DRAFT");
+      if (!previewClockInstalled) {
+        await page.clock.install({ time: new Date("2026-11-06T12:00:00Z") });
+        previewClockInstalled = true;
+      }
+      await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000);
+      await page.getByRole("button", { name: "Talk (simulated)", exact: true }).click();
+      if (resume) {
+        await page.clock.runFor(301);
+        await page.waitForFunction(() => window.previewHarness.store.getSnapshot().voice === "listening");
+        await page.getByRole("button", { name: "Pause", exact: true }).click();
+        await page.clock.runFor(201);
+        await page.waitForFunction(() => window.previewHarness.store.getSnapshot().voice === "paused");
+        await page.getByRole("button", { name: "Resume", exact: true }).click();
+      }
+      assert.equal((await voiceSnapshot()).voice, "connecting");
+    };
+    const assertFinished = async (snapshot) => {
+      assert.equal(snapshot.voice, "off");
+      assert.equal(snapshot.muted, false);
+      assert.equal(snapshot.serviceState, "idle");
+      assert.equal(snapshot.sessionId, null);
+      assert.equal(snapshot.capture, "closed");
+      assert.equal(snapshot.transport, "closed");
+      assert.equal(snapshot.draft, "KEEP_FICTIONAL_VOICE_DRAFT");
+      await expect(page.getByRole("button", { name: "Talk (simulated)", exact: true })).toBeEnabled();
+    };
+    for (const width of [390, 1280]) {
+      for (const resume of [false, true]) {
+        const name = `preview-voice-${resume ? "resume" : "start"}-${width}px-stable-finish`;
+        await voiceProbe(name, async () => {
+          await connectingPreview(width, resume);
+          const finish = page.getByRole("button", { name: "Finish talking", exact: true });
+          await finish.scrollIntoViewIfNeeded();
+          const before = await voiceSnapshot();
+          const beforeBox = await finish.boundingBox();
+          assert.ok(beforeBox);
+          const point = { x: beforeBox.x + beforeBox.width / 2, y: beforeBox.y + beforeBox.height / 2 };
+          await page.screenshot({ path: path.join(out, `${name}-connecting.png`) });
+          await page.clock.runFor(301);
+          await page.waitForFunction(() => window.previewHarness.store.getSnapshot().voice === "listening");
+          const afterBox = await finish.boundingBox();
+          const target = await page.evaluate(({ x, y }) => {
+            document.addEventListener("click", (event) => {
+              window.voiceClickTarget = event.target.closest("button")?.textContent.trim() ?? null;
+            }, { capture: true, once: true });
+            return document.elementFromPoint(x, y)?.closest("button")?.textContent.trim() ?? null;
+          }, point);
+          await page.screenshot({ path: path.join(out, `${name}-listening.png`) });
+          await page.mouse.click(point.x, point.y);
+          const afterClick = await voiceSnapshot();
+          const clicked = await page.evaluate(() => window.voiceClickTarget);
+          // Record the old-position result even on the failing baseline. Then
+          // separately prove that a deliberately targeted Finish still works.
+          if (afterClick.voice !== "off") await finish.click();
+          await page.clock.runFor(1000);
+          const settled = await voiceSnapshot();
+          voiceTransitionObservations.push({ name, before, beforeBox, afterBox, point, target, clicked, afterClick, settled });
+          await assertFinished(settled);
+          assert.equal(settled.threadId, before.threadId);
+          assert.equal(target, "Finish talking", "Connection must not replace the aimed Finish control with Mute");
+          assert.equal(clicked, "Finish talking");
+          await assertFinished(afterClick);
+        });
+      }
+    }
+    for (const resume of [false, true]) {
+      const name = `preview-voice-${resume ? "resume" : "start"}-finish-before-connection`;
+      await voiceProbe(name, async () => {
+        await connectingPreview(390, resume);
+        const before = await voiceSnapshot();
+        await page.getByRole("button", { name: "Finish talking", exact: true }).click();
+        const immediate = await voiceSnapshot();
+        await page.clock.runFor(1000);
+        const settled = await voiceSnapshot();
+        await assertFinished(immediate);
+        await assertFinished(settled);
+        assert.equal(settled.threadId, before.threadId);
+        voiceTransitionObservations.push({ name, before, immediate, settled });
+      });
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
     for (const mode of [
       {
         name: "controlled-font-200",
@@ -859,6 +976,7 @@ async function main() {
         });
     }
     assert.deepEqual(accessibilityFailures, [], "All accessibility mode probes must pass");
+    assert.deepEqual(voiceTransitionFailures, [], "All simulated voice Finish transition probes must pass");
     assert.deepEqual(forbiddenCalls, []);
     assert.deepEqual(errors, []);
     assert.deepEqual(blocked, []);
@@ -879,6 +997,8 @@ async function main() {
       forbiddenCalls,
       accessibilityObservations,
       accessibilityFailures,
+      voiceTransitionObservations,
+      voiceTransitionFailures,
       enlargementMethod:
         "Controlled computed root and body font sizes doubled in the fixture; visualViewport.scale remains 1; not native browser text zoom or WCAG conformance.",
       cssPath,

@@ -283,7 +283,11 @@ jobs:
             await page.getByTestId('shifted-export-print').click();
             const popup=await popupEvent;
             await popup.waitForLoadState('domcontentloaded');
-            const printed=await popup.locator('body').innerText();
+            const printed=await popup.locator('body').textContent();
+            const renderedPrint=await popup.locator('body').innerText();
+            assert.equal(typeof printed,'string');
+            fs.writeFileSync(path.join(output,'printable-dom.txt'),printed);
+            fs.writeFileSync(path.join(output,'printable-rendered.txt'),renderedPrint);
             assert.ok(!printed.includes(privateNote));
             for(let day=1;day<=10;day++) assert.ok(printed.includes(`Day ${day} · `));
             for(const s of report.selections) assert.ok(printed.includes(s.label));
@@ -291,7 +295,7 @@ jobs:
             const printableNorm=norm(printed);
             for(const line of shiftedText.split('\n').filter(l=>l.trim()&&l!=='---')) {
               const expected=line.replace(/^  • /,'• ').replace(/^- /,'').replace(/^(Your selections|Your reflection):$/,'$1');
-              assert.ok(printableNorm.includes(norm(expected)), 'printable contains every corresponding export line');
+              assert.ok(printableNorm.includes(norm(expected)), `printable contains corresponding export line: ${expected}`);
             }
             const printCalls=await page.evaluate(()=>window.__bfaPrintCalls);
             check('printable popup matches export and application requested print once, dialog suppressed',printCalls===1);
@@ -355,7 +359,7 @@ jobs:
           const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),crypto=require('node:crypto');
           const root=process.argv[2];
           let pngTotal=0;
-          for(const name of ['result.json','home-export.txt','review-export.txt','server-output.log','day-10-close.png','all-ten-completed.png','printable-review.png','failure.png']) {
+          for(const name of ['result.json','home-export.txt','review-export.txt','printable-dom.txt','printable-rendered.txt','server-output.log','day-10-close.png','all-ten-completed.png','printable-review.png','failure.png']) {
             const file=path.join(root,name); if(!fs.existsSync(file)) continue;
             const bytes=fs.readFileSync(file),digest=crypto.createHash('sha256').update(bytes).digest('hex');
             console.log(`BFA_JOURNEY_FILE ${name} bytes=${bytes.length} sha256=${digest}`);

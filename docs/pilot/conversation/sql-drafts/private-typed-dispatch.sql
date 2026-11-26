@@ -137,6 +137,9 @@ BEGIN
  a:=bfa_private_text_spend.lock_approval(p_approval,p_owner,p_session,p_thread,p_revision,p_request,p_manifest,p_payload,p_provider,p_model,p_tier,p_max_micros,p_approval_expires_at);
  IF a.approval_id IS NULL OR a.state<>'held' OR p_dispatch_id IS NULL THEN RETURN NULL; END IF;
  IF EXISTS(SELECT 1 FROM bfa_private_text_spend.dispatches WHERE approval_id=p_approval) THEN RETURN NULL; END IF;
+ -- Serialize the globally unique dispatch identity before the final clock.
+ -- Otherwise its unique-index INSERT could wait until after eligibility ended.
+ PERFORM pg_advisory_xact_lock(hashtextextended('bfa-private-text-dispatch:'||p_dispatch_id::text,0));
  r:=bfa_private_text_spend.lock_current(a,a.thread_revision,p_auth_verified_at,p_auth_expires_at,p_eligibility_expires_at,NULL,NULL);
  IF r.checked_at IS NULL THEN RETURN NULL; END IF;
  BEGIN

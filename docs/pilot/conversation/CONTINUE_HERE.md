@@ -1,5 +1,15 @@
 # Continue here — BFA, 25 November 2026, America/Toronto
 
+## Current checkpoint — 25 November 2026, America/Toronto
+
+During an authorized fictional desktop session, the privately hosted application revision `60a19758` rendered the conversation preview. Choosing **Keep working** or cancelling **New conversation** preserved the unsent draft. The simulated voice controls could pause and resume. In the ten-day journey, the existing free pilot unlock opened Day 5, *The Two Pulls Within You*. Paid checkout and purchase recovery remain future work.
+
+**Finish talking.** During the simulated transition from connecting to listening, Mute moved under the pointer where Finish had been. The component now renders Finish before the controls that appear after connecting. On the original component all four Start/Resume checks at 390 and 1280 CSS pixels hit Mute and left the mock session open. With the change, all four clicks at the original coordinates ended the session, closed mock capture and transport, and preserved the thread and unsent draft. Both immediate-Finish controls and all 39 prior focus/interaction checks also passed, giving **45/45** on hosted Chromium. The comparison used the same harness and workflow against both components. The local Chromium launcher lacked its binary. Hosted Chromium supplied the browser evidence. [Original run](https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/45754411297/job/139689546206) · [Corrected run](https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/45754688055/job/139690435926).
+
+The seven new local regressions passed. The four affected test files passed **85/85** in total. Strict TypeScript checking and the local production build succeeded. The measured results are in `artifacts/conversation-eval/offline-validation-v40/finish-target-results.json`. This is evidence for the simulator. Physical phones, screen readers, microphones and real provider sessions still need acceptance.
+
+**Continue from here.** Carl wants the ten-day journey, freeform typed AI chat and live voice together from the first sale. The next text milestone is a private nine-turn fictional response-quality evaluation with an eligible execution environment. Participant AI and live voice remain off. The real voice/device checks, authenticated access and accounting, purchase and restore, and public-release privacy review remain open. The dated SRT source record, policy distinctions and private-writing protections below still apply.
+
 ## Lovable editor and hosted preview verified — 25 November 2026
 
 Carl confirmed that his ChatGPT Lovable connection showed Connected. The project-list request through that integration returned an internal error (-32603). The signed-in Lovable web editor opened Beauty From Ashes Path in Carl's Lovable workspace. The workspace menu showed 200 credits left, separately displayed 5 daily build credits left, and showed December 24 as the next monthly renewal. These are dated observations. No paid Lovable request or purchase was made.

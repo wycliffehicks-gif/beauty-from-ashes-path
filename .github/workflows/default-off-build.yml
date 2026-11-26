@@ -130,6 +130,14 @@ jobs:
           async function waitHome() { await page.getByTestId('day-row-day-01').waitFor({state: 'visible'}); }
           (async () => {
             fs.mkdirSync(output, {recursive: true});
+            const serverRoot=path.join(source,'.output/server');
+            const resolverFiles=fs.readdirSync(serverRoot,{recursive:true}).filter(name=>name.includes('tanstack-start-server-fn-resolver')&&name.endsWith('.mjs'));
+            assert.equal(resolverFiles.length,1,'one generated server-function resolver');
+            const resolver=fs.readFileSync(path.join(serverRoot,resolverFiles[0]),'utf8');
+            const gateMatches=[...resolver.matchAll(/"([a-f0-9]{64})"\s*:\s*\{\s*functionName:\s*"getGateStatus_createServerFn_handler"/g)];
+            assert.equal(gateMatches.length,1,'exact generated public gate binding');
+            const gatePath='/_serverFn/'+gateMatches[0][1];
+            report.publicGate={functionName:'getGateStatus',path:gatePath,resolverSha256:sha(resolver)};
             const links=JSON.parse(execFileSync('/usr/sbin/ip',['-j','link'],{encoding:'utf8'}));
             const routes4=JSON.parse(execFileSync('/usr/sbin/ip',['-j','route'],{encoding:'utf8'}));
             const routes6=JSON.parse(execFileSync('/usr/sbin/ip',['-6','-j','route'],{encoding:'utf8'}));
@@ -203,7 +211,8 @@ jobs:
             await screenshot('default-off-staging');
             await page.reload({waitUntil:'networkidle'});
             await checkDefaultOff('Reload');
-            check('no authenticated or write operation requested',report.localRequests.every(x=>x.method==='GET' && !x.path.startsWith('/_server')));
+            check('no authenticated or write operation requested; only generated public gate GET allowed',report.localRequests.every(x=>x.method==='GET' && (!x.path.startsWith('/_server') || x.path===gatePath)));
+            report.publicGate.requests=report.localRequests.filter(x=>x.path===gatePath).length;
             // Counts live in Node across every page document, including the reload above.
             await page.evaluate(()=>Promise.resolve());
             check('no WebSocket microphone or beacon attempts',Object.values(report.forbidden).every(x=>x===0));

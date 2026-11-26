@@ -14,7 +14,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          source_sha=d245d9b1e6930b1e032e74d7db6dbfbde8dfb20f
+          source_sha=6a69cfe7836c7b3e08938c2dde4f9acd05fdd9f1
           task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
           task_source="$task_root/source"
           task_home="$task_root/home"
@@ -187,7 +187,7 @@ jobs:
                 throw new Error('unexpected rpc');
               }
               throw new Error('unexpected fixture endpoint');
-            } catch(error) {report.fixtureViolations.push(error.message); reply(res,500,{message:'Fictional fixture assertion failed'});}
+            } catch(error) {report.fixtureViolations.push('fixture-request-failed'); reply(res,500,{message:'Fictional fixture assertion failed'});}
           }
           async function eventually(fn,message) {for(let n=0;n<100;n++){if(await fn()) return; await delay(50);} throw new Error(message);}
           const selector=id=>page.locator(`[data-testid="${id}"],#${id}`).first();
@@ -213,6 +213,11 @@ jobs:
             await context.addInitScript(()=>{window.__bfaForbidden={webSocket:0,microphone:0,beacon:0};window.WebSocket=class{constructor(){window.__bfaForbidden.webSocket++;throw new Error('Offline');}};if(navigator.mediaDevices)navigator.mediaDevices.getUserMedia=()=>{window.__bfaForbidden.microphone++;return Promise.reject(new Error('Offline'));};navigator.sendBeacon=()=>{window.__bfaForbidden.beacon++;return false;};});
             page=await context.newPage();page.on('pageerror',()=>report.pageErrors++);
             page.on('request',req=>{if(req.url().startsWith(origin)&&req.method()==='POST'){report.browserRpc.count++;const headers=req.headers();report.browserRpc.allHadExactFictionalBearer&&=headers.authorization===`Bearer ${token}`;capturedRpc={url:req.url(),headers,body:req.postData()};}});
+            phase('ordinary-onboarding');await page.goto(origin);
+            await page.getByRole('link',{name:'Begin the journey',exact:true}).first().click();
+            for(let n=0;n<4;n++){const before=page.url();await page.getByTestId('opening-continue').click();await page.waitForURL(u=>u.href!==before);}
+            await page.getByTestId('agree-adult').check();await page.getByTestId('agree-terms').check();await page.getByTestId('opening-continue').click();await page.getByTestId('day-row-day-01').waitFor();
+            check('ordinary fictional onboarding and agreement completed without storage bypass',true);
             phase('signed-out');await page.goto(origin+'/conversation-staging');await selector('private-staging-sign-in').waitFor();
             check('signed-out route shows sign-in and hides console',!(await page.locator('#staging-heading').isVisible()));
             check('no privileged request before sign-in',report.databaseRequests.allowlist===0&&report.databaseRequests.create===0);
@@ -241,12 +246,17 @@ jobs:
             check('real global middleware attached exact SDK bearer to all browser RPCs',report.browserRpc.count>=5&&report.browserRpc.allHadExactFictionalBearer);
             phase('unauthenticated-rpc-denial');requireCondition(capturedRpc,'captured server function request');
             const dataCounts=JSON.stringify(report.databaseRequests);
+            const {serverFnFetcher}=await import(pathToFileURL(path.join(source,'node_modules/@tanstack/start-client-core/dist/esm/client-rpc/serverFnFetcher.js')).href);
             for(const mode of ['missing','malformed','revoked']){
-              const headers={...capturedRpc.headers};delete headers.authorization;delete headers.host;delete headers['content-length'];
+              const headers={};
               if(mode==='malformed')headers.authorization='Bearer fictional-not-a-jwt';
               if(mode==='revoked'){headers.authorization=`Bearer ${token}`;revoked=true;}
-              const response=await fetch(capturedRpc.url,{method:'POST',headers,body:capturedRpc.body});await response.arrayBuffer();
-              check(mode+' bearer rejected by actual server middleware',response.status>=400&&JSON.stringify(report.databaseRequests)===dataCounts,{httpStatus:response.status});
+              let denied=false,httpStatus=null,serialized=false;
+              try {
+                const decoded=await serverFnFetcher(capturedRpc.url,[{method:'POST',data:{action:'list'},headers}],async(url,init)=>{const response=await fetch(url,init);httpStatus=response.status;serialized=response.headers.has('x-tss-serialized');return response;});
+                denied=decoded?.error instanceof Error && decoded.result===undefined;
+              } catch(error) {denied=error instanceof Error && /^Unauthorized:/.test(error.message);}
+              check(mode+' bearer rejected by actual server middleware',denied&&JSON.stringify(report.databaseRequests)===dataCounts,{httpStatus,serialized,decodedDenial:denied});
             }
             revoked=false;
             phase('sign-out-clears-active-draft');await page.locator('#staging-message').fill(draft);await selector('private-staging-sign-out').click();await selector('private-staging-sign-in').waitFor();await page.getByText('Signed out on this device.',{exact:true}).waitFor();
@@ -261,7 +271,7 @@ jobs:
             child.send({type:'fixture-fetch-status'});await eventually(()=>!!guardStatus,'server fetch guard report missing');report.serverFetch=guardStatus;
             check('actual server fetch stayed within local disposable service',guardStatus.installed===true&&guardStatus.allowed>0&&guardStatus.blocked===0);
             check('app alive throughout acceptance',!childExited);report.status='PASSED';
-          })().catch(error=>{report.status='FAILED';report.error={name:error.name,message:String(error.message).replaceAll(password,'[redacted]').replaceAll(token,'[redacted]').replaceAll(publicKey,'[redacted]').replaceAll(serviceKey,'[redacted]').replaceAll(email,'[fictional email]').replaceAll(note,'[fictional typed text]').replaceAll(draft,'[fictional draft]').replace(/[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/g,'[redacted token]').slice(0,2000)};process.exitCode=1;}).finally(async()=>{
+          })().catch(error=>{report.status='FAILED';report.failurePath=page?new URL(page.url()).pathname:null;report.error={name:error.name,message:String(error.message).replaceAll(password,'[redacted]').replaceAll(token,'[redacted]').replaceAll(publicKey,'[redacted]').replaceAll(serviceKey,'[redacted]').replaceAll(email,'[fictional email]').replaceAll(note,'[fictional typed text]').replaceAll(draft,'[fictional draft]').replace(/[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/g,'[redacted token]').slice(0,2000)};process.exitCode=1;}).finally(async()=>{
             // Never write app output, request bodies/headers, session values or screenshots: all may contain fictional credentials/content.
             if(context)await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));
             if(browser)await browser.close().catch(()=>report.cleanupErrors.push('browser-close-failed'));

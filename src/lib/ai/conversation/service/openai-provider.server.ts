@@ -262,6 +262,87 @@ function parseReplyPayload(
   return { text: decodedText, sourceIds };
 }
 
+function prepareWire(
+  request: ConversationProviderRequest,
+  requestedModel: string,
+  maxOutputTokens: number,
+) {
+  const instructions = buildConversationInstructions(request);
+  const groundedPayload = serializeConversationGroundedPayload(request);
+  const wireBody = JSON.stringify({
+    model: requestedModel,
+    instructions,
+    input: [{ role: "user", content: groundedPayload }],
+    max_output_tokens: maxOutputTokens,
+    store: false,
+    background: false,
+    stream: false,
+    service_tier: "default",
+    truncation: "disabled",
+    reasoning: { effort: "none" },
+    text: {
+      format: {
+        type: "json_schema",
+        name: "bfa_conversation_reply",
+        strict: true,
+        schema: REPLY_SCHEMA,
+      },
+    },
+  });
+  const inputBytes = new TextEncoder().encode(wireBody).byteLength;
+  return {
+    instructions,
+    groundedPayload,
+    wireBody,
+    inputBytes,
+    wireSha256: sha256HexSync(wireBody),
+  };
+}
+
+type PrivateTypedLimits = Pick<
+  DirectConversationProviderOptions,
+  "model" | "maxOutputTokens" | "maxInputBytes" | "maxInputChars" | "deadlineMs"
+>;
+
+function withinWireLimits(wire: ReturnType<typeof prepareWire>, limits: PrivateTypedLimits) {
+  const bytes = limits.maxInputBytes ?? OPENAI_CONVERSATION_MAX_INPUT_BYTES;
+  const chars = limits.maxInputChars ?? OPENAI_CONVERSATION_MAX_INPUT_CHARS;
+  const bounded = (n: number, ceiling: number) => Number.isSafeInteger(n) && n >= 1 && n <= ceiling;
+  return (
+    bounded(bytes, OPENAI_CONVERSATION_MAX_INPUT_BYTES) &&
+    bounded(chars, OPENAI_CONVERSATION_MAX_INPUT_CHARS) &&
+    bounded(limits.maxOutputTokens, OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS) &&
+    bounded(limits.deadlineMs, OPENAI_CONVERSATION_MAX_DEADLINE_MS) &&
+    wire.inputBytes <= bytes &&
+    wire.instructions.length + wire.groundedPayload.length <= chars
+  );
+}
+
+/** Describe a service-built request for review before any credential or transport
+ * is supplied. A matching description does not claim or authorize a send. */
+export function describePrivateTypedWire(
+  request: ConversationProviderRequest,
+  limits: PrivateTypedLimits,
+) {
+  if (
+    !identifier(request.requestId) ||
+    !identifier(limits.model) ||
+    limits.model === "invalid-model"
+  )
+    return null;
+  const wire = prepareWire(request, limits.model, limits.maxOutputTokens);
+  if (!withinWireLimits(wire, limits)) return null;
+  return {
+    serviceRequestId: request.requestId,
+    model: limits.model,
+    maxOutputTokens: limits.maxOutputTokens,
+    maxInputBytes: limits.maxInputBytes ?? OPENAI_CONVERSATION_MAX_INPUT_BYTES,
+    deadlineMs: limits.deadlineMs,
+    wireBytes: wire.inputBytes,
+    wireSha256: wire.wireSha256,
+  };
+}
+
 export function createDirectOpenAIConversationProvider(
   options: DirectConversationProviderOptions,
 ): ConversationProvider {
@@ -314,48 +395,16 @@ export function createDirectOpenAIConversationProvider(
       // A pre-aborted request is never dispatched: zero provider calls.
       if (signal.aborted) fail("pre-aborted");
 
-      const instructions = buildConversationInstructions(request);
-      const groundedPayload = serializeConversationGroundedPayload(request);
-      const wireBody = JSON.stringify({
-        model: requestedModel,
-        instructions,
-        input: [{ role: "user", content: groundedPayload }],
-        max_output_tokens: options.maxOutputTokens,
-        store: false,
-        background: false,
-        stream: false,
-        service_tier: "default",
-        truncation: "disabled",
-        reasoning: { effort: "none" },
-        text: { format: {
-          type: "json_schema", name: "bfa_conversation_reply",
-          strict: true, schema: REPLY_SCHEMA,
-        } },
-      });
-      const inputBytes = new TextEncoder().encode(wireBody).byteLength;
-      meta.requestPayloadSha256 = sha256HexSync(wireBody);
+      const wire = prepareWire(request, requestedModel, options.maxOutputTokens);
+      const { wireBody, inputBytes } = wire;
+      meta.requestPayloadSha256 = wire.wireSha256;
       const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
-      const maxInputChars = options.maxInputChars ?? OPENAI_CONVERSATION_MAX_INPUT_CHARS;
-      const maxInputBytes = options.maxInputBytes ?? OPENAI_CONVERSATION_MAX_INPUT_BYTES;
       if (
         requestedModel === "invalid-model" ||
         /[\r\n]/.test(key) ||
-        !Number.isSafeInteger(maxInputChars) ||
-        maxInputChars < 1 ||
-        maxInputChars > OPENAI_CONVERSATION_MAX_INPUT_CHARS ||
-        !Number.isSafeInteger(maxInputBytes) ||
-        maxInputBytes < 1 ||
-        maxInputBytes > OPENAI_CONVERSATION_MAX_INPUT_BYTES ||
-        inputBytes > maxInputBytes ||
-        instructions.length + groundedPayload.length > maxInputChars ||
-        instructions.includes(key) ||
-        groundedPayload.includes(key) ||
-        !Number.isSafeInteger(options.maxOutputTokens) ||
-        options.maxOutputTokens < 1 ||
-        options.maxOutputTokens > OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS ||
-        !Number.isSafeInteger(options.deadlineMs) ||
-        options.deadlineMs < 1 ||
-        options.deadlineMs > OPENAI_CONVERSATION_MAX_DEADLINE_MS
+        !withinWireLimits(wire, options) ||
+        wire.instructions.includes(key) ||
+        wire.groundedPayload.includes(key)
       )
         fail("invalid-request");
 

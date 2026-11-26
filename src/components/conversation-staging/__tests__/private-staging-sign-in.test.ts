@@ -51,11 +51,26 @@ const harness = vi.hoisted(() => {
 });
 const auth = vi.hoisted(() => ({
   getUser: vi.fn(),
+  getSession: vi.fn(),
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
   onAuthStateChange: vi.fn(),
   unsubscribe: vi.fn(),
-  listener: null as null | ((event: string, session: { user: { id: string } } | null) => void),
+  listener: null as
+    | null
+    | ((event: string, session: { user: { id: string }; access_token?: string } | null) => void),
+}));
+const request = vi.hoisted(() => ({ review: vi.fn(), run: vi.fn() }));
+vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
+vi.mock("@/lib/ai/conversation/staging/staging.functions", () => ({
+  runStagingOperation: request.run,
+}));
+vi.mock("@/lib/ai/conversation/staging/private-typed-review.functions", () => ({
+  reviewStagingMessage: request.review,
+}));
+vi.mock("@/lib/prefs", () => ({
+  readPrefs: () => ({ showSpiritual: false }),
+  usePrefs: () => [{ showSpiritual: false }, () => {}, true],
 }));
 vi.mock("react", async (original) => ({ ...(await original<object>()), ...harness.hooks }));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: { auth } }));
@@ -67,8 +82,15 @@ vi.mock("@tanstack/react-router", () => ({ createFileRoute: () => (options: unkn
 import { PrivateStagingSignIn } from "@/components/conversation-staging/PrivateStagingSignIn";
 import { StagingConsole } from "@/components/conversation-staging/StagingConsole";
 
+import { PrivateTypedReview } from "@/components/conversation-staging/PrivateTypedReview";
+import { ConversationService } from "@/lib/ai/conversation/service/service";
+import type { ActiveThread } from "@/lib/ai/conversation/staging/adapter.server";
+
 type Props = {
+  send?: (requestId: string) => void;
+  id?: string;
   children?: ReactNode;
+  matchesPrivateSession?: () => Promise<boolean>;
   "data-testid"?: string;
   onClick?: () => void;
   onSubmit?: (event: { preventDefault: () => void }) => Promise<void>;
@@ -85,17 +107,21 @@ function nodes(value: ReactNode): ReactElement<Props>[] {
   const element = value as ReactElement<Props>;
   return [element, ...nodes(element.props.children)];
 }
-function render(effects = true) {
+function renderTree(component: () => ReactElement, effects = true) {
   let tree: ReactElement,
     rounds = 0;
   do {
     harness.h.index = 0;
     harness.h.dirty = false;
-    tree = PrivateStagingSignIn();
+    tree = component();
     if (effects) harness.h.effects.splice(0).forEach((fn) => fn());
     if (++rounds > 20) throw new Error("Component did not settle");
   } while (effects && harness.h.dirty);
-  return { tree: tree!, html: renderToStaticMarkup(tree!) };
+  return tree!;
+}
+function render(effects = true) {
+  const tree = renderTree(PrivateStagingSignIn, effects);
+  return { tree, html: renderToStaticMarkup(tree) };
 }
 function element(id: string) {
   const value = nodes(render().tree).find((n) => n.props["data-testid"] === id);
@@ -160,6 +186,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   unmount();
+  vi.unstubAllGlobals();
   vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
@@ -295,6 +322,78 @@ describe("opted-in private fictional staging sign-in", () => {
     await settle();
     expect(consoleNode()).toBeUndefined();
   });
+  function privateSessionFixture() {
+    vi.stubEnv("VITE_BFA_PRIVATE_STAGING_SIGN_IN", "true");
+    vi.stubEnv("VITE_BFA_PRIVATE_TYPED_REVIEW", "true");
+    const owner = crypto.randomUUID();
+    const sessionId = crypto.randomUUID();
+    const make = (id: string, generation = 0) => ({
+      user: { id: owner },
+      access_token:
+        "e30." +
+        Buffer.from(JSON.stringify({ sub: owner, session_id: id, generation })).toString(
+          "base64url",
+        ) +
+        ".YQ",
+    });
+    const initial = make(sessionId);
+    const stored = (value: typeof initial) => ({ data: { session: value }, error: null });
+    auth.getSession.mockResolvedValue(stored(initial));
+    auth.getUser.mockResolvedValue(user(owner));
+    return { make, sessionId, initial, stored, owner };
+  }
+  it("private testing preserves refreshed tokens for one session and fences a delayed result across same-owner replacement", async () => {
+    const { make, sessionId, stored } = privateSessionFixture();
+    render();
+    await settle();
+    const original = consoleNode()!;
+    const check = original.props.matchesPrivateSession!;
+    const rotated = make(sessionId, 1);
+    auth.getSession.mockResolvedValue(stored(rotated));
+    auth.listener?.("TOKEN_REFRESHED", rotated);
+    expect(consoleNode()?.key).toBe(original.key);
+    expect(await check()).toBe(true);
+    const delayed = deferred<ReturnType<typeof stored>>();
+    auth.getSession.mockReturnValueOnce(delayed.promise);
+    const result = check();
+    const replacement = make(crypto.randomUUID());
+    auth.getSession.mockResolvedValue(stored(replacement));
+    auth.listener?.("SIGNED_IN", replacement);
+    expect(consoleNode()?.key).not.toBe(original.key);
+    delayed.resolve(stored(rotated));
+    expect(await result).toBe(false);
+    expect(await check()).toBe(false);
+    expect(await consoleNode()?.props.matchesPrivateSession?.()).toBe(true);
+    expect(render().html).not.toContain(rotated.access_token);
+    expect(render().html).not.toContain("Replies are simulated");
+  });
+  it("retires private results before rendering even when the storage change precedes the Auth event", async () => {
+    const { make, stored } = privateSessionFixture();
+    render();
+    await settle();
+    const check = consoleNode()!.props.matchesPrivateSession!;
+    auth.getSession.mockResolvedValue(stored(make(crypto.randomUUID())));
+    expect(await check()).toBe(false);
+    expect(consoleNode()).toBeUndefined();
+    expect(render().html).toContain("Check sign-in status");
+  });
+  it.each(["invalid-token", "missing-session-id", "foreign-user"])(
+    "keeps the private console closed for %s even when getUser previously succeeded",
+    async (mode) => {
+      const { make, owner, stored } = privateSessionFixture();
+      const raw = make(crypto.randomUUID());
+      if (mode === "invalid-token") raw.access_token = "invalid";
+      if (mode === "missing-session-id")
+        raw.access_token =
+          "e30." + Buffer.from(JSON.stringify({ sub: owner })).toString("base64url") + ".YQ";
+      if (mode === "foreign-user") raw.user.id = crypto.randomUUID();
+      auth.getSession.mockResolvedValue(stored(raw));
+      render();
+      await settle();
+      expect(consoleNode()).toBeUndefined();
+      expect(render().html).not.toContain(raw.access_token);
+    },
+  );
   it("preserves same-user token refresh but remounts on account switch and same-user sign-out/sign-in", async () => {
     auth.getUser.mockResolvedValue(user("owner-a"));
     render();
@@ -398,6 +497,103 @@ describe("opted-in private fictional staging sign-in", () => {
     await Promise.resolve();
     expect(auth.unsubscribe).toHaveBeenCalledTimes(1);
     expect(harness.h.dirty).toBe(false);
+  });
+  function activeThread(): ActiveThread {
+    const service = new ConversationService({ verifiedOwnerId: crypto.randomUUID() });
+    const thread = crypto.randomUUID();
+    service.ensureThread(thread, false);
+    return {
+      kind: "active",
+      thread,
+      saved: false,
+      token: "private-seal",
+      revision: 0,
+      microphone: "off",
+      inspection: service.inspect(thread),
+    };
+  }
+  async function flush() {
+    for (let i = 0; i < 12; i++) await Promise.resolve();
+  }
+  it("drops a delayed reviewed UUID before rendering the Send button if its session changed", async () => {
+    const active = activeThread();
+    const pending = deferred<object>();
+    request.review.mockReturnValue(pending.promise);
+    let sessionCurrent = true;
+    const check = vi.fn(async () => sessionCurrent);
+    const send = vi.fn();
+    const tree = () =>
+      renderTree(() =>
+        PrivateTypedReview({
+          active,
+          message: "fictional draft",
+          preferenceOn: false,
+          disabled: false,
+          send,
+          matchesPrivateSession: check,
+        }),
+      );
+    const prepare = nodes(tree()).find((n) => n.props.children === "Prepare fictional message")!;
+    prepare.props.onClick!();
+    await flush();
+    expect(request.review).toHaveBeenCalledTimes(1);
+    sessionCurrent = false;
+    pending.resolve({
+      requestId: request.review.mock.calls[0]![0].data.requestId,
+      threadId: active.thread,
+      revision: active.revision,
+    });
+    await flush();
+    expect(check).toHaveBeenCalledTimes(2);
+    expect(nodes(tree()).some((n) => n.props.children === "Send reviewed message")).toBe(false);
+    expect(send).not.toHaveBeenCalled();
+  });
+  it("drops an already-completed private reply after browser session replacement without invoking another send", async () => {
+    privateSessionFixture();
+    vi.stubGlobal("window", new EventTarget());
+    const { StagingConsole: ActualConsole } = await vi.importActual<
+      typeof import("@/components/conversation-staging/StagingConsole")
+    >("@/components/conversation-staging/StagingConsole");
+    const active = activeThread();
+    const pending = deferred<ActiveThread>();
+    request.run.mockResolvedValueOnce(active).mockReturnValueOnce(pending.promise);
+    let sessionCurrent = true;
+    const check = vi.fn(async () => sessionCurrent);
+    const tree = () => renderTree(() => ActualConsole({ matchesPrivateSession: check }));
+    nodes(tree()).find((n) => n.props.children === "New conversation")!.props.onClick!();
+    await flush();
+    const input = nodes(tree()).find((n) => n.props.id === "staging-message")!;
+    input.props.onChange!({ target: { value: "fictional draft" } });
+    const requestId = crypto.randomUUID();
+    nodes(tree()).find((n) => !!n.props.send)!.props.send!(requestId);
+    await flush();
+    expect(request.run.mock.calls.map((call) => call[0].data.action)).toEqual([
+      "create",
+      "private-append",
+    ]);
+    expect(request.run.mock.calls[1]![0].data.requestId).toBe(requestId);
+    sessionCurrent = false;
+    pending.resolve({
+      ...active,
+      revision: 1,
+      inspection: {
+        ...active.inspection!,
+        events: [
+          {
+            eventId: "event",
+            role: "assistant",
+            text: "OLD_SESSION_REPLY",
+            turnId: "turn",
+          } as NonNullable<ActiveThread["inspection"]>["events"][number],
+        ],
+      },
+    });
+    await flush();
+    expect(nodes(tree()).some((n) => n.props.children === "OLD_SESSION_REPLY")).toBe(false);
+    expect(nodes(tree()).find((n) => n.props.id === "staging-message")?.props.value).toBe(
+      "fictional draft",
+    );
+    expect(request.run).toHaveBeenCalledTimes(2);
   });
   it.each([undefined, "false", "TRUE", "1", "true"])(
     "route opt-in uses only exact build string %j",

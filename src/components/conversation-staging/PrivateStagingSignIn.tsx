@@ -3,11 +3,17 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { StagingConsole } from "./StagingConsole";
 
+import {
+  privateSessionVisibilityKey,
+  privateTypedReviewEnabled,
+} from "./private-session-visibility";
+
 type View = "checking" | "signed-out" | "signed-in" | "unavailable";
 
 /** Private UI entry only. Every staging operation still verifies Auth and its
  * expiring allowlist on the server; a displayed session grants no access. */
 export function PrivateStagingSignIn() {
+  const privateReview = privateTypedReviewEnabled();
   const [view, setView] = useState<View>("checking");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("Checking sign-in status…");
@@ -17,7 +23,7 @@ export function PrivateStagingSignIn() {
   const alive = useRef(false);
   const epoch = useRef(0);
   const pending = useRef(false);
-  const owner = useRef<string | null>(null);
+  const identity = useRef<string | null>(null);
   const generation = useRef(0);
   const subscription = useRef<(() => void) | null>(null);
   // Deliberate local sign-out keeps this page closed even if its request fails
@@ -26,14 +32,38 @@ export function PrivateStagingSignIn() {
   const signedOut = useRef(false);
 
   function showIdentity(id: string | null, reset = false) {
-    if (owner.current !== id || reset) {
-      owner.current = id;
+    if (identity.current !== id || reset) {
+      identity.current = id;
       generation.current += 1;
       setConsoleKey(generation.current);
     }
     setEmail("");
     setPassword("");
     setView(id ? "signed-in" : "signed-out");
+  }
+
+  function unavailableSession() {
+    showIdentity(null, true);
+    setView("unavailable");
+    setStatus(
+      "Your testing session changed or could not be checked. Check sign-in status to continue.",
+    );
+  }
+
+  // The callback belongs to this mounted generation. Check SDK storage again
+  // before sending or displaying a result, even if its Auth event is delayed.
+  async function matchesPrivateSession() {
+    const current = () => alive.current && consoleKey === generation.current && !!identity.current;
+    if (!current()) return false;
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (!current()) return false;
+      if (!error && privateSessionVisibilityKey(data.session) === identity.current) return true;
+    } catch {
+      if (!current()) return false;
+    }
+    unavailableSession();
+    return false;
   }
 
   function subscribe() {
@@ -43,7 +73,16 @@ export function PrivateStagingSignIn() {
       ++epoch.current;
       pending.current = false;
       setBusy(false);
-      const id = event === "SIGNED_OUT" ? null : (session?.user.id ?? null);
+      const id =
+        event === "SIGNED_OUT"
+          ? null
+          : privateReview
+            ? privateSessionVisibilityKey(session)
+            : (session?.user.id ?? null);
+      if (session && event !== "SIGNED_OUT" && !id) {
+        unavailableSession();
+        return;
+      }
       showIdentity(id, event === "SIGNED_OUT");
       setStatus(id ? "Signed in for fictional testing." : "You are signed out.");
     });
@@ -62,7 +101,15 @@ export function PrivateStagingSignIn() {
       const { data, error } = await supabase.auth.getUser();
       if (!alive.current || ticket !== epoch.current) return;
       if (error && error.name !== "AuthSessionMissingError") throw new Error();
-      showIdentity(error ? null : (data.user?.id ?? null));
+      let id = error ? null : (data.user?.id ?? null);
+      if (id && privateReview) {
+        const local = await supabase.auth.getSession();
+        if (!alive.current || ticket !== epoch.current) return;
+        if (local.error || local.data.session?.user.id !== id) throw new Error();
+        id = privateSessionVisibilityKey(local.data.session);
+        if (!id) throw new Error();
+      }
+      showIdentity(id);
       setStatus(
         data.user && !error
           ? "Signed in for fictional testing."
@@ -120,7 +167,9 @@ export function PrivateStagingSignIn() {
       if (!alive.current || ticket !== epoch.current) return;
       if (error || !data.session || !data.user || data.session.user.id !== data.user.id)
         throw new Error();
-      showIdentity(data.user.id);
+      const id = privateReview ? privateSessionVisibilityKey(data.session) : data.user.id;
+      if (!id) throw new Error();
+      showIdentity(id);
       setStatus("Signed in for fictional testing.");
     } catch {
       if (!alive.current || ticket !== epoch.current) return;
@@ -170,8 +219,9 @@ export function PrivateStagingSignIn() {
           Private fictional testing
         </h1>
         <p className="mt-3">
-          Use your existing fictional tester account. Replies are simulated and the microphone stays
-          off.
+          {privateReview
+            ? "Use your existing fictional tester account. An approved message can be sent to the AI provider. The microphone stays off."
+            : "Use your existing fictional tester account. Replies are simulated and the microphone stays off."}
         </p>
         <p
           role="status"
@@ -245,7 +295,12 @@ export function PrivateStagingSignIn() {
           </Button>
         )}
       </section>
-      {view === "signed-in" && <StagingConsole key={consoleKey} />}
+      {view === "signed-in" && (
+        <StagingConsole
+          key={consoleKey}
+          matchesPrivateSession={privateReview ? matchesPrivateSession : undefined}
+        />
+      )}
     </>
   );
 }

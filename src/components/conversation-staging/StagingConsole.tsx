@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { useServerFn } from '@tanstack/react-start';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,11 @@ import type { StagingInput } from '@/lib/ai/conversation/staging/input';
 import type { ActiveThread, SavedThread } from '@/lib/ai/conversation/staging/adapter.server';
 import { FICTIONAL_NOTE, previewSelection, confirmSelection } from '@/lib/ai/conversation/staging/excerpt';
 import { ResponseFence, NavigationIntent, selectedReopenRevision, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
+
+import { privateTypedReviewEnabled } from './private-session-visibility';
+
+const privateMessageReview = privateTypedReviewEnabled();
+const PrivateTypedReview = lazy(() => import('./PrivateTypedReview').then(module => ({ default: module.PrivateTypedReview })));
 
 type Destination = { action: 'create' } | { action: 'reopen'; target: SavedThread };
 
@@ -39,7 +44,7 @@ function useStagingDialogFocus(initialFocusId?: string) {
   };
 }
 
-export function StagingConsole() {
+export function StagingConsole({ matchesPrivateSession }: { matchesPrivateSession?: () => Promise<boolean> } = {}) {
   const run = useServerFn(runStagingOperation);
   const [prefs, updatePrefs, hydrated] = usePrefs();
   const [state, setState] = useState<ActiveThread | null>(null);
@@ -83,14 +88,21 @@ export function StagingConsole() {
       window.removeEventListener('bfa-app-clear', clear); data.subscription.unsubscribe(); };
   }, []);
 
+  async function visibleOwner() {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user || (privateMessageReview && !await matchesPrivateSession?.())) return null;
+    return data.user.id;
+  }
+
   async function refreshList() {
     const ticket = listFence.current.next(); setListBusy(true); setListStatus('');
     try {
-      const before = await supabase.auth.getUser();
-      if (!before.data.user) throw new Error();
+      const before = await visibleOwner();
+      if (!before) throw new Error();
+      if (!listFence.current.current(ticket)) return;
       const result = await run({ data: { action: 'list' } });
-      const after = await supabase.auth.getUser();
-      if (!listFence.current.current(ticket) || before.data.user.id !== after.data.user?.id) return;
+      const after = await visibleOwner();
+      if (!listFence.current.current(ticket) || before !== after) return;
       if (result.kind !== 'list') throw new Error();
       setSavedList(result.threads); setListStatus(result.threads.length ? '' : 'No saved conversations.');
     } catch { if (listFence.current.current(ticket)) { setSavedList([]); setListStatus('Saved conversations unavailable.'); } }
@@ -104,15 +116,16 @@ export function StagingConsole() {
     setBusy(true); setStatus(''); setSelection(null); setPreferenceError('');
     if (intent) setDestinationError('');
     try {
-      const before = await supabase.auth.getUser();
-      if (!before.data.user) throw new Error();
+      const before = await visibleOwner();
+      if (!before) throw new Error();
       if (!fence.current.current(ticket)) return;
       let next = await run({ data: { action,
         ...(active && action !== 'create' && { thread: active.thread, revision: active.revision, token: active.token }),
         preferenceOn: readPrefs().showSpiritual,
-        ...(action === 'append' && { message: sent, requestId: crypto.randomUUID() }), ...extras } });
-      const after = await supabase.auth.getUser();
-      if (!fence.current.current(ticket) || before.data.user.id !== after.data.user?.id) return;
+        ...(action === 'append' && { message: sent, requestId: crypto.randomUUID() }),
+        ...(action === 'private-append' && { message: sent }), ...extras } });
+      const after = await visibleOwner();
+      if (!fence.current.current(ticket) || before !== after) return;
       if (next.kind === 'list') throw new Error();
       // Initial New/reopen can finish after the separate setting changed with no active thread.
       // One explicit reconciliation only; another change/failure offers a deliberate retry.
@@ -120,17 +133,17 @@ export function StagingConsole() {
       if (next.kind === 'active' && next.inspection?.preferenceOn !== readPrefs().showSpiritual && action !== 'preference') {
         const confirmed = next;
         try {
-          const currentIdentity = await supabase.auth.getUser();
-          if (!fence.current.current(ticket) || before.data.user.id !== currentIdentity.data.user?.id) return;
+          const currentIdentity = await visibleOwner();
+          if (!fence.current.current(ticket) || before !== currentIdentity) return;
           const reconciled = await run({ data: { action: 'preference', thread: confirmed.thread, revision: confirmed.revision, token: confirmed.token, preferenceOn: readPrefs().showSpiritual } });
-          const reconciledIdentity = await supabase.auth.getUser();
-          if (!fence.current.current(ticket) || before.data.user.id !== reconciledIdentity.data.user?.id) return;
+          const reconciledIdentity = await visibleOwner();
+          if (!fence.current.current(ticket) || before !== reconciledIdentity) return;
           if (reconciled.kind !== 'active') throw new Error();
           next = reconciled;
         } catch {
           if (!fence.current.current(ticket)) return;
-          const currentIdentity = await supabase.auth.getUser();
-          if (!fence.current.current(ticket) || before.data.user.id !== currentIdentity.data.user?.id) return;
+          const currentIdentity = await visibleOwner();
+          if (!fence.current.current(ticket) || before !== currentIdentity) return;
           preferenceFailure = 'Preference update unavailable or stale. Nothing was retried. Confirm the current setting before sending.';
         }
       }
@@ -140,7 +153,7 @@ export function StagingConsole() {
       setPreferenceError(preferenceFailure);
       setActive(next.kind === 'active' ? next : null);
       setStatus(next.kind === 'active' ? (next.saved ? 'Saved' : 'Unsaved changes') : next.kind === 'stopped' ? 'Stopped. Unsaved changes were not recovered. Reopen only a confirmed saved snapshot.' : (action === 'discard' ? 'Unsaved conversation discarded.' : 'Deleted.'));
-      if (action === 'append') setMessage(current => draftAfterSend(current, sent));
+      if (action === 'append' || action === 'private-append') setMessage(current => draftAfterSend(current, sent));
       if (!intent && ['discard','reopen','delete','create'].includes(action)) setMessage('');
       setConfirm(null); setRecovery(next.kind === 'stopped');
       if (intent && navigation.current.current(intent.ticket) && !preferenceFailure) {
@@ -211,7 +224,11 @@ export function StagingConsole() {
       <ol className="space-y-4">{state.inspection.events.map(e => <li key={e.eventId} className="border-b border-border pb-4 break-words"><span className="text-sm text-muted-foreground">{e.sharedExcerpt ? 'Shared exact excerpt · untrusted user data' : e.role}</span><p className="whitespace-pre-wrap">{e.text}</p></li>)}</ol>
       <label className="mt-6 block" htmlFor="staging-message">Fictional message</label>
       <Textarea id="staging-message" value={message} onChange={e => setMessage(e.target.value)} maxLength={4000} className="mt-2"/>
-      <Button className="mt-3" disabled={busy || recovery || !!preferenceError || !message.trim() || state.inspection.preferenceOn !== prefs.showSpiritual} onClick={() => act('append')}>Send fictional message</Button>
+      {privateMessageReview ? <Suspense fallback={<p role="status">Loading private test controls…</p>}>
+        <PrivateTypedReview matchesPrivateSession={matchesPrivateSession} active={state} message={message} preferenceOn={prefs.showSpiritual}
+          disabled={busy || recovery || !!preferenceError || state.inspection.preferenceOn !== prefs.showSpiritual}
+          send={requestId => { void act('private-append', {requestId}); }}/>
+      </Suspense> : <Button className="mt-3" disabled={busy || recovery || !!preferenceError || !message.trim() || state.inspection.preferenceOn !== prefs.showSpiritual} onClick={() => act('append')}>Send fictional message</Button>}
       <section className="mt-6 border-y border-border py-4">
         <label htmlFor="fictional-note" className="font-serif text-xl">Fictional source material</label>
         <Textarea id="fictional-note" readOnly value={FICTIONAL_NOTE} className="mt-3 min-h-36" onSelect={e => setRange({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd })}/>

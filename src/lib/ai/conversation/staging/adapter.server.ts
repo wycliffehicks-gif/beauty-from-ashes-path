@@ -9,6 +9,8 @@ import { seal, unseal, fingerprint as keyedFingerprint } from './seal.server';
 import { stagingInput, type StagingInput } from './input';
 import { confirmSelection } from './excerpt';
 import { hasSavedContent } from './lifecycle';
+import { createStagingPrivateTypedProvider, privateTypedMode } from './private-typed-runtime.server';
+import type { PrivateTypedRequestAuth } from './private-typed-auth.server';
 
 export interface SavedThread { thread: string; revision: number; savedAt: string }
 export interface ActiveThread {
@@ -17,16 +19,34 @@ export interface ActiveThread {
 }
 export type StagingResult = ActiveThread | { kind: 'list'; threads: SavedThread[] } | { kind: 'deleted' | 'stopped'; thread: string; revision: number };
 
-/** No server content cache, provider API, microphone or enrollment. */
-export async function stagingOperation(raw: StagingInput, client: SupabaseClient<Database>): Promise<StagingResult> {
+/** No server content cache, microphone or enrollment. Mock remains the default;
+ * the separate private typed selection requires exact server approval and funding. */
+export async function stagingOperation(raw: StagingInput, client: SupabaseClient<Database>, privateRequest?: PrivateTypedRequestAuth): Promise<StagingResult> {
   const input = stagingInput.parse(raw);
+  const selected = privateTypedMode();
+  const privateSend = input.action === 'private-append' || (input.action === 'append' && selected === 'private');
+  if ((privateSend && (selected !== 'private' || !privateRequest)) ||
+    (input.action === 'voice' && selected !== 'mock') ||
+    (input.action === 'append' && selected === 'invalid')) throw new Error('Unavailable');
   if (input.action === 'preference' && input.preferenceOn === undefined) throw new Error('Unavailable');
+  let allowlistCeiling = Number.POSITIVE_INFINITY;
   async function identity(expected?: string) {
     const { data, error } = await client.auth.getUser();
     if (error || !data.user || (expected && data.user.id !== expected)) throw new Error('Unavailable');
-    const { data: allowed, error: denied } = await supabaseAdmin.from('bfa_p3b_staging_accounts')
-      .select('user_id').eq('user_id', data.user.id).eq('admitted', true).gt('expires_at', new Date().toISOString()).maybeSingle();
+    const { data: allowed, error: denied } = privateSend
+      ? await supabaseAdmin.from('bfa_p3b_staging_accounts').select('user_id,expires_at')
+        .eq('user_id', data.user.id).eq('admitted', true).gt('expires_at', new Date().toISOString()).maybeSingle()
+      : await supabaseAdmin.from('bfa_p3b_staging_accounts').select('user_id')
+        .eq('user_id', data.user.id).eq('admitted', true).gt('expires_at', new Date().toISOString()).maybeSingle();
     if (denied || !allowed) throw new Error('Unavailable');
+    if (privateSend) {
+      const expiry = 'expires_at' in allowed && typeof allowed.expires_at === 'string' ? Date.parse(allowed.expires_at) : NaN;
+      const observedAt = Date.now();
+      if (allowed.user_id !== data.user.id || !Number.isSafeInteger(expiry) || expiry <= 0 ||
+        !Number.isSafeInteger(observedAt) || observedAt <= 0 || observedAt >= expiry) throw new Error('Unavailable');
+      allowlistCeiling = Math.min(allowlistCeiling, expiry);
+      if (observedAt >= allowlistCeiling) throw new Error('Unavailable');
+    }
     return data.user.id;
   }
   const owner = await identity();
@@ -48,11 +68,19 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   }
   if (!input.thread) throw new Error('Unavailable');
   const thread: string = input.thread;
-  const found = await client.from('bfa_p3b_threads').select('id,revision,saved_revision,saved_snapshot,deleted_at').eq('id',thread).eq('owner_id',owner).maybeSingle();
+  const found = privateSend
+    ? await client.from('bfa_p3b_threads').select('id,revision,deleted_at').eq('id',thread).eq('owner_id',owner).maybeSingle()
+    : await client.from('bfa_p3b_threads').select('id,revision,saved_revision,saved_snapshot,deleted_at').eq('id',thread).eq('owner_id',owner).maybeSingle();
   if (found.error || !found.data || found.data.deleted_at) throw new Error('Unavailable');
-  const row = found.data;
+  const row: { id: string; revision: number; deleted_at: string | null; saved_revision?: number | null; saved_snapshot?: string | null } = found.data;
   if (!['delete','cancel','preference'].includes(input.action) && input.revision !== row.revision) throw new Error('Conflict');
-  const service = new ConversationService({ verifiedOwnerId: owner, provider: createMockProvider({ delayMs: 250 }),
+  const privateEnvelope = privateSend && input.token ? await unseal(input.token, owner, thread, row.revision) : null;
+  const privateProvider = privateSend && privateEnvelope && privateRequest && input.requestId
+    ? createStagingPrivateTypedProvider(privateRequest, { ownerId: owner, threadId: thread,
+      revision: row.revision, requestId: input.requestId, envelopeExpiresAt: privateEnvelope.expires,
+      readAllowlistExpiresAt: () => allowlistCeiling }) : null;
+  if (privateSend && !privateProvider) throw new Error('Unavailable');
+  const service = new ConversationService({ verifiedOwnerId: owner, provider: privateProvider ?? createMockProvider({ delayMs: 250 }),
     stageHook: async () => {
       try { await current(row.revision); }
       catch { service.cancelThread(thread, 'stale-server-work'); }
@@ -89,7 +117,7 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
     }
   }
   if (input.action === 'reopen' || input.action === 'discard') {
-    if (row.saved_revision !== null && typeof row.saved_snapshot === 'string') {
+    if (typeof row.saved_revision === 'number' && typeof row.saved_snapshot === 'string') {
       const saved = await unseal(row.saved_snapshot, owner, thread, row.saved_revision, true);
       service.restoreAuthority(saved.authority, thread);
       service.discardThread(thread);
@@ -103,34 +131,46 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
     service.openThread(thread);
   } else {
     if (!input.token) throw new Error('Unavailable');
-    const active = await unseal(input.token, owner, thread, row.revision);
+    const active = privateEnvelope ?? await unseal(input.token, owner, thread, row.revision);
     service.restoreAuthority(active.authority, thread);
     if (!['cancel','preference'].includes(input.action) && input.preferenceOn !== undefined && service.inspect(thread)?.preferenceOn !== input.preferenceOn) throw new Error('Confirm current preference');
   }
   await service.ready();
-  if (input.action === 'append' || input.action === 'voice') {
+  if (input.action === 'append' || input.action === 'private-append' || input.action === 'voice') {
     if (!input.message || !input.requestId) throw new Error('Unavailable');
     const requestId = input.requestId;
-    const mode = input.action === 'voice' ? 'voice' : 'text';
-    const fingerprint = await keyedFingerprint(`${input.token}:${requestId}:${mode}:${input.message}`);
-    const args = { p_owner: owner, p_thread: thread, p_revision: revision, p_request: requestId, p_mode: mode, p_fingerprint: fingerprint };
-    await identity(owner);
-    const reserve = await supabaseAdmin.rpc('bfa_p3b_reserve', args);
-    if (reserve.error || !reserve.data || (reserve.data as { duplicate?: boolean }).duplicate) throw new Error('Unavailable');
-    await identity(owner);
-    const claim = await supabaseAdmin.rpc('bfa_p3b_claim', args);
-    if (claim.error || !claim.data) throw new Error('Unavailable');
-    const turn = service.admitUserMessage(thread, requestId, input.message);
-    let accepted = false;
-    const outcome = await service.runTurn(thread, turn, { accept: () => true, apply: result => { accepted = result.ok; } });
-    // No zero-charge inference on failure/stale/timeout. Hold for reliable reconciliation.
-    if (outcome !== 'committed' || !accepted) throw new Error('Unavailable');
-    const settle = await supabaseAdmin.rpc('bfa_p3b_settle', { p_owner: owner, p_request: requestId, p_receipt: crypto.randomUUID(), p_charged: 0 });
-    if (settle.error || !settle.data) throw new Error('Unavailable');
-    await identity(owner);
-    const finish = await supabaseAdmin.rpc('bfa_p3b_finish', { p_owner: owner, p_thread: thread, p_revision: revision, p_request: requestId });
-    if (finish.error || finish.data === null) throw new Error('Conflict');
-    revision = finish.data;
+    if (privateProvider) {
+      // The private coordinator owns its own real monetary claim/dispatch and
+      // receipt settlement. Never run simulated reservation or zero settlement.
+      const turn = service.admitUserMessage(thread, requestId, input.message);
+      let accepted = false;
+      const outcome = await service.runTurn(thread, turn, { accept: () => true, apply: result => { accepted = result.ok; } });
+      if (outcome !== 'committed' || !accepted) throw new Error('Unavailable');
+      const finished = await privateProvider.finish();
+      if (finished !== revision + 1) throw new Error('Unavailable');
+      revision = finished;
+    } else {
+      const mode = input.action === 'voice' ? 'voice' : 'text';
+      const fingerprint = await keyedFingerprint(`${input.token}:${requestId}:${mode}:${input.message}`);
+      const args = { p_owner: owner, p_thread: thread, p_revision: revision, p_request: requestId, p_mode: mode, p_fingerprint: fingerprint };
+      await identity(owner);
+      const reserve = await supabaseAdmin.rpc('bfa_p3b_reserve', args);
+      if (reserve.error || !reserve.data || (reserve.data as { duplicate?: boolean }).duplicate) throw new Error('Unavailable');
+      await identity(owner);
+      const claim = await supabaseAdmin.rpc('bfa_p3b_claim', args);
+      if (claim.error || !claim.data) throw new Error('Unavailable');
+      const turn = service.admitUserMessage(thread, requestId, input.message);
+      let accepted = false;
+      const outcome = await service.runTurn(thread, turn, { accept: () => true, apply: result => { accepted = result.ok; } });
+      // No zero-charge inference on failure/stale/timeout. Hold for reliable reconciliation.
+      if (outcome !== 'committed' || !accepted) throw new Error('Unavailable');
+      const settle = await supabaseAdmin.rpc('bfa_p3b_settle', { p_owner: owner, p_request: requestId, p_receipt: crypto.randomUUID(), p_charged: 0 });
+      if (settle.error || !settle.data) throw new Error('Unavailable');
+      await identity(owner);
+      const finish = await supabaseAdmin.rpc('bfa_p3b_finish', { p_owner: owner, p_thread: thread, p_revision: revision, p_request: requestId });
+      if (finish.error || finish.data === null) throw new Error('Conflict');
+      revision = finish.data;
+    }
   } else if (input.action === 'source') {
     const registry = await service.ready();
     if (!registry) throw new Error('Unavailable');
@@ -156,7 +196,11 @@ export async function stagingOperation(raw: StagingInput, client: SupabaseClient
   }
   await current(revision);
   const authority = service.exportAuthority(thread);
-  const token = await seal({ owner, thread, revision, expires: Date.now()+15*60*1000, authority });
+  const expires = privateEnvelope
+    ? Math.min(privateEnvelope.expires, privateRequest!.initialAuth.expiresAt)
+    : Date.now()+15*60*1000;
+  const token = await seal({ owner, thread, revision, expires, authority });
   await current(revision); // Includes fresh owner check after encryption await.
+  if (privateProvider && !await privateProvider.mayReturn()) throw new Error('Unavailable');
   return { kind: 'active', thread, revision, token, saved: hasSavedContent(authority), inspection: service.inspect(thread), microphone: 'off' };
 }

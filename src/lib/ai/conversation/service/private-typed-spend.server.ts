@@ -13,6 +13,7 @@ import {
   OPENAI_CONVERSATION_MAX_INPUT_BYTES,
   OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS,
   type ConversationExchangeMeta,
+  type PrivateTypedUsageReceipt,
 } from "./openai-provider.server";
 import { sha256HexSync } from "./sha256-sync";
 
@@ -75,9 +76,16 @@ const priceSchema = z
   })
   .strict();
 
-type RpcName = "bfa_private_text_spend_claim" | "bfa_private_text_spend_settle";
+export type PrivateTypedRpcName =
+  | "bfa_private_text_spend_claim"
+  | "bfa_private_text_spend_claim_dispatch"
+  | "bfa_private_text_spend_settle"
+  | "bfa_private_text_spend_read"
+  | "bfa_private_text_spend_dispatch"
+  | "bfa_private_text_spend_settle_dispatched"
+  | "bfa_private_text_spend_finish";
 export interface PrivateTypedSpendRpc {
-  rpc(name: RpcName, args: Readonly<Record<string, unknown>>): PromiseLike<unknown>;
+  rpc(name: PrivateTypedRpcName, args: Readonly<Record<string, unknown>>): PromiseLike<unknown>;
 }
 export interface PrivateTypedSpendMaterial {
   readonly approval: z.infer<typeof approvalSchema>;
@@ -136,6 +144,10 @@ export interface PrivateTypedProviderCall {
 }
 
 export interface PrivateTypedSpend {
+  readonly binding: Readonly<Record<string, string | number>>;
+  readonly eligibilityExpiresAt: number;
+  /** The returned digest acknowledges this dispatch-specific billing receipt only. */
+  settleReceipt(dispatchId: string, receipt: PrivateTypedUsageReceipt): Promise<string | null>;
   /** One claim invocation. An unknown outcome can be a committed monetary hold.
    * Acknowledgment is historical; the future sender must independently recheck
    * current Auth, allowlist/thread, approval and deadlines before transmitting. */
@@ -196,8 +208,73 @@ export function preparePrivateTypedSpend(
       p_max_micros: approval.maxMicros,
       p_approval_expires_at: new Date(manifest.expiresAt).toISOString(),
     });
+    async function recordReceipt(
+      exchange: ConversationExchangeMeta | PrivateTypedUsageReceipt,
+      dispatchId?: string,
+    ): Promise<string | null> {
+      try {
+        const id = exchange.responseId;
+        if (
+          exchange.didDispatch !== true ||
+          exchange.requestId !== manifest.serviceRequestId ||
+          exchange.requestPayloadSha256 !== approval.payloadSha256 ||
+          exchange.requestedModel !== manifest.model ||
+          exchange.reportedModel !== manifest.model ||
+          exchange.serviceTier !== manifest.tier ||
+          !receiptIdentifier(id) ||
+          (exchange.providerRequestId !== null && !receiptIdentifier(exchange.providerRequestId))
+        )
+          return null;
+        const usage = usageSchema.parse(exchange.usage);
+        if (
+          usage.inputTokens > worstCaseInputTokens(manifest.wireBytes) ||
+          usage.outputTokens > manifest.maxOutputTokens
+        )
+          return null;
+        const charged = computeConservativeChargeMicros(usage, price);
+        if (charged === null || !Number.isSafeInteger(charged) || charged > approval.maxMicros)
+          return null;
+        const evidence = sha256HexSync(
+          JSON.stringify([
+            ...(dispatchId
+              ? ["bfa-private-typed-dispatched-receipt-v1", dispatchId]
+              : ["bfa-private-typed-receipt-v1"]),
+            approval.requestId,
+            manifest.serviceRequestId,
+            approval.manifestSha256,
+            approval.payloadSha256,
+            manifest.model,
+            manifest.tier,
+            id,
+            exchange.providerRequestId,
+            usage.inputTokens,
+            usage.outputTokens,
+            usage.totalTokens,
+            usage.reasoningTokens,
+            usage.cachedInputTokens,
+            usage.cacheWriteTokens,
+            charged,
+          ]),
+        );
+        const result = await invoke(
+          dispatchId ? "bfa_private_text_spend_settle_dispatched" : "bfa_private_text_spend_settle",
+          Object.freeze({
+            ...args,
+            ...(dispatchId ? { p_dispatch_id: dispatchId } : {}),
+            p_response_id: id,
+            p_evidence_sha256: evidence,
+            p_charged_micros: charged,
+          }),
+        );
+        return acknowledged(result) ? evidence : null;
+      } catch {
+        return null;
+      }
+    }
     let requested = false;
     return {
+      binding: args,
+      eligibilityExpiresAt: Math.min(manifest.expiresAt, priceDate + 14 * 86_400_000 + 1),
       async claim(auth, call, wireBody) {
         if (requested) return "unconfirmed";
         requested = true;
@@ -261,63 +338,18 @@ export function preparePrivateTypedSpend(
         }
       },
       async settle(exchange) {
-        try {
-          const id = exchange.responseId;
-          if (
-            exchange.didDispatch !== true ||
-            exchange.outcome !== "complete" ||
-            exchange.usageConsistent !== true ||
-            exchange.requestId !== manifest.serviceRequestId ||
-            exchange.requestPayloadSha256 !== approval.payloadSha256 ||
-            exchange.requestedModel !== manifest.model ||
-            exchange.reportedModel !== manifest.model ||
-            exchange.serviceTier !== manifest.tier ||
-            !receiptIdentifier(id) ||
-            (exchange.providerRequestId !== null && !receiptIdentifier(exchange.providerRequestId))
-          )
-            return "unconfirmed";
-          const usage = usageSchema.parse(exchange.usage);
-          if (
-            usage.inputTokens > worstCaseInputTokens(manifest.wireBytes) ||
-            usage.outputTokens > manifest.maxOutputTokens
-          )
-            return "unconfirmed";
-          const charged = computeConservativeChargeMicros(usage, price);
-          if (charged === null || !Number.isSafeInteger(charged) || charged > approval.maxMicros)
-            return "unconfirmed";
-          const evidence = sha256HexSync(
-            JSON.stringify([
-              "bfa-private-typed-receipt-v1",
-              approval.requestId,
-              manifest.serviceRequestId,
-              approval.manifestSha256,
-              approval.payloadSha256,
-              manifest.model,
-              manifest.tier,
-              id,
-              exchange.providerRequestId,
-              usage.inputTokens,
-              usage.outputTokens,
-              usage.totalTokens,
-              usage.reasoningTokens,
-              usage.cachedInputTokens,
-              usage.cacheWriteTokens,
-              charged,
-            ]),
-          );
-          const result = await invoke(
-            "bfa_private_text_spend_settle",
-            Object.freeze({
-              ...args,
-              p_response_id: id,
-              p_evidence_sha256: evidence,
-              p_charged_micros: charged,
-            }),
-          );
-          return acknowledged(result) ? "settled" : "unconfirmed";
-        } catch {
+        if (exchange?.outcome !== "complete" || exchange.usageConsistent !== true)
           return "unconfirmed";
-        }
+        return (await recordReceipt(exchange)) ? "settled" : "unconfirmed";
+      },
+      async settleReceipt(dispatchId, receipt) {
+        if (
+          !uuid.safeParse(dispatchId).success ||
+          receipt?.kind !== "private-typed-usage-v1" ||
+          receipt.providerStatus !== "completed"
+        )
+          return null;
+        return recordReceipt(receipt, dispatchId);
       },
     };
   } catch {

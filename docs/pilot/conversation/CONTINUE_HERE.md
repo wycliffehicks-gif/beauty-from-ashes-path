@@ -1,5 +1,17 @@
 # Continue here — BFA, 26 November 2026, America/Toronto
 
+## Current private text evaluation — 26 November 2026, America/Toronto
+
+Under a separate one-use authorization, the private Lovable runner sent the two fictional C05 grief messages. Both received completed replies. The first acknowledged the lost ordinary phone calls and respected the request for no advice. The second honored the request to end the conversation. A preliminary editorial review flags a small inference about the routine and a slightly formal closing. Carl's human quality review remains open. Together with C04, four of the nine planned replies now exist. All three C07 turns about correcting a misunderstanding and both C08 turns about religious hurt remain unsent. Participant AI and live voice remain off. The ten-day journey, typed conversation and live voice remain the intended first-sale scope.
+
+**Accounting.** The launch check matched the v3 runner and ledger source at `e0e1b321`. After the second completed response, settlement was refused and the run stopped. This time the runner, observed sends and durable ledger each counted two attempts. The first estimate settled at US$0.000159. The second estimate from usage was US$0.000154. Its full US$0.009112 reservation remains uncertain. The combined usage estimate for this run is US$0.000313. Lovable showed 2.30 credits used by this request. The prior C04 accounting discrepancy and its separate operator hold remain preserved. Both private grant registries closed. The new private report and original receipts remain outside Git.
+
+**Offline follow-up.** The v4 private text-test runner records which accounting step refused a receipt and a fixed reason code. It preserves the usage-based estimate separately from settled spending. A read-only command, `scripts/conversation-eval/audit-receipt-cli.ts`, checks six saved files from a v2 or v3 run. It returns limited diagnostic fields and verifies the manifest, request and payload links before comparing the response ID, usage and original reservation. It cannot authorize sends, settle charges or release a hold.
+
+Offline tests reproduced the same second-turn stop using both a repeated synthetic response ID and an ID accepted by the provider adapter but rejected by the ledger. Ordinary distinct IDs settled both turns. These are distinguishable explanations for the same reported outcome. The cause in the real C05 records is still unknown. All 130 affected tests across nine files passed, along with both TypeScript checks and a local production build. The existing receipt rules, past accounting records, provider adapter, SRT policy and participant routes were preserved.
+
+**Continue here.** Run the read-only inspection against the original private C05 files when available. The previous test authorization is closed. The five unsent messages in C07 and C08 require a separate decision after the accounting review. The public launch still requires paid access, real typed chat and real-device voice acceptance, plus Carl's release decision.
+
 ## Private text test and accounting review — 25–26 November 2026
 
 The fixed Finish control remains verified on the private hosted application at `46d81b94`. The first real P4 text evaluation ran privately in Lovable. The ordinary test program ran from executable source and used separate private files for its grant, run records and spending limits. The earlier attempt to load executable code directly from that storage stopped before sending any messages.

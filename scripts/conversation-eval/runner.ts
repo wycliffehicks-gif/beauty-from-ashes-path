@@ -13,11 +13,11 @@ import { buildTeachingSourceRecords } from "../../src/lib/ai/conversation/conten
 import { createSourceRegistry } from "../../src/lib/ai/conversation/sources";
 import { validateEvalManifest, validateManifestForLive, type EvalManifest, type ManifestValidationCode } from "./manifest";
 import { admitLiveGrant, loadApprovalGrants, type ApprovalGrant, type GrantRefusal } from "./approval-grants";
-import { EvalLedger, type EvalAdmission } from "./ledger";
+import { EvalLedger, EvalLedgerError, type EvalAdmission, type EvalLedgerRefusal } from "./ledger";
 import { computeConservativeChargeMicros } from "./pricing";
 import type { ConversationExchangeMeta } from "../../src/lib/ai/conversation/service/openai-provider.server";
 
-export const EVAL_RUNNER_VERSION = "bfa-conversation-eval-runner-v3";
+export const EVAL_RUNNER_VERSION = "bfa-conversation-eval-runner-v4";
 export const EVAL_MAX_MANIFEST_BYTES = 64 * 1024;
 export const sha256 = (text: string) => createHash("sha256").update(text).digest("hex");
 export async function computeSourceSnapshotSha256(): Promise<string> {
@@ -41,6 +41,21 @@ export interface EvalRunDeps {
   grants?: readonly ApprovalGrant[];
   nowIso?: () => string;
 }
+export interface EvalAccountingFailure {
+  readonly stage: "reserve" | "claim" | "reconcile" | "stop" | "accounting";
+  readonly kind: "refusal" | "exception" | "invariant";
+  readonly code: EvalLedgerRefusal | "binding-mismatch" | "duplicate" | "observed-claim-missing" | "unexpected-error";
+}
+const ledgerRefusalCode = (code: EvalLedgerRefusal): EvalAccountingFailure["code"] =>
+  ["invalid", "locked", "corrupt", "conflict", "limit", "consumed", "receipt-conflict"].includes(code)
+    ? code : "unexpected-error";
+function ledgerExceptionCode(error: unknown): EvalAccountingFailure["code"] {
+  // Only our fixed error class and enumerated code are evidence. Never copy
+  // an arbitrary exception message, stack, code or provider response field.
+  if (error instanceof EvalLedgerError && ["locked", "corrupt", "binding-mismatch"].includes(error.code)) return error.code;
+  return "unexpected-error";
+}
+
 export interface EvalTurnEvidence {
   readonly caseId: string;
   readonly turnIndex: number;
@@ -52,6 +67,10 @@ export interface EvalTurnEvidence {
   readonly exchange: ConversationExchangeMeta | null;
   readonly ledgerState: string;
   readonly estimatedChargeMicros: number | null;
+  /** Computed from validated usage even if ledger reconciliation is refused;
+   * not a reconciled charge, invoice or permission to release a hold. */
+  readonly computedChargeMicros: number | null;
+  readonly accountingFailures: readonly EvalAccountingFailure[];
   readonly transportInvoked: boolean;
 }
 export interface EvalRunSummary {
@@ -162,6 +181,7 @@ export async function runConversationEvaluation(
   let calls = 0;
   let chargedTotal = 0;
   let status: EvalRunSummary["status"] = "running";
+  let lastAccountingFailures: readonly EvalAccountingFailure[] = [];
   let observedClaims = ledger.dispatchedAttempts();
   let dispatchHighWater = observedClaims;
   let accountingStatus: EvalRunSummary["accountingStatus"] = "consistent";
@@ -201,7 +221,15 @@ export async function runConversationEvaluation(
         requestId: string; turnIndex: number; hash: string | null;
         invoked: boolean; admitted: boolean; meta: ConversationExchangeMeta | null;
         claim: EvalAdmission | null;
+        accountingFailures: EvalAccountingFailure[];
       } | null = null;
+      const accountingOperation = <T>(failures: EvalAccountingFailure[], stage: EvalAccountingFailure["stage"], operation: () => T): T => {
+        try { return operation(); }
+        catch (error) {
+          failures.push({ stage, kind: "exception", code: ledgerExceptionCode(error) });
+          throw error;
+        }
+      };
       const provider = createDirectOpenAIConversationProvider({
         apiKey, model: manifest.provider.model,
         maxOutputTokens: manifest.limits.maxOutputTokens,
@@ -210,6 +238,7 @@ export async function runConversationEvaluation(
         onExchange: (m) => { if (current) current.meta = m; },
         fetchImpl: (async (url, init) => {
           if (!current || current.invoked || typeof init?.body !== "string") throw new Error("invalid-evaluation-dispatch");
+          const attempt = current;
           const body = init.body;
           // Defense in depth: enforce the same exact full-wire UTF-8 bound
           // used by reservation, before credential-bearing transport.
@@ -220,32 +249,38 @@ export async function runConversationEvaluation(
           if (accountingStatus !== "consistent" || observedClaims >= manifest.limits.maxDispatchAttempts) {
             throw new EvalAdmissionRefused("ledger-refused", "known dispatch scope exhausted or conflicting");
           }
-          const reserved = ledger.reserve({
-            requestId: current.requestId, caseId: evalCase.caseId, turnIndex: current.turnIndex,
+          const reserved = accountingOperation(attempt.accountingFailures, "reserve", () => ledger.reserve({
+            requestId: attempt.requestId, caseId: evalCase.caseId, turnIndex: attempt.turnIndex,
             model: manifest.provider.model, reservedMicros: costBound.worstCasePerDispatchMicros,
-          });
-          if (!reserved.ok || reserved.duplicate) throw new EvalAdmissionRefused("ledger-refused", "reserve refused");
-          current.admitted = true;
-          current.hash = sha256(body);
-          const prefix = `${evidenceDir}/evidence-${evalCase.caseId}-${current.turnIndex}`;
+          }));
+          if (!reserved.ok || reserved.duplicate) {
+            attempt.accountingFailures.push({ stage: "reserve", kind: "refusal", code: reserved.ok ? "duplicate" : ledgerRefusalCode(reserved.code) });
+            throw new EvalAdmissionRefused("ledger-refused", "reserve refused");
+          }
+          attempt.admitted = true;
+          attempt.hash = sha256(body);
+          const prefix = `${evidenceDir}/evidence-${evalCase.caseId}-${attempt.turnIndex}`;
           writeFresh(`${prefix}-admitted.json`, {
-            requestId: current.requestId, caseId: evalCase.caseId, turnIndex: current.turnIndex,
+            requestId: attempt.requestId, caseId: evalCase.caseId, turnIndex: attempt.turnIndex,
             manifestSha256, model: manifest.provider, admittedAtIso: nowIso(),
-            requestPayloadSha256: current.hash, inputBytes: Buffer.byteLength(body, "utf8"),
+            requestPayloadSha256: attempt.hash, inputBytes: Buffer.byteLength(body, "utf8"),
             exactRequestBody: body, reservedMicros: costBound.worstCasePerDispatchMicros,
             simulatedTransport: !!deps.fetchImpl,
           });
           recheck();
-          const claimed = ledger.claim(current.requestId);
-          if (!claimed.ok || claimed.duplicate) throw new EvalAdmissionRefused("ledger-refused", "claim refused");
-          current.claim = Object.freeze({ ...claimed.admission });
+          const claimed = accountingOperation(attempt.accountingFailures, "claim", () => ledger.claim(attempt.requestId));
+          if (!claimed.ok || claimed.duplicate) {
+            attempt.accountingFailures.push({ stage: "claim", kind: "refusal", code: claimed.ok ? "duplicate" : ledgerRefusalCode(claimed.code) });
+            throw new EvalAdmissionRefused("ledger-refused", "claim refused");
+          }
+          attempt.claim = Object.freeze({ ...claimed.admission });
           observedClaims += 1;
           writeFresh(`${prefix}-request-start.json`, {
-            requestId: current.requestId, requestPayloadSha256: current.hash,
+            requestId: attempt.requestId, requestPayloadSha256: attempt.hash,
             startedAtIso: nowIso(), state: "dispatch-claimed; outcome uncertain until response evidence",
           });
           recheck();
-          current.invoked = true;
+          attempt.invoked = true;
           calls += 1;
           return transport(url, init);
         }) as typeof fetch,
@@ -256,46 +291,68 @@ export async function runConversationEvaluation(
       service.ensureThread(storeId, false);
       for (const [turnIndex, text] of evalCase.turns.entries()) {
         recheck();
-        current = { requestId: randomUUID(), turnIndex, hash: null, invoked: false, admitted: false, meta: null, claim: null };
+        current = { requestId: randomUUID(), turnIndex, hash: null, invoked: false, admitted: false, meta: null, claim: null, accountingFailures: [] };
         const turnId = service.admitUserMessage(storeId, `eval-msg-${evalCase.caseId}-${turnIndex}`, text);
         let outcome: TurnOutcome | null = null;
         let committed: string;
         try {
           committed = await service.runTurn(storeId, turnId, { accept: () => true, apply: (o) => { outcome = o; } });
         } catch { committed = "error"; }
-        const meta = current.meta as ConversationExchangeMeta | null;
+        const attempt = current;
+        const meta = attempt.meta as ConversationExchangeMeta | null;
         const okTurn = committed === "committed" && outcome !== null && (outcome as TurnOutcome).ok;
         const replyText = okTurn ? (outcome as unknown as { text: string }).text : null;
         let charge: number | null = null;
-        let ledgerState = current.admitted ? "uncertain" : "not-admitted";
-        let failed = !okTurn || !current.invoked || meta?.outcome !== "complete";
+        let computedCharge: number | null = null;
+        let ledgerState = attempt.admitted ? "uncertain" : "not-admitted";
+        let failed = !okTurn || !attempt.invoked || meta?.outcome !== "complete";
         let accountingError = false;
+        const failuresBeforeAccounting = attempt.accountingFailures.length;
         try {
-          if (current.invoked && !current.claim) throw new Error("observed-dispatch-claim-unavailable");
-          if (!failed && meta?.responseId && meta.usageConsistent) {
-            charge = computeConservativeChargeMicros(meta.usage, manifest.priceBasis);
+          if (attempt.invoked && !attempt.claim) {
+            attempt.accountingFailures.push({ stage: "accounting", kind: "invariant", code: "observed-claim-missing" });
+            throw new Error("observed-dispatch-claim-unavailable");
+          }
+          const responseId = meta?.responseId;
+          if (!failed && responseId && meta?.usageConsistent) {
+            computedCharge = computeConservativeChargeMicros(meta.usage, manifest.priceBasis);
+            charge = computedCharge;
             if (charge !== null) {
-              const settled = ledger.reconcile(current.requestId, meta.responseId, charge, current.claim ?? undefined);
-              if (!settled.ok) { charge = null; failed = true; accountingError = true; accountingStatus = "conflict"; }
+              const reconciliationCharge = charge;
+              const observedClaim = attempt.claim ?? undefined;
+              const settled = accountingOperation(attempt.accountingFailures, "reconcile", () => ledger.reconcile(attempt.requestId, responseId, reconciliationCharge, observedClaim));
+              if (!settled.ok) {
+                attempt.accountingFailures.push({ stage: "reconcile", kind: "refusal", code: ledgerRefusalCode(settled.code) });
+                charge = null; failed = true; accountingError = true; accountingStatus = "conflict";
+              }
               else { ledgerState = settled.admission.state; chargedTotal += charge; }
             } else failed = true;
           } else failed = true;
-          if (failed && current.admitted) {
-            const stopped = ledger.stop(current.requestId, current.invoked ? current.claim ?? undefined : undefined);
+          if (failed && attempt.admitted) {
+            const observedClaim = attempt.invoked ? attempt.claim ?? undefined : undefined;
+            const stopped = accountingOperation(attempt.accountingFailures, "stop", () => ledger.stop(attempt.requestId, observedClaim));
             ledgerState = stopped.ok ? stopped.admission.state : "accounting-conflict; reservation not confirmed";
-            if (!stopped.ok) { accountingError = true; accountingStatus = "conflict"; }
+            if (!stopped.ok) {
+              attempt.accountingFailures.push({ stage: "stop", kind: "refusal", code: ledgerRefusalCode(stopped.code) });
+              accountingError = true; accountingStatus = "conflict";
+            }
           }
-        } catch {
+        } catch (error) {
+          if (attempt.accountingFailures.length === failuresBeforeAccounting) {
+            attempt.accountingFailures.push({ stage: "accounting", kind: "exception", code: ledgerExceptionCode(error) });
+          }
           failed = true; accountingError = true; accountingStatus = "unavailable";
           charge = null; ledgerState = "accounting-unavailable; reservation not confirmed";
         }
+        lastAccountingFailures = attempt.accountingFailures.map((failure) => ({ ...failure }));
         const record: EvalTurnEvidence = {
-          caseId: evalCase.caseId, turnIndex, requestId: current.requestId,
-          requestPayloadSha256: current.hash,
+          caseId: evalCase.caseId, turnIndex, requestId: attempt.requestId,
+          requestPayloadSha256: attempt.hash,
           responseText: replyText, responseSha256: replyText ? sha256(replyText) : null,
           outcome: accountingError ? "ledger-refused" : meta?.outcome ?? committed,
           exchange: meta, ledgerState, estimatedChargeMicros: charge,
-          transportInvoked: current.invoked,
+          computedChargeMicros: computedCharge, accountingFailures: lastAccountingFailures,
+          transportInvoked: attempt.invoked,
         };
         writeFresh(`${evidenceDir}/evidence-${evalCase.caseId}-${turnIndex}.json`, record);
         writeSummary(`${outDir}/run-summary.json`, summary());
@@ -319,6 +376,7 @@ export async function runConversationEvaluation(
     writeFresh(`${evidenceDir}/run-stop.json`, {
       stoppedAtIso: nowIso(), code: error instanceof EvalAdmissionRefused ? error.code : "evaluation-error",
       providerCalls: calls, estimatedProviderCostMicros: chargedTotal,
+      accountingFailures: lastAccountingFailures,
       note: "No retries. Unresolved dispatches require review; conflicting or unavailable storage cannot confirm a retained reservation.",
     });
     writeSummary(`${outDir}/run-summary.json`, summary());

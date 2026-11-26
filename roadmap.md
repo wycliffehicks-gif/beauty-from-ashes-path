@@ -66,3 +66,9 @@ The tested 19-file repair is applied at `80d00f26c6459ef80d486cf12a9c9d1d7122500
 - [ ] Run the prepared 12 native multi-session cases under a suitable nonroot PostgreSQL environment; current native preflight is unavailable. WASM and harness process-double checks are not concurrency evidence. Do not use the connected project or recreate closed P3b accounts.
 - [ ] Implement and verify production Auth/snapshot/issuance and durable atomic admission-store ports for the concrete developer voice route; actual transaction/HTTP acceptance, production proof/revocation wiring and separate concurrent-capacity/settlement limits remain unimplemented. Checked eligibility supplies no dispatch permission or database guarantees.
 - [ ] Select and implement a bounded developer provider route and server admission/accounting, wire the prepared coordinator, and obtain real-device/played-audio/provider-termination evidence under separate live-test approval before accepting voice.
+
+## BFA-PRIVATE-BIRTHDAY-20261126-01 — one private typed acceptance test
+- [ ] Execute at most one reviewed hosted GPT-6 Luna send under the attached US$0.01/deadline limits; no retry, substitute, participant activation, voice, or publication.
+- [x] Verify the required hosted revision, prior-use absence, real Auth session columns, P3b protections, and exact SQL draft hashes.
+- [x] Install both approved service-only SQL controls transactionally after direct-connection privilege failure rolled back; preserve all prior records.
+- [ ] Close the exact grant, allowlist/tester access, server material, temporary flags, and browser session on every exit; retain receipts and uncertain holds.

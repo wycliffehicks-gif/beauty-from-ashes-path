@@ -223,6 +223,156 @@ export type Database = {
         }
         Returns: number
       }
+      bfa_private_text_spend_claim: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_auth_expires_at: string
+          p_auth_verified_at: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: boolean
+      }
+      bfa_private_text_spend_claim_dispatch: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_auth_expires_at: string
+          p_auth_verified_at: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: boolean
+      }
+      bfa_private_text_spend_dispatch: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_auth_expires_at: string
+          p_auth_verified_at: string
+          p_dispatch_id: string
+          p_eligibility_expires_at: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: Json
+      }
+      bfa_private_text_spend_finish: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_auth_expires_at: string
+          p_auth_verified_at: string
+          p_dispatch_id: string
+          p_eligibility_expires_at: string
+          p_evidence_sha256: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: Json
+      }
+      bfa_private_text_spend_read: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_auth_expires_at: string
+          p_auth_verified_at: string
+          p_dispatch_id: string
+          p_eligibility_expires_at: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: Json
+      }
+      bfa_private_text_spend_settle: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_charged_micros: number
+          p_evidence_sha256: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_response_id: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: boolean
+      }
+      bfa_private_text_spend_settle_dispatched: {
+        Args: {
+          p_approval: string
+          p_approval_expires_at: string
+          p_charged_micros: number
+          p_dispatch_id: string
+          p_evidence_sha256: string
+          p_manifest: string
+          p_max_micros: number
+          p_model: string
+          p_owner: string
+          p_payload: string
+          p_provider: string
+          p_request: string
+          p_response_id: string
+          p_revision: number
+          p_session: string
+          p_thread: string
+          p_tier: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

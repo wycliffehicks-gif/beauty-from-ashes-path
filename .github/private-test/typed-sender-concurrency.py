@@ -111,6 +111,7 @@ class RaceTests:
         self.shortened_dispatch_ceiling()
         self.collision_rollback_expiry()
         self.legacy_settlement_read()
+        self.original_verified_age()
         return {"status":"PASS","sqlSha256":hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
                 "baseSpendSha256":hashlib.sha256(SPEND.read_bytes()).hexdigest(),
                 "postgres":self.o.scalar("SHOW server_version;"),"cases":self.cases,
@@ -137,6 +138,16 @@ class RaceTests:
         outcome=self.block_then(f"UPDATE bfa_private_text_spend.approvals SET revoked=true WHERE approval_id={q(f['approval'])};",self.mark(f))
         require(outcome==["f"] and self.state(f)=="held","newly revoked approval cannot send or refund")
         self.cases.append("independent revocation during marker lock wait preserves hold")
+
+    def original_verified_age(self):
+        f=self.fixture()
+        started=self.stamp(-27.5)
+        require(self.a.scalar(f"SELECT public.bfa_private_text_spend_claim({self.binding(f)}, {q(started)}, {q(f['auth_deadline'])});")=="t",
+                "hold begins within original verified window")
+        deadline=self.o.scalar(f"SELECT ({q(started)}::timestamptz + interval '30 seconds')::text;")
+        result=self.block_then(self.lock(f,"thread"),self.mark(f),deadline)
+        require(result==["f"] and self.state(f)=="held","a later Auth timestamp cannot restart the original 30-second verification")
+        self.cases.append("fresh Auth observation cannot reset the durable original verification age during a wait")
 
     def legacy_settlement_read(self):
         f=self.held()

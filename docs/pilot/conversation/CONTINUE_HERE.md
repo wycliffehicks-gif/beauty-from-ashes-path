@@ -8,6 +8,8 @@ During an authorized fictional desktop session, the privately hosted application
 
 The seven new local regressions passed. The four affected test files passed **85/85** in total. Strict TypeScript checking and the local production build succeeded. The measured results are in `artifacts/conversation-eval/offline-validation-v40/finish-target-results.json`. This is evidence for the simulator. Physical phones, screen readers, microphones and real provider sessions still need acceptance.
 
+**Hosted recheck.** Lovable picked up application commit `46d81b945bc4f7810e3ff3af0aae4025dac73dbf`. Its private desktop preview identified revision `46d81b94`. In the fictional session, Finish occupied the same rectangle while Resume changed from connecting to listening. The original centre at (416.73, 468) still hit Finish. A pointer click there closed the voice simulator and restored Talk while the same thread and exact unsent draft remained on screen. No microphone, provider, paid edit or publication was involved.
+
 **Continue from here.** Carl wants the ten-day journey, freeform typed AI chat and live voice together from the first sale. The next text milestone is a private nine-turn fictional response-quality evaluation with an eligible execution environment. Participant AI and live voice remain off. The real voice/device checks, authenticated access and accounting, purchase and restore, and public-release privacy review remain open. The dated SRT source record, policy distinctions and private-writing protections below still apply.
 
 ## Lovable editor and hosted preview verified — 25 November 2026

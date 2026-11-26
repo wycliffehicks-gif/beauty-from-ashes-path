@@ -1,0 +1,275 @@
+name: BFA final exact build and default-off staging
+on:
+  push:
+    branches: [validation/default-off-6a69cfe-20261126]
+permissions: {}
+jobs:
+  build:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Build exact public source with its frozen helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          source_sha=6a69cfe7836c7b3e08938c2dde4f9acd05fdd9f1
+          task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
+          task_source="$task_root/source"
+          task_home="$task_root/home"
+          task_runtime="$task_root/runtime"
+          task_logs="$task_root/logs"
+          mkdir -p "$task_source" "$task_home" "$task_runtime" "$task_logs"
+          clean_env=(env -i "PATH=$PATH" "HOME=$task_home" "TMPDIR=$task_root" CI=1 npm_config_update_notifier=false)
+
+          emit_log() {
+            "${clean_env[@]}" node --input-type=commonjs - "$1" "$2" <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const [phase, path] = process.argv.slice(2);
+          const bytes = fs.readFileSync(path);
+          console.log(`BFA_BUILD_LOG ${phase} bytes=${bytes.length} sha256=${crypto.createHash('sha256').update(bytes).digest('hex')}`);
+          const chunks = bytes.length <= 49152 ? [bytes] : [bytes.subarray(0, 16384), Buffer.from('\n[bounded log: middle omitted]\n'), bytes.subarray(-32768)];
+          for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) console.log(`BFA_BUILD ${phase} ${line}`);
+          NODE
+          }
+          phase() {
+            local label=$1
+            shift
+            local rc=0
+            "$@" > "$task_logs/$label.log" 2>&1 || rc=$?
+            emit_log "$label" "$task_logs/$label.log"
+            printf 'BFA_BUILD_PHASE %s exit=%s\n' "$label" "$rc"
+            if (( rc != 0 )); then exit "$rc"; fi
+          }
+
+          "${clean_env[@]}" git init -q "$task_source"
+          cd "$task_source"
+          "${clean_env[@]}" git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          "${clean_env[@]}" git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          phase source-fetch timeout 120s "${clean_env[@]}" git fetch --no-tags --depth=1 --filter=blob:none origin "$source_sha"
+          "${clean_env[@]}" git checkout -q --detach FETCH_HEAD
+          [[ $(git rev-parse HEAD) == "$source_sha" ]]
+          [[ $(git rev-parse HEAD^{tree}) == dcaaacad3f300837e1b8e07f979f7e7a9322cf0a ]]
+          test ! -e .env
+          printf 'BFA_BUILD_SOURCE %s workflow=%s\n' "$source_sha" "$GITHUB_SHA"
+          "${clean_env[@]}" node --version
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          for (const key of ['preinstall','install','postinstall','preprepare','prepare','postprepare','prebuild','postbuild']) assert.equal(p.scripts?.[key], undefined, `Unexpected root lifecycle hook: ${key}`);
+          assert.equal(p.scripts.build, 'vite build');
+          assert.equal(p.workspaces, undefined);
+          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.27.1');
+          console.log('BFA_BUILD_GUARDS root hooks absent; exact helper declared; no workspace install; no provider credentials inherited');
+          NODE
+          sha256sum package.json bun.lock bunfig.toml vite.config.ts > "$task_logs/source-inputs.sha256"
+          cat "$task_logs/source-inputs.sha256"
+          phase bun-runtime timeout 180s "${clean_env[@]}" npm install --prefix "$task_runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          task_bun="$task_runtime/node_modules/@oven/bun-linux-x64/bin/bun"
+          [[ $("${clean_env[@]}" "$task_bun" --version) == 1.4.4 ]]
+          phase frozen-install timeout 240s "${clean_env[@]}" "$task_bun" install --frozen-lockfile --ignore-scripts
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const p = require('./node_modules/@lovable.dev/vite-tanstack-config/package.json');
+          assert.equal(p.version, '2.27.1');
+          console.log('BFA_BUILD_INSTALLED_HELPER', JSON.stringify({name:p.name,version:p.version,exports:p.exports,main:p.main}));
+          NODE
+          phase production-build timeout 300s "${clean_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          printf 'BFA_BUILD_RESULT PASS source=%s helper=2.27.1; no deploy, model calls, artifact upload, caches or main changes\n' "$source_sha"
+          
+          # The application checkout remains the exact reviewed source; this harness is ephemeral.
+          phase playwright-runtime timeout 180s "${clean_env[@]}" PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$task_runtime/browser" --no-audit --no-fund --ignore-scripts --no-package-lock playwright@1.62.1
+          "${clean_env[@]}" node -e 'require("node:assert/strict").equal(require(process.argv[1]).version,"1.62.1")' "$task_runtime/browser/node_modules/playwright/package.json"
+          task_chrome=''
+          for candidate in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$candidate" ]]; then task_chrome=$candidate; break; fi
+          done
+          [[ -n "$task_chrome" ]] || { printf '%s\n' 'BFA_JOURNEY_UNRUN no preinstalled Chromium'; exit 2; }
+          "${clean_env[@]}" "$task_chrome" --version
+          sha256sum vite.config.cloud.ts scripts/deployment/start-cloud.mjs scripts/deployment/no-outbound-fetch.mjs >> "$task_logs/source-inputs.sha256"
+          phase node-production-build timeout 300s "${clean_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build --config vite.config.cloud.ts
+          cat > "$task_root/check-journey.cjs" <<'BFA_HARNESS'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const { spawn, execFileSync } = require('node:child_process');
+          const { pathToFileURL } = require('node:url');
+          const { chromium } = require(process.env.BFA_PLAYWRIGHT_MODULE);
+          const [source, output] = process.argv.slice(2);
+          const origin = 'http://127.0.0.1:4178';
+          const report = { status:'RUNNING', source:'6a69cfe7836c7b3e08938c2dde4f9acd05fdd9f1', checks:[], externalIntercepts:[], pageErrors:[], localRequests:[], serverFetch:null, forbidden:{webSocket:0,microphone:0,beacon:0}, cleanupErrors:[], limits:['Exact final application source with the private-build flag absent; original staging console only.', 'No authenticated operations, real backend credentials, provider calls or paid requests.', 'Headless Chromium on the existing AI-off Node target, not Lovable runtime or real-device acceptance.', 'Service workers blocked; remote-font CSS intercepted locally; runtime network namespace has loopback only.'] };
+          let browser, context, page, child, guardInstalled = false, guardStatus, childExited = false;
+          let childStdout = '', childStderr = '';
+          const sha = (data) => crypto.createHash('sha256').update(data).digest('hex');
+          const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+          function check(name, condition, evidence = {}) { assert.ok(condition, name); report.checks.push({ name, ...evidence }); }
+          async function visible(locator) { return locator.isVisible().catch(() => false); }
+          async function screenshot(name) { await page.screenshot({ path: path.join(output, name + '.png'), fullPage: true }); }
+          async function waitHome() { await page.getByTestId('day-row-day-01').waitFor({state: 'visible'}); }
+          (async () => {
+            fs.mkdirSync(output, {recursive: true});
+            const links=JSON.parse(execFileSync('/usr/sbin/ip',['-j','link'],{encoding:'utf8'}));
+            const routes4=JSON.parse(execFileSync('/usr/sbin/ip',['-j','route'],{encoding:'utf8'}));
+            const routes6=JSON.parse(execFileSync('/usr/sbin/ip',['-6','-j','route'],{encoding:'utf8'}));
+            report.networkNamespace={interfaces:links.map(x=>x.ifname),routes4,routes6};
+            check('network namespace has loopback only and no egress route', links.length===1 && links[0].ifname==='lo' && [...routes4,...routes6].every(x=>x.dev==='lo'),report.networkNamespace);
+            child = spawn(process.execPath, ['--import', pathToFileURL(path.join(source,'scripts/deployment/no-outbound-fetch.mjs')).href, path.join(source,'scripts/deployment/start-cloud.mjs')], {
+              cwd: source, env: {NODE_ENV:'production', JOURNEY_AI_ENABLED:'false', JOURNEY_AI_RELEASE_READY:'false', LIVE_AI_ENABLED:'false', HOST:'127.0.0.1', PORT:'4178'}, stdio:['ignore','pipe','pipe','ipc']
+            });
+            child.on('exit', () => { childExited = true; });
+            child.on('error', () => { childExited = true; });
+            child.stdout.on('data', b => { childStdout = (childStdout + b.toString()).slice(-16384); });
+            child.stderr.on('data', b => { childStderr = (childStderr + b.toString()).slice(-16384); });
+            child.on('message', m => {
+              if (m?.type !== 'bfa-smoke-fetch-guard') return;
+              if (m.event === 'installed') guardInstalled = true;
+              if (m.event === 'status') guardStatus = m;
+              if (m.event === 'blocked') report.serverFetch = {attempts:m.attempts, blocked:true};
+            });
+            let ready = false;
+            for (let i = 0; i < 80; i++) {
+              assert.ok(!childExited, 'server remained running');
+              try { const r = await fetch(origin, {signal:AbortSignal.timeout(1000)}); ready = r.status === 200; await r.arrayBuffer(); if (ready) break; } catch {}
+              await sleep(250);
+            }
+            check('AI-off local production server ready with fetch canary installed', ready && guardInstalled);
+            browser = await chromium.launch({executablePath:process.env.BFA_CHROMIUM_EXECUTABLE,headless:true,args:['--disable-background-networking','--disable-component-update','--no-first-run','--no-default-browser-check']});
+            report.browserVersion = browser.version();
+            context = await browser.newContext({viewport:{width:390,height:844},acceptDownloads:true,serviceWorkers:'block',reducedMotion:'reduce'});
+            await context.route('**/*', async route => {
+              const u = new URL(route.request().url());
+              if (u.origin === origin) return route.continue();
+              if (u.protocol === 'blob:' || u.protocol === 'data:' || u.protocol === 'about:') return route.continue();
+              report.externalIntercepts.push({host:u.hostname,resourceType:route.request().resourceType()});
+              // Existing remote font stylesheet gets an empty local response; all other nonlocal requests abort.
+              if (u.hostname === 'fonts.googleapis.com' && route.request().resourceType() === 'stylesheet') return route.fulfill({status:200,contentType:'text/css',body:'/* offline font fixture: use system fallbacks */'});
+              return route.abort('blockedbyclient');
+            });
+            await context.exposeBinding('__bfaRecordForbidden', (_source, kind) => { if (Object.hasOwn(report.forbidden, kind)) report.forbidden[kind]++; else report.cleanupErrors.push('unknown-forbidden-kind'); });
+            await context.addInitScript(() => {
+              window.__bfaForbidden = {webSocket:0,microphone:0,beacon:0};
+              window.WebSocket = class { constructor() { window.__bfaForbidden.webSocket++; void window.__bfaRecordForbidden('webSocket'); throw new Error('OFFLINE_WEBSOCKET_BLOCKED'); } };
+              if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia = async () => { window.__bfaForbidden.microphone++; void window.__bfaRecordForbidden('microphone'); throw new Error('OFFLINE_MICROPHONE_BLOCKED'); };
+              navigator.sendBeacon = () => { window.__bfaForbidden.beacon++; void window.__bfaRecordForbidden('beacon'); return false; };
+          
+            });
+            context.on('page', p => p.on('pageerror', error => report.pageErrors.push(error.message)));
+            page = await context.newPage();
+            page.setDefaultTimeout(15000);
+            page.on('request', request => { const u=new URL(request.url()); if(u.origin===origin) report.localRequests.push({method:request.method(),path:u.pathname,type:request.resourceType()}); });
+            await page.goto(origin, {waitUntil:'networkidle'});
+            check('fresh profile starts without journey or entitlement state', await page.evaluate(() => Object.keys(localStorage).length===0));
+            await page.getByRole('link',{name:'Begin the journey',exact:true}).first().click();
+            for(let i=0;i<4;i++) { const before=page.url(); await page.getByTestId('opening-continue').click(); await page.waitForURL(u=>u.href!==before); }
+            await page.getByTestId('agree-adult').check();
+            await page.getByTestId('agree-terms').check();
+            await page.getByTestId('opening-continue').click();
+            await waitHome();
+            check('ordinary four-screen onboarding and agreement completed', true);
+            await page.goto(origin+'/conversation-staging',{waitUntil:'networkidle'});
+            async function checkDefaultOff(label) {
+              await page.getByRole('heading',{name:'Fictional staging conversation',exact:true}).waitFor({state:'visible'});
+              check(label+': original staging controls render',await page.getByRole('button',{name:'New conversation',exact:true}).isVisible() && await page.getByRole('button',{name:'Refresh saved list',exact:true}).isVisible());
+              for(const id of ['private-staging-sign-in','private-staging-email','private-staging-password','private-staging-submit','private-staging-auth-status','private-staging-sign-out','private-staging-auth-retry']) assert.equal(await page.getByTestId(id).count(),0,id+' absent');
+              const text=await page.locator('body').innerText();
+              assert.ok(!text.includes('Private fictional testing'));
+              assert.ok(!text.includes('Use your existing fictional tester account'));
+              assert.equal(await page.locator('input[type="password"]').count(),0);
+              check(label+': private sign-in form and prompt absent',true);
+            }
+            await checkDefaultOff('Initial navigation');
+            await screenshot('default-off-staging');
+            await page.reload({waitUntil:'networkidle'});
+            await checkDefaultOff('Reload');
+            check('no authenticated or write operation requested',report.localRequests.every(x=>x.method==='GET' && !x.path.startsWith('/_server')));
+            // Counts live in Node across every page document, including the reload above.
+            await page.evaluate(()=>Promise.resolve());
+            check('no WebSocket microphone or beacon attempts',Object.values(report.forbidden).every(x=>x===0));
+            check('only known remote-font requests intercepted locally',report.externalIntercepts.every(x=>x.host==='fonts.googleapis.com'&&x.resourceType==='stylesheet'));
+            check('no browser page errors',report.pageErrors.length===0);
+            child.send({type:'bfa-smoke-fetch-guard-status'});
+            for(let i=0;i<20&&!guardStatus;i++) await sleep(50);
+            report.serverFetch=guardStatus;
+            check('server fetch canary remains installed with zero outbound attempts',guardStatus?.installed===true&&guardStatus.attempts===0);
+            check('server remained alive throughout the default-off check',!childExited);
+            report.status='PASSED';
+          })().catch(async error => {
+            report.status='FAILED'; report.error={name:error.name,message:error.message};
+            if(page) { report.failureUrl=page.url(); report.failureBody=await page.locator('body').innerText().catch(()=>null); await screenshot('failure').catch(()=>{}); }
+            process.exitCode=1;
+          }).finally(async()=>{
+            if(context) await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));
+            if(browser) await browser.close().catch(()=>report.cleanupErrors.push('browser-close-failed'));
+            if(child&&!childExited) {
+              if(!guardStatus && child.connected) { child.send({type:'bfa-smoke-fetch-guard-status'}); for(let i=0;i<20&&!guardStatus;i++) await sleep(50); }
+              if(guardStatus) report.serverFetch=guardStatus;
+              child.kill('SIGTERM');
+              for(let i=0;i<20&&!childExited;i++) await sleep(100);
+              if(!childExited) { child.kill('SIGKILL'); for(let i=0;i<20&&!childExited;i++) await sleep(100); }
+            }
+            report.serverStopped=childExited;
+            if(child&&!childExited) report.cleanupErrors.push('server-exit-unconfirmed');
+            if(report.cleanupErrors.length) { report.status='FAILED'; process.exitCode=1; }
+            report.count=report.checks.length;
+            fs.writeFileSync(path.join(output,'result.json'),JSON.stringify(report,null,2)+'\n');
+            fs.writeFileSync(path.join(output,'server-output.log'),childStdout+'\n'+childStderr);
+            console.log(JSON.stringify({status:report.status,count:report.count,error:report.error,serverFetch:report.serverFetch}));
+          });
+          BFA_HARNESS
+          sha256sum "$task_root/check-journey.cjs"
+          node --check "$task_root/check-journey.cjs"
+          mkdir -p "$task_root/journey-evidence"
+          # Only loopback is enabled in this new network namespace. Runtime processes
+          # drop back to the runner's UID. Neither Chromium nor the app has an egress route.
+          journey_rc=0
+          timeout --kill-after=10s 360s sudo --non-interactive unshare --net -- /bin/bash -c '
+            set -eu
+            /usr/sbin/ip link set lo up
+            exec /usr/sbin/runuser -u "$1" -- /usr/bin/env -i PATH="$2" HOME="$3" TMPDIR="$4" BFA_PLAYWRIGHT_MODULE="$5" BFA_CHROMIUM_EXECUTABLE="$6" "$7" "$8" "$9" "${10}"
+          ' bfa "$(id -un)" "$PATH" "$task_home" "$task_root" "$task_runtime/browser/node_modules/playwright" "$task_chrome" "$(command -v node)" "$task_root/check-journey.cjs" "$task_source" "$task_root/journey-evidence" > "$task_logs/journey-browser.log" 2>&1 || journey_rc=$?
+          emit_log journey-browser "$task_logs/journey-browser.log"
+          printf 'BFA_JOURNEY_PROCESS_EXIT %s\n' "$journey_rc"
+          "${clean_env[@]}" node --input-type=commonjs - "$task_root/journey-evidence" <<'BFA_EVIDENCE'
+          const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),crypto=require('node:crypto');
+          const root=process.argv[2];
+          let pngTotal=0;
+          for(const name of ['result.json','server-output.log','default-off-staging.png','failure.png']) {
+            const file=path.join(root,name); if(!fs.existsSync(file)) continue;
+            const bytes=fs.readFileSync(file),digest=crypto.createHash('sha256').update(bytes).digest('hex');
+            console.log(`BFA_JOURNEY_FILE ${name} bytes=${bytes.length} sha256=${digest}`);
+            let payload,encodedName;
+            if(name.endsWith('.png')) { if(bytes.length>400000||pngTotal+bytes.length>900000) continue; payload=bytes;encodedName=name;pngTotal+=bytes.length; }
+            else { if(bytes.length>524288) continue;payload=zlib.gzipSync(bytes);encodedName=name+'.gz'; }
+            const encoded=payload.toString('base64');
+            console.log(`BFA_JOURNEY_PAYLOAD ${encodedName} bytes=${payload.length} sha256=${crypto.createHash('sha256').update(payload).digest('hex')}`);
+            for(let i=0;i<encoded.length;i+=3000) console.log(`BFA_JOURNEY_PART ${encodedName} ${i/3000} ${encoded.slice(i,i+3000)}`);
+          }
+          const result=path.join(root,'result.json');
+          if(!fs.existsSync(result)) { console.log('BFA_JOURNEY_RESULT UNRUN no result file'); process.exitCode=1; }
+          else { const r=JSON.parse(fs.readFileSync(result)); console.log(`BFA_JOURNEY_RESULT ${r.status} checks=${r.count}`); if(r.status!=='PASSED'||r.serverFetch?.attempts!==0||r.serverFetch?.installed!==true||!r.serverStopped) process.exitCode=1; }
+          BFA_EVIDENCE
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          git diff --exit-code
+          exit "$journey_rc"

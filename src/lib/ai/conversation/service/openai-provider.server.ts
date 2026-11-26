@@ -48,6 +48,7 @@ export const OPENAI_CONVERSATION_MAX_OUTPUT_TOKENS = 4_096;
 export const OPENAI_CONVERSATION_MAX_DEADLINE_MS = 45_000;
 
 export type DirectConversationFailureCode =
+  | "access-denied"
   | "missing-key"
   | "invalid-request"
   | "pre-aborted"
@@ -343,8 +344,319 @@ export function describePrivateTypedWire(
   };
 }
 
+/** Billing evidence is independent of reply acceptance. A completed envelope
+ * can contain invalid reply text; this type makes no claim that text is usable. */
+export interface PrivateTypedUsageReceipt {
+  readonly kind: "private-typed-usage-v1";
+  readonly requestId: string;
+  readonly requestPayloadSha256: string;
+  readonly requestedModel: string;
+  readonly reportedModel: string;
+  readonly serviceTier: "default";
+  readonly responseId: string;
+  readonly providerRequestId: string | null;
+  readonly usage: Readonly<ConversationExchangeMeta["usage"]>;
+  readonly didDispatch: true;
+  readonly providerStatus: "completed";
+}
+
+export interface PrivateTypedSendOptions {
+  readonly apiKey: string | undefined;
+  readonly fetchImpl?: typeof fetch;
+  /** Fresh request-bound access/approval check, after any credential waits. */
+  readonly beforeDispatch: () => Promise<boolean>;
+  /** Synchronous cancellation/deadline check after the last await. */
+  readonly mayDispatchNow: () => boolean;
+  /** Independent accounting; can run after foreground cancellation. */
+  readonly onReceipt: (receipt: PrivateTypedUsageReceipt) => void | Promise<void>;
+  readonly onExchange?: (exchange: ConversationExchangeMeta) => void;
+}
+
+function privateReceipt(
+  body: string,
+  headerId: string | null,
+  key: string,
+  requestId: string,
+  wire: ReturnType<typeof prepareWire>,
+  limits: PrivateTypedLimits,
+): PrivateTypedUsageReceipt | null {
+  try {
+    const parsed = object(JSON.parse(body));
+    if (
+      !parsed ||
+      parsed.status !== "completed" ||
+      parsed.error != null ||
+      parsed.model !== limits.model ||
+      parsed.service_tier !== "default"
+    )
+      return null;
+    const responseId = identifier(parsed.id, key);
+    if (!responseId || !identifier(parsed.model, key)) return null;
+    const raw = object(parsed.usage);
+    const input = object(raw?.input_tokens_details),
+      output = object(raw?.output_tokens_details);
+    // Absence is conservative; malformed present metering/header fields are
+    // contradictory evidence and cannot be promoted to a trusted receipt.
+    if (
+      (raw?.input_tokens_details !== undefined && !input) ||
+      (raw?.output_tokens_details !== undefined && !output) ||
+      (headerId !== null && identifier(headerId, key) === null)
+    )
+      return null;
+    const usage = {
+      inputTokens: count(raw?.input_tokens),
+      outputTokens: count(raw?.output_tokens),
+      totalTokens: count(raw?.total_tokens),
+      reasoningTokens: count(output?.reasoning_tokens),
+      cachedInputTokens: count(input?.cached_tokens),
+      cacheWriteTokens: count(input?.cache_write_tokens),
+    };
+    if (
+      usage.inputTokens === null ||
+      usage.outputTokens === null ||
+      usage.totalTokens === null ||
+      usage.inputTokens + usage.outputTokens !== usage.totalTokens ||
+      usage.inputTokens > wire.inputBytes + OPENAI_CONVERSATION_PROTOCOL_TOKEN_ALLOWANCE ||
+      usage.outputTokens > limits.maxOutputTokens ||
+      (output?.reasoning_tokens !== undefined && usage.reasoningTokens === null) ||
+      (input?.cached_tokens !== undefined && usage.cachedInputTokens === null) ||
+      (input?.cache_write_tokens !== undefined && usage.cacheWriteTokens === null) ||
+      (usage.reasoningTokens !== null && usage.reasoningTokens > usage.outputTokens) ||
+      (usage.cachedInputTokens !== null && usage.cachedInputTokens > usage.inputTokens) ||
+      (usage.cacheWriteTokens !== null &&
+        usage.cacheWriteTokens + (usage.cachedInputTokens ?? 0) > usage.inputTokens)
+    )
+      return null;
+    return Object.freeze({
+      kind: "private-typed-usage-v1",
+      requestId,
+      requestPayloadSha256: wire.wireSha256,
+      requestedModel: limits.model,
+      reportedModel: limits.model,
+      serviceTier: "default",
+      responseId,
+      providerRequestId: identifier(headerId, key),
+      usage: Object.freeze(usage),
+      didDispatch: true,
+      providerStatus: "completed",
+    });
+  } catch {
+    return null;
+  }
+}
+
+/** Server-owned one-send preparation. No credentials, fetch or authorization
+ * occurs here. Keep wireBody in server memory; it is not an evidence/log field. */
+export function preparePrivateTypedSender(
+  request: ConversationProviderRequest,
+  input: PrivateTypedLimits,
+) {
+  try {
+    const limits = Object.freeze({ ...input });
+    const requestId = request.requestId;
+    if (!identifier(requestId) || !identifier(limits.model) || limits.model === "invalid-model")
+      return null;
+    const wire = Object.freeze(prepareWire(request, limits.model, limits.maxOutputTokens));
+    if (!withinWireLimits(wire, limits)) return null;
+    const sources = new Set(request.context.sources.map((s) => s.excerpt.sourceKey));
+    const description = Object.freeze({
+      serviceRequestId: requestId,
+      model: limits.model,
+      maxOutputTokens: limits.maxOutputTokens,
+      maxInputBytes: limits.maxInputBytes ?? OPENAI_CONVERSATION_MAX_INPUT_BYTES,
+      deadlineMs: limits.deadlineMs,
+      wireBytes: wire.inputBytes,
+      wireSha256: wire.wireSha256,
+    });
+    let attempted = false;
+    return Object.freeze({
+      description,
+      wireBody: wire.wireBody,
+      async send(
+        options: PrivateTypedSendOptions,
+        signal: AbortSignal,
+      ): Promise<ConversationProviderResponse> {
+        if (attempted) throw new ProviderRequestError("invalid-request");
+        attempted = true;
+        let clockHighWater = performance.now();
+        if (!Number.isFinite(clockHighWater) || clockHighWater < 0)
+          throw new ProviderRequestError("invalid-request");
+        const foregroundDeadline = clockHighWater + limits.deadlineMs;
+        const receiptDeadline = foregroundDeadline + 5_000;
+        const sampleClock = () => {
+          const at = performance.now();
+          if (!Number.isFinite(at) || at < clockHighWater)
+            throw new ProviderRequestError("timeout");
+          clockHighWater = at;
+          return at;
+        };
+        // Capture ports before any wait. Caller-owned options cannot swap the
+        // final guard, recipient or receipt sink during an asynchronous check.
+        const { apiKey, beforeDispatch, mayDispatchNow, onReceipt, onExchange } = options;
+        const transport = options.fetchImpl ?? fetch;
+        let didDispatch = false;
+        const checkedFetch: typeof fetch = async (url, init) => {
+          if (
+            String(url) !== OPENAI_RESPONSES_URL ||
+            init?.body !== wire.wireBody ||
+            init.method !== "POST"
+          )
+            throw new ProviderRequestError("invalid-request");
+          let allowed = false;
+          try {
+            allowed = await beforeDispatch();
+          } catch {
+            /* Fixed denial, no private exception. */
+          }
+          if (allowed !== true || signal.aborted || init.signal?.aborted)
+            throw new ProviderRequestError("access-denied");
+          // No await, serialization or user callback between this final sync
+          // predicate and the one actual transport invocation.
+          let current = false;
+          try {
+            current = mayDispatchNow();
+          } catch {
+            /* Deny. */
+          }
+          if (current !== true || signal.aborted || init.signal?.aborted)
+            throw new ProviderRequestError("access-denied");
+          if (sampleClock() >= foregroundDeadline) throw new ProviderRequestError("timeout");
+          didDispatch = true;
+          const responsePromise = transport(url, init);
+          // The foreground parser retains its original cancellation/deadline.
+          // A transport that ignores abort may still deliver billing evidence
+          // for five additional seconds; never wait/read indefinitely.
+          let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+          let response: Response | undefined;
+          let ended = false;
+          let timer: ReturnType<typeof setTimeout> | undefined;
+          const deadline = new Promise<never>((_, reject) => {
+            timer = setTimeout(
+              () => {
+                ended = true;
+                if (reader) void reader.cancel().catch(() => {});
+                else cancelBody(response);
+                reject(new ProviderRequestError("timeout"));
+              },
+              Math.max(0, receiptDeadline - performance.now()),
+            );
+          });
+          try {
+            const receive = async () => {
+              response = await responsePromise;
+              if (ended || sampleClock() >= receiptDeadline) {
+                cancelBody(response);
+                throw new ProviderRequestError("timeout");
+              }
+              if (
+                !response.ok ||
+                response.redirected ||
+                (response.status >= 300 && response.status < 400)
+              )
+                return response;
+              const body = await readBounded(response, (value) => {
+                reader = value;
+              });
+              if (ended || sampleClock() >= receiptDeadline)
+                throw new ProviderRequestError("timeout");
+              if (body.kind !== "text")
+                throw new ProviderRequestError(
+                  body.kind === "oversize" ? "response-too-large" : "invalid-response",
+                );
+              return { response, text: body.value };
+            };
+            const received = await Promise.race([receive(), deadline]);
+            clearTimeout(timer);
+            if (received instanceof Response) return received;
+            const receipt = privateReceipt(
+              received.text,
+              received.response.headers.get("x-request-id"),
+              apiKey ?? "",
+              requestId,
+              wire,
+              limits,
+            );
+            if (receipt) {
+              try {
+                await onReceipt(receipt);
+              } catch {
+                /* Accounting failure never permits a retry or exposes details. */
+              }
+            }
+            // The unchanged parser validates the exact received text. A late
+            // receipt never becomes a late foreground answer.
+            return new Response(received.text, {
+              status: received.response.status,
+              headers: received.response.headers,
+            });
+          } catch (error) {
+            if (reader) void reader.cancel().catch(() => {});
+            else cancelBody(response);
+            throw error;
+          } finally {
+            clearTimeout(timer);
+          }
+        };
+        let exchange: ConversationExchangeMeta | undefined;
+        let finalOutcome: ConversationExchangeMeta["outcome"] | undefined;
+        try {
+          const answer = await createConversationProvider(
+            {
+              ...limits,
+              apiKey,
+              fetchImpl: checkedFetch,
+              onExchange: (meta) => {
+                exchange = meta;
+              },
+            },
+            { wire, requestId, sources },
+          ).generate(request, signal);
+          // A blocked event loop can delay timers. The synchronous monotonic
+          // sample, not timer delivery, decides whether an answer is still fresh.
+          if (signal.aborted) throw new ProviderRequestError("aborted");
+          if (sampleClock() >= foregroundDeadline) throw new ProviderRequestError("timeout");
+          return answer;
+        } catch (error) {
+          finalOutcome = error instanceof ProviderRequestError ? error.code : "network";
+          throw new ProviderRequestError(finalOutcome);
+        } finally {
+          if (exchange) {
+            try {
+              onExchange?.(
+                Object.freeze({
+                  ...exchange,
+                  didDispatch,
+                  outcome: finalOutcome ?? exchange.outcome,
+                  usage: Object.freeze({ ...exchange.usage }),
+                }),
+              );
+            } catch {
+              /* Content-free observer cannot alter the outcome. */
+            }
+          }
+        }
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export function createDirectOpenAIConversationProvider(
   options: DirectConversationProviderOptions,
+): ConversationProvider {
+  return createConversationProvider(options);
+}
+
+// Private preparation supplies the exact captured bytes and admitted source keys.
+// The original exported factory always uses its unchanged serialization/parser path.
+function createConversationProvider(
+  options: DirectConversationProviderOptions,
+  prepared?: {
+    wire: ReturnType<typeof prepareWire>;
+    requestId: string;
+    sources: ReadonlySet<string>;
+  },
 ): ConversationProvider {
   // Capture only the explicit server-side key supplied by the caller.
   const apiKey = options.apiKey;
@@ -358,7 +670,8 @@ export function createDirectOpenAIConversationProvider(
     ): Promise<ConversationProviderResponse> {
       const startedAt = Date.now();
       const meta: ConversationExchangeMeta = {
-        requestId: identifier(request.requestId, apiKey) ?? "invalid-request-id",
+        requestId:
+          identifier(prepared?.requestId ?? request.requestId, apiKey) ?? "invalid-request-id",
         requestedModel,
         requestPayloadSha256: null,
         didDispatch: false,
@@ -395,7 +708,7 @@ export function createDirectOpenAIConversationProvider(
       // A pre-aborted request is never dispatched: zero provider calls.
       if (signal.aborted) fail("pre-aborted");
 
-      const wire = prepareWire(request, requestedModel, options.maxOutputTokens);
+      const wire = prepared?.wire ?? prepareWire(request, requestedModel, options.maxOutputTokens);
       const { wireBody, inputBytes } = wire;
       meta.requestPayloadSha256 = wire.wireSha256;
       const key = apiKey && apiKey.trim() ? apiKey : fail("missing-key");
@@ -408,9 +721,8 @@ export function createDirectOpenAIConversationProvider(
       )
         fail("invalid-request");
 
-      const admittedSourceKeys = new Set(
-        request.context.sources.map((s) => s.excerpt.sourceKey),
-      );
+      const admittedSourceKeys =
+        prepared?.sources ?? new Set(request.context.sources.map((s) => s.excerpt.sourceKey));
 
       const controller = new AbortController();
       let activeReader: ReadableStreamDefaultReader<Uint8Array> | undefined;

@@ -1,0 +1,304 @@
+name: BFA isolated private sign-in browser
+on:
+  push:
+    branches: [validation/private-signin-browser-20261126]
+permissions: {}
+jobs:
+  build:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - name: Build exact public source with its frozen helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          source_sha=d245d9b1e6930b1e032e74d7db6dbfbde8dfb20f
+          task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
+          task_source="$task_root/source"
+          task_home="$task_root/home"
+          task_runtime="$task_root/runtime"
+          task_logs="$task_root/logs"
+          mkdir -p "$task_source" "$task_home" "$task_runtime" "$task_logs"
+          clean_env=(env -i "PATH=$PATH" "HOME=$task_home" "TMPDIR=$task_root" CI=1 npm_config_update_notifier=false)
+
+          emit_log() {
+            "${clean_env[@]}" node --input-type=commonjs - "$1" "$2" <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const [phase, path] = process.argv.slice(2);
+          const bytes = fs.readFileSync(path);
+          console.log(`BFA_BUILD_LOG ${phase} bytes=${bytes.length} sha256=${crypto.createHash('sha256').update(bytes).digest('hex')}`);
+          const chunks = bytes.length <= 49152 ? [bytes] : [bytes.subarray(0, 16384), Buffer.from('\n[bounded log: middle omitted]\n'), bytes.subarray(-32768)];
+          for (const line of Buffer.concat(chunks).toString('utf8').split('\n')) console.log(`BFA_BUILD ${phase} ${line}`);
+          NODE
+          }
+          phase() {
+            local label=$1
+            shift
+            local rc=0
+            "$@" > "$task_logs/$label.log" 2>&1 || rc=$?
+            emit_log "$label" "$task_logs/$label.log"
+            printf 'BFA_BUILD_PHASE %s exit=%s\n' "$label" "$rc"
+            if (( rc != 0 )); then exit "$rc"; fi
+          }
+
+          "${clean_env[@]}" git init -q "$task_source"
+          cd "$task_source"
+          "${clean_env[@]}" git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          "${clean_env[@]}" git sparse-checkout set --no-cone --stdin <<'PATHS'
+          /*
+          !/.env
+          !/.env.*
+          !**/.env
+          !**/.env.*
+          PATHS
+          phase source-fetch timeout 120s "${clean_env[@]}" git fetch --no-tags --depth=1 --filter=blob:none origin "$source_sha"
+          "${clean_env[@]}" git checkout -q --detach FETCH_HEAD
+          [[ $(git rev-parse HEAD) == "$source_sha" ]]
+          test ! -e .env
+          printf 'BFA_BUILD_SOURCE %s workflow=%s\n' "$source_sha" "$GITHUB_SHA"
+          "${clean_env[@]}" node --version
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          for (const key of ['preinstall','install','postinstall','preprepare','prepare','postprepare','prebuild','postbuild']) assert.equal(p.scripts?.[key], undefined, `Unexpected root lifecycle hook: ${key}`);
+          assert.equal(p.scripts.build, 'vite build');
+          assert.equal(p.workspaces, undefined);
+          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.27.1');
+          console.log('BFA_BUILD_GUARDS root hooks absent; exact helper declared; no workspace install; no provider credentials inherited');
+          NODE
+          sha256sum package.json bun.lock bunfig.toml vite.config.ts > "$task_logs/source-inputs.sha256"
+          cat "$task_logs/source-inputs.sha256"
+          phase bun-runtime timeout 180s "${clean_env[@]}" npm install --prefix "$task_runtime" --no-audit --no-fund --ignore-scripts --no-package-lock @oven/bun-linux-x64@1.4.4
+          task_bun="$task_runtime/node_modules/@oven/bun-linux-x64/bin/bun"
+          [[ $("${clean_env[@]}" "$task_bun" --version) == 1.4.4 ]]
+          phase frozen-install timeout 240s "${clean_env[@]}" "$task_bun" install --frozen-lockfile --ignore-scripts
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          "${clean_env[@]}" node --input-type=commonjs <<'NODE'
+          const assert = require('node:assert/strict');
+          const p = require('./node_modules/@lovable.dev/vite-tanstack-config/package.json');
+          assert.equal(p.version, '2.27.1');
+          console.log('BFA_BUILD_INSTALLED_HELPER', JSON.stringify({name:p.name,version:p.version,exports:p.exports,main:p.main}));
+          NODE
+          task_public_key="sb_publishable_$("${clean_env[@]}" node -e 'process.stdout.write(require("node:crypto").randomBytes(24).toString("hex"))')"
+          sha256sum vite.config.cloud.ts scripts/deployment/start-cloud.mjs src/components/conversation-staging/PrivateStagingSignIn.tsx src/routes/conversation-staging.tsx >> "$task_logs/source-inputs.sha256"
+          phase node-production-build timeout 300s "${clean_env[@]}" \
+            VITE_BFA_PRIVATE_STAGING_SIGN_IN=true \
+            VITE_SUPABASE_URL=http://127.0.0.1:4179 \
+            VITE_SUPABASE_PUBLISHABLE_KEY="$task_public_key" \
+            SUPABASE_URL=http://127.0.0.1:4179 \
+            SUPABASE_PUBLISHABLE_KEY="$task_public_key" \
+            node node_modules/vite/bin/vite.js build --config vite.config.cloud.ts
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          phase playwright-runtime timeout 180s "${clean_env[@]}" PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$task_runtime/browser" --no-audit --no-fund --ignore-scripts --no-package-lock playwright@1.62.1
+          "${clean_env[@]}" node -e 'require("node:assert/strict").equal(require(process.argv[1]).version,"1.62.1")' "$task_runtime/browser/node_modules/playwright/package.json"
+          task_chrome=''
+          for candidate in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$candidate" ]]; then task_chrome=$candidate; break; fi
+          done
+          [[ -n "$task_chrome" ]] || { printf '%s\n' 'BFA_SIGNIN_UNRUN no preinstalled Chromium'; exit 2; }
+          "${clean_env[@]}" "$task_chrome" --version
+          cat > "$task_root/check-private-signin.cjs" <<'BFA_HARNESS'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const http = require('node:http');
+          const crypto = require('node:crypto');
+          const { spawn, execFileSync } = require('node:child_process');
+          const { pathToFileURL } = require('node:url');
+          const { chromium } = require(process.env.BFA_PLAYWRIGHT_MODULE);
+          const [source, output] = process.argv.slice(2);
+          const origin = 'http://127.0.0.1:4178';
+          const authOrigin = 'http://127.0.0.1:4179';
+          const publicKey = process.env.BFA_FIXTURE_PUBLIC_KEY;
+          assert.match(publicKey ?? '', /^sb_publishable_[a-f0-9]{48}$/);
+          const serviceKey = 'sb_secret_' + crypto.randomBytes(24).toString('hex');
+          const owner = '7d1ef242-7511-4866-b6b7-b345d65b5e75';
+          const email = 'fictional.private.tester@example.invalid';
+          const password = crypto.randomBytes(24).toString('hex');
+          const note = 'Invented browser fixture: I set out a blue notebook today.';
+          const draft = 'Invented unsent browser fixture draft.';
+          const user = { id: owner, aud: 'authenticated', role: 'authenticated', email, email_confirmed_at: new Date().toISOString(), app_metadata: {provider:'email',providers:['email']}, user_metadata: {}, identities: [], created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_anonymous: false };
+          const base64 = value => Buffer.from(JSON.stringify(value)).toString('base64url');
+          const tokenPrefix = `${base64({alg:'HS256',typ:'JWT'})}.${base64({sub:owner,aud:'authenticated',role:'authenticated',email,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+3600,session_id:crypto.randomUUID()})}`;
+          const token = tokenPrefix + '.' + crypto.createHmac('sha256',crypto.randomBytes(32)).update(tokenPrefix).digest('base64url');
+          const report = { status:'RUNNING', source: process.env.BFA_SOURCE_SHA, checks:[], phases:[], authRequests:{invalidPassword:0,validPassword:0,user:0,logoutLocal:0,rejectedUser:0}, databaseRequests:{allowlist:0,deniedAllowlist:0,threadRead:0,list:0,create:0,reserve:0,claim:0,settle:0,finish:0}, browserRpc:{count:0,allHadExactFictionalBearer:true}, fixtureViolations:[], forbidden:{webSocket:0,microphone:0,beacon:0}, externalIntercepts:0, pageErrors:0, cleanupErrors:[], limits:['Real built React application, real Supabase JS SDK and existing server middleware; HTTP Auth/REST/RPC service responses are disposable fictional doubles.', 'No hosted Supabase Auth, JWT signature server, SQL/RLS/transaction or real-user acceptance is established.', 'The actual ConversationService canned mock provider and AES-GCM/HMAC boundary run; no model, live voice or microphone is enabled.', 'Direct local browser storage only; Lovable embedded-preview storage broker, other browsers and real devices are not covered.', 'The isolated network namespace has loopback only. No credentials, bearer tokens, headers, response envelopes, typed contents or journal text are emitted in the report.'] };
+          let admitted=false, revoked=false, row=null, reservation=null;
+          let browser, context, page, child, fixture, guardStatus, childExited=false, capturedRpc=null;
+          let childOutput='';
+          const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          function check(name,condition,evidence={}) { assert.ok(condition,name); report.checks.push({name,...evidence}); }
+          function phase(name) { report.phases.push(name); }
+          function reply(res,status,value) { res.writeHead(status,{'content-type':'application/json','access-control-allow-origin':origin,'access-control-allow-headers':'authorization,apikey,content-type,x-client-info,x-supabase-api-version,prefer,accept-profile,content-profile','access-control-allow-methods':'GET,POST,OPTIONS','cache-control':'no-store'}); res.end(value===undefined?'':JSON.stringify(value)); }
+          function requireCondition(condition,label) { if(!condition) { report.fixtureViolations.push(label); throw new Error(label); } }
+          async function fixtureRequest(req,res) {
+            try {
+              if(req.method==='OPTIONS') return reply(res,204);
+              const url=new URL(req.url,authOrigin);
+              let bytes=''; for await(const chunk of req) {bytes+=chunk; requireCondition(bytes.length<524288,'fixture request too large');}
+              const data=bytes?JSON.parse(bytes):null;
+              if(url.pathname==='/auth/v1/token') {
+                requireCondition(req.headers.apikey===publicKey,'token public key');
+                requireCondition(url.searchParams.get('grant_type')==='password','password grant only');
+                if(data?.email!==email || data?.password!==password) {report.authRequests.invalidPassword++; return reply(res,400,{code:'invalid_credentials',error_code:'invalid_credentials',msg:'Invalid login credentials'});}
+                report.authRequests.validPassword++; revoked=false;
+                return reply(res,200,{access_token:token,token_type:'bearer',expires_in:3600,expires_at:Math.floor(Date.now()/1000)+3600,refresh_token:crypto.randomBytes(32).toString('hex'),user});
+              }
+              if(url.pathname==='/auth/v1/user') {
+                report.authRequests.user++;
+                if(req.headers.authorization!==`Bearer ${token}`||revoked) {report.authRequests.rejectedUser++; return reply(res,401,{code:'bad_jwt',msg:'Invalid token'});}
+                requireCondition(req.headers.apikey===publicKey,'user public key');
+                return reply(res,200,user);
+              }
+              if(url.pathname==='/auth/v1/logout') {
+                requireCondition(req.headers.authorization===`Bearer ${token}`,'logout exact bearer');
+                requireCondition(url.searchParams.get('scope')==='local','local logout scope');
+                report.authRequests.logoutLocal++; return reply(res,204);
+              }
+              if(url.pathname==='/rest/v1/bfa_p3b_staging_accounts') {
+                requireCondition(req.headers.apikey===serviceKey,'allowlist service key');
+                requireCondition(!req.headers.authorization,'opaque service key not bearer');
+                requireCondition(url.searchParams.get('user_id')===`eq.${owner}`&&url.searchParams.get('admitted')==='eq.true'&&url.searchParams.get('expires_at')?.startsWith('gt.'),'allowlist exact owner and expiry filters');
+                report.databaseRequests.allowlist++;
+                if(!admitted) report.databaseRequests.deniedAllowlist++;
+                return reply(res,200,admitted?[{user_id:owner}]:[]);
+              }
+              if(url.pathname==='/rest/v1/bfa_p3b_threads') {
+                requireCondition(req.headers.apikey===publicKey&&req.headers.authorization===`Bearer ${token}`,'thread user auth');
+                requireCondition(url.searchParams.get('owner_id')===`eq.${owner}`,'thread owner filter');
+                if(url.searchParams.has('saved_at')) {report.databaseRequests.list++; return reply(res,200,[]);}
+                report.databaseRequests.threadRead++;
+                requireCondition(row&&url.searchParams.get('id')===`eq.${row.id}`,'thread exact id');
+                return reply(res,200,[row]);
+              }
+              if(url.pathname.startsWith('/rest/v1/rpc/')) {
+                requireCondition(req.headers.apikey===serviceKey&&!req.headers.authorization,'rpc service key only');
+                requireCondition(admitted&&data?.p_owner===owner,'rpc allowed exact owner');
+                const name=url.pathname.slice('/rest/v1/rpc/'.length);
+                if(name==='bfa_p3b_create') {report.databaseRequests.create++; requireCondition(!row,'single fixture create'); row={id:crypto.randomUUID(),owner_id:owner,revision:0,saved_revision:null,saved_snapshot:null,saved_at:null,deleted_at:null}; return reply(res,200,row.id);}
+                if(name==='bfa_p3b_settle') {requireCondition(reservation?.claimed&&data.p_request===reservation.request&&data.p_charged===0&&typeof data.p_receipt==='string','exact zero-cost mock settlement'); report.databaseRequests.settle++; reservation.settled=true; return reply(res,200,true);}
+                requireCondition(row&&data.p_thread===row.id&&data.p_revision===row.revision,'rpc exact thread revision');
+                if(name==='bfa_p3b_reserve') {requireCondition(!reservation&&data.p_mode==='text'&&typeof data.p_request==='string'&&/^[a-f0-9]{64}$/.test(data.p_fingerprint),'reserve exact text association'); report.databaseRequests.reserve++; reservation={request:data.p_request,fingerprint:data.p_fingerprint,claimed:false,settled:false}; return reply(res,200,{duplicate:false});}
+                if(name==='bfa_p3b_claim') {requireCondition(reservation&&!reservation.claimed&&data.p_request===reservation.request&&data.p_fingerprint===reservation.fingerprint&&data.p_mode==='text','claim exact reservation'); report.databaseRequests.claim++; reservation.claimed=true; return reply(res,200,true);}
+                if(name==='bfa_p3b_finish') {requireCondition(reservation?.settled&&data.p_request===reservation.request,'finish after settlement'); report.databaseRequests.finish++; row.revision++; return reply(res,200,row.revision);}
+                throw new Error('unexpected rpc');
+              }
+              throw new Error('unexpected fixture endpoint');
+            } catch(error) {report.fixtureViolations.push(error.message); reply(res,500,{message:'Fictional fixture assertion failed'});}
+          }
+          async function eventually(fn,message) {for(let n=0;n<100;n++){if(await fn()) return; await delay(50);} throw new Error(message);}
+          const selector=id=>page.locator(`[data-testid="${id}"],#${id}`).first();
+          async function signIn(pass) {await selector('private-staging-email').fill(email);await selector('private-staging-password').fill(pass);await selector('private-staging-submit').click();}
+          (async()=>{
+            fs.mkdirSync(output,{recursive:true});
+            const interfaces=JSON.parse(execFileSync('/usr/sbin/ip',['-j','link'],{encoding:'utf8'})).map(x=>x.ifname);
+            const routes=[...JSON.parse(execFileSync('/usr/sbin/ip',['-j','route'],{encoding:'utf8'})),...JSON.parse(execFileSync('/usr/sbin/ip',['-6','-j','route'],{encoding:'utf8'}))];
+            check('loopback-only network namespace',interfaces.length===1&&interfaces[0]==='lo'&&routes.every(x=>x.dev==='lo'),{interfaces,routeCount:routes.length});
+            check('app and browser run nonroot',process.getuid()!==0);
+            fixture=http.createServer((req,res)=>void fixtureRequest(req,res)); await new Promise(resolve=>fixture.listen(4179,'127.0.0.1',resolve));
+            const guard=path.join(output,'loopback-fetch-guard.mjs');
+            fs.writeFileSync(guard,`const original=globalThis.fetch;let allowed=0,blocked=0;globalThis.fetch=(input,init)=>{const u=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);if(u.origin!==${JSON.stringify(authOrigin)}){blocked++;throw new Error('Offline fixture blocked unexpected server fetch');}allowed++;return original(input,init);};process.on('message',m=>{if(m?.type==='fixture-fetch-status')process.send?.({type:'fixture-fetch-status',installed:globalThis.fetch!==original,allowed,blocked});});`);
+            child=spawn(process.execPath,['--import',pathToFileURL(guard).href,path.join(source,'scripts/deployment/start-cloud.mjs')],{cwd:source,env:{NODE_ENV:'production',JOURNEY_AI_ENABLED:'false',JOURNEY_AI_RELEASE_READY:'false',LIVE_AI_ENABLED:'false',HOST:'127.0.0.1',PORT:'4178',SUPABASE_URL:authOrigin,SUPABASE_PUBLISHABLE_KEY:publicKey,SUPABASE_SERVICE_ROLE_KEY:serviceKey,BFA_P3B_STATE_SECRET:crypto.randomBytes(32).toString('hex')},stdio:['ignore','pipe','pipe','ipc']});
+            child.on('exit',()=>{childExited=true;});child.on('error',()=>{childExited=true;});
+            child.stdout.on('data',b=>{childOutput=(childOutput+b).slice(-32768);});child.stderr.on('data',b=>{childOutput=(childOutput+b).slice(-32768);});
+            child.on('message',m=>{if(m?.type==='fixture-fetch-status')guardStatus=m;});
+            await eventually(async()=>{if(childExited)throw new Error('built app exited before readiness');try{return(await fetch(origin)).ok;}catch{return false;}},'built app readiness timeout');
+            browser=await chromium.launch({executablePath:process.env.BFA_CHROMIUM_EXECUTABLE,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-background-networking']});
+            report.browserVersion=browser.version();
+            context=await browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block'});
+            await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin===origin||u.origin===authOrigin)return route.continue();report.externalIntercepts++;return route.abort();});
+            await context.addInitScript(()=>{window.__bfaForbidden={webSocket:0,microphone:0,beacon:0};window.WebSocket=class{constructor(){window.__bfaForbidden.webSocket++;throw new Error('Offline');}};if(navigator.mediaDevices)navigator.mediaDevices.getUserMedia=()=>{window.__bfaForbidden.microphone++;return Promise.reject(new Error('Offline'));};navigator.sendBeacon=()=>{window.__bfaForbidden.beacon++;return false;};});
+            page=await context.newPage();page.on('pageerror',()=>report.pageErrors++);
+            page.on('request',req=>{if(req.url().startsWith(origin)&&req.method()==='POST'){report.browserRpc.count++;const headers=req.headers();report.browserRpc.allHadExactFictionalBearer&&=headers.authorization===`Bearer ${token}`;capturedRpc={url:req.url(),headers,body:req.postData()};}});
+            phase('signed-out');await page.goto(origin+'/conversation-staging');await selector('private-staging-sign-in').waitFor();
+            check('signed-out route shows sign-in and hides console',!(await page.locator('#staging-heading').isVisible()));
+            check('no privileged request before sign-in',report.databaseRequests.allowlist===0&&report.databaseRequests.create===0);
+            phase('invalid-password');await signIn('intentionally-invalid-fictional-password');await eventually(()=>report.authRequests.invalidPassword===1,'invalid password not attempted');await eventually(()=>selector('private-staging-submit').isEnabled(),'invalid password form not restored');
+            check('invalid password leaves console hidden',!(await page.locator('#staging-heading').isVisible()));
+            check('invalid password produces generic visible feedback',(await selector('private-staging-auth-status').innerText())==='Sign-in was not completed. Check your details and try again.');
+            check('invalid sign-in clears both credential fields',await selector('private-staging-email').inputValue()===''&&await selector('private-staging-password').inputValue()==='');
+            phase('valid-sign-in-not-allowlisted');await signIn(password);await page.locator('#staging-heading').waitFor();
+            check('valid SDK password response mounts console',report.authRequests.validPassword===1);
+            check('sign-in does not put credentials in URL',page.url()===origin+'/conversation-staging');
+            check('password input unmounted after sign-in',await selector('private-staging-password').count()===0);
+            await page.getByRole('button',{name:'New conversation',exact:true}).click();await page.getByText('Unavailable or stale. Unsaved changes may not be recoverable. Nothing was retried.',{exact:true}).waitFor();
+            check('authenticated but unallowlisted create denied before privileged create',report.databaseRequests.deniedAllowlist>0&&report.databaseRequests.create===0&&report.authRequests.user>=2);
+            await page.getByRole('button',{name:'Leave unavailable conversation',exact:true}).click();
+            phase('admitted-create-and-mock-turn');admitted=true;await page.getByRole('button',{name:'New conversation',exact:true}).click();await page.locator('#staging-message').waitFor();
+            check('ordinary New creates exact owner thread through server middleware',report.databaseRequests.create===1&&row.revision===0);
+            await page.locator('#staging-message').fill(note);await page.getByRole('button',{name:'Send fictional message',exact:true}).click();
+            await page.locator('ol p').filter({hasText:'Fictional preview reply (mock provider, not AI):'}).waitFor();
+            check('ordinary typed message and real canned reply rendered',await page.locator('ol p').filter({hasText:note}).count()===1&&await page.locator('ol p').filter({hasText:'Fictional preview reply (mock provider, not AI):'}).count()===1);
+            check('one exact reserve claim settle finish and revision increment',report.databaseRequests.reserve===1&&report.databaseRequests.claim===1&&report.databaseRequests.settle===1&&report.databaseRequests.finish===1&&row.revision===1);
+            check('submitted draft cleared',await page.locator('#staging-message').inputValue()==='');
+            await page.getByRole('button',{name:'Refresh saved list',exact:true}).click();await page.getByText('No saved conversations.',{exact:true}).waitFor();
+            check('signed-in saved-list request uses owner filter',report.databaseRequests.list===1);
+            phase('fresh-allowlist-denial');admitted=false;const listCount=report.databaseRequests.list;await page.getByRole('button',{name:'Refresh saved list',exact:true}).click();await page.getByText('Saved conversations unavailable.',{exact:true}).waitFor();
+            check('later allowlist loss denies before thread list query',report.databaseRequests.list===listCount&&report.databaseRequests.deniedAllowlist>=2);
+            check('real global middleware attached exact SDK bearer to all browser RPCs',report.browserRpc.count>=5&&report.browserRpc.allHadExactFictionalBearer);
+            phase('unauthenticated-rpc-denial');requireCondition(capturedRpc,'captured server function request');
+            const dataCounts=JSON.stringify(report.databaseRequests);
+            for(const mode of ['missing','malformed','revoked']){
+              const headers={...capturedRpc.headers};delete headers.authorization;delete headers.host;delete headers['content-length'];
+              if(mode==='malformed')headers.authorization='Bearer fictional-not-a-jwt';
+              if(mode==='revoked'){headers.authorization=`Bearer ${token}`;revoked=true;}
+              const response=await fetch(capturedRpc.url,{method:'POST',headers,body:capturedRpc.body});await response.arrayBuffer();
+              check(mode+' bearer rejected by actual server middleware',response.status>=400&&JSON.stringify(report.databaseRequests)===dataCounts,{httpStatus:response.status});
+            }
+            revoked=false;
+            phase('sign-out-clears-active-draft');await page.locator('#staging-message').fill(draft);await selector('private-staging-sign-out').click();await selector('private-staging-sign-in').waitFor();await page.getByText('Signed out on this device.',{exact:true}).waitFor();
+            check('local-scope SDK sign-out sent once',report.authRequests.logoutLocal===1);
+            check('sign-out unmounts active conversation and typed draft',await page.locator('#staging-message').count()===0&&await page.locator('ol p').count()===0&&!(await page.locator('#staging-heading').isVisible()));
+            const stored=await page.evaluate(()=>Object.keys(localStorage).filter(k=>/^sb-.*-auth-token$/.test(k)).map(k=>localStorage.getItem(k)));
+            check('SDK session removed from browser storage',stored.every(x=>x===null));
+            const beforeReload=await page.evaluate(()=>window.__bfaForbidden);
+            await page.reload();await selector('private-staging-sign-in').waitFor();check('reload remains signed out with no console',!(await page.locator('#staging-heading').isVisible()));
+            const afterReload=await page.evaluate(()=>window.__bfaForbidden);for(const key of Object.keys(report.forbidden))report.forbidden[key]=beforeReload[key]+afterReload[key];check('no browser voice microphone or beacon activation',Object.values(report.forbidden).every(x=>x===0));
+            check('no browser page errors',report.pageErrors===0);check('all HTTP fixture constraints met',report.fixtureViolations.length===0);
+            child.send({type:'fixture-fetch-status'});await eventually(()=>!!guardStatus,'server fetch guard report missing');report.serverFetch=guardStatus;
+            check('actual server fetch stayed within local disposable service',guardStatus.installed===true&&guardStatus.allowed>0&&guardStatus.blocked===0);
+            check('app alive throughout acceptance',!childExited);report.status='PASSED';
+          })().catch(error=>{report.status='FAILED';report.error={name:error.name,message:String(error.message).replaceAll(password,'[redacted]').replaceAll(token,'[redacted]').replaceAll(publicKey,'[redacted]').replaceAll(serviceKey,'[redacted]').replaceAll(email,'[fictional email]').replaceAll(note,'[fictional typed text]').replaceAll(draft,'[fictional draft]').replace(/[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/g,'[redacted token]').slice(0,2000)};process.exitCode=1;}).finally(async()=>{
+            // Never write app output, request bodies/headers, session values or screenshots: all may contain fictional credentials/content.
+            if(context)await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));
+            if(browser)await browser.close().catch(()=>report.cleanupErrors.push('browser-close-failed'));
+            if(child&&!childExited){child.kill('SIGTERM');for(let n=0;n<20&&!childExited;n++)await delay(100);if(!childExited){child.kill('SIGKILL');for(let n=0;n<20&&!childExited;n++)await delay(100);}}
+            report.serverStopped=childExited;if(child&&!childExited)report.cleanupErrors.push('app-exit-unconfirmed');
+            if(fixture){await new Promise(resolve=>fixture.close(resolve));report.fixtureStopped=true;}
+            if(report.cleanupErrors.length){report.status='FAILED';process.exitCode=1;}
+            report.count=report.checks.length;report.appOutputBytes=Buffer.byteLength(childOutput);report.appOutputRetained=false;
+            fs.writeFileSync(path.join(output,'result.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,count:report.count,phase:report.phases.at(-1),error:report.error}));
+          });
+          BFA_HARNESS
+          sha256sum "$task_root/check-private-signin.cjs"
+          node --check "$task_root/check-private-signin.cjs"
+          mkdir -p "$task_root/signin-evidence"
+          # Application and browser run as the normal runner, inside a loopback-only namespace.
+          # Fixture credentials exist only in these disposable processes and are never emitted.
+          signin_rc=0
+          timeout --kill-after=10s 240s sudo --non-interactive unshare --net -- /bin/bash -c '
+            set -eu
+            /usr/sbin/ip link set lo up
+            exec /usr/sbin/runuser -u "$1" -- /usr/bin/env -i PATH="$2" HOME="$3" TMPDIR="$4" BFA_PLAYWRIGHT_MODULE="$5" BFA_CHROMIUM_EXECUTABLE="$6" BFA_SOURCE_SHA="${11}" BFA_FIXTURE_PUBLIC_KEY="${12}" "$7" "$8" "$9" "${10}"
+          ' bfa "$(id -un)" "$PATH" "$task_home" "$task_root" "$task_runtime/browser/node_modules/playwright" "$task_chrome" "$(command -v node)" "$task_root/check-private-signin.cjs" "$task_source" "$task_root/signin-evidence" "$source_sha" "$task_public_key" > "$task_logs/signin-browser.log" 2>&1 || signin_rc=$?
+          emit_log signin-browser "$task_logs/signin-browser.log"
+          printf 'BFA_SIGNIN_PROCESS_EXIT %s\n' "$signin_rc"
+          "${clean_env[@]}" node --input-type=commonjs - "$task_root/signin-evidence" <<'BFA_EVIDENCE'
+          const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),crypto=require('node:crypto');
+          const file=path.join(process.argv[2],'result.json');
+          if(!fs.existsSync(file)){console.log('BFA_SIGNIN_RESULT UNRUN no result file');process.exit(1);}
+          const bytes=fs.readFileSync(file),r=JSON.parse(bytes);
+          if(bytes.length>65536)throw new Error('Result exceeds bounded content-free report size');
+          const payload=zlib.gzipSync(bytes),encoded=payload.toString('base64');
+          console.log(`BFA_SIGNIN_FILE result.json bytes=${bytes.length} sha256=${crypto.createHash('sha256').update(bytes).digest('hex')}`);
+          console.log(`BFA_SIGNIN_PAYLOAD result.json.gz bytes=${payload.length} sha256=${crypto.createHash('sha256').update(payload).digest('hex')}`);
+          for(let i=0;i<encoded.length;i+=3000)console.log(`BFA_SIGNIN_PART result.json.gz ${i/3000} ${encoded.slice(i,i+3000)}`);
+          console.log(`BFA_SIGNIN_RESULT ${r.status} checks=${r.count} phase=${r.phases.at(-1)}`);
+          if(r.status!=='PASSED'||!r.serverStopped||!r.fixtureStopped||r.serverFetch?.blocked!==0||r.fixtureViolations.length||Object.values(r.forbidden).some(x=>x!==0))process.exitCode=1;
+          BFA_EVIDENCE
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          git diff --exit-code
+          exit "$signin_rc"

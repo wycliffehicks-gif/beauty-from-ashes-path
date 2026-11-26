@@ -10,6 +10,8 @@ Under a separate one-use authorization, the private Lovable runner sent the two 
 
 Offline tests reproduced the same second-turn stop using both a repeated synthetic response ID and an ID accepted by the provider adapter but rejected by the ledger. Ordinary distinct IDs settled both turns. These are distinguishable explanations for the same reported outcome. The cause in the real C05 records is still unknown. All 130 affected tests across nine files passed, along with both TypeScript checks and a local production build. The existing receipt rules, past accounting records, provider adapter, SRT policy and participant routes were preserved.
 
+**Lovable hosting.** The editor listed the GitHub change at `1167d539` by its exact title. The same card reported **Build unsuccessful** and **Preview is out of date**. The local production build passed. The failing hosted step is unknown. The last verified working hosted walkthrough remains at `46d81b94`. No paid repair or publication occurred.
+
 **Continue here.** Run the read-only inspection against the original private C05 files when available. The previous test authorization is closed. The five unsent messages in C07 and C08 require a separate decision after the accounting review. The public launch still requires paid access, real typed chat and real-device voice acceptance, plus Carl's release decision.
 
 ## Private text test and accounting review — 25–26 November 2026

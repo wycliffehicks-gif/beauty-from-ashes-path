@@ -112,6 +112,9 @@ class RaceTests:
         self.collision_rollback_expiry()
         self.legacy_settlement_read()
         self.original_verified_age()
+        self.original_allowlist_ceiling()
+        self.session_at_hold()
+        self.old_hold_denied()
         return {"status":"PASS","sqlSha256":hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
                 "baseSpendSha256":hashlib.sha256(SPEND.read_bytes()).hexdigest(),
                 "postgres":self.o.scalar("SHOW server_version;"),"cases":self.cases,
@@ -139,10 +142,44 @@ class RaceTests:
         require(outcome==["f"] and self.state(f)=="held","newly revoked approval cannot send or refund")
         self.cases.append("independent revocation during marker lock wait preserves hold")
 
+    def old_hold_denied(self):
+        f=self.fixture()
+        f["initial_verified"]=self.stamp(-.05)
+        approved=f"SELECT public.bfa_private_text_spend_claim({self.binding(f)}, {q(f['initial_verified'])}, {q(f['auth_deadline'])});"
+        require(self.a.scalar(approved)=="t","original legacy accounting hold fixture")
+        require(self.b.scalar(self.mark(f))=="f" and self.state(f)=="held",
+                "legacy hold without new observed access must not become dispatch authority")
+        require(self.b.scalar(self.settle(f,"resp_legacy_reconciliation",54))=="t","legacy reconciliation remains intact")
+        self.cases.append("pre-existing held rows cannot dispatch via new path; historical reconciliation remains available")
+
+    def session_at_hold(self):
+        f=self.held("session")
+        self.o.query(f"UPDATE auth.sessions SET not_after=NULL WHERE id={q(f['session'])};")
+        raw=self.observed(f,"read")
+        ceiling=self.a.scalar(f"SELECT coalesce((({raw})->>'effectiveExpiresAt')::bigint,-1);")
+        original_ms=self.o.scalar(f"SELECT floor(extract(epoch FROM {q(f['session_deadline'])}::timestamptz)*1000)::bigint;")
+        require(0<int(ceiling)<=int(original_ms),"reopening session upper bound must preserve original observed deadline")
+        outcome=self.block_then(self.lock(f,"thread"),self.mark(f),f["session_deadline"])
+        require(outcome==["f"] and self.state(f)=="held","later nullable session deadline cannot revive funding")
+        self.cases.append("removing the session deadline after protected claim cannot extend original eligibility")
+
+    def original_allowlist_ceiling(self):
+        f=self.held("allowlist")
+        self.o.query(f"UPDATE public.bfa_p3b_staging_accounts SET expires_at=clock_timestamp()+interval '75 seconds' WHERE user_id={q(f['owner'])};")
+        raw=self.observed(f,"read")
+        ceiling=self.a.scalar(f"SELECT coalesce((({raw})->>'effectiveExpiresAt')::bigint,-1);")
+        original_ms=self.o.scalar(f"SELECT floor(extract(epoch FROM {q(f['allowlist_deadline'])}::timestamptz)*1000)::bigint;")
+        require(0<int(ceiling)<=int(original_ms),"extend before first protected read must still preserve claim-time allowlist ceiling")
+        outcome=self.block_then(self.lock(f,"thread"),self.mark(f),f["allowlist_deadline"])
+        require(outcome==["f"] and self.state(f)=="held","later allowlist cannot resurrect a past held window")
+        self.cases.append("allowlist extended between claim and first read cannot extend original held spending window")
+
     def original_verified_age(self):
         f=self.fixture()
         started=self.stamp(-27.5)
-        require(self.a.scalar(f"SELECT public.bfa_private_text_spend_claim({self.binding(f)}, {q(started)}, {q(f['auth_deadline'])});")=="t",
+        f["initial_verified"]=started
+        f["checked_verified"]=self.stamp(-.01)
+        require(self.a.scalar(f"SELECT public.bfa_private_text_spend_claim_dispatch({self.binding(f)}, {q(started)}, {q(f['auth_deadline'])});")=="t",
                 "hold begins within original verified window")
         deadline=self.o.scalar(f"SELECT ({q(started)}::timestamptz + interval '30 seconds')::text;")
         result=self.block_then(self.lock(f,"thread"),self.mark(f),deadline)
@@ -241,7 +278,7 @@ class RaceTests:
     def observed(self,f,kind,dispatch=None,evidence=None):
         binding=self.binding(f)
         marker="NULL" if dispatch is None else q(dispatch)
-        auth_start=q(self.stamp(-.01))
+        auth_start=q(f.get("checked_verified") or f["initial_verified"])
         a=q(f["auth_deadline"])
         c=q(f["envelope_deadline"])
         args=f"{binding},{marker},{auth_start},{a},{c}"
@@ -288,7 +325,8 @@ class RaceTests:
 
     def claim(self,f):
         # Auth begins before the database call and its lock waits.
-        return f"SELECT public.bfa_private_text_spend_claim({self.binding(f)}, {q(self.stamp(-.05))}, {q(f['auth_deadline'])});"
+        f["initial_verified"]=self.stamp(-.05)
+        return f"SELECT public.bfa_private_text_spend_claim_dispatch({self.binding(f)}, {q(f['initial_verified'])}, {q(f['auth_deadline'])});"
 
     def settle(self,f,receipt,amount,evidence=None):
         metadata=dig(evidence or (f["request"]+receipt))

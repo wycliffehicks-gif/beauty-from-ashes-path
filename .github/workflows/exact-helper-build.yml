@@ -113,7 +113,7 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const crypto = require('node:crypto');
-          const { spawn } = require('node:child_process');
+          const { spawn, execFileSync } = require('node:child_process');
           const { pathToFileURL } = require('node:url');
           const { chromium } = require(process.env.BFA_PLAYWRIGHT_MODULE);
           const [source, output] = process.argv.slice(2);
@@ -131,6 +131,7 @@ jobs:
           async function completedRows() {
             for (let n = 1; n <= 10; n++) {
               const row = page.getByTestId(`day-row-day-${String(n).padStart(2,'0')}`);
+              await page.locator(`[data-testid="day-row-day-${String(n).padStart(2,'0')}"][data-state="complete"]`).waitFor({state:'visible'});
               assert.equal(await row.getAttribute('data-state'), 'complete', `day ${n} completed row`);
               assert.match(await row.innerText(), /Finished/);
             }
@@ -155,7 +156,11 @@ jobs:
           }
           (async () => {
             fs.mkdirSync(output, {recursive: true});
-            check('network namespace has loopback interface only', fs.readdirSync('/sys/class/net').sort().join(',') === 'lo');
+            const links=JSON.parse(execFileSync('/usr/sbin/ip',['-j','link'],{encoding:'utf8'}));
+            const routes4=JSON.parse(execFileSync('/usr/sbin/ip',['-j','route'],{encoding:'utf8'}));
+            const routes6=JSON.parse(execFileSync('/usr/sbin/ip',['-6','-j','route'],{encoding:'utf8'}));
+            report.networkNamespace={interfaces:links.map(x=>x.ifname),routes4,routes6};
+            check('network namespace has loopback only and no egress route', links.length===1 && links[0].ifname==='lo' && [...routes4,...routes6].every(x=>x.dev==='lo'),report.networkNamespace);
             child = spawn(process.execPath, ['--import', pathToFileURL(path.join(source,'scripts/deployment/no-outbound-fetch.mjs')).href, path.join(source,'scripts/deployment/start-cloud.mjs')], {
               cwd: source, env: {NODE_ENV:'production', JOURNEY_AI_ENABLED:'false', JOURNEY_AI_RELEASE_READY:'false', LIVE_AI_ENABLED:'false', HOST:'127.0.0.1', PORT:'4178'}, stdio:['ignore','pipe','pipe','ipc']
             });
@@ -253,6 +258,7 @@ jobs:
               if(day===10) await screenshot('day-10-close');
               await page.getByTestId('close-return-home').click();
               await waitHome();
+              await page.locator(`[data-testid="day-row-day-${String(day).padStart(2,'0')}"][data-state="complete"]`).waitFor({state:'visible'});
               assert.equal(await page.getByTestId(`day-row-day-${String(day).padStart(2,'0')}`).getAttribute('data-state'),'complete');
             }
             report.phase='completion-review-export';

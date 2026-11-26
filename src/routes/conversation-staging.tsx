@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { StagingConsole } from '@/components/conversation-staging/StagingConsole';
+import { PrivateStagingSignIn } from '@/components/conversation-staging/PrivateStagingSignIn';
 // Public shell only; every data operation independently revalidates auth + allowlist.
 // No navigation link, signup, participant admission or model connection.
 export const Route = createFileRoute('/conversation-staging')({
@@ -9,5 +10,6 @@ export const Route = createFileRoute('/conversation-staging')({
     { property: 'og:title', content: 'Fictional staging — Beauty from Ashes' },
     { property: 'og:description', content: 'Restricted fictional conversation staging; no live AI or microphone.' },
     { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' },
-  ] }), component: StagingConsole,
+  ] }), component: import.meta.env.VITE_BFA_PRIVATE_STAGING_SIGN_IN === 'true'
+    ? PrivateStagingSignIn : StagingConsole,
 });

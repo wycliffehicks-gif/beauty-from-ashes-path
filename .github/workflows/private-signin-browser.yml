@@ -125,7 +125,7 @@ jobs:
           const base64 = value => Buffer.from(JSON.stringify(value)).toString('base64url');
           const tokenPrefix = `${base64({alg:'HS256',typ:'JWT'})}.${base64({sub:owner,aud:'authenticated',role:'authenticated',email,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+3600,session_id:crypto.randomUUID()})}`;
           const token = tokenPrefix + '.' + crypto.createHmac('sha256',crypto.randomBytes(32)).update(tokenPrefix).digest('base64url');
-          const report = { status:'RUNNING', source: process.env.BFA_SOURCE_SHA, checks:[], phases:[], authRequests:{invalidPassword:0,validPassword:0,user:0,logoutLocal:0,rejectedUser:0}, databaseRequests:{allowlist:0,deniedAllowlist:0,threadRead:0,list:0,create:0,reserve:0,claim:0,settle:0,finish:0}, browserRpc:{count:0,allHadExactFictionalBearer:true}, fixtureViolations:[], forbidden:{webSocket:0,microphone:0,beacon:0}, externalIntercepts:0, pageErrors:0, cleanupErrors:[], limits:['Real built React application, real Supabase JS SDK and existing server middleware; HTTP Auth/REST/RPC service responses are disposable fictional doubles.', 'No hosted Supabase Auth, JWT signature server, SQL/RLS/transaction or real-user acceptance is established.', 'The actual ConversationService canned mock provider and AES-GCM/HMAC boundary run; no model, live voice or microphone is enabled.', 'Direct local browser storage only; Lovable embedded-preview storage broker, other browsers and real devices are not covered.', 'The isolated network namespace has loopback only. No credentials, bearer tokens, headers, response envelopes, typed contents or journal text are emitted in the report.'] };
+          const report = { status:'RUNNING', source: process.env.BFA_SOURCE_SHA, checks:[], phases:[], authRequests:{invalidPassword:0,validPassword:0,user:0,logoutLocal:0,rejectedUser:0}, databaseRequests:{allowlist:0,deniedAllowlist:0,threadRead:0,list:0,create:0,reserve:0,claim:0,settle:0,finish:0}, browserRpc:{count:0,allHadExactFictionalBearer:true}, supplementary:{status:'UNRUN',checks:[],failure:null}, fixtureViolations:[], forbidden:{webSocket:0,microphone:0,beacon:0}, externalIntercepts:0, pageErrors:0, cleanupErrors:[], limits:['Real built React application, real Supabase JS SDK and existing server middleware; HTTP Auth/REST/RPC service responses are disposable fictional doubles.', 'No hosted Supabase Auth, JWT signature server, SQL/RLS/transaction or real-user acceptance is established.', 'The actual ConversationService canned mock provider and AES-GCM/HMAC boundary run; no model, live voice or microphone is enabled.', 'Direct local browser storage only; Lovable embedded-preview storage broker, other browsers and real devices are not covered.', 'The isolated network namespace has loopback only. No credentials, bearer tokens, headers, response envelopes, typed contents or journal text are emitted in the report.'] };
           let admitted=false, revoked=false, row=null, reservation=null;
           let browser, context, page, child, fixture, guardStatus, childExited=false, capturedRpc=null;
           let childOutput='';
@@ -212,7 +212,7 @@ jobs:
             await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin===origin||u.origin===authOrigin)return route.continue();report.externalIntercepts++;return route.abort();});
             await context.addInitScript(()=>{window.__bfaForbidden={webSocket:0,microphone:0,beacon:0};window.WebSocket=class{constructor(){window.__bfaForbidden.webSocket++;throw new Error('Offline');}};if(navigator.mediaDevices)navigator.mediaDevices.getUserMedia=()=>{window.__bfaForbidden.microphone++;return Promise.reject(new Error('Offline'));};navigator.sendBeacon=()=>{window.__bfaForbidden.beacon++;return false;};});
             page=await context.newPage();page.on('pageerror',()=>report.pageErrors++);
-            page.on('request',req=>{if(req.url().startsWith(origin)&&req.method()==='POST'){report.browserRpc.count++;const headers=req.headers();report.browserRpc.allHadExactFictionalBearer&&=headers.authorization===`Bearer ${token}`;capturedRpc={url:req.url(),headers,body:req.postData()};}});
+            page.on('request',req=>{if(req.url().startsWith(origin)&&req.method()==='POST'&&report.phases.at(-1)!=='unauthenticated-rpc-denial'){report.browserRpc.count++;const headers=req.headers();report.browserRpc.allHadExactFictionalBearer&&=headers.authorization===`Bearer ${token}`;capturedRpc={url:req.url(),headers,body:req.postData()};}});
             phase('ordinary-onboarding');await page.goto(origin);
             await page.getByRole('link',{name:'Begin the journey',exact:true}).first().click();
             for(let n=0;n<4;n++){const before=page.url();await page.getByTestId('opening-continue').click();await page.waitForURL(u=>u.href!==before);}
@@ -246,18 +246,39 @@ jobs:
             check('real global middleware attached exact SDK bearer to all browser RPCs',report.browserRpc.count>=5&&report.browserRpc.allHadExactFictionalBearer);
             phase('unauthenticated-rpc-denial');requireCondition(capturedRpc,'captured server function request');
             const dataCounts=JSON.stringify(report.databaseRequests);
-            const {serverFnFetcher}=await import(pathToFileURL(path.join(source,'node_modules/@tanstack/start-client-core/dist/esm/client-rpc/serverFnFetcher.js')).href);
-            for(const mode of ['missing','malformed','revoked']){
-              const headers={};
-              if(mode==='malformed')headers.authorization='Bearer fictional-not-a-jwt';
-              if(mode==='revoked'){headers.authorization=`Bearer ${token}`;revoked=true;}
-              let denied=false,httpStatus=null,serialized=false;
-              try {
-                const decoded=await serverFnFetcher(capturedRpc.url,[{method:'POST',data:{action:'list'},headers}],async(url,init)=>{const response=await fetch(url,init);httpStatus=response.status;serialized=response.headers.has('x-tss-serialized');return response;});
-                denied=decoded?.error instanceof Error && decoded.result===undefined;
-              } catch(error) {denied=error instanceof Error && /^Unauthorized:/.test(error.message);}
-              check(mode+' bearer rejected by actual server middleware',denied&&JSON.stringify(report.databaseRequests)===dataCounts,{httpStatus,serialized,decodedDenial:denied});
-            }
+            try {
+              for(const mode of ['missing','malformed','revoked']){
+                let wireObserved=false;
+                const beforeUser=report.authRequests.user,beforeRejected=report.authRequests.rejectedUser;
+                const fault=async route=>{
+                  if(route.request().url()!==capturedRpc.url||route.request().method()!=='POST')return route.fallback();
+                  const headers=await route.request().allHeaders();
+                  requireCondition(headers.authorization===`Bearer ${token}`,'supplementary request began with exact SDK bearer');
+                  delete headers.authorization;
+                  if(mode==='malformed')headers.authorization='Bearer fictional-not-a-jwt';
+                  if(mode==='revoked'){headers.authorization=`Bearer ${token}`;revoked=true;}
+                  wireObserved=true;
+                  await route.continue({headers});
+                };
+                await context.route('**/_serverFn/**',fault);
+                try {
+                  const received=page.waitForResponse(response=>response.url()===capturedRpc.url&&response.request().method()==='POST');
+                  await page.getByRole('button',{name:'Refresh saved list',exact:true}).click();
+                  const response=await received;
+                  await eventually(()=>page.getByRole('button',{name:'Refresh saved list',exact:true}).isEnabled(),'supplementary list request did not finish');
+                  await page.getByText('Saved conversations unavailable.',{exact:true}).waitFor();
+                  const headers=await response.request().allHeaders();
+                  const wireMatches=mode==='missing'?!headers.authorization:mode==='malformed'?headers.authorization==='Bearer fictional-not-a-jwt':headers.authorization===`Bearer ${token}`;
+                  const serialized=response.headers()['x-tss-serialized']==='true';
+                  const userDelta=report.authRequests.user-beforeUser,rejectedDelta=report.authRequests.rejectedUser-beforeRejected;
+                  const evidence={mode,httpStatus:response.status(),serialized,wireObserved,wireMatches,clientReportedUnavailable:true,databaseCountsUnchanged:JSON.stringify(report.databaseRequests)===dataCounts,userCalls:userDelta,rejectedUserCalls:rejectedDelta};
+                  report.supplementary.checks.push(evidence);
+                  assert.ok(wireObserved&&wireMatches&&evidence.databaseCountsUnchanged&&(serialized||response.status()>=400),'supplementary auth response/association assertion');
+                  assert.ok(mode==='revoked'?rejectedDelta===1:rejectedDelta===0,'supplementary exact rejected-user receipt');
+                } finally {await context.unroute('**/_serverFn/**',fault);revoked=false;}
+              }
+              report.supplementary.status='PASSED';
+            } catch(error) {report.supplementary.status='FAILED';report.supplementary.failure={name:error.name,code:'supplementary-authorization-control-not-established'};}
             revoked=false;
             phase('sign-out-clears-active-draft');await page.locator('#staging-message').fill(draft);await selector('private-staging-sign-out').click();await selector('private-staging-sign-in').waitFor();await page.getByText('Signed out on this device.',{exact:true}).waitFor();
             check('local-scope SDK sign-out sent once',report.authRequests.logoutLocal===1);
@@ -270,7 +291,7 @@ jobs:
             check('no browser page errors',report.pageErrors===0);check('all HTTP fixture constraints met',report.fixtureViolations.length===0);
             child.send({type:'fixture-fetch-status'});await eventually(()=>!!guardStatus,'server fetch guard report missing');report.serverFetch=guardStatus;
             check('actual server fetch stayed within local disposable service',guardStatus.installed===true&&guardStatus.allowed>0&&guardStatus.blocked===0);
-            check('app alive throughout acceptance',!childExited);report.status='PASSED';
+            check('app alive throughout acceptance',!childExited);report.coreStatus='PASSED';report.status=report.supplementary.status==='PASSED'?'PASSED':'FAILED';if(report.status==='FAILED')process.exitCode=1;
           })().catch(error=>{report.status='FAILED';report.failurePath=page?new URL(page.url()).pathname:null;report.error={name:error.name,message:String(error.message).replaceAll(password,'[redacted]').replaceAll(token,'[redacted]').replaceAll(publicKey,'[redacted]').replaceAll(serviceKey,'[redacted]').replaceAll(email,'[fictional email]').replaceAll(note,'[fictional typed text]').replaceAll(draft,'[fictional draft]').replace(/[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/g,'[redacted token]').slice(0,2000)};process.exitCode=1;}).finally(async()=>{
             // Never write app output, request bodies/headers, session values or screenshots: all may contain fictional credentials/content.
             if(context)await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));

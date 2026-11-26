@@ -1,0 +1,51 @@
+name: Private typed sender transaction validation
+on:
+  push:
+    branches: [validation/private-typed-sender-native-20261126]
+permissions: {}
+jobs:
+  native:
+    if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Exercise private sender transactions in a disposable local PostgreSQL cluster
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(id -u)" != 0
+          tmpdir="$(mktemp -d "$RUNNER_TEMP/bfatyped.XXXXXXXX")"
+          mkdir -p "$tmpdir/home" "$tmpdir/socket" "$tmpdir/logs" "$tmpdir/source"
+          pg_bin=""
+          for candidate in /usr/lib/postgresql/{18,17,16,15}/bin; do
+            if [[ -x "$candidate/initdb" && -x "$candidate/pg_ctl" && -x "$candidate/psql" ]]; then pg_bin="$candidate"; break; fi
+          done
+          test -n "$pg_bin"
+          isolated=(env -i PATH=/usr/bin:/bin HOME="$tmpdir/home" LANG=C LC_ALL=C GIT_CONFIG_NOSYSTEM=1 GIT_TERMINAL_PROMPT=0)
+          cd "$tmpdir/source"
+          "${isolated[@]}" git init -q .
+          "${isolated[@]}" git remote add origin https://github.com/wycliffehicks-gif/beauty-from-ashes-path.git
+          "${isolated[@]}" git sparse-checkout set --no-cone --stdin <<'FILES'
+          /.github/private-test/typed-sender-concurrency.py
+          /docs/pilot/conversation/sql-drafts/private-typed-spend.sql
+          /docs/pilot/conversation/sql-drafts/private-typed-dispatch.sql
+          /scripts/conversation-eval/p5-sql/concurrency.py
+          /drizzle/migrations/0000_p3b_locked_conversation_foundation.sql
+          /drizzle/migrations/0001_p3b_revoke_inherited_browser_grants.sql
+          FILES
+          "${isolated[@]}" git fetch -q --no-tags --depth=1 origin "$GITHUB_SHA"
+          "${isolated[@]}" git checkout -q --detach FETCH_HEAD
+          test "$("${isolated[@]}" git rev-parse HEAD)" = "$GITHUB_SHA"
+          printf 'BFA_SENDER_SOURCE %s\n' "$GITHUB_SHA"
+          sha256sum docs/pilot/conversation/sql-drafts/private-typed-*.sql .github/private-test/typed-sender-concurrency.py
+          "${isolated[@]}" "$pg_bin/initdb" -D "$tmpdir/cluster" -U bfa_test --no-locale --encoding=UTF8 --auth-local=trust --auth-host=reject > "$tmpdir/logs/initdb.log"
+          printf "listen_addresses = ''\nunix_socket_directories = '%s'\nunix_socket_permissions = 0700\nport = 55432\n" "$tmpdir/socket" >> "$tmpdir/cluster/postgresql.conf"
+          "${isolated[@]}" "$pg_bin/pg_ctl" -D "$tmpdir/cluster" -l "$tmpdir/logs/server.log" -w start
+          trap '"${isolated[@]}" "$pg_bin/pg_ctl" -D "$tmpdir/cluster" -m fast -w stop' EXIT
+          "${isolated[@]}" timeout --signal=INT --kill-after=5s 110s /usr/bin/python3 -I .github/private-test/typed-sender-concurrency.py "$pg_bin/psql" "$tmpdir/socket" "$tmpdir/logs"
+          "${isolated[@]}" "$pg_bin/pg_ctl" -D "$tmpdir/cluster" -m fast -w stop
+          trap - EXIT
+          test ! -e "$tmpdir/cluster/postmaster.pid"
+          test ! -e "$tmpdir/socket/.s.PGSQL.55432"
+          printf 'BFA_SENDER_CLEANUP stopped-and-socket-gone\n'

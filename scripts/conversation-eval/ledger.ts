@@ -139,6 +139,14 @@ function validAdmission(a: unknown): a is EvalAdmission {
   return r.receipt === null;
 }
 
+// A runner may retain the exact successful claim it observed before calling
+// transport. This is local evidence, not a new authorization or a receipt.
+const validObservedClaim = (requestId: string, claim: EvalAdmission | undefined): boolean =>
+  claim === undefined || (validAdmission(claim) && claim.requestId === requestId && claim.state === "dispatched");
+const sameAdmissionIdentity = (a: EvalAdmission, claim: EvalAdmission): boolean =>
+  a.requestId === claim.requestId && a.caseId === claim.caseId && a.turnIndex === claim.turnIndex &&
+  a.model === claim.model && a.reservedMicros === claim.reservedMicros && a.createdAtIso === claim.createdAtIso;
+
 function validFile(f: unknown): f is LedgerFile {
   if (!f || typeof f !== "object" || Array.isArray(f)) return false;
   const r = f as Record<string, unknown>;
@@ -384,18 +392,20 @@ export class EvalLedger {
   /**
    * Stop/timeout: reserved → cancelled-before-dispatch (release once);
    * dispatched → uncertain (the reservation is RETAINED; abort never proves
-   * unpaid cancellation). Terminal states acknowledge unchanged.
+   * unpaid cancellation). With an exact observed dispatch claim, a regressed
+   * reserved row retains an UNCERTAIN hold instead of releasing it. Cancelled,
+   * missing or changed identities are never reconstructed or overwritten.
    */
-  stop(requestId: string): EvalLedgerResult {
+  stop(requestId: string, observedClaim?: EvalAdmission): EvalLedgerResult {
     return this.transition(requestId, (a) => {
       if (a.state === "reserved") {
-        return { ...a, state: "cancelled-before-dispatch" as const, updatedAtIso: this.now() };
+        return { ...a, state: observedClaim ? "uncertain" as const : "cancelled-before-dispatch" as const, updatedAtIso: this.now() };
       }
       if (a.state === "dispatched") {
         return { ...a, state: "uncertain" as const, updatedAtIso: this.now() };
       }
       return a; // terminal states acknowledge unchanged (duplicate)
-    });
+    }, observedClaim);
   }
 
   /**
@@ -403,13 +413,16 @@ export class EvalLedger {
    * receipts conflict; cancelled reservations can never be settled; no
    * double refund and no reopening terminal state.
    */
-  reconcile(requestId: string, receiptId: string, chargedMicros: number): EvalLedgerResult {
-    if (!validId(receiptId) || !validMicros(chargedMicros)) {
+  reconcile(requestId: string, receiptId: string, chargedMicros: number, observedClaim?: EvalAdmission): EvalLedgerResult {
+    if (!validId(receiptId) || !validMicros(chargedMicros) || !validObservedClaim(requestId, observedClaim)) {
       return { ok: false, code: "invalid" };
     }
     return this.transact<EvalLedgerResult>((file) => {
       const a = file.admissions.find((x) => x.requestId === requestId);
       if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
+      if (observedClaim && !sameAdmissionIdentity(a, observedClaim)) {
+        return { file, result: { ok: false as const, code: "conflict" as const } };
+      }
       if (chargedMicros > a.reservedMicros) {
         return { file, result: { ok: false as const, code: "invalid" as const } };
       }
@@ -448,11 +461,18 @@ export class EvalLedger {
   private transition(
     requestId: string,
     step: (a: EvalAdmission) => EvalAdmission | null,
+    observedClaim?: EvalAdmission,
   ): EvalLedgerResult {
-    if (!validId(requestId)) return { ok: false, code: "invalid" };
+    if (!validId(requestId) || !validObservedClaim(requestId, observedClaim)) return { ok: false, code: "invalid" };
     return this.transact<EvalLedgerResult>((file) => {
       const a = file.admissions.find((x) => x.requestId === requestId);
       if (!a) return { file, result: { ok: false as const, code: "invalid" as const } };
+      if (observedClaim && (!sameAdmissionIdentity(a, observedClaim) || a.state === "cancelled-before-dispatch")) {
+        return { file, result: { ok: false as const, code: "conflict" as const } };
+      }
+      if (observedClaim && a.state === "reserved" && file.admissions.filter(countedDispatch).length >= file.maxDispatchAttempts) {
+        return { file, result: { ok: false as const, code: "limit" as const } };
+      }
       const next = step(a);
       if (!next) return { file, result: { ok: false as const, code: "consumed" as const } };
       if (next === a) {

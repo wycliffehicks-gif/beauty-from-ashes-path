@@ -13,11 +13,11 @@ import { buildTeachingSourceRecords } from "../../src/lib/ai/conversation/conten
 import { createSourceRegistry } from "../../src/lib/ai/conversation/sources";
 import { validateEvalManifest, validateManifestForLive, type EvalManifest, type ManifestValidationCode } from "./manifest";
 import { admitLiveGrant, loadApprovalGrants, type ApprovalGrant, type GrantRefusal } from "./approval-grants";
-import { EvalLedger } from "./ledger";
+import { EvalLedger, type EvalAdmission } from "./ledger";
 import { computeConservativeChargeMicros } from "./pricing";
 import type { ConversationExchangeMeta } from "../../src/lib/ai/conversation/service/openai-provider.server";
 
-export const EVAL_RUNNER_VERSION = "bfa-conversation-eval-runner-v2";
+export const EVAL_RUNNER_VERSION = "bfa-conversation-eval-runner-v3";
 export const EVAL_MAX_MANIFEST_BYTES = 64 * 1024;
 export const sha256 = (text: string) => createHash("sha256").update(text).digest("hex");
 export async function computeSourceSnapshotSha256(): Promise<string> {
@@ -61,9 +61,12 @@ export interface EvalRunSummary {
   readonly structural: "pass" | ManifestValidationCode;
   readonly approval: "absent" | "present";
   readonly costBound: unknown | null;
+  /** Conservative high-water: never below a claim or transport this run observed. */
   readonly dispatchAttempts: number;
+  readonly ledgerDispatchAttempts: number | null;
+  readonly accountingStatus: "consistent" | "conflict" | "unavailable";
   readonly providerCalls: number;
-  /** Conservative accounting estimate, not an invoice or measured charge. */
+  /** Reconciled estimates only; partial on accounting failure, never an invoice. */
   readonly estimatedProviderCostMicros: number;
   readonly status: "validated" | "running" | "completed" | "stopped";
   readonly simulatedTransport: boolean;
@@ -126,7 +129,8 @@ export async function runConversationEvaluation(
       structural: result.ok ? "pass" : result.code,
       approval: approval ? "present" : "absent",
       costBound: result.ok ? result.costBound : null,
-      dispatchAttempts: 0, providerCalls: 0, estimatedProviderCostMicros: 0,
+      dispatchAttempts: 0, ledgerDispatchAttempts: 0, accountingStatus: "consistent",
+      providerCalls: 0, estimatedProviderCostMicros: 0,
       status: "validated", simulatedTransport: false,
       evidence: "offline validation only; no model output; no quality evidence",
     };
@@ -158,13 +162,25 @@ export async function runConversationEvaluation(
   let calls = 0;
   let chargedTotal = 0;
   let status: EvalRunSummary["status"] = "running";
-  const summary = (): EvalRunSummary => ({
-    runnerVersion: EVAL_RUNNER_VERSION, mode: "live", manifestLabel: manifest.label,
-    structural: "pass", approval: "present", costBound,
-    dispatchAttempts: ledger.dispatchedAttempts(), providerCalls: calls,
-    estimatedProviderCostMicros: chargedTotal, status,
-    simulatedTransport: !!deps.fetchImpl, evidence: evidenceDir,
-  });
+  let observedClaims = ledger.dispatchedAttempts();
+  let dispatchHighWater = observedClaims;
+  let accountingStatus: EvalRunSummary["accountingStatus"] = "consistent";
+  const summary = (): EvalRunSummary => {
+    let ledgerDispatchAttempts: number | null = null;
+    try {
+      ledgerDispatchAttempts = ledger.dispatchedAttempts();
+      if (ledgerDispatchAttempts !== observedClaims) accountingStatus = "conflict";
+      dispatchHighWater = Math.max(dispatchHighWater, ledgerDispatchAttempts);
+    } catch { accountingStatus = "unavailable"; }
+    dispatchHighWater = Math.max(dispatchHighWater, observedClaims, calls);
+    return {
+      runnerVersion: EVAL_RUNNER_VERSION, mode: "live", manifestLabel: manifest.label,
+      structural: "pass", approval: "present", costBound,
+      dispatchAttempts: dispatchHighWater, ledgerDispatchAttempts, accountingStatus, providerCalls: calls,
+      estimatedProviderCostMicros: chargedTotal, status,
+      simulatedTransport: !!deps.fetchImpl, evidence: evidenceDir,
+    };
+  };
   writeFresh(`${evidenceDir}/run-start.json`, {
     manifestSha256, manifest, runnerVersion: EVAL_RUNNER_VERSION,
     simulatedTransport: !!deps.fetchImpl, startedAtIso: nowIso(),
@@ -184,6 +200,7 @@ export async function runConversationEvaluation(
       let current: {
         requestId: string; turnIndex: number; hash: string | null;
         invoked: boolean; admitted: boolean; meta: ConversationExchangeMeta | null;
+        claim: EvalAdmission | null;
       } | null = null;
       const provider = createDirectOpenAIConversationProvider({
         apiKey, model: manifest.provider.model,
@@ -200,6 +217,9 @@ export async function runConversationEvaluation(
             throw new Error("invalid-evaluation-payload");
           }
           recheck();
+          if (accountingStatus !== "consistent" || observedClaims >= manifest.limits.maxDispatchAttempts) {
+            throw new EvalAdmissionRefused("ledger-refused", "known dispatch scope exhausted or conflicting");
+          }
           const reserved = ledger.reserve({
             requestId: current.requestId, caseId: evalCase.caseId, turnIndex: current.turnIndex,
             model: manifest.provider.model, reservedMicros: costBound.worstCasePerDispatchMicros,
@@ -218,6 +238,8 @@ export async function runConversationEvaluation(
           recheck();
           const claimed = ledger.claim(current.requestId);
           if (!claimed.ok || claimed.duplicate) throw new EvalAdmissionRefused("ledger-refused", "claim refused");
+          current.claim = Object.freeze({ ...claimed.admission });
+          observedClaims += 1;
           writeFresh(`${prefix}-request-start.json`, {
             requestId: current.requestId, requestPayloadSha256: current.hash,
             startedAtIso: nowIso(), state: "dispatch-claimed; outcome uncertain until response evidence",
@@ -234,7 +256,7 @@ export async function runConversationEvaluation(
       service.ensureThread(storeId, false);
       for (const [turnIndex, text] of evalCase.turns.entries()) {
         recheck();
-        current = { requestId: randomUUID(), turnIndex, hash: null, invoked: false, admitted: false, meta: null };
+        current = { requestId: randomUUID(), turnIndex, hash: null, invoked: false, admitted: false, meta: null, claim: null };
         const turnId = service.admitUserMessage(storeId, `eval-msg-${evalCase.caseId}-${turnIndex}`, text);
         let outcome: TurnOutcome | null = null;
         let committed: string;
@@ -249,19 +271,24 @@ export async function runConversationEvaluation(
         let failed = !okTurn || !current.invoked || meta?.outcome !== "complete";
         let accountingError = false;
         try {
+          if (current.invoked && !current.claim) throw new Error("observed-dispatch-claim-unavailable");
           if (!failed && meta?.responseId && meta.usageConsistent) {
             charge = computeConservativeChargeMicros(meta.usage, manifest.priceBasis);
             if (charge !== null) {
-              const settled = ledger.reconcile(current.requestId, meta.responseId, charge);
-              if (!settled.ok) { charge = null; failed = true; accountingError = true; }
+              const settled = ledger.reconcile(current.requestId, meta.responseId, charge, current.claim ?? undefined);
+              if (!settled.ok) { charge = null; failed = true; accountingError = true; accountingStatus = "conflict"; }
               else { ledgerState = settled.admission.state; chargedTotal += charge; }
             } else failed = true;
           } else failed = true;
           if (failed && current.admitted) {
-            const stopped = ledger.stop(current.requestId);
-            ledgerState = stopped.ok ? stopped.admission.state : "stop-refused; hold retained";
+            const stopped = ledger.stop(current.requestId, current.invoked ? current.claim ?? undefined : undefined);
+            ledgerState = stopped.ok ? stopped.admission.state : "accounting-conflict; reservation not confirmed";
+            if (!stopped.ok) { accountingError = true; accountingStatus = "conflict"; }
           }
-        } catch { failed = true; accountingError = true; ledgerState = "accounting-unavailable; hold retained"; }
+        } catch {
+          failed = true; accountingError = true; accountingStatus = "unavailable";
+          charge = null; ledgerState = "accounting-unavailable; reservation not confirmed";
+        }
         const record: EvalTurnEvidence = {
           caseId: evalCase.caseId, turnIndex, requestId: current.requestId,
           requestPayloadSha256: current.hash,
@@ -272,12 +299,19 @@ export async function runConversationEvaluation(
         };
         writeFresh(`${evidenceDir}/evidence-${evalCase.caseId}-${turnIndex}.json`, record);
         writeSummary(`${outDir}/run-summary.json`, summary());
-        if (failed) throw new EvalAdmissionRefused("stop-condition", "evaluation stopped after failed or uncertain exchange");
+        if (failed || accountingStatus !== "consistent") throw new EvalAdmissionRefused("stop-condition", "evaluation stopped after failed or uncertain exchange");
       }
     }
+    // One terminal snapshot: a newly discovered storage conflict must not be
+    // labelled completed, nor hidden by a second independently mutable read.
+    const finalSummary = summary();
+    if (finalSummary.accountingStatus !== "consistent") {
+      throw new EvalAdmissionRefused("stop-condition", "final accounting snapshot refused");
+    }
     status = "completed";
-    writeSummary(`${outDir}/run-summary.json`, summary());
-    return summary();
+    const completedSummary: EvalRunSummary = { ...finalSummary, status };
+    writeSummary(`${outDir}/run-summary.json`, completedSummary);
+    return completedSummary;
   } catch (error) {
     status = "stopped";
     // Never persist an arbitrary exception string: it may contain credentials
@@ -285,7 +319,7 @@ export async function runConversationEvaluation(
     writeFresh(`${evidenceDir}/run-stop.json`, {
       stoppedAtIso: nowIso(), code: error instanceof EvalAdmissionRefused ? error.code : "evaluation-error",
       providerCalls: calls, estimatedProviderCostMicros: chargedTotal,
-      note: "No retries. Any unresolved admitted request keeps its ledger hold.",
+      note: "No retries. Unresolved dispatches require review; conflicting or unavailable storage cannot confirm a retained reservation.",
     });
     writeSummary(`${outDir}/run-summary.json`, summary());
     throw error instanceof EvalAdmissionRefused ? error : new EvalAdmissionRefused("stop-condition", "evaluation failed closed");

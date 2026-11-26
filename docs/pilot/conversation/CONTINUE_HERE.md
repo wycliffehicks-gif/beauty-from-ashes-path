@@ -1,4 +1,16 @@
-# Continue here — BFA, 25 November 2026, America/Toronto
+# Continue here — BFA, 26 November 2026, America/Toronto
+
+## Private text test and accounting review — 25–26 November 2026
+
+The fixed Finish control remains verified on the private hosted application at `46d81b94`. The first real P4 text evaluation ran privately in Lovable. The ordinary test program ran from executable source and used separate private files for its grant, run records and spending limits. The earlier attempt to load executable code directly from that storage stopped before sending any messages.
+
+Two fictional messages in C04 reached the approved OpenAI model and received distinct responses. Read-only inspection linked each request to its own receipt. The second reply respected the user's corrections about food preparation and a sleeping child. C05, C07 and C08 remain untested in this run. The private grant closed after an accounting mismatch. Two provider calls were confirmed, while the old summary counted one dispatch and the ledger described the second request as cancelled before dispatch. Preserve the original records and outstanding reservation. The cause of the hosted discrepancy remains unknown. The transcript, operator grant and original accounting records for this run stayed outside the public repository. The three reviewed program files matched the baseline when inspected after the run. No launch-time source attestation was available.
+
+**Evaluator change.** The runner retains the original successful dispatch claim and compares it with the ledger during reconciliation and stopping. If the same reservation appears to have moved backwards after transport was invoked, it can retain the full amount as uncertain. If the row is missing, cancelled, corrupt or belongs to a different admission, the evaluator stops and reports the conflict without claiming that a hold or refund was verified. The summary keeps the observed sends and the ledger count separately. Completion requires a consistent final snapshot. No historical ledger entry was rewritten.
+
+Seventeen offline regression cases exercise deliberately injected storage faults and normal accounting. All 96 tests across the seven P4 test files passed, including the CLI paths. The P4 TypeScript check passed. These results demonstrate the guard against a known failure mode. They do not establish what caused the private host's original inconsistency. The remaining seven-turn selection (C05, C07 and C08 only) passed structural and budget validation with empty approval and no provider calls. Any later evaluation needs its own approved scope and must leave the two completed turns and their original records intact.
+
+**Source continuity.** The parent `0de4cfa6` includes Lovable's platform updates to its Vite dependency, preview-host recognition and generated project objective. These were preserved. The generated objective does not change the approved SRT sources, policies or privacy boundaries. The ten-day journey, freeform typed conversation and live voice remain the intended first-sale scope. The live evaluation was a private text quality check. Participant AI and live voice remain off.
 
 ## Current checkpoint — 25 November 2026, America/Toronto
 

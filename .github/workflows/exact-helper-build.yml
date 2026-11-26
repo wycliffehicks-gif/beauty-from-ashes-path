@@ -1,4 +1,4 @@
-name: BFA exact 2.27.1 helper build
+name: BFA exact build and ten-day offline browser
 on:
   push:
     branches: [validation/exact-helper-2271-20261126]
@@ -7,7 +7,7 @@ jobs:
   build:
     if: github.repository == 'wycliffehicks-gif/beauty-from-ashes-path' && github.event.repository.private == false
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 18
     steps:
       - name: Build exact public source with its frozen helper
         shell: bash
@@ -91,3 +91,277 @@ jobs:
             node node_modules/vite/bin/vite.js build
           sha256sum --check "$task_logs/source-inputs.sha256"
           printf 'BFA_BUILD_RESULT PASS source=%s helper=2.27.1; no deploy, model calls, artifact upload, caches or main changes\n' "$source_sha"
+          
+          # The application checkout remains the exact reviewed source; this harness is ephemeral.
+          phase playwright-runtime timeout 180s "${clean_env[@]}" PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$task_runtime/browser" --no-audit --no-fund --ignore-scripts --no-package-lock playwright@1.62.1
+          "${clean_env[@]}" node -e 'require("node:assert/strict").equal(require(process.argv[1]).version,"1.62.1")' "$task_runtime/browser/node_modules/playwright/package.json"
+          task_chrome=''
+          for candidate in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [[ -x "$candidate" ]]; then task_chrome=$candidate; break; fi
+          done
+          [[ -n "$task_chrome" ]] || { printf '%s\n' 'BFA_JOURNEY_UNRUN no preinstalled Chromium'; exit 2; }
+          "${clean_env[@]}" "$task_chrome" --version
+          sha256sum vite.config.cloud.ts scripts/deployment/start-cloud.mjs scripts/deployment/no-outbound-fetch.mjs >> "$task_logs/source-inputs.sha256"
+          phase node-production-build timeout 300s "${clean_env[@]}" \
+            VITE_SUPABASE_URL=https://example.invalid \
+            VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            SUPABASE_URL=https://example.invalid \
+            SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
+            node node_modules/vite/bin/vite.js build --config vite.config.cloud.ts
+          cat > "$task_root/check-journey.cjs" <<'BFA_HARNESS'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const { spawn } = require('node:child_process');
+          const { pathToFileURL } = require('node:url');
+          const { chromium } = require(process.env.BFA_PLAYWRIGHT_MODULE);
+          const [source, output] = process.argv.slice(2);
+          const origin = 'http://127.0.0.1:4178';
+          const privateNote = 'FICTIONAL_UNSAVED_REVIEW_20261126_ONLY';
+          const report = { status: 'RUNNING', source: '9d35897111e0bdf9c705336e62e6418bc7043465', checks: [], days: [], selections: [], externalIntercepts: [], pageErrors: [], localRequests: [], serverFetch: null, print: null, downloads: [], forbidden: {webSocket:0,microphone:0,beacon:0}, cleanupErrors: [], limits: ['Chromium headless UI on existing AI-off Node target; not Lovable runtime acceptance.', 'Native print dialog suppressed after observing the application print request; no physical printing.', 'Remote fonts intercepted before transmission; network namespace has loopback only.', 'Service workers blocked; this does not test offline/service-worker behavior or a real phone.'] };
+          let browser, context, page, child, guardInstalled = false, guardStatus, childExited = false;
+          let childStdout = '', childStderr = '';
+          const sha = (data) => crypto.createHash('sha256').update(data).digest('hex');
+          const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+          function check(name, condition, evidence = {}) { assert.ok(condition, name); report.checks.push({ name, ...evidence }); }
+          async function visible(locator) { return locator.isVisible().catch(() => false); }
+          async function screenshot(name) { await page.screenshot({ path: path.join(output, name + '.png'), fullPage: true }); }
+          async function waitHome() { await page.getByTestId('day-row-day-01').waitFor({state: 'visible'}); }
+          async function completedRows() {
+            for (let n = 1; n <= 10; n++) {
+              const row = page.getByTestId(`day-row-day-${String(n).padStart(2,'0')}`);
+              assert.equal(await row.getAttribute('data-state'), 'complete', `day ${n} completed row`);
+              assert.match(await row.innerText(), /Finished/);
+            }
+          }
+          async function download(button, label) {
+            const event = page.waitForEvent('download');
+            await page.getByTestId(button).click();
+            const file = await event;
+            assert.match(file.suggestedFilename(), /^beauty-from-ashes-reflections-\d{4}-\d\d-\d\d\.txt$/);
+            const target = path.join(output, label + '.txt');
+            await file.saveAs(target);
+            assert.equal(await file.failure(), null);
+            const bytes = fs.readFileSync(target), text = bytes.toString('utf8');
+            const days = [...text.matchAll(/^Day (\d+) · /gm)].map(m => Number(m[1]));
+            assert.deepEqual(days, [1,2,3,4,5,6,7,8,9,10]);
+            assert.equal((text.match(/^Your reflection:$/gm) || []).length, 10);
+            assert.ok(!text.includes(privateNote));
+            for (const selection of report.selections) assert.ok(text.includes(`  • ${selection.label}`), `export selected label day ${selection.day}`);
+            report.downloads.push({label, filename: file.suggestedFilename(), bytes: bytes.length, sha256: sha(bytes), days, selectedLabelsChecked: report.selections.length, privateNoteAbsent: true});
+            check(label + ': actual download contains ten finished days and selected labels, excluding private note', true);
+            return text;
+          }
+          (async () => {
+            fs.mkdirSync(output, {recursive: true});
+            check('network namespace has loopback interface only', fs.readdirSync('/sys/class/net').sort().join(',') === 'lo');
+            child = spawn(process.execPath, ['--import', pathToFileURL(path.join(source,'scripts/deployment/no-outbound-fetch.mjs')).href, path.join(source,'scripts/deployment/start-cloud.mjs')], {
+              cwd: source, env: {NODE_ENV:'production', JOURNEY_AI_ENABLED:'false', JOURNEY_AI_RELEASE_READY:'false', LIVE_AI_ENABLED:'false', HOST:'127.0.0.1', PORT:'4178'}, stdio:['ignore','pipe','pipe','ipc']
+            });
+            child.on('exit', () => { childExited = true; });
+            child.on('error', () => { childExited = true; });
+            child.stdout.on('data', b => { childStdout = (childStdout + b.toString()).slice(-16384); });
+            child.stderr.on('data', b => { childStderr = (childStderr + b.toString()).slice(-16384); });
+            child.on('message', m => {
+              if (m?.type !== 'bfa-smoke-fetch-guard') return;
+              if (m.event === 'installed') guardInstalled = true;
+              if (m.event === 'status') guardStatus = m;
+              if (m.event === 'blocked') report.serverFetch = {attempts:m.attempts, blocked:true};
+            });
+            let ready = false;
+            for (let i = 0; i < 80; i++) {
+              assert.ok(!childExited, 'server remained running');
+              try { const r = await fetch(origin, {signal:AbortSignal.timeout(1000)}); ready = r.status === 200; await r.arrayBuffer(); if (ready) break; } catch {}
+              await sleep(250);
+            }
+            check('AI-off local production server ready with fetch canary installed', ready && guardInstalled);
+            browser = await chromium.launch({executablePath:process.env.BFA_CHROMIUM_EXECUTABLE,headless:true,args:['--disable-background-networking','--disable-component-update','--no-first-run','--no-default-browser-check']});
+            report.browserVersion = browser.version();
+            context = await browser.newContext({viewport:{width:390,height:844},acceptDownloads:true,serviceWorkers:'block',reducedMotion:'reduce'});
+            await context.route('**/*', async route => {
+              const u = new URL(route.request().url());
+              if (u.origin === origin) return route.continue();
+              if (u.protocol === 'blob:' || u.protocol === 'data:' || u.protocol === 'about:') return route.continue();
+              report.externalIntercepts.push({host:u.hostname,resourceType:route.request().resourceType()});
+              // Existing remote font stylesheet gets an empty local response; all other nonlocal requests abort.
+              if (u.hostname === 'fonts.googleapis.com' && route.request().resourceType() === 'stylesheet') return route.fulfill({status:200,contentType:'text/css',body:'/* offline font fixture: use system fallbacks */'});
+              return route.abort('blockedbyclient');
+            });
+            await context.exposeBinding('__bfaRecordForbidden', (_source, kind) => { if (Object.hasOwn(report.forbidden, kind)) report.forbidden[kind]++; else report.cleanupErrors.push('unknown-forbidden-kind'); });
+            await context.addInitScript(() => {
+              window.__bfaForbidden = {webSocket:0,microphone:0,beacon:0};
+              window.__bfaPrintCalls = 0;
+              window.WebSocket = class { constructor() { window.__bfaForbidden.webSocket++; void window.__bfaRecordForbidden('webSocket'); throw new Error('OFFLINE_WEBSOCKET_BLOCKED'); } };
+              if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia = async () => { window.__bfaForbidden.microphone++; void window.__bfaRecordForbidden('microphone'); throw new Error('OFFLINE_MICROPHONE_BLOCKED'); };
+              navigator.sendBeacon = () => { window.__bfaForbidden.beacon++; void window.__bfaRecordForbidden('beacon'); return false; };
+              const open = window.open.bind(window);
+              window.open = (...args) => {
+                const popup = open(...args);
+                if (popup) popup.print = () => { window.__bfaPrintCalls++; };
+                return popup;
+              };
+            });
+            context.on('page', p => p.on('pageerror', error => report.pageErrors.push(error.message)));
+            page = await context.newPage();
+            page.setDefaultTimeout(15000);
+            page.on('request', request => { const u=new URL(request.url()); if(u.origin===origin) report.localRequests.push({method:request.method(),path:u.pathname,type:request.resourceType()}); });
+            await page.goto(origin, {waitUntil:'networkidle'});
+            check('fresh profile starts without journey or entitlement state', await page.evaluate(() => Object.keys(localStorage).length===0));
+            await page.getByRole('link',{name:'Begin the journey',exact:true}).first().click();
+            for(let i=0;i<4;i++) { const before=page.url(); await page.getByTestId('opening-continue').click(); await page.waitForURL(u=>u.href!==before); }
+            await page.getByTestId('agree-adult').check();
+            await page.getByTestId('agree-terms').check();
+            await page.getByTestId('opening-continue').click();
+            await waitHome();
+            check('ordinary four-screen onboarding and agreement completed', true);
+            for(let day=1;day<=10;day++) {
+              report.phase=`day-${day}`;
+              assert.equal(await page.getByTestId('completion-card').count(),0);
+              await page.getByTestId(`day-row-day-${String(day).padStart(2,'0')}`).click();
+              await page.waitForURL(u=>u.pathname===`/day/${day}`);
+              if(day===5) {
+                await page.getByTestId('boundary-continue').waitFor({state:'visible'});
+                check('Day 5 boundary states no payment or entry', (await page.locator('body').innerText()).includes('There is nothing to pay and nothing to enter'));
+                await page.getByTestId('boundary-continue').click();
+                await page.getByTestId('boundary-continue').waitFor({state:'hidden'});
+                const entitlement=await page.evaluate(()=>JSON.parse(localStorage.getItem('bfa.entitlement.v1')));
+                check('ordinary UI unlock grants only local pilot access',entitlement.unlocked===true&&entitlement.source==='pilot');
+              }
+              const steps=[];
+              for(let count=0;count<28;count++) {
+                await page.locator('h1').first().waitFor({state:'visible'});
+                if(await visible(page.getByTestId('close-return-home'))) break;
+                const before=page.url();
+                const heading=await page.locator('h1').first().innerText();
+                const choices=page.locator('button.bfa-journey-choice');
+                if(await choices.count()) {
+                  const first=choices.first();
+                  const label=await first.locator('span.block').first().innerText();
+                  await first.click();
+                  assert.equal(await first.getAttribute('aria-pressed'),'true');
+                  report.selections.push({day,screen:new URL(before).searchParams.get('s'),label});
+                }
+                steps.push({screen:new URL(before).searchParams.get('s')||'arrive',heading});
+                await page.getByRole('button',{name:'Continue',exact:true}).click();
+                await page.waitForURL(u=>u.href!==before);
+              }
+              await page.getByTestId('close-return-home').waitFor({state:'visible'});
+              check(`Day ${day} reached Close through ordinary forward controls`, steps.length>=5,{screens:steps.length});
+              assert.equal(await page.getByTestId('close-next-day').count(),day<10?1:0);
+              report.days.push({day,steps,closed:true});
+              if(day===10) await screenshot('day-10-close');
+              await page.getByTestId('close-return-home').click();
+              await waitHome();
+              assert.equal(await page.getByTestId(`day-row-day-${String(day).padStart(2,'0')}`).getAttribute('data-state'),'complete');
+            }
+            report.phase='completion-review-export';
+            await page.getByTestId('completion-card').waitFor({state:'visible'});
+            await completedRows();
+            for (const id of ['completion-card','export-reflections','export-printable']) {
+              const element=page.getByTestId(id); await element.scrollIntoViewIfNeeded();
+              const box=await element.boundingBox();
+              check(`390px viewport: ${id} is visible and within horizontal viewport`, await element.isVisible() && box && box.x>=0 && box.x+box.width<=391,{box});
+            }
+            await screenshot('all-ten-completed');
+            await page.reload({waitUntil:'networkidle'}); await waitHome(); await completedRows();
+            check('all ten Finished rows and completion card survive reload',await visible(page.getByTestId('completion-card')));
+            const homeText=await download('export-reflections','home-export');
+            await page.getByTestId('shifted-link').click();
+            await page.getByTestId('shifted-note-0').fill(privateNote);
+            assert.match(await page.getByTestId('shifted-unsaved-note').innerText(),/not saved/);
+            const shiftedText=await download('shifted-export-text','review-export');
+            check('Home and review downloads have exactly the same content',homeText===shiftedText);
+            check('unsaved review note absent from local/session storage',await page.evaluate(note=>![...Object.values(localStorage),...Object.values(sessionStorage)].some(v=>v.includes(note)),privateNote));
+            const popupEvent=page.waitForEvent('popup');
+            await page.getByTestId('shifted-export-print').click();
+            const popup=await popupEvent;
+            await popup.waitForLoadState('domcontentloaded');
+            const printed=await popup.locator('body').innerText();
+            assert.ok(!printed.includes(privateNote));
+            for(let day=1;day<=10;day++) assert.ok(printed.includes(`Day ${day} · `));
+            for(const s of report.selections) assert.ok(printed.includes(s.label));
+            const norm=s=>s.replace(/\s+/g,' ').trim();
+            const printableNorm=norm(printed);
+            for(const line of shiftedText.split('\n').filter(l=>l.trim()&&l!=='---')) {
+              const expected=line.replace(/^  • /,'• ').replace(/^- /,'').replace(/^(Your selections|Your reflection):$/,'$1');
+              assert.ok(printableNorm.includes(norm(expected)), 'printable contains every corresponding export line');
+            }
+            const printCalls=await page.evaluate(()=>window.__bfaPrintCalls);
+            check('printable popup matches export and application requested print once, dialog suppressed',printCalls===1);
+            report.print={callsObserved:printCalls,nativeDialogSuppressed:true,physicalPrinting:false,privateNoteAbsent:true,textSha256:sha(printed)};
+            await popup.screenshot({path:path.join(output,'printable-review.png'),fullPage:true});
+            await popup.close();
+            assert.equal(await page.getByTestId('shifted-note-0').inputValue(),privateNote);
+            await page.getByRole('link',{name:'Return to Your Journey',exact:true}).click(); await waitHome();
+            await page.getByTestId('shifted-link').click();
+            assert.equal(await page.getByTestId('shifted-note-0').inputValue(),'');
+            check('leaving and reopening review removes private unsaved note',true);
+            await screenshot('review-reopened-empty');
+            // Counts live in Node across every page document, including the reload above.
+            await page.evaluate(()=>Promise.resolve());
+            check('no WebSocket microphone or beacon attempts',Object.values(report.forbidden).every(x=>x===0));
+            check('only known remote-font requests intercepted locally',report.externalIntercepts.every(x=>x.host==='fonts.googleapis.com'&&x.resourceType==='stylesheet'));
+            check('no browser page errors',report.pageErrors.length===0);
+            child.send({type:'bfa-smoke-fetch-guard-status'});
+            for(let i=0;i<20&&!guardStatus;i++) await sleep(50);
+            report.serverFetch=guardStatus;
+            check('server fetch canary remains installed with zero outbound attempts',guardStatus?.installed===true&&guardStatus.attempts===0);
+            check('server remained alive throughout the journey',!childExited);
+            report.status='PASSED';
+          })().catch(async error => {
+            report.status='FAILED'; report.error={name:error.name,message:error.message};
+            if(page) { report.failureUrl=page.url(); report.failureBody=await page.locator('body').innerText().catch(()=>null); await screenshot('failure').catch(()=>{}); }
+            process.exitCode=1;
+          }).finally(async()=>{
+            if(context) await context.close().catch(()=>report.cleanupErrors.push('context-close-failed'));
+            if(browser) await browser.close().catch(()=>report.cleanupErrors.push('browser-close-failed'));
+            if(child&&!childExited) {
+              child.kill('SIGTERM');
+              for(let i=0;i<20&&!childExited;i++) await sleep(100);
+              if(!childExited) { child.kill('SIGKILL'); for(let i=0;i<20&&!childExited;i++) await sleep(100); }
+            }
+            report.serverStopped=childExited;
+            if(child&&!childExited) report.cleanupErrors.push('server-exit-unconfirmed');
+            if(report.cleanupErrors.length) { report.status='FAILED'; process.exitCode=1; }
+            report.count=report.checks.length;
+            fs.writeFileSync(path.join(output,'result.json'),JSON.stringify(report,null,2)+'\n');
+            fs.writeFileSync(path.join(output,'server-output.log'),childStdout+'\n'+childStderr);
+            console.log(JSON.stringify({status:report.status,count:report.count,days:report.days.length,selectedLabels:report.selections.length,error:report.error,serverFetch:report.serverFetch}));
+          });
+          BFA_HARNESS
+          sha256sum "$task_root/check-journey.cjs"
+          node --check "$task_root/check-journey.cjs"
+          mkdir -p "$task_root/journey-evidence"
+          # Only loopback is enabled in this new network namespace. Runtime processes
+          # drop back to the runner's UID. Neither Chromium nor the app has an egress route.
+          journey_rc=0
+          timeout --kill-after=10s 360s sudo --non-interactive unshare --net -- /bin/bash -c '
+            set -eu
+            /usr/sbin/ip link set lo up
+            exec /usr/sbin/runuser -u "$1" -- /usr/bin/env -i PATH="$2" HOME="$3" TMPDIR="$4" BFA_PLAYWRIGHT_MODULE="$5" BFA_CHROMIUM_EXECUTABLE="$6" "$7" "$8" "$9" "${10}"
+          ' bfa "$(id -un)" "$PATH" "$task_home" "$task_root" "$task_runtime/browser/node_modules/playwright" "$task_chrome" "$(command -v node)" "$task_root/check-journey.cjs" "$task_source" "$task_root/journey-evidence" > "$task_logs/journey-browser.log" 2>&1 || journey_rc=$?
+          emit_log journey-browser "$task_logs/journey-browser.log"
+          printf 'BFA_JOURNEY_PROCESS_EXIT %s\n' "$journey_rc"
+          "${clean_env[@]}" node --input-type=commonjs - "$task_root/journey-evidence" <<'BFA_EVIDENCE'
+          const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),crypto=require('node:crypto');
+          const root=process.argv[2];
+          let pngTotal=0;
+          for(const name of ['result.json','home-export.txt','review-export.txt','server-output.log','day-10-close.png','all-ten-completed.png','printable-review.png','failure.png']) {
+            const file=path.join(root,name); if(!fs.existsSync(file)) continue;
+            const bytes=fs.readFileSync(file),digest=crypto.createHash('sha256').update(bytes).digest('hex');
+            console.log(`BFA_JOURNEY_FILE ${name} bytes=${bytes.length} sha256=${digest}`);
+            let payload,encodedName;
+            if(name.endsWith('.png')) { if(bytes.length>400000||pngTotal+bytes.length>900000) continue; payload=bytes;encodedName=name;pngTotal+=bytes.length; }
+            else { if(bytes.length>524288) continue;payload=zlib.gzipSync(bytes);encodedName=name+'.gz'; }
+            const encoded=payload.toString('base64');
+            console.log(`BFA_JOURNEY_PAYLOAD ${encodedName} bytes=${payload.length} sha256=${crypto.createHash('sha256').update(payload).digest('hex')}`);
+            for(let i=0;i<encoded.length;i+=3000) console.log(`BFA_JOURNEY_PART ${encodedName} ${i/3000} ${encoded.slice(i,i+3000)}`);
+          }
+          const result=path.join(root,'result.json');
+          if(!fs.existsSync(result)) { console.log('BFA_JOURNEY_RESULT UNRUN no result file'); process.exitCode=1; }
+          else { const r=JSON.parse(fs.readFileSync(result)); console.log(`BFA_JOURNEY_RESULT ${r.status} checks=${r.count} days=${r.days.length}`); if(r.status!=='PASSED'||r.days.length!==10||r.serverFetch?.attempts!==0||r.serverFetch?.installed!==true||!r.serverStopped) process.exitCode=1; }
+          BFA_EVIDENCE
+          sha256sum --check "$task_logs/source-inputs.sha256"
+          git diff --exit-code
+          exit "$journey_rc"

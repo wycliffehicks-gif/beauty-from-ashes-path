@@ -54,6 +54,8 @@ type RequestEffect =
   | "thread-stopped"
   | "logout-after-finish"
   | "close-after-hold"
+  | "change-key-source-after-hold"
+  | "change-key-source-after-mark"
   | "lost-response"
   | "invalid-answer";
 
@@ -90,7 +92,9 @@ async function prepareExchange(effect: RequestEffect = "complete") {
     "BFA_PRIVATE_TYPED_SEND_MATERIALS_JSON",
     JSON.stringify({ version: 1, materials: [] }),
   );
+  vi.stubEnv("BFA_PRIVATE_TYPED_KEY_SOURCE", undefined);
   vi.stubEnv("BFA_PRIVATE_TYPED_OPENAI_API_KEY", "offline_test_only");
+  vi.stubEnv("OPENAI_API_KEY", "offline_project_only");
   vi.stubGlobal("fetch", async (input: RequestInfo | URL, init?: RequestInit) => {
     const request = new Request(input, init);
     const url = new URL(request.url);
@@ -98,6 +102,12 @@ async function prepareExchange(effect: RequestEffect = "complete") {
     const isService = request.headers.get("apikey") === serviceKey;
     const isTester = request.headers.get("authorization") === `Bearer ${bearer}`;
     if (url.href === "https://api.openai.com/v1/responses" && request.method === "POST") {
+      const expectedKey =
+        process.env.BFA_PRIVATE_TYPED_KEY_SOURCE === "project-openai"
+          ? "offline_project_only"
+          : "offline_test_only";
+      if (request.headers.get("authorization") !== `Bearer ${expectedKey}`)
+        unexpected.push("Wrong private test credential");
       sent.push(await request.text());
       if (effect === "lost-response") throw new TypeError("Fictional receipt unavailable");
       if (effect === "revoke") revoked = true;
@@ -175,6 +185,16 @@ async function prepareExchange(effect: RequestEffect = "complete") {
           session,
           owner,
         ]);
+      if (
+        (name === "bfa_private_text_spend_claim_dispatch" &&
+          effect === "change-key-source-after-hold" &&
+          value === true) ||
+        (name === "bfa_private_text_spend_dispatch" &&
+          effect === "change-key-source-after-mark" &&
+          value)
+      ) {
+        vi.stubEnv("BFA_PRIVATE_TYPED_KEY_SOURCE", "project-openai");
+      }
       if (name === "bfa_private_text_spend_finish" && effect === "logout-after-finish" && value)
         await database.db.query("DELETE FROM auth.sessions WHERE id = $1 AND user_id = $2", [
           session,
@@ -357,6 +377,33 @@ it.skipIf(!engine)(
     test.assertTransport();
   },
 );
+it.skipIf(!engine)(
+  "sends the approved request using the explicitly selected project test credential",
+  async () => {
+    const test = await prepareExchange();
+    vi.stubEnv("BFA_PRIVATE_TYPED_KEY_SOURCE", "project-openai");
+    expect((await test.send()).kind).toBe("active");
+    expect(test.sent).toHaveLength(1);
+    expect(await test.state()).toMatchObject({ state: "settled", charged_micros: 24 });
+    test.assertTransport();
+  },
+);
+it.skipIf(!engine).each(["change-key-source-after-hold", "change-key-source-after-mark"] as const)(
+  "refuses transmission and preserves the held amount on %s",
+  async (effect) => {
+    const test = await prepareExchange(effect);
+    await expect(test.send()).rejects.toThrow();
+    expect(test.sent).toHaveLength(0);
+    expect(await test.state()).toEqual({
+      state: "held",
+      charged_micros: null,
+      revision: 0,
+      saved_snapshot: null,
+    });
+    test.assertTransport();
+  },
+);
+
 it.skipIf(!engine).each(["revoke", "session-closed", "invalid-answer"] as const)(
   "settles verified returned usage but withholds a reply for %s",
   async (effect) => {

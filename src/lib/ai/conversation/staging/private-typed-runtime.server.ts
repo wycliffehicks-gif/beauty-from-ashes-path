@@ -42,6 +42,12 @@ const limitsSchema = z.object({
   deadlineMs: integer.positive(),
 });
 
+function privateTypedKeyName() {
+  const source = process.env["BFA_PRIVATE_TYPED_KEY_SOURCE"];
+  if (source === undefined) return "BFA_PRIVATE_TYPED_OPENAI_API_KEY";
+  return source === "project-openai" ? "OPENAI_API_KEY" : null;
+}
+
 export function privateTypedMode(): "mock" | "private" | "invalid" {
   const selected = process.env["BFA_PRIVATE_TYPED_SEND_ENABLED"];
   if (selected === undefined || selected === "false") return "mock";
@@ -90,6 +96,8 @@ export function createStagingPrivateTypedProvider(
 ) {
   if (privateTypedMode() !== "private" || request.initialAuth.ownerId !== binding.ownerId)
     return null;
+  const keyName = privateTypedKeyName();
+  if (!keyName) return null;
   const selected = selectPrivateTypedMaterial(
     process.env["BFA_PRIVATE_TYPED_SEND_MATERIALS_JSON"],
     {
@@ -118,11 +126,12 @@ export function createStagingPrivateTypedProvider(
     readAllowlistExpiresAt: binding.readAllowlistExpiresAt,
     dispatchId: crypto.randomUUID(),
     readAuth: request.readAuth,
-    readKey: () => process.env["BFA_PRIVATE_TYPED_OPENAI_API_KEY"],
+    readKey: () => process.env[keyName],
     transport: globalThis.fetch.bind(globalThis),
     now: () => Date.now(),
     enabled: () =>
       privateTypedMode() === "private" &&
+      privateTypedKeyName() === keyName &&
       JSON.stringify(currentMaterial()?.material) === originalMaterial,
   });
 }

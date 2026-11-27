@@ -229,7 +229,93 @@ const binding = {
   revision: 2,
   requestId: request,
 };
+function buildProvider() {
+  return createStagingPrivateTypedProvider(
+    {
+      initialAuth: {
+        ownerId: owner,
+        authSessionId: session,
+        verifiedAt: start,
+        expiresAt: start + 120000,
+      },
+      readAuth: vi.fn(async () => null),
+    },
+    {
+      ownerId: owner,
+      threadId: thread,
+      revision: 2,
+      requestId: request,
+      envelopeExpiresAt: start + 60000,
+      readAllowlistExpiresAt: () => start + 60000,
+    },
+  );
+}
 describe("private route selection and trusted material lookup", () => {
+  it.each([
+    {
+      source: undefined,
+      dedicated: "fictional-private",
+      project: "fictional-project",
+      expected: "fictional-private",
+    },
+    {
+      source: "project-openai",
+      dedicated: "fictional-private",
+      project: "fictional-project",
+      expected: "fictional-project",
+    },
+    { source: undefined, dedicated: undefined, project: "fictional-project", expected: undefined },
+    {
+      source: "project-openai",
+      dedicated: "fictional-private",
+      project: undefined,
+      expected: undefined,
+    },
+  ])(
+    "reads only the pinned credential at the dispatch gate, case %#",
+    ({ source, dedicated, project, expected }) => {
+      vi.stubEnv("BFA_PRIVATE_TYPED_SEND_ENABLED", "true");
+      vi.stubEnv(
+        "BFA_PRIVATE_TYPED_SEND_MATERIALS_JSON",
+        JSON.stringify({ version: 1, materials: [material] }),
+      );
+      vi.stubEnv("BFA_PRIVATE_TYPED_KEY_SOURCE", source);
+      vi.stubEnv("BFA_PRIVATE_TYPED_OPENAI_API_KEY", undefined);
+      vi.stubEnv("OPENAI_API_KEY", undefined);
+      const factory = vi
+        .spyOn(dispatchProvider, "createPrivateTypedDispatchProvider")
+        .mockReturnValue(null);
+      buildProvider();
+      const options = factory.mock.calls[0]![0];
+      vi.stubEnv("BFA_PRIVATE_TYPED_OPENAI_API_KEY", dedicated);
+      vi.stubEnv("OPENAI_API_KEY", project);
+      expect(options.enabled()).toBe(true);
+      expect(options.readKey()).toBe(expected);
+      vi.stubEnv(
+        "BFA_PRIVATE_TYPED_KEY_SOURCE",
+        source === undefined ? "project-openai" : undefined,
+      );
+      expect(options.enabled()).toBe(false);
+    },
+  );
+
+  it.each(["", " ", "PROJECT-OPENAI", "project-openai ", "OPENAI_API_KEY"])(
+    "rejects an invalid configured key source before constructing the dispatcher, case %#",
+    (source) => {
+      vi.stubEnv("BFA_PRIVATE_TYPED_SEND_ENABLED", "true");
+      vi.stubEnv(
+        "BFA_PRIVATE_TYPED_SEND_MATERIALS_JSON",
+        JSON.stringify({ version: 1, materials: [material] }),
+      );
+      vi.stubEnv("BFA_PRIVATE_TYPED_KEY_SOURCE", source);
+      const factory = vi
+        .spyOn(dispatchProvider, "createPrivateTypedDispatchProvider")
+        .mockReturnValue(null);
+      expect(buildProvider()).toBeNull();
+      expect(factory).not.toHaveBeenCalled();
+    },
+  );
+
   it("pins selected server material across waits without pinning unrelated entries", () => {
     vi.stubEnv("BFA_PRIVATE_TYPED_SEND_ENABLED", "true");
     const registry = (materials: unknown[]) =>
@@ -241,25 +327,7 @@ describe("private route selection and trusted material lookup", () => {
     const factory = vi
       .spyOn(dispatchProvider, "createPrivateTypedDispatchProvider")
       .mockReturnValue(null);
-    createStagingPrivateTypedProvider(
-      {
-        initialAuth: {
-          ownerId: owner,
-          authSessionId: session,
-          verifiedAt: start,
-          expiresAt: start + 120000,
-        },
-        readAuth: vi.fn(async () => null),
-      },
-      {
-        ownerId: owner,
-        threadId: thread,
-        revision: 2,
-        requestId: request,
-        envelopeExpiresAt: start + 60000,
-        readAllowlistExpiresAt: () => start + 60000,
-      },
-    );
+    buildProvider();
     expect(factory).toHaveBeenCalledOnce();
     const enabled = factory.mock.calls[0]![0].enabled;
     expect(enabled()).toBe(true);

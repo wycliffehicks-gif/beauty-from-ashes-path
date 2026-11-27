@@ -1,5 +1,27 @@
 # Continue here — BFA, 27 November 2026, America/Toronto
 
+## Intermediate direct private test — paused for secure fictional tester creation and sign-in
+
+This is the newest continuation block and supersedes the older pending-clearance and no-temporary-settings statements below. Carl gave explicit clearance at approximately **15:14 Toronto on 27 November** for the bounded direct private test. The original one-message scope, spending ceiling and expiry remain unchanged; this checkpoint creates no new allowance or retry permission.
+
+**What is now observed.** The two temporary preview settings were added and checked. The required provider key and sealing secret were already present by name; their values were not inspected or recorded. A cold/direct bare preview address initially showed the closed state. The latest authenticated editor-linked preview subsequently rendered the actual fictional tester sign-in screen while the private switch was active. This is observed serving behavior, not a claim that every preview address is synchronized.
+
+Existing-user email sign-in was temporarily enabled. **Disable sign-up remained checked and anonymous access remained off.** The admin Users view showed no users, and its supported Create user form offered email and password only. The direct test is paused for Carl to create one fictional tester securely through that form and sign in through the ordinary private app screen. No credentials, personal identifiers, funding identifiers or transient preview addresses belong in these records.
+
+**No new direct-test dispatch or spending.** No tester, authenticated tester session or funded approval has yet been created in this direct phase. No connected SQL write, provider call, returned in-app model reply or model spending has occurred in this phase. Earlier installed SQL, completed operator-evaluator replies and historical holds remain separate, intact evidence. Public signup, participant activation, live voice and publication remain off.
+
+**Source and verification boundaries.** Engineering source remains `71d289db965faddecf0316416575d3ea0dbaa8eb`, tree `2662076db3b7a4dcd4ab2d9bc8d8214c397ba6c7`; this update started from documentation head `75f21a631af816e440dcb28c000260708df198ad`. The recorded **4,490/4,490 Vitest cases across 196 files** and exact frozen-helper **2.28.0** CI results remain historical test evidence, not tests rerun by this documentation update. The final engineering source passed normal production and Node builds with 14 default browser checks, and the opted-in Node build with 34 core plus three authorization checks using isolated fictional services. [Default build/browser](https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/46041469650/job/140649975071) · [Private review browser](https://github.com/wycliffehicks-gif/beauty-from-ashes-path/actions/runs/46041486683/job/140650031096).
+
+The latest documentation/engineering cards in the Lovable editor displayed **Build unsuccessful** and **Preview is out of date**, while the latest editor-linked preview actually served the sign-in screen. Preserve both observations. A fresh successful hosted build, full source synchronization and real authenticated app/provider acceptance are **not established**.
+
+**Resume and cleanup.** After secure human creation/sign-in, recheck the actual session, serving state, protected current eligibility and original approval expiry before continuing the same bounded test. Any later funding must bind the exact fresh in-app review under that existing approval. Do not reuse an old session or funding association, retry an uncertain send, or infer provider permission from a visible sign-in form. Keep the two temporary preview settings and temporary existing-user email sign-in explicitly on the cleanup list; close any subsequently created tester access and preserve accounting evidence. After the original deadline, reconcile and close only.
+
+The first-sale scope remains the ten-day journey, typed AI conversation and live voice together. Preserve all prior handoff bytes below, the wider SRT ecosystem and actual reading limits, exact policies and samples, private-writing and chosen-faith protections, closed v5 and prior grants, and accounting/history. This checkpoint changes documentation only.
+
+---
+
+# Continue here — BFA, 27 November 2026, America/Toronto
+
 ## Private typed preview now serves the new code; first live in-app reply still outstanding
 
 **Verified engineering source.** `71d289db965faddecf0316416575d3ea0dbaa8eb` (tree `2662076db3b7a4dcd4ab2d9bc8d8214c397ba6c7`) adds a temporary private staging entry on the two verified HTTPS preview origins for this project. An operator can open and close it using the private server switch. The unlinked screen checks an uncached, content-free server response. Current browser and server origins must both match. A failed or expired check closes the private flow, retires the in-memory review, and cannot turn it into a simulated send. Explicit build flags retain their established behavior. Browser hostname supplies no monetary, Auth or provider authority. Previous revision `7f505f18ff4f916836f592bf78cac981e4c8bc46` supports the deliberately selected server configuration `BFA_PRIVATE_TYPED_KEY_SOURCE=project-openai`. Missing configuration retains the dedicated credential path. Neither setting reads an alternative credential on failure; no credential reaches the client. The existing per-send funding, deadlines, exact bytes, single dispatch and receipt controls still apply.

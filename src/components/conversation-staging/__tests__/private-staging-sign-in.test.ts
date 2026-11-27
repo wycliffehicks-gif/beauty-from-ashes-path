@@ -60,7 +60,10 @@ const auth = vi.hoisted(() => ({
     | null
     | ((event: string, session: { user: { id: string }; access_token?: string } | null) => void),
 }));
-const request = vi.hoisted(() => ({ review: vi.fn(), run: vi.fn() }));
+const request = vi.hoisted(() => ({ review: vi.fn(), run: vi.fn(), preview: vi.fn() }));
+vi.mock("@/lib/ai/conversation/staging/private-preview.functions", () => ({
+  readPrivatePreviewAvailability: request.preview,
+}));
 vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
 vi.mock("@/lib/ai/conversation/staging/staging.functions", () => ({
   runStagingOperation: request.run,
@@ -79,6 +82,7 @@ vi.mock("@/components/conversation-staging/StagingConsole", () => ({
 }));
 vi.mock("@tanstack/react-router", () => ({ createFileRoute: () => (options: unknown) => options }));
 
+import { HostedStagingEntry } from "@/components/conversation-staging/HostedStagingEntry";
 import { PrivateStagingSignIn } from "@/components/conversation-staging/PrivateStagingSignIn";
 import { StagingConsole } from "@/components/conversation-staging/StagingConsole";
 
@@ -595,14 +599,118 @@ describe("opted-in private fictional staging sign-in", () => {
     );
     expect(request.run).toHaveBeenCalledTimes(2);
   });
-  it.each([undefined, "false", "TRUE", "1", "true"])(
-    "route opt-in uses only exact build string %j",
-    async (flag) => {
-      vi.resetModules();
-      vi.stubEnv("VITE_BFA_PRIVATE_STAGING_SIGN_IN", flag);
-      const { Route } = await import("@/routes/conversation-staging");
-      const selected = (Route as unknown as { component: () => unknown }).component;
-      expect(selected.name).toBe(flag === "true" ? "PrivateStagingSignIn" : "StagingConsole");
+  it.each([
+    [undefined, undefined, "HostedStagingEntry"],
+    [undefined, "true", "StagingConsole"],
+    [undefined, "false", "StagingConsole"],
+    ["false", "true", "StagingConsole"],
+    ["TRUE", undefined, "StagingConsole"],
+    ["1", undefined, "StagingConsole"],
+    ["", undefined, "StagingConsole"],
+    ["true", undefined, "PrivateStagingSignIn"],
+    ["true", "false", "PrivateStagingSignIn"],
+    ["true", "true", "PrivateStagingSignIn"],
+  ])("respects the existing build switches %j/%j", async (flag, reviewFlag, expected) => {
+    vi.resetModules();
+    vi.stubEnv("VITE_BFA_PRIVATE_STAGING_SIGN_IN", flag);
+    vi.stubEnv("VITE_BFA_PRIVATE_TYPED_REVIEW", reviewFlag);
+    const { Route } = await import("@/routes/conversation-staging");
+    const selected = (Route as unknown as { component: () => unknown }).component;
+    expect(selected.name).toBe(expected);
+  });
+});
+
+describe("private preview visibility after hydration", () => {
+  const editor = "https://id-preview--62fcd5e5-2179-45ff-b8f1-2aef8df3ece3.lovable.app";
+  const preview = "https://preview--beauty-from-ashes-path.lovable.app";
+  function useLocation(origin: string) {
+    const target = Object.assign(new EventTarget(), {
+      location: { href: origin + "/conversation-staging" },
+    });
+    vi.stubGlobal("window", target);
+    return target;
+  }
+  afterEach(() => vi.useRealTimers());
+  it("server and first browser render expose only a neutral shell", () => {
+    useLocation(editor);
+    const html = renderToStaticMarkup(renderTree(HostedStagingEntry, false));
+    expect(html).toContain("Checking staging availability");
+    expect(html).not.toContain("<form");
+    expect(request.preview).not.toHaveBeenCalled();
+  });
+  it.each([
+    "https://beauty-from-ashes-path.lovable.app",
+    "http://127.0.0.1:4178",
+    "https://example.invalid",
+  ])("keeps the ordinary private route on %s without a server window lookup", (origin) => {
+    useLocation(origin);
+    const tree = renderTree(HostedStagingEntry);
+    expect(renderToStaticMarkup(tree)).toBe("EXISTING_MOCK_CONSOLE");
+    expect(request.preview).not.toHaveBeenCalled();
+  });
+  it.each([editor, preview])(
+    "opens only with server confirmation and closes without a mock control on %s",
+    async (origin) => {
+      const page = useLocation(origin);
+      request.preview.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+      renderTree(HostedStagingEntry);
+      await Promise.resolve();
+      const active = renderTree(HostedStagingEntry) as ReactElement<{
+        privateReview: boolean;
+        previewIsOpen: () => boolean;
+      }>;
+      expect(active.type).toBe(PrivateStagingSignIn);
+      expect(active.props.privateReview).toBe(true);
+      expect(active.props.previewIsOpen()).toBe(true);
+      page.dispatchEvent(new Event("focus"));
+      await Promise.resolve();
+      expect(renderToStaticMarkup(renderTree(HostedStagingEntry))).toContain(
+        "Private testing is closed",
+      );
+      expect(active.props.previewIsOpen()).toBe(false);
     },
   );
+  it("closes a hanging first check and ignores its late answer", async () => {
+    vi.useFakeTimers();
+    useLocation(preview);
+    const late = deferred<boolean>();
+    request.preview.mockReturnValueOnce(late.promise);
+    renderTree(HostedStagingEntry);
+    await vi.advanceTimersByTimeAsync(30_001);
+    const status = () => renderToStaticMarkup(renderTree(HostedStagingEntry));
+    expect(status()).toContain("Private testing is closed");
+    late.resolve(true);
+    await Promise.resolve();
+    expect(status()).toContain("Private testing is closed");
+  });
+  it("a delayed renewal cannot reopen the expired private UI or revive its old guard", async () => {
+    vi.useFakeTimers();
+    const page = useLocation(preview);
+    const late = deferred<boolean>();
+    request.preview.mockResolvedValueOnce(true).mockReturnValueOnce(late.promise);
+    renderTree(HostedStagingEntry);
+    await Promise.resolve();
+    const active = renderTree(HostedStagingEntry) as ReactElement<{ previewIsOpen: () => boolean }>;
+    expect(active.type).toBe(PrivateStagingSignIn);
+    await vi.advanceTimersByTimeAsync(30_001);
+    expect(active.props.previewIsOpen()).toBe(false);
+    expect(renderToStaticMarkup(renderTree(HostedStagingEntry))).toContain(
+      "Private testing is closed",
+    );
+    late.resolve(true);
+    await Promise.resolve();
+    expect(renderToStaticMarkup(renderTree(HostedStagingEntry))).toContain(
+      "Private testing is closed",
+    );
+    expect(request.preview).toHaveBeenCalledTimes(2);
+    request.preview.mockResolvedValueOnce(true);
+    page.dispatchEvent(new Event("focus"));
+    await Promise.resolve();
+    const reopened = renderTree(HostedStagingEntry) as ReactElement<{
+      previewIsOpen: () => boolean;
+    }>;
+    expect(reopened.type).toBe(PrivateStagingSignIn);
+    expect(reopened.props.previewIsOpen()).toBe(true);
+    expect(active.props.previewIsOpen()).toBe(false);
+  });
 });

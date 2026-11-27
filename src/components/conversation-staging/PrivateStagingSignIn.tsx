@@ -12,8 +12,10 @@ type View = "checking" | "signed-out" | "signed-in" | "unavailable";
 
 /** Private UI entry only. Every staging operation still verifies Auth and its
  * expiring allowlist on the server; a displayed session grants no access. */
-export function PrivateStagingSignIn() {
-  const privateReview = privateTypedReviewEnabled();
+export function PrivateStagingSignIn({
+  privateReview = privateTypedReviewEnabled(),
+  previewIsOpen,
+}: { privateReview?: boolean; previewIsOpen?: () => boolean } = {}) {
   const [view, setView] = useState<View>("checking");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("Checking sign-in status…");
@@ -53,7 +55,11 @@ export function PrivateStagingSignIn() {
   // The callback belongs to this mounted generation. Check SDK storage again
   // before sending or displaying a result, even if its Auth event is delayed.
   async function matchesPrivateSession() {
-    const current = () => alive.current && consoleKey === generation.current && !!identity.current;
+    const current = () =>
+      previewIsOpen?.() !== false &&
+      alive.current &&
+      consoleKey === generation.current &&
+      !!identity.current;
     if (!current()) return false;
     try {
       const { data, error } = await supabase.auth.getSession();
@@ -147,7 +153,14 @@ export function PrivateStagingSignIn() {
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending.current || view !== "signed-out" || !email.trim() || !password) return;
+    if (
+      previewIsOpen?.() === false ||
+      pending.current ||
+      view !== "signed-out" ||
+      !email.trim() ||
+      !password
+    )
+      return;
     const submittedEmail = email.trim();
     const submittedPassword = password;
     // Credentials are used only for this deliberate SDK request. The form

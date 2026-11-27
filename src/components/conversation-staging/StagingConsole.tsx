@@ -12,9 +12,6 @@ import type { ActiveThread, SavedThread } from '@/lib/ai/conversation/staging/ad
 import { FICTIONAL_NOTE, previewSelection, confirmSelection } from '@/lib/ai/conversation/staging/excerpt';
 import { ResponseFence, NavigationIntent, selectedReopenRevision, draftAfterSend, requiresSwitchChoice } from '@/lib/ai/conversation/staging/lifecycle';
 
-import { privateTypedReviewEnabled } from './private-session-visibility';
-
-const privateMessageReview = privateTypedReviewEnabled();
 const PrivateTypedReview = lazy(() => import('./PrivateTypedReview').then(module => ({ default: module.PrivateTypedReview })));
 
 type Destination = { action: 'create' } | { action: 'reopen'; target: SavedThread };
@@ -45,6 +42,7 @@ function useStagingDialogFocus(initialFocusId?: string) {
 }
 
 export function StagingConsole({ matchesPrivateSession }: { matchesPrivateSession?: () => Promise<boolean> } = {}) {
+  const privateMessageReview = matchesPrivateSession !== undefined;
   const run = useServerFn(runStagingOperation);
   const [prefs, updatePrefs, hydrated] = usePrefs();
   const [state, setState] = useState<ActiveThread | null>(null);

@@ -14,7 +14,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          source_sha=90f84aa5fa978baa7143d379fa58428a82a94dba
+          source_sha=71d289db965faddecf0316416575d3ea0dbaa8eb
           task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
           task_source="$task_root/source"
           task_home="$task_root/home"

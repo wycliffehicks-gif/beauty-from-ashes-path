@@ -14,7 +14,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          source_sha=7f505f18ff4f916836f592bf78cac981e4c8bc46
+          source_sha=90f84aa5fa978baa7143d379fa58428a82a94dba
           task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
           task_source="$task_root/source"
           task_home="$task_root/home"
@@ -67,7 +67,7 @@ jobs:
           for (const key of ['preinstall','install','postinstall','preprepare','prepare','postprepare','prebuild','postbuild']) assert.equal(p.scripts?.[key], undefined, `Unexpected root lifecycle hook: ${key}`);
           assert.equal(p.scripts.build, 'vite build');
           assert.equal(p.workspaces, undefined);
-          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.27.1');
+          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.28.0');
           console.log('BFA_BUILD_GUARDS root hooks absent; exact helper declared; no workspace install; no provider credentials inherited');
           NODE
           sha256sum package.json bun.lock bunfig.toml vite.config.ts > "$task_logs/source-inputs.sha256"
@@ -80,7 +80,7 @@ jobs:
           "${clean_env[@]}" node --input-type=commonjs <<'NODE'
           const assert = require('node:assert/strict');
           const p = require('./node_modules/@lovable.dev/vite-tanstack-config/package.json');
-          assert.equal(p.version, '2.27.1');
+          assert.equal(p.version, '2.28.0');
           console.log('BFA_BUILD_INSTALLED_HELPER', JSON.stringify({name:p.name,version:p.version,exports:p.exports,main:p.main}));
           NODE
           task_public_key="sb_publishable_$("${clean_env[@]}" node -e 'process.stdout.write(require("node:crypto").randomBytes(24).toString("hex"))')"

@@ -14,7 +14,7 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          source_sha=7f505f18ff4f916836f592bf78cac981e4c8bc46
+          source_sha=90f84aa5fa978baa7143d379fa58428a82a94dba
           task_root=$(mktemp -d "$RUNNER_TEMP/bfa-exact-build-XXXXXXXX")
           task_source="$task_root/source"
           task_home="$task_root/home"
@@ -57,7 +57,7 @@ jobs:
           phase source-fetch timeout 120s "${clean_env[@]}" git fetch --no-tags --depth=1 --filter=blob:none origin "$source_sha"
           "${clean_env[@]}" git checkout -q --detach FETCH_HEAD
           [[ $(git rev-parse HEAD) == "$source_sha" ]]
-          [[ $(git rev-parse HEAD^{tree}) == 8898fc266c8cca57ecf1c9a5bb410722d61ed109 ]]
+          [[ $(git rev-parse HEAD^{tree}) == aa357ca12de6b3394fa7772ed39dad55f5d96815 ]]
           test ! -e .env
           printf 'BFA_BUILD_SOURCE %s workflow=%s\n' "$source_sha" "$GITHUB_SHA"
           "${clean_env[@]}" node --version
@@ -68,7 +68,7 @@ jobs:
           for (const key of ['preinstall','install','postinstall','preprepare','prepare','postprepare','prebuild','postbuild']) assert.equal(p.scripts?.[key], undefined, `Unexpected root lifecycle hook: ${key}`);
           assert.equal(p.scripts.build, 'vite build');
           assert.equal(p.workspaces, undefined);
-          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.27.1');
+          assert.equal(p.devDependencies['@lovable.dev/vite-tanstack-config'], '2.28.0');
           console.log('BFA_BUILD_GUARDS root hooks absent; exact helper declared; no workspace install; no provider credentials inherited');
           NODE
           sha256sum package.json bun.lock bunfig.toml vite.config.ts > "$task_logs/source-inputs.sha256"
@@ -81,7 +81,7 @@ jobs:
           "${clean_env[@]}" node --input-type=commonjs <<'NODE'
           const assert = require('node:assert/strict');
           const p = require('./node_modules/@lovable.dev/vite-tanstack-config/package.json');
-          assert.equal(p.version, '2.27.1');
+          assert.equal(p.version, '2.28.0');
           console.log('BFA_BUILD_INSTALLED_HELPER', JSON.stringify({name:p.name,version:p.version,exports:p.exports,main:p.main}));
           NODE
           phase production-build timeout 300s "${clean_env[@]}" \
@@ -91,7 +91,7 @@ jobs:
             SUPABASE_PUBLISHABLE_KEY=sb_publishable_fictional_ci_only \
             node node_modules/vite/bin/vite.js build
           sha256sum --check "$task_logs/source-inputs.sha256"
-          printf 'BFA_BUILD_RESULT PASS source=%s helper=2.27.1; no deploy, model calls, artifact upload, caches or main changes\n' "$source_sha"
+          printf 'BFA_BUILD_RESULT PASS source=%s helper=2.28.0; no deploy, model calls, artifact upload, caches or main changes\n' "$source_sha"
           
           # The application checkout remains the exact reviewed source; this harness is ephemeral.
           phase playwright-runtime timeout 180s "${clean_env[@]}" PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --prefix "$task_runtime/browser" --no-audit --no-fund --ignore-scripts --no-package-lock playwright@1.62.1
@@ -119,7 +119,7 @@ jobs:
           const { chromium } = require(process.env.BFA_PLAYWRIGHT_MODULE);
           const [source, output] = process.argv.slice(2);
           const origin = 'http://127.0.0.1:4178';
-          const report = { status:'RUNNING', source:'7f505f18ff4f916836f592bf78cac981e4c8bc46', checks:[], externalIntercepts:[], pageErrors:[], localRequests:[], serverFetch:null, forbidden:{webSocket:0,microphone:0,beacon:0}, cleanupErrors:[], limits:['Exact final application source with the private-build flag absent; original staging console only.', 'No authenticated operations, real backend credentials, provider calls or paid requests.', 'Headless Chromium on the existing AI-off Node target, not Lovable runtime or real-device acceptance.', 'Service workers blocked; remote-font CSS intercepted locally; runtime network namespace has loopback only.'] };
+          const report = { status:'RUNNING', source:'90f84aa5fa978baa7143d379fa58428a82a94dba', checks:[], externalIntercepts:[], pageErrors:[], localRequests:[], serverFetch:null, forbidden:{webSocket:0,microphone:0,beacon:0}, cleanupErrors:[], limits:['Exact final application source with the private-build flag absent; original staging console only.', 'No authenticated operations, real backend credentials, provider calls or paid requests.', 'Headless Chromium on the existing AI-off Node target, not Lovable runtime or real-device acceptance.', 'Service workers blocked; remote-font CSS intercepted locally; runtime network namespace has loopback only.'] };
           let browser, context, page, child, guardInstalled = false, guardStatus, childExited = false;
           let childStdout = '', childStderr = '';
           const sha = (data) => crypto.createHash('sha256').update(data).digest('hex');
